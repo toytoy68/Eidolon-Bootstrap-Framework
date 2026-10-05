@@ -103,7 +103,8 @@ class CoreTests(unittest.TestCase):
 
     def test_model_timeout_never_executes_a_tool(self):
         _, m = self.run_mission(model=SlowModel(), limits=Limits(0.5))
-        self.assertEqual(m["status"], "FAILED")
+        self.assertEqual(m["status"], "BLOCKED")
+        self.assertEqual(m["error"]["code"], "MODEL_UNAVAILABLE")
         self.assertFalse(m["calls"])
 
     def test_injection_in_memory_remains_inert_text(self):

@@ -83,3 +83,48 @@ def lost_tool(parameters, context):
 
 def slow_verifier(parameters, context, output):
     time.sleep(10)
+
+
+@dataclass(frozen=True)
+class RecoverableModel:
+    mode: str = "ok"
+    model_id: str = "test-recoverable/1"
+
+    def propose(self, request, context):
+        if self.mode == "timeout":
+            time.sleep(10)
+        if self.mode == "error":
+            raise OSError("synthetic model unavailable")
+        return plan()
+
+
+def big_result(parameters, context):
+    return {"blob": "x" * 600_000}
+
+
+def verify_big(parameters, context, output):
+    return output == {"blob": "x" * 600_000}
+
+
+def marker_tool(parameters, context):
+    from pathlib import Path
+    from eidolon_core.tools import text_stats
+    directory = Path(os.environ["EIDOLON_TEST_MARKER"])
+    (directory / "entered").write_text("started")
+    deadline = time.monotonic() + 12
+    while not (directory / "release").exists():
+        if time.monotonic() > deadline:
+            raise TimeoutError("test did not release worker")
+        time.sleep(0.01)
+    (directory / "effect").write_text("synthetic local effect")
+    return text_stats(parameters, context)
+
+
+def receipt_then_wait(channel, function, args, receipt_path, lease_path):
+    """Test seam: keep the process alive AFTER the production receipt is written."""
+    from pathlib import Path
+    from eidolon_core.worker import _child
+    _child(channel, function, args, receipt_path, lease_path)
+    if function.__name__ == "text_stats":
+        Path(os.environ["EIDOLON_TEST_RECEIPT_READY"]).write_text("receipt present")
+        time.sleep(10)

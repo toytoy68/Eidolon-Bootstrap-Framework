@@ -1,0 +1,18 @@
+test_f01_nested_overflow_rejected_at_parser_boundary (tests.test_review_regressions.ReviewRegressionTests.test_f01_nested_overflow_rejected_at_parser_boundary) ... ok
+test_f01_overflow_and_surrogates_fail_durably (tests.test_review_regressions.ReviewRegressionTests.test_f01_overflow_and_surrogates_fail_durably) ... ok
+test_f02_five_large_verified_outputs_survive_restart (tests.test_review_regressions.ReviewRegressionTests.test_f02_five_large_verified_outputs_survive_restart) ... ok
+test_f03_abandon_keeps_unknown_effect_and_is_terminal (tests.test_review_regressions.ReviewRegressionTests.test_f03_abandon_keeps_unknown_effect_and_is_terminal) ... ok
+test_f03_cli_abandon_works_without_original_provider (tests.test_review_regressions.ReviewRegressionTests.test_f03_cli_abandon_works_without_original_provider) ... ok
+test_f04_legacy_unknown_call_cannot_enable_retry (tests.test_review_regressions.ReviewRegressionTests.test_f04_legacy_unknown_call_cannot_enable_retry) ... ok
+test_f04_live_orphan_blocks_reconciliation_even_with_wrong_pid (tests.test_review_regressions.ReviewRegressionTests.test_f04_live_orphan_blocks_reconciliation_even_with_wrong_pid) ... ok
+test_f04_parent_dies_before_execution_permission (tests.test_review_regressions.ReviewRegressionTests.test_f04_parent_dies_before_execution_permission) ... ok
+test_f05_model_timeout_and_outage_resume_same_mission (tests.test_review_regressions.ReviewRegressionTests.test_f05_model_timeout_and_outage_resume_same_mission) ... ok
+test_f06_receipt_kept_at_cancellation (tests.test_review_regressions.ReviewRegressionTests.test_f06_receipt_kept_at_cancellation) ... ok
+test_f06_receipt_kept_at_deadline_and_reverified_without_retry (tests.test_review_regressions.ReviewRegressionTests.test_f06_receipt_kept_at_deadline_and_reverified_without_retry) ... ok
+test_internal_error_after_execution_does_not_replay (tests.test_review_regressions.ReviewRegressionTests.test_internal_error_after_execution_does_not_replay) ... ok
+test_internal_error_uses_durable_phase_and_can_resume_before_effect (tests.test_review_regressions.ReviewRegressionTests.test_internal_error_uses_durable_phase_and_can_resume_before_effect) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 9.222s
+
+OK

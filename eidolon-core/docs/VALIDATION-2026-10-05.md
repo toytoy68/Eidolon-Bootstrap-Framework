@@ -115,3 +115,10 @@ d'état créé. La démonstration humaine affiche un succès vérifié et conser
 UNVERIFIED/revue=true. JSON de l'aperçu parsé, erreur sur stderr/code 2 et
 neutralisation des caractères de contrôle vérifiés. Liens documentaires valides.
 Ce contrôle ciblé ne constitue pas une nouvelle exécution des 40 tests ci-dessus.
+
+## Complément après revue Claude C-REV-001
+
+Le [bilan des corrections](REVIEW-FIXES-2026-10-05.md) ajoute 13 tests de régression
+aux 34 tests Core, et consigne une nouvelle exécution des 6 intégrations moteur
+sur copie isolée. Il précise les nouvelles preuves, les changements de format
+et les limites. Le présent rapport reste la trace de la validation initiale.

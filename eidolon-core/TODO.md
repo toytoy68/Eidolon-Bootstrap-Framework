@@ -21,6 +21,27 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] Canal d'échanges Core Codex/GPT ↔ Claude Code, protocole, brainstorming
   et consignes de découverte AGENTS.md/CLAUDE.md ; première revue préparée.
 
+## Revue C-REV-001 : corrections livrées
+
+[Bilan, bases et preuves](docs/REVIEW-FIXES-2026-10-05.md) : 47 tests Core et
+6 intégrations réelles du moteur sur corpus synthétiques réussis sous Python 3.12.
+
+- [x] F-01 : JSON fini/UTF-8 persistable avant plan, diagnostic terminal propre.
+- [x] F-02 : preuves par références, cinq sorties de 600 ko sans blocage final.
+- [x] F-03 : abandon terminal conservant l'effet inconnu et l'audit.
+- [x] F-04 : verrou d'exécutant et lancement autorisé après journalisation ;
+  réconciliation interdite pendant l'exécution locale, test SIGKILL réel.
+- [x] F-05 : indisponibilité/délai modèle reprenable, distinct du plan invalide.
+- [x] F-06 : reçu tardif conservé et non promu automatiquement en succès.
+- [x] Filet INTERNAL_ERROR basé sur l'état durable ; sondage d'annulation allégé.
+- [ ] Contre-revue Claude C-REV-002 des corrections (demandée, non reçue).
+- [ ] Externaliser les gros documents/médias avec budgets et rétention avant
+  leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
+- [ ] P3 : mémoire vide distincte de MODEL_INVALID ; clarification du blocage
+  de précontrôle avec configuration figée, à intégrer dans C-001.
+- [ ] C-008 : propriétaire/battement de mission pour distinguer vivant/orphelin.
+- [ ] C-005 : identité humaine authentifiée ; `actor` actuel est une trace libre.
+
 ## Prochaine tranche proposée : critères de mission et contrôleur simulé enrichi
 
 Le [cadrage consolidé du 05/10](docs/CADRAGE-DECISIONS-2026-10-05.md) intègre le

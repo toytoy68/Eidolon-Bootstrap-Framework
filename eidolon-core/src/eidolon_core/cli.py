@@ -6,7 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
-"""Local JSON CLI. Exit 0 succeeds, 2 blocks/requires review, 3 fails, 4 cancels."""
+"""Local JSON CLI. Exit 0 succeeds, 2 blocks/reviews, 3 fails, 4 cancels/abandons."""
 import argparse
 import json
 from pathlib import Path
@@ -38,7 +38,7 @@ def main(argv=None):
             command.add_argument("--events", action="store_true")
     reconcile = commands.add_parser("reconcile")
     reconcile.add_argument("mission_id")
-    reconcile.add_argument("--decision", choices=("no-effect", "observed-result"), required=True)
+    reconcile.add_argument("--decision", choices=("no-effect", "observed-result", "abandon"), required=True)
     reconcile.add_argument("--actor", required=True)
     reconcile.add_argument("--reason", required=True)
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
@@ -75,7 +75,7 @@ def main(argv=None):
         print(render_result(result) if args.format == "human" else encode(result))
         if args.command in {"show", "create", "reconcile"}:
             return 0
-        return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4}.get(result["status"], 2)
+        return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)
     except (ValueError, KeyError, OSError, Busy) as exc:
         print(render_error(type(exc).__name__, str(exc)) if args.format == "human"
               else encode({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)

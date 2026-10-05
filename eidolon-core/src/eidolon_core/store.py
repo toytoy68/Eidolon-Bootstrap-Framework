@@ -16,9 +16,9 @@ import re
 import sqlite3
 import uuid
 
-from .contracts import encode
+from .contracts import digest, encode
 
-TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED"}
+TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "ABANDONED"}
 
 
 class Busy(RuntimeError):
@@ -92,6 +92,35 @@ class Store:
                        (identity, now(), "CREATED", encode({"configuration": configuration})))
         return mission
 
+    def worker_lease_path(self, identity, call_id, attempt):
+        self.check_id(identity)
+        return self.directory / f"{identity}-{digest([call_id, attempt])}.worker.lock"
+
+    @contextmanager
+    def worker_quiescent(self, identity, call):
+        # A PID can be reused. The child holds this lease from BEFORE its ready
+        # handshake until AFTER execution. Reconciliation holds it until saved.
+        if call.get("worker_protocol") != "lease-v1":
+            raise Busy("legacy call has no worker lease; abandon with unknown effect")
+        path = self.worker_lease_path(identity, call["id"], call["attempt"])
+        with path.open("a") as handle:
+            try:
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError as exc:
+                raise Busy("worker still active; reconciliation cannot enable a retry") from exc
+            try:
+                yield
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    def cancel_requested(self, identity):
+        self.check_id(identity)
+        with self.connection() as db:
+            row = db.execute("SELECT cancel_requested FROM missions WHERE id=?", (identity,)).fetchone()
+        if row is None:
+            raise KeyError("mission not found")
+        return bool(row[0])
+
     def get(self, identity):
         self.check_id(identity)
         with self.connection() as db:
@@ -113,7 +142,8 @@ class Store:
             mission["cancel_requested"] = bool(row[1])
             # Close cancellation/success race inside the same transaction.
             if row[1] and mission["status"] == "SUCCEEDED":
-                mission.update(status="CANCELLED", result=None)
+                mission.update(status="CANCELLED", result=None,
+                               error={"code": "CANCELLED", "message": "cancellation requested before success commit"})
                 kind = "CANCELLED"
             if mission["status"] == "SUCCEEDED" and (
                 not mission["calls"] or any(c["status"] != "VERIFIED" for c in mission["calls"])

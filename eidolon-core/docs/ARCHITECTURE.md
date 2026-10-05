@@ -21,7 +21,8 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 ## Mission et progression
 
 Identifiant UUID stable `m-…`, requête d'origine conservée, configuration figée.
-Statuts : NEW, RUNNING, BLOCKED, REVIEW_REQUIRED, SUCCEEDED, FAILED, CANCELLED.
+Statuts : NEW, RUNNING, BLOCKED, REVIEW_REQUIRED, SUCCEEDED, FAILED, CANCELLED,
+ABANDONED (clôture avec effet inconnu conservé).
 Phases distinctes : RECALL, PLAN, READY, EXECUTING, VERIFY, DONE.
 La progression compte les étapes **vérifiées**, pas celles promises ou démarrées.
 Les appels portent `mission_id/step_id`, numéro de tentative, versions de l'outil
@@ -53,18 +54,48 @@ dernier passage SUCCEEDED vérifie cette demande dans la transaction.
 | STARTED, pas de reçu | REVIEW_REQUIRED ; aucune répétition automatique |
 | RETURNED, reçu durable | Refaire la vérification, aucun appel outil |
 | VERIFIED | Conserver les preuves et passer à l'étape suivante |
-| SUCCEEDED / FAILED / CANCELLED | Retourner l'état terminal sans nouvelle exécution |
+| SUCCEEDED / FAILED / CANCELLED / ABANDONED | Retourner l'état terminal sans nouvelle exécution |
 
 Le journal distingue l'intention d'appel, le reçu retourné et la validation.
 Une intention persistée peut précéder un appel qui n'a jamais démarré. Le choix
 conservateur est de demander une revue dans cette fenêtre aussi. Après un arrêt
-brutal du parent, un exécutant enfant peut subsister : avant une réconciliation
-`no-effect`, confirmer son arrêt et les effets. Aucune promesse exactly-once.
+brutal du parent, un exécutant enfant peut subsister. Il prend un verrou propre
+à l'appel/tentative avant son signal « prêt ». Le parent persiste
+`WORKER_SPAWNED` (PID, horodatage), puis donne le signal d'exécution. Sans ce
+signal, la fermeture du tube empêche l'appel. `no-effect` et `observed-result`
+prennent le même verrou, sans attente, jusqu'à l'enregistrement de la décision ;
+un enfant vivant qui détient ce verrou empêche donc la reprise. PID et horodatage
+servent au diagnostic, pas à une autorisation susceptible de réutilisation de PID.
+Les anciens appels sans `worker_protocol=lease-v1` ne peuvent pas activer de
+reprise ; `abandon` permet leur clôture honnête. Aucune promesse exactly-once.
 
 Après un délai/annulation pendant l'outil, Core arrête son processus enfant et
 conserve REVIEW_REQUIRED ; un arrêt local ne démontre pas l'absence d'effet chez
 un futur service distant. Le runtime ne fournit aucun outil externe dans v0.1.
 L'annulation n'est ni un rollback ni une suppression des preuves déjà obtenues.
+
+Le worker produit un reçu JSON atomique dans un dossier temporaire privé :
+fichier complet puis renommage, sans gros message bloquant sur un tube. Le parent
+le lit aussi après arrêt/jonction sur délai ou annulation. S'il existe, il devient
+`late_receipt` avec empreinte, conservé en revue sans valoir résultat vérifié.
+Ce fichier de transit n'est pas une preuve durable tant que SQLite n'a pas
+enregistré le reçu ; une mort du parent peut laisser un dossier temporaire et un
+effet inconnu. Pas de récupération automatique de ces fichiers ni de garantie
+de résistance à une coupure électrique.
+
+Une exception inattendue recharge l'état durable, journalise `INTERNAL_ERROR`
+et bloque ; si la phase persistée est EXECUTING, elle exige une revue. Si le
+stockage lui-même reste indisponible, cette journalisation ne peut être garantie
+et l'erreur remonte. KeyboardInterrupt/SIGKILL ne sont pas convertis en succès.
+Une panne/délai du fournisseur modèle reste reprenable ; une sortie invalide
+est un échec terminal distinct. `abandon` clôt l'orchestration sans nier l'effet
+inconnu et sans promettre d'arrêter un exécutant survivant.
+
+Les preuves finales référencent les appels et leurs empreintes, sans copier les
+sorties. La limite de 1 Mo porte sur chaque reçu, pas sur leur liste cumulée.
+Les cinq sorties restent dans le snapshot de mission SQLite (au plus environ
+5 Mo hors contexte/métadonnées) ; externaliser les médias en objets adressés par
+empreinte reste un chantier ultérieur, pas une fonctionnalité livrée.
 
 ## Mémoire et vérité
 
@@ -98,6 +129,9 @@ Un futur modèle généraliste demandera des critères d'acceptation métier dis
 
 - Linux/POSIX, écrivains coopératifs, stockage local ; pas de validation NFS,
   Windows natif, coupure électrique ou corruption/adversaire modifiant SQLite.
+  Ne pas déplacer/copier l'état actif ni supprimer ses fichiers de verrou pendant
+  une exécution : l'exclusion repose sur les mêmes fichiers locaux. Un verrou
+  libéré n'atteste pas l'absence d'effet distant ou d'un processus descendant.
 - Fournisseurs Python de confiance ; isolation de processus sans sandbox OS,
   quota mémoire/CPU ou cloisonnement réseau. Les bornes limitent les réponses
   JSON et les durées, pas tous les coûts internes d'un fournisseur malveillant.

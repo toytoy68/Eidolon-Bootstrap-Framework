@@ -1,0 +1,77 @@
+Python 3.12.14 | linux
+
+[P1-a nombre non fini écrit 1e999 dans la sortie modèle]
+  run 1: EXCEPTION NON GÉRÉE ValueError: Out of range float values are not JSON compliant: inf
+  état persisté : {"status": "RUNNING", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": null}
+  run 2 (reprise): EXCEPTION NON GÉRÉE ValueError: Out of range float values are not JSON compliant: inf
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'RESUMED']
+  cancel: retour normal -> {"status": "CANCELLED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "CANCELLED", "message": "cancellation requested"}}
+
+[P1-b substitut UTF-16 isolé (\ud800) dans un identifiant d'étape]
+  run 1: EXCEPTION NON GÉRÉE UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 1225: surrogates not allowed
+  état persisté : {"status": "RUNNING", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": null}
+  run 2 (reprise): EXCEPTION NON GÉRÉE UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 1225: surrogates not allowed
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'RESUMED']
+  cancel: retour normal -> {"status": "CANCELLED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "CANCELLED", "message": "cancellation requested"}}
+
+[P1-c imbrication profonde des paramètres]
+  profondeur 200: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 990: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 5000: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 31000: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "invalid model JSON"}}
+
+[P2-a deux sorties d'outil de 600 ko, chacune sous la borne de 1 Mo, toutes vérifiées]
+  run 1: EXCEPTION NON GÉRÉE ContractError: JSON exceeds 1 MB
+  état persisté : {"status": "RUNNING", "phase": "READY", "progress": {"completed": 2, "total": 2}, "error": null} | appels : ['VERIFIED', 'VERIFIED']
+  run 2 (reprise): EXCEPTION NON GÉRÉE ContractError: JSON exceeds 1 MB
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'PLAN_SAVED', 'CALL_STARTED', 'RESULT_SAVED', 'RESULT_VERIFIED', 'CALL_STARTED', 'RESULT_SAVED', 'RESULT_VERIFIED', 'RESUMED']
+  cancel: retour normal -> {"status": "CANCELLED", "phase": "READY", "progress": {"completed": 2, "total": 2}, "error": {"code": "CANCELLED", "message": "cancellation requested"}}
+
+[P2-b sortie d'une mission REVIEW_REQUIRED sans affirmer « sans effet »]
+  run (outil qui lève une exception): retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  cancel: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  run après cancel: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  reconcile --decision abandon: refus -> unknown reconciliation decision
+  reconcile --decision effect-unknown: refus -> unknown reconciliation decision
+  run après no-effect (annulation déjà demandée): retour normal -> {"status": "CANCELLED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested"}}
+
+[P2-c délai modèle : état terminal, contrairement au délai mémoire]
+Process SpawnProcess-3:
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/worker.py", line 33, in _child
+    sender.send_bytes(encoded)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/connection.py", line 200, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/connection.py", line 427, in _send_bytes
+    self._send(header + buf)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/connection.py", line 384, in _send
+    n = write(self._handle, buf)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+  run: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "call deadline exceeded"}}
+  run avec le modèle rétabli: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "call deadline exceeded"}}
+
+[P2-d parent tué pendant l'appel : l'enfant continue et produit son effet]
+  parent tué (SIGKILL), marqueur présent tout de suite : False
+  run de reprise: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  réconciliation no-effect acceptée ; marqueur présent à cet instant : False
+  3 s plus tard, marqueur présent : True | effet produit par pid 36
+  détail journalisé de CALL_STARTED : [{"attempt": 1, "call_id": "m-3189cfbbb5cd4e018c3d671416e2c8c3/stats-1", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "status": "RUNNING"}]
+
+[P3-a plan valide qui ne couvre pas l'objectif]
+  1 extrait sur 2: SUCCEEDED {'completed': 1, 'total': 1} | résumé : Statistiques vérifiées sur les extraits conservés.
+  même extrait répété 5 fois: SUCCEEDED {'completed': 5, 'total': 5} | résumé : Statistiques vérifiées sur les extraits conservés.
+  demande sans rapport: SUCCEEDED {'completed': 1, 'total': 1} | résumé : Statistiques vérifiées sur les extraits conservés.
+
+[P3-b codes de diagnostic]
+  mémoire vide : {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "plan needs one to five steps"}}
+  outil refusé : {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "POLICY_DENIED: shell"}}
+  même mission, politique élargie : {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CONFIGURATION_CHANGED", "message": "restore the mission configuration or create a new mission"}}
+  annulation à la frontière du succès : {"status": "CANCELLED", "phase": "DONE", "progress": {"completed": 1, "total": 1}, "error": null} | dernier événement : CANCELLED
+
+[P3-c coût du sondage d'annulation pendant un appel]
+  220 lectures SQLite complètes de la mission en 2.25 s (une connexion ouverte par lecture)

@@ -21,8 +21,13 @@ class ContractError(ValueError):
 
 
 def encode(value):
-    return json.dumps(value, ensure_ascii=False, sort_keys=True,
-                      separators=(",", ":"), allow_nan=False)
+    try:
+        raw = json.dumps(value, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":"), allow_nan=False)
+        raw.encode("utf-8")  # Reject unpaired surrogates before any persistence.
+        return raw
+    except (TypeError, ValueError, RecursionError) as exc:
+        raise ContractError("value is not finite UTF-8 JSON") from exc
 
 
 def snapshot(value):
@@ -73,7 +78,13 @@ def validate_context(value):
 
 
 def parse_plan(raw):
-    if not isinstance(raw, str) or len(raw.encode("utf-8")) > 64_000:
+    if not isinstance(raw, str):
+        raise ContractError("model output must be bounded JSON text")
+    try:
+        size = len(raw.encode("utf-8"))
+    except UnicodeError as exc:
+        raise ContractError("model output must be UTF-8 text") from exc
+    if size > 64_000:
         raise ContractError("model output must be bounded JSON text")
 
     def unique(pairs):
@@ -108,7 +119,9 @@ def parse_plan(raw):
         if not isinstance(step["parameters"], dict):
             raise ContractError("parameters must be an object")
         ids.add(step["id"])
-    return plan
+    # json.loads accepts exponent overflow (1e999) and escaped lone surrogates.
+    # Validate the full decoded object, including nested parameters.
+    return snapshot(plan)
 
 
 class Model(Protocol):

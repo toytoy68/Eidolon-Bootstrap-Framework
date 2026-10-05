@@ -71,7 +71,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core -v
+PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -79,6 +79,10 @@ délais mémoire/modèle/outil/vérification, sortie fausse, annulation, concurr
 processus interrompu et reprise sont couverts. Les scénarios d'interruption
 utilisent `os._exit` dans un processus distinct, avant/après l'appel et autour
 de l'enregistrement/vérification du reçu. Ils ne simulent pas une coupure disque.
+Les régressions de la revue Claude couvrent aussi les nombres débordants et
+substituts Unicode isolés, cinq sorties de 600 ko, l'enfant orphelin après
+SIGKILL du parent et un reçu déjà écrit lors de l'annulation/du délai.
+Voir le [bilan des corrections C-REV-001](docs/REVIEW-FIXES-2026-10-05.md).
 
 ## Intégration optionnelle avec le vrai Memory Engine
 
@@ -137,14 +141,42 @@ l'outil, avec une origine `human_reconciliation` explicite. Une simple affirmati
 La réconciliation ne lance aucun outil ; `run` est une étape distincte.
 Une annulation déjà demandée reste active après réconciliation.
 
+Le processus outil détient maintenant un verrou pendant son exécution.
+`no-effect` et `observed-result` sont refusés tant que ce verrou est occupé.
+PID et date sont journalisés pour diagnostic ; le contrôle utilise le verrou,
+pas le PID. Cela ne prouve pas l'absence d'effet distant ou d'un descendant.
+Les appels anciens sans protocole de verrou ne peuvent pas autoriser une reprise.
+
+Pour clore une mission sans prétendre connaître l'effet :
+
+```sh
+PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo reconcile m-ID \
+  --decision abandon --actor toytoy --reason 'Effet impossible à déterminer'
+```
+
+L'état terminal `ABANDONED` conserve `EFFECT_UNKNOWN`, les reçus disponibles
+et l'historique. Il n'interrompt pas un éventuel exécutant orphelin et n'autorise
+aucun nouvel appel. Cette clôture reste possible sans la configuration d'origine.
+Un reçu tardif figure dans `calls[].late_receipt` et exige une inspection :
+`observed-result` le soumet à vérification ; `abandon` clôt sans le valider.
+`no-effect` ne permet pas d'effacer un reçu présent pour relancer l'outil.
+
 La configuration de reprise doit correspondre à celle de création (modèle,
 mémoire/racine, politique, versions outils/vérificateurs, délai). Utiliser les
 mêmes options CLI ; sinon le système bloque. Un reçu présent est revérifié
 sans refaire l'appel. Les missions FAILED sont terminales : nouvelle mission
 après diagnostic. Les propositions bloquées n'expirent jamais automatiquement.
+Un délai ou une panne du modèle produit désormais `BLOCKED/MODEL_UNAVAILABLE`,
+reprenable explicitement avec la même configuration. Un plan invalide reste
+`FAILED/MODEL_INVALID`.
+
+`result.evidence` contient des références compactes : identifiant d'appel,
+tentative, empreinte de sortie et vérificateur. Les sorties complètes restent
+dans `calls[].output`, sans duplication dans le résultat final. Chaque reçu
+reste borné à 1 Mo ; au plus cinq appels par plan.
 
 Codes CLI : 0 succès de commande (`show/create/reconcile`) ou mission réussie ;
-2 bloqué/revue/erreur d'entrée ; 3 mission échouée ; 4 annulée ; 130 interruption.
+2 bloqué/revue/erreur d'entrée ; 3 mission échouée ; 4 annulée/abandonnée ; 130 interruption.
 `cancel` pendant un appel actif persiste la demande ; `show` expose sa progression.
 Le délai `--timeout` est **par appel**, démarrage du processus compris, 10 s par
 défaut. Ce n'est pas encore un budget global de mission.

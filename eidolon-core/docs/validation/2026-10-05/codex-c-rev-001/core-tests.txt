@@ -1,0 +1,39 @@
+test_allowlist_does_not_permit_external_effects (tests.test_core.CoreTests.test_allowlist_does_not_permit_external_effects) ... ok
+test_bad_result_is_not_a_success (tests.test_core.CoreTests.test_bad_result_is_not_a_success) ... ok
+test_blocked_proposal_does_not_expire (tests.test_core.CoreTests.test_blocked_proposal_does_not_expire) ... ok
+test_cancel_before_execution (tests.test_core.CoreTests.test_cancel_before_execution) ... ok
+test_cancel_between_steps_preserves_proof_and_stops_next_tool (tests.test_core.CoreTests.test_cancel_between_steps_preserves_proof_and_stops_next_tool) ... ok
+test_cancel_during_tool_requires_review_and_never_retries (tests.test_core.CoreTests.test_cancel_during_tool_requires_review_and_never_retries) ... ok
+test_cancellation_success_race_is_closed_transactionally (tests.test_core.CoreTests.test_cancellation_success_race_is_closed_transactionally) ... ok
+test_cli_demo_and_durable_show (tests.test_core.CoreTests.test_cli_demo_and_durable_show) ... ok
+test_competing_runner_is_rejected_but_cancel_request_persists (tests.test_core.CoreTests.test_competing_runner_is_rejected_but_cancel_request_persists) ... ok
+test_complete_mission_preserves_sources_and_verified_evidence (tests.test_core.CoreTests.test_complete_mission_preserves_sources_and_verified_evidence) ... ok
+test_configuration_change_blocks_execution (tests.test_core.CoreTests.test_configuration_change_blocks_execution) ... ok
+test_crash_after_receipt_reverifies_without_reexecution (tests.test_core.CoreTests.test_crash_after_receipt_reverifies_without_reexecution) ... ok
+test_crash_with_unknown_effect_never_replays (tests.test_core.CoreTests.test_crash_with_unknown_effect_never_replays) ... ok
+test_empty_memory_does_not_imply_success (tests.test_core.CoreTests.test_empty_memory_does_not_imply_success) ... ok
+test_entire_plan_preflight_prevents_partial_execution (tests.test_core.CoreTests.test_entire_plan_preflight_prevents_partial_execution) ... ok
+test_human_result_must_still_verify_and_does_not_confirm_source (tests.test_core.CoreTests.test_human_result_must_still_verify_and_does_not_confirm_source) ... ok
+test_injection_in_memory_remains_inert_text (tests.test_core.CoreTests.test_injection_in_memory_remains_inert_text) ... ok
+test_invalid_parameters_never_execute (tests.test_core.CoreTests.test_invalid_parameters_never_execute) ... ok
+test_malformed_or_claimed_success_never_succeeds (tests.test_core.CoreTests.test_malformed_or_claimed_success_never_succeeds) ... ok
+test_memory_missing_reference_or_uncertainty_is_rejected (tests.test_core.CoreTests.test_memory_missing_reference_or_uncertainty_is_rejected) ... ok
+test_memory_outage_can_resume_without_changing_identity (tests.test_core.CoreTests.test_memory_outage_can_resume_without_changing_identity) ... ok
+test_memory_timeout_is_bounded_and_blocks (tests.test_core.CoreTests.test_memory_timeout_is_bounded_and_blocks) ... ok
+test_model_timeout_never_executes_a_tool (tests.test_core.CoreTests.test_model_timeout_never_executes_a_tool) ... ok
+test_multiple_steps_progress (tests.test_core.CoreTests.test_multiple_steps_progress) ... ok
+test_no_automatic_expiration_on_show_or_resume (tests.test_core.CoreTests.test_no_automatic_expiration_on_show_or_resume) ... ok
+test_no_effect_reconciliation_is_audited_and_retry_explicit (tests.test_core.CoreTests.test_no_effect_reconciliation_is_audited_and_retry_explicit) ... ok
+test_policy_denial_independent_of_model (tests.test_core.CoreTests.test_policy_denial_independent_of_model) ... ok
+test_process_crashes_before_tools_resume_safely (tests.test_core.CoreTests.test_process_crashes_before_tools_resume_safely) ... ok
+test_store_rejects_stale_snapshot_and_unproved_success (tests.test_core.CoreTests.test_store_rejects_stale_snapshot_and_unproved_success) ... ok
+test_tool_timeout_requires_reconciliation (tests.test_core.CoreTests.test_tool_timeout_requires_reconciliation) ... ok
+test_unknown_tool_denied (tests.test_core.CoreTests.test_unknown_tool_denied) ... ok
+test_unspawnable_tool_is_diagnosed_without_unhandled_exception (tests.test_core.CoreTests.test_unspawnable_tool_is_diagnosed_without_unhandled_exception) ... ok
+test_verification_timeout_keeps_receipt_without_success (tests.test_core.CoreTests.test_verification_timeout_keeps_receipt_without_success) ... ok
+test_worker_loss_requires_reconciliation (tests.test_core.CoreTests.test_worker_loss_requires_reconciliation) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 16.440s
+
+OK

@@ -60,9 +60,9 @@ def render_result(result):
     label = {"NEW": "Mission créée", "RUNNING": "Mission en cours",
              "BLOCKED": "Mission bloquée", "REVIEW_REQUIRED": "Réconciliation requise",
              "SUCCEEDED": "Mission réussie", "FAILED": "Mission échouée",
-             "CANCELLED": "Mission annulée"}[status]
+             "CANCELLED": "Mission annulée", "ABANDONED": "Mission abandonnée — effet inconnu"}[status]
     level = {"SUCCEEDED": "OK", "FAILED": "ERREUR", "BLOCKED": "ATTENTION",
-             "REVIEW_REQUIRED": "ATTENTION", "CANCELLED": "ATTENTION"}.get(status, "INFO")
+             "REVIEW_REQUIRED": "ATTENTION", "CANCELLED": "ATTENTION", "ABANDONED": "ATTENTION"}.get(status, "INFO")
     progress = result["progress"]
     lines = [header(), f"Mission            : {safe_text(result['id'])}",
              f"Demande            : {safe_text(result['request'])}",
