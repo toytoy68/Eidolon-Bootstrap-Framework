@@ -1,0 +1,28 @@
+test_blocked_pages_do_not_become_successful_sources (tests.test_research.ResearchTests.test_blocked_pages_do_not_become_successful_sources) ... ok
+test_cache_capacity_evicts_oldest (tests.test_research.ResearchTests.test_cache_capacity_evicts_oldest) ... ok
+test_cache_reuse_expiry_and_output_isolation (tests.test_research.ResearchTests.test_cache_reuse_expiry_and_output_isolation) ... ok
+test_cached_redirect_final_destination_rechecked (tests.test_research.ResearchTests.test_cached_redirect_final_destination_rechecked) ... ok
+test_cancel_before_search_and_after_receipt (tests.test_research.ResearchTests.test_cancel_before_search_and_after_receipt) ... ok
+test_changed_policy_or_dns_cannot_disclose_cached_page (tests.test_research.ResearchTests.test_changed_policy_or_dns_cannot_disclose_cached_page) ... ok
+test_cooldown_skips_domain_until_elapsed_without_sleep (tests.test_research.ResearchTests.test_cooldown_skips_domain_until_elapsed_without_sleep) ... ok
+test_deadline_after_read_keeps_receipt_without_claiming_target_success (tests.test_research.ResearchTests.test_deadline_after_read_keeps_receipt_without_claiming_target_success) ... ok
+test_denied_destination_never_reaches_reader (tests.test_research.ResearchTests.test_denied_destination_never_reaches_reader) ... ok
+test_empty_and_failed_provider_are_distinct (tests.test_research.ResearchTests.test_empty_and_failed_provider_are_distinct) ... ok
+test_fallback_and_receipt_not_snippet (tests.test_research.ResearchTests.test_fallback_and_receipt_not_snippet) ... ok
+test_final_policy_and_reader_fingerprint_checked (tests.test_research.ResearchTests.test_final_policy_and_reader_fingerprint_checked) ... ok
+test_http_200_challenge_login_and_legitimate_captcha_article (tests.test_research.ResearchTests.test_http_200_challenge_login_and_legitimate_captcha_article) ... ok
+test_huge_provider_iterator_is_bounded (tests.test_research.ResearchTests.test_huge_provider_iterator_is_bounded) ... ok
+test_limits_inputs_and_body_bounds (tests.test_research.ResearchTests.test_limits_inputs_and_body_bounds) ... ok
+test_malformed_provider_batch_rejected_before_reader (tests.test_research.ResearchTests.test_malformed_provider_batch_rejected_before_reader) ... ok
+test_mislabeled_html_challenge_is_not_plain_text_evidence (tests.test_research.ResearchTests.test_mislabeled_html_challenge_is_not_plain_text_evidence) ... ok
+test_no_network_when_providers_are_synthetic (tests.test_research.ResearchTests.test_no_network_when_providers_are_synthetic) ... ok
+test_partial_sources_preserved (tests.test_research.ResearchTests.test_partial_sources_preserved) ... ok
+test_read_and_provider_budgets (tests.test_research.ResearchTests.test_read_and_provider_budgets) ... ok
+test_redirects_to_same_final_are_not_independent_pages (tests.test_research.ResearchTests.test_redirects_to_same_final_are_not_independent_pages) ... ok
+test_same_url_from_two_providers_is_one_source (tests.test_research.ResearchTests.test_same_url_from_two_providers_is_one_source) ... ok
+test_snippets_alone_do_not_meet_read_target (tests.test_research.ResearchTests.test_snippets_alone_do_not_meet_read_target) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.014s
+
+OK

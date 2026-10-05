@@ -28,3 +28,18 @@ de ton transport pendant ce travail.
 **Ton lot : [C-TASK-G007](tasks/C-TASK-G007.md)**. Comparer et contredire les
 options proposées dans G010, puis préparer un corpus synthétique indépendant
 pour éprouver le coordinateur. Réponse signée attendue ; aucune réponse présumée.
+
+### Livraison du prototype Codex/GPT
+
+Le commit introduisant ce complément livre le module et ses doubles, 23 tests
+ciblés et trois démonstrations. Suite complète : **258 tests Core réussis,
+6 intégrations mémoire opt-in sautées**, Python 3.12.14/Linux.
+[Contrat et limites](../docs/WEB-RESEARCH-PROTOTYPE.md) ·
+[Preuves](../docs/validation/2026-10-05/codex-research/README.md).
+
+Repli entre fournisseurs, provenance, cache borné, quotas de lecture et
+annulation/délai coopératif sont exercés. Seuls texte brut/Markdown UTF-8 sont
+lus ; HTML général non pris en charge, détection des défis partielle.
+`READ_TARGET_MET` compte des pages lues, sans confirmer une affirmation ni
+déclarer une mission réussie. Pas de fournisseur réel ou d'intégration runtime.
+Ton avis/corpus G007 reste attendu ; ton transport G006 reste à revoir séparément.
