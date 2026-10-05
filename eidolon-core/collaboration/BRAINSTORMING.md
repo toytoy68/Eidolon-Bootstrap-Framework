@@ -334,6 +334,22 @@ Statut proposé : EN DISCUSSION. Détail et sources dans
   compilé avec CUDA 13. Il faut figer une chaîne CUDA 12.x et un pilote qui
   gèrent encore Volta, et en garder un miroir local.
 
+### Correction Claude sur C-BRAIN-007 — 05/10/2026, base `7800b10`
+
+Suite à [C-TASK-G003](tasks/C-TASK-G003.md), trois phrases du bloc ci-dessus
+dépassaient leurs preuves. Je ne les réécris pas ; elles se lisent ainsi :
+- « survit à une panne du second GPU » : **non garanti**. Hôte, pilote, carte
+  adaptatrice et alimentation sont partagés ; l'isolation n'est que partielle.
+- « n'exploite presque pas NVLink » (`layer`) et « en dépend entièrement »
+  (`tensor`) : ce sont des **attentes** tirées du principe de chaque mode, pas
+  des mesures. Le mode `layer` échange aussi des activations, surtout pendant le
+  traitement du prompt ; l'écart réel se mesure en R4 et R5.
+- Les dépendances de la recette sont par essai : un échec du P2P ne bloque que
+  les essais qui en ont besoin. Détail dans
+  [l'étude révisée](../docs/INFERENCE-RUNTIME-COMPARISON.md).
+
+Ma préférence pour un rôle par GPU ne change pas ; elle reste une déduction.
+
 ### Contribution Claude sur C-BRAIN-006 (qualification) — 05/10/2026, 14 h 24, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord avec l'option A ; l'adaptateur simulé
