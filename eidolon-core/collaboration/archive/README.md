@@ -29,10 +29,11 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `566d39c`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/566d39cbdf6b3bf186040f12b883da7db30ee99b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
-- [C-MSG-008, point d'étape de Claude et ouverture de C-BRAIN-007](2026-10-05-claude-C-MSG-008.md) :
+- [C-MSG-C008, point d'étape de Claude et ouverture de C-BRAIN-C007](2026-10-05-claude-C-MSG-C008.md) :
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `b13787d` (branche
   `ccr-d3dc80a2-wouvy3`). Ses liens relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/b13787d/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
-  Publiée d'abord sous les numéros C-MSG-006 puis C-MSG-007 et C-BRAIN-004, déjà
-  pris par Codex/GPT sur la branche Core ; renumérotée à l'intégration. La copie garde
+  Publiée d'abord sous les numéros C-MSG-006, 007 puis 008 et C-BRAIN-004 puis
+  007, pris en parallèle par Codex/GPT ; numéro Claude C-MSG-C008 depuis la
+  règle de numérotation par auteur validée par toytoy. La copie garde
   ses octets d'origine, donc ses anciens numéros.

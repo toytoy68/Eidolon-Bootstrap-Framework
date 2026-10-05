@@ -59,6 +59,19 @@ Différencier lecture du code, tests réellement exécutés par l'auteur et rés
 rapportés. Un accord entre deux modèles ne remplace pas un test ou une décision
 utilisateur nécessaire. Ne pas inventer une réponse absente.
 
+## Numérotation par auteur
+
+Décision de toytoy, 05/10/2026 vers 14 h 30 (Europe/Paris), en réponse à la
+proposition de Claude dans C-MSG-C009 : « Ok pour moi ». Les deux auteurs
+publient sur des branches différentes et leurs numéros se sont croisés quatre
+fois. Désormais, chaque identifiant nouveau porte la lettre de son auteur :
+`G` pour Codex/GPT (`C-MSG-G010`, `C-BRAIN-G008`), `C` pour Claude
+(`C-MSG-C010`, `C-BRAIN-C008`). Les identifiants déjà publiés par Codex/GPT
+restent inchangés. Les éléments Claude publiés pendant les collisions portent
+déjà leur forme `C` : C-MSG-C008, C-MSG-C009, C-BRAIN-C007. Le nombre suit le
+plus grand numéro connu, toutes lettres confondues ; deux auteurs peuvent donc
+avoir le même nombre sans collision.
+
 ## Brainstorming et décisions
 
 Pour chaque idée : besoin, options, compromis, essai discriminant et statut.

@@ -64,7 +64,7 @@ les premières missions sur documents. L'implémentation/protocole restent à fa
 
 **C-D07 — `SUCCEEDED` signifie « mission atteinte ».** Décision de toytoy,
 05/10/2026 vers 14 h 10 (Europe/Paris), en réponse à la question Q1 de
-[C-BRAIN-007](../collaboration/BRAINSTORMING.md#c-brain-007--forme-minimale-du-contrat-de-mission-c-001)
+[C-BRAIN-C007](../collaboration/BRAINSTORMING.md#c-brain-c007--forme-minimale-du-contrat-de-mission-c-001)
 transmise par Claude : « Oui pour Q1, garde SUCCEEDED pour mission atteinte ».
 Une mission dont l'exécution s'est terminée sans atteindre son objectif (issue
 non atteinte, partielle ou sans preuve) ne finit jamais en `SUCCEEDED` ; elle
@@ -211,3 +211,15 @@ feuille de route actualisée. Aucun code d'accès réseau, API distante, modèle
 nouvelle autorisation d'exécution ou outil de redémarrage livré dans ce lot.
 Contrôles : source copiée à l'identique, liens et diff documentaire vérifiés.
 Les précédentes preuves logicielles restent datées de leurs propres exécutions.
+
+## Complément matériel — instruction toytoy du 05/10 à 14 h 23, Europe/Paris
+
+Matériel prévu : **2 × NVIDIA V100 32 Go avec NVLink**. Réviser le recours à
+Ollama en fonction de cette cible. Ceci fixe un objectif de qualification, pas
+une machine déjà installée ou testée, ni un modèle contrôleur retenu. Les références
+exactes des cartes, l'interconnexion et la répartition hôte/VM restent à relever.
+[Note d'inférence et tâche Claude révisée](INFERENCE-2XV100-2026-10-05.md).
+
+Précision toytoy du même jour à 14 h 28 : **deux modules SXM2 montés sur une carte
+adaptatrice PCIe, lien NVLink sur le PCB**. Le format est donc renseigné ; restent
+la référence/révision de l'adaptateur et la topologie constatée lors de la recette.
