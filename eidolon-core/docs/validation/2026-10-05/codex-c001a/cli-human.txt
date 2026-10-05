@@ -41,4 +41,3 @@ Sources et réserves
 Prochaine étape
 =========================================================
 [INFO] Inspection détaillée : show m-7291908cf2ba49b6a4849ac35979d4aa --events (avec les mêmes options --state).
-
