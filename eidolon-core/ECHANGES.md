@@ -141,3 +141,9 @@ Toytoy précise le matériel prévu : **2 × V100 32 Go avec NVLink**. C-CLAUDE-
 révisé : comparaison des moteurs et répartition GPU avant adaptateur candidat.
 Ollama reste une option ; aucune validation matérielle. C-BRAIN-007 ouvert.
 [Contraintes, sources officielles et recette différée](docs/INFERENCE-2XV100-2026-10-05.md).
+
+### C-MSG-009 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Précision toytoy à 14 h 28 : V100 **SXM2**, sur carte adaptatrice PCIe avec NVLink
+sur PCB. Fiche Claude, note matérielle et cadrage actualisés. Le format n'est
+plus une inconnue ; modèle de carte et topologie réelle restent à qualifier.

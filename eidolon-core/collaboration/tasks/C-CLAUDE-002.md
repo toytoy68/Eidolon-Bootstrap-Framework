@@ -20,8 +20,10 @@ Volta/compute 7.0 est démontré pour une version précise. vLLM actuel annonce 
 Distinguer GPU détecté, kernels/quantification compatibles, modèle effectivement
 réparti et avantage NVLink mesuré. Identifier version du moteur, CUDA/driver,
 format de poids, précision/cache, budget VRAM par GPU, contexte et parallélisme.
-Le nom V100 ne fixe pas à lui seul PCIe/SXM2, interconnexion réelle, hôte/VM ou
-passthrough : noter ces inconnues sans les inventer et sans bloquer le rapport.
+Précision de toytoy à 14 h 28 : **deux modules SXM2 sur carte adaptatrice PCIe,
+NVLink câblé sur son PCB**. Analyser cette architecture, pas deux cartes V100 PCIe
+standard. Référence/révision de l'adaptateur, liens effectivement câblés, exposition
+hôte/VM et passthrough restent à relever sans les inventer ni bloquer le rapport.
 
 Proposer une recette comparative ultérieure : un modèle sur un GPU ; un même
 modèle partagé sur deux ; deux rôles indépendants avec un GPU chacun. Mesurer

@@ -130,7 +130,8 @@ explicités avant activation ; les accès réels ne sont pas supposés disponibl
 - [ ] Arrêt/reboot du runtime et diagnostic des éventuels enfants survivants.
 - [ ] Persistance/permissions/stockage physique et essai contrôlé de coupure.
 - [ ] Matériel prévu : 2 × V100 32 Go + NVLink selon toytoy. Vérifier références
-  exactes PCIe/SXM2, topologie et visibilité hôte/VM ; comparer un GPU, partage
+  exactes des modules SXM2 et de leur carte adaptatrice PCIe (NVLink sur PCB
+  selon toytoy), topologie et visibilité hôte/VM ; comparer un GPU, partage
   sur deux et rôles séparés. [Note](docs/INFERENCE-2XV100-2026-10-05.md).
 - [ ] Modèle/GPU réel, latence, consommation, contexte utile et qualification.
 - [ ] Corpus utilisateur seulement après choix/autorisation et copie isolée.

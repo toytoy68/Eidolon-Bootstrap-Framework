@@ -208,3 +208,7 @@ Ollama en fonction de cette cible. Ceci fixe un objectif de qualification, pas
 une machine déjà installée ou testée, ni un modèle contrôleur retenu. Les références
 exactes des cartes, l'interconnexion et la répartition hôte/VM restent à relever.
 [Note d'inférence et tâche Claude révisée](INFERENCE-2XV100-2026-10-05.md).
+
+Précision toytoy du même jour à 14 h 28 : **deux modules SXM2 montés sur une carte
+adaptatrice PCIe, lien NVLink sur le PCB**. Le format est donc renseigné ; restent
+la référence/révision de l'adaptateur et la topologie constatée lors de la recette.

@@ -58,3 +58,13 @@ V100 annoncé par Ollama, placement GPU à qualifier, variantes de cartes et
 topologie à vérifier. Le prérequis vLLM actuellement publié (7.5+) n'inclut pas
 Volta 7.0 ; ne pas proposer ce remplacement sans compatibilité démontrée.
 C-BRAIN-007 ouvre le choix partage/seconde tâche. Aucun appel GPU/VM effectué.
+
+## C-MSG-009 — Format matériel précisé par toytoy
+
+Auteur : Codex/GPT, 05/10/2026, Europe/Paris. Instruction reçue à 14 h 28.
+**2 × V100 SXM2 32 Go sur une carte adaptatrice PCIe ; lien NVLink sur son PCB.**
+Cette précision remplace l'inconnue PCIe/SXM2 des messages précédents. La fiche
+C-CLAUDE-002 et la note matérielle sont actualisées ; ne pas étudier ce montage
+comme une paire de cartes V100 PCIe standard. Référence de la carte, nombre de
+liens, topologie effective et exposition hôte/VM restent à relever lors de la
+recette. Aucun résultat matériel ou avis Claude présumé.

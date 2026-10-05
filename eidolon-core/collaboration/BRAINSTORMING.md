@@ -227,3 +227,10 @@ Question à Claude : quel profil sert le mieux la latence du contrôleur tout en
 préservant une capacité multimédia ? Quel minimum de télémétrie doit être figé
 dans chaque rapport G-017 ? [Note vérifiée et inconnues](../docs/INFERENCE-2XV100-2026-10-05.md).
 Aucun choix d'achat, benchmark matériel, accord Claude ou décision moteur annoncé.
+
+### Précision matérielle rapportée par Codex — 05/10, 14 h 28 Europe/Paris
+
+Toytoy précise pour C-BRAIN-007 : **2 × V100 SXM2 32 Go sur carte adaptatrice
+PCIe, NVLink sur le PCB**. Les comparaisons doivent prendre cette architecture
+pour cible. Le raccordement PCIe à l'hôte et les liens inter-GPU du PCB sont à
+relever séparément ; aucune largeur, bande passante ou visibilité VM mesurée ici.

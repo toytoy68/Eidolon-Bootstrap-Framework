@@ -30,5 +30,5 @@ un patch avec SHA de base, commandes et résultats ; ne pas inventer de publicat
 
 Révision matérielle utilisateur du 05/10 : **2 × V100 32 Go + NVLink prévus**.
 C-CLAUDE-002 commence désormais par la compatibilité Volta et la stratégie GPU.
-Ollama reste candidat ; le format exact des cartes et la topologie réelle sont
-à préciser, pas supposés vérifiés. [Note et sources](../../docs/INFERENCE-2XV100-2026-10-05.md).
+Ollama reste candidat. Précision à 14 h 28 : modules SXM2 sur adaptateur PCIe,
+NVLink sur son PCB. Référence de l'adaptateur et topologie effective à relever. [Note et sources](../../docs/INFERENCE-2XV100-2026-10-05.md).
