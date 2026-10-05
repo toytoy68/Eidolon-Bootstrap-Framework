@@ -10,6 +10,7 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 | Module | Contrat |
 | --- | --- |
 | `contracts` | JSON borné, références et réserves mémoire, plan strict v1 |
+| `objectives` | Catalogue restreint hors modèle, liaison au rappel et couverture des preuves |
 | `model` | `Model.propose(request, context) -> str`, simulateur déterministe |
 | `memory` | `MemoryReader.recall(query) -> dict`, fixture ou délégation au vrai moteur |
 | `tools` | Registre de code de confiance, validateurs, politique fixe, vérificateurs |
@@ -41,6 +42,15 @@ le premier outil, puis recommence lors d'une reprise. La politique autorise
 uniquement les noms configurés **et** les outils déclarés sans effet. Le modèle
 ne peut pas modifier le registre ni cette politique. Les paramètres de
 `text.stats` contiennent uniquement une référence à l'extrait persisté.
+
+L'objectif est établi hors modèle dès la création : seul le texte exact de la
+mission synthétique est reconnu dans C-001a. Après rappel, le code fige toutes
+les références et l'empreinte du contexte. Le précontrôle exige exactement un
+appel text.stats par référence. L'[évaluateur de mission](MISSION-CONTRACT-C001A.md)
+recalcule `outcome` à chaque enregistrement à partir des preuves d'étapes ; le
+passage SUCCEEDED exige aussi ACHIEVED. L'objectif ne vient jamais du plan.
+Une mémoire vide bloque avant le modèle et peut être rappelée lors d'un `run`
+explicite. Ce catalogue n'est pas encore une compréhension générale de la demande.
 
 ## Persistance et reprise
 
@@ -149,8 +159,10 @@ Le vérificateur recalcule les statistiques des octets/du texte conservés ; une
 fausse sortie ne passe pas. L'empreinte lie la preuve à ce snapshot. Elle ne
 prouve ni l'actualité future de la source, ni la justesse de son interprétation,
 ni que la mission naturelle quelconque serait satisfaite par le plan choisi.
-La demande admissible du simulateur est précisément bornée à ce calcul.
-Un futur modèle généraliste demandera des critères d'acceptation métier distincts.
+La demande admissible est bornée par le code à ce calcul indépendamment du
+modèle. La couverture vérifiée concerne toutes les références du rappel conservé.
+Un futur modèle généraliste demandera d'autres types et critères d'acceptation ;
+C-001a ne qualifie pas les scénarios A–D complets.
 
 ## Limites assumées
 

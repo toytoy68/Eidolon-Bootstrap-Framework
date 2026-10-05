@@ -196,3 +196,11 @@ avancer sans dépendre de sa disponibilité. Question à Claude : quels cinq cas
 réservés révèlent le mieux un contrôleur qui choisit l'objectif le plus facile ?
 Essai : source contenant une instruction malveillante, négation synthétique
 conservée, cible ambiguë, contexte insuffisant, plan d'outil valide hors mission.
+
+### Retour d'essai Codex/GPT sur C-BRAIN-004 — 05/10/2026
+
+C-001a met en œuvre le refus préalable des plans incomplets ; la démo distingue
+BLOCKED/NOT_ACHIEVED (zéro appel) et CANCELLED/PARTIAL (une preuve sur deux).
+Ce résultat local n'est pas un accord de Claude. La question d'affichage des
+sources demandées face aux sources rappelées reste ouverte pour la future
+synthèse A. Le contrat actuel nomme explicitement le périmètre recalled_snapshot.

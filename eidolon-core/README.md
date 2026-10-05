@@ -23,6 +23,8 @@ PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo demo
 
 La sortie JSON contient un `id` stable `m-…`, `status: SUCCEEDED`, un plan,
 la progression, le reçu de l'outil, sa vérification et les sources complètes.
+Le contrat `objective` est fixé par le code ; `outcome.status: ACHIEVED` indique
+que chaque référence du rappel conservé possède un résultat vérifié.
 Le texte synthétique commence par « Ne pas acheter la V100 cette semaine. ».
 L'outil calcule nombre de caractères Unicode, nombre d'octets UTF-8 et SHA-256.
 Le code vérifie ces trois valeurs. Le statut de la source reste `UNVERIFIED`
@@ -38,8 +40,9 @@ PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo cancel m-ID
 
 Remplacer `m-ID` par l'identifiant complet renvoyé. `run` ne rejoue pas une
 mission terminée. `create` crée la mission de démonstration sans l'exécuter ;
-un texte peut être fourni, mais le modèle simulé refuse toute demande différente
-de la mission documentée. Ce n'est pas encore un assistant généraliste.
+un texte peut être fourni, mais le code bloque toute demande différente
+de la mission documentée (`MISSION_UNSUPPORTED`, issue `CLARIFICATION`) avant
+le rappel et le modèle. Ce n'est pas encore un assistant généraliste.
 
 Installation facultative dans un environnement Python :
 
@@ -71,7 +74,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review -v
+PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -85,6 +88,29 @@ SIGKILL du parent et un reçu déjà écrit lors de l'annulation/du délai.
 Voir le [bilan des corrections C-REV-001](docs/REVIEW-FIXES-2026-10-05.md).
 La [contre-revue C-REV-002](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) ajoute les
 tentatives avec erreur, l'orphelin terminé et la réutilisation d'un reçu conservé.
+
+## Contrat de mission et résultats partiels
+
+```sh
+PYTHONPATH=src:. python -m examples.objective_demo
+```
+
+Quatre missions synthétiques sont exécutées dans un état temporaire supprimé
+à la fin : couverture de deux sources, plan incomplet refusé sans outil,
+demande hors catalogue à clarifier, annulation après un résultat vérifié.
+La sortie JSON expose `outcome`, références manquantes et preuves. Pour un état
+persistant inspectable, utiliser la commande CLI `demo` ci-dessus.
+
+Un plan qui répète une référence ou oublie un extrait est refusé intégralement
+avant exécution. `PARTIAL` décrit des preuves réellement vérifiées avant un arrêt.
+Une mémoire vide produit `BLOCKED/MEMORY_EMPTY`, issue `NO_EVIDENCE`, sans appeler
+le modèle ; `run` peut retenter le rappel explicitement avec la même configuration.
+Cela ne signifie jamais que tout le corpus mémoire a été couvert.
+
+Les missions actives créées avant C-001a sans contrat sont bloquées pour examen ;
+les appels interrompus restent prioritaires et exigent une réconciliation.
+Les missions historiques terminales restent lisibles sans qualification rétroactive.
+Voir [contrat, limites et migration](docs/MISSION-CONTRACT-C001A.md).
 
 ## Intégration optionnelle avec le vrai Memory Engine
 

@@ -1,0 +1,174 @@
+{
+  "calls": [
+    {
+      "attempt": 1,
+      "context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095",
+      "id": "m-7291908cf2ba49b6a4849ac35979d4aa/stats-1",
+      "output": {
+        "characters": 70,
+        "sha256": "e1336e1ecbe9efd2e830d241a6476420e58a1a63dbb210ffc79c24236fe8d9cc",
+        "utf8_bytes": 72
+      },
+      "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+      "receipt_origin": "worker",
+      "status": "VERIFIED",
+      "step": {
+        "id": "stats-1",
+        "parameters": {
+          "reference": "synthetic-note@1"
+        },
+        "tool": "text.stats"
+      },
+      "tool_version": "1",
+      "verifier": "text-stats-recompute/1",
+      "worker": {
+        "pid": 10,
+        "protocol": "lease-v2",
+        "started_at": "2026-10-05T12:22:06.896948+00:00"
+      },
+      "worker_protocol": "lease-v2"
+    }
+  ],
+  "cancel_requested": false,
+  "configuration": {
+    "call_seconds": 10.0,
+    "memory": "synthetic-memory/1",
+    "memory_root": null,
+    "model": "deterministic-demo/1",
+    "policy": {
+      "allowed_effect": "none",
+      "allowed_tools": [
+        "text.stats"
+      ],
+      "id": "local-pure-only/1"
+    },
+    "tools": {
+      "text.stats": {
+        "effect": "none",
+        "verifier": "text-stats-recompute/1",
+        "version": "1"
+      }
+    }
+  },
+  "context": {
+    "excluded_counts": {},
+    "items": [
+      {
+        "applicability": "UNKNOWN",
+        "confidence": "LOW",
+        "content": "Ne pas acheter la V100 cette semaine. Ceci est une donnée synthétique.",
+        "epistemic_status": "UNVERIFIED",
+        "excerpt_reference": {
+          "end": 70,
+          "source": "fixture/1",
+          "start": 0
+        },
+        "information_id": "synthetic-note",
+        "needs_review": true,
+        "operational_state": "PLANNED",
+        "provenance": {
+          "kind": "original_source",
+          "source": "synthetic-fixture"
+        },
+        "relations": [],
+        "revision": 1,
+        "temporal": {},
+        "truncated": false,
+        "verification": {}
+      }
+    ],
+    "policy_version": "synthetic-memory/1",
+    "query": "Calculer les statistiques du texte synthétique de démonstration."
+  },
+  "created_at": "2026-10-05T12:22:06.479186+00:00",
+  "error": null,
+  "id": "m-7291908cf2ba49b6a4849ac35979d4aa",
+  "model_output": "{\"steps\":[{\"id\":\"stats-1\",\"parameters\":{\"reference\":\"synthetic-note@1\"},\"tool\":\"text.stats\"}],\"version\":1}",
+  "objective": {
+    "context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095",
+    "kind": "recalled_text_statistics",
+    "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6",
+    "required_references": [
+      "synthetic-note@1"
+    ],
+    "scope": "recalled_snapshot",
+    "tool": "text.stats",
+    "version": 1
+  },
+  "outcome": {
+    "code": "COVERAGE_VERIFIED",
+    "covered_references": [
+      "synthetic-note@1"
+    ],
+    "missing_references": [],
+    "scope": "recalled_snapshot",
+    "status": "ACHIEVED"
+  },
+  "phase": "DONE",
+  "plan": {
+    "steps": [
+      {
+        "id": "stats-1",
+        "parameters": {
+          "reference": "synthetic-note@1"
+        },
+        "tool": "text.stats"
+      }
+    ],
+    "version": 1
+  },
+  "progress": {
+    "completed": 1,
+    "total": 1
+  },
+  "request": "Calculer les statistiques du texte synthétique de démonstration.",
+  "result": {
+    "evidence": [
+      {
+        "attempt": 1,
+        "call_id": "m-7291908cf2ba49b6a4849ac35979d4aa/stats-1",
+        "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+        "receipt_origin": "worker",
+        "verifier": "text-stats-recompute/1"
+      }
+    ],
+    "limits": [
+      "Coverage is limited to the retained recall snapshot, not the whole memory corpus.",
+      "Text statistics do not confirm source truth or semantic completeness.",
+      "Source epistemic labels and review requirements remain unchanged."
+    ],
+    "sources": {
+      "excluded_counts": {},
+      "items": [
+        {
+          "applicability": "UNKNOWN",
+          "confidence": "LOW",
+          "content": "Ne pas acheter la V100 cette semaine. Ceci est une donnée synthétique.",
+          "epistemic_status": "UNVERIFIED",
+          "excerpt_reference": {
+            "end": 70,
+            "source": "fixture/1",
+            "start": 0
+          },
+          "information_id": "synthetic-note",
+          "needs_review": true,
+          "operational_state": "PLANNED",
+          "provenance": {
+            "kind": "original_source",
+            "source": "synthetic-fixture"
+          },
+          "relations": [],
+          "revision": 1,
+          "temporal": {},
+          "truncated": false,
+          "verification": {}
+        }
+      ],
+      "policy_version": "synthetic-memory/1",
+      "query": "Calculer les statistiques du texte synthétique de démonstration."
+    },
+    "summary": "Statistiques vérifiées sur les extraits conservés."
+  },
+  "revision": 10,
+  "status": "SUCCEEDED"
+}

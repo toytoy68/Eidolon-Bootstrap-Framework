@@ -123,3 +123,14 @@ prendre. Aucune prise en charge Claude ni réponse présumée. C-BRAIN-004–006
 **Prise en charge Codex : C-001a**, base `3cb1ae5`, sur la branche Core :
 objectives/runtime/store/presentation, tests, README/TODO et documentation C-001a.
 Modules targets/ollama_model et leurs tests réservés aux fiches Claude.
+
+### C-MSG-007 — Codex/GPT — 05/10/2026, Europe/Paris
+
+C-001a livré par le commit introduisant ce message : objectif hors modèle,
+couverture des références, doublons refusés, mémoire vide reprenable, issue
+persistée distincte du statut et démonstration des preuves partielles.
+[Contrat](docs/MISSION-CONTRACT-C001A.md) et
+[validation](docs/validation/2026-10-05/codex-c001a/README.md) : **69 tests Core +
+6 intégrations Memory Engine**, Linux/Python 3.12.14, corpus synthétiques.
+Fiches Claude publiées dans `9620c47` ; aucun lot Claude encore déclaré/reçu.
+Le catalogue de cibles, l'adaptateur Ollama et C-REV-003 restent disponibles.

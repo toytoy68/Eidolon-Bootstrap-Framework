@@ -24,7 +24,7 @@ from eidolon_core.memory import DEMO_REQUEST
 from eidolon_core.runtime import Limits, Runtime
 from eidolon_core.store import Busy, Store
 from eidolon_core.tools import Registry, default_registry, text_stats
-from tests.support import (FixedModel, RecoverableModel, big_result, marker_tool,
+from tests.support import (FixedModel, MultipleMemory, RecoverableModel, big_result, marker_tool,
                            plan, receipt_then_wait, slow_tool, verify_big)
 
 
@@ -70,8 +70,10 @@ class ReviewRegressionTests(unittest.TestCase):
 
     def test_f02_five_large_verified_outputs_survive_restart(self):
         proposal = json.loads(plan())
-        proposal["steps"] = [{**proposal["steps"][0], "id": str(i)} for i in range(5)]
-        runtime = Runtime(self.store, model=FixedModel(encode(proposal)),
+        proposal["steps"] = [{**proposal["steps"][0], "id": str(i), "parameters": {"reference":
+                              "synthetic-note@1" if i == 0 else f"synthetic-note-{i + 1}@1"}}
+                             for i in range(5)]
+        runtime = Runtime(self.store, memory=MultipleMemory(count=5), model=FixedModel(encode(proposal)),
                           registry=self.registry(execute=big_result, verify=verify_big))
         identity = runtime.create(DEMO_REQUEST)["id"]
         m = runtime.run(identity)

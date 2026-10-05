@@ -17,6 +17,7 @@ import sqlite3
 import uuid
 
 from .contracts import digest, encode
+from .objectives import assess, define
 
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "ABANDONED"}
 
@@ -82,14 +83,16 @@ class Store:
         identity = "m-" + uuid.uuid4().hex
         mission = {"id": identity, "request": request, "configuration": configuration,
                    "created_at": now(), "status": "NEW", "phase": "RECALL",
+                   "objective": define(request),
                    "context": None, "model_output": None, "plan": None, "calls": [],
                    "progress": {"completed": 0, "total": None}, "result": None,
                    "error": None, "revision": 0, "cancel_requested": False}
+        mission["outcome"] = assess(mission)
         with self.connection() as db:
             db.execute("INSERT INTO missions (id,revision,body) VALUES (?,0,?)",
                        (identity, encode(mission)))
             db.execute("INSERT INTO events (mission_id,at,kind,detail) VALUES (?,?,?,?)",
-                       (identity, now(), "CREATED", encode({"configuration": configuration})))
+                       (identity, now(), "CREATED", encode({"configuration": configuration, "objective": mission["objective"]})))
         return mission
 
     def worker_lease_path(self, identity, call_id, attempt):
@@ -153,18 +156,20 @@ class Store:
                 mission.update(status="CANCELLED", result=None,
                                error={"code": "CANCELLED", "message": "cancellation requested before success commit"})
                 kind = "CANCELLED"
+            mission["outcome"] = assess(mission)
             if mission["status"] == "SUCCEEDED" and (
+                mission["outcome"]["status"] != "ACHIEVED" or
                 not mission["calls"] or any(c["status"] != "VERIFIED" for c in mission["calls"])
                 or len(mission["calls"]) != len(mission["plan"]["steps"])
                 or any(c.get("output_sha256") != digest(c.get("output")) for c in mission["calls"])
                 or not mission["result"]
             ):
-                raise ValueError("success requires all verified results")
+                raise ValueError("success requires all verified results and achieved mission criteria")
             mission["revision"] += 1
             db.execute("UPDATE missions SET revision=?,body=? WHERE id=?",
                        (mission["revision"], encode(mission), mission["id"]))
             event = {"status": mission["status"], "phase": mission["phase"],
-                     "progress": mission["progress"], **(detail or {})}
+                     "progress": mission["progress"], "outcome": mission["outcome"], **(detail or {})}
             db.execute("INSERT INTO events (mission_id,at,kind,detail) VALUES (?,?,?,?)",
                        (mission["id"], now(), kind, encode(event)))
 
