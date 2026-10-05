@@ -71,8 +71,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude attendu.
 - [ ] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
   et capacités ; fiche préparée, aucune réalisation Claude reçue.
-- [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : adaptateur Ollama simulé ;
-  fiche préparée, aucun modèle réel choisi ou qualifié.
+- [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
+  puis adaptateur candidat simulé ; Ollama à réévaluer, aucun modèle réel qualifié.
 - [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
 ### Lots concrets suivant le brainstorming
@@ -86,7 +86,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 | C-004 | Mission B de diagnostic d'un service | Résultat observé daté, authentifié selon le transport et vérifié ; cible hors ligne ou réponse périmée explicite |
 | C-005 | Mission C avec proposition d'action, approbation liée aux paramètres, refus/annulation | Démonstration de redémarrage simulée ; aucun vrai redémarrage sans cible et autorisation concrètes |
 | C-006 | Mission D : reprise explicite après échec partiel | X vérifié reste acquis ; Y seul réessayé si admissible ; appel à effet inconnu toujours en revue |
-| C-007 | Adaptateur Ollama configurable et mission A sourcée | Réponses structurées, manque de contexte explicite, critères indépendants et protocole de qualification ; aucun modèle préqualifié |
+| C-007 | Moteur réévalué pour 2 × V100 32 Go/NVLink, adaptateur interchangeable et mission A sourcée | Réponses structurées, manque de contexte explicite, critères indépendants et protocole de qualification ; aucun modèle préqualifié |
 | C-008 | Contrats de client distant et événements de reconnexion | Fermeture du client distincte de l'annulation ; événements récupérables sans recréer les missions |
 
 Les connecteurs commencent avec doubles de test ou services locaux synthétiques.
@@ -129,6 +129,9 @@ explicités avant activation ; les accès réels ne sont pas supposés disponibl
 - [ ] Recette Python 3.13/Debian 13, installation isolée du paquet.
 - [ ] Arrêt/reboot du runtime et diagnostic des éventuels enfants survivants.
 - [ ] Persistance/permissions/stockage physique et essai contrôlé de coupure.
+- [ ] Matériel prévu : 2 × V100 32 Go + NVLink selon toytoy. Vérifier références
+  exactes PCIe/SXM2, topologie et visibilité hôte/VM ; comparer un GPU, partage
+  sur deux et rôles séparés. [Note](docs/INFERENCE-2XV100-2026-10-05.md).
 - [ ] Modèle/GPU réel, latence, consommation, contexte utile et qualification.
 - [ ] Corpus utilisateur seulement après choix/autorisation et copie isolée.
 - [ ] Internet réel, service Memory Engine distant et NAS : valider séparément

@@ -200,3 +200,11 @@ feuille de route actualisée. Aucun code d'accès réseau, API distante, modèle
 nouvelle autorisation d'exécution ou outil de redémarrage livré dans ce lot.
 Contrôles : source copiée à l'identique, liens et diff documentaire vérifiés.
 Les précédentes preuves logicielles restent datées de leurs propres exécutions.
+
+## Complément matériel — instruction toytoy du 05/10 à 14 h 23, Europe/Paris
+
+Matériel prévu : **2 × NVIDIA V100 32 Go avec NVLink**. Réviser le recours à
+Ollama en fonction de cette cible. Ceci fixe un objectif de qualification, pas
+une machine déjà installée ou testée, ni un modèle contrôleur retenu. Les références
+exactes des cartes, l'interconnexion et la répartition hôte/VM restent à relever.
+[Note d'inférence et tâche Claude révisée](INFERENCE-2XV100-2026-10-05.md).

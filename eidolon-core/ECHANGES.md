@@ -134,3 +134,10 @@ persistée distincte du statut et démonstration des preuves partielles.
 6 intégrations Memory Engine**, Linux/Python 3.12.14, corpus synthétiques.
 Fiches Claude publiées dans `9620c47` ; aucun lot Claude encore déclaré/reçu.
 Le catalogue de cibles, l'adaptateur Ollama et C-REV-003 restent disponibles.
+
+### C-MSG-008 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Toytoy précise le matériel prévu : **2 × V100 32 Go avec NVLink**. C-CLAUDE-002
+révisé : comparaison des moteurs et répartition GPU avant adaptateur candidat.
+Ollama reste une option ; aucune validation matérielle. C-BRAIN-007 ouvert.
+[Contraintes, sources officielles et recette différée](docs/INFERENCE-2XV100-2026-10-05.md).

@@ -8,7 +8,7 @@ Statut : **prêtes à prendre, aucune prise en charge Claude présumée**.
 | --- | --- | --- |
 | 1 | [C-REV-003](C-REV-003.md) | Contre-revue ciblée des reçus et de la réconciliation |
 | 2 | [C-CLAUDE-001](C-CLAUDE-001.md) | Catalogue pur de cibles et capacités, testé sans réseau |
-| 3 | [C-CLAUDE-002](C-CLAUDE-002.md) | Adaptateur Ollama optionnel, testé avec transport simulé |
+| 3 | [C-CLAUDE-002](C-CLAUDE-002.md) | Étude 2 × V100/NVLink puis adaptateur candidat simulé |
 
 Codex prend **C-001a**, critères de mission indépendants du modèle :
 `objectives.py`, `runtime.py`, `store.py`, `presentation.py`, tests existants et
@@ -27,3 +27,8 @@ L'adresse `192.168.1.135` désigne VM100 Core selon toytoy ; ce n'est ni une URL
 Ollama, ni une validation de connectivité, ni une permission de déploiement.
 Ne pas modifier Memory Engine, Bootstrap ou main. Si le push est bloqué, remettre
 un patch avec SHA de base, commandes et résultats ; ne pas inventer de publication.
+
+Révision matérielle utilisateur du 05/10 : **2 × V100 32 Go + NVLink prévus**.
+C-CLAUDE-002 commence désormais par la compatibilité Volta et la stratégie GPU.
+Ollama reste candidat ; le format exact des cartes et la topologie réelle sont
+à préciser, pas supposés vérifiés. [Note et sources](../../docs/INFERENCE-2XV100-2026-10-05.md).
