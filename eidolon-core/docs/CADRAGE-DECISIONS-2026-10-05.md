@@ -87,6 +87,14 @@ Restent ouverts : outils, emplacement des règles (VM, hôte, box), liste des
 services autorisés, choix du VPN et calendrier. Aucune adresse, aucun port ni
 aucun secret n'est consigné dans Git. Voir C-BRAIN-C009.
 
+**C-D09 — Accès Web du premier lot.** Le 05/10/2026 dans cette session,
+toytoy répond « Ok » à la proposition d'un accès identifiable, de fournisseurs
+interchangeables et de blocages explicites, sans rotation automatique d'identité.
+Il demande ensuite un brainstorming avec Claude et autorise de développer notre
+propre solution. Ce cadrage ne choisit aucun fournisseur ni abonnement, et
+n'autorise aucun déploiement supplémentaire. Les alternatives restent discutées
+dans C-BRAIN-G010 ; aucune garantie d'accès universel aux sites.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

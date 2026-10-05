@@ -54,3 +54,9 @@ Les prises en charge Claude restent à confirmer dans sa réponse.
 G004 et G005 reçus ; les mentions « prêt à prendre » ci-dessus sont historiques.
 [C-TASK-G006](C-TASK-G006.md) est le prochain développement Claude : transport
 HTTP candidat isolé. Codex traite la lisibilité des accords O-G5-1/O-G5-2.
+
+## Brainstorming et prototype — C-MSG-G017
+
+G006 publié par Claude (`6a972ff`), à relire avant intégration. Nouveau lot
+[C-TASK-G007](C-TASK-G007.md) : alternatives de recherche et corpus synthétique
+indépendant. Codex prend le coordinateur `research.py`, hors runtime.

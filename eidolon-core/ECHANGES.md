@@ -277,3 +277,10 @@ identique hors version Python ; vue dérivée sans mutation, 14 tests nouveaux,
 235 Core et 6 intégrations mémoire réussis. Six scénarios de démonstration ;
 une configuration différente est distinguée d'une condition devenue incompatible.
 O-G5-3 reste prudent. Sources d'exécution et services simulés inchangés.
+
+### C-MSG-G017 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Toytoy demande brainstorming commun et développement d'une solution de recherche.
+C-BRAIN-G010 ouvert, G007 confié à Claude ; Codex prend `research.py`, tests/démo
+et docs. G006 repéré `6a972ff`, message lu, tests pas encore reproduits ici.
+Aucune intégration de ce transport présumée. Ce lot commence sur doubles de test.
