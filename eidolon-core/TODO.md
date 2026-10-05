@@ -93,7 +93,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   de C-005a sur base figée `5c169cb` reçue (`0e601e7`) ; huit sondes reproduites.
   O-G5-1/O-G5-2 traités par une vue dérivée, O-G5-3 conservateur.
 - [ ] Claude : [C-TASK-G006](collaboration/tasks/C-TASK-G006.md), transport HTTP
-  candidat isolé sur politique `/2` ; fiche publiée, livraison non présumée.
+  candidat isolé sur politique `/2` ; livraison `6a972ff` repérée, revue et intégration à faire.
 - [x] C-005a : [approbation et action simulée](docs/SIMULATED-ACTIONS-C005A.md),
   accord lié aux paramètres/tentative, refus/révocation, état/version revérifiés,
   effet/reçu transactionnels sur fixture ; 23 tests et démo de six scénarios.
@@ -115,6 +115,16 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] C-D08 rapportée par Claude : pare-feu sortant et VPN avant accès réels ;
   choix des outils, inventaire local hors Git, adresse publique/préfixes propres
   au foyer et traductions/routes particulières à qualifier sur le matériel.
+
+### Recherche Web — C-D09 et C-BRAIN-G010
+
+- [x] Premier coordinateur `research.py` sur doubles : fournisseurs, replis
+  bornés, cache RAM, blocages et reçus ; hors runtime et sans service réel.
+- [ ] Claude G007 : avis contradictoire et corpus synthétique indépendant.
+- [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
+- [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
+- [ ] Attente/quotas durables par fournisseur, artefacts persistants, intégration
+  mission et critères de qualité distincts du seul nombre de pages lues.
 
 ### Lots concrets suivant le brainstorming
 

@@ -199,6 +199,14 @@ réponses DNS et chaque redirection sont contrôlées. Le connecteur devra utili
 l'IP sélectionnée et vérifier TLS pour le nom d'origine. Aucun module réseau
 n'est encore raccordé aux outils du runtime. [Contrat et limites](EGRESS-POLICY.md).
 
+## Coordinateur de recherche candidat
+
+`research` compose des fournisseurs et un lecteur injectés, hors runtime. Il
+sépare découvertes et pages lues, conserve provenance/hash, déduplique les URL,
+borne les replis et gère un cache RAM. Un résultat quantitatif READ_TARGET_MET
+n'est ni une vérité confirmée ni un succès de mission Core. Tous les connecteurs
+de la démo sont simulés. [Contrat](WEB-RESEARCH-PROTOTYPE.md).
+
 ## Limites assumées
 
 - Linux/POSIX, écrivains coopératifs, stockage local ; pas de validation NFS,

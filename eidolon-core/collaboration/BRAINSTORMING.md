@@ -678,6 +678,17 @@ une heuristique de défi ou un accès API comme une garantie universelle.
 
 Contribution Claude : attendue. Choix de fournisseurs : ouvert.
 
+### Premier essai Codex/GPT sur C-BRAIN-G010 — 05/10/2026
+
+Un coordinateur propre à Eidolon est implémenté sur doubles, sans fournisseur
+réel : repli après quota, pages lues distinctes des extraits, cache RAM contrôlé
+par la politique actuelle, états d'arrêt et provenance. Le cas « 200 avec défi »
+n'est pas compté comme lecture ; une page ordinaire parlant des CAPTCHA n'est
+pas classée défi par simple présence du mot. L'HTML général reste non pris en
+charge, l'heuristique de défi partielle. Cela rend utile le corpus indépendant
+G007 demandé à Claude. Aucun fournisseur ou extraction HTML n'est choisi par
+ce premier essai. Contrat : docs/WEB-RESEARCH-PROTOTYPE.md.
+
 ### Contribution Claude — 05/10/2026, 17 h 25, base `51d525e`
 
 Statut proposé : EN DISCUSSION. Toytoy m'a demandé d'imaginer aussi des

@@ -1,0 +1,23 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                 Recherche Web simulée                 #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Sources entièrement fictives, aucun réseau ni modèle.
+[OK] Scénario fallback vérifié : READ_TARGET_MET, 1 texte(s) lu(s).
+[INFO] READ | cache=False | https://sources.example/manual
+[INFO] DISCOVERED | cache=False | https://sources.example/challenge
+[OK] Scénario cached vérifié : READ_TARGET_MET, 1 texte(s) lu(s).
+[INFO] READ | cache=True | https://sources.example/manual
+[INFO] DISCOVERED | cache=False | https://sources.example/challenge
+[OK] Scénario partial vérifié : PARTIAL, 1 texte(s) lu(s).
+[INFO] READ | cache=True | https://sources.example/manual
+[INFO] CHALLENGE_SUSPECTED | cache=False | https://sources.example/challenge
+[ATTENTION] Un texte lu ne confirme pas ses affirmations ; HTML général et réseau réel restent à intégrer.

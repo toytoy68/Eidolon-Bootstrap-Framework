@@ -285,6 +285,18 @@ le raccordement aux missions et la recette pare-feu/VPN restent à réaliser.
 [Validation intégrée C-002a.1](docs/validation/2026-10-05/codex-c002a/README.md) :
 221 tests Core et 6 intégrations mémoire réussis sur données synthétiques.
 
+## Prototype de recherche propre à Eidolon
+
+```sh
+PYTHONPATH=src:. python -m examples.research_demo --format human
+```
+
+Fournisseurs simulés interchangeables, repli après quota, cache RAM et provenance
+séparent les extraits trouvés des textes réellement lus. Un défi HTTP 200 reste
+non exploitable. Le prototype lit le texte UTF-8 simple/Markdown ; extraction
+HTML générale et fournisseurs Internet restent à raccorder. Ce n'est pas encore
+un outil disponible dans une mission Core. [Contrat et limites](docs/WEB-RESEARCH-PROTOTYPE.md).
+
 ## Diagnostic synthétique C-004a
 
 Le profil `service-sim` sélectionne une cible et contrôle ses permissions avant

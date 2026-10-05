@@ -22,16 +22,21 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 - Memory Engine reste développé dans l'autre session. Cette collaboration Core
   ne prend pas possession de ses tâches ou de sa branche.
 
-## État courant après intégration G005 — 05/10/2026
+## État courant après prototype de recherche — 05/10/2026
 
 Les repères ci-dessus décrivent l'ouverture historique du canal. Désormais :
 C-004a diagnostic, C-005a accord/action simulée, G001 à G005 et C-TASK-C001
 intégrés. Politique Web durcie et exclusions configurables, sans transport réel.
 La CLI distingue décision, applicabilité et preuve d'effet ; huit sondes de
 Claude reproduites, observations O-G5-1/O-G5-2 traitées, prudence O-G5-3 conservée.
-**235 tests Core + 6 intégrations mémoire** réussis sous Python 3.12.14,
-sur données synthétiques. [Preuves](docs/validation/2026-10-05/codex-g005/README.md).
-Claude reçoit C-TASK-G006 (transport Web candidat isolé) ; livraison non présumée.
+Prototype `research.py` livré hors runtime, fournisseurs/lecteur simulés,
+repli borné, cache et provenance. **258 tests Core réussis**, 6 intégrations
+mémoire opt-in sautées dans cette exécution, sous Python 3.12.14.
+[Preuves actuelles](docs/validation/2026-10-05/codex-research/README.md).
+Les 6 intégrations mémoire avaient réussi au lot G005 ; pas de nouvelle
+qualification mémoire par ce prototype.
+G006 repéré au commit `6a972ff` de Claude, à relire/tester avant intégration.
+Claude reçoit C-TASK-G007 (alternatives et corpus indépendant de recherche).
 C-D08 pare-feu/VPN reste à qualifier sur matériel. Aucun service personnel contacté.
 
 ## Sujets ouverts
@@ -284,3 +289,9 @@ Toytoy demande brainstorming commun et développement d'une solution de recherch
 C-BRAIN-G010 ouvert, G007 confié à Claude ; Codex prend `research.py`, tests/démo
 et docs. G006 repéré `6a972ff`, message lu, tests pas encore reproduits ici.
 Aucune intégration de ce transport présumée. Ce lot commence sur doubles de test.
+
+Complément de livraison G017 : coordinateur simulé, 23 tests nouveaux, trois
+scénarios de démonstration. 258 tests Core réussis, 6 intégrations mémoire
+opt-in sautées. HTML général, fournisseur réel et raccordement au runtime restent
+à développer ; la lecture d'une page ne confirme pas ses affirmations.
+G007 reste en attente de réponse, G006 reste à revoir avant intégration.
