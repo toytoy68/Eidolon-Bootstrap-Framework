@@ -11,6 +11,7 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 | --- | --- |
 | `contracts` | JSON borné, références et réserves mémoire, plan strict v1 |
 | `objectives` | Catalogue restreint hors modèle, liaison au rappel et couverture des preuves |
+| `targets` / `diagnostics` | Catalogue, permissions par cible et observation synthétique C-004a |
 | `model` | `Model.propose(request, context) -> str`, simulateur déterministe |
 | `memory` | `MemoryReader.recall(query) -> dict`, fixture ou délégation au vrai moteur |
 | `tools` | Registre de code de confiance, validateurs, politique fixe, vérificateurs |
@@ -49,8 +50,14 @@ les références et l'empreinte du contexte. Le précontrôle exige exactement u
 appel text.stats par référence. L'[évaluateur de mission](MISSION-CONTRACT-C001A.md)
 recalcule `outcome` à chaque enregistrement à partir des preuves d'étapes ; le
 passage SUCCEEDED exige aussi ACHIEVED. L'objectif ne vient jamais du plan.
-Une mémoire vide bloque avant le modèle et peut être rappelée lors d'un `run`
+Pour cette mission de statistiques, une mémoire vide bloque avant le modèle et peut être rappelée lors d'un `run`
 explicite. Ce catalogue n'est pas encore une compréhension générale de la demande.
+
+C-004a ajoute une intention explicite `create_diagnostic(cible)` : résolution
+hors modèle, catalogue figé, permission cible/capacité, observation synthétique
+datée et vérifiée. La santé DOWN est un résultat possible d'une mission réussie.
+Un rappel vide est ici un contexte valide, jamais une preuve de santé.
+[Contrat détaillé et limites](SYNTHETIC-DIAGNOSTIC-C004A.md).
 
 ## Persistance et reprise
 

@@ -13,6 +13,8 @@ from pathlib import Path
 import sys
 
 from .contracts import encode
+from .diagnostics import synthetic_runtime
+from .targets import Catalog
 from .memory import DEMO_REQUEST, EngineMemory
 from .runtime import Limits, Runtime
 from .store import Busy, Store
@@ -24,11 +26,17 @@ def main(argv=None):
     parser.add_argument("--state", default=".eidolon-core")
     parser.add_argument("--timeout", type=float, default=10.0, help="seconds per call, including process startup")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
+    parser.add_argument("--profile", choices=("text", "service-sim"), default="text")
+    parser.add_argument("--targets", help="catalog JSON for service-sim; destinations are never contacted")
+    parser.add_argument("--allow-target", action="append", help="allowed synthetic target id; replaces default fixture grants")
     parser.add_argument("--format", choices=("json", "human"), default="json",
                         help="JSON for automation (default), human for the Eidolon console presentation")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="create and run the deterministic synthetic mission")
+    diagnose = commands.add_parser("diagnose", help="observe one synthetic service, requires --profile service-sim")
+    diagnose.add_argument("target")
+    diagnose.add_argument("--create-only", action="store_true")
     create = commands.add_parser("create", help="create a durable mission without executing it")
     create.add_argument("request", nargs="?", default=DEMO_REQUEST)
     for name in ("run", "show", "cancel"):
@@ -50,10 +58,26 @@ def main(argv=None):
             text = preview()
             print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
             return 0
+        if args.profile == "text" and (args.targets or args.allow_target or args.command == "diagnose"):
+            raise ValueError("diagnostic options require --profile service-sim")
+        if args.profile == "service-sim" and args.command in {"demo", "create"}:
+            raise ValueError("service-sim missions are created with diagnose [--create-only]")
+        catalog = None
+        if args.targets:
+            path = Path(args.targets)
+            if path.stat().st_size > 1_000_000:
+                raise ValueError("catalog file exceeds 1 MB")
+            catalog = Catalog.from_config(json.loads(path.read_text(encoding="utf-8")))
         store = Store(args.state)
-        runtime = Runtime(store, limits=Limits(args.timeout),
-                          memory=EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None)
-        if args.command in ("demo", "create"):
+        options = {"limits": Limits(args.timeout),
+                   "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}
+        runtime = (synthetic_runtime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
+                   if args.profile == "service-sim" else Runtime(store, **options))
+        if args.command == "diagnose":
+            result = runtime.create_diagnostic(args.target)
+            if not args.create_only:
+                result = runtime.run(result["id"])
+        elif args.command in ("demo", "create"):
             result = runtime.create(DEMO_REQUEST if args.command == "demo" else args.request)
             if args.command == "demo":
                 result = runtime.run(result["id"])
@@ -76,7 +100,7 @@ def main(argv=None):
                                        actor=args.actor, reason=args.reason, output=output,
                                        confirm_no_effect=args.confirm_no_effect)
         print(render_result(result) if args.format == "human" else encode(result))
-        if args.command in {"show", "create", "reconcile"}:
+        if args.command in {"show", "create", "reconcile"} or (args.command == "diagnose" and args.create_only):
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)
     except (ValueError, KeyError, OSError, Busy) as exc:

@@ -25,3 +25,16 @@ class DeterministicModel:
              "parameters": {"reference": reference(item)}}
             for i, item in enumerate(context["items"])
         ]})
+
+
+@dataclass(frozen=True)
+class DiagnosticModel:
+    """Planner for an explicit synthetic mission, supplied by the runtime."""
+    model_id: str = "deterministic-service-diagnostic/1"
+
+    def propose(self, request, context):
+        mission = context["_core_mission"]
+        if mission["kind"] != "service_diagnostic.synthetic":
+            raise ValueError("unsupported diagnostic intent")
+        return encode({"version": 1, "steps": [{"id": "observe", "tool": mission["tool"],
+                       "parameters": {"target": mission["target_id"]}}]})

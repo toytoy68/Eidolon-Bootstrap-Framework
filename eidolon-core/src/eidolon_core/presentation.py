@@ -75,7 +75,12 @@ def render_result(result):
                          "NOT_ACHIEVED": "Non atteint", "PARTIAL": "Partiel",
                          "CLARIFICATION": "Clarification nécessaire", "NO_EVIDENCE": "Sans preuve"}
         lines.append(message("INFO", "Objectif : " + outcome_label[outcome["status"]]))
-        lines.append(message("INFO", "Périmètre : extraits du rappel conservé, pas tout le corpus."))
+        scope = ("Périmètre : service synthétique, sans connexion réseau."
+                 if outcome["scope"] == "synthetic_service" else
+                 "Périmètre : extraits du rappel conservé, pas tout le corpus.")
+        lines.append(message("INFO", scope))
+        if result.get("result") and outcome["scope"] == "synthetic_service":
+            lines.append(message("INFO", result["result"]["summary"]))
         if outcome["missing_references"]:
             lines.append(message("ATTENTION", "Références sans résultat vérifié : "
                                  + ", ".join(outcome["missing_references"])))

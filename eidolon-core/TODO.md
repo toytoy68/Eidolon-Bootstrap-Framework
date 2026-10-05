@@ -75,10 +75,16 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Démonstration `examples.objective_demo`, sans réseau ni VM.
 - [x] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude intégré et suites traitées.
 - [x] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
-  et capacités intégré avec tests ; raccordement runtime/permissions encore différé.
+  et capacités intégré avec tests ; raccordement runtime/permissions livré en C-004a.
 - [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
-  à faire. Adaptateur candidat simulé (étape 2) intégré ; Ollama à réévaluer,
+  reçue (`ec7582b`), précisions C-TASK-G003 en attente. Adaptateur candidat
+  simulé (étape 2) intégré ; Ollama à réévaluer,
   aucun modèle réel qualifié et aucune activation CLI.
+- [x] C-004a/C-001b : [diagnostic synthétique](docs/SYNTHETIC-DIAGNOSTIC-C004A.md),
+  cible résolue hors modèle, permission par capacité, observation datée vérifiée,
+  CLI et reprise ; état DOWN distinct de l'échec de mission.
+- [ ] Claude : C-TASK-G003 (précisions V100), G002 (validateur de rapports),
+  G001 (contre-revue ciblée), fiches publiées ; exécution non présumée.
 - [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
 ### Lots concrets suivant le brainstorming

@@ -71,14 +71,22 @@ class Registry:
 class Policy:
     allowed_tools: tuple[str, ...] = ("text.stats",)
     policy_id: str = "local-pure-only/1"
+    target_grants: tuple[tuple[str, str], ...] = ()
 
     def allows(self, tool):
         # Even a listed tool is denied if it declares external effects.
         return tool is not None and tool.name in self.allowed_tools and tool.effect == "none"
 
+    def allows_target(self, tool, target, capability):
+        return (self.allows(tool) and capability is not None and capability.effect == "none"
+                and (target.id, capability.name) in self.target_grants)
+
     def manifest(self):
-        return {"id": self.policy_id, "allowed_tools": sorted(self.allowed_tools),
-                "allowed_effect": "none"}
+        value = {"id": self.policy_id, "allowed_tools": sorted(self.allowed_tools),
+                 "allowed_effect": "none"}
+        if self.target_grants:
+            value["target_grants"] = sorted([list(g) for g in self.target_grants])
+        return value
 
 
 def default_registry():

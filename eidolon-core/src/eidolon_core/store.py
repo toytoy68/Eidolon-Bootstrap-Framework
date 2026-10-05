@@ -77,16 +77,18 @@ class Store:
             finally:
                 fcntl.flock(handle, fcntl.LOCK_UN)
 
-    def create(self, request, configuration):
+    def create(self, request, configuration, *, intent=None):
         if not isinstance(request, str) or not request.strip() or len(request) > 8000:
             raise ValueError("request must contain 1–8000 characters")
         identity = "m-" + uuid.uuid4().hex
         mission = {"id": identity, "request": request, "configuration": configuration,
                    "created_at": now(), "status": "NEW", "phase": "RECALL",
-                   "objective": define(request),
+                   "objective": define(request, intent, configuration),
                    "context": None, "model_output": None, "plan": None, "calls": [],
                    "progress": {"completed": 0, "total": None}, "result": None,
                    "error": None, "revision": 0, "cancel_requested": False}
+        if intent is not None:
+            mission["intent"] = json.loads(encode(intent))
         mission["outcome"] = assess(mission)
         with self.connection() as db:
             db.execute("INSERT INTO missions (id,revision,body) VALUES (?,0,?)",
