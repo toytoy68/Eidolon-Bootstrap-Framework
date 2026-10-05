@@ -21,10 +21,15 @@ from .contracts import MAX_JSON_BYTES, encode
 
 
 class CallFailure(RuntimeError):
-    def __init__(self, code, message, *, receipt=None):
+    def __init__(self, code, message, *, receipt=None, authorized=None):
         super().__init__(message)
         self.code = code
         self.receipt = receipt  # Unverified envelope retained for review, never success.
+        self.authorized = authorized
+
+
+def attempt_receipt_path(lease_path):
+    return Path(lease_path).with_suffix(".receipt.json")
 
 
 def _error(code, exc):
@@ -37,11 +42,20 @@ def _child(channel, function, args, receipt_path, lease_path):
         with (open(lease_path, "a") if lease_path else nullcontext()) as lease:
             if lease is not None:
                 fcntl.flock(lease, fcntl.LOCK_EX)
-            channel.send_bytes(b"ready")
-            # If the parent dies before committing WORKER_SPAWNED and authorizing
-            # execution, EOF prevents this child from ever calling the provider.
-            if channel.recv_bytes(16) != b"execute":
+            try:
+                channel.send_bytes(b"ready")
+                # EOF/reset before permission cannot execute the provider.
+                permission = channel.recv_bytes(16)
+            except (EOFError, OSError):
                 return
+            if permission != b"execute":
+                return
+            if lease is not None:
+                # Keep the same inode locked. Mark authorization before entering
+                # provider code; an interrupted write is conservatively unknown.
+                lease.write("authorized\n")
+                lease.flush()
+                os.fsync(lease.fileno())
             try:
                 value = function(*args)
             except Exception as exc:
@@ -58,10 +72,11 @@ def _child(channel, function, args, receipt_path, lease_path):
             # large pipe message it cannot leave recv_bytes blocked on a partial
             # write when the child is terminated at the deadline.
             pending = Path(receipt_path).with_suffix(".pending")
-            pending.write_bytes(encoded)
+            with pending.open("wb") as stream:
+                stream.write(encoded)
+                stream.flush()
+                os.fsync(stream.fileno())
             os.replace(pending, receipt_path)
-    except (EOFError, BrokenPipeError):
-        pass  # Parent disappeared before granting execution.
     finally:
         channel.close()
 
@@ -89,22 +104,24 @@ def invoke(function, args, *, timeout, cancelled, lease_path=None, on_started=No
     ctx = multiprocessing.get_context("spawn")
     parent, child = ctx.Pipe(duplex=True)
     with tempfile.TemporaryDirectory(prefix="eidolon-worker-") as directory:
-        receipt_path = Path(directory) / "receipt.json"
+        # Tool receipts belong to the attempt, not to the parent's lifetime.
+        receipt_path = (attempt_receipt_path(lease_path) if lease_path
+                        else Path(directory) / "receipt.json")
         process = ctx.Process(target=_child, args=(child, function, args, str(receipt_path),
                                                    str(lease_path) if lease_path else None), daemon=True)
         deadline = time.monotonic() + timeout
         started = False
         failure = None
+        authorized = False
         try:
             if cancelled():
-                raise CallFailure("CANCELLED", "cancellation requested before worker launch")
+                raise CallFailure("CANCELLED", "cancellation requested before worker launch", authorized=False)
             try:
                 process.start()
             except Exception as exc:
-                raise CallFailure("WORKER_START_FAILED", "worker could not start: " + type(exc).__name__) from exc
+                raise CallFailure("WORKER_START_FAILED", "worker could not start: " + type(exc).__name__, authorized=False) from exc
             started = True
             child.close()
-            authorized = False
             while True:
                 if cancelled():
                     failure = ("CANCELLED", "cancellation requested")
@@ -116,18 +133,19 @@ def invoke(function, args, *, timeout, cancelled, lease_path=None, on_started=No
                     try:
                         ready = parent.recv_bytes(16)
                     except (EOFError, OSError) as exc:
-                        raise CallFailure("WORKER_LOST", "worker exited before launch handshake") from exc
+                        raise CallFailure("WORKER_LOST", "worker exited before launch handshake", authorized=False) from exc
                     if ready != b"ready":
-                        raise CallFailure("WORKER_LOST", "invalid worker handshake")
+                        raise CallFailure("WORKER_LOST", "invalid worker handshake", authorized=False)
                     if on_started:
                         on_started({"pid": process.pid,
                                     "started_at": datetime.now(timezone.utc).isoformat(),
-                                    "protocol": "lease-v1"})
+                                    "protocol": "lease-v2"})
                     # Persisted launch precedes permission; recheck cancellation.
                     if cancelled() or time.monotonic() >= deadline:
                         continue
-                    parent.send_bytes(b"execute")
+                    # A failed/partial send is ambiguous, not proof of no permission.
                     authorized = True
+                    parent.send_bytes(b"execute")
                 process.join(0.01)
                 if not process.is_alive():
                     # Recheck cancellation/deadline on the following iteration.
@@ -152,10 +170,10 @@ def invoke(function, args, *, timeout, cancelled, lease_path=None, on_started=No
         # remains evidence for review; it does not override cancellation/deadline.
         response = _read_receipt(receipt_path)
         if failure:
-            raise CallFailure(*failure, receipt=response)
+            raise CallFailure(*failure, receipt=response, authorized=authorized)
         if response is None:
-            raise CallFailure("WORKER_LOST", "worker exited without receipt")
+            raise CallFailure("WORKER_LOST", "worker exited without receipt", authorized=authorized)
         if exitcode != 0 or not response["ok"]:
             raise CallFailure(response.get("code", "CALL_ERROR"),
-                              response.get("message", "worker failed"), receipt=response)
+                              response.get("message", "worker failed"), receipt=response, authorized=authorized)
         return response["value"]

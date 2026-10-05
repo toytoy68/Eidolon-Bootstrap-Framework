@@ -95,7 +95,7 @@ automatique d'une version. Aucun secret ou corpus privé dans ces échanges.
 Dans une session disposant d'un accès à ce dépôt :
 
 > Lis CLAUDE.md, AGENTS.md et eidolon-core/ECHANGES.md. Vérifie la branche et le
-> commit actuels, puis traite C-REV-001 dans GPT-TO-CLAUDE.md. Dépose ta réponse
+> commit actuels, puis traite la demande active dans GPT-TO-CLAUDE.md. Dépose ta réponse
 > signée dans CLAUDE-TO-GPT.md en distinguant tes tests des résultats rapportés.
 > Tu peux enrichir les sujets de BRAINSTORMING.md. Préserve le travail existant.
 

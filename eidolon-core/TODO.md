@@ -35,10 +35,19 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] F-06 : reçu tardif conservé et non promu automatiquement en succès.
 - [x] Filet INTERNAL_ERROR basé sur l'état durable ; sondage d'annulation allégé.
 - [x] Contre-revue Claude C-REV-002 reçue (C-MSG-004, base `2474c7c`).
-- [ ] Suites de C-REV-002 signalées par Claude, non traitées : N-01 et N-02 (P2),
-  N-03 à N-08 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
+- [x] Suites C-REV-002 : N-01/N-02, annulation avant autorisation, profondeur
+  bornée, connexion interrompue, origine/cohérence des preuves et adoption du reçu.
+  [Bilan](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) : 58 tests Core + 6 intégrations.
+- [x] N-08 : marge des délais de test relevée, annulation synchronisée ; deux
+  tests ciblés verts sur deux CPU avec six concurrents. Recette VM toujours différée.
+- [ ] Contre-revue C-REV-003 préparée pour les traces par tentative et la reprise.
+- [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
+  historiques et verrous ; aucun effacement automatique d'un état actif.
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant
   leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
+- [ ] C-001 : appliquer [C-D07](docs/CADRAGE-DECISIONS-2026-10-05.md) : `SUCCEEDED`
+  réservé à une mission atteinte, état terminal distinct pour les autres issues
+  (nom et code CLI à fixer). Proposition de contrat : C-BRAIN-004.
 - [ ] P3 : mémoire vide distincte de MODEL_INVALID ; clarification du blocage
   de précontrôle avec configuration figée, à intégrer dans C-001.
 - [ ] C-008 : propriétaire/battement de mission pour distinguer vivant/orphelin.

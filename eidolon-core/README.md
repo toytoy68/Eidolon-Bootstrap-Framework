@@ -71,7 +71,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions -v
+PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -83,6 +83,8 @@ Les régressions de la revue Claude couvrent aussi les nombres débordants et
 substituts Unicode isolés, cinq sorties de 600 ko, l'enfant orphelin après
 SIGKILL du parent et un reçu déjà écrit lors de l'annulation/du délai.
 Voir le [bilan des corrections C-REV-001](docs/REVIEW-FIXES-2026-10-05.md).
+La [contre-revue C-REV-002](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) ajoute les
+tentatives avec erreur, l'orphelin terminé et la réutilisation d'un reçu conservé.
 
 ## Intégration optionnelle avec le vrai Memory Engine
 
@@ -147,6 +149,12 @@ PID et date sont journalisés pour diagnostic ; le contrôle utilise le verrou,
 pas le PID. Cela ne prouve pas l'absence d'effet distant ou d'un descendant.
 Les appels anciens sans protocole de verrou ne peuvent pas autoriser une reprise.
 
+Les nouveaux appels utilisent `lease-v2` : l'enfant inscrit son autorisation
+dans le fichier verrouillé **avant** d'entrer dans l'outil, puis conserve son
+reçu à côté du verrou dans le dossier d'état Core. La réconciliation consulte
+ce reçu sous le verrou, même après la mort du parent. Conserver le dossier
+d'état complet, pas uniquement le fichier SQLite.
+
 Pour clore une mission sans prétendre connaître l'effet :
 
 ```sh
@@ -157,9 +165,33 @@ PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo reconcile m
 L'état terminal `ABANDONED` conserve `EFFECT_UNKNOWN`, les reçus disponibles
 et l'historique. Il n'interrompt pas un éventuel exécutant orphelin et n'autorise
 aucun nouvel appel. Cette clôture reste possible sans la configuration d'origine.
-Un reçu tardif figure dans `calls[].late_receipt` et exige une inspection :
-`observed-result` le soumet à vérification ; `abandon` clôt sans le valider.
-`no-effect` ne permet pas d'effacer un reçu présent pour relancer l'outil.
+Un reçu tardif figure dans `calls[].late_receipt`, une erreur rendue normalement
+dans `error_receipt`, un résultat récupéré après interruption dans
+`recovered_receipt`. Aucun n'est validé automatiquement. Pour réutiliser la
+valeur conservée sans la retaper :
+
+```sh
+PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo reconcile m-ID \
+  --decision use-receipt --actor toytoy --reason 'Reçu conservé examiné'
+PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo run m-ID
+```
+
+`use-receipt` prépare la vérification, sans relancer l'outil. Une sortie humaine
+différente d'un reçu positif conservé est refusée avant de modifier le résultat.
+`no-effect` est refusé si un reçu positif existe, même avec confirmation.
+Une enveloppe d'erreur autorise la décision humaine d'absence d'effet, sans
+constituer cette preuve à elle seule ; l'ancienne tentative et son erreur sont
+conservées dans `attempt_history`.
+
+Si l'appel a été autorisé (ou son autorisation est inconnue avec `lease-v1`)
+et qu'aucun reçu n'existe, `no-effect` exige en plus `--confirm-no-effect` après
+une investigation établissant l'absence d'effet. Un verrou libre ne suffit pas.
+Cette attestation reste une décision humaine auditée, pas une preuve automatique.
+Si l'absence d'effet ne peut pas être établie, rester en revue ou abandonner.
+
+Une annulation constatée avant tout envoi d'autorisation se termine directement
+en CANCELLED. Un échec/délai de lancement connu avant autorisation bloque et
+permet une reprise explicite ; il n'est pas présenté comme un effet inconnu.
 
 La configuration de reprise doit correspondre à celle de création (modèle,
 mémoire/racine, politique, versions outils/vérificateurs, délai). Utiliser les
@@ -171,7 +203,7 @@ reprenable explicitement avec la même configuration. Un plan invalide reste
 `FAILED/MODEL_INVALID`.
 
 `result.evidence` contient des références compactes : identifiant d'appel,
-tentative, empreinte de sortie et vérificateur. Les sorties complètes restent
+tentative, empreinte de sortie, origine du reçu et vérificateur. Les sorties complètes restent
 dans `calls[].output`, sans duplication dans le résultat final. Chaque reçu
 reste borné à 1 Mo ; au plus cinq appels par plan.
 

@@ -62,6 +62,17 @@ administrateur implicite ni de partage global du disque. L'interface Desktop
 pourra utiliser ce même connecteur ; sa réalisation finale ne doit pas retarder
 les premières missions sur documents. L'implémentation/protocole restent à faire.
 
+**C-D07 — `SUCCEEDED` signifie « mission atteinte ».** Décision de toytoy,
+05/10/2026 vers 14 h 10 (Europe/Paris), en réponse à la question Q1 de
+[C-BRAIN-004](../collaboration/BRAINSTORMING.md#c-brain-004--forme-minimale-du-contrat-de-mission-c-001)
+transmise par Claude : « Oui pour Q1, garde SUCCEEDED pour mission atteinte ».
+Une mission dont l'exécution s'est terminée sans atteindre son objectif (issue
+non atteinte, partielle ou sans preuve) ne finit jamais en `SUCCEEDED` ; elle
+finit dans un état distinct qui porte son issue. Restent à fixer dans C-001 :
+le nom de cet état (`CONCLUDED` proposé), son code de retour CLI (5 proposé)
+et le traitement d'une demande de clarification. Cette décision ne tranche pas
+Q2 (refus au précontrôle) ni Q3 (missions sans type déjà en base).
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

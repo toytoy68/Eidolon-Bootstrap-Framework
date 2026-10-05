@@ -30,7 +30,9 @@ et du vérificateur, empreintes du contexte et du résultat.
 
 Le modèle propose uniquement `{"version":1,"steps":[...]}` ; 1 à 5 étapes,
 identités uniques, paramètres objets, clés inattendues/dupliquées et nombres non
-finis refusés. Aucun champ modèle « success », « permission » ou instruction
+finis refusés. La profondeur JSON du plan est bornée à 32 conteneurs avant
+parsing, indépendamment de la limite de récursion Python. Aucun champ modèle
+« success », « permission » ou instruction
 mémoire ne constitue une autorisation. La sortie brute est conservée avant
 validation pour diagnostic, dans les limites de taille.
 
@@ -66,22 +68,44 @@ signal, la fermeture du tube empêche l'appel. `no-effect` et `observed-result`
 prennent le même verrou, sans attente, jusqu'à l'enregistrement de la décision ;
 un enfant vivant qui détient ce verrou empêche donc la reprise. PID et horodatage
 servent au diagnostic, pas à une autorisation susceptible de réutilisation de PID.
-Les anciens appels sans `worker_protocol=lease-v1` ne peuvent pas activer de
-reprise ; `abandon` permet leur clôture honnête. Aucune promesse exactly-once.
+Les appels sans protocole de verrou ne peuvent pas activer de reprise ;
+`abandon` permet leur clôture honnête. Aucune promesse exactly-once.
 
 Après un délai/annulation pendant l'outil, Core arrête son processus enfant et
 conserve REVIEW_REQUIRED ; un arrêt local ne démontre pas l'absence d'effet chez
 un futur service distant. Le runtime ne fournit aucun outil externe dans v0.1.
 L'annulation n'est ni un rollback ni une suppression des preuves déjà obtenues.
 
-Le worker produit un reçu JSON atomique dans un dossier temporaire privé :
-fichier complet puis renommage, sans gros message bloquant sur un tube. Le parent
-le lit aussi après arrêt/jonction sur délai ou annulation. S'il existe, il devient
-`late_receipt` avec empreinte, conservé en revue sans valoir résultat vérifié.
-Ce fichier de transit n'est pas une preuve durable tant que SQLite n'a pas
-enregistré le reçu ; une mort du parent peut laisser un dossier temporaire et un
-effet inconnu. Pas de récupération automatique de ces fichiers ni de garantie
-de résistance à une coupure électrique.
+Avec `lease-v2`, l'enfant écrit et synchronise `authorized` dans le fichier
+verrouillé avant d'entrer dans le fournisseur. Il publie le reçu borné par
+écriture complète, synchronisation et renommage à côté du verrou, dans le
+dossier d'état de la mission. Le chemin dépend de l'identifiant d'appel et du
+numéro de tentative. Ces reçus restent présents après la mort du parent ; la
+réconciliation les lit sous le verrou et les rattache à SQLite. L'absence d'un
+marqueur pour `lease-v1` reste inconnue, pas assimilée à « jamais autorisé ».
+Pas de qualification de résistance à une coupure électrique ; sauvegarder le
+dossier d'état complet sans déplacer ni effacer un état actif.
+
+Le parent lit le reçu aussi après arrêt/jonction sur délai ou annulation :
+`late_receipt` est conservé sans valoir résultat vérifié. Une erreur normale est
+`error_receipt` et une récupération après interruption `recovered_receipt`.
+Un reçu positif interdit `no-effect`. `use-receipt` sélectionne sa valeur exacte,
+la marque `worker_receipt_reconciliation`, puis exige toujours le vérificateur.
+Une sortie humaine contradictoire est refusée avant adoption ; une sortie
+humaine concordante garde l'origine `human_reconciliation`.
+
+Une erreur d'outil permet une décision humaine d'absence d'effet ; elle ne
+prouve pas cette absence. En l'absence de reçu, un appel autorisé ou inconnu
+exige une attestation distincte `confirm_no_effect` après investigation.
+L'ancienne tentative et ses reçus sont archivés dans `attempt_history` avant
+incrémentation, sans relance automatique. Le seul verrou libre ne donne plus
+accès à une nouvelle tentative quand un reçu positif existe localement.
+
+Si le parent sait n'avoir envoyé aucune permission et a arrêté/joint l'enfant,
+une annulation devient CANCELLED, un défaut de lancement BLOCKED ; l'appel
+est préparé pour une tentative ultérieure explicite. Une mort brutale du parent
+reste conservativement en revue. Rappel/modèle/vérification utilisent encore
+des reçus temporaires ; leurs dossiers orphelins n'ont pas de nettoyage automatique.
 
 Une exception inattendue recharge l'état durable, journalise `INTERNAL_ERROR`
 et bloque ; si la phase persistée est EXECUTING, elle exige une revue. Si le
@@ -92,7 +116,10 @@ est un échec terminal distinct. `abandon` clôt l'orchestration sans nier l'eff
 inconnu et sans promettre d'arrêter un exécutant survivant.
 
 Les preuves finales référencent les appels et leurs empreintes, sans copier les
-sorties. La limite de 1 Mo porte sur chaque reçu, pas sur leur liste cumulée.
+sorties, et portent l'origine du reçu. Les empreintes des sorties sont recalculées
+avant succès ; c'est un contrôle de cohérence, pas une signature protégeant contre
+un acteur qui modifierait à la fois le résultat et son empreinte. La limite de
+1 Mo porte sur chaque reçu, pas sur leur liste cumulée.
 Les cinq sorties restent dans le snapshot de mission SQLite (au plus environ
 5 Mo hors contexte/métadonnées) ; externaliser les médias en objets adressés par
 empreinte reste un chantier ultérieur, pas une fonctionnalité livrée.

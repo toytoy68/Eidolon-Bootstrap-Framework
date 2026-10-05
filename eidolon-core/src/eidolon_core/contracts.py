@@ -14,6 +14,7 @@ import json
 from typing import Protocol
 
 MAX_JSON_BYTES = 1_000_000
+MAX_PLAN_DEPTH = 32
 
 
 class ContractError(ValueError):
@@ -86,6 +87,26 @@ def parse_plan(raw):
         raise ContractError("model output must be UTF-8 text") from exc
     if size > 64_000:
         raise ContractError("model output must be bounded JSON text")
+
+    # Bound nesting BEFORE parsing, independent of Python's recursion limit.
+    # Brackets inside JSON strings do not contribute to structural depth.
+    depth, quoted, escaped = 0, False, False
+    for char in raw:
+        if quoted:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                quoted = False
+        elif char == '"':
+            quoted = True
+        elif char in "[{":
+            depth += 1
+            if depth > MAX_PLAN_DEPTH:
+                raise ContractError("model plan nesting exceeds 32 containers")
+        elif char in "]}":
+            depth -= 1
 
     def unique(pairs):
         result = {}

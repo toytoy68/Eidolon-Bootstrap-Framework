@@ -200,7 +200,7 @@ Ces fonctions sont du code de confiance, déterministe, versionné comme les
 vérificateurs. Elles s'exécutent dans le processus parent : pas d'effet, pas de
 délai d'outil.
 
-### 4. Statut d'exécution et issue (Q1 de C-MSG-005, à arbitrer)
+### 4. Statut d'exécution et issue (Q1 de C-MSG-006, à arbitrer)
 
 | Option | Principe | Pour | Contre |
 | --- | --- | --- | --- |
@@ -210,6 +210,11 @@ délai d'outil.
 
 Ma préférence : S1. Code CLI proposé pour `CONCLUDED` : 5, pour que 0 reste
 réservé à une mission atteinte.
+
+**Décision de toytoy (05/10/2026, vers 14 h 10)** : principe de S1 adopté,
+`SUCCEEDED` reste réservé à une mission atteinte. Consigné en
+[C-D07](../docs/CADRAGE-DECISIONS-2026-10-05.md). Le nom `CONCLUDED` et le code 5
+restent des propositions.
 
 ### 5. Premier catalogue, jouable sans nouvel outil
 
@@ -222,7 +227,7 @@ Déclarer `service.diagnose/1` sans outil est volontaire : le type existe, son
 contrat est testable, et B pourra lui ajouter son outil plus tard sans changer
 le mécanisme.
 
-### 6. Missions déjà en base (Q3 de C-MSG-005)
+### 6. Missions déjà en base (Q3 de C-MSG-006)
 
 Le corps de mission est en JSON : pas de migration SQL. Option M1 : une mission
 sans `kind` est lue comme `demo.text-stats/1` implicite, puisque c'est la seule

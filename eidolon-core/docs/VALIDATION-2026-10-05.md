@@ -122,3 +122,7 @@ Le [bilan des corrections](REVIEW-FIXES-2026-10-05.md) ajoute 13 tests de régre
 aux 34 tests Core, et consigne une nouvelle exécution des 6 intégrations moteur
 sur copie isolée. Il précise les nouvelles preuves, les changements de format
 et les limites. Le présent rapport reste la trace de la validation initiale.
+
+Le [bilan C-REV-002](COUNTER-REVIEW-FIXES-2026-10-05.md) consigne ensuite 58 tests
+Core, 6 intégrations mémoire et un contrôle ciblé de deux tests sous charge.
+Les résultats Python 3.13 de Claude restent attribués à leurs bases respectives.

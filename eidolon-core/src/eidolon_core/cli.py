@@ -38,7 +38,9 @@ def main(argv=None):
             command.add_argument("--events", action="store_true")
     reconcile = commands.add_parser("reconcile")
     reconcile.add_argument("mission_id")
-    reconcile.add_argument("--decision", choices=("no-effect", "observed-result", "abandon"), required=True)
+    reconcile.add_argument("--decision", choices=("no-effect", "observed-result", "use-receipt", "abandon"), required=True)
+    reconcile.add_argument("--confirm-no-effect", action="store_true",
+                           help="attest investigated absence of effect after an authorized call without receipt")
     reconcile.add_argument("--actor", required=True)
     reconcile.add_argument("--reason", required=True)
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
@@ -71,7 +73,8 @@ def main(argv=None):
                     raise ValueError("result file exceeds 1 MB")
                 output = json.loads(path.read_text(encoding="utf-8"))
             result = runtime.reconcile(args.mission_id, decision=args.decision,
-                                       actor=args.actor, reason=args.reason, output=output)
+                                       actor=args.actor, reason=args.reason, output=output,
+                                       confirm_no_effect=args.confirm_no_effect)
         print(render_result(result) if args.format == "human" else encode(result))
         if args.command in {"show", "create", "reconcile"}:
             return 0
