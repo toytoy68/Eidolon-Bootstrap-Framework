@@ -349,6 +349,16 @@ absentes et un corpus vide ne deviennent pas un succès.
 
 ## Documents et limites
 
+Le [lecteur HTTP candidat](docs/WEB-READER.md) raccorde maintenant le transport
+contrôlé au coordinateur. Démonstration sur serveur local et fournisseur simulé :
+
+```sh
+PYTHONPATH=src:. python -m examples.research_http_demo --format human
+```
+
+Elle vérifie refus, quota, défi et texte reçu après redirection. Aucun moteur
+de recherche Internet ni outil réseau de mission n'est activé.
+
 - [Échanges Codex/GPT ↔ Claude Code](ECHANGES.md),
   [protocole](collaboration/README.md) et [brainstorming](collaboration/BRAINSTORMING.md).
 - [Cadrage produit et accès Internet/LAN](docs/CADRAGE-DECISIONS-2026-10-05.md) :

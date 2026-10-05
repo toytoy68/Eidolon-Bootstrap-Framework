@@ -60,3 +60,9 @@ HTTP candidat isolé. Codex traite la lisibilité des accords O-G5-1/O-G5-2.
 G006 publié par Claude (`6a972ff`), à relire avant intégration. Nouveau lot
 [C-TASK-G007](C-TASK-G007.md) : alternatives de recherche et corpus synthétique
 indépendant. Codex prend le coordinateur `research.py`, hors runtime.
+
+## Répartition courante — C-MSG-G018
+
+G006/G007 intégrés dans `534f4f4`, puis transport durci et lecteur raccordé.
+[C-TASK-G008](C-TASK-G008.md) : contre-revue Claude, sondes et rapport uniquement.
+Les mentions précédentes décrivent les répartitions historiques.

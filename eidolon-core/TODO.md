@@ -92,8 +92,9 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude : [C-TASK-G005](collaboration/tasks/C-TASK-G005.md), contre-revue
   de C-005a sur base figée `5c169cb` reçue (`0e601e7`) ; huit sondes reproduites.
   O-G5-1/O-G5-2 traités par une vue dérivée, O-G5-3 conservateur.
-- [ ] Claude : [C-TASK-G006](collaboration/tasks/C-TASK-G006.md), transport HTTP
-  candidat isolé sur politique `/2` ; livraison `6a972ff` repérée, revue et intégration à faire.
+- [x] Claude : [C-TASK-G006](collaboration/tasks/C-TASK-G006.md), transport HTTP
+  candidat intégré avec G007 dans `534f4f4` ; 15 tests reproduits, puis frontières
+  renforcées et [lecteur raccordé](docs/WEB-READER.md), hors runtime.
 - [x] C-005a : [approbation et action simulée](docs/SIMULATED-ACTIONS-C005A.md),
   accord lié aux paramètres/tentative, refus/révocation, état/version revérifiés,
   effet/reçu transactionnels sur fixture ; 23 tests et démo de six scénarios.
@@ -107,9 +108,9 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   adresses contrôlées et sélectionnées, redirections revérifiées ; hors runtime.
 - [x] C-002a.1 : exclusions IP/CIDR explicites, configuration figée, validation
   URL/DNS renforcée, NAT64 local refusé ; 30 tests et démo de huit décisions.
-- [ ] C-002b : transport HTTP de lecture avec adresse réellement épinglée,
+- [x] C-002b candidat : transport HTTP de lecture avec adresse épinglée,
   TLS/Host/SNI corrects, pas de proxy, bornes et délais, redirections contrôlées ;
-  tests sur transport simulé avant accès externe.
+  tests sur transport simulé et HTTP/TLS loopback ; accès externe non qualifié.
 - [ ] Raccordement `web.read` au catalogue, permissions et critères de mission,
   provenance/version du contenu et minimisation des données sortantes.
 - [ ] C-D08 rapportée par Claude : pare-feu sortant et VPN avant accès réels ;
@@ -120,7 +121,12 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 
 - [x] Premier coordinateur `research.py` sur doubles : fournisseurs, replis
   bornés, cache RAM, blocages et reçus ; hors runtime et sans service réel.
-- [ ] Claude G007 : avis contradictoire et corpus synthétique indépendant.
+- [x] Claude G007 : avis contradictoire et corpus de 20 cas intégrés ; cohérence
+  du corpus vérifiée ici, pas encore conformité du coordinateur à ses attentes.
+- [x] WebReader : raccordement HTTP au coordinateur, statut/Retry-After/provenance,
+  reçus tardifs et suspensions entre sauts ; démonstration sur serveur local.
+- [ ] Exécuter G007 contre le coordinateur avec écarts explicites ; ne pas
+  assimiler une page lue à une réponse démontrée ou à une source indépendante.
 - [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [ ] Attente/quotas durables par fournisseur, artefacts persistants, intégration

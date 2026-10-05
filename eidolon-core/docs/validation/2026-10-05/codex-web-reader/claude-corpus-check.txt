@@ -1,0 +1,3 @@
+cases: 20 | categories: access, budget, cache, challenge, contradiction, duplicate, etiquette, exploitable, policy, privacy, provider, quota, snippet
+required situations covered: 12/12
+OK

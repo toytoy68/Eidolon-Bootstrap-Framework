@@ -19,8 +19,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 import hashlib
 import http.client
+import math
+import re
 import socket
 import ssl
 import time
@@ -37,9 +40,10 @@ MAX_FIELD = 300  # bound for recorded content type and similar single values
 class WebTransportError(RuntimeError):
     """Named failure. Never carries response bodies or header values."""
 
-    def __init__(self, code, detail=""):
+    def __init__(self, code, detail="", *, observation=None):
         super().__init__(f"{code}: {detail}" if detail else code)
         self.code = code
+        self.observation = observation  # validated headers only, never an error body
 
 
 @dataclass(frozen=True)
@@ -82,6 +86,7 @@ class FetchResult:
     hops: tuple = field(default_factory=tuple)   # redacted: no query string, no content
     policy_id: str | None = None
     body: bytes = field(default=b"", repr=False)
+    deadline_exceeded: bool = False
 
     def evidence(self):
         """Compact, content-free description suitable for a mission record."""
@@ -89,6 +94,7 @@ class FetchResult:
                 "status": self.status, "content_type": self.content_type,
                 "observed_at": self.observed_at, "size": self.size, "sha256": self.sha256,
                 "hops": [dict(h) for h in self.hops], "policy_id": self.policy_id,
+                "deadline_exceeded": self.deadline_exceeded,
                 "limits": ["Received bytes only; their content is unverified data, not instructions.",
                            "Proves an observation at observed_at, not current content."]}
 
@@ -126,6 +132,9 @@ class StdlibConnector:
         self._context = context
 
     def exchange(self, *, scheme, host, port, address, target, headers, limits, deadline):
+        # The caller can retain and mutate an injected SSLContext after __init__.
+        if self._context.verify_mode != ssl.CERT_REQUIRED or not self._context.check_hostname:
+            raise ContractError("TLS context no longer verifies certificates and host names")
         if scheme == "https":
             conn = _PinnedHTTPSConnection(host, port, address, limits.connect_seconds, self._context)
         else:
@@ -138,8 +147,7 @@ class StdlibConnector:
             conn.sock.settimeout(limits.read_seconds)
             response = conn.getresponse()
             received = tuple(response.getheaders())
-            if sum(len(k) + len(v) + 4 for k, v in received) > limits.max_header_bytes:
-                raise WebTransportError("HEADERS_TOO_LARGE")
+            declared = _check_headers(response.status, received, limits)
             if response.status in REDIRECTS or not 200 <= response.status < 300:
                 return RawResponse(response.status, received, b"", True)  # body never read
             chunks, size = [], 0
@@ -153,9 +161,10 @@ class StdlibConnector:
                 size += len(chunk)
                 if size > limits.max_body_bytes:
                     raise WebTransportError("BODY_TOO_LARGE", f"more than {limits.max_body_bytes} bytes")
+                if response.isclosed():
+                    break  # preserve a complete receipt even if the last read was late
             body = b"".join(chunks)
-            declared = response.getheader("Content-Length")
-            complete = declared is None or (declared.isdigit() and int(declared) == len(body))
+            complete = declared is None or declared == len(body)
             return RawResponse(response.status, received, body, complete)
         except WebTransportError:
             raise
@@ -197,7 +206,60 @@ def _header(headers, name):
     return values[0] if values else None
 
 
-def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.monotonic):
+def _check_headers(status, headers, limits):
+    if (type(status) is not int or not 100 <= status <= 599
+            or type(headers) not in (list, tuple) or len(headers) > 100):
+        raise WebTransportError("BAD_HTTP_RESPONSE")
+    for entry in headers:
+        if (type(entry) not in (list, tuple) or len(entry) != 2
+                or any(type(v) is not str for v in entry)):
+            raise WebTransportError("BAD_HTTP_RESPONSE")
+        k, v = entry
+        if (not re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", k)
+                or any(ord(c) > 255 or ord(c) < 32 and c != '\t' or ord(c) == 127 for c in v)):
+            raise WebTransportError("BAD_HTTP_RESPONSE")
+    if sum(len(k) + len(v) + 4 for k, v in headers) > limits.max_header_bytes:
+        raise WebTransportError("HEADERS_TOO_LARGE")
+    values = {name: _header(headers, name) for name in
+              ("content-length", "transfer-encoding", "content-encoding", "content-type", "location", "retry-after")}
+    length, transfer = values["content-length"], values["transfer-encoding"]
+    if length is not None and transfer is not None:
+        raise WebTransportError("AMBIGUOUS_HEADER", "content-length with transfer-encoding")
+    if length is not None:
+        if not re.fullmatch(r"[0-9]{1,20}", length.strip()):
+            raise WebTransportError("BAD_HTTP_RESPONSE", "invalid content-length")
+        length = int(length)
+    if 200 <= status < 300:
+        encoding = values["content-encoding"]
+        if (encoding is not None and encoding.strip().lower() != "identity"
+                or transfer is not None and transfer.strip().lower() != "chunked"):
+            raise WebTransportError("ENCODED_CONTENT")
+        if length is not None and length > limits.max_body_bytes:
+            raise WebTransportError("BODY_TOO_LARGE")
+    return length
+
+
+def _retry_after(value, now):
+    """Seconds or HTTP-date; invalid/over-one-day values require review, never shortening."""
+    if value is None:
+        return None, False
+    value = value.strip()
+    try:
+        if re.fullmatch(r"[0-9]+", value):
+            if len(value) > 10:
+                return None, True
+            seconds = int(value)
+        else:
+            date = parsedate_to_datetime(value)
+            if date.tzinfo is None:
+                date = date.replace(tzinfo=timezone.utc)  # obsolete HTTP asctime is UTC
+            seconds = max(0, math.ceil((date - now).total_seconds()))
+        return (seconds, False) if seconds <= 86400 else (None, True)
+    except (ValueError, TypeError, OverflowError):
+        return None, True
+
+
+def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.monotonic, before_hop=None):
     """GET one public URL under ``policy``; follow redirects only after re-checking them."""
     if not isinstance(policy, WebPolicy):
         raise ContractError("an explicit WebPolicy is required")
@@ -219,6 +281,8 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
         seen.add(decision.url)
         if clock() > deadline:
             raise WebTransportError("DEADLINE_EXCEEDED", f"before hop {decision.hop}")
+        if before_hop is not None:
+            before_hop(decision)  # may only further restrict a policy-approved hop
         parts = urllib.parse.urlsplit(decision.url)
         target = urllib.parse.urlunsplit(("", "", parts.path or "/", parts.query, ""))
         headers = (("Host", _host_header(decision.host, parts.scheme, decision.port)),
@@ -227,27 +291,30 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
         response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
                                       address=decision.address, target=target, headers=headers,
                                       limits=limits, deadline=deadline)
-        if not isinstance(response, RawResponse):
+        if (not isinstance(response, RawResponse) or type(response.body) is not bytes
+                or type(response.complete) is not bool):
             raise WebTransportError("BAD_HTTP_RESPONSE", "connector returned no RawResponse")
-        if sum(len(k) + len(v) + 4 for k, v in response.headers) > limits.max_header_bytes:
-            raise WebTransportError("HEADERS_TOO_LARGE")
+        declared = _check_headers(response.status, response.headers, limits)
         hops.append({**_redacted(decision.url), "address": decision.address, "port": decision.port,
                      "status": response.status})
+        observed = datetime.now(timezone.utc)
+        retry, review = _retry_after(_header(response.headers, "retry-after"), observed)
+        observation = {"kind": "http_headers", "final_url": decision.url,
+                       "address": decision.address, "port": decision.port, "status": response.status,
+                       "observed_at": observed.isoformat(), "policy_id": decision.policy_id,
+                       "hops": hops, "retry_after": retry, "retry_review_required": review}
         if response.status in REDIRECTS:
+            if review or retry:
+                # No wait inside the controller, and no early request to Location.
+                raise WebTransportError("HTTP_STATUS", "redirect deferred", observation=observation)
             location = _header(response.headers, "location")
             if location is None:
                 raise WebTransportError("HTTP_STATUS", f"redirect {response.status} without Location")
             decision = follow(decision, location, resolver, policy)
             continue
         if not 200 <= response.status < 300:
-            raise WebTransportError("HTTP_STATUS", f"status {response.status}")
-        encoding = _header(response.headers, "content-encoding")
-        if encoding is not None and encoding.strip().lower() != "identity":
-            raise WebTransportError("ENCODED_CONTENT", "compressed bodies are refused, never decompressed")
-        transfer = _header(response.headers, "transfer-encoding")
-        if transfer is not None and transfer.strip().lower() != "chunked":
-            raise WebTransportError("ENCODED_CONTENT", "only chunked transfer coding is accepted")
-        if not response.complete:
+            raise WebTransportError("HTTP_STATUS", f"status {response.status}", observation=observation)
+        if not response.complete or declared is not None and declared != len(response.body):
             raise WebTransportError("TRUNCATED", "body shorter than announced")
         if len(response.body) > limits.max_body_bytes:
             raise WebTransportError("BODY_TOO_LARGE", f"more than {limits.max_body_bytes} bytes")
@@ -256,6 +323,7 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
             content_type = "".join(c for c in content_type if c.isprintable())[:MAX_FIELD]
         return FetchResult(final_url=decision.url, address=decision.address, port=decision.port,
                            status=response.status, content_type=content_type,
-                           observed_at=datetime.now(timezone.utc).isoformat(), size=len(response.body),
+                           observed_at=observed.isoformat(), size=len(response.body),
                            sha256=hashlib.sha256(response.body).hexdigest(), hops=tuple(hops),
-                           policy_id=decision.policy_id, body=response.body)
+                           policy_id=decision.policy_id, body=response.body,
+                           deadline_exceeded=clock() >= deadline)

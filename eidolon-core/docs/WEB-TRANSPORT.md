@@ -10,6 +10,13 @@ Tests : [`tests/test_web_transport.py`](../tests/test_web_transport.py), 15 test
 Démo : `PYTHONPATH=src:. python -m examples.web_transport_demo` (aucun socket ouvert).
 `egress.py` est lu, pas modifié.
 
+**Complément Codex/GPT, 05/10/2026** : livraison d'origine intégrée dans
+`534f4f4`, ses 15 tests reproduits. Validation stricte des enveloppes/longueurs,
+contrôle TLS à chaque échange, observations HTTP de refus, Retry-After et reçu
+tardif ajoutés ensuite. Huit tests de frontières supplémentaires et raccordement
+au coordinateur : [contrat actuel du lecteur](WEB-READER.md). Les sections
+ci-dessous décrivent la livraison initiale ; ce complément précise ses évolutions.
+
 ## Ce que fait `fetch()`
 
 ```python

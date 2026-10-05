@@ -3,7 +3,12 @@
 Auteur : Codex/GPT. Date : 05/10/2026. Base Core `c8cd94a`, cadrage C-D09,
 [C-BRAIN-G010](../collaboration/BRAINSTORMING.md#c-brain-g010--recherche-web-fiable-malgre-les-blocages).
 Module `research.py`, distinct du transport HTTP candidat G006 livré par Claude
-sur sa branche et encore à relire. **Aucun service de recherche réel raccordé**.
+sur sa branche à cette base initiale. **Aucun service de recherche réel raccordé**.
+
+Suite livrée : G006/G007 intégrés dans `534f4f4`, transport durci et
+[WebReader raccordé sur serveur local](WEB-READER.md). Ce document décrit le
+premier prototype ; le contrat du lecteur détaille les nouvelles observations
+HTTP, contrôles entre sauts, suspensions et reçus tardifs.
 
 ## Fonctionnement livré
 
@@ -24,8 +29,8 @@ implicite. Les URL retournées sont des données non fiables, jamais des permiss
 Le lecteur doit appliquer la politique à **toutes les connexions/redirections**.
 Le contrôle de l'URL finale par le coordinateur est un contrôle supplémentaire,
 pas une protection rétroactive contre un lecteur qui aurait déjà contacté le LAN.
-Le futur adaptateur G006 devra repasser par `fetch(url, policy=...)`, qui contrôle
-lui-même chaque IP avant connexion ; il n'est pas livré dans ce prototype.
+L'adaptateur WebReader repasse par `fetch(url, policy=...)`, qui contrôle chaque
+IP avant connexion ; le raccordement est documenté séparément dans WEB-READER.md.
 
 ## Un résultat trouvé n'est pas une source lue
 
@@ -90,8 +95,8 @@ Une lecture 429/AccessFailure RATE_LIMITED enregistre une suspension du domaine
 (hôte/port), utilisant `retry_after` validé en secondes, 60 secondes par défaut.
 Pas de sommeil ni relance automatique. Après 64 domaines suspendus, une pause
 globale conservatrice borne cet état RAM sans oublier une interdiction active.
-L'adaptateur futur devra parser le vrai en-tête Retry-After (date ou durée), pas
-le passer directement comme texte. Les quotas de recherche sont signalés mais
+WebReader parse le vrai en-tête Retry-After (date ou durée) et conserve les
+valeurs hors périmètre comme demande de revue. Les quotas de recherche sont signalés mais
 ne sont pas conservés entre recherches : ordonnanceur par fournisseur à développer.
 
 Le TTL des copies Web ne change **aucun accord humain** ni proposition mémoire.
@@ -119,9 +124,10 @@ connexion n'est ouverte. Le mode humain reprend le standard Eidolon.
 
 ## Suite et séparation des travaux
 
-Claude reçoit G007 : comparaison contradictoire des options et corpus indépendant.
-G006 est repéré dans `6a972ff`, pas intégré ni requalifié par ce lot. Prochains
-travaux : lire/tester ce transport, adapter un fournisseur réel choisi, choisir
+G007 est reçu : comparaison contradictoire et corpus indépendant, dont la
+cohérence est vérifiée mais pas encore la conformité du coordinateur. G006 et
+son raccordement sont intégrés, testés sur simulation et loopback. Prochains
+travaux : adapter un fournisseur réel choisi, choisir
 un extracteur HTML, budget durable/attente par fournisseur, provenance des sauts
 et artefacts, puis objectif de mission avec critères de source indépendants du LLM.
 
