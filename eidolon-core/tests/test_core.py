@@ -136,6 +136,12 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(m["status"], "REVIEW_REQUIRED")
         self.assertEqual(m["error"]["code"], "WORKER_LOST")
 
+    def test_unspawnable_tool_is_diagnosed_without_unhandled_exception(self):
+        _, m = self.run_mission(registry=self.registry(execute=lambda parameters, context: {}))
+        self.assertEqual(m["status"], "REVIEW_REQUIRED")
+        self.assertEqual(m["error"]["code"], "WORKER_START_FAILED")
+        self.assertIsNone(m["result"])
+
     def test_verification_timeout_keeps_receipt_without_success(self):
         _, m = self.run_mission(registry=self.registry(verify=slow_verifier), limits=Limits(0.5))
         self.assertEqual(m["status"], "BLOCKED")

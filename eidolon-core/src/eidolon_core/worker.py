@@ -34,7 +34,12 @@ def invoke(function, args, *, timeout, cancelled):
     deadline = time.monotonic() + timeout
     started = False
     try:
-        process.start()
+        if cancelled():
+            raise CallFailure("CANCELLED", "cancellation requested before worker launch")
+        try:
+            process.start()
+        except Exception as exc:
+            raise CallFailure("WORKER_START_FAILED", "worker could not start: " + type(exc).__name__) from exc
         started = True
         sender.close()
         response = None
