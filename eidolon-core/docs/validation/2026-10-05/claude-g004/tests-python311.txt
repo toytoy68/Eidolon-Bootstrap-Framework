@@ -1,0 +1,40 @@
+# Base: c0fa5ba7e161a3870bb4298ac0b29437889e9f1e + fichiers C-TASK-G004 ; llama.cpp b11418 (9871df5)
+# Python 3.11.15 ; 4 cœurs ; 2026-10-05T15:32:04+02:00
+# Commandes : PYTHONPATH=src:. python3 -m unittest tests.test_openai_chat_model -v ; python3 -m examples.openai_chat_demo ; puis suite complète
+test_api_key_is_a_variable_name_and_needs_https_off_loopback (tests.test_openai_chat_model.ConfigurationTests.test_api_key_is_a_variable_name_and_needs_https_off_loopback) ... ok
+test_endpoint_rules (tests.test_openai_chat_model.ConfigurationTests.test_endpoint_rules) ... ok
+test_model_id_and_immutability (tests.test_openai_chat_model.ConfigurationTests.test_model_id_and_immutability) ... ok
+test_no_default_endpoint_or_model (tests.test_openai_chat_model.ConfigurationTests.test_no_default_endpoint_or_model) ... ok
+test_options_budgets_and_context (tests.test_openai_chat_model.ConfigurationTests.test_options_budgets_and_context) ... ok
+test_secret_value_never_enters_manifest_or_model_id (tests.test_openai_chat_model.ConfigurationTests.test_secret_value_never_enters_manifest_or_model_id) ... ok
+test_authentication_with_and_without_key (tests.test_openai_chat_model.LoopbackServerTests.test_authentication_with_and_without_key) ... ok
+test_connection_refused (tests.test_openai_chat_model.LoopbackServerTests.test_connection_refused) ... ok
+test_errors_redirects_size_timeout (tests.test_openai_chat_model.LoopbackServerTests.test_errors_redirects_size_timeout) ... ok
+test_plan_text_over_http (tests.test_openai_chat_model.LoopbackServerTests.test_plan_text_over_http) ... ok
+test_bearer_key_comes_from_the_environment_at_call_time (tests.test_openai_chat_model.ProtocolTests.test_bearer_key_comes_from_the_environment_at_call_time) ... ok
+test_completion_beyond_max_tokens_is_inconsistent (tests.test_openai_chat_model.ProtocolTests.test_completion_beyond_max_tokens_is_inconsistent) ... ok
+test_failures_are_errors_never_a_plan (tests.test_openai_chat_model.ProtocolTests.test_failures_are_errors_never_a_plan) ... ok
+test_oversized_injected_response_is_refused (tests.test_openai_chat_model.ProtocolTests.test_oversized_injected_response_is_refused) ... ok
+test_prompt_budget_checked_before_any_transport_call (tests.test_openai_chat_model.ProtocolTests.test_prompt_budget_checked_before_any_transport_call) ... ok
+test_request_matches_the_server_contract (tests.test_openai_chat_model.ProtocolTests.test_request_matches_the_server_contract) ... ok
+test_invalid_or_unauthorized_plans_are_refused_by_core (tests.test_openai_chat_model.RuntimeIntegrationTests.test_invalid_or_unauthorized_plans_are_refused_by_core) ... ok
+test_secret_never_reaches_the_mission_record (tests.test_openai_chat_model.RuntimeIntegrationTests.test_secret_never_reaches_the_mission_record) ... ok
+test_transport_failure_blocks_instead_of_planning (tests.test_openai_chat_model.RuntimeIntegrationTests.test_transport_failure_blocks_instead_of_planning) ... ok
+test_valid_plan_still_goes_through_core_checks (tests.test_openai_chat_model.RuntimeIntegrationTests.test_valid_plan_still_goes_through_core_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 3.569s
+
+OK
+# --- démonstration
+{
+  "status": "SUCCEEDED",
+  "outcome": "ACHIEVED",
+  "model_id": "openai-chat/synthetic-planner-q4@90d43e9ec97ff7a6",
+  "plan_steps": 1,
+  "note": "synthetic server: protocol shape only, no llama.cpp, GPU or model"
+}
+# --- suite complète
+Ran 163 tests in 55.512s
+
+OK (skipped=6)
