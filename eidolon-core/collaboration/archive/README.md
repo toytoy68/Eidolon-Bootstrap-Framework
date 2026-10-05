@@ -55,3 +55,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ec7582b`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ec7582b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+
+- [C-MSG-G012, prise en charge C-005a](2026-10-05-gpt-C-MSG-G012.md) : copie exacte ;
+  [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d4ead61dc1ff942fcb25fbfed8353407d5805e70/eidolon-core/collaboration/GPT-TO-CLAUDE.md).

@@ -42,3 +42,6 @@ L'étude V100 de Claude est reçue dans ec7582b ; précisions demandées dans
 [C-TASK-G002](C-TASK-G002.md), validateur de rapports de qualification.
 Revue : [C-TASK-G001](C-TASK-G001.md). Codex prend le diagnostic simulé C-004a.
 Les prises en charge Claude restent à confirmer dans sa réponse.
+
+- [C-TASK-G004](C-TASK-G004.md) : Claude, adaptateur candidat API chat llama.cpp
+  sur transport simulé, fichiers séparés de C-005a. Prêt à prendre.
