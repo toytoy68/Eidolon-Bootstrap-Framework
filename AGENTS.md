@@ -1,5 +1,13 @@
 # Consignes pour les agents — projets Eidolon
 
+## Reprise et collaboration Core
+
+Pour le chantier Core, commencer par [eidolon-core/ECHANGES.md](eidolon-core/ECHANGES.md)
+et suivre le [protocole de collaboration](eidolon-core/collaboration/README.md).
+Vérifier les messages reçus, déclarer le lot pris en charge et préserver les
+contributions de l'autre auteur. Les propositions du brainstorming ne valent
+pas décision utilisateur ; les fichiers ne lancent aucune session d'agent.
+
 ## Identité et présentation
 
 Avant de créer/modifier un en-tête source, une CLI destinée à l'utilisateur ou

@@ -18,6 +18,8 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] Documentation des trois défauts mémoire et des validations différées.
 - [x] Standard de présentation commun Eidolon, consignes AGENTS.md, en-têtes
   des modules et mode humain de la CLI ; aperçu sans installation.
+- [x] Canal d'échanges Core Codex/GPT ↔ Claude Code, protocole, brainstorming
+  et consignes de découverte AGENTS.md/CLAUDE.md ; première revue préparée.
 
 ## Prochaine tranche proposée : critères de mission et contrôleur simulé enrichi
 

@@ -151,6 +151,8 @@ défaut. Ce n'est pas encore un budget global de mission.
 
 ## Documents et limites
 
+- [Échanges Codex/GPT ↔ Claude Code](ECHANGES.md),
+  [protocole](collaboration/README.md) et [brainstorming](collaboration/BRAINSTORMING.md).
 - [Cadrage produit et accès Internet/LAN](docs/CADRAGE-DECISIONS-2026-10-05.md) :
   brainstorming reçu, besoins Desktop/fichiers Windows/NAS/mémoire distante et
   écarts avec v0.1.
