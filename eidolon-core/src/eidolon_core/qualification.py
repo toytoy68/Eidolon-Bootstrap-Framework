@@ -62,8 +62,11 @@ class Verdict:
 
 def criteria_fingerprint(thresholds):
     """SHA-256 of the canonical threshold list, as recorded before the run."""
-    canonical = json.dumps(thresholds, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    try:
+        canonical = json.dumps(thresholds, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    except (TypeError, ValueError, RecursionError) as exc:
+        raise ReportError("criteria must be finite UTF-8 JSON") from exc
 
 
 def load(raw):
@@ -98,6 +101,10 @@ def load(raw):
             raise
         raise ReportError("report is not valid JSON") from exc
     _depth(value, 0)
+    try:
+        json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
+    except (TypeError, ValueError, RecursionError) as exc:
+        raise ReportError("report must be finite UTF-8 JSON") from exc
     return value
 
 
@@ -137,9 +144,20 @@ def _count(value, where, limit=MAX_CASES):
 
 
 def _number(value, where):
-    if type(value) not in (int, float) or not math.isfinite(value):
-        raise ReportError(f"{where} must be a finite number")
+    try:
+        finite = type(value) in (int, float) and math.isfinite(value)
+    except OverflowError:
+        finite = False
+    if not finite:
+        raise ReportError(f"{where} must be a finite representable number")
     return value
+
+
+def _metric_value(metric, value, where):
+    _number(value, where)
+    minimum = -100 if metric == "latency_degradation" else 0
+    if value < minimum or (metric == "error_rate" and value > 1):
+        raise ReportError(f"{where} is outside the domain of {metric}")
 
 
 def _timestamp(value, where):
@@ -182,7 +200,7 @@ def _parse(report):
         _unit(item["metric"], item["unit"], f"criteria.thresholds[{i}]")
         if item["op"] not in OPERATORS:
             raise ReportError(f"criteria.thresholds[{i}].op must be one of {OPERATORS}")
-        _number(item["value"], f"criteria.thresholds[{i}].value")
+        _metric_value(item["metric"], item["value"], f"criteria.thresholds[{i}].value")
         if (item["metric"], item["op"]) in seen:
             raise ReportError(f"criteria.thresholds[{i}] duplicates a metric/operator pair")
         seen.add((item["metric"], item["op"]))
@@ -209,14 +227,14 @@ def _parse(report):
         _object(entry, ("value", "unit", "origin"), f"measurements.{metric}")
         _unit(metric, entry["unit"], f"measurements.{metric}")
         if entry["value"] is not None:
-            _number(entry["value"], f"measurements.{metric}.value")
+            _metric_value(metric, entry["value"], f"measurements.{metric}.value")
         if entry["origin"] not in ORIGINS:
             raise ReportError(f"measurements.{metric}.origin must be one of {ORIGINS}")
     return started, fixed
 
 
 def _unit(metric, unit, where):
-    if metric not in METRIC_UNITS:
+    if not isinstance(metric, str) or metric not in METRIC_UNITS:
         raise ReportError(f"{where}: unknown metric {metric!r}")
     if unit != METRIC_UNITS[metric]:
         raise ReportError(f"{where}: unit for {metric} must be {METRIC_UNITS[metric]!r}")
@@ -253,6 +271,9 @@ def validate(raw):
         rejected.append(("COUNT_MISMATCH", "more cases executed than expected"))
     elif len(results) < cases["expected"]:
         incomplete.append(("CASES_MISSING", f"{cases['expected'] - len(results)} expected case(s) without result"))
+
+    if cases["expected"] == 0:
+        incomplete.append(("EMPTY_CORPUS", "no evaluation case was expected; no passed scope can be established"))
 
     # One violation or failure rejects the run, whatever the other results.
     for result in results:

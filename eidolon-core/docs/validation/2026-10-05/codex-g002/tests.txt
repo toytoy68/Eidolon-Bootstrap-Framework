@@ -1,0 +1,25 @@
+test_fixtures_give_the_three_verdicts (tests.test_qualification.FixtureTests.test_fixtures_give_the_three_verdicts) ... ok
+test_passed_scope_is_limited_to_the_announced_scope (tests.test_qualification.FixtureTests.test_passed_scope_is_limited_to_the_announced_scope) ... ok
+test_absent_measurement_stays_absent_not_zero (tests.test_qualification.IncompleteTests.test_absent_measurement_stays_absent_not_zero) ... ok
+test_missing_case_is_incomplete (tests.test_qualification.IncompleteTests.test_missing_case_is_incomplete) ... ok
+test_invalid_units_and_metrics (tests.test_qualification.MalformedTests.test_invalid_units_and_metrics) ... ok
+test_model_supplied_validation_flag_is_refused (tests.test_qualification.MalformedTests.test_model_supplied_validation_flag_is_refused) ... ok
+test_non_finite_numbers (tests.test_qualification.MalformedTests.test_non_finite_numbers) ... ok
+test_size_depth_duplicates_and_encoding (tests.test_qualification.MalformedTests.test_size_depth_duplicates_and_encoding) ... ok
+test_structure_bounds_and_types (tests.test_qualification.MalformedTests.test_structure_bounds_and_types) ... ok
+test_criteria_must_be_fixed_before_the_run_and_unchanged (tests.test_qualification.RejectionTests.test_criteria_must_be_fixed_before_the_run_and_unchanged) ... ok
+test_failed_or_errored_case_rejects (tests.test_qualification.RejectionTests.test_failed_or_errored_case_rejects) ... ok
+test_inconsistent_counts_reject (tests.test_qualification.RejectionTests.test_inconsistent_counts_reject) ... ok
+test_mixed_synthetic_and_hardware_data_rejects (tests.test_qualification.RejectionTests.test_mixed_synthetic_and_hardware_data_rejects) ... ok
+test_one_violation_among_many_successes_rejects (tests.test_qualification.RejectionTests.test_one_violation_among_many_successes_rejects) ... ok
+test_threshold_breach_rejects (tests.test_qualification.RejectionTests.test_threshold_breach_rejects) ... ok
+test_violation_is_not_hidden_by_missing_data (tests.test_qualification.RejectionTests.test_violation_is_not_hidden_by_missing_data) ... ok
+test_empty_corpus_is_incomplete_and_does_not_hide_rejection (tests.test_qualification_boundaries.QualificationBoundaryTests.test_empty_corpus_is_incomplete_and_does_not_hide_rejection) ... ok
+test_exponent_overflow_large_integer_and_surrogates_are_report_errors (tests.test_qualification_boundaries.QualificationBoundaryTests.test_exponent_overflow_large_integer_and_surrogates_are_report_errors) ... ok
+test_physical_metric_domains_and_improvement (tests.test_qualification_boundaries.QualificationBoundaryTests.test_physical_metric_domains_and_improvement) ... ok
+test_unhashable_metric_gives_contract_error (tests.test_qualification_boundaries.QualificationBoundaryTests.test_unhashable_metric_gives_contract_error) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.024s
+
+OK
