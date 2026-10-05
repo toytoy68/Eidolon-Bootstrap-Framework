@@ -97,6 +97,28 @@ Essais à ajouter à celui de GPT : redirection d'une URL publique vers une
 adresse privée, nom dont la résolution change entre contrôle et connexion,
 fichier remplacé entre `stat` et `read`, lien sortant du dossier autorisé.
 
+### Contribution Claude — 05/10/2026, 14 h 55, base `9620c47`
+
+Retour d'implémentation de [C-CLAUDE-001](tasks/C-CLAUDE-001.md), sans décision.
+Le catalogue `targets/1` réalise la partie « liste finie » de l'option A : des
+capacités nommées, chacune avec sa classe d'effet (`none`, `local_read`,
+`egress_read`, `mutation`), et une empreinte qui peut entrer dans
+`configuration()`. Trois enseignements :
+
+- **Ce que le catalogue ne règle pas** : redirections, DNS et traversée de
+  chemin restent l'affaire de chaque connecteur. La liste de ces contrôles est
+  dans [TARGETS-CONTRACT.md](../docs/TARGETS-CONTRACT.md). Un catalogue sûr
+  n'empêche pas un connecteur négligent.
+- **Les alias ambigus sont normaux** : deux NAS répondent tous les deux à « nas ».
+  Le catalogue rend `TARGET_AMBIGUOUS` avec les candidats. Il faut une issue
+  CLARIFICATION au niveau de la mission (C-001a), pas seulement un refus technique.
+- **Web et LAN sont deux types de cible**, pas un paramètre : `web_public` et
+  `lan_service` ne se confondent pas dans le catalogue. Reste à faire respecter
+  cette séparation par `Policy` et par le connecteur Web (refus des adresses privées).
+
+Ma préférence pour le connecteur Windows dans la session ne change pas.
+Le catalogue la sert déjà : `windows_session` est un type distinct de `nas_storage`.
+
 ## C-BRAIN-003 — Approbations et reprise d'un échec partiel
 
 Statut : PROPOSÉ. Auteur : Codex/GPT. Liens : C-005, C-006.
@@ -179,6 +201,33 @@ version/fraîcheur minimales pour une lecture et pour un futur redémarrage ?
 Essai : même nom, destination modifiée après approbation ; PC déconnecté après
 observation ; capacité retirée entre plan et appel. Tout doit rester diagnostiquable.
 VM100 Core = `192.168.1.135`, information fournie par toytoy ; aucun test réseau.
+
+### Contribution Claude — 05/10/2026, 14 h 55, base `9620c47`
+
+Statut proposé : EN DISCUSSION. D'accord pour séparer les trois informations.
+Le catalogue livré par C-CLAUDE-001 en couvre une seule : la configuration
+stable. Il ne contient volontairement aucun champ « joignable » ou « autorisé ».
+
+Réponse à la question — preuves minimales :
+
+| | Lecture | Futur redémarrage |
+| --- | --- | --- |
+| Configuration | Empreinte du catalogue et identifiant de cible, figés avec la mission | Idem, plus l'empreinte des paramètres dans l'accord |
+| Identité de la cible | Identité de celui qui répond (empreinte TLS, clé d'hôte SSH, clé enrôlée du connecteur Windows), comparée à une valeur attendue | La même, revérifiée juste avant l'action, égale à celle présente lors de l'accord |
+| Fraîcheur | La lecture est sa propre observation : date côté Core, taille, date de modification et SHA-256 des octets lus | Observation de l'état ayant motivé l'action, plus récente qu'un délai fixé par la politique ; une observation antérieure à l'accord ne suffit jamais |
+| Après coup | Rien de plus | Observation postérieure au reçu qui montre l'état attendu (cas rouge C-6) |
+
+Deux points à ajouter :
+
+- **Dater côté Core, pas avec l'horloge de la cible.** Une machine à l'heure
+  fausse ne doit pas rendre « fraîche » une vieille observation.
+- **La destination ne suffit pas comme identité.** Même adresse, machine
+  remplacée : la clé d'identité change. Essai à ajouter à ceux de GPT : même
+  nom, même destination, clé d'hôte différente après l'approbation → refus et
+  nouvelle décision.
+
+Affichage proposé : trois colonnes distinctes, « configurée », « observée il y
+a X », « autorisée pour cet appel ». Jamais un unique voyant « disponible ».
 
 ## C-BRAIN-006 — Qualifier un modèle sans en faire une autorité
 
