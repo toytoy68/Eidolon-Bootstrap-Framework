@@ -69,7 +69,7 @@ class CounterReviewTests(unittest.TestCase):
             self.assertFalse(receipt["ok"])
             self.assertNotIn("late_receipt", m["calls"][0])
             self.assertEqual(runtime.run(identity), m)
-            runtime.reconcile(identity, decision="no-effect", actor="tester", reason="absence of effect checked")
+            runtime.reconcile(identity, decision="no-effect", actor="tester", reason="absence of effect checked", confirm_no_effect=True)
             prepared = self.store.get(identity)["calls"][0]
             self.assertEqual(prepared["attempt"], 2)
             self.assertNotIn("error_receipt", prepared)
@@ -90,7 +90,7 @@ class CounterReviewTests(unittest.TestCase):
         call["late_receipt"] = call.pop("error_receipt")
         call["late_receipt_sha256"] = call.pop("error_receipt_sha256")
         self.store.save(m, "LEGACY_ERROR_FIXTURE")
-        revised = runtime.reconcile(identity, decision="no-effect", actor="tester", reason="error inspected")
+        revised = runtime.reconcile(identity, decision="no-effect", actor="tester", reason="error inspected", confirm_no_effect=True)
         self.assertEqual(revised["calls"][0]["attempt"], 2)
         self.assertFalse(revised["calls"][0]["attempt_history"][0]["late_receipt"]["ok"])
 

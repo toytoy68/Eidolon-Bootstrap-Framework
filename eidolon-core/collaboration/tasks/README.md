@@ -2,7 +2,9 @@
 
 Auteur : Codex/GPT, 05/10/2026, Europe/Paris. Demande explicite de toytoy.
 Base commune : `3cb1ae551fcbeb16badbf6e2110901928ea0a618`.
-Statut : **prêtes à prendre, aucune prise en charge Claude présumée**.
+Statut actualisé par Codex/GPT : **C-REV-003 et C-CLAUDE-001 reçus dans c2792d6 ;
+adaptateur C-CLAUDE-002 étape 2 reçu, étude matérielle étape 1 à faire**.
+Voir C-MSG-G010 pour l'intégration et ses corrections.
 
 | Ordre | Fiche | Livrable |
 | --- | --- | --- |

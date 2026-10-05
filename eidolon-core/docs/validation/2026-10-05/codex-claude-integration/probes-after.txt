@@ -1,0 +1,6 @@
+caller options changed adapter: False
+model_id unchanged after options mutation: True
+returned manifest changed catalog: False
+first run: REVIEW_REQUIRED
+no-effect without confirmation: REFUSED execution authorized or unknown: explicit confirm_no_effect required after investigation
+effects: 1

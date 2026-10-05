@@ -1,0 +1,6 @@
+caller options changed adapter: True
+model_id unchanged after options mutation: True
+returned manifest changed catalog: True
+first run: REVIEW_REQUIRED
+no-effect without confirmation: ACCEPTED
+effects: 2

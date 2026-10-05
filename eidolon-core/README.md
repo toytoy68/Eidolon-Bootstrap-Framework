@@ -74,7 +74,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives -v
+PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives tests.test_targets tests.test_ollama_model tests.test_integration_review -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -157,7 +157,7 @@ Après cette vérification humaine explicite :
 
 ```sh
 PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo reconcile m-ID \
-  --decision no-effect --actor toytoy --reason 'Exécutant arrêté, absence d’effet vérifiée'
+  --decision no-effect --confirm-no-effect --actor toytoy --reason 'Exécutant arrêté, absence d’effet vérifiée'
 PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo run m-ID
 ```
 
@@ -205,15 +205,20 @@ PYTHONPATH=src python -m eidolon_core --state /tmp/eidolon-core-demo run m-ID
 `use-receipt` prépare la vérification, sans relancer l'outil. Une sortie humaine
 différente d'un reçu positif conservé est refusée avant de modifier le résultat.
 `no-effect` est refusé si un reçu positif existe, même avec confirmation.
-Une enveloppe d'erreur autorise la décision humaine d'absence d'effet, sans
-constituer cette preuve à elle seule ; l'ancienne tentative et son erreur sont
-conservées dans `attempt_history`.
+Une enveloppe d'erreur ne prouve jamais l'absence d'effet : si l'exécution a été
+autorisée ou reste inconnue, `no-effect` exige aussi `--confirm-no-effect` après
+investigation. L'ancienne tentative et son erreur restent dans `attempt_history`.
 
 Si l'appel a été autorisé (ou son autorisation est inconnue avec `lease-v1`)
-et qu'aucun reçu n'existe, `no-effect` exige en plus `--confirm-no-effect` après
+et qu'aucun reçu positif n'existe, `no-effect` exige en plus `--confirm-no-effect` après
 une investigation établissant l'absence d'effet. Un verrou libre ne suffit pas.
 Cette attestation reste une décision humaine auditée, pas une preuve automatique.
 Si l'absence d'effet ne peut pas être établie, rester en revue ou abandonner.
+
+Après WORKER_SPAWNED, un verrou manquant bloque toute réconciliation ouvrant une
+reprise ; il n'est pas recréé vide. L'abandon reste possible. Un reçu récupéré
+peut être journalisé même si la décision de réconciliation est ensuite refusée :
+consulter `show --events` après un refus. Cela n'autorise aucun nouvel appel.
 
 Une annulation constatée avant tout envoi d'autorisation se termine directement
 en CANCELLED. Un échec/délai de lancement connu avant autorisation bloque et
@@ -238,6 +243,17 @@ Codes CLI : 0 succès de commande (`show/create/reconcile`) ou mission réussie 
 `cancel` pendant un appel actif persiste la demande ; `show` expose sa progression.
 Le délai `--timeout` est **par appel**, démarrage du processus compris, 10 s par
 défaut. Ce n'est pas encore un budget global de mission.
+
+## Modules optionnels intégrés, activation différée
+
+Le [catalogue de cibles](docs/TARGETS-CONTRACT.md) et l'[adaptateur Ollama](docs/OLLAMA-ADAPTER.md)
+de Claude sont intégrés au paquet. Le catalogue reste sans raccordement au runtime
+ou à la CLI ; l'adaptateur peut être injecté via l'API Python mais n'est ni le
+modèle par défaut, ni une option de la CLI. Ses tests emploient des transports
+simulés et un faux serveur HTTP loopback. Aucun vrai modèle n'est qualifié.
+
+L'étude comparative pour les deux V100 SXM2 sur carte adaptatrice PCIe/NVLink
+reste à réaliser dans C-CLAUDE-002 étape 1. [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
 
 ## Documents et limites
 

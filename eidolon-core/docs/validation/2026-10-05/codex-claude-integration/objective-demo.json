@@ -1,0 +1,102 @@
+{
+  "synthetic": true,
+  "temporary_state_removed": true,
+  "cases": [
+    {
+      "case": "complete",
+      "status": "SUCCEEDED",
+      "outcome": {
+        "status": "ACHIEVED",
+        "scope": "recalled_snapshot",
+        "covered_references": [
+          "synthetic-note@1",
+          "synthetic-second@1"
+        ],
+        "missing_references": [],
+        "code": "COVERAGE_VERIFIED"
+      },
+      "calls": 2,
+      "error": null,
+      "evidence": [
+        {
+          "call_id": "m-ba40561155dc4bd6b16bd6fe9feefd32/stats-1",
+          "attempt": 1,
+          "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+          "verifier": "text-stats-recompute/1",
+          "receipt_origin": "worker"
+        },
+        {
+          "call_id": "m-ba40561155dc4bd6b16bd6fe9feefd32/stats-2",
+          "attempt": 1,
+          "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+          "verifier": "text-stats-recompute/1",
+          "receipt_origin": "worker"
+        }
+      ]
+    },
+    {
+      "case": "incomplete_plan",
+      "status": "BLOCKED",
+      "outcome": {
+        "status": "NOT_ACHIEVED",
+        "scope": "recalled_snapshot",
+        "covered_references": [],
+        "missing_references": [
+          "synthetic-note@1",
+          "synthetic-second@1"
+        ],
+        "code": "NO_VERIFIED_RESULT"
+      },
+      "calls": 0,
+      "error": {
+        "code": "PREFLIGHT_REFUSED",
+        "message": "MISSION_INCOMPLETE_PLAN: cover every reference in the retained recall"
+      },
+      "evidence": []
+    },
+    {
+      "case": "clarification",
+      "status": "BLOCKED",
+      "outcome": {
+        "status": "CLARIFICATION",
+        "scope": "recalled_snapshot",
+        "covered_references": [],
+        "missing_references": [],
+        "code": "MISSION_UNSUPPORTED"
+      },
+      "calls": 0,
+      "error": {
+        "code": "MISSION_UNSUPPORTED",
+        "message": "clarification required: only the documented statistics demo is supported"
+      },
+      "evidence": []
+    },
+    {
+      "case": "cancelled_partial",
+      "status": "CANCELLED",
+      "outcome": {
+        "status": "PARTIAL",
+        "scope": "recalled_snapshot",
+        "covered_references": [
+          "synthetic-note@1"
+        ],
+        "missing_references": [
+          "synthetic-second@1"
+        ],
+        "code": "INCOMPLETE_EVIDENCE"
+      },
+      "calls": 1,
+      "error": {
+        "code": "CANCELLED",
+        "message": "cancellation requested"
+      },
+      "evidence": [
+        {
+          "call_id": "m-1c925c16b19f4bee8c9ff03aafaae8df/stats-1",
+          "status": "VERIFIED",
+          "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29"
+        }
+      ]
+    }
+  ]
+}

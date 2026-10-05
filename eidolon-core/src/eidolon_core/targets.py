@@ -63,7 +63,7 @@ class Capability:
     scope: dict  # Declared intention (folders, endpoints); not enforcement.
 
     def manifest(self):
-        return {"name": self.name, "effect": self.effect, "scope": self.scope}
+        return {"name": self.name, "effect": self.effect, "scope": snapshot(self.scope)}
 
 
 @dataclass(frozen=True)
@@ -107,7 +107,7 @@ def _capability(raw, target_id):
     scope = raw.get("scope", {})
     if not isinstance(scope, dict):
         raise ContractError(f"{target_id}/{name}: scope must be an object")
-    if len(encode(scope)) > MAX_SCOPE:
+    if len(encode(scope).encode("utf-8")) > MAX_SCOPE:
         raise ContractError(f"{target_id}/{name}: scope too large")
     return Capability(name, raw["effect"], snapshot(scope))
 
@@ -148,6 +148,14 @@ class Catalog:
     """Immutable, validated catalog. Order of the configuration is irrelevant."""
 
     def __init__(self, targets):
+        # Copy and validate even when callers construct Catalog from Target DTOs.
+        targets = [_target(t.manifest()) for t in targets]
+        ids = {t.id for t in targets}
+        if len(targets) > MAX_TARGETS or len(ids) != len(targets):
+            raise ContractError("too many targets or duplicate target id")
+        for target in targets:
+            if set(target.aliases) & (ids - {target.id}):
+                raise ContractError("target alias equals another target id")
         self._targets = {t.id: t for t in sorted(targets, key=lambda t: t.id)}
         self._names = {}
         for target in self._targets.values():
@@ -165,14 +173,6 @@ class Catalog:
         if not isinstance(raw, list) or len(raw) > MAX_TARGETS:
             raise ContractError(f"catalog holds at most {MAX_TARGETS} targets")
         targets = [_target(t) for t in raw]
-        ids = [t.id for t in targets]
-        if len(set(ids)) != len(ids):
-            raise ContractError("duplicate target id")
-        for target in targets:
-            # An alias equal to another target's id would make that id ambiguous.
-            clash = set(target.aliases) & (set(ids) - {target.id})
-            if clash:
-                raise ContractError(f"{target.id}: alias equals another target id: {sorted(clash)[0]}")
         return cls(targets)
 
     def manifest(self):
@@ -182,7 +182,8 @@ class Catalog:
         return digest(self.manifest())
 
     def get(self, identity):
-        return self._targets.get(identity)
+        target = self._targets.get(identity)
+        return _target(target.manifest()) if target is not None else None
 
     def resolve(self, reference):
         """Resolve an id or alias; an ambiguous alias never picks a candidate."""
@@ -192,7 +193,7 @@ class Catalog:
             return Lookup("TARGET_ABSENT", reference)
         if len(matches) > 1:
             return Lookup("TARGET_AMBIGUOUS", reference, candidates=tuple(matches))
-        return Lookup("FOUND", reference, target=self._targets[matches[0]])
+        return Lookup("FOUND", reference, target=self.get(matches[0]))
 
     def lookup(self, reference, capability):
         """Resolve a target and one of its declared capabilities."""

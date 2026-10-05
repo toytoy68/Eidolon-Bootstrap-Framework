@@ -41,8 +41,9 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] N-08 : marge des délais de test relevée, annulation synchronisée ; deux
   tests ciblés verts sur deux CPU avec six concurrents. Recette VM toujours différée.
 - [x] Contre-revue C-REV-003 reçue (C-MSG-C009, base `3cb1ae5`).
-- [ ] Suites de C-REV-003 signalées par Claude, non traitées : N-09 (P2),
-  N-10 et N-11 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
+- [x] Suites C-REV-003 : N-09 confirmation après erreur ; N-10 verrou absent
+  après spawn bloquant ; N-11 import de reçu avant refus documenté.
+  [Bilan de l'intégration](docs/CLAUDE-INTEGRATION-2026-10-05.md).
 - [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
   historiques et verrous ; aucun effacement automatique d'un état actif.
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant
@@ -72,11 +73,12 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] `outcome` persistant : atteint, non atteint, partiel, clarification, sans
   preuve ; aucun succès final sans objectif atteint et résultats vérifiés.
 - [x] Démonstration `examples.objective_demo`, sans réseau ni VM.
-- [ ] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude attendu.
-- [ ] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
-  et capacités ; fiche préparée, aucune réalisation Claude reçue.
+- [x] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude intégré et suites traitées.
+- [x] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
+  et capacités intégré avec tests ; raccordement runtime/permissions encore différé.
 - [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
-  puis adaptateur candidat simulé ; Ollama à réévaluer, aucun modèle réel qualifié.
+  à faire. Adaptateur candidat simulé (étape 2) intégré ; Ollama à réévaluer,
+  aucun modèle réel qualifié et aucune activation CLI.
 - [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
 ### Lots concrets suivant le brainstorming

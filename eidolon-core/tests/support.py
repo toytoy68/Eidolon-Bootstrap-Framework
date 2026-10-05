@@ -156,3 +156,10 @@ class MultipleMemory(SyntheticMemory):
                 item["information_id"] += "-" + str(i + 1)
             item["provenance"]["fixture_index"] = i
         return data
+
+
+def effect_then_error(parameters, context):
+    from pathlib import Path
+    with Path(os.environ["EIDOLON_TEST_EFFECT"]).open("a") as stream:
+        stream.write("synthetic effect\n")
+    raise ConnectionResetError("synthetic failure after effect")

@@ -179,3 +179,14 @@ observé : effet puis exception, `no-effect` sans confirmation, 2 effets. N-10
 (P3) : un verrou supprimé se lit comme « jamais autorisé ». N-11 (P3) : une
 réconciliation refusée enregistre quand même le reçu récupéré. Non exécuté :
 Memory Engine, VM, réseau, modèle réel. Q2/Q3 de C-BRAIN-C007 toujours ouvertes.
+
+### C-MSG-G010 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Prise en charge : revue/intégration de `ccr-d3dc80a2-wouvy3` au SHA `c2792d6`,
+corrections N-09/N-10, documentation N-11 et protection des configurations des
+modules targets/ollama_model. Commits et contributions Claude conservés.
+94 tests Claude reproduits ici avant changements (Python 3.12.14).
+[Bilan final et preuves](docs/CLAUDE-INTEGRATION-2026-10-05.md) : **102 tests Core
++ 6 intégrations mémoire** réussis ici après corrections.
+Étude 2 × V100 : C-CLAUDE-002 étape 1 reste à faire ; étape 2 candidate intégrée.
+Nouveaux identifiants GPT préfixés G, conformément au protocole reçu.

@@ -17,6 +17,7 @@ docs/OLLAMA-ADAPTER.md for what is documented versus tested.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from collections.abc import Mapping
 import json
 import math
 import urllib.error
@@ -61,10 +62,28 @@ class OllamaError(RuntimeError):
 
 
 @dataclass(frozen=True)
+class _Options(Mapping):
+    """Immutable scalar options, including across a multiprocessing spawn."""
+    entries: tuple
+
+    def __getitem__(self, key):
+        for name, value in self.entries:
+            if name == key:
+                return value
+        raise KeyError(key)
+
+    def __iter__(self):
+        return (name for name, _ in self.entries)
+
+    def __len__(self):
+        return len(self.entries)
+
+
+@dataclass(frozen=True)
 class OllamaConfig:
     endpoint: str                     # base URL, e.g. http://127.0.0.1:11434 (no default)
     model: str                        # e.g. "name:tag" (no default model is chosen)
-    options: dict = field(default_factory=dict)
+    options: Mapping = field(default_factory=dict)
     timeout_seconds: float = 60.0
     max_prompt_bytes: int = 64_000
     max_response_bytes: int = 256_000
@@ -82,11 +101,12 @@ class OllamaConfig:
         if not isinstance(self.model, str) or not 1 <= len(self.model) <= 200 or any(
                 c.isspace() or ord(c) < 32 for c in self.model):
             raise ContractError("model must be a non-empty name without whitespace")
-        if not isinstance(self.options, dict) or set(self.options) - OPTION_KEYS:
+        if not isinstance(self.options, (dict, _Options)) or set(self.options) - OPTION_KEYS:
             raise ContractError(f"options limited to {sorted(OPTION_KEYS)}")
         for key, value in self.options.items():
             if type(value) not in (int, float) or not math.isfinite(value):
                 raise ContractError(f"option {key} must be a finite number")
+        object.__setattr__(self, "options", _Options(tuple(sorted(self.options.items()))))
         if (type(self.timeout_seconds) not in (int, float) or not math.isfinite(self.timeout_seconds)
                 or not 0 < self.timeout_seconds <= 600):
             raise ContractError("timeout must be within (0, 600] seconds")
@@ -104,6 +124,7 @@ class OllamaConfig:
         """Canonical, secret-free description that identifies this controller."""
         return {"adapter": "ollama-chat/1", "endpoint": self.endpoint.rstrip("/"), "model": self.model,
                 "options": dict(sorted(self.options.items())), "format": digest(PLAN_SCHEMA),
+                "allow_non_loopback": self.allow_non_loopback,
                 "system_prompt": digest(SYSTEM_PROMPT), "timeout_seconds": self.timeout_seconds,
                 "budgets": {"prompt_bytes": self.max_prompt_bytes,
                             "response_bytes": self.max_response_bytes,
@@ -156,7 +177,11 @@ class OllamaModel:
             raise ContractError("OllamaConfig required")
         self.config = config
         self.transport = transport or UrllibTransport()
-        self.model_id = f"ollama/{config.model}@{digest(config.manifest())[:16]}"
+
+    @property
+    def model_id(self):
+        # Replacing the config must also change Runtime.configuration().
+        return f"ollama/{self.config.model}@{digest(self.config.manifest())[:16]}"
 
     def messages(self, request, context):
         if not isinstance(request, str) or not request.strip():
@@ -178,6 +203,8 @@ class OllamaModel:
     def read_response(self, status, content_type, raw):
         if not isinstance(raw, bytes):
             raise OllamaError("BAD_RESPONSE", "transport returned no bytes")
+        if len(raw) > self.config.max_response_bytes:
+            raise OllamaError("RESPONSE_TOO_LARGE", "transport response exceeds configured budget")
         try:
             payload = json.loads(raw.decode("utf-8"), parse_constant=_reject_constant)
         except (UnicodeDecodeError, ValueError, RecursionError) as exc:

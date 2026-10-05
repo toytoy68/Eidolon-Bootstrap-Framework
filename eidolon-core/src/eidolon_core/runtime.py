@@ -309,7 +309,7 @@ class Runtime:
                         raise ValueError("no-effect does not accept output")
                     if receipt is not None and receipt["ok"]:
                         raise ValueError("successful receipt exists: use-receipt or abandon")
-                    if receipt is None and authorized is not False and not confirm_no_effect:
+                    if authorized is not False and not confirm_no_effect:
                         raise ValueError("execution authorized or unknown: explicit confirm_no_effect required after investigation")
                     detail["confirmed_no_effect"] = confirm_no_effect
                     self._reset_attempt(call, detail.copy())

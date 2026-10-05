@@ -111,3 +111,13 @@ les durées. Les conserver dans la mission demande d'étendre ce contrat
 stdlib uniquement. Pas de streaming, de mode outils, d'images ni d'appel cloud
 authentifié. Le schéma `format` restreint la forme de la sortie, pas son sens :
 un plan bien formé peut rester hors sujet, ce que C-001a doit refuser.
+
+## Revue d'intégration Codex/GPT — 05/10/2026
+
+Base Claude `c2792d6`. Les options sont désormais copiées dans un mapping immuable
+sérialisable avec spawn. Le manifeste rendu est détaché, et `model_id` est calculé
+à partir de la configuration actuelle : remplacer celle-ci bloque une reprise
+existante. Le manifeste inclut aussi le choix d'autoriser un endpoint non loopback.
+La limite de réponse est vérifiée par l'adaptateur même avec un transport injecté.
+Les tests ne qualifient toujours ni Ollama ni le matériel. L'étude V100 (étape 1)
+reste ouverte ; ce module constitue uniquement l'étape 2 candidate.

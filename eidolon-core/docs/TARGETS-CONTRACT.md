@@ -115,3 +115,13 @@ capacité et aux paramètres ; usage unique de cet accord.
 Aucune cible réelle n'est décrite ; les exemples utilisent `.example.invalid`.
 Ni l'adresse de VM100, ni le NAS, ni le PC n'ont été contactés. Les tests
 prouvent le comportement du module, pas la sûreté d'un futur connecteur.
+
+## Revue d'intégration Codex/GPT — 05/10/2026
+
+Base Claude `c2792d6`. Les objets retournés par manifest/get/resolve/lookup
+contiennent désormais des portées détachées du catalogue. Modifier une copie ne
+modifie pas l'inventaire. Le constructeur direct recopie et valide également les
+Target reçues (doublons et alias en conflit refusés). La borne de scope est mesurée
+en octets UTF-8, y compris pour les caractères multioctets. Le module reste pur et
+sans raccordement aux permissions ; ses objets publics sont des copies, pas des
+jetons d'autorisation. Tests complémentaires : `tests.test_integration_review`.

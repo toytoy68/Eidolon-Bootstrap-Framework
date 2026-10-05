@@ -40,7 +40,7 @@ def main(argv=None):
     reconcile.add_argument("mission_id")
     reconcile.add_argument("--decision", choices=("no-effect", "observed-result", "use-receipt", "abandon"), required=True)
     reconcile.add_argument("--confirm-no-effect", action="store_true",
-                           help="attest investigated absence of effect after an authorized call without receipt")
+                           help="attest investigated absence of effect after an authorized/uncertain call, including an error receipt")
     reconcile.add_argument("--actor", required=True)
     reconcile.add_argument("--reason", required=True)
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")

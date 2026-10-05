@@ -106,7 +106,13 @@ class Store:
         if call.get("worker_protocol") not in {"lease-v1", "lease-v2"}:
             raise Busy("legacy call has no worker lease; abandon with unknown effect")
         path = self.worker_lease_path(identity, call["id"], call["attempt"])
-        with path.open("a+") as handle:
+        try:
+            # Once SPAWNED is durable the child already created this inode.
+            # Recreating it could hide a live orphan holding the removed inode.
+            handle = path.open("r+" if call.get("worker") is not None else "a+")
+        except FileNotFoundError as exc:
+            raise Busy("worker lease missing after spawn; retain review or abandon") from exc
+        with handle:
             try:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError as exc:

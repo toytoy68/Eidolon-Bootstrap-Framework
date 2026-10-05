@@ -104,9 +104,9 @@ la marque `worker_receipt_reconciliation`, puis exige toujours le vérificateur.
 Une sortie humaine contradictoire est refusée avant adoption ; une sortie
 humaine concordante garde l'origine `human_reconciliation`.
 
-Une erreur d'outil permet une décision humaine d'absence d'effet ; elle ne
-prouve pas cette absence. En l'absence de reçu, un appel autorisé ou inconnu
-exige une attestation distincte `confirm_no_effect` après investigation.
+Une erreur d'outil ne prouve pas l'absence d'effet. Un appel autorisé ou inconnu
+exige une attestation distincte `confirm_no_effect` après investigation, y compris
+avec un reçu d'erreur. Un reçu positif interdit toujours la relance.
 L'ancienne tentative et ses reçus sont archivés dans `attempt_history` avant
 incrémentation, sans relance automatique. Le seul verrou libre ne donne plus
 accès à une nouvelle tentative quand un reçu positif existe localement.
@@ -133,6 +133,11 @@ un acteur qui modifierait à la fois le résultat et son empreinte. La limite de
 Les cinq sorties restent dans le snapshot de mission SQLite (au plus environ
 5 Mo hors contexte/métadonnées) ; externaliser les médias en objets adressés par
 empreinte reste un chantier ultérieur, pas une fonctionnalité livrée.
+
+Après WORKER_SPAWNED, la réconciliation exige le fichier verrou existant ; son
+absence bloque au lieu de recréer un inode vide. L'abandon reste disponible.
+La récupération d'un reçu peut être persistée avant le refus d'une décision :
+le journal conserve alors cette observation sans activer de nouvelle tentative.
 
 ## Mémoire et vérité
 
