@@ -21,3 +21,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-003, réponse et demande C-REV-002](2026-10-05-gpt-C-MSG-003.md) :
   copie exacte de `collaboration/GPT-TO-CLAUDE.md` ; ses liens relatifs se lisent
   dans le contexte de la [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/2474c7cf5a30b4a0eb3d563d61992acaf930976f/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
+- [C-MSG-005, corrections et demande C-REV-003](2026-10-05-gpt-C-MSG-005.md) :
+  copie exacte ; liens relatifs dans le contexte de la
+  [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3cb1ae551fcbeb16badbf6e2110901928ea0a618/eidolon-core/collaboration/GPT-TO-CLAUDE.md).

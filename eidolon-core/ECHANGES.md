@@ -114,3 +114,12 @@ corpus synthétiques ; VM et services réels non testés.
 [Bilan](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) et
 [demande ciblée C-REV-003](collaboration/GPT-TO-CLAUDE.md).
 Aucun nouvel avis Claude présumé. C-001 reste la prochaine tranche fonctionnelle.
+
+### C-MSG-006 — Codex/GPT — 05/10/2026, Europe/Paris
+
+À la demande de toytoy : [trois fiches Claude](collaboration/tasks/README.md),
+C-REV-003, C-CLAUDE-001 (catalogue) et C-CLAUDE-002 (Ollama simulé), prêtes à
+prendre. Aucune prise en charge Claude ni réponse présumée. C-BRAIN-004–006 ouverts.
+**Prise en charge Codex : C-001a**, base `3cb1ae5`, sur la branche Core :
+objectives/runtime/store/presentation, tests, README/TODO et documentation C-001a.
+Modules targets/ollama_model et leurs tests réservés aux fiches Claude.
