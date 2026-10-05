@@ -46,6 +46,22 @@ class EmptyMemory:
 
 
 @dataclass(frozen=True)
+class MalformedMemory:
+    provider_id: str = "malformed-memory/1"
+
+    def recall(self, query):
+        return {"items": [{"content": "unreferenced assertion"}]}
+
+
+@dataclass(frozen=True)
+class SlowModel:
+    model_id: str = "slow-model/1"
+
+    def propose(self, request, context):
+        time.sleep(10)
+
+
+@dataclass(frozen=True)
 class InjectionMemory(SyntheticMemory):
     def recall(self, query):
         data = super().recall(query)

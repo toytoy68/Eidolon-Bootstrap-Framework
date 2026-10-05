@@ -9,12 +9,12 @@ import threading
 import time
 import unittest
 
-from eidolon_core.contracts import ContractError, encode, parse_plan, validate_context
+from eidolon_core.contracts import encode
 from eidolon_core.memory import DEMO_REQUEST, DEMO_TEXT, SyntheticMemory
 from eidolon_core.runtime import Limits, Runtime
 from eidolon_core.store import Busy, Store
 from eidolon_core.tools import Policy, Registry, default_registry, text_stats
-from tests.support import (EmptyMemory, FixedModel, InjectionMemory, SlowMemory,
+from tests.support import (EmptyMemory, FixedModel, InjectionMemory, MalformedMemory, SlowMemory, SlowModel,
                            UnavailableMemory, lost_tool, plan, slow_tool, slow_verifier, wrong_result)
 
 
@@ -95,6 +95,16 @@ class CoreTests(unittest.TestCase):
         _, m = self.run_mission(memory=EmptyMemory())
         self.assertEqual(m["status"], "FAILED")
         self.assertIsNone(m["result"])
+
+    def test_memory_missing_reference_or_uncertainty_is_rejected(self):
+        _, m = self.run_mission(memory=MalformedMemory())
+        self.assertEqual(m["status"], "BLOCKED")
+        self.assertIsNone(m["plan"])
+
+    def test_model_timeout_never_executes_a_tool(self):
+        _, m = self.run_mission(model=SlowModel(), limits=Limits(0.5))
+        self.assertEqual(m["status"], "FAILED")
+        self.assertFalse(m["calls"])
 
     def test_injection_in_memory_remains_inert_text(self):
         _, m = self.run_mission(memory=InjectionMemory())
@@ -260,6 +270,32 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(m["status"], "SUCCEEDED")
         self.assertEqual(m["progress"], {"completed": 2, "total": 2})
         self.assertNotEqual(m["calls"][0]["id"], m["calls"][1]["id"])
+
+    def test_cancel_between_steps_preserves_proof_and_stops_next_tool(self):
+        proposal = json.loads(plan())
+        proposal["steps"].append({**proposal["steps"][0], "id": "second"})
+
+        def cancel(kind):
+            if kind == "RESULT_VERIFIED":
+                self.store.request_cancel(identity)
+
+        runtime = Runtime(self.store, model=FixedModel(encode(proposal)), checkpoint=cancel)
+        identity = runtime.create(DEMO_REQUEST)["id"]
+        m = runtime.run(identity)
+        self.assertEqual(m["status"], "CANCELLED")
+        self.assertEqual(m["progress"], {"completed": 1, "total": 2})
+        self.assertEqual(len(m["calls"]), 1)
+        self.assertEqual(m["calls"][0]["status"], "VERIFIED")
+
+    def test_blocked_proposal_does_not_expire(self):
+        runtime, m = self.run_mission(policy=Policy(allowed_tools=()))
+        m["created_at"] = "2000-01-01T00:00:00Z"
+        self.store.save(m, "SYNTHETIC_AGE")
+        before = m["plan"]
+        result = runtime.run(m["id"])
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["plan"], before)
+        self.assertFalse(result["calls"])
 
     def test_no_automatic_expiration_on_show_or_resume(self):
         runtime = Runtime(self.store)
