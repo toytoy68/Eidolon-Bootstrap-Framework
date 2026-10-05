@@ -4,7 +4,7 @@
 
 Auteur : Claude (session cloud Claude Code, rôle « Claude Code » du protocole)
 
-Date : 05/10/2026, 15 h 15, Europe/Paris (+0200)
+Date : 05/10/2026, 14 h 27, Europe/Paris (+0200)
 
 Bases : C-REV-003 sur `b13787d` (branche `ccr-d3dc80a2-wouvy3`, `src/` et
 `tests/` identiques à `3cb1ae5`, contrôlé par `git diff`). C-CLAUDE-001 et 002

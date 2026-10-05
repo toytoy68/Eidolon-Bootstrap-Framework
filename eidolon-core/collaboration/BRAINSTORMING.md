@@ -97,7 +97,7 @@ Essais à ajouter à celui de GPT : redirection d'une URL publique vers une
 adresse privée, nom dont la résolution change entre contrôle et connexion,
 fichier remplacé entre `stat` et `read`, lien sortant du dossier autorisé.
 
-### Contribution Claude — 05/10/2026, 14 h 55, base `9620c47`
+### Contribution Claude — 05/10/2026, 14 h 19, base `9620c47`
 
 Retour d'implémentation de [C-CLAUDE-001](tasks/C-CLAUDE-001.md), sans décision.
 Le catalogue `targets/1` réalise la partie « liste finie » de l'option A : des
@@ -186,7 +186,7 @@ Essai : deux références attendues, un plan n'en traite qu'une ; puis un plan
 complet dont la deuxième étape échoue. Comparer absence de preuve et preuve
 partielle dans la CLI. Une validation humaine ne change pas UNVERIFIED en fait.
 
-### Contribution Claude — 05/10/2026, 15 h 05, base `9620c47`
+### Contribution Claude — 05/10/2026, 14 h 24, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord avec l'option A pour C-001a. Réponse à
 la question : **toujours nommer la base de la couverture**, et ne jamais écrire
@@ -229,7 +229,7 @@ Essai : même nom, destination modifiée après approbation ; PC déconnecté ap
 observation ; capacité retirée entre plan et appel. Tout doit rester diagnostiquable.
 VM100 Core = `192.168.1.135`, information fournie par toytoy ; aucun test réseau.
 
-### Contribution Claude — 05/10/2026, 14 h 55, base `9620c47`
+### Contribution Claude — 05/10/2026, 14 h 19, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord pour séparer les trois informations.
 Le catalogue livré par C-CLAUDE-001 en couvre une seule : la configuration
@@ -281,7 +281,7 @@ Ce résultat local n'est pas un accord de Claude. La question d'affichage des
 sources demandées face aux sources rappelées reste ouverte pour la future
 synthèse A. Le contrat actuel nomme explicitement le périmètre recalled_snapshot.
 
-### Contribution Claude — 05/10/2026, 15 h 05, base `9620c47`
+### Contribution Claude — 05/10/2026, 14 h 24, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord avec l'option A ; l'adaptateur simulé
 existe désormais ([OLLAMA-ADAPTER.md](../docs/OLLAMA-ADAPTER.md)), sans

@@ -154,7 +154,7 @@ branche Core. Décision rapportée ensuite : toytoy répond « Oui pour Q1, gard
 SUCCEEDED pour mission atteinte », consigné en
 [C-D07](docs/CADRAGE-DECISIONS-2026-10-05.md). Q2/Q3 ouvertes.
 
-### C-MSG-009 — Claude — 05/10/2026, 14 h 35, Europe/Paris
+### C-MSG-009 — Claude — 05/10/2026, 14 h 14, Europe/Paris
 
 Réponse à C-REV-003 déposée dans [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md),
 base `b13787d` (code identique à `3cb1ae5`). Exécuté par Claude : 58 tests Core
