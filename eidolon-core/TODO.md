@@ -21,6 +21,33 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## Prochaine tranche proposée : critères de mission et contrôleur simulé enrichi
 
+Le [cadrage consolidé du 05/10](docs/CADRAGE-DECISIONS-2026-10-05.md) intègre le
+brainstorming reçu et l'exigence explicite **Internet + machines du LAN, dont
+Memory Engine et NAS**, ainsi que les **documents, images, vidéos et audio de
+la session Windows**. Ces capacités deviennent un besoin du socle, pas une
+option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
+
+### Lots concrets suivant le brainstorming
+
+| Lot | Livrable | Critère de sortie |
+| --- | --- | --- |
+| C-001 | Contrats de mission/cible/capacité et critères de réussite A–D | Refus des cibles ambiguës et des plans sans rapport avec l'objectif ; fixtures indépendantes du modèle |
+| C-002 | Connecteurs de lecture Internet et LAN, politiques distinctes | Destinations, redirections, egress, authentification, délais/volume et provenance contrôlés ; tests sans infrastructure personnelle |
+| C-003 | Rappel Memory Engine distant et accès aux fichiers NAS autorisés | API/protocole réellement vérifiés, références/statuts préservés, périmètres de fichiers bornés, aucune écriture canonique directe |
+| C-003W | Connecteur Windows de fichiers, indépendant du Desktop complet | Dossiers autorisés, droits de session, recherche/lecture et preuves de version ; PC hors ligne, liens hors périmètre et changements concurrents traités |
+| C-004 | Mission B de diagnostic d'un service | Résultat observé daté, authentifié selon le transport et vérifié ; cible hors ligne ou réponse périmée explicite |
+| C-005 | Mission C avec proposition d'action, approbation liée aux paramètres, refus/annulation | Démonstration de redémarrage simulée ; aucun vrai redémarrage sans cible et autorisation concrètes |
+| C-006 | Mission D : reprise explicite après échec partiel | X vérifié reste acquis ; Y seul réessayé si admissible ; appel à effet inconnu toujours en revue |
+| C-007 | Adaptateur Ollama configurable et mission A sourcée | Réponses structurées, manque de contexte explicite, critères indépendants et protocole de qualification ; aucun modèle préqualifié |
+| C-008 | Contrats de client distant et événements de reconnexion | Fermeture du client distincte de l'annulation ; événements récupérables sans recréer les missions |
+
+Les connecteurs commencent avec doubles de test ou services locaux synthétiques.
+Leur activation vers Internet, le NAS et les services personnels constitue une
+recette distincte. Les choix API/transport, cibles et authentification seront
+explicités avant activation ; les accès réels ne sont pas supposés disponibles.
+
+### Exigences transversales
+
 1. Définir un petit catalogue de missions et leurs critères d'acceptation
    déterministes indépendants du plan ; résultat partiel, clarification et absence
    de preuve doivent avoir des sorties explicites. Garder un lot de cas réservé.
@@ -41,6 +68,8 @@ ils ne constituent pas des fonctionnalités livrées.
 - [ ] Revalider l'adaptateur après les corrections A5-01 (exports recouvrants),
   A5-02 (contexte/négation) et A5-03 (content.parts). Suivre ces corrections dans
   l'autre session, ne pas les implémenter ici.
+  Actualisation du 05/10 : correctif A5-03 publié dans `d34a365`, diff lu ici,
+  tests non réexécutés dans ce lot. A5-01/A5-02 restent ouverts sur cette tête.
 - [ ] Contrat de fraîcheur/révision à la frontière d'une action réelle.
 - [ ] Si une mutation est autorisée ultérieurement : adaptateur des services
   coordonnés, identité stable, idempotence métier et reprise par le moteur.
@@ -54,6 +83,26 @@ ils ne constituent pas des fonctionnalités livrées.
 - [ ] Persistance/permissions/stockage physique et essai contrôlé de coupure.
 - [ ] Modèle/GPU réel, latence, consommation, contexte utile et qualification.
 - [ ] Corpus utilisateur seulement après choix/autorisation et copie isolée.
+- [ ] Internet réel, service Memory Engine distant et NAS : valider séparément
+  connectivité, identité, permissions, limites de débit/volume et comportement
+  en cas de perte réseau ; commencer par les lectures autorisées.
+- [ ] Session Windows réelle : fichiers/dossiers choisis, chemins déplacés,
+  droits effectifs, liens/jonctions, fichiers indisponibles et verrouillage de
+  session. Valider les lectures avant toute capacité de modification.
+
+## Vision produit conservée pour les tranches ultérieures
+
+- [ ] Traitement multimédia des ressources Windows/NAS : extraction documentaire,
+  OCR/Vision, segments vidéo et transcription audio ; capacités et budgets explicites.
+
+- [ ] Client Windows résident : E bleu, chat, zone de notification, autostart
+  configurable, silence et état du serveur.
+- [ ] Presence/Identity : événements locaux, identité probable séparée de
+  l'authentification, contexte invité et protection des informations personnelles.
+- [ ] Voix : transcription, synthèse et identité du locuteur traitées séparément.
+- [ ] Catalogue des équipements, fraîcheur de la télémétrie et missions liées.
+- [ ] Scheduler différé/récurrent/conditionnel et notifications dédupliquées.
+- [ ] Robot/Vision/domotique : contrôle et sécurité locaux indépendants du LLM.
 
 Ni Hermes, ni Qdrant, ni multi-agents, ni service permanent n'est requis pour
 terminer ou reproduire la tranche actuelle. Main reste inchangée.

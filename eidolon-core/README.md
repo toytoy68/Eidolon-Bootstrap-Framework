@@ -151,6 +151,9 @@ défaut. Ce n'est pas encore un budget global de mission.
 
 ## Documents et limites
 
+- [Cadrage produit et accès Internet/LAN](docs/CADRAGE-DECISIONS-2026-10-05.md) :
+  brainstorming reçu, besoins Desktop/fichiers Windows/NAS/mémoire distante et
+  écarts avec v0.1.
 - [Architecture et garanties](docs/ARCHITECTURE.md)
 - [Bilan de validation](docs/VALIDATION-2026-10-05.md)
 - [TODO Core et prochaine tranche](TODO.md)

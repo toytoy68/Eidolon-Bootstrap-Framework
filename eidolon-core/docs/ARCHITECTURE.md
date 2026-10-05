@@ -1,5 +1,10 @@
 # Architecture Core v0.1
 
+Ce document décrit la tranche implémentée. La cible élargie d'assistant résident,
+d'accès Internet/LAN et de clients distants est consignée dans le
+[cadrage consolidé](CADRAGE-DECISIONS-2026-10-05.md). L'absence d'outil réseau dans
+la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit.
+
 ## Responsabilités
 
 | Module | Contrat |
