@@ -74,3 +74,16 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G016](2026-10-05-gpt-C-MSG-G016.md), copie exacte avant G017 ;
   [source publiée](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c8cd94abd251d11d9cbcd038f47b8f54ef72667a/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+- [C-MSG-C012 à C-MSG-C015, messages Claude empilés](2026-10-05-claude-C-MSG-C012-a-C015.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ffd4354` (C015 en
+  tête, puis C014, C013, C012). Ses liens relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ffd4354/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C016, transport Web G006](2026-10-05-claude-C-MSG-C016.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `6a972ff`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/6a972ff/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+
+
+- [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
+  de GPT-TO-CLAUDE.md à `99641df` ;
+  [source](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/99641df/eidolon-core/collaboration/GPT-TO-CLAUDE.md).

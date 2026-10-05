@@ -688,3 +688,108 @@ pas classée défi par simple présence du mot. L'HTML général reste non pris 
 charge, l'heuristique de défi partielle. Cela rend utile le corpus indépendant
 G007 demandé à Claude. Aucun fournisseur ou extraction HTML n'est choisi par
 ce premier essai. Contrat : docs/WEB-RESEARCH-PROTOTYPE.md.
+
+### Contribution Claude — 05/10/2026, 17 h 25, base `51d525e`
+
+Statut proposé : EN DISCUSSION. Toytoy m'a demandé d'imaginer aussi des
+solutions à **créer** : « Nous sommes en développement donc on peut imaginer
+et chercher ». Plusieurs pistes ci-dessous n'existent pas encore ; ce sont des
+propositions, pas des décisions. Corpus d'essai :
+[claude-g007](../docs/validation/2026-10-05/claude-g007/README.md).
+
+**Désaccord principal : ne pas partir de la recherche.** Le tableau Codex
+compare surtout des moyens de *chercher*. Or beaucoup de besoins d'Eidolon ne
+demandent pas de moteur : la documentation d'un logiciel, une version, une
+référence. Pour ceux-là, aller directement à la **source structurée** évite le
+blocage et donne une meilleure preuve. Cette session en est un exemple réel :
+`docs.ollama.com`, `docs.vllm.ai` et les pages NVIDIA étaient bloqués, mais les
+dépôts officiels étaient lisibles ; chaque constat a été lié à un commit
+immuable, une preuve plus solide qu'une page Web datée.
+
+#### Pistes à créer pour Eidolon
+
+1. **Connecteurs « source d'abord »** (MVP). Un catalogue de sources
+   structurées par type de besoin : dépôt versionné lu à un tag ou un commit
+   (documentation, changelog), registres de paquets (l'API JSON de PyPI
+   répondait ici), API officielles quand elles existent (Crossref, comme le
+   propose Codex). Le coordinateur choisit d'abord ces voies ; la recherche
+   générale vient ensuite. Preuve : dépôt, commit, chemin, empreinte.
+2. **« Bibliothèque Eidolon » locale** sur le NAS (suivant). Trois couches :
+   - copies hors ligne existantes au format ZIM (Wikipédia, Stack Exchange,
+     d'autres sites), lisibles par `kiwix-serve`, avec recherche plein texte
+     (`kiwix-search`) ; DevDocs pour les documentations de développement ;
+   - pages déjà lues, stockées par empreinte avec date et URL ;
+   - **notre propre index plein texte** : SQLite FTS5 est disponible dans la
+     bibliothèque standard de Python (vérifié ici, SQLite 3.45.1). Pas de
+     dépendance, pas de service.
+   Avantages : aucun blocage, aucune requête qui sort, réponse rapide, cohérent
+   avec « Local AI ». Limite : fraîcheur, à afficher (date de la copie).
+3. **Lecture assistée par le client Windows** (suivant). Quand un site exige une
+   connexion ou un défi, Core ne contourne rien : il demande à l'utilisateur
+   d'ouvrir la page dans **son** navigateur, puis un bouton « Envoyer à Eidolon »
+   transmet la page, l'URL, la date et une empreinte. Provenance distincte :
+   « fournie par l'utilisateur ». Couvre aussi les pages en JavaScript, pour
+   bien moins cher qu'un navigateur isolé. S'appuie sur le connecteur Windows (C-003W).
+4. **Robot poli, par construction** (MVP). Budget par domaine (seau à jetons),
+   `Retry-After` respecté sans attente bloquante, `robots.txt` lu et respecté
+   (RFC 9309), requêtes conditionnelles (`If-None-Match`, `If-Modified-Since`)
+   pour ne pas retélécharger, `User-Agent` identifiable avec une page de contact.
+   C'est la forme constructive de C-D09 : moins de blocages parce qu'on dérange moins.
+5. **Pare-feu de requête** (MVP). Toute requête vers un fournisseur tiers est
+   **minimisée** avant de sortir : mots-clés utiles, jamais de mémoire, de nom
+   ou de coordonnées (cas W20). Un moteur voit nos questions : c'est une fuite
+   de vie privée aussi réelle que l'adresse IP.
+6. **Veille planifiée** (différé, avec le Scheduler). Pour les sources que
+   l'utilisateur suit, lire flux RSS/Atom et plans de site à faible fréquence et
+   alimenter la bibliothèque en avance. Les questions trouvent la réponse déjà
+   localement.
+7. **Archive publique en repli** (suivant). Quand une page a disparu ou est
+   indisponible, lire une copie d'archive publique en l'étiquetant « copie
+   archivée du … ». Non vérifié ici (archive.org bloqué depuis cette session).
+
+#### Désaccords et nuances sur les options de Codex
+
+- **SearXNG : différé plutôt qu'étape suivante.** C'est un métamoteur : il
+  interroge d'autres moteurs. Le blocage est déplacé sur notre instance, avec
+  une maintenance en plus. Une API officielle unique, derrière notre interface,
+  me semble un meilleur deuxième pas.
+- **Navigateur isolé : différé.** Il exécute du code non fiable, coûte cher en
+  mémoire et ouvre une surface d'attaque (sous-requêtes, iframes, WebSocket
+  vers le LAN). La lecture assistée (piste 3) couvre les cas JavaScript du MVP.
+- **Détection de défi : renverser la logique.** Plutôt que de chercher à
+  reconnaître un défi (heuristique fragile, cas W05), exiger une **preuve
+  positive de contenu exploitable** : texte principal extrait non vide et assez
+  long, type cohérent, pas de formulaire de connexion seul. Tout le reste est
+  `NOT_EXPLOITABLE` ou plus précis si les signaux le permettent. L'erreur
+  possible devient alors « non lu à tort », plus sûre que « lu à tort ».
+- **Indépendance des sources.** Deux moteurs qui renvoient la même page, ou deux
+  domaines qui hébergent la même copie (W07, W08), ne sont pas deux preuves.
+  Comparer le **texte extrait**, pas seulement l'URL ou le SHA-256 brut.
+
+#### Comparaison
+
+| Voie | Disponibilité | Confidentialité | Coût, maintenance | Qualité de preuve | Complexité |
+| --- | --- | --- | --- | --- | --- |
+| Source d'abord (dépôts, registres, API) | Élevée pour son périmètre | Bonne (requêtes ciblées) | Faible | **Très bonne** (commit, version) | Faible |
+| Bibliothèque locale (ZIM, FTS5, cache) | **Totale** hors ligne | **Totale** | Stockage NAS, mises à jour | Bonne, datée | Moyenne |
+| API de recherche officielle | Bonne, sous quota | Requête confiée à un tiers | Clé, coût | Moyenne (extraits) | Faible |
+| Lecture assistée | Dépend de l'utilisateur | Bonne | Faible | Bonne, provenance humaine | Moyenne (client Windows) |
+| SearXNG | Variable | Moyenne | Maintenance | Moyenne | Moyenne |
+| Navigateur isolé | Moyenne | Moyenne | Élevé | Moyenne | Élevée |
+
+Ces appréciations sont des hypothèses, pas des mesures ; R-WEB-1 à 3 (dans le
+README du corpus) proposent de les vérifier.
+
+#### Sources consultées par Claude (dépôts officiels, commits relevés)
+
+- `openzim/libzim` `e4de4b7a2636` : implémentation de référence du format ZIM.
+- `kiwix/kiwix-tools` `4717ee15faa7` : `kiwix-serve` (serveur HTTP de fichiers
+  ZIM) et `kiwix-search` (recherche plein texte dans un ZIM).
+- `freeCodeCamp/devdocs` `8ea53dd09805` : documentations agrégées, mode hors ligne.
+- `searxng/searxng` `d48c4b555421` : métamoteur, « users are neither tracked nor profiled ».
+- `adbar/trafilatura` `6c1977a00b4e` : extraction de texte (README lu).
+- Python 3.11.15 local : SQLite 3.45.1 avec FTS5, essai exécuté.
+- Non vérifiés depuis cette session (bloqués) : API Wikipédia, arXiv,
+  archive.org, Common Crawl, texte de la RFC 9309.
+
+Contribution Codex/GPT sur ces pistes : attendue. Décision : ouverte.

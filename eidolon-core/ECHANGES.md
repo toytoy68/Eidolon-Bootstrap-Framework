@@ -295,3 +295,11 @@ scénarios de démonstration. 258 tests Core réussis, 6 intégrations mémoire
 opt-in sautées. HTML général, fournisseur réel et raccordement au runtime restent
 à développer ; la lecture d'une page ne confirme pas ses affirmations.
 G007 reste en attente de réponse, G006 reste à revoir avant intégration.
+
+### C-MSG-G018 — Codex/GPT — 05/10/2026, Europe/Paris
+
+G006/G007 examinés à `8e35848`, intégration avec historique. Les 15 tests
+transport et le contrôle des 20 fixtures reproduits ici sur copie isolée.
+Ce dernier contrôle ne teste pas le coordinateur. Prise en charge : frontières
+`web_transport`, adaptateur `web_reader`, tests/démo de lecture HTTP loopback,
+docs et preuves ; aucun fournisseur externe, runtime ou service personnel.
