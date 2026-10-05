@@ -1,0 +1,327 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-d8736e3460f24dac813922a33adb21eb
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission bloquée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : PENDING
+[INFO] Proposition en attente de décision, sans expiration automatique.
+[INFO] Applicabilité : AWAITING_DECISION — Une décision explicite reste nécessaire.
+[INFO] Effet : NOT_STARTED — Aucun lancement enregistré pour cette proposition.
+[INFO] Empreinte : 126653dd4e5268a76829a694e578f5be333c7c4e97f68fcb9948496774f10e34
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-d8736e3460f24dac813922a33adb21eb', 'target': 'sim-nas', 'world_id': 'ad2df2ce-fd93-4ce5-ab74-905a3f250d0e'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': 'ad2df2ce-fd93-4ce5-ab74-905a3f250d0e'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] APPROVAL_REQUIRED : inspect proposal; explicit decision and resume required
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-d8736e3460f24dac813922a33adb21eb/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-d8736e3460f24dac813922a33adb21eb --events (avec les mêmes options --state).
+
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-f515c2be58164c4a94a79168f8291871
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission bloquée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : APPROVED
+[INFO] Accord enregistré ; les contrôles d'exécution restent obligatoires.
+[INFO] Applicabilité : RECHECK_REQUIRED — Accord enregistré ; permissions, configuration et condition doivent être revérifiées par run.
+[INFO] Effet : NOT_STARTED — Aucun lancement enregistré pour cette proposition.
+[INFO] Empreinte : 5c19c913ad2c4095396069b0ddfaf3aba0dc802058f2ff4d855202eb325dae82
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-f515c2be58164c4a94a79168f8291871', 'target': 'sim-nas', 'world_id': '4aa2f478-f6a8-4989-be6f-fdc6f1917bd4'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': '4aa2f478-f6a8-4989-be6f-fdc6f1917bd4'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] APPROVAL_APPROVED : decision recorded; no tool executed
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-f515c2be58164c4a94a79168f8291871/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-f515c2be58164c4a94a79168f8291871 --events (avec les mêmes options --state).
+
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-c24c1cae12f140ce8d020c0645969095
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission bloquée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : APPROVED
+[INFO] Accord enregistré ; les contrôles d'exécution restent obligatoires.
+[INFO] Applicabilité : STALE_CONDITION — Condition observée différente de celle approuvée ; nouvelle mission après revue.
+[INFO] Effet : NOT_STARTED — Aucun lancement enregistré pour cette proposition.
+[INFO] Empreinte : 1e4147cae52d717a456fcc988c007fec14aac6bdec36c8d817967c706030f81a
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-c24c1cae12f140ce8d020c0645969095', 'target': 'sim-nas', 'world_id': '18c5183a-5440-40c0-9d0a-71fe42370f2e'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': '18c5183a-5440-40c0-9d0a-71fe42370f2e'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] ACTION_PRECONDITION_CHANGED : synthetic state or revision changed; proposal retained, create a new mission after review
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-c24c1cae12f140ce8d020c0645969095/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-c24c1cae12f140ce8d020c0645969095 --events (avec les mêmes options --state).
+
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-41e74d9df61549f882307f3d43ae8348
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission annulée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : USED
+[INFO] Accord consommé au lancement ; cela ne prouve pas un effet.
+[INFO] Applicabilité : MISSION_CLOSED — Mission close ; cet accord ne permet aucun nouveau lancement.
+[INFO] Effet : NOT_AUTHORIZED — Cette tentative n'a pas reçu l'autorisation d'appeler l'outil.
+[INFO] Empreinte : 209ed28989f34024e79d58421198ab5e8f6d0b47a0f53cf9ad4caa62e04b6e85
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-41e74d9df61549f882307f3d43ae8348', 'target': 'sim-nas', 'world_id': '2407b10c-d778-486b-a989-838e13ddad9a'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': '2407b10c-d778-486b-a989-838e13ddad9a'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] Demande d'annulation enregistrée.
+[ATTENTION] CANCELLED : cancellation requested before worker launch; tool was not authorized
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-41e74d9df61549f882307f3d43ae8348/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-41e74d9df61549f882307f3d43ae8348 --events (avec les mêmes options --state).
+
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-931804b9bd774679ade1ce2cd57a874f
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission bloquée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : APPROVED
+[INFO] Accord enregistré ; les contrôles d'exécution restent obligatoires.
+[INFO] Applicabilité : CONFIGURATION_MISMATCH — Reprise bloquée avec la configuration utilisée ; ne pas déduire une invalidité définitive.
+[INFO] Effet : NOT_STARTED — Aucun lancement enregistré pour cette proposition.
+[INFO] Empreinte : b1bacc7aa4a58331c0fd7b7a16fb597856f56a5d00f16290d21a6a76e3634403
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-931804b9bd774679ade1ce2cd57a874f', 'target': 'sim-nas', 'world_id': '534be15c-b92e-4ec5-b5a3-9f959efaae01'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': '534be15c-b92e-4ec5-b5a3-9f959efaae01'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] CONFIGURATION_CHANGED : restore the mission configuration or create a new mission
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-931804b9bd774679ade1ce2cd57a874f/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-931804b9bd774679ade1ce2cd57a874f --events (avec les mêmes options --state).
+
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-070a6f75071046cebe6b9de594b45ec5
+Demande            : Simuler le redémarrage du service : nas
+Phase              : DONE
+Étapes vérifiées   : 1 / 1
+
+=========================================================
+Résumé
+=========================================================
+[OK] Mission réussie
+[INFO] Objectif : Atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+[INFO] Redémarrage simulé vérifié : sim-nas
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] Décision enregistrée : USED
+[INFO] Accord consommé au lancement ; cela ne prouve pas un effet.
+[INFO] Applicabilité : MISSION_CLOSED — Mission close ; cet accord ne permet aucun nouveau lancement.
+[INFO] Effet : VERIFIED_PAST_EFFECT — Effet passé vérifié ; la santé actuelle du service n'est pas connue par cette vue.
+[INFO] Empreinte : afda4c2f039e5f6ab9adfcdb2059cf7a975694f67b180ef8941f93550c09f25e
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-070a6f75071046cebe6b9de594b45ec5', 'target': 'sim-nas', 'world_id': 'bf70880a-90a3-4b6c-b0b9-a53313696194'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': 'bf70880a-90a3-4b6c-b0b9-a53313696194'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+
+=========================================================
+Résultats et preuves
+=========================================================
+[OK] m-070a6f75071046cebe6b9de594b45ec5/restart — VERIFIED
+[INFO] Vérificateur : sqlite-synthetic-receipt/1
+  after : {'revision': 2, 'state': 'UP'}
+  before : {'revision': 1, 'state': 'DOWN'}
+  operation_id : m-070a6f75071046cebe6b9de594b45ec5
+  performed_at : 2026-10-05T14:58:03.131121+00:00
+  source : sqlite-synthetic-services/1
+  synthetic : True
+  target_id : sim-nas
+  world_id : bf70880a-90a3-4b6c-b0b9-a53313696194
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-070a6f75071046cebe6b9de594b45ec5 --events (avec les mêmes options --state).

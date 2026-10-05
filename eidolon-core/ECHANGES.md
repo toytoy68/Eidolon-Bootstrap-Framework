@@ -22,17 +22,17 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 - Memory Engine reste développé dans l'autre session. Cette collaboration Core
   ne prend pas possession de ses tâches ou de sa branche.
 
-## État courant après C-002a.1 — 05/10/2026
+## État courant après intégration G005 — 05/10/2026
 
 Les repères ci-dessus décrivent l'ouverture historique du canal. Désormais :
-C-004a diagnostic synthétique et C-005a accord/action simulée livrés ; G001 à G004
-et C-TASK-C001 Claude intégrés avec leur historique. Politique Web pure durcie,
-avec exclusions IP/CIDR ; aucun transport Web ni raccordement aux missions.
-**221 tests Core + 6 intégrations mémoire** réussis ici sous Python 3.12.14,
-sur données synthétiques. [Preuves](docs/validation/2026-10-05/codex-c002a/README.md).
-C-D08 (pare-feu/VPN) reçue comme décision rapportée par Claude ; détails ouverts.
-G005 reste la contre-revue disponible, sans résultat présumé. Services/GPU/VM
-personnels non contactés ; les accès réels restent à développer et qualifier.
+C-004a diagnostic, C-005a accord/action simulée, G001 à G005 et C-TASK-C001
+intégrés. Politique Web durcie et exclusions configurables, sans transport réel.
+La CLI distingue décision, applicabilité et preuve d'effet ; huit sondes de
+Claude reproduites, observations O-G5-1/O-G5-2 traitées, prudence O-G5-3 conservée.
+**235 tests Core + 6 intégrations mémoire** réussis sous Python 3.12.14,
+sur données synthétiques. [Preuves](docs/validation/2026-10-05/codex-g005/README.md).
+Claude reçoit C-TASK-G006 (transport Web candidat isolé) ; livraison non présumée.
+C-D08 pare-feu/VPN reste à qualifier sur matériel. Aucun service personnel contacté.
 
 ## Sujets ouverts
 
@@ -271,3 +271,9 @@ G005 reçu `0e601e7`, intégré ; sondes en reproduction. Codex prend O-G5-1/O-G
 (vue des actions, présentation/CLI, tests/démo/docs) ; aucune réconciliation
 automatique pour O-G5-3. Claude reçoit C-TASK-G006, transport HTTP candidat sur
 politique `/2` de `02af040`, fichiers distincts, hors runtime.
+
+Complément de livraison G016 : huit sondes de Claude reproduites à sortie
+identique hors version Python ; vue dérivée sans mutation, 14 tests nouveaux,
+235 Core et 6 intégrations mémoire réussis. Six scénarios de démonstration ;
+une configuration différente est distinguée d'une condition devenue incompatible.
+O-G5-3 reste prudent. Sources d'exécution et services simulés inchangés.
