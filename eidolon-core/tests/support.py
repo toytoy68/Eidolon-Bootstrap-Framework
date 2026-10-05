@@ -74,6 +74,9 @@ def wrong_result(parameters, context):
 
 
 def slow_tool(parameters, context):
+    from pathlib import Path
+    if "EIDOLON_TEST_TOOL_ENTERED" in os.environ:
+        Path(os.environ["EIDOLON_TEST_TOOL_ENTERED"]).touch()
     time.sleep(10)
 
 
@@ -116,7 +119,8 @@ def marker_tool(parameters, context):
         if time.monotonic() > deadline:
             raise TimeoutError("test did not release worker")
         time.sleep(0.01)
-    (directory / "effect").write_text("synthetic local effect")
+    with (directory / "effect").open("a") as stream:
+        stream.write("synthetic local effect\n")
     return text_stats(parameters, context)
 
 
@@ -128,3 +132,11 @@ def receipt_then_wait(channel, function, args, receipt_path, lease_path):
     if function.__name__ == "text_stats":
         Path(os.environ["EIDOLON_TEST_RECEIPT_READY"]).write_text("receipt present")
         time.sleep(10)
+
+
+def recoverable_tool(parameters, context):
+    from pathlib import Path
+    from eidolon_core.tools import text_stats
+    if not Path(os.environ["EIDOLON_TEST_RECOVERED"]).exists():
+        raise ConnectionRefusedError("synthetic unavailable provider, no effect")
+    return text_stats(parameters, context)

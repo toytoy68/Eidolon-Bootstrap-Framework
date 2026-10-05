@@ -1,0 +1,8 @@
+Python 3.12.14 CPU affinity 2 six competing CPU processes
+test_verification_timeout_keeps_receipt_without_success (tests.test_core.CoreTests.test_verification_timeout_keeps_receipt_without_success) ... ok
+test_f05_model_timeout_and_outage_resume_same_mission (tests.test_review_regressions.ReviewRegressionTests.test_f05_model_timeout_and_outage_resume_same_mission) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 9.826s
+
+OK

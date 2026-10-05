@@ -15,7 +15,7 @@ from .memory import SyntheticMemory
 from .model import DeterministicModel
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
-from .worker import CallFailure, invoke
+from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
 
 
 @dataclass(frozen=True)
@@ -70,6 +70,28 @@ class Runtime:
         return invoke(function, args, timeout=self.limits.call_seconds,
                       cancelled=lambda: self._cancelled(m), lease_path=lease,
                       on_started=spawned if call is not None else None)
+
+    def _retain_receipt(self, m, call, receipt, *, late=False, recovered=False):
+        key = "late_receipt" if late else ("recovered_receipt" if receipt["ok"] else "error_receipt")
+        if call.get(key) == receipt:
+            return
+        call[key] = receipt
+        call[key + "_sha256"] = digest(receipt)
+        self._save(m, "RECOVERED_RECEIPT_SAVED" if recovered else key.upper() + "_SAVED",
+                   {"call_id": call["id"], "attempt": call["attempt"],
+                    "receipt_kind": key, "receipt_sha256": call[key + "_sha256"]})
+
+    @staticmethod
+    def _reset_attempt(call, detail):
+        keys = ("attempt", "worker", "worker_protocol", "error_receipt", "error_receipt_sha256",
+                "late_receipt", "late_receipt_sha256", "recovered_receipt", "recovered_receipt_sha256")
+        prior = {key: call[key] for key in keys if key in call}
+        prior["reconciliation"] = detail
+        call.setdefault("attempt_history", []).append(prior)
+        for key in keys:
+            if key != "attempt":
+                call.pop(key, None)
+        call.update(status="PREPARED", attempt=call["attempt"] + 1, worker=None)
 
     def _preflight(self, m):
         # Validate ALL steps before any tool is run, and again after a restart.
@@ -144,6 +166,8 @@ class Runtime:
             tool = self.registry.get(step["tool"])
             call = m["calls"][index] if index < len(m["calls"]) else None
             if call and call["status"] == "VERIFIED":
+                if call.get("output_sha256") != digest(call["output"]):
+                    return self._stop(m, "FAILED", "EVIDENCE_MISMATCH", "verified output fingerprint changed")
                 continue
             if self._cancelled(m):
                 return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested")
@@ -155,16 +179,18 @@ class Runtime:
                 m["calls"].append(call)
             if call["status"] == "PREPARED":
                 m["phase"] = "EXECUTING"
-                call.update(status="STARTED", worker_protocol="lease-v1", worker=None)
+                call.update(status="STARTED", worker_protocol="lease-v2", worker=None)
                 self._save(m, "CALL_STARTED", {"call_id": call["id"], "attempt": call["attempt"]})
                 try:
                     output = self._invoke(m, tool.execute, step["parameters"], m["context"], call=call)
                 except CallFailure as exc:
                     if exc.receipt is not None:
-                        call["late_receipt"] = exc.receipt
-                        call["late_receipt_sha256"] = digest(exc.receipt)
-                        self._save(m, "LATE_RECEIPT_SAVED", {"call_id": call["id"],
-                                   "receipt_sha256": call["late_receipt_sha256"]})
+                        self._retain_receipt(m, call, exc.receipt, late=exc.code in {"TIMEOUT", "CANCELLED"})
+                    if exc.authorized is False:
+                        self._reset_attempt(call, {"decision": "not-authorized", "code": exc.code})
+                        m["phase"] = "READY"
+                        status = "CANCELLED" if self._cancelled(m) else "BLOCKED"
+                        return self._stop(m, status, exc.code, str(exc) + "; tool was not authorized")
                     return self._stop(m, "REVIEW_REQUIRED", exc.code,
                                       str(exc) + "; effect unknown, no automatic retry")
                 self.checkpoint("TOOL_RETURNED")
@@ -180,6 +206,8 @@ class Runtime:
                 return self._stop(m, status, "VERIFICATION_UNAVAILABLE", str(exc))
             if verified is not True:
                 return self._stop(m, "FAILED", "VERIFICATION_FAILED", "output does not match expected result")
+            if call.get("output_sha256") != digest(call["output"]):
+                return self._stop(m, "FAILED", "EVIDENCE_MISMATCH", "output fingerprint changed")
             call["status"] = "VERIFIED"
             m["progress"]["completed"] = index + 1
             m["phase"] = "READY"
@@ -187,7 +215,8 @@ class Runtime:
         m.update(status="SUCCEEDED", phase="DONE", error=None,
                  result={"summary": "Statistiques vérifiées sur les extraits conservés.",
                          "evidence": [{"call_id": c["id"], "attempt": c["attempt"],
-                                       "output_sha256": c["output_sha256"], "verifier": c["verifier"]}
+                                       "output_sha256": c["output_sha256"], "verifier": c["verifier"],
+                                       "receipt_origin": c["receipt_origin"]}
                                       for c in m["calls"]],
                          "sources": snapshot(m["context"]),
                          "limits": ["Text statistics do not confirm source truth or semantic completeness.",
@@ -203,12 +232,14 @@ class Runtime:
         except Busy:
             return self.store.get(identity)
 
-    def reconcile(self, identity, *, decision, actor, reason, output=None):
+    def reconcile(self, identity, *, decision, actor, reason, output=None, confirm_no_effect=False):
         if (not isinstance(actor, str) or not actor.strip() or len(actor) > 200
                 or not isinstance(reason, str) or not reason.strip() or len(reason) > 4000):
             raise ValueError("explicit reconciliation actor and reason required")
         snapshot({"actor": actor, "reason": reason})
-        if decision not in {"no-effect", "observed-result", "abandon"}:
+        if type(confirm_no_effect) is not bool or (confirm_no_effect and decision != "no-effect"):
+            raise ValueError("confirm_no_effect is only valid with no-effect")
+        if decision not in {"no-effect", "observed-result", "use-receipt", "abandon"}:
             raise ValueError("unknown reconciliation decision")
         with self.store.lock(identity):
             m = self.store.get(identity)
@@ -229,18 +260,54 @@ class Runtime:
                 return m
             if m["configuration"] != self.configuration():
                 raise ValueError("reconciliation requires the original configuration")
-            with self.store.worker_quiescent(identity, call):
+            with self.store.worker_quiescent(identity, call) as authorized:
+                receipt = None
+                saved = []
+                for key in ("late_receipt", "error_receipt", "recovered_receipt"):
+                    if key in call:
+                        if call.get(key + "_sha256") != digest(call[key]):
+                            raise ValueError("stored receipt fingerprint changed; review or abandon")
+                        saved.append(call[key])
+                if call.get("worker_protocol") == "lease-v2":
+                    path = self.store.worker_lease_path(identity, call["id"], call["attempt"])
+                    try:
+                        receipt = _read_receipt(attempt_receipt_path(path))
+                    except CallFailure as exc:
+                        raise ContractError("stored attempt receipt invalid; review or abandon") from exc
+                disk_receipt = receipt
+                for item in saved:
+                    if receipt is not None and digest(item) != digest(receipt):
+                        raise ValueError("conflicting attempt receipts; review or abandon")
+                    receipt = item
+                if disk_receipt is not None:
+                    self._retain_receipt(m, call, disk_receipt, recovered=True)
+                detail["worker_authorized"] = authorized
                 if decision == "no-effect":
                     if output is not None:
                         raise ValueError("no-effect does not accept output")
-                    if call.get("late_receipt") is not None:
-                        raise ValueError("receipt exists: inspect it and use observed-result or abandon")
-                    call.update(status="PREPARED", attempt=call["attempt"] + 1, worker=None)
+                    if receipt is not None and receipt["ok"]:
+                        raise ValueError("successful receipt exists: use-receipt or abandon")
+                    if receipt is None and authorized is not False and not confirm_no_effect:
+                        raise ValueError("execution authorized or unknown: explicit confirm_no_effect required after investigation")
+                    detail["confirmed_no_effect"] = confirm_no_effect
+                    self._reset_attempt(call, detail.copy())
                     m["phase"] = "READY"
                 else:
+                    if decision == "use-receipt":
+                        if output is not None:
+                            raise ValueError("use-receipt does not accept output")
+                        if receipt is None or not receipt["ok"]:
+                            raise ValueError("no successful stored receipt to verify")
+                        output = receipt["value"]
+                        origin = "worker_receipt_reconciliation"
+                    else:
+                        if receipt is not None and receipt["ok"] and digest(output) != digest(receipt["value"]):
+                            raise ValueError("observed result conflicts with stored receipt; use-receipt or abandon")
+                        origin = "human_reconciliation"
                     call.update(status="RETURNED", output=snapshot(output),
-                                output_sha256=digest(output), receipt_origin="human_reconciliation")
+                                output_sha256=digest(output), receipt_origin=origin)
                     detail["output_sha256"] = call["output_sha256"]
+                    detail["receipt_origin"] = origin
                     m["phase"] = "VERIFY"
                 m.update(status="BLOCKED", error={"code": "RECONCILED", "message": "explicit resume required"})
                 self._save(m, "RECONCILED", detail)

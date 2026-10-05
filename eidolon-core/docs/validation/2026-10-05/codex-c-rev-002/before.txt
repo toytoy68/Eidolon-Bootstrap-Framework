@@ -1,0 +1,73 @@
+Python 3.12.14 | linux
+
+[N-01 erreur d'outil rendue dans les temps : quelles issues restent ?]
+  run (l'outil lève ConnectionRefusedError): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "refus de connexion synthétique, avant tout effet; effect unknown, no automatic retry"}}
+  late_receipt : {"code": "CALL_ERROR", "error": "ConnectionRefusedError", "message": "refus de connexion synthétique, avant tout effet", "ok": false}
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'PLAN_SAVED', 'CALL_STARTED', 'WORKER_SPAWNED', 'LATE_RECEIPT_SAVED', 'REVIEW_REQUIRED']
+  reconcile no-effect: REFUS/EXCEPTION ValueError: receipt exists: inspect it and use observed-result or abandon
+  issues restantes : observed-result (il n'y a aucune sortie à fournir) ou abandon
+  reconcile abandon: {"status": "ABANDONED", "phase": "DONE", "progress": {"completed": 0, "total": 1}, "error": {"code": "EFFECT_UNKNOWN", "message": "closed without resolving the effect"}}
+
+[N-02 orphelin terminé : no-effect accepté, puis second effet]
+  outil entré (exécution autorisée) : True
+  run de reprise après SIGKILL du parent: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  reconcile no-effect pendant que l'orphelin vit: REFUS/EXCEPTION Busy: worker still active; reconciliation cannot enable a retry
+  verrou libéré après la fin de l'orphelin : True
+  effets produits à cet instant : 1
+  reçu de transit resté sur disque : ok=True (129 octets)
+  late_receipt en base : None | worker journalisé : True
+  reconcile no-effect après la fin de l'orphelin: {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run (nouvelle tentative): {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 1, "total": 1}, "error": null}
+  effets produits au total : 2 | CALL_STARTED : 2
+
+[N-03 annulation entre WORKER_SPAWNED et l'autorisation : l'outil n'a pas pu tourner]
+  run: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested; effect unknown, no automatic retry"}}
+  effets produits : 0 | événements : ['CALL_STARTED', 'WORKER_SPAWNED', 'CANCEL_REQUESTED', 'REVIEW_REQUIRED']
+  reconcile no-effect: {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run: {"status": "CANCELLED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested"}}
+
+[Point 1 : échec de persistance de WORKER_SPAWNED]
+  run: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "INTERNAL_ERROR", "message": "OSError"}}
+  effets produits : 0 | worker en base : None | événements : ['PLAN_SAVED', 'CALL_STARTED', 'INTERNAL_ERROR']
+  reconcile no-effect: {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run: {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 1, "total": 1}, "error": null}
+  effets produits au total : 1 | CALL_STARTED : 2
+
+[Point 1 : mort du parent à chaque frontière (os._exit dans le point de contrôle)]
+  mort à CALL_STARTED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 0 | verrou libre True | CALL_STARTED 1
+  mort à WORKER_SPAWNED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 0 | verrou libre True | CALL_STARTED 1
+  mort à TOOL_RETURNED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 1 | verrou libre True | CALL_STARTED 1
+  mort à RESULT_SAVED (code 77) -> SUCCEEDED/DONE | effets 1 | verrou libre None | CALL_STARTED 1
+
+[N-04 imbrication : un plan accepté par parse_plan peut-il échouer à l'enregistrement ?]
+  plus grande profondeur acceptée par parse_plan sur cet interpréteur : 9993
+  profondeurs 9979…9992 (14) : BLOCKED/READY/PREFLIGHT_REFUSED (text.stats requires exactly one string reference) ; reprise -> BLOCKED/PREFLIGHT_REFUSED ; INTERNAL_ERROR journalisés : 0
+  profondeurs 9993…9993 (1) : BLOCKED/PLAN/INTERNAL_ERROR (ContractError) ; reprise -> BLOCKED/INTERNAL_ERROR ; INTERNAL_ERROR journalisés : 2
+  profondeurs 9994…9994 (1) : FAILED/PLAN/MODEL_INVALID (invalid model JSON) ; reprise -> FAILED/MODEL_INVALID ; INTERNAL_ERROR journalisés : 0
+
+[Point 3 : références de result.evidence, origine humaine, tailles]
+  après observed-result : SUCCEEDED | receipt_origin de l'appel : human_reconciliation
+  result.evidence : [{"call_id": "m-b8959e4056b14ee59234dfd7f123b955/stats-1", "attempt": 1, "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29", "verifier": "text-stats-recompute/1"}]
+  5 x 600 ko : SUCCEEDED en 1.8 s | corps final 3.01 Mo | 26 enregistrements, 33.1 Mo réécrits | résultat 1749 octets
+  lecture complète de la mission : 6.6 ms en moyenne
+
+[Point 2 : reçu tardif et sortie fournie par l'humain]
+  run (reçu écrit, puis délai dépassé): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "TIMEOUT", "message": "call deadline exceeded; effect unknown, no automatic retry"}}
+  late_receipt.ok : True | résultat de mission : None
+  reconcile no-effect: REFUS/EXCEPTION ValueError: receipt exists: inspect it and use observed-result or abandon
+  reconcile observed-result avec une sortie DIFFÉRENTE du reçu conservé: {"status": "BLOCKED", "phase": "VERIFY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  output_sha256 (valeur fournie)   : a600c2159e1e4027 …
+  empreinte de la valeur du reçu   : 9f5fee5ecfa9235f …
+  late_receipt_sha256 (enveloppe)  : 81d5d5a906143a12 …
+  détail journalisé de RECONCILED  : ['actor', 'attempt', 'call_id', 'decision', 'output_sha256', 'phase', 'progress', 'reason', 'status']
+  run (le vérificateur de text.stats recalcule et tranche): {"status": "FAILED", "phase": "VERIFY", "progress": {"completed": 0, "total": 1}, "error": {"code": "VERIFICATION_FAILED", "message": "output does not match expected result"}}
+
+[N-05 parent disparu sans avoir lu « ready » : exception côté enfant]
+  fin de _child : exception non interceptée ConnectionResetError | outil exécuté : False
+
+[Coût du lancement d'un exécutant (spawn + poignée de main + SQLite)]
+  mission complète (4 exécutants : rappel, modèle, outil, vérification), 5 essais : 0.53s 0.52s 0.53s 0.49s 0.42s
+  délai par appel 0.05 s -> BLOCKED/MEMORY_UNAVAILABLE
+  délai par appel 0.10 s -> BLOCKED/MODEL_UNAVAILABLE
+  délai par appel 0.20 s -> SUCCEEDED/None
+  délai par appel 0.40 s -> SUCCEEDED/None

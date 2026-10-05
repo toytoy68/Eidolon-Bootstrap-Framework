@@ -87,7 +87,7 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(self.started_count(identity), 5)
 
     def test_f03_abandon_keeps_unknown_effect_and_is_terminal(self):
-        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(0.5))
+        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(2.0))
         identity = runtime.create(DEMO_REQUEST)["id"]
         self.assertEqual(runtime.run(identity)["status"], "REVIEW_REQUIRED")
         m = runtime.reconcile(identity, decision="abandon", actor="tester", reason="effect cannot be determined")
@@ -101,7 +101,7 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(self.store.events(identity)[-1]["detail"]["actor"], "tester")
 
     def test_f03_cli_abandon_works_without_original_provider(self):
-        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(0.5))
+        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(2.0))
         identity = runtime.create(DEMO_REQUEST)["id"]
         runtime.run(identity)
         command = [sys.executable, "-m", "eidolon_core", "--state", str(self.directory)]
@@ -178,7 +178,7 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(runtime.run(identity)["status"], "SUCCEEDED")
 
     def test_f04_legacy_unknown_call_cannot_enable_retry(self):
-        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(0.5))
+        runtime = Runtime(self.store, registry=self.registry(execute=slow_tool), limits=Limits(2.0))
         identity = runtime.create(DEMO_REQUEST)["id"]
         m = runtime.run(identity)
         del m["calls"][0]["worker_protocol"]
@@ -191,13 +191,13 @@ class ReviewRegressionTests(unittest.TestCase):
     def test_f05_model_timeout_and_outage_resume_same_mission(self):
         for mode in ("timeout", "error"):
             with self.subTest(mode=mode):
-                runtime = Runtime(self.store, model=RecoverableModel(mode), limits=Limits(0.5))
+                runtime = Runtime(self.store, model=RecoverableModel(mode), limits=Limits(2.0))
                 identity = runtime.create(DEMO_REQUEST)["id"]
                 m = runtime.run(identity)
                 self.assertEqual((m["status"], m["error"]["code"]), ("BLOCKED", "MODEL_UNAVAILABLE"))
                 self.assertIsNone(m["model_output"])
                 self.assertEqual(self.started_count(identity), 0)
-                restored = Runtime(self.store, model=RecoverableModel(), limits=Limits(0.5))
+                restored = Runtime(self.store, model=RecoverableModel(), limits=Limits(2.0))
                 self.assertEqual(restored.run(identity)["status"], "SUCCEEDED")
                 self.assertEqual(self.started_count(identity), 1)
 
@@ -225,12 +225,14 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(m["calls"][0]["late_receipt_sha256"], digest(m["calls"][0]["late_receipt"]))
         self.assertIsNone(m["result"])
         self.assertEqual(runtime.run(identity), m)
-        runtime.reconcile(identity, decision="abandon", actor="tester", reason="cancelled with unverified receipt")
+        abandoned = runtime.reconcile(identity, decision="abandon", actor="tester", reason="cancelled with unverified receipt")
+        self.assertEqual(abandoned["status"], "ABANDONED")
+        self.assertEqual(abandoned["calls"][0]["late_receipt"], m["calls"][0]["late_receipt"])
         self.assertEqual(self.started_count(identity), 1)
 
     def test_f06_receipt_kept_at_deadline_and_reverified_without_retry(self):
         marker = self.directory / "receipt-ready"
-        runtime = Runtime(self.store, limits=Limits(1.0))
+        runtime = Runtime(self.store, limits=Limits(2.0))
         identity = runtime.create(DEMO_REQUEST)["id"]
         with patch.dict(os.environ, {"EIDOLON_TEST_RECEIPT_READY": str(marker)}), \
                 patch("eidolon_core.worker._child", receipt_then_wait):

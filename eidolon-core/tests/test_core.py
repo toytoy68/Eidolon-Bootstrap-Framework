@@ -8,6 +8,7 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import patch
 
 from eidolon_core.contracts import encode
 from eidolon_core.memory import DEMO_REQUEST, DEMO_TEXT, SyntheticMemory
@@ -102,7 +103,7 @@ class CoreTests(unittest.TestCase):
         self.assertIsNone(m["plan"])
 
     def test_model_timeout_never_executes_a_tool(self):
-        _, m = self.run_mission(model=SlowModel(), limits=Limits(0.5))
+        _, m = self.run_mission(model=SlowModel(), limits=Limits(2.0))
         self.assertEqual(m["status"], "BLOCKED")
         self.assertEqual(m["error"]["code"], "MODEL_UNAVAILABLE")
         self.assertFalse(m["calls"])
@@ -127,7 +128,7 @@ class CoreTests(unittest.TestCase):
         self.assertLess(time.monotonic() - start, 3)
 
     def test_tool_timeout_requires_reconciliation(self):
-        runtime, m = self.run_mission(registry=self.registry(execute=slow_tool), limits=Limits(0.5))
+        runtime, m = self.run_mission(registry=self.registry(execute=slow_tool), limits=Limits(2.0))
         self.assertEqual(m["status"], "REVIEW_REQUIRED")
         self.assertEqual(m["error"]["code"], "TIMEOUT")
         self.assertEqual(runtime.run(m["id"]), m)
@@ -139,12 +140,13 @@ class CoreTests(unittest.TestCase):
 
     def test_unspawnable_tool_is_diagnosed_without_unhandled_exception(self):
         _, m = self.run_mission(registry=self.registry(execute=lambda parameters, context: {}))
-        self.assertEqual(m["status"], "REVIEW_REQUIRED")
+        self.assertEqual(m["status"], "BLOCKED")
+        self.assertEqual(m["calls"][0]["status"], "PREPARED")
         self.assertEqual(m["error"]["code"], "WORKER_START_FAILED")
         self.assertIsNone(m["result"])
 
     def test_verification_timeout_keeps_receipt_without_success(self):
-        _, m = self.run_mission(registry=self.registry(verify=slow_verifier), limits=Limits(0.5))
+        _, m = self.run_mission(registry=self.registry(verify=slow_verifier), limits=Limits(2.0))
         self.assertEqual(m["status"], "BLOCKED")
         self.assertEqual(m["calls"][0]["status"], "RETURNED")
         self.assertIsNone(m["result"])
@@ -160,20 +162,22 @@ class CoreTests(unittest.TestCase):
         runtime = Runtime(self.store, registry=self.registry(execute=slow_tool))
         m = runtime.create(DEMO_REQUEST)
 
+        marker = Path(self.temp.name) / "tool-entered"
         def request():
-            for _ in range(500):
-                if self.store.get(m["id"])["phase"] == "EXECUTING":
+            for _ in range(800):
+                if marker.exists():
                     self.store.request_cancel(m["id"])
                     return
                 time.sleep(0.01)
 
         thread = threading.Thread(target=request)
-        thread.start()
-        result = runtime.run(m["id"])
-        thread.join(6)
+        with patch.dict(os.environ, {"EIDOLON_TEST_TOOL_ENTERED": str(marker)}):
+            thread.start()
+            result = runtime.run(m["id"])
+            thread.join(9)
         self.assertFalse(thread.is_alive())
         self.assertEqual(result["status"], "REVIEW_REQUIRED")
-        runtime.reconcile(m["id"], decision="no-effect", actor="tester", reason="synthetic worker stopped")
+        runtime.reconcile(m["id"], decision="no-effect", actor="tester", reason="synthetic worker stopped before any effect", confirm_no_effect=True)
         result = runtime.run(m["id"])
         self.assertEqual(result["status"], "CANCELLED")
         self.assertEqual(len([e for e in self.store.events(m["id"]) if e["kind"] == "CALL_STARTED"]), 1)
@@ -225,7 +229,8 @@ class CoreTests(unittest.TestCase):
     def test_human_result_must_still_verify_and_does_not_confirm_source(self):
         for good in (True, False):
             with self.subTest(good=good):
-                runtime, identity = self.crash("TOOL_RETURNED")
+                # No worker receipt exists; a human claim must still verify.
+                runtime, identity = self.crash("CALL_STARTED")
                 m = runtime.run(identity)
                 output = text_stats(m["plan"]["steps"][0]["parameters"], m["context"]) if good else {"ok": True}
                 runtime.reconcile(identity, decision="observed-result", actor="human", reason="observed output", output=output)

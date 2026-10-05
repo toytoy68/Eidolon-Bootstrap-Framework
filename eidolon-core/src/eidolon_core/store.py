@@ -100,16 +100,24 @@ class Store:
     def worker_quiescent(self, identity, call):
         # A PID can be reused. The child holds this lease from BEFORE its ready
         # handshake until AFTER execution. Reconciliation holds it until saved.
-        if call.get("worker_protocol") != "lease-v1":
+        if call.get("worker_protocol") not in {"lease-v1", "lease-v2"}:
             raise Busy("legacy call has no worker lease; abandon with unknown effect")
         path = self.worker_lease_path(identity, call["id"], call["attempt"])
-        with path.open("a") as handle:
+        with path.open("a+") as handle:
             try:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError as exc:
                 raise Busy("worker still active; reconciliation cannot enable a retry") from exc
             try:
-                yield
+                handle.seek(0)
+                marker = handle.read(128)
+                # v1 did not mark authorization; absence there proves nothing.
+                authorized = None
+                if call.get("worker_protocol") == "lease-v2":
+                    if marker not in {"", "authorized\n"}:
+                        raise ValueError("invalid worker authorization marker; review or abandon")
+                    authorized = bool(marker)
+                yield authorized
             finally:
                 fcntl.flock(handle, fcntl.LOCK_UN)
 
@@ -148,6 +156,7 @@ class Store:
             if mission["status"] == "SUCCEEDED" and (
                 not mission["calls"] or any(c["status"] != "VERIFIED" for c in mission["calls"])
                 or len(mission["calls"]) != len(mission["plan"]["steps"])
+                or any(c.get("output_sha256") != digest(c.get("output")) for c in mission["calls"])
                 or not mission["result"]
             ):
                 raise ValueError("success requires all verified results")
