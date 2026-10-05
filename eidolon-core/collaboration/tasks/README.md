@@ -48,3 +48,9 @@ Les prises en charge Claude restent à confirmer dans sa réponse.
 
 - [C-TASK-G005](C-TASK-G005.md) : Claude, contre-revue C-005a sur `5c169cb`,
   sondes et preuves uniquement ; prêt à prendre après livraison G004.
+
+## Répartition courante — C-MSG-G016
+
+G004 et G005 reçus ; les mentions « prêt à prendre » ci-dessus sont historiques.
+[C-TASK-G006](C-TASK-G006.md) est le prochain développement Claude : transport
+HTTP candidat isolé. Codex traite la lisibilité des accords O-G5-1/O-G5-2.
