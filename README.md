@@ -267,6 +267,13 @@ Together, they combine engineering methodology with practical implementation, ma
 
 ---
 
+## Independent Core prototype
+
+The experimental [Eidolon Core v0.1 subproject](eidolon-core/README.md) contains
+its own Python package, tests, CLI and roadmap. It is independent of Bootstrap;
+the installers do not launch or deploy it. Its synthetic demo needs no GPU,
+Docker or external service.
+
 ## License
 
 Released under the MIT License.

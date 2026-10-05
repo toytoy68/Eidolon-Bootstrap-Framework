@@ -1,0 +1,236 @@
+{
+  "calls": [
+    {
+      "attempt": 1,
+      "context_sha256": "13e0fea2a993163e5bb3196deb0230107cf20a3128f29ad734f7b2247e9c0e87",
+      "id": "m-c08efc92c30c43b596f15ddb13a7a546/stats-1",
+      "output": {
+        "characters": 70,
+        "sha256": "e1336e1ecbe9efd2e830d241a6476420e58a1a63dbb210ffc79c24236fe8d9cc",
+        "utf8_bytes": 72
+      },
+      "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+      "receipt_origin": "worker",
+      "status": "VERIFIED",
+      "step": {
+        "id": "stats-1",
+        "parameters": {
+          "reference": "synthetic-note@1"
+        },
+        "tool": "text.stats"
+      },
+      "tool_version": "1",
+      "verifier": "text-stats-recompute/1"
+    }
+  ],
+  "cancel_requested": false,
+  "configuration": {
+    "call_seconds": 10.0,
+    "memory": "memory-engine/contextual-recall/0.1",
+    "memory_root": "/tmp/eidolon-core-memory-demo-b9pzc33k/engine",
+    "model": "deterministic-demo/1",
+    "policy": {
+      "allowed_effect": "none",
+      "allowed_tools": [
+        "text.stats"
+      ],
+      "id": "local-pure-only/1"
+    },
+    "tools": {
+      "text.stats": {
+        "effect": "none",
+        "verifier": "text-stats-recompute/1",
+        "version": "1"
+      }
+    }
+  },
+  "context": {
+    "at": null,
+    "dossier_status": null,
+    "excluded_counts": {},
+    "items": [
+      {
+        "applicability": "UNKNOWN",
+        "availability": null,
+        "confidence": "LOW",
+        "content": "Ne pas acheter la V100 cette semaine. Ceci est une donnée synthétique.",
+        "content_format": "text",
+        "context": {
+          "scope": {
+            "goal": "demo"
+          }
+        },
+        "epistemic_status": "UNVERIFIED",
+        "excerpt_reference": null,
+        "freshness": "CANONICAL_AT_READ",
+        "importance": null,
+        "information_id": "synthetic-note",
+        "needs_review": true,
+        "operational_state": "PLANNED",
+        "provenance": {
+          "source": "core-integration-fixture/1",
+          "source_type": "SYNTHETIC"
+        },
+        "ranking": {
+          "content_coverage": 0.125,
+          "coverage": 0.125,
+          "frequency": 0.041666666666666664,
+          "phrase_in_content": false,
+          "policy": "lexical_v1"
+        },
+        "relations": [],
+        "retention": null,
+        "revision": 1,
+        "score": 0.10208333333333335,
+        "selection_reasons": [
+          "canonical_source",
+          "lexical_v1_candidate",
+          "applicability_unknown",
+          "epistemic_unverified"
+        ],
+        "temporal": {
+          "observed_at": "2026-10-05T07:11:52+00:00"
+        },
+        "token_count": null,
+        "truncated": false,
+        "valid_from": null,
+        "valid_until": null,
+        "verification": {
+          "evidence": {
+            "supporting": [
+              "synthetic-case-1"
+            ]
+          }
+        }
+      }
+    ],
+    "mode": "operational",
+    "policy_version": "contextual-recall/0.1",
+    "query": "Calculer les statistiques du texte synthétique de démonstration.",
+    "query_scope": {},
+    "used_chars": 70,
+    "used_tokens": null
+  },
+  "created_at": "2026-10-05T07:34:47.129154+00:00",
+  "error": null,
+  "id": "m-c08efc92c30c43b596f15ddb13a7a546",
+  "model_output": "{\"steps\":[{\"id\":\"stats-1\",\"parameters\":{\"reference\":\"synthetic-note@1\"},\"tool\":\"text.stats\"}],\"version\":1}",
+  "phase": "DONE",
+  "plan": {
+    "steps": [
+      {
+        "id": "stats-1",
+        "parameters": {
+          "reference": "synthetic-note@1"
+        },
+        "tool": "text.stats"
+      }
+    ],
+    "version": 1
+  },
+  "progress": {
+    "completed": 1,
+    "total": 1
+  },
+  "request": "Calculer les statistiques du texte synthétique de démonstration.",
+  "result": {
+    "evidence": [
+      {
+        "attempt": 1,
+        "context_sha256": "13e0fea2a993163e5bb3196deb0230107cf20a3128f29ad734f7b2247e9c0e87",
+        "id": "m-c08efc92c30c43b596f15ddb13a7a546/stats-1",
+        "output": {
+          "characters": 70,
+          "sha256": "e1336e1ecbe9efd2e830d241a6476420e58a1a63dbb210ffc79c24236fe8d9cc",
+          "utf8_bytes": 72
+        },
+        "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29",
+        "receipt_origin": "worker",
+        "status": "VERIFIED",
+        "step": {
+          "id": "stats-1",
+          "parameters": {
+            "reference": "synthetic-note@1"
+          },
+          "tool": "text.stats"
+        },
+        "tool_version": "1",
+        "verifier": "text-stats-recompute/1"
+      }
+    ],
+    "limits": [
+      "Text statistics do not confirm source truth or semantic completeness.",
+      "Source epistemic labels and review requirements remain unchanged."
+    ],
+    "sources": {
+      "at": null,
+      "dossier_status": null,
+      "excluded_counts": {},
+      "items": [
+        {
+          "applicability": "UNKNOWN",
+          "availability": null,
+          "confidence": "LOW",
+          "content": "Ne pas acheter la V100 cette semaine. Ceci est une donnée synthétique.",
+          "content_format": "text",
+          "context": {
+            "scope": {
+              "goal": "demo"
+            }
+          },
+          "epistemic_status": "UNVERIFIED",
+          "excerpt_reference": null,
+          "freshness": "CANONICAL_AT_READ",
+          "importance": null,
+          "information_id": "synthetic-note",
+          "needs_review": true,
+          "operational_state": "PLANNED",
+          "provenance": {
+            "source": "core-integration-fixture/1",
+            "source_type": "SYNTHETIC"
+          },
+          "ranking": {
+            "content_coverage": 0.125,
+            "coverage": 0.125,
+            "frequency": 0.041666666666666664,
+            "phrase_in_content": false,
+            "policy": "lexical_v1"
+          },
+          "relations": [],
+          "retention": null,
+          "revision": 1,
+          "score": 0.10208333333333335,
+          "selection_reasons": [
+            "canonical_source",
+            "lexical_v1_candidate",
+            "applicability_unknown",
+            "epistemic_unverified"
+          ],
+          "temporal": {
+            "observed_at": "2026-10-05T07:11:52+00:00"
+          },
+          "token_count": null,
+          "truncated": false,
+          "valid_from": null,
+          "valid_until": null,
+          "verification": {
+            "evidence": {
+              "supporting": [
+                "synthetic-case-1"
+              ]
+            }
+          }
+        }
+      ],
+      "mode": "operational",
+      "policy_version": "contextual-recall/0.1",
+      "query": "Calculer les statistiques du texte synthétique de démonstration.",
+      "query_scope": {},
+      "used_chars": 70,
+      "used_tokens": null
+    },
+    "summary": "Statistiques vérifiées sur les extraits conservés."
+  },
+  "revision": 9,
+  "status": "SUCCEEDED"
+}
