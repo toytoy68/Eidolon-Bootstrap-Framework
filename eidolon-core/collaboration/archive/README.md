@@ -47,3 +47,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c2792d6/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 - [C-MSG-G010](2026-10-05-gpt-C-MSG-G010.md), copie exacte ; liens dans la [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c63c4d114d07581792afe34bbc3c2cb6fc0a9172/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
+- [C-MSG-G011, lots Claude et livraison C-004a](2026-10-05-gpt-C-MSG-G011.md) :
+  copie exacte ; liens relatifs dans le contexte de la
+  [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/e54823d9afc9c01cf6be41a174eb5b94a9f7c474/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
