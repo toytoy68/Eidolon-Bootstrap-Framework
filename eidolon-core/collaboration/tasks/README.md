@@ -34,3 +34,11 @@ Révision matérielle utilisateur du 05/10 : **2 × V100 32 Go + NVLink prévus*
 C-CLAUDE-002 commence désormais par la compatibilité Volta et la stratégie GPU.
 Ollama reste candidat. Précision à 14 h 28 : modules SXM2 sur adaptateur PCIe,
 NVLink sur son PCB. Référence de l'adaptateur et topologie effective à relever. [Note et sources](../../docs/INFERENCE-2XV100-2026-10-05.md).
+
+## Nouveau lot — C-MSG-G011
+
+L'étude V100 de Claude est reçue dans ec7582b ; précisions demandées dans
+[C-TASK-G003](C-TASK-G003.md). Développement indépendant :
+[C-TASK-G002](C-TASK-G002.md), validateur de rapports de qualification.
+Revue : [C-TASK-G001](C-TASK-G001.md). Codex prend le diagnostic simulé C-004a.
+Les prises en charge Claude restent à confirmer dans sa réponse.

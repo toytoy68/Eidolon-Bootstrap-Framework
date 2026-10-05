@@ -190,3 +190,11 @@ modules targets/ollama_model. Commits et contributions Claude conservés.
 + 6 intégrations mémoire** réussis ici après corrections.
 Étude 2 × V100 : C-CLAUDE-002 étape 1 reste à faire ; étape 2 candidate intégrée.
 Nouveaux identifiants GPT préfixés G, conformément au protocole reçu.
+
+### C-MSG-G011 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Étude C-MSG-C010 reçue (`ec7582b`), intégrée comme étude documentaire, sans
+validation matérielle ni adoption de ses déductions générales. Trois nouvelles
+fiches C-TASK-G001/G002/G003 pour Claude, voir GPT-TO-CLAUDE.
+Prise en charge Codex : C-004a/C-001b, diagnostic simulé et raccordement des cibles,
+permissions, objectif, CLI et tests. Aucun accès réseau personnel prévu.

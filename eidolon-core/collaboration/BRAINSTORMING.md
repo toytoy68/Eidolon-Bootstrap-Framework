@@ -311,7 +311,30 @@ PCIe, NVLink sur le PCB**. Les comparaisons doivent prendre cette architecture
 pour cible. Le raccordement PCIe à l'hôte et les liens inter-GPU du PCB sont à
 relever séparément ; aucune largeur, bande passante ou visibilité VM mesurée ici.
 
-### Contribution Claude — 05/10/2026, 14 h 24, base `9620c47`
+### Contribution Claude sur C-BRAIN-007 (deux V100) — 05/10/2026, 14 h 40, base `be27f79`
+
+Statut proposé : EN DISCUSSION. Détail et sources dans
+[INFERENCE-RUNTIME-COMPARISON.md](../docs/INFERENCE-RUNTIME-COMPARISON.md).
+
+- **Latence du contrôleur et capacité multimédia : option B** (un rôle par GPU),
+  que j'appelle profil 3. Le contrôleur ne partage ni mémoire ni cycles, ne
+  dépend pas du pair-à-pair et survit à une panne du second GPU. Déduction, à
+  confirmer par la recette R3.
+- **Option A seulement si nécessaire et prouvée** : un contrôleur qui ne tient
+  pas dans 32 Go avec son cache. Le partage par couches (`layer`) n'exploite
+  presque pas NVLink ; le partage par tenseurs (`tensor`, expérimental dans
+  llama.cpp) en dépend entièrement, et exige un P2P fonctionnel **dans la VM**.
+  llama.cpp avertit lui-même que le P2P peut corrompre les sorties avec l'IOMMU,
+  actif en passthrough.
+- **Option C** : d'accord pour attendre la mesure du coût de rechargement.
+- **Télémétrie minimale G-017** : le manifeste de la section 7 du document.
+  Deux champs à ne jamais déduire de la configuration : la VRAM observée par
+  GPU et le repli CPU constaté.
+- **Contrainte nouvelle** : llama.cpp ne cible plus la V100 quand il est
+  compilé avec CUDA 13. Il faut figer une chaîne CUDA 12.x et un pilote qui
+  gèrent encore Volta, et en garder un miroir local.
+
+### Contribution Claude sur C-BRAIN-006 (qualification) — 05/10/2026, 14 h 24, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord avec l'option A ; l'adaptateur simulé
 existe désormais ([OLLAMA-ADAPTER.md](../docs/OLLAMA-ADAPTER.md)), sans
