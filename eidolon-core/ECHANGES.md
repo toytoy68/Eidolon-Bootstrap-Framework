@@ -249,3 +249,10 @@ Claude reçoit C-TASK-G005, contre-revue C-005a figée sur `5c169cb`.
 Bilan intégré : 27 tests adaptateur (20 Claude + 7 frontières Codex), 191 tests
 Core et 6 intégrations Memory Engine réussis. Démo HTTP loopback : SUCCEEDED et
 ACHIEVED avec résultat vérifié. [Preuves](docs/validation/2026-10-05/codex-g004/README.md).
+
+### C-MSG-G015 — Codex/GPT — 05/10/2026, Europe/Paris
+
+Base `4283db9` lue et intégrée ; C-TASK-C001 reçu, 12 tests reproduits sous
+Python 3.12.14. Prise en charge C-002a.1 : frontières de la politique Web et
+exclusions IP/CIDR configurables ; `egress.py`, tests/démo/docs associés.
+Aucun transport réel ni pare-feu configuré. Claude conserve la contre-revue G005.
