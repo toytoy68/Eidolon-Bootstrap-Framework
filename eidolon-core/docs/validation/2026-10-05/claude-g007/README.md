@@ -17,6 +17,8 @@ donnée personnelle, aucun service réel contacté pour simuler un blocage.
 | `build_corpus.py` | Génère `cases.json` de façon déterministe à partir de `bodies/` |
 | `check_corpus.py` | Vérifie le corpus (code 0 seulement si tout passe) |
 | `check-output.txt` | Sortie réellement obtenue ici, Python 3.11.15 |
+| `run_against_research.py` | Fait passer les 20 cas dans `research.py` de Codex (importé, jamais modifié) |
+| `research-run.txt` | Résultat de ce passage, cas par cas |
 
 ```sh
 cd eidolon-core/docs/validation/2026-10-05/claude-g007
@@ -31,6 +33,28 @@ privée. Essai de mutation exécuté ici : un état inconnu, une empreinte fauss
 un cas obligatoire retiré, une adresse électronique d'apparence réelle et un
 hôte non réservé sont tous détectés. Le vérificateur ne fait pas tourner de
 coordinateur : brancher `research.py` sur ce corpus relève de l'adaptateur de Codex.
+
+## Passage dans `research.py` (commit `99641df`)
+
+Le coordinateur de Codex est arrivé pendant ce lot ; le corpus a été branché
+dessus par des doubles (fournisseurs, lecteur, DNS), sans réseau. Chaque cas
+reçoit un verdict : `PASS` (conforme à l'oracle), `KNOWN_GAP` (limite que
+`WEB-RESEARCH-PROTOTYPE.md` annonce déjà : pas d'extracteur HTML, pas de
+`robots.txt`, pas de comparaison d'affirmations, pas d'indépendance éditoriale,
+pas de copie périmée affichée) ou `FINDING` (écart non annoncé).
+
+**Résultat : 9 PASS, 7 KNOWN_GAP, 4 FINDING** ([sortie](research-run.txt)).
+
+| Écart | Cas | Constat |
+| --- | --- | --- |
+| Paramètres de suivi | W07 | `?utm_source=…` n'est pas retiré de l'URL canonique : la même page est lue deux fois et compte pour deux sources |
+| Statut global ambigu | W14, W15 | « tous les fournisseurs en panne » et « rien trouvé » donnent le même `NO_READABLE_SOURCE` ; seul `providers[]` les distingue |
+| Données personnelles | W20 | La requête est envoyée telle quelle au fournisseur, courriel et téléphone compris |
+
+Bons comportements observés, au-delà de l'oracle : une page HTML déclarée
+`text/plain` est reconnue comme HTML et non lue ; le cache sert dans sa minute
+de validité puis relit après expiration ; un changement de politique n'utilise
+pas le cache ; un 429 suspend le domaine sans réessai.
 
 ## Schéma d'un cas
 

@@ -1,0 +1,24 @@
+# Base: 3b10eb350d48724cf78e4df7f5c6776525259895 (research.py de 99641df, non modifié) ; Python 3.11.15 ; 2026-10-05T17:52:07+02:00
+# Commande : PYTHONPATH=src:. python3 docs/validation/2026-10-05/claude-g007/run_against_research.py
+W01  PASS       NO_READABLE_SOURCE  providers {'engine-a': 'RATE_LIMITED', 'engine-b': 'OK'}; page state ['UNSUPPORTED_CONTENT'] (no HTML extractor in this slice (UNSUPPORTED_CONTENT is documented))
+W02  PASS       NO_READABLE_SOURCE  states ['RATE_LIMITED'], reads 1, no retry
+W03  PASS       NO_READABLE_SOURCE  states ['ACCESS_DENIED', 'UNSUPPORTED_CONTENT'] (no HTML extractor in this slice (UNSUPPORTED_CONTENT is documented))
+W04  PASS       NO_READABLE_SOURCE  states ['CHALLENGE_SUSPECTED']
+W05  KNOWN_GAP  NO_READABLE_SOURCE  not misread as challenge: True; states ['UNSUPPORTED_CONTENT']
+W06  PASS       NO_READABLE_SOURCE  state TIMEOUT, snippet kept, no text
+W07  FINDING    NO_READABLE_SOURCE  2 read call(s) and 2 source(s) for one page: tracking parameters (utm_*) are not removed from the canonical URL
+W08  KNOWN_GAP  NO_READABLE_SOURCE  two sources counted separately (documented: no editorial independence); ['UNSUPPORTED_CONTENT', 'UNSUPPORTED_CONTENT']
+W09  PASS       NO_READABLE_SOURCE  within 60 s: cache_hit True; after expiry: ['READ'], cache_hit False, reads 2 (text body)
+W10  KNOWN_GAP  NO_READABLE_SOURCE  after expiry, site 503: ['HTTP_ERROR']; stale copy not reused (safe) and not offered as a dated copy (not in this slice)
+W11  PASS       NO_READABLE_SOURCE  states ['POLICY_REFUSED'], reads 0; cache keyed by policy_id
+W12  PASS       NO_READABLE_SOURCE  states ['LOGIN_SUSPECTED']
+W13  KNOWN_GAP  READ_TARGET_MET     no claim comparison in this slice; states ['UNSUPPORTED_CONTENT', 'UNSUPPORTED_CONTENT', 'READ']
+W14  FINDING    NO_READABLE_SOURCE  report status NO_READABLE_SOURCE for providers ['UNAVAILABLE', 'TIMEOUT']: the top-level status is the same for 'all providers down' (W14) and 'nothing found' (W15); only providers[] differs
+W15  FINDING    NO_READABLE_SOURCE  report status NO_READABLE_SOURCE for providers ['EMPTY', 'EMPTY']: the top-level status is the same for 'all providers down' (W14) and 'nothing found' (W15); only providers[] differs
+W16  PASS       NO_READABLE_SOURCE  read_calls 2, states ['UNSUPPORTED_CONTENT', 'UNSUPPORTED_CONTENT', 'READ_BUDGET', 'READ_BUDGET', 'READ_BUDGET'], limitation READ_BUDGET
+W17  KNOWN_GAP  NO_READABLE_SOURCE  robots.txt not consulted; disallowed path read calls: 1
+W18  KNOWN_GAP  NO_READABLE_SOURCE  states ['UNSUPPORTED_CONTENT'] (no HTML extractor in this slice (UNSUPPORTED_CONTENT is documented)); a text soft-404 or paywall would need content judgement
+W19  KNOWN_GAP  NO_READABLE_SOURCE  states ['UNSUPPORTED_CONTENT'] (no HTML extractor in this slice (UNSUPPORTED_CONTENT is documented)); a text soft-404 or paywall would need content judgement
+W20  FINDING    NO_READABLE_SOURCE  query sent verbatim to 1 provider call(s), personal data included
+
+PASS 9 | KNOWN_GAP 7 | FINDING 4
