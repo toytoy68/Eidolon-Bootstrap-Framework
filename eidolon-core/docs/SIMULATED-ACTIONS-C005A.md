@@ -149,3 +149,10 @@ synthétiques (Internet/LAN/Windows), budgets de contenu et artefacts. L'adaptat
 chat candidat de Claude (C-TASK-G004) reste séparé. Le retry métier de D conserve
 son lot C-006 ; FAILED demeure terminal. Budget global, rétention des bases et
 reçus, restauration physique et recette VM restent différés.
+
+## Lisibilité après contre-revue G005
+
+La CLI expose désormais une [vue dérivée des accords et effets](ACTION-VIEW-G005.md),
+sans modifier les décisions ou le journal. `USED` signifie consommé au lancement,
+pas action forcément réalisée. Applicabilité et preuve d'effet sont séparées ;
+une configuration différente n'est pas assimilée automatiquement à une expiration.

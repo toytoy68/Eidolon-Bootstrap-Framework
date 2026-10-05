@@ -20,6 +20,7 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 | `worker` | Appels en processus spawn, délais, interruption, reçu JSON borné |
 | `runtime` | Mission, plan, précontrôle intégral, exécution séquentielle, reprise |
 | `cli` | Création, exécution/reprise, inspection, annulation et réconciliation |
+| `action_view` | Projection de décision/applicabilité/preuve pour affichage, sans effet ni permission |
 
 ## Mission et progression
 
@@ -67,6 +68,9 @@ La proposition persiste sans TTL, l'accord consommé est enregistré avec le
 lancement. Une comparaison état/révision dans la transaction couvre la course
 entre contrôle préalable et modification. Le reçu et l'accord sont nécessaires
 au succès. [Contrat C-005a](SIMULATED-ACTIONS-C005A.md).
+Une [vue pure](ACTION-VIEW-G005.md) expose séparément accord et effet dans la
+CLI ; elle recherche la tentative exacte, y compris dans l’historique, sans
+persistance ni contrôle en direct. Le runtime ne lit jamais cette projection.
 
 ## Persistance et reprise
 

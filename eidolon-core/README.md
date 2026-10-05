@@ -314,6 +314,16 @@ d'état et interruption sont testés. Rien n'agit sur un service réel.
 [Commandes, contrat et limites d'identité](docs/SIMULATED-ACTIONS-C005A.md).
 La démonstration couvre six scénarios ; une proposition sans décision n'expire pas.
 
+La CLI distingue aussi décision enregistrée, applicabilité et preuve d'effet dans
+`action_view` (JSON) et le rendu humain. Un accord consommé (`USED`) n'annonce
+pas une action effectuée. [Contrat de la vue](docs/ACTION-VIEW-G005.md).
+[Validation G005 intégrée](docs/validation/2026-10-05/codex-g005/README.md) :
+235 tests Core et 6 intégrations mémoire réussis sur synthétique.
+
+```sh
+PYTHONPATH=src:. python -m examples.action_view_demo --format human
+```
+
 ## Rapports de qualification G-017
 
 ```bash

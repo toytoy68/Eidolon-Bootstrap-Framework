@@ -13,6 +13,7 @@ from pathlib import Path
 import sys
 
 from .contracts import encode
+from .action_view import presented_mission
 from .diagnostics import synthetic_runtime
 from .actions import ActionRuntime
 from .targets import Catalog
@@ -131,7 +132,7 @@ def main(argv=None):
             result = runtime.reconcile(args.mission_id, decision=args.decision,
                                        actor=args.actor, reason=args.reason, output=output,
                                        confirm_no_effect=args.confirm_no_effect)
-        print(render_result(result) if args.format == "human" else encode(result))
+        print(render_result(result) if args.format == "human" else encode(presented_mission(result)))
         if args.command in {"show", "create", "reconcile", "decide"} or (args.command == "diagnose" and args.create_only):
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)

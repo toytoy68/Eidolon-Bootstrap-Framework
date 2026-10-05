@@ -1,0 +1,19 @@
+test_approved_requires_recheck_and_is_not_effect (tests.test_action_view.ActionViewTests.test_approved_requires_recheck_and_is_not_effect) ... ok
+test_cancel_request_visible_before_runtime_observes_it (tests.test_action_view.ActionViewTests.test_cancel_request_visible_before_runtime_observes_it) ... ok
+test_changed_condition_remains_visible_after_decision_changes_error (tests.test_action_view.ActionViewTests.test_changed_condition_remains_visible_after_decision_changes_error) ... ok
+test_cli_view_is_ephemeral_and_human_does_not_trust_supplied_view (tests.test_action_view.ActionViewTests.test_cli_view_is_ephemeral_and_human_does_not_trust_supplied_view) ... ok
+test_configuration_mismatch_is_not_irrevocable_expiry (tests.test_action_view.ActionViewTests.test_configuration_mismatch_is_not_irrevocable_expiry) ... ok
+test_consumed_then_cancelled_before_tool_authorization (tests.test_action_view.ActionViewTests.test_consumed_then_cancelled_before_tool_authorization) ... ok
+test_human_no_effect_remains_reported_then_new_proposal_is_separate (tests.test_action_view.ActionViewTests.test_human_no_effect_remains_reported_then_new_proposal_is_separate) ... ok
+test_interruption_without_receipt_remains_unknown (tests.test_action_view.ActionViewTests.test_interruption_without_receipt_remains_unknown) ... ok
+test_late_receipt_and_inconsistent_binding_never_promoted (tests.test_action_view.ActionViewTests.test_late_receipt_and_inconsistent_binding_never_promoted) ... ok
+test_non_action_mission_does_not_gain_action_view (tests.test_action_view.ActionViewTests.test_non_action_mission_does_not_gain_action_view) ... ok
+test_pending_age_does_not_expire_or_change_evidence (tests.test_action_view.ActionViewTests.test_pending_age_does_not_expire_or_change_evidence) ... ok
+test_proven_effect_is_historical_and_bad_hash_not_promoted (tests.test_action_view.ActionViewTests.test_proven_effect_is_historical_and_bad_hash_not_promoted) ... ok
+test_rejected_and_revoked_proposals_have_no_permission (tests.test_action_view.ActionViewTests.test_rejected_and_revoked_proposals_have_no_permission) ... ok
+test_saved_result_is_not_verified_yet (tests.test_action_view.ActionViewTests.test_saved_result_is_not_verified_yet) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 8.531s
+
+OK

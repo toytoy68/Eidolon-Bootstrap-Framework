@@ -8,6 +8,7 @@
 
 """Human console rendering; business state and machine output stay separate."""
 from . import __version__
+from .action_view import action_view
 
 COMPANY_NAME = "Eidolon Core Technologies"
 COMPANY_SHORT = "ECT"
@@ -89,8 +90,12 @@ def render_result(result):
         lines.append(message("ATTENTION", "Mission historique sans évaluation d'objectif C-001a."))
     if result.get("proposal"):
         proposal = result["proposal"]
+        view = action_view(result)
         lines.extend((section("Proposition d'action simulée"),
-                      message("INFO", "État : " + proposal["status"]),
+                      message("INFO", "Décision enregistrée : " + proposal["status"]),
+                      message("INFO", view["decision"]["message"]),
+                      message("INFO", "Applicabilité : " + view["applicability"]["code"] + " — " + view["applicability"]["message"]),
+                      message("INFO", "Effet : " + view["effect"]["code"] + " — " + view["effect"]["message"]),
                       message("INFO", "Empreinte : " + proposal["sha256"]),
                       message("INFO", "Action : " + str(proposal["action"]["step"])),
                       message("INFO", "Condition : " + str(proposal["action"]["condition"])),
