@@ -40,7 +40,9 @@ ils ne constituent pas des fonctionnalités livrées.
   [Bilan](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) : 58 tests Core + 6 intégrations.
 - [x] N-08 : marge des délais de test relevée, annulation synchronisée ; deux
   tests ciblés verts sur deux CPU avec six concurrents. Recette VM toujours différée.
-- [ ] Contre-revue C-REV-003 préparée pour les traces par tentative et la reprise.
+- [x] Contre-revue C-REV-003 reçue (C-MSG-007, base `3cb1ae5`).
+- [ ] Suites de C-REV-003 signalées par Claude, non traitées : N-09 (P2),
+  N-10 et N-11 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
 - [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
   historiques et verrous ; aucun effacement automatique d'un état actif.
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant

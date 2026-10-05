@@ -1,0 +1,44 @@
+Python 3.11.15 | linux
+
+[R1 mort du parent après le retour de l'outil : adoption du reçu conservé]
+  run de reprise: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  reconcile no-effect: REFUS ValueError: successful receipt exists: use-receipt or abandon
+  reconcile no-effect --confirm-no-effect: REFUS ValueError: successful receipt exists: use-receipt or abandon
+  événements ajoutés par les deux refus : ['RECOVERED_RECEIPT_SAVED']
+  clés de reçu sur l'appel après refus : ['recovered_receipt']
+  reconcile use-receipt: {"status": "BLOCKED", "phase": "VERIFY", "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run: {"status": "SUCCEEDED", "phase": "DONE", "error": null}
+  effets : 1 | CALL_STARTED : 1 | origine dans result.evidence : worker_receipt_reconciliation
+
+[R2 l'outil produit son effet puis lève : no-effect sans confirmation ?]
+  run: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "error": {"code": "CALL_ERROR", "message": "connexion coupée après l'envoi de la requête; effect unknown, no automatic retry"}}
+  error_receipt.ok : False | effets : 1
+  reconcile no-effect (sans --confirm-no-effect): {"status": "BLOCKED", "phase": "READY", "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  journal RECONCILED : worker_authorized = True | confirmed_no_effect = False
+  run (nouvelle tentative): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "error": {"code": "CALL_ERROR", "message": "connexion coupée après l'envoi de la requête; effect unknown, no automatic retry"}}
+  effets au total : 2 | CALL_STARTED : 2
+
+[R3 parent et exécutant tués pendant l'outil : marqueur présent, aucun reçu]
+  outil entré : True
+  run de reprise: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  reconcile no-effect (sans confirmation): REFUS ValueError: execution authorized or unknown: explicit confirm_no_effect required after investigation
+  contenu du verrou : 'authorized\n'
+  effets : 0
+
+[R4 même situation, fichier de verrou supprimé (nettoyage manuel ou futur)]
+
+[R3 parent et exécutant tués pendant l'outil : marqueur présent, aucun reçu]
+  outil entré : True
+  run de reprise: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  reconcile no-effect (sans confirmation): REFUS ValueError: execution authorized or unknown: explicit confirm_no_effect required after investigation
+  contenu du verrou : 'authorized\n'
+  effets : 0
+  verrou supprimé ; outil entré mais tué, effet réel inconnu
+  reconcile no-effect (sans confirmation): {"status": "BLOCKED", "phase": "READY", "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  journal RECONCILED : worker_authorized = False
+
+[R5 fichiers laissés dans le dossier d'état]
+  .worker.lock   : 10
+  .receipt.json  : 10
+  .pending       : 0
+  missions terminées : 10, toutes SUCCEEDED

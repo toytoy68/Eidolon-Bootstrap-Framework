@@ -1,0 +1,74 @@
+Python 3.11.15 | linux
+
+[N-01 erreur d'outil rendue dans les temps : quelles issues restent ?]
+  run (l'outil lève ConnectionRefusedError): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "refus de connexion synthétique, avant tout effet; effect unknown, no automatic retry"}}
+  late_receipt : null
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'PLAN_SAVED', 'CALL_STARTED', 'WORKER_SPAWNED', 'ERROR_RECEIPT_SAVED', 'REVIEW_REQUIRED']
+  reconcile no-effect: {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  issues restantes : observed-result (il n'y a aucune sortie à fournir) ou abandon
+  reconcile abandon: REFUS/EXCEPTION ValueError: mission has no uncertain call to reconcile
+
+[N-02 orphelin terminé : no-effect accepté, puis second effet]
+  outil entré (exécution autorisée) : True
+  run de reprise après SIGKILL du parent: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  reconcile no-effect pendant que l'orphelin vit: REFUS/EXCEPTION Busy: worker still active; reconciliation cannot enable a retry
+  verrou libéré après la fin de l'orphelin : True
+  effets produits à cet instant : 1
+  late_receipt en base : None | worker journalisé : True
+  reconcile no-effect après la fin de l'orphelin: REFUS/EXCEPTION ValueError: successful receipt exists: use-receipt or abandon
+  run (nouvelle tentative): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  effets produits au total : 1 | CALL_STARTED : 1
+
+[N-03 annulation entre WORKER_SPAWNED et l'autorisation : l'outil n'a pas pu tourner]
+  run: {"status": "CANCELLED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested; tool was not authorized"}}
+  effets produits : 0 | événements : ['CALL_STARTED', 'WORKER_SPAWNED', 'CANCEL_REQUESTED', 'CANCELLED']
+  reconcile no-effect: REFUS/EXCEPTION ValueError: mission has no uncertain call to reconcile
+  run: {"status": "CANCELLED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested; tool was not authorized"}}
+
+[Point 1 : échec de persistance de WORKER_SPAWNED]
+  run: {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "INTERNAL_ERROR", "message": "OSError"}}
+  effets produits : 0 | worker en base : None | événements : ['PLAN_SAVED', 'CALL_STARTED', 'INTERNAL_ERROR']
+  reconcile no-effect: {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run: {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 1, "total": 1}, "error": null}
+  effets produits au total : 1 | CALL_STARTED : 2
+
+[Point 1 : mort du parent à chaque frontière (os._exit dans le point de contrôle)]
+  mort à CALL_STARTED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 0 | verrou libre True | CALL_STARTED 1
+  mort à WORKER_SPAWNED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 0 | verrou libre True | CALL_STARTED 1
+  mort à TOOL_RETURNED (code 77) -> REVIEW_REQUIRED/EXECUTING | effets 1 | verrou libre True | CALL_STARTED 1
+  mort à RESULT_SAVED (code 77) -> SUCCEEDED/DONE | effets 1 | verrou libre None | CALL_STARTED 1
+
+[N-04 imbrication : un plan accepté par parse_plan peut-il échouer à l'enregistrement ?]
+  plus grande profondeur acceptée par parse_plan sur cet interpréteur : 28
+  profondeurs 14…28 (15) : BLOCKED/READY/PREFLIGHT_REFUSED (text.stats requires exactly one string reference) ; reprise -> BLOCKED/PREFLIGHT_REFUSED ; INTERNAL_ERROR journalisés : 0
+  profondeurs 29…29 (1) : FAILED/PLAN/MODEL_INVALID (model plan nesting exceeds 32 containers) ; reprise -> FAILED/MODEL_INVALID ; INTERNAL_ERROR journalisés : 0
+
+[Point 3 : références de result.evidence, origine humaine, tailles]
+  après observed-result : SUCCEEDED | receipt_origin de l'appel : human_reconciliation
+  result.evidence : [{"call_id": "m-14d2c27dceaa46fda995d26813aba590/stats-1", "attempt": 1, "output_sha256": "9f5fee5ecfa9235fb498809e0913486b2dfa908eebef83aae90f8ff0a98d8a29", "verifier": "text-stats-recompute/1", "receipt_origin": "human_reconciliation"}]
+  5 x 600 ko : SUCCEEDED en 1.8 s | corps final 3.01 Mo | 26 enregistrements, 33.1 Mo réécrits | résultat 1879 octets
+  lecture complète de la mission : 4.1 ms en moyenne
+
+[Point 2 : reçu tardif et sortie fournie par l'humain]
+  run (reçu écrit, puis délai dépassé): {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "TIMEOUT", "message": "call deadline exceeded; effect unknown, no automatic retry"}}
+  late_receipt.ok : True | résultat de mission : None
+  reconcile no-effect: REFUS/EXCEPTION ValueError: successful receipt exists: use-receipt or abandon
+  reconcile observed-result avec une sortie DIFFÉRENTE du reçu conservé: REFUS/EXCEPTION ValueError: observed result conflicts with stored receipt; use-receipt or abandon
+  SONDE EN ERREUR :
+Traceback (most recent call last):
+  File "/home/user/Eidolon-Bootstrap-Framework/eidolon-core/docs/validation/2026-10-05/claude-c-rev-002/repro2.py", line 435, in <module>
+    probe()
+  File "/home/user/Eidolon-Bootstrap-Framework/eidolon-core/docs/validation/2026-10-05/claude-c-rev-002/repro2.py", line 360, in probe_n08_late_receipt_digest
+    print("  output_sha256 (valeur fournie)   :", stored["output_sha256"][:16], "…")
+                                                  ~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'output_sha256'
+
+[N-05 parent disparu sans avoir lu « ready » : exception côté enfant]
+  fin de _child : retour normal | outil exécuté : False
+
+[Coût du lancement d'un exécutant (spawn + poignée de main + SQLite)]
+  mission complète (4 exécutants : rappel, modèle, outil, vérification), 5 essais : 0.38s 0.41s 0.37s 0.40s 0.41s
+  délai par appel 0.05 s -> BLOCKED/MEMORY_UNAVAILABLE
+  délai par appel 0.10 s -> BLOCKED/MEMORY_UNAVAILABLE
+  délai par appel 0.20 s -> SUCCEEDED/None
+  délai par appel 0.40 s -> SUCCEEDED/None

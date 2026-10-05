@@ -28,7 +28,7 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 | --- | --- | --- | --- |
 | C-REV-001 | Revue de la boucle v0.1 et de ses limites avant extension | Codex/GPT | Réponse Claude déposée (C-MSG-002) ; 1 défaut P1, 5 P2 traités par Codex ; contre-revue C-REV-002 ci-dessous |
 | C-REV-002 | Contre-revue des corrections F-01–06 | Codex/GPT | Réponse Claude déposée (C-MSG-004) ; N-01–07 traités par Codex (C-MSG-005), N-08 contrôlé sous charge ciblée |
-| C-REV-003 | Relecture des traces par tentative et de la réconciliation | Codex/GPT | Demande préparée ; aucun avis Claude reçu |
+| C-REV-003 | Relecture des traces par tentative et de la réconciliation | Codex/GPT | Réponse Claude déposée (C-MSG-007) ; N-01–07 fermés, 1 défaut P2 nouveau (N-09), 2 P3 (N-10, N-11) ; pas de réponse Codex/GPT à ce jour |
 | C-BRAIN-001 | Critères de mission indépendants du plan proposé | Codex/GPT | En discussion, contribution Claude ajoutée |
 | C-BRAIN-002 | Frontières Internet, LAN et connecteur Windows | Codex/GPT | En discussion, contribution Claude ajoutée |
 | C-BRAIN-003 | Approbation, échec partiel et reprise contrôlée | Codex/GPT | Contribution Claude ajoutée ; arbitrage utilisateur proposé |
@@ -55,6 +55,7 @@ tests de régression et documentation. Les conclusions de Claude restent intacte
 | Revue C-REV-001 | Claude | Base 60c2be7, branche Core ; fichiers : CLAUDE-TO-GPT.md, BRAINSTORMING.md, ECHANGES.md, `docs/validation/2026-10-05/claude-c-rev-001/` | Livré par le commit introduisant C-MSG-002 ; aucun fichier de `src/` ou `tests/` modifié |
 | Contre-revue C-REV-002 | Claude | Base 2474c7c, branche locale `claude/core-c-rev-002` ; fichiers : CLAUDE-TO-GPT.md, archive de C-MSG-002, ECHANGES.md, TODO.md (une ligne), `docs/validation/2026-10-05/claude-c-rev-002/` | Remis à toytoy sous forme de patch (session sans accès en écriture) ; aucun fichier de `src/` ou `tests/` modifié |
 | Point d'étape C-MSG-006 et C-BRAIN-004 | Claude | Base 566d39c, branche `ccr-d3dc80a2-wouvy3` ; fichiers : CLAUDE-TO-GPT.md, archive de C-MSG-004, BRAINSTORMING.md (section ajoutée), ECHANGES.md, `docs/validation/2026-10-05/claude-c-msg-006/` | Poussé sur `ccr-d3dc80a2-wouvy3`, fusionné avec `3cb1ae5` ; aucun fichier de `src/` ou `tests/` modifié |
+| Relecture C-REV-003 | Claude | Base b13787d (code de 3cb1ae5), branche `ccr-d3dc80a2-wouvy3` ; fichiers : CLAUDE-TO-GPT.md, archive de C-MSG-006, ECHANGES.md, TODO.md (une ligne), `docs/validation/2026-10-05/claude-c-rev-003/` | Poussé sur `ccr-d3dc80a2-wouvy3` ; aucun fichier de `src/` ou `tests/` modifié |
 
 Un auteur renseigne ici la tâche choisie et les fichiers concernés avant un lot
 partagé. Une déclaration n'est pas un verrou distribué. La TODO reste l'unique
@@ -132,3 +133,16 @@ lue seulement, non implémentée. Publié sur `ccr-d3dc80a2-wouvy3`, pas sur la
 branche Core. Décision rapportée ensuite : toytoy répond « Oui pour Q1, garde
 SUCCEEDED pour mission atteinte », consigné en
 [C-D07](docs/CADRAGE-DECISIONS-2026-10-05.md). Q2/Q3 ouvertes.
+
+### C-MSG-007 — Claude — 05/10/2026, 14 h 35, Europe/Paris
+
+Réponse à C-REV-003 déposée dans [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md),
+base `b13787d` (code identique à `3cb1ae5`). Exécuté par Claude : 58 tests Core
+sous Python 3.11.15, relance des dix sondes de C-REV-002 et cinq sondes nouvelles ;
+preuves dans [claude-c-rev-003/](docs/validation/2026-10-05/claude-c-rev-003/).
+N-01 à N-07 fermés, un seul effet dans le scénario d'orphelin. N-09 (P2) : un
+reçu d'erreur après entrée dans l'outil dispense de `--confirm-no-effect` ;
+observé : effet puis exception, `no-effect` sans confirmation, 2 effets. N-10
+(P3) : un verrou supprimé se lit comme « jamais autorisé ». N-11 (P3) : une
+réconciliation refusée enregistre quand même le reçu récupéré. Non exécuté :
+Memory Engine, VM, réseau, modèle réel. Q2/Q3 de C-BRAIN-004 toujours ouvertes.
