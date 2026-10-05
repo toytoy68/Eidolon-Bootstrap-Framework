@@ -113,3 +113,34 @@ l'adaptateur Ollama, importés pour que les deux candidats restent comparables.
 Proposition, sans décision : une authentification réelle plus forte qu'une
 clé partagée (TLS mutuel ou tunnel) pourra se discuter au brainstorming. Elle
 ne bloque pas ce transport simulé.
+
+## Révision d'intégration Codex/GPT — contrat `/2`, 05/10/2026
+
+Le code serveur de référence reste b11418. L'identifiant du contrat adaptateur
+passe à `openai-chat-llamacpp/2` ; une mission utilisant l'ancien contrat bloque
+à la reprise pour configuration différente. La lecture documentaire de Claude
+ci-dessus reste attribuée à son auteur, sans essai llama.cpp réel supplémentaire.
+
+Les erreurs distantes ne sont plus copiées dans le diagnostic : elles peuvent
+refléter une clé d'en-tête. Les codes locaux et le statut HTTP restent visibles.
+Une erreur du parseur HTTP est également convertie en diagnostic local sans
+texte brut ni chaîne de cause contenant la réponse distante.
+Une complétion reflétant littéralement la clé utilisée, y compris après décodage
+des chaînes JSON du plan, est refusée avant sauvegarde. Les sondes utilisent une
+clé synthétique et vérifient mission, événements et octets SQLite. Cette protection
+n'est pas un détecteur général de secrets obfusqués ; les extensions de transport
+Python restent de confiance et ne doivent pas journaliser leurs en-têtes.
+
+La clé doit comporter 1 à 8192 caractères ASCII imprimables sans espace, et ne
+pas contenir de retour à la ligne. Codes ajoutés : INVALID_SECRET et
+SECRET_IN_RESPONSE. L'enveloppe exige des clés JSON uniques, des valeurs finies,
+un texte UTF-8 valide, `usage` présent et cohérent, des types `tool_calls` et
+`refusal` valides. Le schéma renvoyé par `body()` est une copie indépendante.
+
+Bornes choisies **par cet adaptateur**, pas annoncées comme limites universelles
+du serveur : max_tokens entier 1–1 000 000, seed entier −1 à 2³²−1, top_k entier
+0–1 000 000, top_p entre 0 et 1, temperature entre 0 et 10. Aucune limite négative
+illimitée ni budget fractionnaire. Endpoint borné, sans contrôles, port valide ;
+les nombres trop grands donnent ContractError plutôt qu'une exception de conversion.
+
+[Preuves et limites du lot intégré](validation/2026-10-05/codex-g004/README.md).

@@ -1,0 +1,32 @@
+test_api_key_is_a_variable_name_and_needs_https_off_loopback (tests.test_openai_chat_model.ConfigurationTests.test_api_key_is_a_variable_name_and_needs_https_off_loopback) ... ok
+test_endpoint_rules (tests.test_openai_chat_model.ConfigurationTests.test_endpoint_rules) ... ok
+test_model_id_and_immutability (tests.test_openai_chat_model.ConfigurationTests.test_model_id_and_immutability) ... ok
+test_no_default_endpoint_or_model (tests.test_openai_chat_model.ConfigurationTests.test_no_default_endpoint_or_model) ... ok
+test_options_budgets_and_context (tests.test_openai_chat_model.ConfigurationTests.test_options_budgets_and_context) ... ok
+test_secret_value_never_enters_manifest_or_model_id (tests.test_openai_chat_model.ConfigurationTests.test_secret_value_never_enters_manifest_or_model_id) ... ok
+test_authentication_with_and_without_key (tests.test_openai_chat_model.LoopbackServerTests.test_authentication_with_and_without_key) ... ok
+test_connection_refused (tests.test_openai_chat_model.LoopbackServerTests.test_connection_refused) ... ok
+test_errors_redirects_size_timeout (tests.test_openai_chat_model.LoopbackServerTests.test_errors_redirects_size_timeout) ... ok
+test_plan_text_over_http (tests.test_openai_chat_model.LoopbackServerTests.test_plan_text_over_http) ... ok
+test_bearer_key_comes_from_the_environment_at_call_time (tests.test_openai_chat_model.ProtocolTests.test_bearer_key_comes_from_the_environment_at_call_time) ... ok
+test_completion_beyond_max_tokens_is_inconsistent (tests.test_openai_chat_model.ProtocolTests.test_completion_beyond_max_tokens_is_inconsistent) ... ok
+test_failures_are_errors_never_a_plan (tests.test_openai_chat_model.ProtocolTests.test_failures_are_errors_never_a_plan) ... ok
+test_oversized_injected_response_is_refused (tests.test_openai_chat_model.ProtocolTests.test_oversized_injected_response_is_refused) ... ok
+test_prompt_budget_checked_before_any_transport_call (tests.test_openai_chat_model.ProtocolTests.test_prompt_budget_checked_before_any_transport_call) ... ok
+test_request_matches_the_server_contract (tests.test_openai_chat_model.ProtocolTests.test_request_matches_the_server_contract) ... ok
+test_invalid_or_unauthorized_plans_are_refused_by_core (tests.test_openai_chat_model.RuntimeIntegrationTests.test_invalid_or_unauthorized_plans_are_refused_by_core) ... ok
+test_secret_never_reaches_the_mission_record (tests.test_openai_chat_model.RuntimeIntegrationTests.test_secret_never_reaches_the_mission_record) ... ok
+test_transport_failure_blocks_instead_of_planning (tests.test_openai_chat_model.RuntimeIntegrationTests.test_transport_failure_blocks_instead_of_planning) ... ok
+test_valid_plan_still_goes_through_core_checks (tests.test_openai_chat_model.RuntimeIntegrationTests.test_valid_plan_still_goes_through_core_checks) ... ok
+test_duplicate_keys_nonfinite_and_surrogates_rejected (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_duplicate_keys_nonfinite_and_surrogates_rejected) ... ok
+test_invalid_scalar_options_and_endpoints_rejected_early (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_invalid_scalar_options_and_endpoints_rejected_early) ... ok
+test_invalid_secret_never_reaches_transport (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_invalid_secret_never_reaches_transport) ... ok
+test_malformed_http_status_cannot_leak_credential_through_exception (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_malformed_http_status_cannot_leak_credential_through_exception) ... ok
+test_missing_usage_and_wrong_control_types_rejected (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_missing_usage_and_wrong_control_types_rejected) ... ok
+test_reflected_credential_never_reaches_mission_or_events (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_reflected_credential_never_reaches_mission_or_events) ... ok
+test_returned_schema_cannot_modify_shared_contract (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_returned_schema_cannot_modify_shared_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 6.390s
+
+OK

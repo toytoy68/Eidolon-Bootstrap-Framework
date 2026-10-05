@@ -254,6 +254,18 @@ l'API Python mais n'est ni le
 modèle par défaut, ni une option de la CLI. Ses tests emploient des transports
 simulés et un faux serveur HTTP loopback. Aucun vrai modèle n'est qualifié.
 
+L'[adaptateur chat candidat llama.cpp](docs/OPENAI-CHAT-ADAPTER.md) de Claude
+est également intégré, avec validation renforcée des réponses et protection
+contre la réflexion de la clé d'accès dans les traces. Il reste injectable via
+Python, hors CLI. Cette démonstration utilise uniquement un faux serveur local :
+
+```bash
+PYTHONPATH=src:. python -m examples.openai_chat_demo
+```
+
+[Dernière validation intégrée](docs/validation/2026-10-05/codex-g004/README.md) :
+191 tests Core réussis et 6 tests du moteur mémoire sur copie isolée.
+
 L'étude comparative pour les deux V100 SXM2 sur carte adaptatrice PCIe/NVLink
 a été reçue (`ec7582b`), puis précisée par Claude dans C-TASK-G003.
 Aucune qualification matérielle n'est acquise. G003 est intégré (`a77e7cf`). [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).

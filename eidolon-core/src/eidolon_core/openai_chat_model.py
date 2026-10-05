@@ -19,6 +19,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 import json
+from http.client import HTTPException
 import math
 import os
 import re
@@ -26,7 +27,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from .contracts import ContractError, digest, encode
+from .contracts import ContractError, digest, encode, snapshot
 from .ollama_model import PLAN_SCHEMA, SYSTEM_PROMPT  # same plan contract for comparable planners
 
 LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1"}
@@ -74,7 +75,16 @@ class OpenAIChatConfig:
     api_key_env: str | None = None      # NAME of an environment variable, never the key
 
     def __post_init__(self):
-        url = urllib.parse.urlsplit(self.endpoint) if isinstance(self.endpoint, str) else None
+        if (not isinstance(self.endpoint, str) or not 1 <= len(self.endpoint) <= 2000
+                or any(c.isspace() or ord(c) < 32 for c in self.endpoint)):
+            raise ContractError("endpoint must be bounded text without whitespace or controls")
+        try:
+            url = urllib.parse.urlsplit(self.endpoint)
+            if url.port is not None and not 1 <= url.port <= 65535:
+                raise ValueError("invalid port")
+            encode(self.endpoint)
+        except ValueError as exc:
+            raise ContractError("invalid endpoint") from exc
         if (url is None or url.scheme not in {"http", "https"} or not url.hostname
                 or url.username or url.password or url.query or url.fragment
                 or url.path not in {"", "/"}):
@@ -89,15 +99,23 @@ class OpenAIChatConfig:
             raise ContractError("model must be a non-empty name without whitespace")
         if not isinstance(self.options, (dict, _Options)) or set(self.options) - OPTION_KEYS:
             raise ContractError(f"options limited to {sorted(OPTION_KEYS)}")
+        bounds = {"temperature": (0, 10), "seed": (-1, 2**32 - 1),
+                  "max_tokens": (1, 1_000_000), "top_p": (0, 1), "top_k": (0, 1_000_000)}
         for key, value in self.options.items():
-            if type(value) not in (int, float) or not math.isfinite(value):
-                raise ContractError(f"option {key} must be a finite number")
+            try:
+                finite = type(value) in (int, float) and math.isfinite(value)
+            except OverflowError:
+                finite = False
+            low, high = bounds[key]
+            if (not finite or not low <= value <= high
+                    or (key in {"seed", "max_tokens", "top_k"} and type(value) is not int)):
+                raise ContractError(f"option {key} is outside the adapter's bounded domain")
+        encode(self.model)
         object.__setattr__(self, "options", _Options(tuple(sorted(self.options.items()))))
         if self.context_tokens is not None and (type(self.context_tokens) is not int
                                                 or not 1 <= self.context_tokens <= 10_000_000):
             raise ContractError("context_tokens must be a positive integer or None")
-        if (type(self.timeout_seconds) not in (int, float) or not math.isfinite(self.timeout_seconds)
-                or not 0 < self.timeout_seconds <= 600):
+        if (type(self.timeout_seconds) not in (int, float) or not 0 < self.timeout_seconds <= 600):
             raise ContractError("timeout must be within (0, 600] seconds")
         for name in ("max_prompt_bytes", "max_response_bytes", "max_output_bytes"):
             value = getattr(self, name)
@@ -115,7 +133,7 @@ class OpenAIChatConfig:
 
     def manifest(self):
         """Canonical, secret-free description that identifies this controller."""
-        return {"adapter": "openai-chat-llamacpp/1", "server_contract": "llama.cpp b11418",
+        return {"adapter": "openai-chat-llamacpp/2", "server_contract": "llama.cpp b11418",
                 "endpoint": self.endpoint.rstrip("/"), "model": self.model,
                 "options": dict(self.options), "response_format": digest(PLAN_SCHEMA),
                 "system_prompt": digest(SYSTEM_PROMPT), "context_tokens": self.context_tokens,
@@ -140,9 +158,9 @@ class UrllibChatTransport:
         except urllib.error.HTTPError as exc:
             with exc:
                 return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
-        except (urllib.error.URLError, OSError, ValueError) as exc:
+        except (urllib.error.URLError, OSError, ValueError, HTTPException) as exc:
             reason = getattr(exc, "reason", exc)
-            raise OpenAIChatError("TRANSPORT", type(reason).__name__) from exc
+            raise OpenAIChatError("TRANSPORT", type(reason).__name__) from None
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -184,7 +202,7 @@ class OpenAIChatModel:
     def body(self, request, context):
         return {"model": self.config.model, "messages": self.messages(request, context), "stream": False,
                 # llama-server b11418 reads "schema" directly for json_object (server-common.cpp).
-                "response_format": {"type": "json_object", "schema": PLAN_SCHEMA},
+                "response_format": {"type": "json_object", "schema": snapshot(PLAN_SCHEMA)},
                 **dict(self.config.options)}
 
     def headers(self):
@@ -193,6 +211,8 @@ class OpenAIChatModel:
             key = os.environ.get(self.config.api_key_env)
             if not key:
                 raise OpenAIChatError("MISSING_SECRET", f"environment variable {self.config.api_key_env} is not set")
+            if len(key) > 8192 or any(not 33 <= ord(c) <= 126 for c in key):
+                raise OpenAIChatError("INVALID_SECRET", "API key must be bounded printable ASCII without whitespace")
             headers["Authorization"] = "Bearer " + key
         return headers
 
@@ -200,18 +220,30 @@ class OpenAIChatModel:
         body = encode(self.body(request, context)).encode("utf-8")
         if len(body) > self.config.max_prompt_bytes:
             raise OpenAIChatError("PROMPT_TOO_LARGE", f"{len(body)} > {self.config.max_prompt_bytes} bytes")
+        headers = self.headers()
         status, content_type, raw = self.transport.post(
-            self.config.url(), body, headers=self.headers(), timeout=self.config.timeout_seconds,
+            self.config.url(), body, headers=headers, timeout=self.config.timeout_seconds,
             max_bytes=self.config.max_response_bytes)
-        return self.read_response(status, content_type, raw)
+        secret = headers.get("Authorization", "").removeprefix("Bearer ") or None
+        return self.read_response(status, content_type, raw, _secret=secret)
 
-    def read_response(self, status, content_type, raw):
+    def read_response(self, status, content_type, raw, *, _secret=None):
+        if type(status) is not int or not 100 <= status <= 599:
+            raise OpenAIChatError("BAD_RESPONSE", "transport returned an invalid HTTP status")
         if not isinstance(raw, bytes):
             raise OpenAIChatError("BAD_RESPONSE", "transport returned no bytes")
         if len(raw) > self.config.max_response_bytes:
             raise OpenAIChatError("RESPONSE_TOO_LARGE", "transport response exceeds configured budget")
+        def unique(pairs):
+            value = {}
+            for key, item in pairs:
+                if key in value:
+                    raise ValueError("duplicate response key")
+                value[key] = item
+            return value
         try:
-            payload = json.loads(raw.decode("utf-8"), parse_constant=_reject_constant)
+            payload = json.loads(raw.decode("utf-8"), parse_constant=_reject_constant, object_pairs_hook=unique)
+            encode(payload)  # Finite values and UTF-8, including escaped lone surrogates.
         except (UnicodeDecodeError, ValueError, RecursionError) as exc:
             if status != 200:
                 raise OpenAIChatError("HTTP_STATUS", f"status {status}") from exc
@@ -219,17 +251,17 @@ class OpenAIChatModel:
         if status != 200:
             error = payload.get("error") if isinstance(payload, dict) else None
             kind = error.get("type") if isinstance(error, dict) else None
-            message = error.get("message") if isinstance(error, dict) else None
             code = "CONTEXT_EXCEEDED" if kind == "exceed_context_size_error" else (
                 "AUTHENTICATION" if status == 401 else "HTTP_STATUS")
-            detail = message[:300] if isinstance(message, str) else "no error message"
-            raise OpenAIChatError(code, f"status {status} ({kind}): {detail}")
+            # A server/proxy can reflect Authorization in arbitrary fields. Do not
+            # copy remote error text into the durable mission or its journal.
+            raise OpenAIChatError(code, f"status {status}; remote error details omitted")
         if str(content_type).split(";")[0].strip().lower() != "application/json":
             raise OpenAIChatError("BAD_RESPONSE", "non-streaming answer must be application/json")
         if not isinstance(payload, dict) or payload.get("object") != "chat.completion":
             raise OpenAIChatError("BAD_RESPONSE", "answer is not a chat.completion object")
         if "error" in payload:
-            raise OpenAIChatError("MODEL_ERROR", str(payload["error"])[:300])
+            raise OpenAIChatError("MODEL_ERROR", "server returned an error envelope")
         if payload.get("model") != self.config.model:
             raise OpenAIChatError("MODEL_MISMATCH", "answer does not come from the configured model")
         choices = payload.get("choices")
@@ -239,6 +271,10 @@ class OpenAIChatModel:
         message = choice.get("message")
         if not isinstance(message, dict) or message.get("role") != "assistant":
             raise OpenAIChatError("BAD_RESPONSE", "missing assistant message")
+        if message.get("tool_calls") is not None and not isinstance(message["tool_calls"], list):
+            raise OpenAIChatError("BAD_RESPONSE", "tool_calls must be null or a list")
+        if message.get("refusal") is not None and not isinstance(message["refusal"], str):
+            raise OpenAIChatError("BAD_RESPONSE", "refusal must be null or text")
         if message.get("tool_calls") or choice.get("finish_reason") == "tool_calls":
             raise OpenAIChatError("TOOL_CALL_REFUSED", "the adapter never executes or relays tool calls")
         if message.get("refusal"):
@@ -247,19 +283,34 @@ class OpenAIChatModel:
         if reason == "length":
             raise OpenAIChatError("INCOMPLETE", "generation stopped on a length limit")
         if reason != "stop":
-            raise OpenAIChatError("BAD_RESPONSE", f"unexpected finish_reason {reason!r}")
+            raise OpenAIChatError("BAD_RESPONSE", "unexpected finish_reason")
         self._check_usage(payload.get("usage"))
         content = message.get("content")
         if not isinstance(content, str) or not content.strip():
             # reasoning_content alone is not a plan.
             raise OpenAIChatError("EMPTY_OUTPUT", "assistant content is absent or not text")
-        if len(content.encode("utf-8", errors="surrogatepass")) > self.config.max_output_bytes:
+        if len(content.encode("utf-8")) > self.config.max_output_bytes:
             raise OpenAIChatError("OUTPUT_TOO_LARGE", f"more than {self.config.max_output_bytes} bytes")
+        if _secret:
+            # Check both the text and JSON-decoded strings before Core can
+            # persist a plan containing an escaped reflection of the key.
+            values = [content]
+            try:
+                values.append(json.loads(content))
+            except (ValueError, RecursionError):
+                pass  # Core will classify a malformed plan, without executing it.
+            while values:
+                value = values.pop()
+                if isinstance(value, str) and _secret in value:
+                    raise OpenAIChatError("SECRET_IN_RESPONSE", "response reflected the transport credential; output withheld")
+                if isinstance(value, dict):
+                    values.extend(value.keys())
+                    values.extend(value.values())
+                elif isinstance(value, list):
+                    values.extend(value)
         return content
 
     def _check_usage(self, usage):
-        if usage is None:
-            return
         counts = [usage.get(k) for k in ("prompt_tokens", "completion_tokens", "total_tokens")] \
             if isinstance(usage, dict) else [None]
         if any(type(c) is not int or c < 0 for c in counts):

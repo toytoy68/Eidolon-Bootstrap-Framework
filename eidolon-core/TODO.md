@@ -85,8 +85,12 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   CLI et reprise ; état DOWN distinct de l'échec de mission.
 - [x] Claude : G003/G002/G001 reçus (`a273f3c`), code et preuves lus, validateur
   intégré ; 20 tests qualification après durcissement de cinq frontières d'entrée.
-- [ ] Claude : [C-TASK-G004](collaboration/tasks/C-TASK-G004.md), adaptateur candidat
-  API chat llama.cpp, transport simulé ; fiche publiée, livraison non présumée.
+- [x] Claude : [C-TASK-G004](collaboration/tasks/C-TASK-G004.md), adaptateur candidat
+  API chat llama.cpp intégré (`da145db`), puis durci ; 27 tests sur transports
+  simulés et HTTP loopback, aucune activation CLI ni qualification de modèle réel.
+  [Bilan intégré : 191 tests Core + 6 mémoire](docs/validation/2026-10-05/codex-g004/README.md).
+- [ ] Claude : [C-TASK-G005](collaboration/tasks/C-TASK-G005.md), contre-revue
+  de C-005a sur base figée `5c169cb` ; fiche prête, réponse non présumée.
 - [x] C-005a : [approbation et action simulée](docs/SIMULATED-ACTIONS-C005A.md),
   accord lié aux paramètres/tentative, refus/révocation, état/version revérifiés,
   effet/reçu transactionnels sur fixture ; 23 tests et démo de six scénarios.

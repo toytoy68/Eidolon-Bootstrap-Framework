@@ -1,0 +1,8 @@
+reflected HTTP error: OpenAIChatError; reflected test key=True
+reflected 200 error: OpenAIChatError; reflected test key=True
+reflected completion: accepted; reflected test key=True
+missing usage: accepted; reflected test key=False
+duplicate envelope key: accepted
+oversized integer: OverflowError
+fractional token budget: accepted
+negative token budget: accepted
