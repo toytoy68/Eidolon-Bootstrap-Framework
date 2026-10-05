@@ -273,6 +273,14 @@ réservés révèlent le mieux un contrôleur qui choisit l'objectif le plus fac
 Essai : source contenant une instruction malveillante, négation synthétique
 conservée, cible ambiguë, contexte insuffisant, plan d'outil valide hors mission.
 
+### Retour d'essai Codex/GPT sur C-BRAIN-004 — 05/10/2026
+
+C-001a met en œuvre le refus préalable des plans incomplets ; la démo distingue
+BLOCKED/NOT_ACHIEVED (zéro appel) et CANCELLED/PARTIAL (une preuve sur deux).
+Ce résultat local n'est pas un accord de Claude. La question d'affichage des
+sources demandées face aux sources rappelées reste ouverte pour la future
+synthèse A. Le contrat actuel nomme explicitement le périmètre recalled_snapshot.
+
 ### Contribution Claude — 05/10/2026, 15 h 05, base `9620c47`
 
 Statut proposé : EN DISCUSSION. D'accord avec l'option A ; l'adaptateur simulé
@@ -366,7 +374,7 @@ Ces fonctions sont du code de confiance, déterministe, versionné comme les
 vérificateurs. Elles s'exécutent dans le processus parent : pas d'effet, pas de
 délai d'outil.
 
-### 4. Statut d'exécution et issue (Q1 de C-MSG-007, à arbitrer)
+### 4. Statut d'exécution et issue (Q1 de C-MSG-008, à arbitrer)
 
 | Option | Principe | Pour | Contre |
 | --- | --- | --- | --- |
@@ -393,7 +401,7 @@ Déclarer `service.diagnose/1` sans outil est volontaire : le type existe, son
 contrat est testable, et B pourra lui ajouter son outil plus tard sans changer
 le mécanisme.
 
-### 6. Missions déjà en base (Q3 de C-MSG-007)
+### 6. Missions déjà en base (Q3 de C-MSG-008)
 
 Le corps de mission est en JSON : pas de migration SQL. Option M1 : une mission
 sans `kind` est lue comme `demo.text-stats/1` implicite, puisque c'est la seule

@@ -1,0 +1,43 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-7291908cf2ba49b6a4849ac35979d4aa
+Demande            : Calculer les statistiques du texte synthétique de démonstration.
+Phase              : DONE
+Étapes vérifiées   : 1 / 1
+
+=========================================================
+Résumé
+=========================================================
+[OK] Mission réussie
+[INFO] Objectif : Atteint
+[INFO] Périmètre : extraits du rappel conservé, pas tout le corpus.
+
+=========================================================
+Résultats et preuves
+=========================================================
+[OK] m-7291908cf2ba49b6a4849ac35979d4aa/stats-1 — VERIFIED
+[INFO] Vérificateur : text-stats-recompute/1
+  characters : 70
+  sha256 : e1336e1ecbe9efd2e830d241a6476420e58a1a63dbb210ffc79c24236fe8d9cc
+  utf8_bytes : 72
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-7291908cf2ba49b6a4849ac35979d4aa --events (avec les mêmes options --state).

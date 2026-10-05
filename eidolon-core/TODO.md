@@ -40,18 +40,20 @@ ils ne constituent pas des fonctionnalités livrées.
   [Bilan](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) : 58 tests Core + 6 intégrations.
 - [x] N-08 : marge des délais de test relevée, annulation synchronisée ; deux
   tests ciblés verts sur deux CPU avec six concurrents. Recette VM toujours différée.
-- [x] Contre-revue C-REV-003 reçue (C-MSG-008, base `3cb1ae5`).
+- [x] Contre-revue C-REV-003 reçue (C-MSG-009, base `3cb1ae5`).
 - [ ] Suites de C-REV-003 signalées par Claude, non traitées : N-09 (P2),
   N-10 et N-11 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
 - [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
   historiques et verrous ; aucun effacement automatique d'un état actif.
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant
   leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
-- [ ] C-001 : appliquer [C-D07](docs/CADRAGE-DECISIONS-2026-10-05.md) : `SUCCEEDED`
-  réservé à une mission atteinte, état terminal distinct pour les autres issues
-  (nom et code CLI à fixer). Proposition de contrat : C-BRAIN-007.
-- [ ] P3 : mémoire vide distincte de MODEL_INVALID ; clarification du blocage
-  de précontrôle avec configuration figée, à intégrer dans C-001.
+- [x] C-001a : mémoire vide distincte de MODEL_INVALID et rappel reprenable,
+  critères de couverture hors modèle, issue distincte du statut et preuves partielles.
+  [Contrat et limites](docs/MISSION-CONTRACT-C001A.md).
+- [ ] Révision explicite d'un plan refusé : configuration et proposition restent
+  figées ; créer une nouvelle mission pour les corriger dans cette tranche.
+- [x] C-D07 appliquée par C-001a : `SUCCEEDED` exige l'issue ACHIEVED ; les
+  autres issues restent hors de `SUCCEEDED`. Proposition d'origine : C-BRAIN-007.
 - [ ] C-008 : propriétaire/battement de mission pour distinguer vivant/orphelin.
 - [ ] C-005 : identité humaine authentifiée ; `actor` actuel est une trace libre.
 
@@ -62,6 +64,20 @@ brainstorming reçu et l'exigence explicite **Internet + machines du LAN, dont
 Memory Engine et NAS**, ainsi que les **documents, images, vidéos et audio de
 la session Windows**. Ces capacités deviennent un besoin du socle, pas une
 option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
+
+### C-001a et tâches parallèles
+
+- [x] Premier contrat restreint : demande synthétique reconnue par le code,
+  toutes les références rappelées couvertes, doublons refusés avant tout outil.
+- [x] `outcome` persistant : atteint, non atteint, partiel, clarification, sans
+  preuve ; aucun succès final sans objectif atteint et résultats vérifiés.
+- [x] Démonstration `examples.objective_demo`, sans réseau ni VM.
+- [ ] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude attendu.
+- [ ] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
+  et capacités ; fiche préparée, aucune réalisation Claude reçue.
+- [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : adaptateur Ollama simulé ;
+  fiche préparée, aucun modèle réel choisi ou qualifié.
+- [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
 ### Lots concrets suivant le brainstorming
 

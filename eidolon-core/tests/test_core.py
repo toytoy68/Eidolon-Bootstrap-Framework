@@ -15,7 +15,7 @@ from eidolon_core.memory import DEMO_REQUEST, DEMO_TEXT, SyntheticMemory
 from eidolon_core.runtime import Limits, Runtime
 from eidolon_core.store import Busy, Store
 from eidolon_core.tools import Policy, Registry, default_registry, text_stats
-from tests.support import (EmptyMemory, FixedModel, InjectionMemory, MalformedMemory, SlowMemory, SlowModel,
+from tests.support import (EmptyMemory, FixedModel, InjectionMemory, MalformedMemory, MultipleMemory, SlowMemory, SlowModel,
                            UnavailableMemory, lost_tool, plan, slow_tool, slow_verifier, wrong_result)
 
 
@@ -94,7 +94,8 @@ class CoreTests(unittest.TestCase):
 
     def test_empty_memory_does_not_imply_success(self):
         _, m = self.run_mission(memory=EmptyMemory())
-        self.assertEqual(m["status"], "FAILED")
+        self.assertEqual((m["status"], m["error"]["code"]), ("BLOCKED", "MEMORY_EMPTY"))
+        self.assertEqual(m["outcome"]["status"], "NO_EVIDENCE")
         self.assertIsNone(m["result"])
 
     def test_memory_missing_reference_or_uncertainty_is_rejected(self):
@@ -277,21 +278,23 @@ class CoreTests(unittest.TestCase):
 
     def test_multiple_steps_progress(self):
         proposal = json.loads(plan())
-        proposal["steps"].append({**proposal["steps"][0], "id": "second"})
-        _, m = self.run_mission(model=FixedModel(encode(proposal)))
+        proposal["steps"].append({**proposal["steps"][0], "id": "second",
+                                  "parameters": {"reference": "synthetic-note-2@1"}})
+        _, m = self.run_mission(memory=MultipleMemory(), model=FixedModel(encode(proposal)))
         self.assertEqual(m["status"], "SUCCEEDED")
         self.assertEqual(m["progress"], {"completed": 2, "total": 2})
         self.assertNotEqual(m["calls"][0]["id"], m["calls"][1]["id"])
 
     def test_cancel_between_steps_preserves_proof_and_stops_next_tool(self):
         proposal = json.loads(plan())
-        proposal["steps"].append({**proposal["steps"][0], "id": "second"})
+        proposal["steps"].append({**proposal["steps"][0], "id": "second",
+                                  "parameters": {"reference": "synthetic-note-2@1"}})
 
         def cancel(kind):
             if kind == "RESULT_VERIFIED":
                 self.store.request_cancel(identity)
 
-        runtime = Runtime(self.store, model=FixedModel(encode(proposal)), checkpoint=cancel)
+        runtime = Runtime(self.store, memory=MultipleMemory(), model=FixedModel(encode(proposal)), checkpoint=cancel)
         identity = runtime.create(DEMO_REQUEST)["id"]
         m = runtime.run(identity)
         self.assertEqual(m["status"], "CANCELLED")

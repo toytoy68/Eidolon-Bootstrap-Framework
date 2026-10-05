@@ -69,6 +69,18 @@ def render_result(result):
              f"Phase              : {safe_text(result['phase'])}",
              f"Étapes vérifiées   : {progress['completed']} / {progress['total'] if progress['total'] is not None else '?'}",
              section("Résumé"), message(level, label)]
+    if result.get("outcome"):
+        outcome = result["outcome"]
+        outcome_label = {"PENDING": "En attente de preuves", "ACHIEVED": "Atteint",
+                         "NOT_ACHIEVED": "Non atteint", "PARTIAL": "Partiel",
+                         "CLARIFICATION": "Clarification nécessaire", "NO_EVIDENCE": "Sans preuve"}
+        lines.append(message("INFO", "Objectif : " + outcome_label[outcome["status"]]))
+        lines.append(message("INFO", "Périmètre : extraits du rappel conservé, pas tout le corpus."))
+        if outcome["missing_references"]:
+            lines.append(message("ATTENTION", "Références sans résultat vérifié : "
+                                 + ", ".join(outcome["missing_references"])))
+    else:
+        lines.append(message("ATTENTION", "Mission historique sans évaluation d'objectif C-001a."))
     if result.get("cancel_requested"):
         lines.append(message("ATTENTION", "Demande d'annulation enregistrée."))
     if result.get("error"):

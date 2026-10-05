@@ -1,5 +1,6 @@
 """Trusted synthetic fault providers, importable by spawned workers."""
 from dataclasses import dataclass
+from copy import deepcopy
 import os
 import time
 
@@ -140,3 +141,18 @@ def recoverable_tool(parameters, context):
     if not Path(os.environ["EIDOLON_TEST_RECOVERED"]).exists():
         raise ConnectionRefusedError("synthetic unavailable provider, no effect")
     return text_stats(parameters, context)
+
+
+@dataclass(frozen=True)
+class MultipleMemory(SyntheticMemory):
+    count: int = 2
+
+    def recall(self, query):
+        data = super().recall(query)
+        original = data["items"][0]
+        data["items"] = [deepcopy(original) for _ in range(self.count)]
+        for i, item in enumerate(data["items"]):
+            if i:
+                item["information_id"] += "-" + str(i + 1)
+            item["provenance"]["fixture_index"] = i
+        return data

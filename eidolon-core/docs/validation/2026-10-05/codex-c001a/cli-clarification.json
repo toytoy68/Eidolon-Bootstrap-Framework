@@ -1,0 +1,58 @@
+{
+  "calls": [],
+  "cancel_requested": false,
+  "configuration": {
+    "call_seconds": 10.0,
+    "memory": "synthetic-memory/1",
+    "memory_root": null,
+    "model": "deterministic-demo/1",
+    "policy": {
+      "allowed_effect": "none",
+      "allowed_tools": [
+        "text.stats"
+      ],
+      "id": "local-pure-only/1"
+    },
+    "tools": {
+      "text.stats": {
+        "effect": "none",
+        "verifier": "text-stats-recompute/1",
+        "version": "1"
+      }
+    }
+  },
+  "context": null,
+  "created_at": "2026-10-05T12:22:07.253047+00:00",
+  "error": {
+    "code": "MISSION_UNSUPPORTED",
+    "message": "clarification required: only the documented statistics demo is supported"
+  },
+  "id": "m-786ead6b05124b07ba52ca0ba182f687",
+  "model_output": null,
+  "objective": {
+    "context_sha256": null,
+    "kind": null,
+    "request_sha256": "b79db11549b31a9db1d4161a5d6cf43935c14ed784b42e8c76987adea422c1c9",
+    "required_references": null,
+    "scope": "recalled_snapshot",
+    "tool": null,
+    "version": 1
+  },
+  "outcome": {
+    "code": "MISSION_UNSUPPORTED",
+    "covered_references": [],
+    "missing_references": [],
+    "scope": "recalled_snapshot",
+    "status": "CLARIFICATION"
+  },
+  "phase": "RECALL",
+  "plan": null,
+  "progress": {
+    "completed": 0,
+    "total": null
+  },
+  "request": "Vérifier le service du NAS.",
+  "result": null,
+  "revision": 1,
+  "status": "BLOCKED"
+}

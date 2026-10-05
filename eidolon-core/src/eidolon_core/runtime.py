@@ -13,6 +13,7 @@ import math
 from .contracts import ContractError, digest, parse_plan, snapshot, validate_context
 from .memory import SyntheticMemory
 from .model import DeterministicModel
+from .objectives import bind, check_contract, check_plan
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
 from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
@@ -100,6 +101,7 @@ class Runtime:
             if not self.policy.allows(tool):
                 raise ContractError("POLICY_DENIED: " + step["tool"])
             tool.validate(step["parameters"], m["context"])
+        check_plan(m)
 
     def run(self, identity):
         with self.store.lock(identity):
@@ -127,9 +129,24 @@ class Runtime:
                               "interrupted call: reconcile before any retry")
         if self._cancelled(m):
             return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested")
+        if "objective" not in m:
+            return self._stop(m, "BLOCKED", "MISSION_CONTRACT_REQUIRED",
+                              "legacy mission: retain evidence and create a new contracted mission")
+        try:
+            check_contract(m)
+        except ContractError as exc:
+            return self._stop(m, "BLOCKED", "MISSION_CONTRACT_INVALID", str(exc))
+        if m["objective"]["kind"] is None:
+            return self._stop(m, "BLOCKED", "MISSION_UNSUPPORTED",
+                              "clarification required: only the documented statistics demo is supported")
         if m["configuration"] != self.configuration():
             return self._stop(m, "BLOCKED", "CONFIGURATION_CHANGED",
                               "restore the mission configuration or create a new mission")
+        # Explicit resume may retry an empty recall; no plan/tool existed.
+        if (m["context"] is not None and not m["context"]["items"]
+                and m["plan"] is None and not m["calls"]):
+            m["context"] = None
+            m["objective"].update(required_references=None, context_sha256=None)
         m.update(status="RUNNING", error=None)
         self._save(m, "RESUMED")
         if m["context"] is None:
@@ -140,8 +157,12 @@ class Runtime:
             except (CallFailure, ContractError, TypeError, ValueError) as exc:
                 status = "CANCELLED" if self._cancelled(m) else "BLOCKED"
                 return self._stop(m, status, "MEMORY_UNAVAILABLE", str(exc))
+            m["objective"] = bind(m["objective"], m["context"])
             m["phase"] = "PLAN"
             self._save(m, "CONTEXT_SAVED", {"context_sha256": digest(m["context"])})
+        if not m["context"]["items"]:
+            return self._stop(m, "BLOCKED", "MEMORY_EMPTY",
+                              "no recalled evidence; explicit resume can retry recall")
         if m["plan"] is None:
             try:
                 if m["model_output"] is None:
@@ -219,7 +240,8 @@ class Runtime:
                                        "receipt_origin": c["receipt_origin"]}
                                       for c in m["calls"]],
                          "sources": snapshot(m["context"]),
-                         "limits": ["Text statistics do not confirm source truth or semantic completeness.",
+                         "limits": ["Coverage is limited to the retained recall snapshot, not the whole memory corpus.",
+                                    "Text statistics do not confirm source truth or semantic completeness.",
                                     "Source epistemic labels and review requirements remain unchanged."]})
         self._save(m, "SUCCEEDED")
         return m
