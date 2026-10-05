@@ -1,0 +1,89 @@
+{
+  "schema": "eidolon-qualification-report/1",
+  "run": {
+    "id": "synthetic-profile1-003",
+    "started_at": "2026-10-05T15:00:00+02:00",
+    "origin": "synthetic"
+  },
+  "scope": {
+    "profile": "1",
+    "engine": "synthetic-engine 0.0",
+    "model": "synthetic-planner:1b",
+    "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel."
+  },
+  "fingerprints": {
+    "corpus_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "configuration_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "criteria_sha256": "c2a22e10200258a133929ac31505637286963a1a9d4d7cad4c7ec0e87fd44547"
+  },
+  "criteria": {
+    "fixed_at": "2026-10-05T14:50:00+02:00",
+    "thresholds": [
+      {
+        "metric": "ttft",
+        "unit": "ms",
+        "op": "<=",
+        "value": 1500
+      },
+      {
+        "metric": "decode_throughput",
+        "unit": "tokens/s",
+        "op": ">=",
+        "value": 20
+      },
+      {
+        "metric": "error_rate",
+        "unit": "ratio",
+        "op": "<=",
+        "value": 0
+      }
+    ]
+  },
+  "cases": {
+    "expected": 5,
+    "executed": 4,
+    "results": [
+      {
+        "id": "case-1",
+        "outcome": "PASS",
+        "violations": [],
+        "origin": "synthetic"
+      },
+      {
+        "id": "case-2",
+        "outcome": "PASS",
+        "violations": [],
+        "origin": "synthetic"
+      },
+      {
+        "id": "case-3",
+        "outcome": "PASS",
+        "violations": [],
+        "origin": "synthetic"
+      },
+      {
+        "id": "case-4",
+        "outcome": "PASS",
+        "violations": [],
+        "origin": "synthetic"
+      }
+    ]
+  },
+  "measurements": {
+    "ttft": {
+      "value": 820.5,
+      "unit": "ms",
+      "origin": "synthetic"
+    },
+    "decode_throughput": {
+      "value": null,
+      "unit": "tokens/s",
+      "origin": "synthetic"
+    },
+    "error_rate": {
+      "value": 0,
+      "unit": "ratio",
+      "origin": "synthetic"
+    }
+  }
+}

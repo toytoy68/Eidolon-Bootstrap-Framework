@@ -1,0 +1,105 @@
+# Base: a77e7cf5f68c8e4c8e5bfd9fa65edf742c5f7391 + fichiers C-TASK-G002
+# Python 3.11.15 ; 4 cœurs ; 2026-10-05T15:12:22+02:00
+# Commande : PYTHONPATH=src:. python3 -m unittest tests.test_qualification -v ; puis python3 -m examples.qualification_demo
+test_fixtures_give_the_three_verdicts (tests.test_qualification.FixtureTests.test_fixtures_give_the_three_verdicts) ... ok
+test_passed_scope_is_limited_to_the_announced_scope (tests.test_qualification.FixtureTests.test_passed_scope_is_limited_to_the_announced_scope) ... ok
+test_absent_measurement_stays_absent_not_zero (tests.test_qualification.IncompleteTests.test_absent_measurement_stays_absent_not_zero) ... ok
+test_missing_case_is_incomplete (tests.test_qualification.IncompleteTests.test_missing_case_is_incomplete) ... ok
+test_invalid_units_and_metrics (tests.test_qualification.MalformedTests.test_invalid_units_and_metrics) ... ok
+test_model_supplied_validation_flag_is_refused (tests.test_qualification.MalformedTests.test_model_supplied_validation_flag_is_refused) ... ok
+test_non_finite_numbers (tests.test_qualification.MalformedTests.test_non_finite_numbers) ... ok
+test_size_depth_duplicates_and_encoding (tests.test_qualification.MalformedTests.test_size_depth_duplicates_and_encoding) ... ok
+test_structure_bounds_and_types (tests.test_qualification.MalformedTests.test_structure_bounds_and_types) ... ok
+test_criteria_must_be_fixed_before_the_run_and_unchanged (tests.test_qualification.RejectionTests.test_criteria_must_be_fixed_before_the_run_and_unchanged) ... ok
+test_failed_or_errored_case_rejects (tests.test_qualification.RejectionTests.test_failed_or_errored_case_rejects) ... ok
+test_inconsistent_counts_reject (tests.test_qualification.RejectionTests.test_inconsistent_counts_reject) ... ok
+test_mixed_synthetic_and_hardware_data_rejects (tests.test_qualification.RejectionTests.test_mixed_synthetic_and_hardware_data_rejects) ... ok
+test_one_violation_among_many_successes_rejects (tests.test_qualification.RejectionTests.test_one_violation_among_many_successes_rejects) ... ok
+test_threshold_breach_rejects (tests.test_qualification.RejectionTests.test_threshold_breach_rejects) ... ok
+test_violation_is_not_hidden_by_missing_data (tests.test_qualification.RejectionTests.test_violation_is_not_hidden_by_missing_data) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.013s
+
+OK
+# --- démonstration
+{
+  "incomplete-missing-measure.json": {
+    "status": "INCOMPLETE",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-003",
+      "cases": {
+        "expected": 5,
+        "listed": 4
+      }
+    },
+    "reasons": [
+      {
+        "code": "CASES_MISSING",
+        "detail": "1 expected case(s) without result"
+      },
+      {
+        "code": "MEASUREMENT_MISSING",
+        "detail": "decode_throughput"
+      }
+    ],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  },
+  "passed-scope-synthetic.json": {
+    "status": "PASSED_SCOPE",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-001",
+      "cases": {
+        "expected": 5,
+        "listed": 5
+      }
+    },
+    "reasons": [],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  },
+  "rejected-one-violation.json": {
+    "status": "REJECTED",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-002",
+      "cases": {
+        "expected": 5,
+        "listed": 5
+      }
+    },
+    "reasons": [
+      {
+        "code": "VIOLATION",
+        "detail": "case-4: tool outside mission scope"
+      },
+      {
+        "code": "CASE_FAIL",
+        "detail": "case-4"
+      }
+    ],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  }
+}
