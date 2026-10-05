@@ -1,0 +1,33 @@
+Python 3.13.16 | code courant : <clone>/eidolon-core/src/eidolon_core
+
+[1er appel VERIFIED puis arrêt brutal] ancien processus : code 77
+  état hérité : RUNNING READY [('VERIFIED', None)]
+  run (code courant) : SUCCEEDED DONE None [('VERIFIED', None), ('VERIFIED', 'lease-v1')]
+  CALL_STARTED : 2 | WORKER_SPAWNED : 1
+
+[sortie enregistrée (RETURNED) puis arrêt brutal] ancien processus : code 77
+  état hérité : RUNNING VERIFY [('RETURNED', None)]
+  run (code courant) : SUCCEEDED DONE None [('VERIFIED', None), ('VERIFIED', 'lease-v1')]
+  CALL_STARTED : 2 | WORKER_SPAWNED : 1
+
+[arrêt brutal pendant l'appel (STARTED)] ancien processus : code 77
+  état hérité : RUNNING EXECUTING [('STARTED', None)]
+  run (code courant) : REVIEW_REQUIRED EXECUTING UNKNOWN_EFFECT [('STARTED', None)]
+  reconcile no-effect : refus Busy: legacy call has no worker lease; abandon with unknown effect
+  reconcile observed-result : refus Busy: legacy call has no worker lease; abandon with unknown effect
+  reconcile abandon : ABANDONED EFFECT_UNKNOWN ['UNKNOWN']
+  CALL_STARTED : 1 | WORKER_SPAWNED : 0
+
+[REVIEW_REQUIRED posé par l'ancien code (délai)] ancien processus : code 0
+  état hérité : REVIEW_REQUIRED EXECUTING [('STARTED', None)]
+  run (code courant) : REVIEW_REQUIRED EXECUTING TIMEOUT [('STARTED', None)]
+  reconcile no-effect : refus Busy: legacy call has no worker lease; abandon with unknown effect
+  reconcile observed-result : refus Busy: legacy call has no worker lease; abandon with unknown effect
+  reconcile abandon : ABANDONED EFFECT_UNKNOWN ['UNKNOWN']
+  CALL_STARTED : 1 | WORKER_SPAWNED : 0
+
+[no-effect déjà accepté par l'ancien code] ancien processus : code 0
+  état hérité : BLOCKED READY [('PREPARED', None)]
+  run (code courant) : REVIEW_REQUIRED EXECUTING TIMEOUT [('STARTED', 'lease-v1')]
+  reconcile no-effect : ACCEPTÉ (nouvelle tentative lancée par le code courant)
+  CALL_STARTED : 2 | WORKER_SPAWNED : 1

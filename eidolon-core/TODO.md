@@ -34,7 +34,9 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] F-05 : indisponibilité/délai modèle reprenable, distinct du plan invalide.
 - [x] F-06 : reçu tardif conservé et non promu automatiquement en succès.
 - [x] Filet INTERNAL_ERROR basé sur l'état durable ; sondage d'annulation allégé.
-- [ ] Contre-revue Claude C-REV-002 des corrections (demandée, non reçue).
+- [x] Contre-revue Claude C-REV-002 reçue (C-MSG-004, base `2474c7c`).
+- [ ] Suites de C-REV-002 signalées par Claude, non traitées : N-01 et N-02 (P2),
+  N-03 à N-08 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant
   leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
 - [ ] P3 : mémoire vide distincte de MODEL_INVALID ; clarification du blocage

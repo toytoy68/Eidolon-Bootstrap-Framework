@@ -1,0 +1,95 @@
+Python 3.13.16 | linux
+
+[P1-a nombre non fini écrit 1e999 dans la sortie modèle]
+  run 1: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  état persisté : {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  run 2 (reprise): retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'FAILED']
+  cancel: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+
+[P1-b substitut UTF-16 isolé (\ud800) dans un identifiant d'étape]
+  run 1: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  état persisté : {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  run 2 (reprise): retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'FAILED']
+  cancel: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "value is not finite UTF-8 JSON"}}
+
+[P1-c imbrication profonde des paramètres]
+  profondeur 200: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 990: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 5000: retour normal -> {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "text.stats requires exactly one string reference"}}
+  profondeur 31000: retour normal -> {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "invalid model JSON"}}
+
+[P2-a deux sorties d'outil de 600 ko, chacune sous la borne de 1 Mo, toutes vérifiées]
+  run 1: retour normal -> {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 2, "total": 2}, "error": null}
+  état persisté : {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 2, "total": 2}, "error": null} | appels : ['VERIFIED', 'VERIFIED']
+  run 2 (reprise): retour normal -> {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 2, "total": 2}, "error": null}
+  événements : ['CREATED', 'RESUMED', 'RECALL_STARTED', 'CONTEXT_SAVED', 'MODEL_OUTPUT_SAVED', 'PLAN_SAVED', 'CALL_STARTED', 'WORKER_SPAWNED', 'RESULT_SAVED', 'RESULT_VERIFIED', 'CALL_STARTED', 'WORKER_SPAWNED', 'RESULT_SAVED', 'RESULT_VERIFIED', 'SUCCEEDED']
+  cancel: retour normal -> {"status": "SUCCEEDED", "phase": "DONE", "progress": {"completed": 2, "total": 2}, "error": null}
+
+[P2-b sortie d'une mission REVIEW_REQUIRED sans affirmer « sans effet »]
+  run (outil qui lève une exception): retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  cancel: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  run après cancel: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "CALL_ERROR", "message": "erreur déterministe avant tout effet; effect unknown, no automatic retry"}}
+  reconcile --decision effect-unknown: refus -> unknown reconciliation decision
+  SONDE EN ERREUR :
+Traceback (most recent call last):
+  File "<clone>/eidolon-core/docs/validation/2026-10-05/claude-c-rev-001/repro.py", line 309, in <module>
+    probe()
+    ~~~~~^^
+  File "<clone>/eidolon-core/docs/validation/2026-10-05/claude-c-rev-001/repro.py", line 194, in probe_p2_review_exit
+    runtime.reconcile(identity, decision="no-effect", actor="relecteur",
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      reason="seule décision disponible pour pouvoir clore")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<clone>/eidolon-core/src/eidolon_core/runtime.py", line 216, in reconcile
+    raise ValueError("mission has no uncertain call to reconcile")
+ValueError: mission has no uncertain call to reconcile
+
+[P2-c délai modèle : état terminal, contrairement au délai mémoire]
+  run: retour normal -> {"status": "BLOCKED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_UNAVAILABLE", "message": "call deadline exceeded"}}
+  run avec le modèle rétabli: retour normal -> {"status": "BLOCKED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_UNAVAILABLE", "message": "call deadline exceeded"}}
+
+[P2-d parent tué pendant l'appel : l'enfant continue et produit son effet]
+  parent tué (SIGKILL), marqueur présent tout de suite : False
+  run de reprise: retour normal -> {"status": "REVIEW_REQUIRED", "phase": "EXECUTING", "progress": {"completed": 0, "total": 1}, "error": {"code": "UNKNOWN_EFFECT", "message": "interrupted call: reconcile before any retry"}}
+  SONDE EN ERREUR :
+Traceback (most recent call last):
+  File "<clone>/eidolon-core/src/eidolon_core/store.py", line 108, in worker_quiescent
+    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<clone>/eidolon-core/docs/validation/2026-10-05/claude-c-rev-001/repro.py", line 309, in <module>
+    probe()
+    ~~~~~^^
+  File "<clone>/eidolon-core/docs/validation/2026-10-05/claude-c-rev-001/repro.py", line 226, in probe_p2_orphan
+    runtime.reconcile(identity, decision="no-effect", actor="relecteur",
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      reason="aucun PID d'enfant dans le journal pour vérifier")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<clone>/eidolon-core/src/eidolon_core/runtime.py", line 232, in reconcile
+    with self.store.worker_quiescent(identity, call):
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "<clone>/eidolon-core/src/eidolon_core/store.py", line 110, in worker_quiescent
+    raise Busy("worker still active; reconciliation cannot enable a retry") from exc
+eidolon_core.store.Busy: worker still active; reconciliation cannot enable a retry
+
+[P3-a plan valide qui ne couvre pas l'objectif]
+  1 extrait sur 2: SUCCEEDED {'completed': 1, 'total': 1} | résumé : Statistiques vérifiées sur les extraits conservés.
+  même extrait répété 5 fois: SUCCEEDED {'completed': 5, 'total': 5} | résumé : Statistiques vérifiées sur les extraits conservés.
+  demande sans rapport: SUCCEEDED {'completed': 1, 'total': 1} | résumé : Statistiques vérifiées sur les extraits conservés.
+
+[P3-b codes de diagnostic]
+  mémoire vide : {"status": "FAILED", "phase": "PLAN", "progress": {"completed": 0, "total": null}, "error": {"code": "MODEL_INVALID", "message": "plan needs one to five steps"}}
+  outil refusé : {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "PREFLIGHT_REFUSED", "message": "POLICY_DENIED: shell"}}
+  même mission, politique élargie : {"status": "BLOCKED", "phase": "READY", "progress": {"completed": 0, "total": 1}, "error": {"code": "CONFIGURATION_CHANGED", "message": "restore the mission configuration or create a new mission"}}
+  annulation à la frontière du succès : {"status": "CANCELLED", "phase": "DONE", "progress": {"completed": 1, "total": 1}, "error": {"code": "CANCELLED", "message": "cancellation requested before success commit"}} | dernier événement : CANCELLED
+
+[P3-c coût du sondage d'annulation pendant un appel]
+  1 lectures SQLite complètes de la mission en 2.29 s (une connexion ouverte par lecture)
