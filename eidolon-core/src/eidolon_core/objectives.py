@@ -13,9 +13,29 @@ Trusted tool verifiers attest results; this module checks their mission coverage
 """
 from .contracts import ContractError, digest, reference
 from .memory import DEMO_REQUEST
+from .targets import Catalog
+
+DIAGNOSTIC = "service_diagnostic.synthetic"
 
 
-def define(request):
+def diagnostic_request(target):
+    return "Diagnostiquer le service synthétique : " + target
+
+
+def define(request, intent=None, configuration=None):
+    if intent is not None:
+        if (not isinstance(intent, dict) or set(intent) != {"kind", "target_reference"}
+                or intent["kind"] != DIAGNOSTIC or not isinstance(intent["target_reference"], str)
+                or request != diagnostic_request(intent["target_reference"])):
+            raise ContractError("invalid explicit mission intent")
+        catalog = Catalog.from_config((configuration or {}).get("targets"))
+        selected = catalog.lookup(intent["target_reference"], "service.observe")
+        return {"version": 1, "kind": DIAGNOSTIC, "scope": "synthetic_service",
+                "request_sha256": digest(request), "tool": "service.observe.synthetic",
+                "required_references": [], "context_sha256": None,
+                "selection_status": selected.status, "candidates": list(selected.candidates),
+                "target_id": selected.target.id if selected.target else None,
+                "capability": "service.observe", "catalog_sha256": catalog.fingerprint()}
     supported = request == DEMO_REQUEST
     return {"version": 1, "kind": "recalled_text_statistics" if supported else None,
             "request_sha256": digest(request), "scope": "recalled_snapshot",
@@ -24,12 +44,13 @@ def define(request):
 
 
 def bind(objective, context):
-    return {**objective, "required_references": sorted(reference(i) for i in context["items"]),
+    return {**objective, "required_references": ([] if objective["kind"] == DIAGNOSTIC else
+                                                sorted(reference(i) for i in context["items"])),
             "context_sha256": digest(context)}
 
 
 def check_contract(mission):
-    expected = define(mission["request"])
+    expected = define(mission["request"], mission.get("intent"), mission["configuration"])
     if mission["context"] is not None:
         expected = bind(expected, mission["context"])
     if mission.get("objective") != expected:
@@ -40,6 +61,13 @@ def check_contract(mission):
 def check_plan(mission):
     objective = check_contract(mission)
     required = objective["required_references"]
+    if objective["kind"] == DIAGNOSTIC:
+        steps = mission["plan"]["steps"]
+        if (objective["selection_status"] != "FOUND" or len(steps) != 1
+                or steps[0]["tool"] != objective["tool"]
+                or steps[0]["parameters"] != {"target": objective["target_id"]}):
+            raise ContractError("MISSION_PLAN_MISMATCH: diagnostic must observe exactly the selected target")
+        return
     if objective["kind"] is None or not required:
         raise ContractError("MISSION_NO_CRITERIA: no supported objective with evidence")
     references = []
@@ -61,6 +89,8 @@ def assess(mission):
         objective = check_contract(mission)
     except ContractError:
         return {**outcome, "status": "CLARIFICATION", "code": "MISSION_CONTRACT_REQUIRED"}
+    if objective["kind"] == DIAGNOSTIC:
+        return assess_diagnostic(mission, objective)
     if objective["kind"] is None:
         return {**outcome, "status": "CLARIFICATION", "code": "MISSION_UNSUPPORTED"}
     required = objective["required_references"]
@@ -90,3 +120,26 @@ def assess(mission):
     code = "COVERAGE_VERIFIED" if achieved else ("INCOMPLETE_EVIDENCE" if covered else "NO_VERIFIED_RESULT")
     return {**outcome, "status": state, "code": code,
             "covered_references": sorted(covered), "missing_references": missing}
+
+
+def assess_diagnostic(mission, objective):
+    outcome = {"status": "NOT_ACHIEVED", "scope": "synthetic_service",
+               "covered_references": [], "missing_references": [],
+               "target_id": objective["target_id"], "code": "NO_VERIFIED_OBSERVATION"}
+    if objective["selection_status"] != "FOUND":
+        return {**outcome, "status": "CLARIFICATION", "code": objective["selection_status"],
+                "candidates": objective["candidates"]}
+    try:
+        check_plan(mission)
+    except (ContractError, TypeError, KeyError):
+        return outcome
+    calls = mission["calls"]
+    if len(calls) == 1:
+        call = calls[0]
+        if (call["status"] == "VERIFIED" and call["step"] == mission["plan"]["steps"][0]
+                and call.get("context_sha256") == objective["context_sha256"]
+                and call.get("output_sha256") == digest(call.get("output"))
+                and call.get("target_binding") == {"target_id": objective["target_id"],
+                    "capability": objective["capability"], "catalog_sha256": objective["catalog_sha256"]}):
+            return {**outcome, "status": "ACHIEVED", "code": "OBSERVATION_VERIFIED"}
+    return outcome

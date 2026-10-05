@@ -74,7 +74,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives tests.test_targets tests.test_ollama_model tests.test_integration_review -v
+PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives tests.test_targets tests.test_ollama_model tests.test_integration_review tests.test_diagnostics -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -247,13 +247,30 @@ défaut. Ce n'est pas encore un budget global de mission.
 ## Modules optionnels intégrés, activation différée
 
 Le [catalogue de cibles](docs/TARGETS-CONTRACT.md) et l'[adaptateur Ollama](docs/OLLAMA-ADAPTER.md)
-de Claude sont intégrés au paquet. Le catalogue reste sans raccordement au runtime
-ou à la CLI ; l'adaptateur peut être injecté via l'API Python mais n'est ni le
+de Claude sont intégrés au paquet. Le catalogue est raccordé au runtime et à la
+CLI pour le diagnostic synthétique C-004a ; l'adaptateur peut être injecté via
+l'API Python mais n'est ni le
 modèle par défaut, ni une option de la CLI. Ses tests emploient des transports
 simulés et un faux serveur HTTP loopback. Aucun vrai modèle n'est qualifié.
 
 L'étude comparative pour les deux V100 SXM2 sur carte adaptatrice PCIe/NVLink
-reste à réaliser dans C-CLAUDE-002 étape 1. [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
+a été reçue (`ec7582b`) ; des précisions sont demandées dans C-TASK-G003.
+Aucune qualification matérielle n'est acquise. [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
+
+## Diagnostic synthétique C-004a
+
+Le profil `service-sim` sélectionne une cible et contrôle ses permissions avant
+un outil sans réseau. `sim-memory` est UP, `nas` est DOWN, `offline` est
+UNREACHABLE : ces trois observations vérifiées donnent une mission réussie.
+L'alias ambigu `service` et une permission absente bloquent sans outil.
+
+```bash
+PYTHONPATH=src:. python -m examples.service_diagnostic_demo
+PYTHONPATH=src python -m eidolon_core --profile service-sim --format human --state /tmp/eidolon-services diagnose nas
+```
+
+[Contrat, commandes de reprise et limites](docs/SYNTHETIC-DIAGNOSTIC-C004A.md).
+Ce diagnostic observe uniquement des fixtures ; aucun accès au NAS ou à la VM.
 
 ## Documents et limites
 

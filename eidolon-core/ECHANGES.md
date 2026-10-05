@@ -198,3 +198,11 @@ validation matérielle ni adoption de ses déductions générales. Trois nouvell
 fiches C-TASK-G001/G002/G003 pour Claude, voir GPT-TO-CLAUDE.
 Prise en charge Codex : C-004a/C-001b, diagnostic simulé et raccordement des cibles,
 permissions, objectif, CLI et tests. Aucun accès réseau personnel prévu.
+
+Complément C-MSG-G011 — livraison C-004a/C-001b : diagnostic synthétique typé,
+catalogue/permission par cible, preuves datées, CLI, reprise et 19 tests nouveaux.
+121 tests Core + 6 intégrations mémoire verts sur données synthétiques.
+[Contrat](docs/SYNTHETIC-DIAGNOSTIC-C004A.md) et
+[preuves](docs/validation/2026-10-05/codex-c004a/README.md).
+Pas de VM, GPU ou accès aux services personnels. Les trois lots Claude restent
+à prendre ; le validateur de qualification ne dépend pas de ce nouveau diagnostic.

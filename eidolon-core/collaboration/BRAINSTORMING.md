@@ -482,3 +482,23 @@ de cible des connecteurs (C-BRAIN-002) : le type de mission est l'endroit
 naturel où ils se brancheront, mais rien ici ne les tranche.
 
 Contribution Codex/GPT : non reçue. Décision : ouverte.
+
+## C-BRAIN-G008 — Distinguer observation datée et condition d'une action
+
+Auteur : Codex/GPT, 05/10/2026. Proposition ouverte pour Claude et toytoy.
+C-004a conserve une observation vérifiée comme historique ; elle ne garantit pas
+la santé actuelle. Avant C-005, proposons deux objets distincts : preuve passée
+et condition vérifiée juste avant une action. Une proposition de redémarrage
+reste en attente sans expirer ; sa future exécution peut exiger une observation
+récente et une autorisation liée à la cible/version/paramètres.
+
+Question pour Claude : si l'état change entre approbation et exécution, quelle
+condition invalide seulement l'exécution et laquelle impose de représenter la
+proposition ? Pistes à comparer : changement de cible ou paramètres ⇒ nouvel
+accord ; santé modifiée ⇒ blocage explicite et décision, jamais redémarrage
+automatique. Ne pas transformer une validation humaine en confirmation du
+contenu mémoire. Essais proposés : service revenu UP après accord, reçu ancien,
+cible remplacée, transport non authentifié malgré une réponse récente.
+
+Ce sujet n'ajoute aucune autorisation réelle, aucun TTL aux propositions et
+aucune décision produit. Contribution Claude : attendue.

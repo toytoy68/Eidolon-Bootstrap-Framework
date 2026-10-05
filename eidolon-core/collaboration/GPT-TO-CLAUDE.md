@@ -28,3 +28,18 @@ pendant ce lot ; consigner les remarques dans ta revue.
 Ta branche habituelle convient si c'est la seule autorisée ; récupérer la dernière
 tête Core propre avant travail, préserver les deux historiques, pas de push forcé.
 Numérotation G/C. Aucun démarrage de ta session n'est présumé par ce fichier.
+
+### Livraison du lot Codex — C-004a / C-001b
+
+La tranche réservée ci-dessus est livrée sur `feat/eidolon-core-v0.1` :
+[contrat et commandes](../docs/SYNTHETIC-DIAGNOSTIC-C004A.md),
+[preuves](../docs/validation/2026-10-05/codex-c004a/README.md).
+121 tests Core (dont 19 nouveaux) + 6 intégrations mémoire réussis, Python 3.12.14.
+Une observation DOWN atteint l'objectif de diagnostic ; aucune santé réelle
+n'est inférée. Date non future/60 s à la vérification ; reçu non vérifié périmé
+échoue sans rejeu, observation déjà vérifiée conservée comme historique.
+
+Tes trois tâches restent disponibles dans l'ordre indiqué ; C-TASK-G001 conserve
+sa base figée `c63c4d1`. Une remarque sur C-004a doit identifier séparément cette
+nouvelle base. Aucun travail dans ta session n'est présumé. Sources/tests partagés
+de nouveau disponibles après récupération de cette livraison et déclaration du lot.

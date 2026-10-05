@@ -13,7 +13,7 @@ import math
 from .contracts import ContractError, digest, parse_plan, snapshot, validate_context
 from .memory import SyntheticMemory
 from .model import DeterministicModel
-from .objectives import bind, check_contract, check_plan
+from .objectives import DIAGNOSTIC, bind, check_contract, check_plan, diagnostic_request
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
 from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
@@ -31,7 +31,8 @@ class Limits:
 
 class Runtime:
     def __init__(self, store, *, model=None, memory=None, registry=None, policy=None,
-                 limits=None, checkpoint=None):
+                 limits=None, checkpoint=None, catalog=None):
+        self.catalog = catalog
         self.store = store
         self.model = model or DeterministicModel()
         self.memory = memory or SyntheticMemory()
@@ -41,13 +42,22 @@ class Runtime:
         self.checkpoint = checkpoint or (lambda _: None)
 
     def configuration(self):
-        return {"model": self.model.model_id, "memory": self.memory.provider_id,
+        config = {"model": self.model.model_id, "memory": self.memory.provider_id,
                 "memory_root": getattr(self.memory, "root", None),
                 "policy": self.policy.manifest(), "tools": self.registry.manifest(),
                 "call_seconds": self.limits.call_seconds}
+        if self.catalog is not None:
+            config["targets"] = self.catalog.manifest()
+        return config
 
     def create(self, request):
         return self.store.create(request, self.configuration())
+
+    def create_diagnostic(self, target_reference):
+        if self.catalog is None or not isinstance(target_reference, str):
+            raise ContractError("diagnostic requires a configured catalog and a target reference")
+        return self.store.create(diagnostic_request(target_reference), self.configuration(),
+                                 intent={"kind": DIAGNOSTIC, "target_reference": target_reference})
 
     def _save(self, m, kind, detail=None):
         self.store.save(m, kind, detail)
@@ -102,6 +112,12 @@ class Runtime:
                 raise ContractError("POLICY_DENIED: " + step["tool"])
             tool.validate(step["parameters"], m["context"])
         check_plan(m)
+        if m["objective"]["kind"] == DIAGNOSTIC:
+            objective = m["objective"]
+            found = self.catalog.lookup(objective["target_id"], objective["capability"])
+            tool = self.registry.get(objective["tool"])
+            if found.status != "FOUND" or not self.policy.allows_target(tool, found.target, found.capability):
+                raise ContractError("TARGET_POLICY_DENIED: explicit target/capability grant required")
 
     def run(self, identity):
         with self.store.lock(identity):
@@ -136,6 +152,10 @@ class Runtime:
             check_contract(m)
         except ContractError as exc:
             return self._stop(m, "BLOCKED", "MISSION_CONTRACT_INVALID", str(exc))
+        diagnostic = m["objective"]["kind"] == DIAGNOSTIC
+        if diagnostic and m["objective"]["selection_status"] != "FOUND":
+            return self._stop(m, "BLOCKED", m["objective"]["selection_status"],
+                              "select one configured target with the required capability")
         if m["objective"]["kind"] is None:
             return self._stop(m, "BLOCKED", "MISSION_UNSUPPORTED",
                               "clarification required: only the documented statistics demo is supported")
@@ -143,7 +163,7 @@ class Runtime:
             return self._stop(m, "BLOCKED", "CONFIGURATION_CHANGED",
                               "restore the mission configuration or create a new mission")
         # Explicit resume may retry an empty recall; no plan/tool existed.
-        if (m["context"] is not None and not m["context"]["items"]
+        if (not diagnostic and m["context"] is not None and not m["context"]["items"]
                 and m["plan"] is None and not m["calls"]):
             m["context"] = None
             m["objective"].update(required_references=None, context_sha256=None)
@@ -160,13 +180,17 @@ class Runtime:
             m["objective"] = bind(m["objective"], m["context"])
             m["phase"] = "PLAN"
             self._save(m, "CONTEXT_SAVED", {"context_sha256": digest(m["context"])})
-        if not m["context"]["items"]:
+        if not diagnostic and not m["context"]["items"]:
             return self._stop(m, "BLOCKED", "MEMORY_EMPTY",
                               "no recalled evidence; explicit resume can retry recall")
         if m["plan"] is None:
             try:
                 if m["model_output"] is None:
-                    m["model_output"] = self._invoke(m, self.model.propose, m["request"], m["context"])
+                    model_context = snapshot(m["context"])
+                    if diagnostic:
+                        # Overwrite any similarly named untrusted memory field.
+                        model_context["_core_mission"] = snapshot(m["objective"])
+                    m["model_output"] = self._invoke(m, self.model.propose, m["request"], model_context)
                     self._save(m, "MODEL_OUTPUT_SAVED")
                 m["plan"] = parse_plan(m["model_output"])
             except CallFailure as exc:
@@ -197,6 +221,9 @@ class Runtime:
                         "tool_version": tool.version, "verifier": tool.verifier_id,
                         "attempt": 1, "status": "PREPARED", "output": None,
                         "context_sha256": digest(m["context"]), "receipt_origin": "worker"}
+                if diagnostic:
+                    call["target_binding"] = {key: m["objective"][key]
+                                              for key in ("target_id", "capability", "catalog_sha256")}
                 m["calls"].append(call)
             if call["status"] == "PREPARED":
                 m["phase"] = "EXECUTING"
@@ -243,6 +270,15 @@ class Runtime:
                          "limits": ["Coverage is limited to the retained recall snapshot, not the whole memory corpus.",
                                     "Text statistics do not confirm source truth or semantic completeness.",
                                     "Source epistemic labels and review requirements remain unchanged."]})
+        if diagnostic:
+            observation = m["calls"][0]["output"]
+            m["result"]["summary"] = ("Diagnostic synthétique vérifié : "
+                                      + observation["target_id"] + " = " + observation["state"])
+            m["result"]["observation"] = snapshot(observation)
+            m["result"]["target"] = snapshot(m["calls"][0]["target_binding"])
+            m["result"]["limits"] = ["Synthetic fixture only; no machine was contacted.",
+                                      "Observation is dated, not a guarantee of current service health.",
+                                      "Memory epistemic labels remain unchanged."]
         self._save(m, "SUCCEEDED")
         return m
 
