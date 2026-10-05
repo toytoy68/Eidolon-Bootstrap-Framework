@@ -73,6 +73,20 @@ le nom de cet état (`CONCLUDED` proposé), son code de retour CLI (5 proposé)
 et le traitement d'une demande de clarification. Cette décision ne tranche pas
 Q2 (refus au précontrôle) ni Q3 (missions sans type déjà en base).
 
+**C-D08 — Pare-feu et VPN avant les accès réels.** Décision de toytoy,
+05/10/2026 vers 16 h 20 (Europe/Paris), rapportée par Claude après une
+explication des risques de l'adresse publique et de l'IPv6 : « Oui c'est clair
+qu'il faut un pare-feu et un vpn là... Sachant que l'on a plusieurs service en
+écoute sur le réseau interne.... l'API du robot par exemple. »
+Faits rapportés par toytoy : un port de jeu est déjà ouvert sur la box ; plusieurs
+services écoutent sur le réseau interne, dont l'API du robot. Conséquences
+retenues comme principe : un pare-feu filtre les sorties de Core vers le réseau
+local (refus par défaut, seuls les services du catalogue autorisés) ; l'accès
+à Eidolon depuis l'extérieur passe par un VPN, pas par une redirection de port.
+Restent ouverts : outils, emplacement des règles (VM, hôte, box), liste des
+services autorisés, choix du VPN et calendrier. Aucune adresse, aucun port ni
+aucun secret n'est consigné dans Git. Voir C-BRAIN-C009.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

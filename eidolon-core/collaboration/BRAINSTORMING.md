@@ -534,3 +534,48 @@ aucune révision implicite d'un accord, aucune décision générale sur un servi
 réel. Question pour la suite : quels connecteurs offriront une comparaison de
 version au moment de l'action, et que proposer lorsque le protocole ne le permet
 pas ? Le reçu SQLite du simulateur ne constitue pas une réponse pour eux.
+
+## C-BRAIN-C009 — Pare-feu, VPN et services internes sensibles
+
+Statut : EN DISCUSSION. Auteur : Claude, 05/10/2026, 16 h 22, base `b028957`.
+Liens : C-D08 (principe décidé par toytoy), C-002, C-TASK-C001 (`egress.py`),
+catalogue de cibles, C-005 (actions approuvées).
+
+Besoin : la politique Web (`egress.py`) refuse les adresses privées, mais deux
+chemins restent ouverts sans protection système :
+- **adresse publique du foyer** : passer par l'adresse de la box peut atteindre
+  un service exposé par redirection de port. Un port de jeu est ouvert (port
+  non consigné ici) ; il n'est pas dans la liste par défaut (443), mais un
+  élargissement futur des ports le rendrait atteignable ;
+- **IPv6** : les appareils de la maison peuvent avoir des adresses globales.
+  Pour `egress.py` elles ressemblent à des sites publics, alors qu'elles mènent
+  directement aux machines du foyer, depuis l'intérieur.
+
+Services sensibles signalés par toytoy : plusieurs services internes, dont
+**l'API du robot**. Un robot agit physiquement : son accès doit passer par une
+cible du catalogue, une capacité `mutation` et un accord humain lié à l'action
+(C-005), jamais par une URL Web, même publique.
+
+Propositions, sans décision au-delà de C-D08 :
+1. **Pare-feu sortant sur la machine de Core** : refus par défaut vers le réseau
+   local et le préfixe IPv6 du foyer ; exceptions nominatives pour les
+   services du catalogue (Memory Engine, NAS…) ; aucune exception pour le robot
+   tant qu'un connecteur approuvé n'existe pas. Barrière indépendante du code.
+2. **Blocage dans le code** : `egress.py` reçoit une liste d'« adresses du
+   foyer » (préfixe IPv6 déduit des interfaces, adresse IPv4 publique fournie
+   par l'opérateur ou la box), refusées comme `DESTINATION_HOME`. Fichier de
+   configuration local, hors Git.
+3. **VPN pour l'accès distant** (WireGuard, Tailscale ou équivalent, à choisir) :
+   aucun port supplémentaire ouvert pour Eidolon ; le client Windows et le
+   téléphone passent par le tunnel.
+4. **Inventaire** : lister les services qui écoutent sur le réseau interne
+   (machine, port, rôle, sensibilité) dans un document local hors Git, pour en
+   déduire les règles du pare-feu et les cibles du catalogue.
+
+Essais discriminants (synthétiques, sans toucher au réseau réel) : URL vers
+l'adresse publique simulée du foyer → refus ; adresse IPv6 dans le préfixe
+simulé → refus ; nom public qui résout vers ces adresses → refus ; règle de
+pare-feu générée qui n'autorise que les cibles du catalogue.
+
+Contribution Codex/GPT : non reçue. Décision : principe C-D08 acquis, détails ouverts.
+
