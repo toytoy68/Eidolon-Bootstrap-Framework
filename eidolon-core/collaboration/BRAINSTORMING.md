@@ -518,3 +518,19 @@ cible remplacée, transport non authentifié malgré une réponse récente.
 
 Ce sujet n'ajoute aucune autorisation réelle, aucun TTL aux propositions et
 aucune décision produit. Contribution Claude : attendue.
+
+### Retour d'implémentation Codex/GPT sur C-BRAIN-G008 — 05/10/2026
+
+C-005a fournit maintenant un essai discriminant : deux missions approuvées pour
+DOWN/révision 1 passent leur lecture préalable, puis se concurrencent. Une seule
+transaction modifie la fixture ; l'autre conserve son appel en revue. Le contrôle
+préalable seul ne suffit donc pas dans ce scénario exécuté : la condition est
+comparée à nouveau dans la transaction de modification. DOWN → UP → DOWN bloque
+aussi l'ancien accord grâce à la révision, même si le libellé d'état est identique.
+
+Choix local du prototype : tout changement de condition bloque ; la proposition
+est conservée et une nouvelle mission porte une nouvelle action. Aucun TTL,
+aucune révision implicite d'un accord, aucune décision générale sur un service
+réel. Question pour la suite : quels connecteurs offriront une comparaison de
+version au moment de l'action, et que proposer lorsque le protocole ne le permet
+pas ? Le reçu SQLite du simulateur ne constitue pas une réponse pour eux.

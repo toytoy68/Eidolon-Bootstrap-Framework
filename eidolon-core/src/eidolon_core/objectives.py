@@ -16,6 +16,18 @@ from .memory import DEMO_REQUEST
 from .targets import Catalog
 
 DIAGNOSTIC = "service_diagnostic.synthetic"
+RESTART = "service_restart.simulated"
+TARGETED = {DIAGNOSTIC, RESTART}
+
+
+def restart_request(target):
+    return "Simuler le redémarrage du service : " + target
+
+
+def restart_parameters(mission):
+    condition = mission["action_condition"]
+    return {"target": mission["objective"]["target_id"], "expected_revision": condition["revision"],
+            "world_id": condition["world_id"], "operation_id": mission["id"]}
 
 
 def diagnostic_request(target):
@@ -25,17 +37,19 @@ def diagnostic_request(target):
 def define(request, intent=None, configuration=None):
     if intent is not None:
         if (not isinstance(intent, dict) or set(intent) != {"kind", "target_reference"}
-                or intent["kind"] != DIAGNOSTIC or not isinstance(intent["target_reference"], str)
-                or request != diagnostic_request(intent["target_reference"])):
+                or intent["kind"] not in TARGETED or not isinstance(intent["target_reference"], str)
+                or request != (diagnostic_request if intent["kind"] == DIAGNOSTIC else restart_request)(intent["target_reference"])):
             raise ContractError("invalid explicit mission intent")
         catalog = Catalog.from_config((configuration or {}).get("targets"))
-        selected = catalog.lookup(intent["target_reference"], "service.observe")
-        return {"version": 1, "kind": DIAGNOSTIC, "scope": "synthetic_service",
-                "request_sha256": digest(request), "tool": "service.observe.synthetic",
+        restart = intent["kind"] == RESTART
+        capability = "service.restart.simulated" if restart else "service.observe"
+        selected = catalog.lookup(intent["target_reference"], capability)
+        return {"version": 1, "kind": intent["kind"], "scope": "synthetic_action" if restart else "synthetic_service",
+                "request_sha256": digest(request), "tool": capability if restart else "service.observe.synthetic",
                 "required_references": [], "context_sha256": None,
                 "selection_status": selected.status, "candidates": list(selected.candidates),
                 "target_id": selected.target.id if selected.target else None,
-                "capability": "service.observe", "catalog_sha256": catalog.fingerprint()}
+                "capability": capability, "catalog_sha256": catalog.fingerprint()}
     supported = request == DEMO_REQUEST
     return {"version": 1, "kind": "recalled_text_statistics" if supported else None,
             "request_sha256": digest(request), "scope": "recalled_snapshot",
@@ -44,7 +58,7 @@ def define(request, intent=None, configuration=None):
 
 
 def bind(objective, context):
-    return {**objective, "required_references": ([] if objective["kind"] == DIAGNOSTIC else
+    return {**objective, "required_references": ([] if objective["kind"] in TARGETED else
                                                 sorted(reference(i) for i in context["items"])),
             "context_sha256": digest(context)}
 
@@ -61,12 +75,13 @@ def check_contract(mission):
 def check_plan(mission):
     objective = check_contract(mission)
     required = objective["required_references"]
-    if objective["kind"] == DIAGNOSTIC:
+    if objective["kind"] in TARGETED:
         steps = mission["plan"]["steps"]
         if (objective["selection_status"] != "FOUND" or len(steps) != 1
                 or steps[0]["tool"] != objective["tool"]
-                or steps[0]["parameters"] != {"target": objective["target_id"]}):
-            raise ContractError("MISSION_PLAN_MISMATCH: diagnostic must observe exactly the selected target")
+                or steps[0]["parameters"] != (restart_parameters(mission) if objective["kind"] == RESTART else
+                                            {"target": objective["target_id"]})):
+            raise ContractError("MISSION_PLAN_MISMATCH: step must serve exactly the selected target and typed objective")
         return
     if objective["kind"] is None or not required:
         raise ContractError("MISSION_NO_CRITERIA: no supported objective with evidence")
@@ -89,7 +104,7 @@ def assess(mission):
         objective = check_contract(mission)
     except ContractError:
         return {**outcome, "status": "CLARIFICATION", "code": "MISSION_CONTRACT_REQUIRED"}
-    if objective["kind"] == DIAGNOSTIC:
+    if objective["kind"] in TARGETED:
         return assess_diagnostic(mission, objective)
     if objective["kind"] is None:
         return {**outcome, "status": "CLARIFICATION", "code": "MISSION_UNSUPPORTED"}
@@ -123,7 +138,7 @@ def assess(mission):
 
 
 def assess_diagnostic(mission, objective):
-    outcome = {"status": "NOT_ACHIEVED", "scope": "synthetic_service",
+    outcome = {"status": "NOT_ACHIEVED", "scope": objective["scope"],
                "covered_references": [], "missing_references": [],
                "target_id": objective["target_id"], "code": "NO_VERIFIED_OBSERVATION"}
     if objective["selection_status"] != "FOUND":
@@ -141,5 +156,10 @@ def assess_diagnostic(mission, objective):
                 and call.get("output_sha256") == digest(call.get("output"))
                 and call.get("target_binding") == {"target_id": objective["target_id"],
                     "capability": objective["capability"], "catalog_sha256": objective["catalog_sha256"]}):
-            return {**outcome, "status": "ACHIEVED", "code": "OBSERVATION_VERIFIED"}
+            if objective["kind"] == RESTART:
+                from .approvals import consumed
+                if not consumed(mission, call):
+                    return {**outcome, "code": "APPROVAL_NOT_CONSUMED"}
+            return {**outcome, "status": "ACHIEVED", "code": (
+                "SIMULATED_ACTION_VERIFIED" if objective["kind"] == RESTART else "OBSERVATION_VERIFIED")}
     return outcome

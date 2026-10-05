@@ -56,7 +56,7 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] C-D07 appliquée par C-001a : `SUCCEEDED` exige l'issue ACHIEVED ; les
   autres issues restent hors de `SUCCEEDED`. Proposition d'origine : C-BRAIN-C007.
 - [ ] C-008 : propriétaire/battement de mission pour distinguer vivant/orphelin.
-- [ ] C-005 : identité humaine authentifiée ; `actor` actuel est une trace libre.
+- [ ] C-005 : identité humaine authentifiée (C-005a simule les décisions) ; `actor` actuel est une trace libre.
 
 ## Prochaine tranche proposée : critères de mission et contrôleur simulé enrichi
 
@@ -77,14 +77,21 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
   et capacités intégré avec tests ; raccordement runtime/permissions livré en C-004a.
 - [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
-  reçue (`ec7582b`), précisions C-TASK-G003 en attente. Adaptateur candidat
+  reçue (`ec7582b`), précisions C-TASK-G003 intégrées (`a77e7cf`). Adaptateur candidat
   simulé (étape 2) intégré ; Ollama à réévaluer,
   aucun modèle réel qualifié et aucune activation CLI.
 - [x] C-004a/C-001b : [diagnostic synthétique](docs/SYNTHETIC-DIAGNOSTIC-C004A.md),
   cible résolue hors modèle, permission par capacité, observation datée vérifiée,
   CLI et reprise ; état DOWN distinct de l'échec de mission.
-- [ ] Claude : C-TASK-G003 (précisions V100), G002 (validateur de rapports),
-  G001 (contre-revue ciblée), fiches publiées ; exécution non présumée.
+- [x] Claude : G003/G002/G001 reçus (`a273f3c`), code et preuves lus, validateur
+  intégré ; 20 tests qualification après durcissement de cinq frontières d'entrée.
+- [ ] Claude : [C-TASK-G004](collaboration/tasks/C-TASK-G004.md), adaptateur candidat
+  API chat llama.cpp, transport simulé ; fiche publiée, livraison non présumée.
+- [x] C-005a : [approbation et action simulée](docs/SIMULATED-ACTIONS-C005A.md),
+  accord lié aux paramètres/tentative, refus/révocation, état/version revérifiés,
+  effet/reçu transactionnels sur fixture ; 23 tests et démo de six scénarios.
+- [ ] C-005 réel : identité authentifiée, protocole de service, autorisation
+  distante et recette ; actor actuel reste une trace libre, pas une identité.
 - [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
 ### Lots concrets suivant le brainstorming

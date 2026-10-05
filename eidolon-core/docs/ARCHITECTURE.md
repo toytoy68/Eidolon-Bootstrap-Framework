@@ -15,6 +15,7 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 | `model` | `Model.propose(request, context) -> str`, simulateur déterministe |
 | `memory` | `MemoryReader.recall(query) -> dict`, fixture ou délégation au vrai moteur |
 | `tools` | Registre de code de confiance, validateurs, politique fixe, vérificateurs |
+| `simulation` / `actions` / `approvals` | Service fictif transactionnel, préconditions, décisions locales liées à une tentative |
 | `store` | SQLite : snapshot et événement dans une transaction, contrôle de révision |
 | `worker` | Appels en processus spawn, délais, interruption, reçu JSON borné |
 | `runtime` | Mission, plan, précontrôle intégral, exécution séquentielle, reprise |
@@ -58,6 +59,14 @@ hors modèle, catalogue figé, permission cible/capacité, observation synthéti
 datée et vérifiée. La santé DOWN est un résultat possible d'une mission réussie.
 Un rappel vide est ici un contexte valide, jamais une preuve de santé.
 [Contrat détaillé et limites](SYNTHETIC-DIAGNOSTIC-C004A.md).
+
+C-005a ajoute `ActionRuntime` et une politique séparée pour le seul outil de
+mutation `service.restart.simulated`. L'effet et son reçu sont transactionnels
+dans une base synthétique ; aucune capacité d'administration réelle n'est exposée.
+La proposition persiste sans TTL, l'accord consommé est enregistré avec le
+lancement. Une comparaison état/révision dans la transaction couvre la course
+entre contrôle préalable et modification. Le reçu et l'accord sont nécessaires
+au succès. [Contrat C-005a](SIMULATED-ACTIONS-C005A.md).
 
 ## Persistance et reprise
 

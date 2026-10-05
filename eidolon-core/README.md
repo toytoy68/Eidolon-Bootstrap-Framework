@@ -74,7 +74,7 @@ le `AGENTS.md` à la racine y renvoie.
 ## Tests simulés
 
 ```sh
-PYTHONPATH=src:. python -m unittest tests.test_core tests.test_review_regressions tests.test_counter_review tests.test_objectives tests.test_targets tests.test_ollama_model tests.test_integration_review tests.test_diagnostics -v
+PYTHONPATH=src:. python -m unittest discover -s tests -t . -v
 ```
 
 Refus, paramètres invalides, sortie modèle mal formée, mémoire absente/vide,
@@ -114,8 +114,9 @@ Voir [contrat, limites et migration](docs/MISSION-CONTRACT-C001A.md).
 
 ## Intégration optionnelle avec le vrai Memory Engine
 
-Base testée : `refactor/architecture-v1`, commit
-`3a86ef0707d24f8126df385e462f911c52891d3e`.
+Dernière intégration testée sur copie : `refactor/architecture-v1`, commit
+`7d99ded07b7e10aa8029655ce4a939af6e0a6c44` ; audit initial consulté : `3a86ef0`.
+[Validation C-005a](docs/validation/2026-10-05/codex-c005a/README.md).
 La source du moteur est une dépendance séparée, jamais recopiée dans Core.
 Les commandes suivantes sont à exécuter depuis `eidolon-core/` avec un chemin
 absolu vers un clone **isolé** du moteur :
@@ -238,7 +239,7 @@ tentative, empreinte de sortie, origine du reçu et vérificateur. Les sorties c
 dans `calls[].output`, sans duplication dans le résultat final. Chaque reçu
 reste borné à 1 Mo ; au plus cinq appels par plan.
 
-Codes CLI : 0 succès de commande (`show/create/reconcile`) ou mission réussie ;
+Codes CLI : 0 succès de commande (`show/create/reconcile/decide/fixture`) ou mission réussie ;
 2 bloqué/revue/erreur d'entrée ; 3 mission échouée ; 4 annulée/abandonnée ; 130 interruption.
 `cancel` pendant un appel actif persiste la demande ; `show` expose sa progression.
 Le délai `--timeout` est **par appel**, démarrage du processus compris, 10 s par
@@ -254,8 +255,8 @@ modèle par défaut, ni une option de la CLI. Ses tests emploient des transports
 simulés et un faux serveur HTTP loopback. Aucun vrai modèle n'est qualifié.
 
 L'étude comparative pour les deux V100 SXM2 sur carte adaptatrice PCIe/NVLink
-a été reçue (`ec7582b`) ; des précisions sont demandées dans C-TASK-G003.
-Aucune qualification matérielle n'est acquise. [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
+a été reçue (`ec7582b`), puis précisée par Claude dans C-TASK-G003.
+Aucune qualification matérielle n'est acquise. G003 est intégré (`a77e7cf`). [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
 
 ## Diagnostic synthétique C-004a
 
@@ -271,6 +272,31 @@ PYTHONPATH=src python -m eidolon_core --profile service-sim --format human --sta
 
 [Contrat, commandes de reprise et limites](docs/SYNTHETIC-DIAGNOSTIC-C004A.md).
 Ce diagnostic observe uniquement des fixtures ; aucun accès au NAS ou à la VM.
+
+## Approbation et redémarrage simulé C-005a
+
+```bash
+PYTHONPATH=src:. python -m examples.action_demo
+PYTHONPATH=src python -m eidolon_core --profile action-sim --state /tmp/eidolon-actions --format human restart nas
+```
+
+La CLI présente une proposition et attend une décision (code 2). `decide` lie
+l'accord à son empreinte, puis `run` contrôle de nouveau la condition et exécute
+la transition dans une base de services fictifs. Refus, révocation, changement
+d'état et interruption sont testés. Rien n'agit sur un service réel.
+[Commandes, contrat et limites d'identité](docs/SIMULATED-ACTIONS-C005A.md).
+La démonstration couvre six scénarios ; une proposition sans décision n'expire pas.
+
+## Rapports de qualification G-017
+
+```bash
+PYTHONPATH=src:. python -m examples.qualification_demo
+```
+
+Le [validateur livré par Claude](docs/QUALIFICATION-REPORTS.md) distingue
+REJECTED, INCOMPLETE et PASSED_SCOPE. Il vérifie la cohérence du rapport, jamais
+l'authenticité des mesures ni la qualification générale d'un modèle. Les mesures
+absentes et un corpus vide ne deviennent pas un succès.
 
 ## Documents et limites
 
