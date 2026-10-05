@@ -1,0 +1,73 @@
+Python 3.11.15 | linux
+
+[1] Interruption du parent à chaque frontière, après accord
+  mort à ACTION_CONDITION_CHECKED (code 77) -> SUCCEEDED / None / proposition USED | redémarrages 1
+    bilan : SUCCEEDED / None / proposition USED | redémarrages 1 | CALL_STARTED 1
+  mort à CALL_STARTED (code 77) -> REVIEW_REQUIRED / UNKNOWN_EFFECT / proposition USED | redémarrages 0
+      no-effect confirmé: BLOCKED / RECONCILED / proposition USED
+      run (nouvelle tentative): BLOCKED / APPROVAL_REQUIRED / proposition PENDING
+    ancien accord réutilisé : non ; historique : 1
+      nouvel accord: BLOCKED / APPROVAL_APPROVED / proposition APPROVED
+      run: SUCCEEDED / None / proposition USED
+    bilan : SUCCEEDED / None / proposition USED | redémarrages 1 | CALL_STARTED 2
+  mort à WORKER_SPAWNED (code 77) -> REVIEW_REQUIRED / UNKNOWN_EFFECT / proposition USED | redémarrages 0
+      no-effect confirmé: BLOCKED / RECONCILED / proposition USED
+      run (nouvelle tentative): BLOCKED / APPROVAL_REQUIRED / proposition PENDING
+    ancien accord réutilisé : non ; historique : 1
+      nouvel accord: BLOCKED / APPROVAL_APPROVED / proposition APPROVED
+      run: SUCCEEDED / None / proposition USED
+    bilan : SUCCEEDED / None / proposition USED | redémarrages 1 | CALL_STARTED 2
+  mort à TOOL_RETURNED (code 77) -> REVIEW_REQUIRED / UNKNOWN_EFFECT / proposition USED | redémarrages 1
+      no-effect confirmé: REFUS ContractError: simulation has a committed effect receipt; reconcile its result or abandon
+      observed-result (reçu du simulateur): BLOCKED / RECONCILED / proposition USED
+      run: SUCCEEDED / None / proposition USED
+    bilan : SUCCEEDED / None / proposition USED | redémarrages 1 | CALL_STARTED 1
+
+[2] Accord copié d'une mission à l'autre
+  empreintes différentes : True
+  decide B avec l'empreinte de A: REFUS ContractError: decision must name the exact proposal sha256
+  decide A avec l'empreinte de A: BLOCKED / APPROVAL_APPROVED / proposition APPROVED
+  run B (non approuvée): BLOCKED / APPROVAL_REQUIRED / proposition PENDING
+  redémarrages : 0
+
+[3] DOWN -> UP -> DOWN après accord (même état, révision différente)
+  run: BLOCKED / ACTION_PRECONDITION_CHANGED / proposition APPROVED
+  appels : 1 | redémarrages : 0
+  ré-approuver la même proposition: REFUS ContractError: decision is not valid for the current proposal status
+
+[4] Deux missions approuvées sur la même révision ; B passe le contrôle, A agit avant B
+  run B (A s'exécute pendant B): REVIEW_REQUIRED / CALL_ERROR / proposition USED
+  A : SUCCEEDED / None / proposition USED | redémarrages : 1 | reçu B : False
+  erreur rendue par l'outil de B : PRECONDITION_CHANGED: synthetic service must still be DOWN at the approved revision
+    no-effect sans confirmation: REFUS ValueError: execution authorized or unknown: explicit confirm_no_effect required after investigation
+    abandon: ABANDONED / EFFECT_UNKNOWN / proposition USED
+
+[5] Annulation et révocation
+  annulation après accord, puis run: CANCELLED / CANCELLED / proposition APPROVED
+  redémarrages : 0
+  annulation juste après CALL_STARTED (accord consommé): CANCELLED / CANCELLED / proposition USED
+  redémarrages : 0 | statut de l'accord : USED | tentative tracée non autorisée : not-authorized
+  approve: BLOCKED / APPROVAL_APPROVED / proposition APPROVED
+  revoke: BLOCKED / APPROVAL_REVOKED / proposition REVOKED
+  run après révocation: BLOCKED / APPROVAL_REVOKED / proposition REVOKED
+  ré-approuver après révocation: REFUS ContractError: decision is not valid for the current proposal status
+  redémarrages : 0
+
+[6] Un modèle modifie les paramètres de l'action
+  paramètre expected_revision altéré: BLOCKED / PREFLIGHT_REFUSED / proposition None
+    proposition créée : False | appels : 0 | redémarrages : 0
+  paramètre operation_id altéré: BLOCKED / PREFLIGHT_REFUSED / proposition None
+    proposition créée : False | appels : 0 | redémarrages : 0
+  paramètre target altéré: BLOCKED / PREFLIGHT_REFUSED / proposition None
+    proposition créée : False | appels : 0 | redémarrages : 0
+
+[7] Après succès : preuve historique, santé actuelle, mémoire, proposition ancienne
+  mission : SUCCEEDED / None / proposition USED | issue : ACHIEVED
+  service actuellement : DOWN | limite affichée : ['Receipt proves a past transition; current health can change.']
+  contexte mémoire inchangé : True
+  proposition sans décision, relancée : BLOCKED / APPROVAL_REQUIRED / proposition PENDING | toujours la même empreinte : True
+
+[8] Base de simulation remplacée après l'accord
+  identité changée : True
+  run avec la nouvelle base: BLOCKED / CONFIGURATION_CHANGED / proposition APPROVED
+  redémarrages dans la nouvelle base : 0
