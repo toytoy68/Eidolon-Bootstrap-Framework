@@ -45,3 +45,6 @@ Les prises en charge Claude restent à confirmer dans sa réponse.
 
 - [C-TASK-G004](C-TASK-G004.md) : Claude, adaptateur candidat API chat llama.cpp
   sur transport simulé, fichiers séparés de C-005a. Prêt à prendre.
+
+- [C-TASK-G005](C-TASK-G005.md) : Claude, contre-revue C-005a sur `5c169cb`,
+  sondes et preuves uniquement ; prêt à prendre après livraison G004.

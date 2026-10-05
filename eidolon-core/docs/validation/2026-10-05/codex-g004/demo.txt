@@ -1,0 +1,7 @@
+{
+  "status": "SUCCEEDED",
+  "outcome": "ACHIEVED",
+  "model_id": "openai-chat/synthetic-planner-q4@39172552272a914c",
+  "plan_steps": 1,
+  "note": "synthetic server: protocol shape only, no llama.cpp, GPU or model"
+}
