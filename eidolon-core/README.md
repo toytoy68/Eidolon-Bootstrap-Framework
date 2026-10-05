@@ -263,12 +263,27 @@ Python, hors CLI. Cette démonstration utilise uniquement un faux serveur local 
 PYTHONPATH=src:. python -m examples.openai_chat_demo
 ```
 
-[Dernière validation intégrée](docs/validation/2026-10-05/codex-g004/README.md) :
+[Validation G004](docs/validation/2026-10-05/codex-g004/README.md) :
 191 tests Core réussis et 6 tests du moteur mémoire sur copie isolée.
 
 L'étude comparative pour les deux V100 SXM2 sur carte adaptatrice PCIe/NVLink
 a été reçue (`ec7582b`), puis précisée par Claude dans C-TASK-G003.
 Aucune qualification matérielle n'est acquise. G003 est intégré (`a77e7cf`). [Bilan de l'intégration et corrections](docs/CLAUDE-INTEGRATION-2026-10-05.md).
+
+## Préparation de l'accès Web C-002a
+
+La [politique de destinations Web](docs/EGRESS-POLICY.md) de Claude est intégrée
+et durcie : URL/redirections contrôlées, DNS borné et exclusions IP/CIDR
+configurables pour les adresses du foyer, même publiques. Démonstration pure :
+
+```sh
+PYTHONPATH=src:. python -m examples.web_policy_demo --format human
+```
+
+Aucun téléchargement ni accès au réseau dans cette démo. Le connecteur HTTP,
+le raccordement aux missions et la recette pare-feu/VPN restent à réaliser.
+[Validation intégrée C-002a.1](docs/validation/2026-10-05/codex-c002a/README.md) :
+221 tests Core et 6 intégrations mémoire réussis sur données synthétiques.
 
 ## Diagnostic synthétique C-004a
 

@@ -98,6 +98,21 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   distante et recette ; actor actuel reste une trace libre, pas une identité.
 - [ ] Étendre le contrat aux scénarios A–D ; le lot C-001 complet reste ouvert.
 
+### Accès Web — C-002a reçu et durci
+
+- [x] Politique pure de destinations Claude (`b869eef`) intégrée : DNS injecté,
+  adresses contrôlées et sélectionnées, redirections revérifiées ; hors runtime.
+- [x] C-002a.1 : exclusions IP/CIDR explicites, configuration figée, validation
+  URL/DNS renforcée, NAT64 local refusé ; 30 tests et démo de huit décisions.
+- [ ] C-002b : transport HTTP de lecture avec adresse réellement épinglée,
+  TLS/Host/SNI corrects, pas de proxy, bornes et délais, redirections contrôlées ;
+  tests sur transport simulé avant accès externe.
+- [ ] Raccordement `web.read` au catalogue, permissions et critères de mission,
+  provenance/version du contenu et minimisation des données sortantes.
+- [ ] C-D08 rapportée par Claude : pare-feu sortant et VPN avant accès réels ;
+  choix des outils, inventaire local hors Git, adresse publique/préfixes propres
+  au foyer et traductions/routes particulières à qualifier sur le matériel.
+
 ### Lots concrets suivant le brainstorming
 
 | Lot | Livrable | Critère de sortie |

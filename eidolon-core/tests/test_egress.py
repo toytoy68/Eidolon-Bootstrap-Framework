@@ -51,7 +51,7 @@ class ClassifyTests(unittest.TestCase):
             "::1": "LOOPBACK", "fe80::1": "LINK_LOCAL", "fc00::1": "NOT_GLOBAL", "::": "UNSPECIFIED",
             "ff02::1": "MULTICAST", "2001:db8::1": "NOT_GLOBAL",
             # Python's is_global says True for the next three; they still embed local IPv4.
-            "64:ff9b::7f00:1": "LOOPBACK", "64:ff9b:1::a00:1": "NOT_GLOBAL", "::127.0.0.1": "IPV4_COMPATIBLE",
+            "64:ff9b::7f00:1": "LOOPBACK", "64:ff9b:1::a00:1": "NAT64_LOCAL", "::127.0.0.1": "IPV4_COMPATIBLE",
             "::ffff:127.0.0.1": "LOOPBACK", "::ffff:169.254.169.254": "LINK_LOCAL",
             "2002:7f00:1::1": "LOOPBACK", "2002:c0a8:101::1": "NOT_GLOBAL",
             "2001:0:4136:e378:8000:63bf:80ff:fffe": "TEREDO",
@@ -154,7 +154,9 @@ class RedirectTests(unittest.TestCase):
             d = follow(d, "/next", DNS)
             self.assertTrue(d.allowed)
         self.assertEqual(follow(d, "/next", DNS).code, "TOO_MANY_REDIRECTS")
-        self.assertEqual(follow(self.start, "/x", DNS, WebPolicy(max_redirects=0)).code, "TOO_MANY_REDIRECTS")
+        policy = WebPolicy(max_redirects=0)
+        start = decide("https://docs.example.com/", DNS, policy)
+        self.assertEqual(follow(start, "/x", DNS, policy).code, "TOO_MANY_REDIRECTS")
 
     def test_cannot_follow_a_refusal(self):
         with self.assertRaises(ContractError):

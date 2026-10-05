@@ -1,0 +1,10 @@
+malformed bracket ValueError
+port zero allowed=True code=ALLOWED
+Unicode surrogate path allowed=True code=ALLOWED
+redirect newline repaired allowed=True code=ALLOWED
+scoped DNS IPv6 allowed=True code=ALLOWED
+integer DNS address allowed=True code=ALLOWED
+local NAT64 public tail allowed=True code=ALLOWED
+mutable policy allowed=True code=ALLOWED
+oversized DNS iterable allowed=False code=RESOLUTION_TOO_LARGE
+DNS items consumed: 1000

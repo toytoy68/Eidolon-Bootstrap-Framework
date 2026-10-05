@@ -185,6 +185,16 @@ modèle. La couverture vérifiée concerne toutes les références du rappel con
 Un futur modèle généraliste demandera d'autres types et critères d'acceptation ;
 C-001a ne qualifie pas les scénarios A–D complets.
 
+## Politique Web préparatoire C-002a
+
+`egress` décide à partir d'une URL, d'une configuration immuable et d'un
+résolveur injecté ; il ne fait pas de téléchargement. La décision autorisée
+lie URL canonique, hôte, port, IP sélectionnée et empreinte de politique.
+Les exclusions opérateur concernent aussi les IP publiques ; toutes les
+réponses DNS et chaque redirection sont contrôlées. Le connecteur devra utiliser
+l'IP sélectionnée et vérifier TLS pour le nom d'origine. Aucun module réseau
+n'est encore raccordé aux outils du runtime. [Contrat et limites](EGRESS-POLICY.md).
+
 ## Limites assumées
 
 - Linux/POSIX, écrivains coopératifs, stockage local ; pas de validation NFS,

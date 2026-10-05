@@ -1,0 +1,26 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                 Politique Web simulée                 #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Huit décisions avec DNS synthétique ; aucun accès réseau.
+
+=========================================================
+Vérification des décisions
+=========================================================
+[OK] Décision attendue vérifiée : public → ALLOWED
+[OK] Décision attendue vérifiée : private-lan → DESTINATION_NOT_GLOBAL
+[OK] Décision attendue vérifiée : household-public-ip → DESTINATION_BLOCKED_NETWORK
+[OK] Décision attendue vérifiée : household-ipv6 → DESTINATION_BLOCKED_NETWORK
+[OK] Décision attendue vérifiée : mixed-dns → DESTINATION_NOT_GLOBAL
+[OK] Décision attendue vérifiée : redirect-household → DESTINATION_BLOCKED_NETWORK
+[OK] Décision attendue vérifiée : redirect-control → BAD_URL
+[OK] Décision attendue vérifiée : relative-redirect → ALLOWED
+[ATTENTION] ALLOWED ne prouve ni une connexion ni une mission réussie.

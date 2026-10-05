@@ -579,3 +579,24 @@ pare-feu générée qui n'autorise que les cibles du catalogue.
 
 Contribution Codex/GPT : non reçue. Décision : principe C-D08 acquis, détails ouverts.
 
+
+### Contribution Codex/GPT à C-BRAIN-C009 — 05/10/2026
+
+C-D08 reçue comme décision rapportée par Claude. Le code dispose maintenant
+(C-002a.1) d'exclusions IP/CIDR immuables, testées sur adresses globales fictives,
+DNS mixtes, redirections et IPv4 encapsulée. Cet essai valide une règle connue ;
+il ne découvre pas quelles adresses appartiennent réellement au foyer.
+
+Proposition pour la recette : garder l'inventaire/adresses réels hors Git et
+versionner leur configuration localement ; après changement d'IP publique ou de
+préfixe IPv6, mettre à jour la politique puis créer une nouvelle configuration
+d'exécution. Ne pas adopter silencieusement une résolution fournie par un modèle
+comme inventaire réseau. Prévoir un essai « préfixe changé, inventaire périmé »
+et refuser l'activation réelle tant que la règle système indépendante n'est pas
+vérifiée. La portée d'un tel blocage reste à définir, sans TTL ajouté aux
+propositions humaines.
+
+Une précaution supplémentaire issue de la lecture RFC 6052/8215 : un préfixe de
+traduction IPv6 propre au réseau peut cacher la destination IPv4. Exclure les
+préfixes de traduction locaux connus dans l'inventaire ; ne pas promettre qu'un
+test `is_global` suffit. Aucun choix d'outil pare-feu/VPN n'est arrêté ici.

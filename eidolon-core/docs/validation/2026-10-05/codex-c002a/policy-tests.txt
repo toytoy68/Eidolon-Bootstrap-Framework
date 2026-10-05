@@ -1,0 +1,35 @@
+test_non_public_addresses_are_refused (tests.test_egress.ClassifyTests.test_non_public_addresses_are_refused) ... ok
+test_public_unicast_passes (tests.test_egress.ClassifyTests.test_public_unicast_passes) ... ok
+test_http_and_ports_only_by_explicit_policy (tests.test_egress.DecisionTests.test_http_and_ports_only_by_explicit_policy) ... ok
+test_ip_literals_are_classified_without_dns (tests.test_egress.DecisionTests.test_ip_literals_are_classified_without_dns) ... ok
+test_public_https_url_is_allowed_with_a_pinned_address (tests.test_egress.DecisionTests.test_public_https_url_is_allowed_with_a_pinned_address) ... ok
+test_rebinding_needs_no_second_lookup (tests.test_egress.DecisionTests.test_rebinding_needs_no_second_lookup) ... ok
+test_resolution_rules (tests.test_egress.DecisionTests.test_resolution_rules) ... ok
+test_url_shape_refusals (tests.test_egress.DecisionTests.test_url_shape_refusals) ... ok
+test_module_opens_no_socket (tests.test_egress.NoNetworkTests.test_module_opens_no_socket) ... ok
+test_cannot_follow_a_refusal (tests.test_egress.RedirectTests.test_cannot_follow_a_refusal) ... ok
+test_each_hop_is_checked_again (tests.test_egress.RedirectTests.test_each_hop_is_checked_again) ... ok
+test_redirect_count_is_bounded (tests.test_egress.RedirectTests.test_redirect_count_is_bounded) ... ok
+test_bad_urls_refuse_without_exception_or_dns (tests.test_egress_boundaries.EgressBoundaryTests.test_bad_urls_refuse_without_exception_or_dns) ... ok
+test_blocked_prefix_first_last_and_adjacent_addresses (tests.test_egress_boundaries.EgressBoundaryTests.test_blocked_prefix_first_last_and_adjacent_addresses) ... ok
+test_canonical_url_matches_checked_idna_host_and_port (tests.test_egress_boundaries.EgressBoundaryTests.test_canonical_url_matches_checked_idna_host_and_port) ... ok
+test_deny_network_applies_to_embedded_ipv4_and_outer_ipv6 (tests.test_egress_boundaries.EgressBoundaryTests.test_deny_network_applies_to_embedded_ipv4_and_outer_ipv6) ... ok
+test_dns_failure_after_first_address_is_not_a_partial_allow (tests.test_egress_boundaries.EgressBoundaryTests.test_dns_failure_after_first_address_is_not_a_partial_allow) ... ok
+test_dns_iteration_stops_after_33_addresses (tests.test_egress_boundaries.EgressBoundaryTests.test_dns_iteration_stops_after_33_addresses) ... ok
+test_dns_requires_unscoped_ip_strings (tests.test_egress_boundaries.EgressBoundaryTests.test_dns_requires_unscoped_ip_strings) ... ok
+test_exclusions_and_redirects_make_no_network_calls (tests.test_egress_boundaries.EgressBoundaryTests.test_exclusions_and_redirects_make_no_network_calls) ... ok
+test_hop_counter_cannot_be_negative_or_non_integer (tests.test_egress_boundaries.EgressBoundaryTests.test_hop_counter_cannot_be_negative_or_non_integer) ... ok
+test_local_nat64_prefix_refused_regardless_of_tail (tests.test_egress_boundaries.EgressBoundaryTests.test_local_nat64_prefix_refused_regardless_of_tail) ... ok
+test_manifest_canonical_and_binding_changes (tests.test_egress_boundaries.EgressBoundaryTests.test_manifest_canonical_and_binding_changes) ... ok
+test_normalization_expansion_is_bounded (tests.test_egress_boundaries.EgressBoundaryTests.test_normalization_expansion_is_bounded) ... ok
+test_policy_inputs_are_copied_and_spawn_serializable (tests.test_egress_boundaries.EgressBoundaryTests.test_policy_inputs_are_copied_and_spawn_serializable) ... ok
+test_policy_invalid_types_and_cidr_host_bits (tests.test_egress_boundaries.EgressBoundaryTests.test_policy_invalid_types_and_cidr_host_bits) ... ok
+test_public_household_addresses_refused_for_literals_and_dns (tests.test_egress_boundaries.EgressBoundaryTests.test_public_household_addresses_refused_for_literals_and_dns) ... ok
+test_redirect_blocked_even_from_public_and_policy_cannot_change (tests.test_egress_boundaries.EgressBoundaryTests.test_redirect_blocked_even_from_public_and_policy_cannot_change) ... ok
+test_redirect_controls_are_refused_before_join (tests.test_egress_boundaries.EgressBoundaryTests.test_redirect_controls_are_refused_before_join) ... ok
+test_refusals_do_not_echo_credentials_or_queries (tests.test_egress_boundaries.EgressBoundaryTests.test_refusals_do_not_echo_credentials_or_queries) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.023s
+
+OK

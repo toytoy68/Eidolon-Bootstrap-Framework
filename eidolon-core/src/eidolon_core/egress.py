@@ -17,12 +17,13 @@ targets (targets.py). This module opens no socket and sends no request.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import islice
 import ipaddress
 import re
 import socket
 import urllib.parse
 
-from .contracts import ContractError
+from .contracts import ContractError, digest
 
 MAX_URL = 2048
 MAX_ADDRESSES = 32
@@ -40,14 +41,40 @@ class WebPolicy:
     schemes: tuple = ("https",)
     ports: tuple = (443,)
     max_redirects: int = 5
+    blocked_networks: tuple = ()
 
     def __post_init__(self):
-        if not self.schemes or set(self.schemes) - {"http", "https"}:
+        for name, maximum in (("schemes", 2), ("ports", 128), ("blocked_networks", 256)):
+            value = getattr(self, name)
+            if not isinstance(value, (tuple, list)) or len(value) > maximum:
+                raise ContractError(f"{name} must be a bounded list or tuple")
+        if (not self.schemes or any(type(s) is not str or s not in {"http", "https"}
+                                    for s in self.schemes)):
             raise ContractError("schemes limited to http and https")
         if not self.ports or any(type(p) is not int or not 1 <= p <= 65535 for p in self.ports):
             raise ContractError("ports must be valid TCP ports")
         if type(self.max_redirects) is not int or not 0 <= self.max_redirects <= 10:
             raise ContractError("max_redirects must be within [0, 10]")
+        networks = []
+        for value in self.blocked_networks:
+            if type(value) is not str or not 1 <= len(value) <= 64 or "%" in value:
+                raise ContractError("blocked networks must be IP or CIDR strings without scopes")
+            try:
+                networks.append(str(ipaddress.ip_network(value, strict=True)))
+            except ValueError as exc:
+                raise ContractError("invalid blocked network; CIDR must have no host bits") from exc
+        object.__setattr__(self, "schemes", tuple(sorted(set(self.schemes))))
+        object.__setattr__(self, "ports", tuple(sorted(set(self.ports))))
+        object.__setattr__(self, "blocked_networks", tuple(sorted(set(networks))))
+
+    def manifest(self):
+        return {"version": "web-destination/2", "schemes": list(self.schemes),
+                "ports": list(self.ports), "max_redirects": self.max_redirects,
+                "blocked_networks": list(self.blocked_networks)}
+
+    @property
+    def policy_id(self):
+        return digest(self.manifest())
 
 
 @dataclass(frozen=True)
@@ -59,18 +86,27 @@ class Decision:
     port: int | None = None
     address: str | None = None  # pinned: the connector must connect to this address only
     hop: int = 0
+    policy_id: str | None = None  # configuration binding, not an authorization token
 
 
-def classify(address):
+def classify(address, blocked_networks=()):
     """Return None for a public unicast address, else the refusal reason."""
+    if type(address) is not str or not 1 <= len(address) <= 45 or "%" in address:
+        raise ValueError("address must be unscoped IP text")
     ip = ipaddress.ip_address(address)
+    if any(ip in ipaddress.ip_network(network) for network in blocked_networks):
+        return "BLOCKED_NETWORK"
     if ip.version == 6:
         if ip.ipv4_mapped is not None:
-            return classify(str(ip.ipv4_mapped))
-        if ip in NAT64 or ip in NAT64_LOCAL:
-            return classify(str(ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF)))
+            return classify(str(ip.ipv4_mapped), blocked_networks)
+        if ip in NAT64_LOCAL:
+            # RFC 8215 allocates /48; actual translation subprefix lengths vary.
+            # The last 32 bits alone cannot identify the translated destination.
+            return "NAT64_LOCAL"
+        if ip in NAT64:
+            return classify(str(ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF)), blocked_networks)
         if ip.sixtofour is not None:
-            return classify(str(ip.sixtofour))
+            return classify(str(ip.sixtofour), blocked_networks)
         if ip.teredo is not None:
             return "TEREDO"
     if ip.is_multicast:
@@ -95,15 +131,30 @@ def system_resolver(host, port):
 
 
 def _refuse(code, url, hop, host=None, port=None):
-    return Decision(False, code, url, host, port, None, hop)
+    # Invalid inputs can contain credentials or non-serializable values. A
+    # refusal carries only its reason; never echo the rejected URL.
+    return Decision(False, code, "", host, port, None, hop)
+
+
+def _url_text(value):
+    if type(value) is not str or not 1 <= len(value) <= MAX_URL:
+        raise ContractError("BAD_URL")
+    if any(not c.isprintable() or c.isspace() or c == "\\" for c in value):
+        raise ContractError("BAD_URL")
+    try:
+        value.encode("utf-8")
+    except UnicodeError as exc:
+        raise ContractError("BAD_URL") from exc
+    if re.search(r"%(?![0-9a-fA-F]{2})", value):
+        raise ContractError("BAD_URL")
 
 
 def _parse(url, policy):
-    if not isinstance(url, str) or not url or len(url) > MAX_URL:
-        raise ContractError("BAD_URL")
-    if any(ord(c) < 33 or ord(c) == 127 for c in url):
-        raise ContractError("BAD_URL")  # spaces and control characters are never repaired
-    parts = urllib.parse.urlsplit(url)
+    _url_text(url)
+    try:
+        parts = urllib.parse.urlsplit(url)
+    except ValueError as exc:
+        raise ContractError("BAD_URL") from exc
     scheme = parts.scheme.lower()
     if scheme not in policy.schemes:
         raise ContractError("SCHEME_REFUSED")
@@ -113,53 +164,76 @@ def _parse(url, policy):
         port = parts.port
     except ValueError as exc:
         raise ContractError("BAD_PORT") from exc
-    port = port or (443 if scheme == "https" else 80)
+    if parts.netloc.endswith(":") or port == 0:
+        raise ContractError("BAD_PORT")
+    port = port if port is not None else (443 if scheme == "https" else 80)
     if port not in policy.ports:
         raise ContractError("PORT_REFUSED")
     host = parts.hostname
     if not host:
         raise ContractError("BAD_HOST")
-    if host.startswith("[") or ":" in host:
-        literal = host.strip("[]")
+    literal = False
+    if ":" in host:
+        if not re.fullmatch(r"\[[0-9a-fA-F:.]+\](?::[0-9]+)?", parts.netloc):
+            raise ContractError("BAD_HOST")
         try:
-            ipaddress.IPv6Address(literal.split("%")[0])
+            host = str(ipaddress.IPv6Address(host))
         except ValueError as exc:
             raise ContractError("BAD_HOST") from exc
-        if "%" in literal:
-            raise ContractError("BAD_HOST")  # zone identifiers designate a local interface
-        return scheme, literal, port, True
-    host = host.rstrip(".")
-    try:
-        ipaddress.IPv4Address(host)
-        return scheme, host, port, True
-    except ValueError:
-        pass
-    if NUMERIC_HOST.fullmatch(host):
-        raise ContractError("AMBIGUOUS_NUMERIC_HOST")
-    try:
-        ascii_host = host.encode("idna").decode("ascii").lower()
-    except UnicodeError as exc:
-        raise ContractError("BAD_HOST") from exc
-    labels = ascii_host.split(".")
-    if len(ascii_host) > 253 or len(labels) < 2 or not all(HOST_LABEL.fullmatch(l) for l in labels):
-        raise ContractError("BAD_HOST")  # single-label names resolve through local search domains
-    if labels[-1] in {"localhost", "local", "internal", "lan", "home", "localdomain", "arpa"}:
-        raise ContractError("LOCAL_NAME")
-    return scheme, ascii_host, port, False
+        literal = True
+    else:
+        host = host[:-1] if host.endswith(".") else host
+        try:
+            host = host.encode("idna").decode("ascii").lower()
+        except UnicodeError as exc:
+            raise ContractError("BAD_HOST") from exc
+        try:
+            host = str(ipaddress.IPv4Address(host))
+            literal = True
+        except ValueError:
+            if NUMERIC_HOST.fullmatch(host):
+                raise ContractError("AMBIGUOUS_NUMERIC_HOST")
+            labels = host.split(".")
+            if len(host) > 253 or len(labels) < 2 or not all(HOST_LABEL.fullmatch(l) for l in labels):
+                raise ContractError("BAD_HOST")
+            if labels[-1] in {"localhost", "local", "internal", "lan", "home", "localdomain", "arpa"}:
+                raise ContractError("LOCAL_NAME")
+    authority = f"[{host}]" if ":" in host else host
+    if port != (443 if scheme == "https" else 80):
+        authority += f":{port}"
+    path = urllib.parse.quote(parts.path or "/", safe="/:@!$&'()*+,;=-._~%")
+    query = urllib.parse.quote(parts.query, safe="/?:@!$&'()*+,;=-._~%")
+    canonical = urllib.parse.urlunsplit((scheme, authority, path, query, ""))
+    if len(canonical) > MAX_URL:
+        raise ContractError("BAD_URL")
+    return scheme, host, port, literal, canonical
+
+
+def _policy(value):
+    if value is None:
+        return WebPolicy()
+    if not isinstance(value, WebPolicy):
+        raise ContractError("policy must be WebPolicy")
+    return value
 
 
 def decide(url, resolver, policy=None, *, hop=0):
     """Check one URL; return a Decision with a pinned public address or a refusal."""
-    policy = policy or WebPolicy()
+    policy = _policy(policy)
+    if type(hop) is not int or not 0 <= hop <= policy.max_redirects:
+        raise ContractError("hop must be within the configured redirect budget")
     try:
-        scheme, host, port, literal = _parse(url, policy)
+        scheme, host, port, literal, url = _parse(url, policy)
     except ContractError as exc:
         return _refuse(str(exc), url, hop)
     if literal:
         addresses = [host]
     else:
         try:
-            addresses = list(resolver(host, port))
+            resolved = resolver(host, port)
+            if isinstance(resolved, (str, bytes, dict)):
+                return _refuse("RESOLUTION_INVALID", url, hop, host, port)
+            addresses = list(islice(resolved, MAX_ADDRESSES + 1))
         except Exception:  # noqa: BLE001 - any resolver failure is a refusal, never a pass
             return _refuse("RESOLUTION_FAILED", url, hop, host, port)
         if not addresses:
@@ -168,27 +242,33 @@ def decide(url, resolver, policy=None, *, hop=0):
             return _refuse("RESOLUTION_TOO_LARGE", url, hop, host, port)
     for address in addresses:
         try:
-            reason = classify(address)
+            reason = classify(address, policy.blocked_networks)
         except (ValueError, TypeError):
             return _refuse("RESOLUTION_INVALID", url, hop, host, port)
         if reason is not None:
             # One non-public answer refuses the name: a mixed answer is how rebinding starts.
             return _refuse("DESTINATION_" + reason, url, hop, host, port)
-    return Decision(True, "ALLOWED", url, host, port, str(ipaddress.ip_address(addresses[0])), hop)
+    return Decision(True, "ALLOWED", url, host, port, str(ipaddress.ip_address(addresses[0])), hop, policy.policy_id)
 
 
 def follow(previous, location, resolver, policy=None):
     """Check a redirect target relative to an allowed previous Decision."""
-    policy = policy or WebPolicy()
+    policy = _policy(policy)
     if not isinstance(previous, Decision) or not previous.allowed:
         raise ContractError("a redirect can only follow an allowed decision")
+    if (previous.policy_id != policy.policy_id or type(previous.hop) is not int
+            or not 0 <= previous.hop <= policy.max_redirects):
+        raise ContractError("redirect must retain its original policy and valid hop")
     hop = previous.hop + 1
     if hop > policy.max_redirects:
-        return _refuse("TOO_MANY_REDIRECTS", str(location), hop)
-    if not isinstance(location, str) or not location or len(location) > MAX_URL:
-        return _refuse("BAD_URL", str(location)[:MAX_URL], hop)
-    target = urllib.parse.urljoin(previous.url, location)
-    if (urllib.parse.urlsplit(previous.url).scheme.lower() == "https"
-            and urllib.parse.urlsplit(target).scheme.lower() != "https"):
+        return _refuse("TOO_MANY_REDIRECTS", location, hop)
+    try:
+        _url_text(location)  # Before urljoin can silently remove controls.
+        _parse(previous.url, policy)
+        target = urllib.parse.urljoin(previous.url, location)
+        scheme = urllib.parse.urlsplit(target).scheme.lower()
+    except (ValueError, UnicodeError):
+        return _refuse("BAD_URL", location, hop)
+    if urllib.parse.urlsplit(previous.url).scheme.lower() == "https" and scheme != "https":
         return _refuse("DOWNGRADE_REFUSED", target, hop)
     return decide(target, resolver, policy, hop=hop)

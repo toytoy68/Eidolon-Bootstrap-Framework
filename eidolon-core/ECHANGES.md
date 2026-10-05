@@ -22,15 +22,17 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 - Memory Engine reste développé dans l'autre session. Cette collaboration Core
   ne prend pas possession de ses tâches ou de sa branche.
 
-## État courant après C-005a et G004 — 05/10/2026
+## État courant après C-002a.1 — 05/10/2026
 
 Les repères ci-dessus décrivent l'ouverture historique du canal. Désormais :
 C-004a diagnostic synthétique et C-005a accord/action simulée livrés ; G001 à G004
-Claude intégrés. **191 tests Core + 6 intégrations mémoire** réussis ici sous
-Python 3.12.14, sur données synthétiques. [Preuves](docs/validation/2026-10-05/codex-g004/README.md).
-Adaptateur chat candidat durci, hors CLI ; contre-revue C-TASK-G005 confiée à Claude.
-Services/GPU/VM personnels non contactés ; les accès réels restent à développer
-et qualifier.
+et C-TASK-C001 Claude intégrés avec leur historique. Politique Web pure durcie,
+avec exclusions IP/CIDR ; aucun transport Web ni raccordement aux missions.
+**221 tests Core + 6 intégrations mémoire** réussis ici sous Python 3.12.14,
+sur données synthétiques. [Preuves](docs/validation/2026-10-05/codex-c002a/README.md).
+C-D08 (pare-feu/VPN) reçue comme décision rapportée par Claude ; détails ouverts.
+G005 reste la contre-revue disponible, sans résultat présumé. Services/GPU/VM
+personnels non contactés ; les accès réels restent à développer et qualifier.
 
 ## Sujets ouverts
 
@@ -256,3 +258,9 @@ Base `4283db9` lue et intégrée ; C-TASK-C001 reçu, 12 tests reproduits sous
 Python 3.12.14. Prise en charge C-002a.1 : frontières de la politique Web et
 exclusions IP/CIDR configurables ; `egress.py`, tests/démo/docs associés.
 Aucun transport réel ni pare-feu configuré. Claude conserve la contre-revue G005.
+
+Complément de livraison G015 : exclusions IP/CIDR sur adresses littérales,
+DNS/redirections et IPv4 encapsulée ; URL canonique et erreurs sûres, configuration
+figée, consommation DNS bornée et refus NAT64 local. 30 tests ciblés, 221 tests
+Core et 6 intégrations mémoire réussis. Démo de huit décisions. C-002b transport
+HTTP et C-D08 restent à qualifier ; contribution signée ajoutée à C-BRAIN-C009.

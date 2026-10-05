@@ -1,0 +1,17 @@
+test_non_public_addresses_are_refused (tests.test_egress.ClassifyTests.test_non_public_addresses_are_refused) ... ok
+test_public_unicast_passes (tests.test_egress.ClassifyTests.test_public_unicast_passes) ... ok
+test_http_and_ports_only_by_explicit_policy (tests.test_egress.DecisionTests.test_http_and_ports_only_by_explicit_policy) ... ok
+test_ip_literals_are_classified_without_dns (tests.test_egress.DecisionTests.test_ip_literals_are_classified_without_dns) ... ok
+test_public_https_url_is_allowed_with_a_pinned_address (tests.test_egress.DecisionTests.test_public_https_url_is_allowed_with_a_pinned_address) ... ok
+test_rebinding_needs_no_second_lookup (tests.test_egress.DecisionTests.test_rebinding_needs_no_second_lookup) ... ok
+test_resolution_rules (tests.test_egress.DecisionTests.test_resolution_rules) ... ok
+test_url_shape_refusals (tests.test_egress.DecisionTests.test_url_shape_refusals) ... ok
+test_module_opens_no_socket (tests.test_egress.NoNetworkTests.test_module_opens_no_socket) ... ok
+test_cannot_follow_a_refusal (tests.test_egress.RedirectTests.test_cannot_follow_a_refusal) ... ok
+test_each_hop_is_checked_again (tests.test_egress.RedirectTests.test_each_hop_is_checked_again) ... ok
+test_redirect_count_is_bounded (tests.test_egress.RedirectTests.test_redirect_count_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.012s
+
+OK
