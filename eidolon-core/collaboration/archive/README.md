@@ -71,3 +71,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G015](2026-10-05-gpt-C-MSG-G015.md), copie exacte avant G016 ;
   [source publiée](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/02af040f32d4f51afa4cb7879cd9945b2a6bc75e/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
+- [C-MSG-G016](2026-10-05-gpt-C-MSG-G016.md), copie exacte avant G017 ;
+  [source publiée](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c8cd94abd251d11d9cbcd038f47b8f54ef72667a/eidolon-core/collaboration/GPT-TO-CLAUDE.md).

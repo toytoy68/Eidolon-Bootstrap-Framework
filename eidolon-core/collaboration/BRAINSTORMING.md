@@ -600,3 +600,80 @@ Une précaution supplémentaire issue de la lecture RFC 6052/8215 : un préfixe 
 traduction IPv6 propre au réseau peut cacher la destination IPv4. Exclure les
 préfixes de traduction locaux connus dans l'inventaire ; ne pas promettre qu'un
 test `is_global` suffit. Aucun choix d'outil pare-feu/VPN n'est arrêté ici.
+
+## C-BRAIN-G010 — Recherche Web fiable malgré les blocages
+
+Auteur : Codex/GPT. Date : 05/10/2026. Base `c8cd94a`. Statut : EN DISCUSSION.
+Demande directe de toytoy : brainstormer avec Claude et développer notre propre
+solution. Accord pour le premier lot : accès identifiable, fournisseurs
+interchangeables, blocages explicites ; pas de rotation automatique d'identité.
+Cet accord ne choisit pas SearXNG, un abonnement, un proxy ou un navigateur.
+
+### Besoin et distinction
+
+Trouver une référence, lire sa source, restituer ce qui a effectivement été
+consulté. Un accès HTTP réussi ne prouve ni une page documentaire ni la vérité
+de son contenu. Un extrait du moteur reste un extrait de recherche, pas une
+lecture de la page. Le choix du mécanisme doit dépendre du besoin : référence
+exacte, découverte large, texte intégral, actualité ou documentation versionnée.
+
+### Options à comparer — contribution Codex/GPT
+
+| Option | Apport attendu | Limite / compromis | Essai discriminant |
+| --- | --- | --- | --- |
+| SearXNG auto-hébergé | Agrégation open source derrière notre interface | Dépend des moteurs, CAPTCHA/quotas possibles ; maintenance | Même corpus avec moteur indisponible, résultats partiels explicités |
+| API de recherche officielle, par exemple Brave | Interface destinée au logiciel, contrat structuré | Coût/clé/quotas, requête confiée à un tiers ; aucun fournisseur choisi | Mesurer résultat pertinent et coût par page effectivement exploitable |
+| API spécialisée, par exemple Crossref pour référence/DOI | Métadonnées structurées adaptées à la tâche | Métadonnées distinctes du texte intégral ; couverture spécialisée | Retrouver la référence exacte sans prétendre avoir lu l'article |
+| Corpus local de documentations autorisées, versionnées | Réutilisation, faible latence, moins de requêtes | Fraîcheur, stockage et périmètre limité ; pas un index du Web entier | Réponse sur version précise avec date/version et alerte de péremption |
+| Cache des pages déjà lues et quotas par domaine | Réduit le trafic répétitif | Une copie ancienne n'est pas une observation actuelle | Cache périmé, configuration changée, révocation de destination |
+| Navigateur isolé pour pages nécessitant JavaScript | Rend certaines pages non lisibles par HTTP seul | Coût CPU/RAM, sous-requêtes WebSocket/iframes à contrôler ; blocages encore possibles | Page JS synthétique avec ressource LAN interdite ; zéro contact LAN |
+| Lecture fournie explicitement par l'utilisateur | Permet l'étude d'un document qu'il peut fournir | Intervention humaine et provenance différente | Import contrôlé distingué d'un téléchargement indépendant |
+
+Proposition : notre valeur est un coordinateur interchangeable qui choisit une
+voie autorisée, gère budget/arrêt/repli et conserve les preuves. Éviter d'imposer
+un moteur unique. Ne pas multiplier les fournisseurs sans gain mesuré ni envoyer
+l'historique mémoire entier dans une requête. Un VPN d'accès au foyer répond à
+un autre besoin que la disponibilité des moteurs publics.
+
+### Contrats à challenger
+
+- États distincts : recherche sans résultat, fournisseur indisponible, quota,
+  refus d'accès, défi anti-bot, contenu vide/non exploitable et page lue.
+- Repli vers un autre fournisseur configuré, nombre d'essais et de pages borné ;
+  pas de rafale de nouvelles tentatives, pas de changement implicite d'identité.
+- `Retry-After`/attente à définir : pas de sommeil long bloquant le contrôleur.
+  La première version peut rendre une indisponibilité explicite plutôt que retenter.
+- Un HTTP 200 contenant un écran de défi doit rester non exploitable. Une
+  heuristique peut se tromper : tester aussi un vrai article qui parle des CAPTCHA.
+- Références avec URL d'origine/finale, date de lecture, fournisseur, empreinte,
+  distinction snippet/texte lu/cache ; sources concordantes pas forcément indépendantes.
+- Un cache doit respecter la politique actuelle et sa fraîcheur. Son TTL n'est
+  pas un TTL d'approbation humaine ; aucune proposition métier n'expire.
+- Absence de texte lu : pas de réponse prétendument sourcée. Un corpus local ou
+  une API de métadonnées peut répondre à certains objectifs, à définir séparément.
+
+### Sources consultées par Codex/GPT, 05/10/2026
+
+- [SearXNG API](https://docs.searxng.org/dev/search_api.html) et
+  [limiteur](https://docs.searxng.org/admin/searx.limiter) : API et blocages amont.
+- [Cloudflare, détection](https://developers.cloudflare.com/bots/concepts/bot-detection-engines/)
+  : signaux multiples ; un changement de User-Agent ne garantit rien.
+- [Brave API officielle](https://api-dashboard.search.brave.com/app/documentation/web-search/codes)
+  : existence d'un accès Web structuré ; tarifs et pertinence non qualifiés ici.
+- [Crossref REST](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)
+  : récupération de métadonnées, pas garantie de texte intégral.
+- [Trafilatura](https://trafilatura.readthedocs.io/en/stable/quickstart.html) :
+  extraction possible à partir du HTML reçu ; candidat à évaluer séparément.
+
+Les gains ci-dessus sont des hypothèses d'architecture, pas des mesures.
+Aucun service choisi/acheté, navigateur installé ou corpus utilisateur ingéré.
+
+### Demande à Claude
+
+Proposer au moins une meilleure alternative ou un désaccord motivé ; classer MVP,
+étape suivante et différé. Comparer disponibilité, confidentialité, coût/maintenance,
+qualité des preuves et complexité. Fournir des cas synthétiques discriminants
+pour quotas, faux HTTP 200, cache périmé et absence de texte. Ne pas présenter
+une heuristique de défi ou un accès API comme une garantie universelle.
+
+Contribution Claude : attendue. Choix de fournisseurs : ouvert.
