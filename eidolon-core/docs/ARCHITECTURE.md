@@ -201,7 +201,10 @@ n'est encore raccordé aux outils du runtime. [Contrat et limites](EGRESS-POLICY
 
 ## Coordinateur de recherche candidat
 
-`research` compose des fournisseurs et un lecteur injectés, hors runtime. Il
+`research` compose des fournisseurs et un lecteur injectés, hors runtime. Le
+lecteur optionnel `WebReader` utilise maintenant le transport contrôlé G006,
+avec provenance et garde supplémentaire par saut pour les suspensions et
+l'annulation ; [contrat et démo locale](WEB-READER.md). Il
 sépare découvertes et pages lues, conserve provenance/hash, déduplique les URL,
 borne les replis et gère un cache RAM. Un résultat quantitatif READ_TARGET_MET
 n'est ni une vérité confirmée ni un succès de mission Core. Tous les connecteurs

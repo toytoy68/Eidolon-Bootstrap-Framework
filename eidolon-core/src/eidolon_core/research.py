@@ -21,10 +21,12 @@ import hashlib
 import re
 import time
 
-from .contracts import ContractError, digest, snapshot
+from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
 
-FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT"}
+FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
+            "POLICY_REFUSED", "TOO_LARGE", "TRUNCATED", "UNSUPPORTED_CONTENT", "INVALID_RESPONSE", "TLS_ERROR",
+            "RETRY_WAIT", "CANCELLED"}
 
 
 class AccessFailure(Exception):
@@ -52,6 +54,9 @@ class Page:
     policy_id: str
     complete: bool = True
     retry_after: int | None = None
+    retry_review_required: bool = False
+    deadline_exceeded: bool = False
+    retrieval: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -110,6 +115,7 @@ def classify_page(page, limits):
     """Return a content state and optional readable text; HTTP 200 is insufficient."""
     if (not isinstance(page, Page) or type(page.status) is not int or not 100 <= page.status <= 599
             or type(page.complete) is not bool or type(page.body) is not bytes
+            or type(page.retry_review_required) is not bool or type(page.deadline_exceeded) is not bool
             or type(page.media_type) is not str or len(page.media_type) > 200
             or (page.retry_after is not None and (type(page.retry_after) is not int
                 or not 0 <= page.retry_after <= 86400))):
@@ -169,21 +175,22 @@ class ResearchCoordinator:
         self.clock, self._cache, self._cooldowns = clock, OrderedDict(), {}
         self._pause_until = 0
 
-    def _rate_limit(self, domain, retry_after):
-        until = self.clock() + (retry_after if retry_after is not None else 60)
+    def _rate_limit(self, domain, retry_after, review=False, state="RATE_LIMITED"):
+        until = float("inf") if review else self.clock() + (retry_after if retry_after is not None else 60)
         if len(self._cooldowns) >= 64 and domain not in self._cooldowns:
             # Bound memory without forgetting an active refusal: pause all reads.
-            self._pause_until = max(until, *self._cooldowns.values())
+            self._pause_until = max(self._pause_until, until, *(v[0] for v in self._cooldowns.values()))
             self._cooldowns.clear()
         else:
-            self._cooldowns[domain] = until
+            self._cooldowns[domain] = (until, state, review)
 
     def run(self, query, *, required_pages=1, cancelled=lambda: False):
         _text(query, 1000)
         if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
             raise ContractError("required_pages must fit the read budget")
         start = self.clock()
-        self._cooldowns = {k: v for k, v in self._cooldowns.items() if v > start}
+        self._cooldowns = {k: v for k, v in self._cooldowns.items() if v[0] > start}
+        late_receipt = False
         report = {"version": 1, "query_sha256": digest(query), "policy_id": self.policy.policy_id,
                   "required_pages": required_pages, "readable_pages": 0, "read_calls": 0,
                   "providers": [], "sources": [], "status": None,
@@ -193,12 +200,20 @@ class ResearchCoordinator:
         def stop():
             if cancelled():
                 return "CANCELLED"
-            if self.clock() - start >= self.limits.seconds:
+            if late_receipt or self.clock() - start >= self.limits.seconds:
                 return "DEADLINE"
             return None
 
         def enough():
             return report["readable_pages"] >= required_pages
+
+        def before_hop(decision):
+            interrupted = stop()
+            if interrupted:
+                raise AccessFailure("CANCELLED" if interrupted == "CANCELLED" else "TIMEOUT")
+            until = self._cooldowns.get((decision.host, decision.port), (0,))[0]
+            if max(self._pause_until, until) > self.clock():
+                raise AccessFailure("RETRY_WAIT")
 
         for provider in self.providers[:self.limits.providers]:
             if stop() or enough():
@@ -254,34 +269,62 @@ class ResearchCoordinator:
                 else:
                     self._cache.pop(key, None)
                     domain = (decision.host, decision.port)
-                    if max(self._pause_until, self._cooldowns.get(domain, 0)) > self.clock():
-                        source["state"] = "RATE_LIMITED"
+                    until, waiting_state, review = self._cooldowns.get(domain, (0, "RETRY_WAIT", False))
+                    if max(self._pause_until, until) > self.clock():
+                        source.update(state=waiting_state,
+                                      retry_review_required=review or self._pause_until == float("inf"))
                         continue
                     if report["read_calls"] >= self.limits.reads:
                         source["state"] = "READ_BUDGET"
                         continue
                     report["read_calls"] += 1
                     try:
-                        page = self.reader.read(url, self.policy)
+                        guarded = getattr(self.reader, "read_guarded", None)
+                        page = (guarded(url, self.policy, before_hop) if callable(guarded)
+                                else self.reader.read(url, self.policy))
                         state, content = classify_page(page, self.limits)
                         if page.policy_id != self.policy.policy_id:
                             raise ContractError("reader policy mismatch")
+                        retrieval = snapshot(page.retrieval) if page.retrieval is not None else None
+                        if retrieval is not None:
+                            if (type(retrieval) is not dict or len(encode(retrieval).encode()) > 32_000
+                                    or retrieval.get("final_url") != page.url
+                                    or retrieval.get("policy_id") != page.policy_id
+                                    or type(retrieval.get("status")) is not int or retrieval.get("status") != page.status
+                                    or type(retrieval.get("observed_at")) is not str
+                                    or datetime.fromisoformat(retrieval["observed_at"]).tzinfo is None):
+                                raise ContractError("retrieval envelope mismatch")
+                            if state == "READ" and (type(retrieval.get("size")) is not int
+                                    or retrieval.get("sha256") != hashlib.sha256(page.body).hexdigest()
+                                    or retrieval.get("size") != len(page.body)):
+                                raise ContractError("retrieval body mismatch")
                         final = decide(page.url, self.resolver, self.policy)
                         if not final.allowed:
                             source.update(state="POLICY_REFUSED", reason=final.code)
                             continue
                         source.update(state=state, final_url=final.url,
-                                      http_status=page.status, retry_after=page.retry_after)
-                        if state == "RATE_LIMITED":
-                            self._rate_limit(domain, page.retry_after)
+                                      http_status=page.status, retry_after=page.retry_after,
+                                      retry_review_required=page.retry_review_required,
+                                      deadline_exceeded=page.deadline_exceeded)
+                        late_receipt = late_receipt or page.deadline_exceeded
+                        if retrieval is not None:
+                            source["retrieval"] = retrieval
+                        if state == "RATE_LIMITED" or page.retry_after is not None or page.retry_review_required:
+                            wait_state = "RATE_LIMITED" if state == "RATE_LIMITED" else "RETRY_WAIT"
+                            self._rate_limit(domain, page.retry_after, page.retry_review_required, wait_state)
+                            # A quota returned after redirect applies to the final domain too.
+                            self._rate_limit((final.host, final.port), page.retry_after, page.retry_review_required, wait_state)
                         if state == "READ":
                             evidence = {"state": "READ", "final_url": final.url, "text": content,
-                                        "observed_at": datetime.now(timezone.utc).isoformat(),
+                                        "observed_at": retrieval["observed_at"] if retrieval else datetime.now(timezone.utc).isoformat(),
                                         "body_sha256": hashlib.sha256(page.body).hexdigest(),
                                         "body_bytes": len(page.body), "media_type": page.media_type,
                                         "reader_id": self.reader.reader_id, "policy_id": page.policy_id}
+                            if retrieval is not None:
+                                evidence["retrieval"] = retrieval
                             source.update(evidence)
-                            self._cache[key] = (self.clock() + self.limits.cache_seconds, snapshot(evidence))
+                            if not page.deadline_exceeded:
+                                self._cache[key] = (self.clock() + self.limits.cache_seconds, snapshot(evidence))
                             while len(self._cache) > self.limits.cache_entries:
                                 self._cache.popitem(last=False)
                     except AccessFailure as exc:

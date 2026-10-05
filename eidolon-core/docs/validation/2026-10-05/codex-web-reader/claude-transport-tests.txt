@@ -1,0 +1,20 @@
+test_global_deadline_is_checked_between_hops (tests.test_web_transport.FetchTests.test_global_deadline_is_checked_between_hops) ... ok
+test_home_network_exclusion_applies_through_names_and_redirects (tests.test_web_transport.FetchTests.test_home_network_exclusion_applies_through_names_and_redirects) ... ok
+test_inputs_and_configuration (tests.test_web_transport.FetchTests.test_inputs_and_configuration) ... ok
+test_named_failures_never_echo_bodies (tests.test_web_transport.FetchTests.test_named_failures_never_echo_bodies) ... ok
+test_redirect_loop_and_budget (tests.test_web_transport.FetchTests.test_redirect_loop_and_budget) ... ok
+test_redirects_are_rechecked_and_followed_by_code (tests.test_web_transport.FetchTests.test_redirects_are_rechecked_and_followed_by_code) ... ok
+test_refused_destination_is_never_contacted (tests.test_web_transport.FetchTests.test_refused_destination_is_never_contacted) ... ok
+test_request_is_fixed_get_with_name_host_and_no_extras (tests.test_web_transport.FetchTests.test_request_is_fixed_get_with_name_host_and_no_extras) ... ok
+test_success_records_evidence_without_second_resolution (tests.test_web_transport.FetchTests.test_success_records_evidence_without_second_resolution) ... ok
+test_connection_refused (tests.test_web_transport.LoopbackHTTPTests.test_connection_refused) ... ok
+test_real_exchange_keeps_name_in_host_and_ignores_proxy_variables (tests.test_web_transport.LoopbackHTTPTests.test_real_exchange_keeps_name_in_host_and_ignores_proxy_variables) ... ok
+test_real_failures (tests.test_web_transport.LoopbackHTTPTests.test_real_failures) ... ok
+test_sni_and_certificate_use_the_checked_name (tests.test_web_transport.LoopbackTLSTests.test_sni_and_certificate_use_the_checked_name) ... ok
+test_wrong_name_and_untrusted_certificates_are_refused (tests.test_web_transport.LoopbackTLSTests.test_wrong_name_and_untrusted_certificates_are_refused) ... ok
+test_simulated_fetch_opens_no_socket (tests.test_web_transport.NoNetworkTests.test_simulated_fetch_opens_no_socket) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 4.406s
+
+OK

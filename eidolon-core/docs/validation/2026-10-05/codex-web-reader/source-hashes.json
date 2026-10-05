@@ -1,0 +1,5 @@
+{
+  "src/eidolon_core/web_transport.py": "dae17b7204d8b13f526231082efc56b9b68a6c722132070fbab5ae10b1fb7d82",
+  "src/eidolon_core/web_reader.py": "9a55452e381dbece6e56ff34041cc509cee29899105810f179e3e31c4176bd1b",
+  "src/eidolon_core/research.py": "4eecc52920a62092bae5266fe0e9ed392ff0b7d026f54a050e3ce9fb1041bece"
+}

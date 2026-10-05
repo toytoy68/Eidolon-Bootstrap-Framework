@@ -151,7 +151,7 @@ class FetchTests(unittest.TestCase):
             "HTTP_STATUS": RawResponse(500, (("Content-Type", "text/plain"),), b"SECRET-BODY", True),
             "HTTP_STATUS ": RawResponse(302, (), b"", True),
             "ENCODED_CONTENT": ok(gzip.compress(b"x" * 1000), extra=(("Content-Encoding", "gzip"),)),
-            "ENCODED_CONTENT ": ok(extra=(("Transfer-Encoding", "gzip, chunked"),)),
+            "ENCODED_CONTENT ": RawResponse(200, (("Transfer-Encoding", "gzip, chunked"),), b"hello", True),
             "TRUNCATED": RawResponse(200, (("Content-Length", "100"),), b"short", False),
             "AMBIGUOUS_HEADER": ok(extra=(("Content-Type", "text/html"),)),
             "HEADERS_TOO_LARGE": ok(extra=(("X-Big", "v" * 40_000),)),

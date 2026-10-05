@@ -1,0 +1,170 @@
+test_ambiguous_content_length_and_transfer_are_refused (__main__.TransportBoundaryTests.test_ambiguous_content_length_and_transfer_are_refused) ...
+  test_ambiguous_content_length_and_transfer_are_refused (__main__.TransportBoundaryTests.test_ambiguous_content_length_and_transfer_are_refused) (extra=(('Content-Length', '5'),)) ... FAIL
+  test_ambiguous_content_length_and_transfer_are_refused (__main__.TransportBoundaryTests.test_ambiguous_content_length_and_transfer_are_refused) (extra=(('Transfer-Encoding', 'chunked'),)) ... FAIL
+test_announced_length_and_actual_body_must_agree (__main__.TransportBoundaryTests.test_announced_length_and_actual_body_must_agree) ... FAIL
+test_http_refusal_keeps_status_and_retry_without_body (__main__.TransportBoundaryTests.test_http_refusal_keeps_status_and_retry_without_body) ... ERROR
+test_late_complete_response_is_marked_and_retained (__main__.TransportBoundaryTests.test_late_complete_response_is_marked_and_retained) ... ERROR
+test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) ...
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200.0, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=True)) ... FAIL
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=True, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=True)) ... FAIL
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=1)) ... FAIL
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body='hello', complete=True)) ... ERROR
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=None, body=b'hello', complete=True)) ... ERROR
+  test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('X', None),), body=b'hello', complete=True)) ... ERROR
+test_tls_context_cannot_be_weakened_after_construction (__main__.TransportBoundaryTests.test_tls_context_cannot_be_weakened_after_construction) ... FAIL
+
+======================================================================
+ERROR: test_http_refusal_keeps_status_and_retry_without_body (__main__.TransportBoundaryTests.test_http_refusal_keeps_status_and_retry_without_body)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 64, in test_http_refusal_keeps_status_and_retry_without_body
+    observation = raised.exception.observation
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebTransportError' object has no attribute 'observation'
+
+======================================================================
+ERROR: test_late_complete_response_is_marked_and_retained (__main__.TransportBoundaryTests.test_late_complete_response_is_marked_and_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 59, in test_late_complete_response_is_marked_and_retained
+    self.assertTrue(result.deadline_exceeded)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FetchResult' object has no attribute 'deadline_exceeded'
+
+======================================================================
+ERROR: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body='hello', complete=True))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 38, in test_raw_envelope_is_checked_before_its_use
+    self.get(response)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 22, in get
+    return fetch(URL, policy=POLICY, resolver=DNS,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 260, in fetch
+    sha256=hashlib.sha256(response.body).hexdigest(), hops=tuple(hops),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Strings must be encoded before hashing
+
+======================================================================
+ERROR: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=None, body=b'hello', complete=True))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 38, in test_raw_envelope_is_checked_before_its_use
+    self.get(response)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 22, in get
+    return fetch(URL, policy=POLICY, resolver=DNS,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 232, in fetch
+    if sum(len(k) + len(v) + 4 for k, v in response.headers) > limits.max_header_bytes:
+                                           ^^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not iterable
+
+======================================================================
+ERROR: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('X', None),), body=b'hello', complete=True))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 38, in test_raw_envelope_is_checked_before_its_use
+    self.get(response)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 22, in get
+    return fetch(URL, policy=POLICY, resolver=DNS,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 232, in fetch
+    if sum(len(k) + len(v) + 4 for k, v in response.headers) > limits.max_header_bytes:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 232, in <genexpr>
+    if sum(len(k) + len(v) + 4 for k, v in response.headers) > limits.max_header_bytes:
+                    ^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+======================================================================
+FAIL: test_ambiguous_content_length_and_transfer_are_refused (__main__.TransportBoundaryTests.test_ambiguous_content_length_and_transfer_are_refused) (extra=(('Content-Length', '5'),))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 28, in test_ambiguous_content_length_and_transfer_are_refused
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_ambiguous_content_length_and_transfer_are_refused (__main__.TransportBoundaryTests.test_ambiguous_content_length_and_transfer_are_refused) (extra=(('Transfer-Encoding', 'chunked'),))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 28, in test_ambiguous_content_length_and_transfer_are_refused
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_announced_length_and_actual_body_must_agree (__main__.TransportBoundaryTests.test_announced_length_and_actual_body_must_agree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 42, in test_announced_length_and_actual_body_must_agree
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200.0, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=True))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 37, in test_raw_envelope_is_checked_before_its_use
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=True, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=True))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 39, in test_raw_envelope_is_checked_before_its_use
+    self.assertEqual(raised.exception.code, 'BAD_HTTP_RESPONSE')
+AssertionError: 'HTTP_STATUS' != 'BAD_HTTP_RESPONSE'
+- HTTP_STATUS
++ BAD_HTTP_RESPONSE
+
+
+======================================================================
+FAIL: test_raw_envelope_is_checked_before_its_use (__main__.TransportBoundaryTests.test_raw_envelope_is_checked_before_its_use) (response=RawResponse(status=200, headers=(('Content-Type', 'text/plain'), ('Content-Length', '5')), body=b'hello', complete=1))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 37, in test_raw_envelope_is_checked_before_its_use
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_tls_context_cannot_be_weakened_after_construction (__main__.TransportBoundaryTests.test_tls_context_cannot_be_weakened_after_construction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport_boundaries.py", line 53, in test_tls_context_cannot_be_weakened_after_construction
+    fetch(URL, policy=POLICY, resolver=DNS, connector=connector)
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 227, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 137, in exchange
+    conn.endheaders()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1141, in _send_output
+    self.send(msg)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1085, in send
+    self.connect()
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 113, in connect
+    super().connect()
+  File "/workspace/scratch/aeef887fc8c0/claude-web-review/eidolon-core/src/eidolon_core/web_transport.py", line 104, in connect
+    self.sock = socket.create_connection((self._pinned_address, self.port), self.timeout)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+AssertionError: socket must not open
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.013s
+
+FAILED (failures=7, errors=5)
