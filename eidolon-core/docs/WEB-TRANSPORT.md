@@ -17,6 +17,11 @@ tardif ajoutés ensuite. Huit tests de frontières supplémentaires et raccordem
 au coordinateur : [contrat actuel du lecteur](WEB-READER.md). Les sections
 ci-dessous décrivent la livraison initiale ; ce complément précise ses évolutions.
 
+**Révision G008 Codex/GPT** : D1/D2 et C5 corrigés, protocole connecteur
+`remaining_seconds` (durée relative), observations 429/503 ambiguës conservées
+pour suspension. Voir le contrat actuel ci-dessus et ses limites explicites
+TLS/cache/URL ; les anciens scripts de sondes restent des archives.
+
 ## Ce que fait `fetch()`
 
 ```python
@@ -68,7 +73,7 @@ d'en-tête reçue (testé avec un marqueur dans un corps 500).
 | --- | --- | --- |
 | `connect_seconds` | Établissement TCP et poignée de main TLS (délai du socket) | La résolution DNS |
 | `read_seconds` | **Chaque** lecture sur le socket | La durée totale du corps : un serveur qui envoie un octet toutes les 9 s ne la dépasse jamais |
-| `total_seconds` | Vérifié avant chaque saut et entre deux blocs du corps | Un appel bloquant en cours : le dépassement réel peut atteindre `total_seconds` + `read_seconds` (ou + `connect_seconds`) |
+| `total_seconds` | Vérifié avant chaque saut et entre deux blocs du corps | Un appel bloquant en cours : des recv internes au goutte-à-goutte peuvent dépasser largement la somme `total_seconds` + `read_seconds` (correction L1/G008) |
 | Résolveur | Rien : `resolver()` est appelé tel quel | Un `getaddrinfo` système peut bloquer sans limite propre |
 
 Il n'y a donc **pas de budget global garanti**. Pour une garantie dure, le

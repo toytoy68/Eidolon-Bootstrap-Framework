@@ -1,0 +1,230 @@
+======================================================================
+ERROR: test_real_429_and_503_keep_status_when_header_validation_fails (tests.test_web_review_regressions.WebReviewRegressionTests.test_real_429_and_503_keep_status_when_header_validation_fails) (status=429)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 47, in read_guarded
+    result = fetch(url, policy=policy, resolver=self.resolver, connector=self.connector,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 291, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport.py", line 201, in exchange
+    return super().exchange(**{**kwargs, "address": "127.0.0.1"})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 150, in exchange
+    declared = _check_headers(response.status, received, limits)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 223, in _check_headers
+    values = {name: _header(headers, name) for name in
+                    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 205, in _header
+    raise WebTransportError("AMBIGUOUS_HEADER", name)
+eidolon_core.web_transport.WebTransportError: AMBIGUOUS_HEADER: content-length
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 57, in test_real_429_and_503_keep_status_when_header_validation_fails
+    page = WebReader(DNS, LoopbackConnector()).read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 43, in read
+    return self.read_guarded(url, policy, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 61, in read_guarded
+    raise AccessFailure(code) from exc
+eidolon_core.research.AccessFailure: INVALID_RESPONSE
+
+======================================================================
+ERROR: test_real_429_and_503_keep_status_when_header_validation_fails (tests.test_web_review_regressions.WebReviewRegressionTests.test_real_429_and_503_keep_status_when_header_validation_fails) (status=503)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 47, in read_guarded
+    result = fetch(url, policy=policy, resolver=self.resolver, connector=self.connector,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 291, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport.py", line 201, in exchange
+    return super().exchange(**{**kwargs, "address": "127.0.0.1"})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 150, in exchange
+    declared = _check_headers(response.status, received, limits)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 223, in _check_headers
+    values = {name: _header(headers, name) for name in
+                    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 205, in _header
+    raise WebTransportError("AMBIGUOUS_HEADER", name)
+eidolon_core.web_transport.WebTransportError: AMBIGUOUS_HEADER: content-length
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 57, in test_real_429_and_503_keep_status_when_header_validation_fails
+    page = WebReader(DNS, LoopbackConnector()).read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 43, in read
+    return self.read_guarded(url, policy, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_reader.py", line 61, in read_guarded
+    raise AccessFailure(code) from exc
+eidolon_core.research.AccessFailure: INVALID_RESPONSE
+
+======================================================================
+ERROR: test_real_connector_accepts_offset_reader_clocks (tests.test_web_review_regressions.WebReviewRegressionTests.test_real_connector_accepts_offset_reader_clocks) (offset=0.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 84, in test_real_connector_accepts_offset_reader_clocks
+    result = fetch(f'http://docs.example.com:{port}/', resolver=DNS,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 291, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_transport.py", line 201, in exchange
+    return super().exchange(**{**kwargs, "address": "127.0.0.1"})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 156, in exchange
+    raise WebTransportError("DEADLINE_EXCEEDED", "during body")
+eidolon_core.web_transport.WebTransportError: DEADLINE_EXCEEDED: during body
+
+======================================================================
+ERROR: test_real_connector_checks_own_elapsed_time_even_with_frozen_reader_clock (tests.test_web_review_regressions.WebReviewRegressionTests.test_real_connector_checks_own_elapsed_time_even_with_frozen_reader_clock) (offset=1000000000.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 102, in test_real_connector_checks_own_elapsed_time_even_with_frozen_reader_clock
+    fetch('http://docs.example.com/', resolver=DNS,
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 291, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 155, in exchange
+    if time.monotonic() > deadline:
+       ^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1200, in _execute_mock_call
+    result = next(effect)
+             ^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_remaining_budget_decreases_across_redirects (tests.test_web_review_regressions.WebReviewRegressionTests.test_remaining_budget_decreases_across_redirects)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 117, in test_remaining_budget_decreases_across_redirects
+    fetch(URL, policy=POLICY, resolver=DNS, connector=connector,
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/web_transport.py", line 291, in fetch
+    response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 113, in recording
+    budgets.append(kwargs['remaining_seconds'])
+                   ~~~~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'remaining_seconds'
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=429, headers=(('Retry-After', '600'), ('Retry-After', '600')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=429, headers=(('Retry-After', '600'), ('Content-Type', 'text/plain'), ('Content-Type', 'text/plain')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=429, headers=(('Retry-After', '600'), ('Content-Length', '0'), ('Transfer-Encoding', 'chunked')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=429, headers=(('Retry-After', '600'), ('Content-Length', 'invalid-secret-value')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=429, headers=(('Retry-After', '١٢٠'),))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=503, headers=(('Retry-After', '600'), ('Retry-After', '600')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=503, headers=(('Retry-After', '600'), ('Content-Type', 'text/plain'), ('Content-Type', 'text/plain')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=503, headers=(('Retry-After', '600'), ('Content-Length', '0'), ('Transfer-Encoding', 'chunked')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=503, headers=(('Retry-After', '600'), ('Content-Length', 'invalid-secret-value')))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body (tests.test_web_review_regressions.WebReviewRegressionTests.test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body) (status=503, headers=(('Retry-After', '١٢٠'),))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 38, in test_ambiguous_429_and_503_suspend_same_domain_without_retry_or_error_body
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_guard_time_is_charged_before_connection (tests.test_web_review_regressions.WebReviewRegressionTests.test_guard_time_is_charged_before_connection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 126, in test_guard_time_is_charged_before_connection
+    with self.assertRaises(WebTransportError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WebTransportError not raised
+
+======================================================================
+FAIL: test_redirect_without_location_is_invalid_response (tests.test_web_review_regressions.WebReviewRegressionTests.test_redirect_without_location_is_invalid_response)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_web_review_regressions.py", line 136, in test_redirect_without_location_is_invalid_response
+    self.assertEqual(raised.exception.code, 'INVALID_RESPONSE')
+AssertionError: 'UNAVAILABLE' != 'INVALID_RESPONSE'
+- UNAVAILABLE
++ INVALID_RESPONSE
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.560s
+
+FAILED (failures=12, errors=5)

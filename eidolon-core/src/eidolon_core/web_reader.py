@@ -25,7 +25,7 @@ class WebReader:
     resolver: object
     connector: object = None
     limits: TransportLimits = field(default_factory=lambda: TransportLimits(max_body_bytes=128_000))
-    transport_id: str = "stdlib-http/2"
+    transport_id: str = "stdlib-http/3"
     clock: object = time.monotonic
 
     def __post_init__(self):
@@ -37,7 +37,7 @@ class WebReader:
 
     @property
     def reader_id(self):
-        return "web-reader/1/" + digest({"transport": self.transport_id, "limits": asdict(self.limits)})[:24]
+        return "web-reader/2/" + digest({"transport": self.transport_id, "limits": asdict(self.limits)})[:24]
 
     def read(self, url, policy):
         return self.read_guarded(url, policy, None)

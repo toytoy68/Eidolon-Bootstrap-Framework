@@ -1,0 +1,19 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                 Recherche HTTP locale                 #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Serveur synthétique sur 127.0.0.1 ; fournisseur et DNS simulés.
+[INFO] ACCESS_DENIED | HTTP 403
+[INFO] RATE_LIMITED | HTTP 429
+[INFO] CHALLENGE_SUSPECTED | HTTP 200
+[INFO] READ | HTTP 200
+[OK] Parcours vérifié : 5 requêtes locales, 1 texte lu, résultat PARTIAL.
+[ATTENTION] Aucune recherche Internet ni mission réelle validée.

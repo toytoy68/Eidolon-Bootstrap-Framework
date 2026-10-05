@@ -34,7 +34,15 @@ URL, statut et politique sont contrôlés avant adoption par le coordinateur.
 Le cache conserve la date et la provenance originales ; il ne crée pas une
 nouvelle observation. Le contenu reste une donnée non fiable.
 
-Un refus HTTP garde seulement une observation d'en-têtes, `kind=http_headers`.
+Un refus HTTP garde seulement une observation de statut/en-têtes,
+`kind=http_headers`, avec `headers_validated`. Pour un statut 429/503 reçu
+mais des en-têtes rejetés, l'observation garde le statut et `header_error`,
+sans aucune valeur d'en-tête : `headers_validated=false`, `retry_after=null`,
+`retry_review_required=true`. La suspension reste indéfinie dans cette session,
+y compris pour une autre URL du domaine ; aucun délai ambigu n'est adopté.
+Ce chemin exige un statut entier valide. Si le parseur HTTP échoue avant de
+rendre une réponse (par exemple plus de 100 en-têtes), aucun statut exploitable
+n'est disponible et l'erreur reste INVALID_RESPONSE.
 Le connecteur ne lit pas le corps d'erreur ; aucune empreinte de ce corps n'est
 inventée. 401/403 deviennent ACCESS_DENIED, 429 RATE_LIMITED, les autres codes
 non 200 HTTP_ERROR. Un défi HTML 200 reste CHALLENGE_SUSPECTED, jamais READ.
@@ -67,18 +75,49 @@ coordinateur perd cet état. La revue n'est pas une nouvelle approbation de miss
   différente des octets : TRUNCATED, même si un connecteur annonce complete=True.
 - Encodage/longueur contrôlés avant lecture du corps par le connecteur standard.
   Chunked sans Content-Length reste supporté ; aucune décompression ajoutée.
-- Contexte TLS revérifié avant chaque échange ; un contexte injecté affaibli
-  depuis sa construction ne peut plus ouvrir la connexion. Cela ne protège pas
-  contre du code de confiance qui muterait le contexte concurremment.
+- Contexte TLS : `CERT_REQUIRED` et `check_hostname` revérifiés avant chaque
+  échange. Ce contrôle ne couvre PAS minimum_version, ciphers/security_level,
+  verify_flags ni une mutation concurrente. L3 de G008 corrige ici une promesse
+  documentaire trop large ; le durcissement de ces autres paramètres reste ouvert.
 - Une réponse complète arrivée tard reste disponible avec deadline_exceeded.
-  Le coordinateur rend DEADLINE, garde le reçu et ne le met pas au cache.
-  Une annulation concurrente garde aussi le reçu, sans annoncer l'objectif atteint.
+  Si le délai du transport est dépassé, le coordinateur rend DEADLINE, garde
+  le reçu et ne le met pas au cache. Une annulation concurrente garde aussi le
+  reçu sans annoncer l'objectif atteint. Attention C1 de G008 : un délai du seul
+  coordinateur ou une annulation peut encore laisser ce reçu dans le cache,
+  avec sa date originale ; l'harmonisation de cette règle reste ouverte.
 
 Le budget temporel reste **coopératif** : DNS et appels en cours ne sont pas
-interrompus. La limite d'en-têtes configurée est vérifiée après le parseur
+interrompus. Un pair envoyant au goutte-à-goutte peut dépasser largement la
+somme total_seconds + read_seconds : le timeout socket est renouvelé au fil
+des recv internes. La limite d'en-têtes configurée est vérifiée après le parseur
 stdlib, qui possède ses propres bornes ; ce n'est pas un plafond d'allocation
 égal à max_header_bytes. Le nombre de lectures compte les appels au lecteur,
 pas chaque saut HTTP ; la politique borne séparément les redirections.
+
+## Contrat connecteur révisé après G008 — Codex/GPT
+
+D2 : `exchange(..., limits, remaining_seconds)` reçoit une durée positive,
+jamais une échéance absolue issue de l'horloge injectée de fetch. Le connecteur
+standard calcule son échéance locale avec time.monotonic ; les redirections
+reçoivent seulement le reste du budget et le temps du before_hop est décompté.
+La limite de connexion est au plus cette durée restante. Cette correction
+n'ajoute pas d'interruption dure d'une lecture en cours.
+
+Changement de protocole candidat : remplacer l'ancien argument `deadline`
+dans les connecteurs tiers/doubles. Aucune détection silencieuse de l'ancienne
+signature. `transport_id` par défaut passe à `stdlib-http/3` et reader_id à
+`web-reader/2/…` pour distinguer la sémantique. Les sondes Claude archivées sont
+inchangées : les rejouer exige une copie adaptée explicitement, pas une réécriture
+de leurs preuves historiques. Redirection sans Location : INVALID_RESPONSE (C5).
+
+Le compteur readable_pages décrit les reçus lisibles, même tardifs (C2) :
+seul le statut global dit si le seuil est atteint dans le budget. Un statut
+HTTP_ERROR peut porter une attente (C3) : lire aussi retry_after et
+retry_review_required. final_url et source.url gardent encore les paramètres
+URL en clair (C4) ; le masquage des sauts n'est pas une minimisation complète.
+Données synthétiques seulement jusqu'au lot de minimisation.
+
+[Preuves et tri G008](validation/2026-10-05/codex-g008-fixes/README.md).
 
 ## Démonstration
 
@@ -106,6 +145,6 @@ Pas d'extracteur HTML général, JavaScript, authentification, robots.txt,
 minimisation automatique des requêtes, fournisseur réel, persistance du cache
 ou des quotas, ni intégration aux permissions/exécutants des missions. C-D08
 et les tests VM restent différés. Les hypothèses de G007 sont intégrées comme
-propositions ; son corpus est contrôlé mais pas encore exécuté contre le
-coordinateur. READ_TARGET_MET ne peut pas être traduit en ANSWERED sans contrat
+propositions ; son corpus a été exécuté par Claude sur `99641df` (C018), résultat rapporté
+non requalifié par ce lot de correctifs du transport. READ_TARGET_MET ne peut pas être traduit en ANSWERED sans contrat
 supplémentaire sur la question, ses sources et les contradictions.

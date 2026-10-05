@@ -43,7 +43,7 @@ class WebTransportError(RuntimeError):
     def __init__(self, code, detail="", *, observation=None):
         super().__init__(f"{code}: {detail}" if detail else code)
         self.code = code
-        self.observation = observation  # validated headers only, never an error body
+        self.observation = observation  # status + validation state, never raw headers or error body
 
 
 @dataclass(frozen=True)
@@ -131,14 +131,19 @@ class StdlibConnector:
             raise ContractError("TLS context must verify certificates and host names")
         self._context = context
 
-    def exchange(self, *, scheme, host, port, address, target, headers, limits, deadline):
+    def exchange(self, *, scheme, host, port, address, target, headers, limits, remaining_seconds):
+        # Relative budget crosses the connector boundary; monotonic epochs never do.
+        if (type(remaining_seconds) not in (int, float) or not math.isfinite(remaining_seconds)
+                or not 0 < remaining_seconds <= limits.total_seconds):
+            raise ContractError("remaining_seconds must be positive and within total_seconds")
+        deadline = time.monotonic() + remaining_seconds
         # The caller can retain and mutate an injected SSLContext after __init__.
         if self._context.verify_mode != ssl.CERT_REQUIRED or not self._context.check_hostname:
             raise ContractError("TLS context no longer verifies certificates and host names")
         if scheme == "https":
-            conn = _PinnedHTTPSConnection(host, port, address, limits.connect_seconds, self._context)
+            conn = _PinnedHTTPSConnection(host, port, address, min(limits.connect_seconds, remaining_seconds), self._context)
         else:
-            conn = _PinnedHTTPConnection(host, port, address, limits.connect_seconds)
+            conn = _PinnedHTTPConnection(host, port, address, min(limits.connect_seconds, remaining_seconds))
         try:
             conn.putrequest("GET", target, skip_host=True, skip_accept_encoding=True)
             for name, value in headers:
@@ -147,12 +152,13 @@ class StdlibConnector:
             conn.sock.settimeout(limits.read_seconds)
             response = conn.getresponse()
             received = tuple(response.getheaders())
-            declared = _check_headers(response.status, received, limits)
             if response.status in REDIRECTS or not 200 <= response.status < 300:
+                # fetch validates these headers, retaining 429/503 even if malformed.
                 return RawResponse(response.status, received, b"", True)  # body never read
+            declared = _check_headers(response.status, received, limits)
             chunks, size = [], 0
             while True:
-                if time.monotonic() > deadline:
+                if time.monotonic() >= deadline:
                     raise WebTransportError("DEADLINE_EXCEEDED", "during body")
                 chunk = response.read(min(65536, limits.max_body_bytes + 1 - size))
                 if not chunk:
@@ -279,10 +285,11 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
         if decision.url in seen:
             raise WebTransportError("REDIRECT_LOOP", f"hop {decision.hop}")
         seen.add(decision.url)
-        if clock() > deadline:
-            raise WebTransportError("DEADLINE_EXCEEDED", f"before hop {decision.hop}")
         if before_hop is not None:
             before_hop(decision)  # may only further restrict a policy-approved hop
+        remaining = deadline - clock()
+        if remaining <= 0:
+            raise WebTransportError("DEADLINE_EXCEEDED", f"before hop {decision.hop}")
         parts = urllib.parse.urlsplit(decision.url)
         target = urllib.parse.urlunsplit(("", "", parts.path or "/", parts.query, ""))
         headers = (("Host", _host_header(decision.host, parts.scheme, decision.port)),
@@ -290,26 +297,37 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
                    ("Accept-Encoding", "identity"), ("Connection", "close"))
         response = connector.exchange(scheme=parts.scheme, host=decision.host, port=decision.port,
                                       address=decision.address, target=target, headers=headers,
-                                      limits=limits, deadline=deadline)
+                                      limits=limits, remaining_seconds=remaining)
         if (not isinstance(response, RawResponse) or type(response.body) is not bytes
-                or type(response.complete) is not bool):
+                or type(response.complete) is not bool or type(response.status) is not int
+                or not 100 <= response.status <= 599):
             raise WebTransportError("BAD_HTTP_RESPONSE", "connector returned no RawResponse")
-        declared = _check_headers(response.status, response.headers, limits)
         hops.append({**_redacted(decision.url), "address": decision.address, "port": decision.port,
                      "status": response.status})
         observed = datetime.now(timezone.utc)
-        retry, review = _retry_after(_header(response.headers, "retry-after"), observed)
         observation = {"kind": "http_headers", "final_url": decision.url,
                        "address": decision.address, "port": decision.port, "status": response.status,
                        "observed_at": observed.isoformat(), "policy_id": decision.policy_id,
-                       "hops": hops, "retry_after": retry, "retry_review_required": review}
+                       "hops": hops, "headers_validated": False,
+                       "retry_after": None, "retry_review_required": True}
+        try:
+            declared = _check_headers(response.status, response.headers, limits)
+        except WebTransportError as exc:
+            if response.status not in (429, 503):
+                raise
+            # No ambiguous value is adopted; status alone justifies a conservative pause.
+            observation["header_error"] = exc.code
+            raise WebTransportError("HTTP_STATUS", "retry status with invalid headers",
+                                    observation=observation) from exc
+        retry, review = _retry_after(_header(response.headers, "retry-after"), observed)
+        observation.update(headers_validated=True, retry_after=retry, retry_review_required=review)
         if response.status in REDIRECTS:
             if review or retry:
                 # No wait inside the controller, and no early request to Location.
                 raise WebTransportError("HTTP_STATUS", "redirect deferred", observation=observation)
             location = _header(response.headers, "location")
             if location is None:
-                raise WebTransportError("HTTP_STATUS", f"redirect {response.status} without Location")
+                raise WebTransportError("BAD_HTTP_RESPONSE", "redirect without Location")
             decision = follow(decision, location, resolver, policy)
             continue
         if not 200 <= response.status < 300:

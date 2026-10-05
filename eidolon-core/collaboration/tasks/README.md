@@ -77,3 +77,11 @@ G008 reçu dans `e55dc5d` pendant cette revue ; ne pas refaire ce lot.
 
 Codex réserve le contrat serveur client/reconnexion ; Claude reste propriétaire
 du prototype. Fiches prêtes, démarrage de sa session non présumé.
+
+## Répartition courante — C-MSG-G022
+
+G009 prototype bureau et G010 étude Windows restent confiés à Claude ; leur
+livraison n'est pas présumée. Nouveau [C-TASK-G011](C-TASK-G011.md) : contre-revue
+D1/D2/C5, après son lot GUI engagé et avant G010 si possible. Codex livre les
+correctifs Web et garde le futur contrat serveur du client. Pas de modification
+simultanée du prototype ou des modules de production.

@@ -134,8 +134,12 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] Attente/quotas durables par fournisseur, artefacts persistants, intégration
   mission et critères de qualité distincts du seul nombre de pages lues.
 
-- [ ] Traiter la contre-revue G008 reçue dans `e55dc5d` : D1 attente perdue
-  sur en-têtes ambigus, D2 horloges incompatibles ; trier L1–L3/C1–C5.
+- [x] G008 : D1 attente 429/503 ambiguë, D2 base de temps et C5 redirection
+  sans destination corrigés ; dix tests nouveaux, 303 réussis / 6 sautés.
+- [ ] Claude G011 : contre-revue indépendante de ces correctifs.
+- [ ] Suites G008 : L1 délai dur, L2 suspensions durables, L3 paramètres TLS,
+  C1 cache tardif/annulé et C4 minimisation des URL ; C2/C3 explicités dans le
+  contrat. [Tri](docs/validation/2026-10-05/codex-g008-fixes/README.md).
 
 ### Client bureau Eidolon — propositions et recette distinctes
 

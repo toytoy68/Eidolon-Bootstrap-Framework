@@ -55,7 +55,7 @@ class FakeConnector:
         self.script = script
         self.calls = []
 
-    def exchange(self, *, scheme, host, port, address, target, headers, limits, deadline):
+    def exchange(self, *, scheme, host, port, address, target, headers, limits, remaining_seconds):
         self.calls.append({"scheme": scheme, "host": host, "port": port, "address": address,
                            "target": target, "headers": dict(headers)})
         response = self.script[(address, target)]
@@ -149,7 +149,7 @@ class FetchTests(unittest.TestCase):
     def test_named_failures_never_echo_bodies(self):
         cases = {
             "HTTP_STATUS": RawResponse(500, (("Content-Type", "text/plain"),), b"SECRET-BODY", True),
-            "HTTP_STATUS ": RawResponse(302, (), b"", True),
+            "BAD_HTTP_RESPONSE": RawResponse(302, (), b"", True),
             "ENCODED_CONTENT": ok(gzip.compress(b"x" * 1000), extra=(("Content-Encoding", "gzip"),)),
             "ENCODED_CONTENT ": RawResponse(200, (("Transfer-Encoding", "gzip, chunked"),), b"hello", True),
             "TRUNCATED": RawResponse(200, (("Content-Length", "100"),), b"short", False),
