@@ -1,0 +1,80 @@
+# Base: ffd4354401f300a9114b0a75d9bdf547cb1fe493 + fichiers C-TASK-G006 ; OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+# Python 3.11.15 ; 2026-10-05T17:01:42+02:00
+# Commandes : PYTHONPATH=src:. python3 -m unittest tests.test_web_transport -v ; python3 -m examples.web_transport_demo ; puis suite complète
+test_global_deadline_is_checked_between_hops (tests.test_web_transport.FetchTests.test_global_deadline_is_checked_between_hops) ... ok
+test_home_network_exclusion_applies_through_names_and_redirects (tests.test_web_transport.FetchTests.test_home_network_exclusion_applies_through_names_and_redirects) ... ok
+test_inputs_and_configuration (tests.test_web_transport.FetchTests.test_inputs_and_configuration) ... ok
+test_named_failures_never_echo_bodies (tests.test_web_transport.FetchTests.test_named_failures_never_echo_bodies) ... ok
+test_redirect_loop_and_budget (tests.test_web_transport.FetchTests.test_redirect_loop_and_budget) ... ok
+test_redirects_are_rechecked_and_followed_by_code (tests.test_web_transport.FetchTests.test_redirects_are_rechecked_and_followed_by_code) ... ok
+test_refused_destination_is_never_contacted (tests.test_web_transport.FetchTests.test_refused_destination_is_never_contacted) ... ok
+test_request_is_fixed_get_with_name_host_and_no_extras (tests.test_web_transport.FetchTests.test_request_is_fixed_get_with_name_host_and_no_extras) ... ok
+test_success_records_evidence_without_second_resolution (tests.test_web_transport.FetchTests.test_success_records_evidence_without_second_resolution) ... ok
+test_connection_refused (tests.test_web_transport.LoopbackHTTPTests.test_connection_refused) ... ok
+test_real_exchange_keeps_name_in_host_and_ignores_proxy_variables (tests.test_web_transport.LoopbackHTTPTests.test_real_exchange_keeps_name_in_host_and_ignores_proxy_variables) ... ok
+test_real_failures (tests.test_web_transport.LoopbackHTTPTests.test_real_failures) ... ok
+test_sni_and_certificate_use_the_checked_name (tests.test_web_transport.LoopbackTLSTests.test_sni_and_certificate_use_the_checked_name) ... ok
+test_wrong_name_and_untrusted_certificates_are_refused (tests.test_web_transport.LoopbackTLSTests.test_wrong_name_and_untrusted_certificates_are_refused) ... ok
+test_simulated_fetch_opens_no_socket (tests.test_web_transport.NoNetworkTests.test_simulated_fetch_opens_no_socket) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 3.827s
+
+OK
+# --- démonstration
+{
+  "/start": {
+    "outcome": "FETCHED",
+    "final_url": "https://cdn.example.com/page",
+    "address": "93.184.215.15",
+    "port": 443,
+    "status": 200,
+    "content_type": "text/plain",
+    "observed_at": "2026-10-05T15:01:46.943322+00:00",
+    "size": 21,
+    "sha256": "9c6c2b5b4e60f352f4b6429795e54a104126705a82769f4c4c650fe5769d2664",
+    "hops": [
+      {
+        "url": "https://docs.example.com/start",
+        "address": "93.184.215.14",
+        "port": 443,
+        "status": 301
+      },
+      {
+        "url": "https://cdn.example.com/page",
+        "address": "93.184.215.15",
+        "port": 443,
+        "status": 200
+      }
+    ],
+    "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f",
+    "limits": [
+      "Received bytes only; their content is unverified data, not instructions.",
+      "Proves an observation at observed_at, not current content."
+    ],
+    "contacted": [
+      "93.184.215.14/start",
+      "93.184.215.15/page"
+    ]
+  },
+  "/to-lan": {
+    "outcome": "REFUSED",
+    "code": "DESTINATION_REFUSED",
+    "detail": "DESTINATION_REFUSED: DESTINATION_NOT_GLOBAL",
+    "contacted": [
+      "93.184.215.14/to-lan"
+    ]
+  },
+  "/gzip": {
+    "outcome": "REFUSED",
+    "code": "ENCODED_CONTENT",
+    "detail": "ENCODED_CONTENT: compressed bodies are refused, never decompressed",
+    "contacted": [
+      "93.184.215.14/gzip"
+    ]
+  }
+}
+# --- suite complète
+Ran 242 tests in 83.591s
+
+OK (skipped=6)

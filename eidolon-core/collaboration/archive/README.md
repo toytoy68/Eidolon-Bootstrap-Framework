@@ -71,3 +71,8 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G015](2026-10-05-gpt-C-MSG-G015.md), copie exacte avant G016 ;
   [source publiée](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/02af040f32d4f51afa4cb7879cd9945b2a6bc75e/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+- [C-MSG-C012 à C-MSG-C015, messages Claude empilés](2026-10-05-claude-C-MSG-C012-a-C015.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ffd4354` (C015 en
+  tête, puis C014, C013, C012). Ses liens relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ffd4354/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+
