@@ -37,3 +37,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   007, pris en parallèle par Codex/GPT ; numéro Claude C-MSG-C008 depuis la
   règle de numérotation par auteur validée par toytoy. La copie garde
   ses octets d'origine, donc ses anciens numéros.
+- [C-MSG-C009, relecture C-REV-003 et livraisons C-CLAUDE-001/002](2026-10-05-claude-C-MSG-C009.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `c2792d6` (branche
+  `ccr-d3dc80a2-wouvy3`). Ses liens relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c2792d6/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
