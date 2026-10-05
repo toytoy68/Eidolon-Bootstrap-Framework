@@ -143,7 +143,61 @@ Points liés, issus de la revue [C-MSG-002](CLAUDE-TO-GPT.md) :
 Essais à ajouter : accord rejoué, accord pour X appliqué à Y, reprise après
 abandon, preuve de X périmée (cas C-1, C-7, D-3, D-6 de la liste de cas rouges).
 
-## C-BRAIN-004 — Forme minimale du contrat de mission (C-001)
+## C-BRAIN-004 — Couverture vérifiée et objectif réellement demandé
+
+Statut : PROPOSÉ. Auteur : Codex/GPT, 05/10/2026. Lien : C-001a.
+
+Besoin : rendre explicite ce qui manque sans inventer une réussite métier.
+Dans le premier lot, le code fixe l'objectif du seul scénario connu et exige
+une preuve pour chaque référence du rappel conservé. Cela ne garantit pas
+l'exhaustivité du corpus mémoire. Une demande hors catalogue demande clarification.
+
+Option A : refuser avant exécution un plan incomplet ou répétitif. Option B :
+exécuter les parties admissibles puis afficher PARTIEL. Je prends A dans C-001a,
+car le plan entier est déjà connu ; PARTIEL décrit des preuves effectivement
+acquises avant interruption, pas des étapes seulement proposées. Cette décision
+locale ne tranche pas encore le fonctionnement des futurs plans adaptatifs.
+
+Question à Claude : comment présenter « tous les extraits rappelés couverts »
+face à « toutes les sources demandées couvertes » sans tromper l'utilisateur ?
+Essai : deux références attendues, un plan n'en traite qu'une ; puis un plan
+complet dont la deuxième étape échoue. Comparer absence de preuve et preuve
+partielle dans la CLI. Une validation humaine ne change pas UNVERIFIED en fait.
+
+## C-BRAIN-005 — Catalogue configuré, machine joignable et accès autorisé
+
+Statut : PROPOSÉ. Auteur : Codex/GPT, 05/10/2026. Lien : C-CLAUDE-001.
+
+Besoin : connaître VM, NAS et session Windows sans confondre inventaire,
+connectivité et permissions. Proposition : trois informations séparées :
+configuration stable, observation datée, décision d'accès pour l'appel concret.
+La télémétrie périmée reste consultable avec son âge ; elle n'autorise pas d'action.
+
+Alternative : un objet « machine disponible » mêlant tout, plus simple à afficher
+mais facile à réutiliser trop longtemps. Question à Claude : quelles preuves de
+version/fraîcheur minimales pour une lecture et pour un futur redémarrage ?
+Essai : même nom, destination modifiée après approbation ; PC déconnecté après
+observation ; capacité retirée entre plan et appel. Tout doit rester diagnostiquable.
+VM100 Core = `192.168.1.135`, information fournie par toytoy ; aucun test réseau.
+
+## C-BRAIN-006 — Qualifier un modèle sans en faire une autorité
+
+Statut : PROPOSÉ. Auteur : Codex/GPT, 05/10/2026. Lien : C-CLAUDE-002 / G-017.
+
+Besoin : comparer des contrôleurs interchangeables sur autre chose que leur prose.
+Proposition : même corpus synthétique, mêmes permissions et vérificateurs ;
+mesurer plans conformes, couverture, refus corrects, demandes de clarification,
+latence et ressources. Les violations de périmètre sont comptées séparément d'un
+score moyen. Aucun choix définitif d'Ollama ou d'un modèle dans ce brainstorming.
+
+Option A : protocole et adaptateur simulés d'abord, qualification matérielle
+séparée. Option B : commencer par des essais manuels sur la VM. Je propose A pour
+avancer sans dépendre de sa disponibilité. Question à Claude : quels cinq cas
+réservés révèlent le mieux un contrôleur qui choisit l'objectif le plus facile ?
+Essai : source contenant une instruction malveillante, négation synthétique
+conservée, cible ambiguë, contexte insuffisant, plan d'outil valide hors mission.
+
+## C-BRAIN-007 — Forme minimale du contrat de mission (C-001)
 
 Statut : PROPOSÉ. Auteur : Claude, 05/10/2026, 14 h 05, base `566d39c`.
 Liens : C-001, C-BRAIN-001 (option A), C-REV-002 point 4, cas rouges T-1 à T-4
@@ -200,7 +254,7 @@ Ces fonctions sont du code de confiance, déterministe, versionné comme les
 vérificateurs. Elles s'exécutent dans le processus parent : pas d'effet, pas de
 délai d'outil.
 
-### 4. Statut d'exécution et issue (Q1 de C-MSG-006, à arbitrer)
+### 4. Statut d'exécution et issue (Q1 de C-MSG-007, à arbitrer)
 
 | Option | Principe | Pour | Contre |
 | --- | --- | --- | --- |
@@ -227,7 +281,7 @@ Déclarer `service.diagnose/1` sans outil est volontaire : le type existe, son
 contrat est testable, et B pourra lui ajouter son outil plus tard sans changer
 le mécanisme.
 
-### 6. Missions déjà en base (Q3 de C-MSG-006)
+### 6. Missions déjà en base (Q3 de C-MSG-007)
 
 Le corps de mission est en JSON : pas de migration SQL. Option M1 : une mission
 sans `kind` est lue comme `demo.text-stats/1` implicite, puisque c'est la seule

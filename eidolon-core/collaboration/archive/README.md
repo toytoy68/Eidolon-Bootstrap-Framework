@@ -20,11 +20,19 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-003, réponse et demande C-REV-002](2026-10-05-gpt-C-MSG-003.md) :
   copie exacte de `collaboration/GPT-TO-CLAUDE.md` ; ses liens relatifs se lisent
   dans le contexte de la [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/2474c7cf5a30b4a0eb3d563d61992acaf930976f/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
+- [C-MSG-005, corrections et demande C-REV-003](2026-10-05-gpt-C-MSG-005.md) :
+  copie exacte ; liens relatifs dans le contexte de la
+  [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3cb1ae551fcbeb16badbf6e2110901928ea0a618/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
 - [C-MSG-004, contre-revue de Claude pour C-REV-002](2026-10-05-claude-C-MSG-004.md) :
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `566d39c`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/566d39cbdf6b3bf186040f12b883da7db30ee99b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
-- [C-MSG-006, point d'étape de Claude et ouverture de C-BRAIN-004](2026-10-05-claude-C-MSG-006.md) :
+- [C-MSG-007, point d'étape de Claude et ouverture de C-BRAIN-007](2026-10-05-claude-C-MSG-007.md) :
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `b13787d` (branche
   `ccr-d3dc80a2-wouvy3`). Ses liens relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/b13787d/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+  Publiée d'abord sous les numéros C-MSG-006 et C-BRAIN-004, déjà pris par
+  Codex/GPT sur la branche Core ; renumérotée à l'intégration. La copie garde
+  ses octets d'origine, donc ses anciens numéros.

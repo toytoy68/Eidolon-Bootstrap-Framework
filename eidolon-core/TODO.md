@@ -40,7 +40,7 @@ ils ne constituent pas des fonctionnalités livrées.
   [Bilan](docs/COUNTER-REVIEW-FIXES-2026-10-05.md) : 58 tests Core + 6 intégrations.
 - [x] N-08 : marge des délais de test relevée, annulation synchronisée ; deux
   tests ciblés verts sur deux CPU avec six concurrents. Recette VM toujours différée.
-- [x] Contre-revue C-REV-003 reçue (C-MSG-007, base `3cb1ae5`).
+- [x] Contre-revue C-REV-003 reçue (C-MSG-008, base `3cb1ae5`).
 - [ ] Suites de C-REV-003 signalées par Claude, non traitées : N-09 (P2),
   N-10 et N-11 (P3). Voir [CLAUDE-TO-GPT.md](collaboration/CLAUDE-TO-GPT.md).
 - [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
@@ -49,7 +49,7 @@ ils ne constituent pas des fonctionnalités livrées.
   leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
 - [ ] C-001 : appliquer [C-D07](docs/CADRAGE-DECISIONS-2026-10-05.md) : `SUCCEEDED`
   réservé à une mission atteinte, état terminal distinct pour les autres issues
-  (nom et code CLI à fixer). Proposition de contrat : C-BRAIN-004.
+  (nom et code CLI à fixer). Proposition de contrat : C-BRAIN-007.
 - [ ] P3 : mémoire vide distincte de MODEL_INVALID ; clarification du blocage
   de précontrôle avec configuration figée, à intégrer dans C-001.
 - [ ] C-008 : propriétaire/battement de mission pour distinguer vivant/orphelin.

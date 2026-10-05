@@ -200,6 +200,51 @@ def probe_r5_state_residue():
     print("  missions terminées : 10, toutes SUCCEEDED")
 
 
+def probe_r6_forged_receipt_then_abandon():
+    print("\n[R6 reçu du disque modifié après import en base, puis abandon]")
+    directory, store = fresh()
+    runtime = Runtime(store, registry=registry(execute=quick_counting_tool))
+    identity = runtime.create(DEMO_REQUEST)["id"]
+    subprocess.run([sys.executable, str(HERE), "--crash", directory, identity, "TOOL_RETURNED"],
+                   env=dict(os.environ, REVIEW3_DIR=directory), capture_output=True, timeout=30)
+    runtime.run(identity)
+    attempt("reconcile no-effect (importe le reçu, refusé)", reconcile(runtime, identity, "no-effect"))
+    call = store.get(identity)["calls"][0]
+    lease = store.worker_lease_path(identity, call["id"], call["attempt"])
+    receipt = lease.with_suffix(".receipt.json")
+    forged = json.loads(receipt.read_text())
+    forged["value"]["characters"] += 1
+    receipt.write_text(json.dumps(forged))
+    print("  reçu du disque modifié : characters +1")
+    attempt("reconcile use-receipt", reconcile(runtime, identity, "use-receipt"))
+    attempt("reconcile observed-result (valeur falsifiée)",
+            reconcile(runtime, identity, "observed-result", output=forged["value"]))
+    m = attempt("reconcile abandon", reconcile(runtime, identity, "abandon"))
+    if m:
+        call = m["calls"][0]
+        print("  après abandon : statut d'appel", call["status"], "| effect_unknown", call.get("effect_unknown"),
+              "| reçu conservé", "recovered_receipt" in call, "| résultat", m["result"])
+        attempt("run après abandon", lambda: runtime.run(identity))
+    print("  effets :", effects(directory))
+
+
+def probe_r7_forged_receipt_before_import():
+    print("\n[R7 reçu du disque falsifié avant tout import : le vérificateur tranche]")
+    directory, store = fresh()
+    runtime = Runtime(store, registry=registry(execute=quick_counting_tool))
+    identity = runtime.create(DEMO_REQUEST)["id"]
+    subprocess.run([sys.executable, str(HERE), "--crash", directory, identity, "TOOL_RETURNED"],
+                   env=dict(os.environ, REVIEW3_DIR=directory), capture_output=True, timeout=30)
+    runtime.run(identity)
+    call = store.get(identity)["calls"][0]
+    receipt = store.worker_lease_path(identity, call["id"], call["attempt"]).with_suffix(".receipt.json")
+    forged = json.loads(receipt.read_text())
+    forged["value"]["characters"] += 1
+    receipt.write_text(json.dumps(forged))
+    attempt("reconcile use-receipt", reconcile(runtime, identity, "use-receipt"))
+    attempt("run", lambda: runtime.run(identity))
+
+
 def drive(directory, identity, tool):
     Runtime(Store(directory), registry=registry(execute=TOOLS[tool])).run(identity)
 
@@ -222,7 +267,8 @@ if __name__ == "__main__":
     print("Python", sys.version.split()[0], "|", sys.platform)
     for probe in (probe_r1_receipt_survives_parent_death, probe_r2_error_after_effect,
                   probe_r3_both_killed_without_receipt, probe_r4_lease_removed,
-                  probe_r5_state_residue):
+                  probe_r5_state_residue, probe_r6_forged_receipt_then_abandon,
+                  probe_r7_forged_receipt_before_import):
         try:
             probe()
         except Exception:  # noqa: BLE001

@@ -42,3 +42,17 @@ Python 3.11.15 | linux
   .receipt.json  : 10
   .pending       : 0
   missions terminées : 10, toutes SUCCEEDED
+
+[R6 reçu du disque modifié après import en base, puis abandon]
+  reconcile no-effect (importe le reçu, refusé): REFUS ValueError: successful receipt exists: use-receipt or abandon
+  reçu du disque modifié : characters +1
+  reconcile use-receipt: REFUS ValueError: conflicting attempt receipts; review or abandon
+  reconcile observed-result (valeur falsifiée): REFUS ValueError: conflicting attempt receipts; review or abandon
+  reconcile abandon: {"status": "ABANDONED", "phase": "DONE", "error": {"code": "EFFECT_UNKNOWN", "message": "closed without resolving the effect"}}
+  après abandon : statut d'appel UNKNOWN | effect_unknown True | reçu conservé True | résultat None
+  run après abandon: {"status": "ABANDONED", "phase": "DONE", "error": {"code": "EFFECT_UNKNOWN", "message": "closed without resolving the effect"}}
+  effets : 1
+
+[R7 reçu du disque falsifié avant tout import : le vérificateur tranche]
+  reconcile use-receipt: {"status": "BLOCKED", "phase": "VERIFY", "error": {"code": "RECONCILED", "message": "explicit resume required"}}
+  run: {"status": "FAILED", "phase": "VERIFY", "error": {"code": "VERIFICATION_FAILED", "message": "output does not match expected result"}}
