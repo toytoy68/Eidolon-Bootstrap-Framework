@@ -1,0 +1,5 @@
+unhashable metric: TypeError
+oversized integer: OverflowError
+lone surrogate: PASSED_SCOPE
+zero executed cases: PASSED_SCOPE
+negative latency: PASSED_SCOPE

@@ -14,6 +14,7 @@ import sys
 
 from .contracts import encode
 from .diagnostics import synthetic_runtime
+from .actions import ActionRuntime
 from .targets import Catalog
 from .memory import DEMO_REQUEST, EngineMemory
 from .runtime import Limits, Runtime
@@ -26,8 +27,8 @@ def main(argv=None):
     parser.add_argument("--state", default=".eidolon-core")
     parser.add_argument("--timeout", type=float, default=10.0, help="seconds per call, including process startup")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
-    parser.add_argument("--profile", choices=("text", "service-sim"), default="text")
-    parser.add_argument("--targets", help="catalog JSON for service-sim; destinations are never contacted")
+    parser.add_argument("--profile", choices=("text", "service-sim", "action-sim"), default="text")
+    parser.add_argument("--targets", help="catalog JSON for a simulation profile; destinations are never contacted")
     parser.add_argument("--allow-target", action="append", help="allowed synthetic target id; replaces default fixture grants")
     parser.add_argument("--format", choices=("json", "human"), default="json",
                         help="JSON for automation (default), human for the Eidolon console presentation")
@@ -37,6 +38,17 @@ def main(argv=None):
     diagnose = commands.add_parser("diagnose", help="observe one synthetic service, requires --profile service-sim")
     diagnose.add_argument("target")
     diagnose.add_argument("--create-only", action="store_true")
+    restart = commands.add_parser("restart", help="propose a synthetic restart, requires --profile action-sim")
+    restart.add_argument("target")
+    decide = commands.add_parser("decide", help="record a local action decision; does not execute")
+    decide.add_argument("mission_id")
+    decide.add_argument("--proposal-sha", required=True)
+    decide.add_argument("--decision", choices=("approve", "reject", "revoke"), required=True)
+    decide.add_argument("--actor", required=True)
+    decide.add_argument("--reason", required=True)
+    fixture = commands.add_parser("fixture", help="inspect or change ONLY the synthetic service state")
+    fixture.add_argument("target")
+    fixture.add_argument("--set-state", choices=("UP", "DOWN", "UNREACHABLE"))
     create = commands.add_parser("create", help="create a durable mission without executing it")
     create.add_argument("request", nargs="?", default=DEMO_REQUEST)
     for name in ("run", "show", "cancel"):
@@ -58,10 +70,14 @@ def main(argv=None):
             text = preview()
             print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
             return 0
-        if args.profile == "text" and (args.targets or args.allow_target or args.command == "diagnose"):
-            raise ValueError("diagnostic options require --profile service-sim")
-        if args.profile == "service-sim" and args.command in {"demo", "create"}:
-            raise ValueError("service-sim missions are created with diagnose [--create-only]")
+        if args.profile == "text" and (args.targets or args.allow_target):
+            raise ValueError("target options require a simulation profile")
+        if args.command == "diagnose" and args.profile != "service-sim":
+            raise ValueError("diagnose requires --profile service-sim")
+        if args.command in {"restart", "decide", "fixture"} and args.profile != "action-sim":
+            raise ValueError("action commands require --profile action-sim")
+        if args.profile != "text" and args.command in {"demo", "create"}:
+            raise ValueError("simulation missions are created with diagnose or restart")
         catalog = None
         if args.targets:
             path = Path(args.targets)
@@ -73,7 +89,23 @@ def main(argv=None):
                    "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}
         runtime = (synthetic_runtime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
                    if args.profile == "service-sim" else Runtime(store, **options))
-        if args.command == "diagnose":
+        if args.profile == "action-sim":
+            runtime = ActionRuntime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
+        if args.command == "fixture":
+            result = (runtime.world.set_state(args.target, args.set_state) if args.set_state
+                      else runtime.world.observe(args.target))
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Service fictif") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 0
+        if args.command == "restart":
+            result = runtime.run(runtime.create_restart(args.target)["id"])
+        elif args.command == "decide":
+            result = runtime.decide(args.mission_id, expected_sha256=args.proposal_sha,
+                                    decision=args.decision, actor=args.actor, reason=args.reason)
+        elif args.command == "diagnose":
             result = runtime.create_diagnostic(args.target)
             if not args.create_only:
                 result = runtime.run(result["id"])
@@ -100,7 +132,7 @@ def main(argv=None):
                                        actor=args.actor, reason=args.reason, output=output,
                                        confirm_no_effect=args.confirm_no_effect)
         print(render_result(result) if args.format == "human" else encode(result))
-        if args.command in {"show", "create", "reconcile"} or (args.command == "diagnose" and args.create_only):
+        if args.command in {"show", "create", "reconcile", "decide"} or (args.command == "diagnose" and args.create_only):
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)
     except (ValueError, KeyError, OSError, Busy) as exc:

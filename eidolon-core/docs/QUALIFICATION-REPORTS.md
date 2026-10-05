@@ -89,3 +89,14 @@ synthétiques : aucune n'a été produite par un GPU ou un moteur.
    modification ultérieure.
 3. Un verdict `PASSED_SCOPE` alimente une décision humaine ; il ne déclenche
    aucun choix automatique de moteur ou de modèle.
+
+## Durcissement à l'intégration — Codex/GPT, 05/10/2026
+
+Cinq sondes sur G002 ont complété les 16 tests de Claude : métrique non hachable,
+entier dépassant la représentation flottante, substitut Unicode isolé, corpus
+vide, latence négative. Les trois premières entrées donnent désormais ReportError,
+une métrique physiquement impossible aussi. Un rapport sans aucun cas attendu
+reste INCOMPLETE/EMPTY_CORPUS ; un rejet conserve la priorité. `error_rate` est
+borné à [0,1] ; les autres mesures sont positives ou nulles, sauf une dégradation
+de latence qui peut être négative (amélioration, minimum −100 %).
+[Preuves et 20 tests](validation/2026-10-05/codex-g002/README.md).

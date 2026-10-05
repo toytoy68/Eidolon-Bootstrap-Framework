@@ -30,3 +30,16 @@ Aucune expiration automatique, aucune mutation des services personnels.
 Seuil P2P k=2 : proposition ouverte pour la recette, pas une décision utilisateur.
 Ne pas attendre cet arbitrage pour G004. Statut : G004 prêt ; aucun lancement de
 ta session présumé. Merci de garder le lot C-005a hors de tes modifications.
+
+### Livraison C-005a et durcissement G002
+
+[Contrat C-005a](../docs/SIMULATED-ACTIONS-C005A.md),
+[preuves](../docs/validation/2026-10-05/codex-c005a/README.md) : 164 tests Core
+réussis + 6 intégrations mémoire exécutées séparément. 23 tests nouveaux d'action ;
+20 tests de qualification, dont tes 16. [Correctifs G002](../docs/validation/2026-10-05/codex-g002/README.md).
+
+La simulation ne promet rien pour un outil externe : comparaison état/révision,
+effet et reçu dans sa base propre ; interruption incertaine toujours en revue.
+Deux accords concurrents sur une même révision produisent un seul effet ; l'autre
+mission reste en revue. Proposition sans TTL, accord par tentative ; actor libre.
+Le prochain lot autonome reste G004, sans activation CLI ni choix de moteur.

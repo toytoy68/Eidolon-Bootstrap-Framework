@@ -13,7 +13,7 @@ import math
 from .contracts import ContractError, digest, parse_plan, snapshot, validate_context
 from .memory import SyntheticMemory
 from .model import DeterministicModel
-from .objectives import DIAGNOSTIC, bind, check_contract, check_plan, diagnostic_request
+from .objectives import DIAGNOSTIC, RESTART, TARGETED, bind, check_contract, check_plan, diagnostic_request, restart_parameters
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
 from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
@@ -94,7 +94,7 @@ class Runtime:
 
     @staticmethod
     def _reset_attempt(call, detail):
-        keys = ("attempt", "worker", "worker_protocol", "error_receipt", "error_receipt_sha256",
+        keys = ("attempt", "worker", "worker_protocol", "approval_sha256", "error_receipt", "error_receipt_sha256",
                 "late_receipt", "late_receipt_sha256", "recovered_receipt", "recovered_receipt_sha256")
         prior = {key: call[key] for key in keys if key in call}
         prior["reconciliation"] = detail
@@ -104,6 +104,18 @@ class Runtime:
                 call.pop(key, None)
         call.update(status="PREPARED", attempt=call["attempt"] + 1, worker=None)
 
+    def _prepare(self, m):
+        """Optional trusted preparation before planning; return a stopped mission."""
+        return None
+
+    def _authorize_call(self, m, call):
+        """Optional approval gate. Consumption is persisted with CALL_STARTED."""
+        return None
+
+    def _check_reconciliation(self, m, call, decision, output):
+        """Optional provider-specific check while the worker lease is held."""
+        return None
+
     def _preflight(self, m):
         # Validate ALL steps before any tool is run, and again after a restart.
         for step in m["plan"]["steps"]:
@@ -112,7 +124,7 @@ class Runtime:
                 raise ContractError("POLICY_DENIED: " + step["tool"])
             tool.validate(step["parameters"], m["context"])
         check_plan(m)
-        if m["objective"]["kind"] == DIAGNOSTIC:
+        if m["objective"]["kind"] in TARGETED:
             objective = m["objective"]
             found = self.catalog.lookup(objective["target_id"], objective["capability"])
             tool = self.registry.get(objective["tool"])
@@ -152,13 +164,13 @@ class Runtime:
             check_contract(m)
         except ContractError as exc:
             return self._stop(m, "BLOCKED", "MISSION_CONTRACT_INVALID", str(exc))
-        diagnostic = m["objective"]["kind"] == DIAGNOSTIC
+        diagnostic = m["objective"]["kind"] in TARGETED
         if diagnostic and m["objective"]["selection_status"] != "FOUND":
             return self._stop(m, "BLOCKED", m["objective"]["selection_status"],
                               "select one configured target with the required capability")
         if m["objective"]["kind"] is None:
             return self._stop(m, "BLOCKED", "MISSION_UNSUPPORTED",
-                              "clarification required: only the documented statistics demo is supported")
+                              "clarification required: use a documented typed mission")
         if m["configuration"] != self.configuration():
             return self._stop(m, "BLOCKED", "CONFIGURATION_CHANGED",
                               "restore the mission configuration or create a new mission")
@@ -183,6 +195,9 @@ class Runtime:
         if not diagnostic and not m["context"]["items"]:
             return self._stop(m, "BLOCKED", "MEMORY_EMPTY",
                               "no recalled evidence; explicit resume can retry recall")
+        prepared = self._prepare(m)
+        if prepared is not None:
+            return prepared
         if m["plan"] is None:
             try:
                 if m["model_output"] is None:
@@ -190,6 +205,8 @@ class Runtime:
                     if diagnostic:
                         # Overwrite any similarly named untrusted memory field.
                         model_context["_core_mission"] = snapshot(m["objective"])
+                        if m["objective"]["kind"] == RESTART:
+                            model_context["_core_action"] = restart_parameters(m)
                     m["model_output"] = self._invoke(m, self.model.propose, m["request"], model_context)
                     self._save(m, "MODEL_OUTPUT_SAVED")
                 m["plan"] = parse_plan(m["model_output"])
@@ -226,6 +243,9 @@ class Runtime:
                                               for key in ("target_id", "capability", "catalog_sha256")}
                 m["calls"].append(call)
             if call["status"] == "PREPARED":
+                gated = self._authorize_call(m, call)
+                if gated is not None:
+                    return gated
                 m["phase"] = "EXECUTING"
                 call.update(status="STARTED", worker_protocol="lease-v2", worker=None)
                 self._save(m, "CALL_STARTED", {"call_id": call["id"], "attempt": call["attempt"]})
@@ -270,7 +290,15 @@ class Runtime:
                          "limits": ["Coverage is limited to the retained recall snapshot, not the whole memory corpus.",
                                     "Text statistics do not confirm source truth or semantic completeness.",
                                     "Source epistemic labels and review requirements remain unchanged."]})
-        if diagnostic:
+        if m["objective"]["kind"] == RESTART:
+            m["result"].update(summary="Redémarrage simulé vérifié : " + m["objective"]["target_id"],
+                               simulation=snapshot(m["calls"][0]["output"]),
+                               proposal_sha256=m["proposal"]["sha256"],
+                               limits=["Local synthetic SQLite state only; no real service was contacted.",
+                                       "Actor is an audit label, not an authenticated identity.",
+                                       "Receipt proves a past transition; current health can change.",
+                                       "Memory epistemic labels remain unchanged."])
+        elif diagnostic:
             observation = m["calls"][0]["output"]
             m["result"]["summary"] = ("Diagnostic synthétique vérifié : "
                                       + observation["target_id"] + " = " + observation["state"])
@@ -340,6 +368,7 @@ class Runtime:
                 if disk_receipt is not None:
                     self._retain_receipt(m, call, disk_receipt, recovered=True)
                 detail["worker_authorized"] = authorized
+                self._check_reconciliation(m, call, decision, output)
                 if decision == "no-effect":
                     if output is not None:
                         raise ValueError("no-effect does not accept output")

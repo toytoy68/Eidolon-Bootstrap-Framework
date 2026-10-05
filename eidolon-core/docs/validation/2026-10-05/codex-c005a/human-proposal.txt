@@ -1,0 +1,49 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                    Suivi de mission                   #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+Mission            : m-5b4c6a1e9e734fc7b34bf34d0e21d782
+Demande            : Simuler le redémarrage du service : nas
+Phase              : READY
+Étapes vérifiées   : 0 / 1
+
+=========================================================
+Résumé
+=========================================================
+[ATTENTION] Mission bloquée
+[INFO] Objectif : Non atteint
+[INFO] Périmètre : modification d'un service fictif dans la base locale.
+
+=========================================================
+Proposition d'action simulée
+=========================================================
+[INFO] État : PENDING
+[INFO] Empreinte : 63bba94d9f4ef66ed8a50647a8a815781716e39edf0785bfdd15a5be601779e0
+[INFO] Action : {'id': 'restart', 'parameters': {'expected_revision': 1, 'operation_id': 'm-5b4c6a1e9e734fc7b34bf34d0e21d782', 'target': 'sim-nas', 'world_id': 'a513b782-d454-4f30-9365-5321a0e53d0e'}, 'tool': 'service.restart.simulated'}
+[INFO] Condition : {'revision': 1, 'state': 'DOWN', 'target_id': 'sim-nas', 'world_id': 'a513b782-d454-4f30-9365-5321a0e53d0e'}
+[ATTENTION] Décision locale : actor est une trace, pas une identité authentifiée.
+[ATTENTION] APPROVAL_REQUIRED : inspect proposal; explicit decision and resume required
+
+=========================================================
+Résultats et preuves
+=========================================================
+[INFO] m-5b4c6a1e9e734fc7b34bf34d0e21d782/restart — PREPARED
+
+=========================================================
+Sources et réserves
+=========================================================
+[ATTENTION] synthetic-note@1 — statut=UNVERIFIED, revue=True
+[INFO] Un résultat technique vérifié ne confirme pas le contenu des sources.
+
+=========================================================
+Prochaine étape
+=========================================================
+[INFO] Inspection détaillée : show m-5b4c6a1e9e734fc7b34bf34d0e21d782 --events (avec les mêmes options --state).

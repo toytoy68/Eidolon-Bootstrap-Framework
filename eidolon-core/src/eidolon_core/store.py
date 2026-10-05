@@ -165,6 +165,10 @@ class Store:
                                error={"code": "CANCELLED", "message": "cancellation requested before success commit"})
                 kind = "CANCELLED"
             mission["outcome"] = assess(mission)
+            if kind == "CALL_STARTED" and mission["objective"]["kind"] == "service_restart.simulated":
+                from .approvals import consumed
+                if not mission["calls"] or not consumed(mission, mission["calls"][-1]):
+                    raise ValueError("simulated action launch requires its consumed approval in the same commit")
             if mission["status"] == "SUCCEEDED" and (
                 mission["outcome"]["status"] != "ACHIEVED" or
                 not mission["calls"] or any(c["status"] != "VERIFIED" for c in mission["calls"])

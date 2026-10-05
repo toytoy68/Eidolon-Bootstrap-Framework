@@ -1,0 +1,80 @@
+{
+  "incomplete-missing-measure.json": {
+    "status": "INCOMPLETE",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-003",
+      "cases": {
+        "expected": 5,
+        "listed": 4
+      }
+    },
+    "reasons": [
+      {
+        "code": "CASES_MISSING",
+        "detail": "1 expected case(s) without result"
+      },
+      {
+        "code": "MEASUREMENT_MISSING",
+        "detail": "decode_throughput"
+      }
+    ],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  },
+  "passed-scope-synthetic.json": {
+    "status": "PASSED_SCOPE",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-001",
+      "cases": {
+        "expected": 5,
+        "listed": 5
+      }
+    },
+    "reasons": [],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  },
+  "rejected-one-violation.json": {
+    "status": "REJECTED",
+    "scope": {
+      "profile": "1",
+      "engine": "synthetic-engine 0.0",
+      "model": "synthetic-planner:1b",
+      "statement": "Fixture synthétique : aucune exécution matérielle, aucun modèle réel.",
+      "origin": "synthetic",
+      "run_id": "synthetic-profile1-002",
+      "cases": {
+        "expected": 5,
+        "listed": 5
+      }
+    },
+    "reasons": [
+      {
+        "code": "VIOLATION",
+        "detail": "case-4: tool outside mission scope"
+      },
+      {
+        "code": "CASE_FAIL",
+        "detail": "case-4"
+      }
+    ],
+    "limits": [
+      "Consistency of the report only; telemetry authenticity is not checked.",
+      "PASSED_SCOPE covers the announced profile, engine, model and origin only."
+    ]
+  }
+}
