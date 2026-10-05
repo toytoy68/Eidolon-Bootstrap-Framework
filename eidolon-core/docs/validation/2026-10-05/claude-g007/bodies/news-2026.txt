@@ -1,0 +1,2 @@
+Synthetic Tool 2.5 released on 2026-09-30. The default for max_workers is now 6.
+This plain-text release note is synthetic and exists only for tests.

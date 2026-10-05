@@ -1,0 +1,1358 @@
+{
+  "schema": "eidolon-research-corpus/1",
+  "author": "Claude",
+  "task": "C-TASK-G007",
+  "clock": "2026-10-05T15:00:00+00:00",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "W01",
+      "title": "Fournisseur A en 429 avec Retry-After long, B disponible",
+      "category": "quota",
+      "why": "Un 429 n'est ni une absence de résultat ni une raison d'attendre au-delà du budget.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "http_429",
+            "retry_after_seconds": 120
+          },
+          "engine-b": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "max_workers defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "providers": {
+          "engine-a": "RATE_LIMITED",
+          "engine-b": "USED"
+        },
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          }
+        ],
+        "provider_calls_max": 2,
+        "must_not": [
+          "retry_before_retry_after",
+          "sleep_beyond_budget"
+        ]
+      }
+    },
+    {
+      "id": "W02",
+      "title": "Page en 429 avec Retry-After court",
+      "category": "quota",
+      "why": "Une première version peut rendre l'indisponibilité explicite ; un unique réessai après le délai est aussi acceptable.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "max_workers defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 429,
+            "headers": {
+              "Retry-After": "5"
+            },
+            "sequence_after_retry": {
+              "status": 200,
+              "headers": {
+                "Content-Type": "text/html; charset=utf-8"
+              },
+              "body": "bodies/docs-v2.html",
+              "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+              "size": 384
+            }
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome_any_of": [
+          "UNAVAILABLE",
+          "ANSWERED"
+        ],
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state_any_of": [
+              "RATE_LIMITED",
+              "READ"
+            ]
+          }
+        ],
+        "page_fetches_max": 2,
+        "must_not": [
+          "retry_before_retry_after",
+          "more_than_one_retry"
+        ]
+      }
+    },
+    {
+      "id": "W03",
+      "title": "403 sur un résultat, un autre résultat lisible",
+      "category": "access",
+      "why": "Un refus d'accès est un état de la source, pas un échec de la recherche entière.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://restricted.example/report",
+                "title": "Report",
+                "snippet": "restricted"
+              },
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "max_workers defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://restricted.example/report": {
+            "status": 403,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/forbidden-403.html",
+            "body_sha256": "6fc9639c3779d991b0735f7313d917fdf5a8fd758ca9455d019387fc33bbc890",
+            "size": 159
+          },
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://restricted.example/report",
+            "state": "ACCESS_DENIED"
+          },
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          }
+        ],
+        "must_not": [
+          "retry_forbidden"
+        ]
+      }
+    },
+    {
+      "id": "W04",
+      "title": "Défi anti-robot servi en HTTP 200",
+      "category": "challenge",
+      "why": "Un 200 ne prouve pas une page lue : ce contenu n'est pas exploitable.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://guarded.example/article",
+                "title": "Guarded article",
+                "snippet": "an article about configuration"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://guarded.example/article": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/challenge-200.html",
+            "body_sha256": "83c4891b4a5748a84b7b94c4c8321cbdc9c1269a78c72981056a27e5554e9172",
+            "size": 427
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "NEEDS_USER",
+        "items": [
+          {
+            "url": "https://guarded.example/article",
+            "state": "CHALLENGE"
+          }
+        ],
+        "must_not": [
+          "treat_challenge_as_read",
+          "change_identity",
+          "solve_challenge_automatically"
+        ]
+      }
+    },
+    {
+      "id": "W05",
+      "title": "Article légitime qui parle de CAPTCHA",
+      "category": "challenge",
+      "why": "Le détecteur ne doit pas refuser un vrai article qui cite les phrases d'un défi.",
+      "setup": {
+        "query": "how do captcha challenges work",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://magazine.example/how-captcha-works",
+                "title": "How CAPTCHA challenges work",
+                "snippet": "an explainer"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://magazine.example/how-captcha-works": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/captcha-article.html",
+            "body_sha256": "40464b5e91b084583a85b2351826cc35ae2add6f2d365a3db358ffdf3df1f1c5",
+            "size": 932
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://magazine.example/how-captcha-works",
+            "state": "READ"
+          }
+        ],
+        "must_not": [
+          "treat_article_as_challenge"
+        ]
+      }
+    },
+    {
+      "id": "W06",
+      "title": "Source connue seulement par son extrait",
+      "category": "snippet",
+      "why": "Un extrait du moteur reste un extrait : la réponse est partielle et le dit.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "max_workers defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": "timeout"
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "PARTIAL",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "SNIPPET_ONLY"
+          }
+        ],
+        "must_not": [
+          "claim_full_text_from_snippet"
+        ]
+      }
+    },
+    {
+      "id": "W07",
+      "title": "Même résultat renvoyé par deux moteurs",
+      "category": "duplicate",
+      "why": "Une URL canonique identique (paramètres de suivi retirés) n'est lue qu'une fois.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "max_workers defaults to 4"
+              }
+            ]
+          },
+          "engine-b": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config?utm_source=engine-b",
+                "title": "Configuration",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          }
+        ],
+        "page_fetches_max": 1,
+        "must_not": [
+          "fetch_same_canonical_url_twice"
+        ]
+      }
+    },
+    {
+      "id": "W08",
+      "title": "Copie identique sur un autre domaine",
+      "category": "duplicate",
+      "why": "Deux pages au contenu identique ne sont pas deux sources indépendantes.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              },
+              {
+                "url": "https://mirror.other-host.example/synthetic-tool/config",
+                "title": "Mirror — configuration",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          },
+          "https://mirror.other-host.example/synthetic-tool/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-mirror.html",
+            "body_sha256": "ea9f569d4063f66d9e937c589bb35b21870a6754b413b5bfaabd300fe18cf027",
+            "size": 395
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "independent_sources": 1,
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          },
+          {
+            "url": "https://mirror.other-host.example/synthetic-tool/config",
+            "state": "READ",
+            "same_content_as": "https://docs.synthetic-tool.example/config"
+          }
+        ],
+        "must_not": [
+          "count_mirror_as_independent"
+        ],
+        "note": "Les octets diffèrent (titre), le texte principal est identique : comparer le texte extrait, pas seulement le SHA-256 brut."
+      }
+    },
+    {
+      "id": "W09",
+      "title": "Cache périmé, site disponible",
+      "category": "cache",
+      "why": "Une copie ancienne n'est pas une observation actuelle : relire et dater.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "fetched_at": "2026-09-05T15:00:00+00:00",
+            "max_age_days": 7,
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        ],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ",
+            "observed_at": "2026-10-05T15:00:00+00:00"
+          }
+        ],
+        "page_fetches_max": 1,
+        "must_not": [
+          "serve_stale_cache_as_current"
+        ]
+      }
+    },
+    {
+      "id": "W10",
+      "title": "Cache périmé, site en panne",
+      "category": "cache",
+      "why": "Sans relecture possible, la copie peut être montrée avec sa date, jamais comme actuelle.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 503,
+            "headers": {}
+          }
+        },
+        "cache": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "fetched_at": "2026-09-05T15:00:00+00:00",
+            "max_age_days": 7,
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        ],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "PARTIAL",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "CACHE_STALE",
+            "observed_at": "2026-09-05T15:00:00+00:00"
+          }
+        ],
+        "must_not": [
+          "serve_stale_cache_as_current"
+        ]
+      }
+    },
+    {
+      "id": "W11",
+      "title": "Domaine mis en liste noire après mise en cache",
+      "category": "policy",
+      "why": "Le cache obéit à la politique actuelle : aucune lecture ni restitution d'un domaine désormais bloqué.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "fetched_at": "2026-10-05T14:00:00+00:00",
+            "max_age_days": 7,
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        ],
+        "robots": {},
+        "policy": {
+          "blocked_domains": [
+            "docs.synthetic-tool.example"
+          ]
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "NO_EVIDENCE",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "POLICY_REFUSED"
+          }
+        ],
+        "page_fetches_max": 0,
+        "must_not": [
+          "serve_cache_after_policy_change",
+          "contact_blocked_domain"
+        ]
+      }
+    },
+    {
+      "id": "W12",
+      "title": "Page de connexion",
+      "category": "access",
+      "why": "Un formulaire d'identification n'est pas le contenu ; aucun identifiant n'est envoyé.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://members.example/article",
+                "title": "Members article",
+                "snippet": "members only"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://members.example/article": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/login.html",
+            "body_sha256": "54a7551553bd0a01db646f004a041ed0aa3ba1f2732dcd8099141e45fb479f57",
+            "size": 314
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "NEEDS_USER",
+        "items": [
+          {
+            "url": "https://members.example/article",
+            "state": "LOGIN_REQUIRED"
+          }
+        ],
+        "must_not": [
+          "submit_credentials",
+          "treat_login_as_read"
+        ]
+      }
+    },
+    {
+      "id": "W13",
+      "title": "Résultats contradictoires de dates différentes",
+      "category": "contradiction",
+      "why": "Les sources se contredisent : montrer le désaccord et les dates, ne pas choisir en silence.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference 2.4",
+                "snippet": "defaults to 4"
+              },
+              {
+                "url": "https://blog.community.example/tuning-notes",
+                "title": "Tuning notes",
+                "snippet": "defaults to 8"
+              }
+            ]
+          },
+          "engine-b": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://news.synthetic-tool.example/release-2.5.txt",
+                "title": "Release 2.5",
+                "snippet": "default is now 6"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          },
+          "https://blog.community.example/tuning-notes": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-contradiction.html",
+            "body_sha256": "71f38409a61fbc20d35cd791cc691e79b7d303cbb285f6b0c9a70a1c3c2a1c28",
+            "size": 314
+          },
+          "https://news.synthetic-tool.example/release-2.5.txt": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/plain; charset=utf-8"
+            },
+            "body": "bodies/news-2026.txt",
+            "body_sha256": "24b15db62cda4e5c7ccfd51e60f575d6769b34e988e4cfeebb9f66dbc26adbc7",
+            "size": 150
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED_WITH_CONFLICT",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          },
+          {
+            "url": "https://blog.community.example/tuning-notes",
+            "state": "READ"
+          },
+          {
+            "url": "https://news.synthetic-tool.example/release-2.5.txt",
+            "state": "READ"
+          }
+        ],
+        "conflict": {
+          "claim": "max_workers default",
+          "values": {
+            "4": "https://docs.synthetic-tool.example/config",
+            "8": "https://blog.community.example/tuning-notes",
+            "6": "https://news.synthetic-tool.example/release-2.5.txt"
+          }
+        },
+        "must_not": [
+          "pick_one_side_silently"
+        ],
+        "note": "La date de publication et la version citée sont des indices, pas une vérité : les restituer."
+      }
+    },
+    {
+      "id": "W14",
+      "title": "Tous les fournisseurs en panne",
+      "category": "provider",
+      "why": "Une panne n'est pas « aucun résultat ».",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "down"
+          },
+          "engine-b": {
+            "status": "timeout"
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {},
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "UNAVAILABLE",
+        "providers": {
+          "engine-a": "PROVIDER_UNAVAILABLE",
+          "engine-b": "PROVIDER_UNAVAILABLE"
+        },
+        "items": [],
+        "provider_calls_max": 2,
+        "must_not": [
+          "report_no_results_when_down"
+        ]
+      }
+    },
+    {
+      "id": "W15",
+      "title": "Recherche sans résultat",
+      "category": "provider",
+      "why": "Distinct de W14 : le fournisseur répond, il n'a rien trouvé.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": []
+          },
+          "engine-b": {
+            "status": "ok",
+            "results": []
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {},
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "NO_RESULTS",
+        "items": []
+      }
+    },
+    {
+      "id": "W16",
+      "title": "Budget de lecture insuffisant",
+      "category": "budget",
+      "why": "Le budget s'épuise : les résultats non lus restent visibles comme tels.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              },
+              {
+                "url": "https://blog.community.example/tuning-notes",
+                "title": "Tuning notes",
+                "snippet": "defaults to 8"
+              },
+              {
+                "url": "https://news.synthetic-tool.example/release-2.5.txt",
+                "title": "Release 2.5",
+                "snippet": "default is now 6"
+              },
+              {
+                "url": "https://magazine.example/how-captcha-works",
+                "title": "CAPTCHA",
+                "snippet": "unrelated"
+              },
+              {
+                "url": "https://mirror.other-host.example/synthetic-tool/config",
+                "title": "Mirror",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          },
+          "https://blog.community.example/tuning-notes": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-contradiction.html",
+            "body_sha256": "71f38409a61fbc20d35cd791cc691e79b7d303cbb285f6b0c9a70a1c3c2a1c28",
+            "size": 314
+          },
+          "https://news.synthetic-tool.example/release-2.5.txt": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/plain; charset=utf-8"
+            },
+            "body": "bodies/news-2026.txt",
+            "body_sha256": "24b15db62cda4e5c7ccfd51e60f575d6769b34e988e4cfeebb9f66dbc26adbc7",
+            "size": 150
+          },
+          "https://magazine.example/how-captcha-works": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/captcha-article.html",
+            "body_sha256": "40464b5e91b084583a85b2351826cc35ae2add6f2d365a3db358ffdf3df1f1c5",
+            "size": 932
+          },
+          "https://mirror.other-host.example/synthetic-tool/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-mirror.html",
+            "body_sha256": "ea9f569d4063f66d9e937c589bb35b21870a6754b413b5bfaabd300fe18cf027",
+            "size": 395
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 1,
+          "page_fetches": 2,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "PARTIAL",
+        "page_fetches_max": 2,
+        "items_read_max": 2,
+        "unread_state": "NOT_FETCHED_BUDGET",
+        "must_not": [
+          "exceed_budget",
+          "hide_unread_results"
+        ]
+      }
+    },
+    {
+      "id": "W17",
+      "title": "Chemin interdit par robots.txt",
+      "category": "etiquette",
+      "why": "Respecter robots.txt est un choix de politesse explicite (RFC 9309), à configurer et à tracer.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/private/notes",
+                "title": "Private notes",
+                "snippet": "x"
+              },
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [],
+        "robots": {
+          "https://docs.synthetic-tool.example/robots.txt": {
+            "body": "bodies/robots-disallow.txt",
+            "body_sha256": "efc4db5408347a17597d7618522f084512d5d8d9ff46135129e293e4dee3355a",
+            "size": 34
+          }
+        },
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/private/notes",
+            "state": "ROBOTS_DISALLOWED"
+          },
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          }
+        ],
+        "must_not": [
+          "fetch_disallowed_path"
+        ]
+      }
+    },
+    {
+      "id": "W18",
+      "title": "Fausse page 200 « introuvable »",
+      "category": "exploitable",
+      "why": "Un soft-404 n'est pas une page lue.",
+      "setup": {
+        "query": "synthetic tool max_workers default",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/old-page",
+                "title": "Old configuration page",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/old-page": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/soft-404.html",
+            "body_sha256": "bd3dd65224675a2b05d7c0690aafb8ee56d3c81043bb4d5d308637265310b4de",
+            "size": 174
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "NO_EVIDENCE",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/old-page",
+            "state": "NOT_FOUND"
+          }
+        ],
+        "must_not": [
+          "treat_soft_404_as_read"
+        ]
+      }
+    },
+    {
+      "id": "W19",
+      "title": "Article tronqué par un abonnement",
+      "category": "exploitable",
+      "why": "Un début d'article est une lecture partielle, à ne pas présenter comme texte intégral.",
+      "setup": {
+        "query": "storage prices 2026",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://daily.example/storage-prices",
+                "title": "Storage prices in 2026",
+                "snippet": "prices moved"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://daily.example/storage-prices": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/paywall.html",
+            "body_sha256": "9a2a0b579ce2111208b70464c20b3e85122946de85380c61d49c79286085bd8d",
+            "size": 308
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "PARTIAL",
+        "items": [
+          {
+            "url": "https://daily.example/storage-prices",
+            "state": "PARTIAL_CONTENT"
+          }
+        ],
+        "must_not": [
+          "claim_full_text_from_partial"
+        ]
+      }
+    },
+    {
+      "id": "W20",
+      "title": "Requête contenant des données personnelles",
+      "category": "privacy",
+      "why": "La requête envoyée à un tiers est minimisée : rien de personnel ne sort.",
+      "setup": {
+        "query": "synthetic tool max_workers default (contexte: écrire à jean.exemple@example.invalid au 01 23 45 67 89)",
+        "providers": {
+          "engine-a": {
+            "status": "ok",
+            "results": [
+              {
+                "url": "https://docs.synthetic-tool.example/config",
+                "title": "Configuration reference",
+                "snippet": "defaults to 4"
+              }
+            ]
+          }
+        },
+        "provider_order": [
+          "engine-a",
+          "engine-b"
+        ],
+        "pages": {
+          "https://docs.synthetic-tool.example/config": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "text/html; charset=utf-8"
+            },
+            "body": "bodies/docs-v2.html",
+            "body_sha256": "48b615504024806a96e78406fa8ae538593b6834ba2a9e635ef9433ed7f72648",
+            "size": 384
+          }
+        },
+        "cache": [],
+        "robots": {},
+        "policy": {
+          "blocked_domains": []
+        },
+        "budget": {
+          "provider_calls": 4,
+          "page_fetches": 5,
+          "seconds": 30
+        }
+      },
+      "expected": {
+        "outcome": "ANSWERED",
+        "items": [
+          {
+            "url": "https://docs.synthetic-tool.example/config",
+            "state": "READ"
+          }
+        ],
+        "sent_query_must_not_contain": [
+          "jean.exemple@example.invalid",
+          "01 23 45 67 89"
+        ],
+        "must_not": [
+          "send_personal_data_in_query"
+        ]
+      }
+    }
+  ]
+}
