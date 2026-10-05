@@ -1,0 +1,30 @@
+Python 3.11.15 | linux
+
+[N-09 effet puis exception : confirmation exigée ?]
+  run: REVIEW_REQUIRED / CALL_ERROR
+  no-effect sans confirmation: REFUS ValueError: execution authorized or unknown: explicit confirm_no_effect required after investigation
+  effets : 1 | CALL_STARTED : 1
+  no-effect --confirm-no-effect: BLOCKED / RECONCILED
+  historique conservé : 1 tentative(s) ; reçu d'erreur archivé : True | confirmation journalisée : True
+
+[N-10 verrou supprimé après WORKER_SPAWNED]
+  worker journalisé : True | verrou : 'authorized\n'
+  no-effect --confirm-no-effect (verrou absent): REFUS Busy: worker lease missing after spawn; retain review or abandon
+  verrou recréé par la tentative : False
+  abandon: ABANDONED / EFFECT_UNKNOWN
+  effets : 0
+
+[Catalogue : les objets rendus sont-ils détachés ?]
+  empreinte inchangée : True | portée : {'roots': ['archives']}
+  constructeur direct, doublon : refusé, ContractError
+
+[Options Ollama : immuables et reflétées par model_id ?]
+  source modifiée → options : {'seed': 7, 'temperature': 0} | model_id inchangé : True
+  écriture directe : refusée (TypeError)
+  remplacement explicite → model_id change : True
+  après pickle (spawn) : options {'seed': 7, 'temperature': 0.5} | model_id identique : True
+
+[C-001a : une demande hors catalogue peut-elle atteindre le modèle ou un outil ?]
+  mission normale : SUCCEEDED / ACHIEVED
+  demande hors catalogue (create) : objectif None | issue CLARIFICATION
+  demande hors catalogue (run) : BLOCKED / CLARIFICATION | appels : 0

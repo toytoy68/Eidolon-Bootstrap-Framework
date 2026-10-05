@@ -47,3 +47,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c2792d6/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 - [C-MSG-G010](2026-10-05-gpt-C-MSG-G010.md), copie exacte ; liens dans la [version originale](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c63c4d114d07581792afe34bbc3c2cb6fc0a9172/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+- [C-MSG-C010, étude des moteurs pour 2 × V100](2026-10-05-claude-C-MSG-C010.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ec7582b`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ec7582b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
