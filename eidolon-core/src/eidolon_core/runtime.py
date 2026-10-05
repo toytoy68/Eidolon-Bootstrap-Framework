@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : runtime.py
+# Description : Exécution séquentielle, vérification et reprise des missions
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """One agent, sequential execution, explicit uncertain-effect reconciliation."""
 from dataclasses import dataclass
 import math

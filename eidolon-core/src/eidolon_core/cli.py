@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : cli.py
+# Description : Commandes de mission et choix du format de sortie
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """Local JSON CLI. Exit 0 succeeds, 2 blocks/requires review, 3 fails, 4 cancels."""
 import argparse
 import json
@@ -8,6 +16,7 @@ from .contracts import encode
 from .memory import DEMO_REQUEST, EngineMemory
 from .runtime import Limits, Runtime
 from .store import Busy, Store
+from .presentation import PRESENTATION_STANDARD, preview, render_error, render_result
 
 
 def main(argv=None):
@@ -15,7 +24,10 @@ def main(argv=None):
     parser.add_argument("--state", default=".eidolon-core")
     parser.add_argument("--timeout", type=float, default=10.0, help="seconds per call, including process startup")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
+    parser.add_argument("--format", choices=("json", "human"), default="json",
+                        help="JSON for automation (default), human for the Eidolon console presentation")
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="create and run the deterministic synthetic mission")
     create = commands.add_parser("create", help="create a durable mission without executing it")
     create.add_argument("request", nargs="?", default=DEMO_REQUEST)
@@ -32,6 +44,10 @@ def main(argv=None):
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
     args = parser.parse_args(argv)
     try:
+        if args.command == "presentation-preview":
+            text = preview()
+            print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
+            return 0
         store = Store(args.state)
         runtime = Runtime(store, limits=Limits(args.timeout),
                           memory=EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None)
@@ -56,15 +72,18 @@ def main(argv=None):
                 output = json.loads(path.read_text(encoding="utf-8"))
             result = runtime.reconcile(args.mission_id, decision=args.decision,
                                        actor=args.actor, reason=args.reason, output=output)
-        print(encode(result))
+        print(render_result(result) if args.format == "human" else encode(result))
         if args.command in {"show", "create", "reconcile"}:
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4}.get(result["status"], 2)
     except (ValueError, KeyError, OSError, Busy) as exc:
-        print(encode({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)
+        print(render_error(type(exc).__name__, str(exc)) if args.format == "human"
+              else encode({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)
         return 2
     except KeyboardInterrupt:
-        print(encode({"error": "INTERRUPTED", "message": "state preserved; use show/run to diagnose"}), file=sys.stderr)
+        diagnostic = "state preserved; use show/run to diagnose"
+        print(render_error("INTERRUPTED", diagnostic) if args.format == "human"
+              else encode({"error": "INTERRUPTED", "message": diagnostic}), file=sys.stderr)
         return 130
 
 

@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : model.py
+# Description : Modèle simulé déterministe interchangeable
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 from dataclasses import dataclass
 
 from .contracts import encode, reference

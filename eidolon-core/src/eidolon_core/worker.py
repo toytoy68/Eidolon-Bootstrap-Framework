@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : worker.py
+# Description : Appels bornés dans des processus distincts
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """Bounded trusted Python calls in spawned processes; not a security sandbox."""
 import json
 import multiprocessing

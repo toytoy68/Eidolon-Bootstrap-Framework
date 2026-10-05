@@ -1,11 +1,9 @@
 # ==========================================================
-# Projet      : Eidolon Core
+# Projet      : <Eidolon Core / Eidolon Memory Engine>
 # Organisation: Eidolon Core Technologies (ECT)
-# Fichier     : __init__.py
-# Description : Identité et version du paquet autonome
+# Fichier     : <nom_du_module.py>
+# Description : <responsabilité du module>
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
-"""Eidolon Core, independent from Memory Engine's `core` package."""
-
-__version__ = "0.1.0"
+"""<Contrat du module et limites utiles.>"""

@@ -269,6 +269,10 @@ Together, they combine engineering methodology with practical implementation, ma
 
 ## Independent Core prototype
 
+Shared presentation and source-header conventions for agents working on Eidolon:
+[Eidolon Presentation Standard v1](standards/EIDOLON-PRESENTATION-v1.md),
+also referenced by [AGENTS.md](AGENTS.md).
+
 The experimental [Eidolon Core v0.1 subproject](eidolon-core/README.md) contains
 its own Python package, tests, CLI and roadmap. It is independent of Bootstrap;
 the installers do not launch or deploy it. Its synthetic demo needs no GPU,

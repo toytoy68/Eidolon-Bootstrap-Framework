@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : store.py
+# Description : Persistance transactionnelle des missions et événements
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """SQLite snapshots and audit events committed together; POSIX execution locks."""
 from contextlib import contextmanager
 from datetime import datetime, timezone

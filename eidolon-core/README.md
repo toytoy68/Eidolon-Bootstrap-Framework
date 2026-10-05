@@ -52,6 +52,22 @@ python -m venv .venv
 Le packaging utilise setuptools>=68 (installation éventuellement réseau) ;
 l'exécution et les tests simulés utilisent uniquement la bibliothèque standard.
 
+## Présentation humaine commune
+
+Le mode humain reprend le cadre, les séparateurs et les préfixes des installateurs
+Bootstrap, avec l'identité Eidolon Core Technologies. Le défaut reste JSON.
+
+```sh
+PYTHONPATH=src python -m eidolon_core --format human presentation-preview
+PYTHONPATH=src python -m eidolon_core --format human --state /tmp/eidolon-core-demo demo
+```
+
+`presentation-preview` affiche le style sans installer de logiciel ni créer de
+dossier d'état. `--format human` est aussi disponible pour show/run/cancel et
+les autres commandes. Le [standard commun](../standards/EIDOLON-PRESENTATION-v1.md)
+définit les règles à transmettre aux agents de tous les projets Eidolon ;
+le `AGENTS.md` à la racine y renvoie.
+
 ## Tests simulés
 
 ```sh

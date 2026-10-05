@@ -16,6 +16,8 @@ ils ne constituent pas des fonctionnalités livrées.
 - [x] Réconciliation explicite et auditée, sans confirmation automatique des sources.
 - [x] Adaptateur réel de rappel, tests synthétiques du service mémoire sur copie.
 - [x] Documentation des trois défauts mémoire et des validations différées.
+- [x] Standard de présentation commun Eidolon, consignes AGENTS.md, en-têtes
+  des modules et mode humain de la CLI ; aperçu sans installation.
 
 ## Prochaine tranche proposée : critères de mission et contrôleur simulé enrichi
 

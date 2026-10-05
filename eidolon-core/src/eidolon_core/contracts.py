@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : contracts.py
+# Description : Contrats JSON des modèles, plans et rappels mémoire
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """Strict JSON boundaries. Source text is data, never permission."""
 from __future__ import annotations
 

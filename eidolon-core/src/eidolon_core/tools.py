@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : tools.py
+# Description : Registre, autorisations et vérification des outils
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """Trusted implementations, strict inputs, deterministic deny-by-default policy."""
 from dataclasses import dataclass
 import hashlib

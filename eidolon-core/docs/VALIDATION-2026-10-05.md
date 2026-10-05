@@ -101,3 +101,17 @@ pas la qualification d'un futur LLM. Les trois défauts mémoire ne sont pas cor
 La prochaine tranche proposée porte sur les critères de réussite des missions
 et les contrats du contrôleur, voir la [TODO Core](../TODO.md). Aucun travail
 ne reste suspendu à une disponibilité VM pour reproduire cette tranche.
+
+## Ajout de présentation commune — même journée
+
+Le lot suivant ajoute le standard réutilisable
+`standards/EIDOLON-PRESENTATION-v1.md`, les modèles d'en-tête, les consignes
+`AGENTS.md`, les en-têtes des modules Core et le rendu CLI `--format human`.
+Les installateurs Bootstrap restent inchangés et n'ont pas été exécutés.
+
+Vérification ciblée : le test existant `test_cli_demo_and_durable_show` réussit
+(1 test, 0,595 s). L'aperçu humain a été exécuté et examiné : aucun dossier
+d'état créé. La démonstration humaine affiche un succès vérifié et conserve
+UNVERIFIED/revue=true. JSON de l'aperçu parsé, erreur sur stderr/code 2 et
+neutralisation des caractères de contrôle vérifiés. Liens documentaires valides.
+Ce contrôle ciblé ne constitue pas une nouvelle exécution des 40 tests ci-dessus.

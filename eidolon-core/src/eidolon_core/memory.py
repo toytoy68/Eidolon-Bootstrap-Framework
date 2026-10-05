@@ -1,3 +1,11 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : memory.py
+# Description : Interfaces de rappel mémoire, sans mutation métier
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+
 """Read-only ports. The optional adapter delegates to the real engine API."""
 from dataclasses import asdict, dataclass
 from pathlib import Path
