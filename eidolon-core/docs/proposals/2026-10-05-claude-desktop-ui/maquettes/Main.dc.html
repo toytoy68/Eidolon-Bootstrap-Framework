@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Eidolon — Conversation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#181B20}
+a{color:#8FB6FF}a:hover{color:#B9D0FF}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #8FB6FF;outline-offset:2px}
+.eid-breathe .iris{animation:eid-breathe 4s ease-in-out infinite}
+.eid-listen .iris{animation:eid-pulse 1.1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.eid-listen .ring{animation:eid-breathe 1.1s ease-in-out infinite}
+.eid-think .ring{animation:eid-spin 2.2s linear infinite;transform-box:fill-box;transform-origin:center}
+.eid-think .pupil{animation:eid-look 3.2s ease-in-out infinite}
+.eid-alert .ring{animation:eid-breathe 1.4s ease-in-out infinite}
+@keyframes eid-breathe{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes eid-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes eid-spin{to{transform:rotate(360deg)}}
+@keyframes eid-look{0%,100%{transform:translate(0,0)}30%{transform:translate(-3px,1px)}65%{transform:translate(3px,-1px)}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none!important}}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #181B20; color: #E8EAED; font-family: 'Segoe UI Variable Text', 'Segoe UI', 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 20px 14px; background: #1F2329; border-right: 1px solid #323843; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 18px">
+<div style="width: 36px; height: 36px; border-radius: 9px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 20px; font-family: 'IBM Plex Sans', sans-serif">E</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><strong style="font-weight: 600; font-size: 16px">Eidolon</strong></div>
+</div>
+<a href="Main.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; background: #2C323C; color: #E8EAED; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Conversation</a>
+<a href="Missions.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span style="flex: 1">Missions</span><span style="background: #F0A050; color: #1A1206; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 600">1</span></a>
+<a href="Systeme.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M11 7.2L6.2 15.8M13 7.2l4.8 8.6M7.5 18h9"/></svg><span style="flex: 1">Système</span><span style="background: #3A404B; color: #E8EAED; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 600">1 hors ligne</span></a>
+<a href="Lecture.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5"/></svg>Lecture assistée</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Paramètres</a>
+<div style="flex: 1"></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 8px; background: #252A31; font-size: 13px">
+<div style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{dot}}"></span><span>{{statusLabel}}</span></div>
+<span style="color: #A9B0BB">{{statusDetail}}</span>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 28px; border-bottom: 1px solid #323843">
+<h1 style="margin: 0; font-size: 20px; font-weight: 600; flex: 1">Conversation</h1>
+<div style="display: flex; align-items: center; gap: 12px; order: 2">
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-size: 14px; font-weight: 500">{{eye.label}}</span><span style="font-size: 12px; color: #A9B0BB">{{eye.detail}}</span></div>
+<svg class="{{eye.cls}}" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Présence d’Eidolon : {{eye.label}}" style="flex: none; filter: drop-shadow(0 0 12px {{eye.glow}})">
+<defs><clipPath id="eye-main"><circle cx="32" cy="32" r="27"></circle></clipPath></defs>
+<circle cx="32" cy="32" r="31" fill="#0B0D11" stroke="#3A404B" stroke-width="1.5"></circle>
+<circle class="ring" cx="32" cy="32" r="25" fill="none" stroke="{{eye.ring}}" stroke-width="2" stroke-dasharray="{{eye.dash}}"></circle>
+<g clip-path="url(#eye-main)">
+<circle class="iris" cx="32" cy="32" r="16" fill="{{eye.iris}}"></circle>
+<circle cx="32" cy="32" r="14" fill="none" stroke="#0B0D11" stroke-opacity="0.35" stroke-width="4"></circle>
+<circle class="pupil" cx="32" cy="32" r="{{eye.pupil}}" fill="#05070A"></circle>
+<circle cx="26.5" cy="26" r="2.6" fill="#FFFFFF" fill-opacity="0.85"></circle>
+<rect x="0" y="0" width="64" height="{{eye.lid}}" fill="#14171C"></rect>
+</g>
+</svg>
+</div>
+<button type="button" style="min-height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #3A404B; background: #23272E; color: #E8EAED; font: inherit; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0M3 3l18 18"/></svg>Silence 1 h</button>
+</header>
+
+<sc-if value="{{offline}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 28px 0; padding: 14px 16px; border-radius: 10px; background: #3A2A14; border: 1px solid #7A5520; color: #F7DDB8">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.6a10 10 0 0 1 9-2.6M8.5 16.4a5 5 0 0 1 4-1.3M12 20h.01M3 3l18 18"/></svg>
+<span style="flex: 1; min-width: 240px">Eidolon est injoignable. Les missions continuent sur le serveur ; la conversation reprendra et les événements manqués seront rattrapés à la reconnexion.</span>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 8px; border: 1px solid #A87A3A; background: transparent; color: #F7DDB8; font: inherit; cursor: pointer">Réessayer maintenant</button>
+</div>
+</sc-if>
+
+<section aria-label="Messages" style="flex: 1; display: flex; flex-direction: column; gap: 20px; padding: 24px 28px; max-width: 880px; width: 100%; box-sizing: border-box">
+
+<article style="display: flex; gap: 14px">
+<div aria-hidden="true" style="flex: none; width: 32px; height: 32px; border-radius: 8px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600">E</div>
+<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
+<div style="color: #A9B0BB; font-size: 13px">Eidolon · 18:02</div>
+<p style="margin: 0; line-height: 1.55">Bonjour toytoy. Eidolon est en ligne. Deux missions sont terminées et une attend ton accord.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="Missions.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: 18px; background: #23303F; color: #CFE0FF; text-decoration: none; font-size: 14px">2 réussies</a>
+<a href="Missions.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: 18px; background: #3A2A14; color: #F7DDB8; text-decoration: none; font-size: 14px">1 attend ton accord</a>
+</div>
+</div>
+</article>
+
+<article aria-label="Demande d’accord" style="margin-left: 46px; border-radius: 12px; background: #23272E; border: 1px solid #4A3A22; display: flex; flex-direction: column; gap: 14px; padding: 18px 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0A050" stroke-width="1.7" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/></svg>
+<h2 style="margin: 0; font-size: 16px; font-weight: 600; flex: 1">Une action attend ton accord</h2>
+
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; font-size: 14px">
+<dt style="color: #A9B0BB">Action</dt><dd style="margin: 0">Écrire le fichier <strong style="font-weight: 600">comparatif-inference.md</strong></dd>
+<dt style="color: #A9B0BB">Où</dt><dd style="margin: 0">Documents\Eidolon\rapports (dossier autorisé)</dd>
+<dt style="color: #A9B0BB">Mission</dt><dd style="margin: 0">Comparer les moteurs d’inférence locaux</dd>
+<dt style="color: #A9B0BB">Pourquoi</dt><dd style="margin: 0">Rendre le rapport lisible hors du serveur</dd>
+</dl>
+<sc-if value="{{pending}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" onClick="{{approve}}" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: none; background: #2F6FE0; color: #FFFFFF; font: inherit; font-weight: 600; cursor: pointer">Autoriser</button>
+<button type="button" onClick="{{refuse}}" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #3A404B; background: transparent; color: #E8EAED; font: inherit; cursor: pointer">Refuser</button>
+<a href="Missions.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px">Voir le détail et les preuves</a>
+</div>
+</sc-if>
+<sc-if value="{{decided}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; background: #1C2128; font-size: 14px">
+<strong style="font-weight: 600">{{decisionLabel}}</strong>
+<span style="color: #A9B0BB">Décision enregistrée et rattachée à la mission.</span>
+<button type="button" onClick="{{undo}}" style="min-height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid #3A404B; background: transparent; color: #E8EAED; font: inherit; font-size: 13px; cursor: pointer">Annuler</button>
+</div>
+</sc-if>
+<p style="margin: 0; font-size: 13px; color: #A9B0BB">v0.1 : l’accord est enregistré, aucune action réelle n’est exécutée (approbation simulée).</p>
+</article>
+
+<article style="display: flex; justify-content: flex-end">
+<div style="max-width: 520px; padding: 12px 16px; border-radius: 12px; background: #2A3F66; line-height: 1.5">Tu peux me résumer ce que tu as trouvé sur llama.cpp ?</div>
+</article>
+
+<article style="display: flex; gap: 14px">
+<div aria-hidden="true" style="flex: none; width: 32px; height: 32px; border-radius: 8px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600">E</div>
+<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
+<div style="color: #A9B0BB; font-size: 13px">Eidolon · 18:04</div>
+<p style="margin: 0; line-height: 1.55">J’ai lu deux sources ; une troisième demande une connexion, je ne l’ai pas lue. Le résumé ci-dessous ne s’appuie que sur les deux pages lues.</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+<li style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: #1E3A33; color: #8EE0C8">Lue</span><span>Dépôt officiel, au commit noté</span></li>
+<li style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: #1E3A33; color: #8EE0C8">Lue</span><span>Notes de version</span></li>
+<li style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: #3A2A14; color: #F7DDB8">Connexion requise</span><span>Forum de discussion</span><a href="Lecture.dc.html">Me la montrer</a></li>
+</ul>
+</div>
+</article>
+</section>
+
+<form aria-label="Écrire à Eidolon" style="display: flex; align-items: flex-end; gap: 10px; padding: 16px 28px 22px; border-top: 1px solid #323843; max-width: 880px; width: 100%; box-sizing: border-box">
+<label for="msg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Message</label>
+<textarea id="msg" rows="2" placeholder="Écris à Eidolon…" style="flex: 1; min-width: 0; resize: none; min-height: 48px; padding: 12px 14px; border-radius: 10px; border: 1px solid #3A404B; background: #23272E; color: #E8EAED; font: inherit"></textarea>
+<button type="button" aria-label="Parler à Eidolon" aria-pressed="{{listening}}" onClick="{{toggleMic}}" style="flex: none; width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{micBorder}}; background: {{micBg}}; color: #E8EAED; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+<button type="submit" aria-label="Envoyer" style="flex: none; width: 48px; height: 48px; border-radius: 10px; border: none; background: #2F6FE0; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+</form>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"activity":{"editor":"enum","options":["idle","work","attention","silence"],"default":"attention"},"coreOnline":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":860}}'>
+const EYES = {
+  idle: { label: 'En veille', detail: 'Rien en cours', iris: '#2A5BC0', ring: '#2A3F66', dash: '3 7', pupil: 6, lid: 0, glow: 'rgba(47,111,224,0.25)', cls: 'eid-breathe' },
+  listen: { label: 'À l’écoute', detail: 'Parle, je t’écoute', iris: '#4C8DFF', ring: '#8FB6FF', dash: 'none', pupil: 8.5, lid: 0, glow: 'rgba(76,141,255,0.55)', cls: 'eid-listen' },
+  work: { label: 'Au travail', detail: '1 mission en cours', iris: '#3F7BEA', ring: '#8FB6FF', dash: '22 9', pupil: 5.5, lid: 0, glow: 'rgba(76,141,255,0.4)', cls: 'eid-think' },
+  attention: { label: 'Attend ton accord', detail: '1 décision', iris: '#E0913F', ring: '#F0A050', dash: '5 4', pupil: 6, lid: 0, glow: 'rgba(240,160,80,0.45)', cls: 'eid-alert' },
+  silence: { label: 'Silence', detail: 'Jusqu’à 8 h', iris: '#24448A', ring: '#2A3F66', dash: '2 8', pupil: 6, lid: 30, glow: 'rgba(0,0,0,0)', cls: '' },
+  offline: { label: 'Injoignable', detail: 'Nouvel essai automatique', iris: '#3A404B', ring: '#3A404B', dash: '2 6', pupil: 3, lid: 44, glow: 'rgba(0,0,0,0)', cls: '' }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const online = this.props.coreOnline ?? true;
+    const d = this.state && this.state.decision;
+    const listening = !!(this.state && this.state.listening) && online;
+    let mode = this.props.activity ?? 'attention';
+    if (mode === 'attention' && d) mode = 'work';
+    if (listening) mode = 'listen';
+    if (!online) mode = 'offline';
+    return {
+      offline: !online,
+      dot: online ? '#5CC8B0' : '#F0A050',
+      statusLabel: online ? 'Eidolon en ligne' : 'Eidolon injoignable',
+      statusDetail: online ? 'Serveur Eidolon, via le VPN' : 'Nouvel essai automatique',
+      eye: EYES[mode],
+      listening: listening,
+      micBg: listening ? '#2A3F66' : '#23272E',
+      micBorder: listening ? '#8FB6FF' : '#3A404B',
+      toggleMic: () => this.setState({ listening: !listening }),
+      pending: !d,
+      decided: !!d,
+      decisionLabel: d === 'approved' ? 'Autorisé à 18:05' : 'Refusé à 18:05',
+      approve: () => this.setState({ decision: 'approved' }),
+      refuse: () => this.setState({ decision: 'refused' }),
+      undo: () => this.setState({ decision: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

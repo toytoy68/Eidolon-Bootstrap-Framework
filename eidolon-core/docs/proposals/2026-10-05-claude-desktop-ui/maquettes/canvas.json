@@ -1,0 +1,14 @@
+{"v":3,"createdOnFiles":{"v":1,"at":"2026-10-05T15:56:08Z"},"title":"Eidolon Desktop — Windows 11","launch":{"view":"canvas"},"pages":[],
+"boards":{
+"Main.dc.html":{"x":0,"y":0,"w":1280,"h":860,"title":"Conversation","expand":"fill","is_interactive":true},
+"Missions.dc.html":{"x":1360,"y":0,"w":1280,"h":860,"title":"Missions","expand":"fill"},
+"Systeme.dc.html":{"x":2720,"y":0,"w":1280,"h":1000,"title":"Système : agents et appareils","expand":"fill","is_interactive":true},
+"Lecture.dc.html":{"x":0,"y":980,"w":1280,"h":860,"title":"Lecture assistée","expand":"fill","is_interactive":true},
+"Settings.dc.html":{"x":1360,"y":980,"w":1280,"h":1040,"title":"Paramètres","expand":"fill"},
+"Tray.dc.html":{"x":0,"y":2140,"w":360,"h":600,"title":"Menu de la zone de notification"},
+"Toasts.dc.html":{"x":440,"y":2140,"w":420,"h":600,"title":"Notifications Windows"},
+"Presence.dc.html":{"x":940,"y":2140,"w":1280,"h":640,"title":"Présence : l’œil d’Eidolon"}
+},
+"order":["Main.dc.html","Missions.dc.html","Systeme.dc.html","Lecture.dc.html","Settings.dc.html","Tray.dc.html","Toasts.dc.html","Presence.dc.html"],
+"notes":{"t1":{"x":0,"y":-300,"text":"Eidolon — application Windows 11 (proposition)","kind":"title1","maxW":4000}},
+"designSystems":[]}

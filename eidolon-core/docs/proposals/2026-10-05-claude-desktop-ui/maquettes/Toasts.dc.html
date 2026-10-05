@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Eidolon — Notifications</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a,button{color:#E8EAED}
+a:focus-visible,button:focus-visible{outline:2px solid #8FB6FF;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 420px; height: 600px; box-sizing: border-box; padding: 20px; background: #0F1114; font-family: 'Segoe UI Variable Text', 'Segoe UI', 'IBM Plex Sans', system-ui, sans-serif; color: #E8EAED; font-size: 14px; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px">
+
+<div role="alert" style="border-radius: 10px; background: #262A31; border: 1px solid #3A404B; box-shadow: 0 12px 30px rgba(0,0,0,0.45); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px; color: #A9B0BB; font-size: 12px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">E</span>Eidolon</div>
+<strong style="font-weight: 600">Une action attend ton accord</strong>
+<span style="color: #C9CED6; line-height: 1.45">Écrire un rapport dans Documents\Eidolon\rapports.</span>
+<a href="Main.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 40px; border-radius: 6px; background: #323843; text-decoration: none">Ouvrir pour décider</a>
+</div>
+
+<div role="status" style="border-radius: 10px; background: #262A31; border: 1px solid #3A404B; box-shadow: 0 12px 30px rgba(0,0,0,0.45); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px; color: #A9B0BB; font-size: 12px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">E</span>Eidolon</div>
+<strong style="font-weight: 600">Eidolon injoignable</strong>
+<span style="color: #C9CED6; line-height: 1.45">Les missions continuent sur le serveur. Nouvel essai automatique.</span>
+</div>
+
+<div role="status" style="border-radius: 10px; background: #262A31; border: 1px solid #3A404B; box-shadow: 0 12px 30px rgba(0,0,0,0.45); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px; color: #A9B0BB; font-size: 12px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">E</span>Eidolon</div>
+<strong style="font-weight: 600">De retour en ligne</strong>
+<span style="color: #C9CED6; line-height: 1.45">3 événements rattrapés pendant la coupure : une mission réussie, deux en cours.</span>
+<a href="Missions.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 40px; border-radius: 6px; background: #323843; text-decoration: none">Voir les missions</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":420,"height":600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Eidolon — Système</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#181B20}
+a{color:#8FB6FF}a:hover{color:#B9D0FF}
+button:focus-visible,a:focus-visible{outline:2px solid #8FB6FF;outline-offset:2px}
+.eid-breathe .iris{animation:eid-breathe 4s ease-in-out infinite}
+.eid-think .ring{animation:eid-spin 2.2s linear infinite;transform-box:fill-box;transform-origin:center}
+.eid-alert .ring{animation:eid-breathe 1.4s ease-in-out infinite}
+@keyframes eid-breathe{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes eid-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none!important}}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #181B20; color: #E8EAED; font-family: 'Segoe UI Variable Text', 'Segoe UI', 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 20px 14px; background: #1F2329; border-right: 1px solid #323843; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 18px">
+<div style="width: 36px; height: 36px; border-radius: 9px; background: #2F6FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 20px; font-family: 'IBM Plex Sans', sans-serif">E</div>
+<strong style="font-weight: 600; font-size: 16px">Eidolon</strong>
+</div>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Conversation</a>
+<a href="Missions.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span style="flex: 1">Missions</span><span style="background: #F0A050; color: #1A1206; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 600">1</span></a>
+<a href="Systeme.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; background: #2C323C; color: #E8EAED; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M11 7.2L6.2 15.8M13 7.2l4.8 8.6M7.5 18h9"/></svg><span style="flex: 1">Système</span><span style="background: #3A404B; color: #E8EAED; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 600">1 hors ligne</span></a>
+<a href="Lecture.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5"/></svg>Lecture assistée</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9CED6; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Paramètres</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 28px; border-bottom: 1px solid #323843">
+<h1 style="margin: 0; font-size: 20px; font-weight: 600; flex: 1">Système</h1>
+<span style="color: #A9B0BB; font-size: 14px">Mis à jour à l’instant</span>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; flex: 1">
+<div style="flex: 999 1 520px; min-width: 0; padding: 24px 28px; display: flex; flex-direction: column; gap: 28px; box-sizing: border-box">
+
+<section aria-labelledby="h-agents" style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px"><h2 id="h-agents" style="margin: 0; font-size: 16px; font-weight: 600">Agents</h2><span style="color: #A9B0BB; font-size: 14px">Ce qui pense et agit, sur le serveur</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{agents}}" as="it" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{it.selected}}" onClick="{{it.pick}}" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; border: 1px solid {{it.border}}; background: {{it.bg}}; color: #E8EAED; font: inherit; text-align: left; cursor: pointer; min-height: 88px">
+<svg class="{{it.eye.cls}}" width="44" height="44" viewBox="0 0 64 64" aria-hidden="true" style="flex: none">
+<defs><clipPath id="{{it.clipId}}"><circle cx="32" cy="32" r="27"></circle></clipPath></defs>
+<circle cx="32" cy="32" r="31" fill="#0B0D11" stroke="#3A404B" stroke-width="2"></circle>
+<circle class="ring" cx="32" cy="32" r="25" fill="none" stroke="{{it.eye.ring}}" stroke-width="2.5" stroke-dasharray="{{it.eye.dash}}"></circle>
+<g clip-path="url(#{{it.clipId}})">
+<circle class="iris" cx="32" cy="32" r="16" fill="{{it.eye.iris}}"></circle>
+<circle cx="32" cy="32" r="{{it.eye.pupil}}" fill="#05070A"></circle>
+<circle cx="26.5" cy="26" r="2.6" fill="#FFFFFF" fill-opacity="0.8"></circle>
+<rect x="0" y="0" width="64" height="{{it.eye.lid}}" fill="#14171C"></rect>
+</g>
+</svg>
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><strong style="font-weight: 600">{{it.name}}</strong><span style="font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 11px; background: {{it.chipBg}}; color: {{it.chipFg}}">{{it.state}}</span></span>
+<span style="color: #C9CED6; font-size: 14px">{{it.now}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="h-devices" style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px"><h2 id="h-devices" style="margin: 0; font-size: 16px; font-weight: 600">Appareils</h2><span style="color: #A9B0BB; font-size: 14px">Ce qu’Eidolon voit, entend ou pilote</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{devices}}" as="it" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{it.selected}}" onClick="{{it.pick}}" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; border: 1px solid {{it.border}}; background: {{it.bg}}; color: #E8EAED; font: inherit; text-align: left; cursor: pointer; min-height: 88px">
+<svg class="{{it.eye.cls}}" width="44" height="44" viewBox="0 0 64 64" aria-hidden="true" style="flex: none">
+<defs><clipPath id="{{it.clipId}}"><circle cx="32" cy="32" r="27"></circle></clipPath></defs>
+<circle cx="32" cy="32" r="31" fill="#0B0D11" stroke="#3A404B" stroke-width="2"></circle>
+<circle class="ring" cx="32" cy="32" r="25" fill="none" stroke="{{it.eye.ring}}" stroke-width="2.5" stroke-dasharray="{{it.eye.dash}}"></circle>
+<g clip-path="url(#{{it.clipId}})">
+<circle class="iris" cx="32" cy="32" r="16" fill="{{it.eye.iris}}"></circle>
+<circle cx="32" cy="32" r="{{it.eye.pupil}}" fill="#05070A"></circle>
+<circle cx="26.5" cy="26" r="2.6" fill="#FFFFFF" fill-opacity="0.8"></circle>
+<rect x="0" y="0" width="64" height="{{it.eye.lid}}" fill="#14171C"></rect>
+</g>
+</svg>
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><strong style="font-weight: 600">{{it.name}}</strong><span style="font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 11px; background: {{it.chipBg}}; color: {{it.chipFg}}">{{it.state}}</span></span>
+<span style="color: #C9CED6; font-size: 14px">{{it.now}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</section>
+</div>
+
+<aside aria-label="Détail" style="flex: 1 1 320px; min-width: 0; box-sizing: border-box; margin: 24px 28px 24px 0; padding: 20px; border-radius: 14px; background: #1F2329; border: 1px solid #2C323C; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="color: #A9B0BB; font-size: 13px">{{sel.kind}}</span>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><h2 style="margin: 0; font-size: 20px; font-weight: 600">{{sel.name}}</h2><span style="font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 11px; background: {{sel.chipBg}}; color: {{sel.chipFg}}">{{sel.state}}</span></div>
+<span style="color: #C9CED6; font-size: 14px">{{sel.role}}</span>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; font-size: 14px">
+<sc-for list="{{sel.rows}}" as="r" hint-placeholder-count="4">
+<dt style="color: #A9B0BB">{{r.k}}</dt><dd style="margin: 0">{{r.v}}</dd>
+</sc-for>
+</dl>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="color: #A9B0BB; font-size: 13px">Capacités autorisées</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{sel.caps}}" as="c" hint-placeholder-count="3">
+<span style="font-size: 13px; padding: 4px 10px; border-radius: 12px; background: #2C323C; color: #E8EAED">{{c}}</span>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{sel.hasNote}}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0; padding: 12px 14px; border-radius: 10px; background: #262A31; color: #E8EAED; font-size: 14px; line-height: 1.5">{{sel.note}}</p>
+</sc-if>
+<a href="Missions.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 8px; border: 1px solid #3A404B; text-decoration: none; color: #E8EAED">Voir les missions liées</a>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+const LOOK = {
+  work: { chipBg: '#23303F', chipFg: '#CFE0FF', eye: { iris: '#3F7BEA', ring: '#8FB6FF', dash: '22 9', pupil: 5.5, lid: 0, cls: 'eid-think' } },
+  idle: { chipBg: '#23303F', chipFg: '#CFE0FF', eye: { iris: '#2A5BC0', ring: '#2A3F66', dash: '3 7', pupil: 6, lid: 0, cls: 'eid-breathe' } },
+  online: { chipBg: '#1E3A33', chipFg: '#8EE0C8', eye: { iris: '#2E9C86', ring: '#5CC8B0', dash: 'none', pupil: 6, lid: 0, cls: 'eid-breathe' } },
+  check: { chipBg: '#3A2A14', chipFg: '#F7DDB8', eye: { iris: '#E0913F', ring: '#F0A050', dash: '5 4', pupil: 6, lid: 0, cls: 'eid-alert' } },
+  off: { chipBg: '#2C323C', chipFg: '#C9CED6', eye: { iris: '#3A404B', ring: '#3A404B', dash: '2 6', pupil: 3, lid: 44, cls: '' } },
+  later: { chipBg: '#2C323C', chipFg: '#C9CED6', eye: { iris: '#2A2F37', ring: '#2A2F37', dash: '1 6', pupil: 3, lid: 30, cls: '' } }
+};
+const AGENTS = [
+  { id: 'brain', name: 'Eidolon', look: 'work', state: 'Au travail', now: 'Rédige le comparatif d’inférence', kind: 'Agent', role: 'Dialogue, raisonnement et décisions',
+    rows: [['Où', 'Serveur Eidolon'], ['Modèle', 'Local, sur le GPU du serveur'], ['Travail', 'Mission « Comparer les moteurs d’inférence »'], ['Dernier contact', 'À l’instant']],
+    caps: ['Dialogue', 'Planifier une mission', 'Demander un accord'], note: 'Il propose, il ne s’autorise jamais lui-même : chaque action passe par la politique et, si besoin, par ton accord.' },
+  { id: 'workers', name: 'Exécuteur', look: 'work', state: 'Au travail', now: '1 mission en cours, aucune en attente', kind: 'Agent', role: 'Exécute les missions approuvées',
+    rows: [['Où', 'Serveur Eidolon'], ['Workers', '2 prêts, 1 occupé'], ['Travail', 'Étape 3 sur 4'], ['Dernier contact', 'À l’instant']],
+    caps: ['Exécuter une mission', 'Écrire des preuves'], note: '' },
+  { id: 'research', name: 'Recherche web', look: 'idle', state: 'En veille', now: 'Dernière lecture il y a 6 min', kind: 'Agent', role: 'Cherche et lit des sources publiques',
+    rows: [['Où', 'Serveur Eidolon'], ['Accès', 'Identifié, sans changer d’identité'], ['Dernier contact', 'Il y a 6 min']],
+    caps: ['Rechercher', 'Lire une page publique'], note: 'Il ne contourne ni connexion ni anti-robot : il te propose la lecture assistée.' },
+  { id: 'memory', name: 'Mémoire', look: 'later', state: 'Désactivée', now: 'Pas encore activée dans cette version', kind: 'Agent', role: 'Souvenirs et contexte à long terme',
+    rows: [['Où', 'Serveur Eidolon'], ['État', 'Installée, non activée']], caps: ['Aucune pour l’instant'], note: '' },
+  { id: 'vision', name: 'Vision', look: 'later', state: 'Prévue', now: 'Phase ultérieure', kind: 'Agent', role: 'Comprendre les images de la caméra',
+    rows: [['Où', 'À définir'], ['État', 'Pas encore déployé']], caps: ['Aucune pour l’instant'], note: '' }
+];
+const DEVICES = [
+  { id: 'server', name: 'Serveur Eidolon', look: 'online', state: 'En ligne', now: 'GPU RTX 2060 · 12 Go', kind: 'Appareil', role: 'Héberge Eidolon et ses agents',
+    rows: [['Connexion', 'En ligne, via le VPN'], ['Télémétrie', 'GPU 33 °C · exemple'], ['Travail', '1 mission en cours'], ['Dernier contact', 'À l’instant']],
+    caps: ['Calcul', 'Stockage des missions'], note: '' },
+  { id: 'pc', name: 'Ce PC', look: 'online', state: 'En ligne', now: 'Client Eidolon ouvert', kind: 'Appareil', role: 'Ton poste Windows 11',
+    rows: [['Connexion', 'En ligne, via le VPN'], ['Contexte', 'Tu es présent'], ['Dernier contact', 'À l’instant']],
+    caps: ['Dossiers autorisés', 'Micro sur demande', 'Notifications'], note: '' },
+  { id: 'walle', name: 'WALL-E', look: 'off', state: 'Hors ligne', now: 'Dernier contact il y a 2 h', kind: 'Appareil · robot', role: 'Robot mobile',
+    rows: [['Connexion', 'Hors ligne'], ['Dernier contact', 'Il y a 2 h'], ['Télémétrie', 'Batterie 64 %, dernière valeur connue il y a 2 h · exemple'], ['Contexte', 'Salon, position déclarée']],
+    caps: ['Caméra', 'Audio', 'Navigation'], note: 'Hors ligne : aucune action ne peut lui être envoyée. L’arrêt d’urgence et l’anticollision restent sur le robot et ne dépendent pas d’Eidolon.' },
+  { id: 'nas', name: 'NAS', look: 'check', state: 'À vérifier', now: 'Sauvegarde : une preuve manque', kind: 'Appareil', role: 'Stockage et sauvegardes',
+    rows: [['Connexion', 'En ligne'], ['Travail', 'Mission « Vérifier la sauvegarde du NAS »'], ['Dernier contact', 'Il y a 4 min']],
+    caps: ['Lecture des journaux de sauvegarde'], note: '' }
+];
+class Component extends DCLogic {
+  renderVals() {
+    const selId = (this.state && this.state.sel) || 'walle';
+    const dress = (list) => list.map((x) => Object.assign({}, x, LOOK[x.look], {
+      clipId: 'sys-' + x.id,
+      selected: x.id === selId,
+      bg: x.id === selId ? '#262B33' : '#1F2329',
+      border: x.id === selId ? '#4C6FA8' : '#2C323C',
+      pick: () => this.setState({ sel: x.id })
+    }));
+    const agents = dress(AGENTS);
+    const devices = dress(DEVICES);
+    const s = agents.concat(devices).find((x) => x.selected);
+    return {
+      agents, devices,
+      sel: Object.assign({}, s, { rows: s.rows.map(([k, v]) => ({ k, v })), hasNote: !!s.note })
+    };
+  }
+}
+</script>
+</body>
+</html>
