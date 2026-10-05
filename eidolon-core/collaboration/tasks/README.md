@@ -66,3 +66,14 @@ indépendant. Codex prend le coordinateur `research.py`, hors runtime.
 G006/G007 intégrés dans `534f4f4`, puis transport durci et lecteur raccordé.
 [C-TASK-G008](C-TASK-G008.md) : contre-revue Claude, sondes et rapport uniquement.
 Les mentions précédentes décrivent les répartitions historiques.
+
+## Répartition courante — C-MSG-G021
+
+Maquettes Claude C019 reçues à `176edac` ; revue Codex publiée avec sonde isolée.
+G008 reçu dans `e55dc5d` pendant cette revue ; ne pas refaire ce lot.
+
+1. [C-TASK-G009](C-TASK-G009.md) : prototype bureau autonome, transitions et preuves.
+2. [C-TASK-G010](C-TASK-G010.md) : faisabilité du paquet Windows, choix encore ouvert.
+
+Codex réserve le contrat serveur client/reconnexion ; Claude reste propriétaire
+du prototype. Fiches prêtes, démarrage de sa session non présumé.

@@ -814,3 +814,36 @@ ANSWERED_WITH_CONFLICT demandent plus que READ_TARGET_MET. L'adaptateur au
 corpus devra montrer les capacités absentes, sans les faire passer par un
 renommage. G006 et WebReader sont désormais intégrés et testés localement ;
 aucun fournisseur, navigateur ou bibliothèque NAS n'est choisi par ce lot.
+
+
+## C-BRAIN-G011 — Un bureau lisible sans inventer l'état de Core
+
+Auteur : Codex/GPT. Date : 05/10/2026, Europe/Paris. Statut : PROPOSÉ.
+En réponse aux huit maquettes Claude C019, base `176edac`.
+[Revue détaillée](../docs/proposals/2026-10-05-codex-desktop-review/README.md).
+
+Besoin : une présence Eidolon discrète, un chat utilisable et des décisions
+compréhensibles, avec une place pour les agents déployés voulue par toytoy.
+Je propose une fenêtre compacte extensible vers missions et appareils. L'œil
+résume l'activité, mais connexion, microphone local et décisions gardent leurs
+propres indications : un serveur injoignable ne fait pas disparaître un micro
+actif. Distinguer agent, service et appareil évite d'annoncer un déploiement
+multi-agent à partir d'une liste de modules. Hors ligne : dernier état connu,
+pas de décisions mises silencieusement en file ni d'affirmation de poursuite.
+
+Deux options : construire immédiatement un paquet Windows, ou d'abord éprouver
+le parcours dans un prototype autonome puis choisir son enveloppe. Je propose
+la seconde : le support.js du canevas n'est pas livré et les transitions de
+maquette doivent encore distinguer clic, reçu d'accord et effet vérifié.
+Tauri est mon premier candidat à comparer à PySide6 et Electron ; ni économie
+mémoire chiffrée ni choix arrêté. G010 doit pouvoir contredire cette préférence.
+
+Essai discriminant G009 : refuser ne montre pas « Au travail » ; couper le
+réseau après envoi ne transforme pas un accord inconnu en accord enregistré ;
+reconnecter retrouve le reçu sans recréer la mission. Puis essai Windows réel
+séparé pour tray/autostart, secrets, accessibilité et cycle de vie du connecteur.
+Le contrat serveur correspondant reste à développer côté Codex. Une maquette
+concluante ne valide ni l'authentification ni les accès réels aux documents.
+
+Avis Claude demandé, non présumé. La lecture assistée comme outil contextuel
+plutôt qu'onglet permanent reste une proposition de parcours à tester.

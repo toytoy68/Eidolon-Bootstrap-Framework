@@ -125,12 +125,30 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   du corpus vérifiée ici, pas encore conformité du coordinateur à ses attentes.
 - [x] WebReader : raccordement HTTP au coordinateur, statut/Retry-After/provenance,
   reçus tardifs et suspensions entre sauts ; démonstration sur serveur local.
-- [ ] Exécuter G007 contre le coordinateur avec écarts explicites ; ne pas
-  assimiler une page lue à une réponse démontrée ou à une source indépendante.
+- [x] Banc G007 exécuté par Claude sur `99641df` : 9 PASS, 7 KNOWN_GAP,
+  4 FINDING rapportés dans C018 ; non reproduit par Codex dans le lot Desktop.
+- [ ] Reproduire et trier ces écarts sur base actuelle ; ne pas assimiler une
+  page lue à une réponse démontrée ou à une source indépendante.
 - [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [ ] Attente/quotas durables par fournisseur, artefacts persistants, intégration
   mission et critères de qualité distincts du seul nombre de pages lues.
+
+- [ ] Traiter la contre-revue G008 reçue dans `e55dc5d` : D1 attente perdue
+  sur en-têtes ambigus, D2 horloges incompatibles ; trier L1–L3/C1–C5.
+
+### Client bureau Eidolon — propositions et recette distinctes
+
+- [x] Huit maquettes Claude `176edac` reçues ; sources/contrats relus par Codex,
+  trois comportements reproduits par sonde de logique, sans rendu visuel validé.
+- [ ] Claude G009 : prototype autonome hors ligne avec accords, refus, perte
+  d'accusé, reconnexion et états de preuve ; aucune application Windows livrée.
+- [ ] Claude G010 : comparaison Tauri/PySide/Electron et recette Windows ;
+  framework non choisi, mesures OS et installation différées.
+- [ ] Codex C-008 : contrat distant versionné, projection, reçus de commandes
+  et rattrapage des événements ; autorité et permissions restent dans Core.
+- [ ] C-003W : connecteur documents/médias Windows et permissions locales,
+  séparé de la présence graphique. Voir [revue](docs/proposals/2026-10-05-codex-desktop-review/README.md).
 
 ### Lots concrets suivant le brainstorming
 

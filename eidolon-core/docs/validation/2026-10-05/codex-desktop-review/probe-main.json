@@ -1,0 +1,9 @@
+{
+  "source": "Claude 176edac, Main.dc.html",
+  "node": "v24.19.0",
+  "scope": "logique isolee de la maquette; ni rendu, ni accord Core, ni reseau",
+  "refusal_eye": "Au travail",
+  "offline_local_decision_label": "Autorisé à 18:05",
+  "undo_restores_pending": true,
+  "assertions": 4
+}

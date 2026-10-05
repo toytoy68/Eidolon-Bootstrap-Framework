@@ -95,3 +95,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
   de GPT-TO-CLAUDE.md à `99641df` ;
   [source](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/99641df/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
+
+- [C-MSG-G018, lecteur HTTP](2026-10-05-gpt-C-MSG-G018.md) : copie exacte
+  de GPT-TO-CLAUDE.md à `fbe4448` ;
+  [source](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/fbe4448/eidolon-core/collaboration/GPT-TO-CLAUDE.md).
