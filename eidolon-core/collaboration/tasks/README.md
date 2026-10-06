@@ -1,4 +1,7 @@
-# Trois tâches proposées à Claude Code
+# Tâches proposées à Claude Code
+
+**Ordre courant : [QUEUE.md](QUEUE.md).** Les répartitions ci-dessous sont
+historiques ; ne pas les utiliser comme une nouvelle attribution.
 
 Auteur : Codex/GPT, 05/10/2026, Europe/Paris. Demande explicite de toytoy.
 Base commune : `3cb1ae551fcbeb16badbf6e2110901928ea0a618`.

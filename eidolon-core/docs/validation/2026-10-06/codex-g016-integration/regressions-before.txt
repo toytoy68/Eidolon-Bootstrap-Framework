@@ -1,0 +1,134 @@
+✖ G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective (1.584203ms)
+✔ G012-01: other validations are not relaxed (objective_kind must be a bounded string or null) (0.296065ms)
+✖ G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11) (0.660694ms)
+✖ G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested (1.27624ms)
+✔ G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored (0.386081ms)
+✖ G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED (0.343236ms)
+✖ G012-03: a cancellation on a running mission is labelled without promising the outcome (0.299831ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 2
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.469067
+
+✖ failing tests:
+
+test at desktop/prototype/tests/g016.test.js:24:1
+✖ G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective (1.584203ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'INVALID_MISSION'
+  - null
+  
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g016-review/eidolon-core/desktop/prototype/tests/g016.test.js:27:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'INVALID_MISSION',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop/prototype/tests/g016.test.js:43:1
+✖ G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11) (0.660694ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  11 !== 1
+  
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g016-review/eidolon-core/desktop/prototype/tests/g016.test.js:48:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 11,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop/prototype/tests/g016.test.js:53:1
+✖ G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested (1.27624ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   99,
+  +   5,
+  +   4
+  -   11,
+  -   3,
+  -   2
+    ]
+  
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g016-review/eidolon-core/desktop/prototype/tests/g016.test.js:60:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 99, 5, 4 ],
+    expected: [ 11, 3, 2 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop/prototype/tests/g016.test.js:82:1
+✖ G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED (0.343236ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Annulation demandée — pas encore confirmée'
+  - 'Revue requise — effet à vérifier'
+  
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g016-review/eidolon-core/desktop/prototype/tests/g016.test.js:87:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Annulation demandée — pas encore confirmée',
+    expected: 'Revue requise — effet à vérifier',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop/prototype/tests/g016.test.js:94:1
+✖ G012-03: a cancellation on a running mission is labelled without promising the outcome (0.299831ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Annulation demandée — pas encore confirmée'
+  - 'Annulation demandée — issue non confirmée'
+  
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g016-review/eidolon-core/desktop/prototype/tests/g016.test.js:97:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Annulation demandée — pas encore confirmée',
+    expected: 'Annulation demandée — issue non confirmée',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

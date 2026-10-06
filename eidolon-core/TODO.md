@@ -151,15 +151,15 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   absent). Aucune application Windows livrée.
 - [x] Claude G013 : suivi séparé des commandes incertaines livré dans deef553 ;
   28 tests Node et sonde adaptée reproduits ; 11 UI réussis rapportés par Claude.
-- [ ] Claude G010 (en cours selon toytoy, 06/10) : comparaison Tauri/PySide/Electron et recette Windows ;
-  framework non choisi, mesures OS et installation différées.
+- [x] Claude G010 : étude reçue dans 7a1c682, intégrée ; framework non choisi,
+  mesures OS et installation différées.
 - [x] C-008a : projection locale cohérente, curseur durable, rattrapage paginé,
   reset explicite, CLI et démo sans réseau ; 19 tests nouveaux.
 - [x] Claude G012 : prototype candidat intégré depuis cc9a64b ; 42 tests de
   logique reproduits, 16 UI seulement rapportés. Trois écarts encore ouverts :
   [revue](docs/validation/2026-10-06/codex-g012-integration/README.md).
-- [ ] Claude G016 : objectif null, gel en attente de reset, priorité de la revue
-  sur l'annulation ; tests de régression et cas UI. Aucune API réelle raccordée.
+- [x] Claude G016 : trois corrections intégrées dans 1b9f7dd ; 49 tests Node
+  reproduits, 18 UI rapportés. Aucune API réelle raccordée.
 - [x] C-008b : reçus atomiques approve/reject/revoke locaux, consultation et
   déduplication, annulation avant commit protégée ; 22 nouveaux tests.
   [Contrat](docs/COMMAND-RECEIPTS.md). Aucun effet externe, reçu != résultat.
@@ -167,7 +167,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   sur cible figée 176c1d2 ; aucun nouveau défaut confirmé.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
-- [ ] Claude G015 : contre-revue des reçus d’annulation, sous verrou et après effet.
+- [ ] Claude G015 (en cours selon toytoy) : contre-revue des reçus d’annulation, sous verrou et après effet.
 - [x] Diagnostic CLI STORAGE_UNAVAILABLE pour les erreurs SQLite ; incertitude
   conservée, pas de traceback/message SQL brut.
 - [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
@@ -175,7 +175,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] Claude G017 : contre-revue C-008d, cible figée et sondes indépendantes.
 - [x] C-008e : inventaire paginé local, projection minimale, reset entre pages
   si l'état évolue ; 18 tests et démo. [Contrat](docs/MISSION-LIST.md).
-- [ ] Consommateur Desktop de mission-list/1 : pages cohérentes, reset et sélection
+- [ ] Claude G018 : consommateur Desktop de mission-list/1 : pages cohérentes, reset et sélection
   vers client-sync/1 ; autorisations distantes et mesures de charge différées.
 - [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
   ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.

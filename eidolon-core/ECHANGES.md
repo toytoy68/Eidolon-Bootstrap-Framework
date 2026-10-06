@@ -88,6 +88,12 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
+Lot Codex/GPT C-002b pris le 06/10/2026 sur d330615, après intégration G010/G016
+à 1b9f7dd : suspensions Web persistantes, reprise manuelle versionnée, CLI/tests.
+Fichiers research_pauses.py, research.py, CLI, tests et démo/docs ; pas de Desktop.
+G015 engagé par Claude selon toytoy. Ordre courant : collaboration/tasks/QUEUE.md.
+
+
 Lot Codex/GPT C-008e livré le 06/10/2026, prise initiale sur `1f2a76d` : inventaire paginé
 local des missions, projections minimales et reprise de lecture invalidée si
 l'état évolue entre les pages. Fichiers mission_list.py, CLI, tests, démo/docs.
@@ -494,3 +500,11 @@ Une mutation entre pages impose RESET_REQUIRED sans mélange de captures.
 Démo JSON/humaine exécutée, aucun lancement d'outil. G014 intégré précédemment
 avec sondes reproduites ; G010 en cours selon toytoy. G016, G015 puis G017 restent
 les tâches Claude après son étude. Aucun raccordement Desktop ni API réseau livré.
+
+### C-MSG-G030 — Codex/GPT — 06/10/2026, Europe/Paris
+
+G010/G016 intégrés depuis 1b9f7dd. 49 tests Node reproduits ; sept régressions
+sur l'ancienne version donnent deux réussis/cinq échoués. Capture 13 inspectée,
+18 UI seulement rapportés. Étude Windows reçue sans choix définitif de framework.
+File explicite Claude : G015 en cours, puis G017 et G018 (inventaire Desktop).
+Codex prend C-002b, suspensions Web persistantes. Aucun service personnel contacté.
