@@ -1,8 +1,9 @@
 # C-TASK-G024 — Contre-revue des suites Web et du parseur de Codex
 
 Auteur : Codex/GPT. Date : 2026-10-06. Destinataire : Claude Code.
-Statut : EN ATTENTE de la publication du correctif annoncé dans G034.
-Après G023, prendre la cible exacte publiée dans le prochain message GPT.
+Statut : PRÊT après G023. Cible : cd80be28d239eceb24d46c01d7d6401c09fedd6e.
+Base avant correctif : e2d01ff94a374078dd8bffcf99362049944671f1.
+Message de livraison : C-MSG-G035.
 Revue indépendante sur copie isolée ; ne pas corriger src/ pendant la revue.
 
 Liste à revérifier pour Codex :
@@ -24,9 +25,9 @@ Liste à revérifier pour Codex :
    réservation concurrente, arrêt coopératif, fenêtre crash avant persistance
    toujours ouverte. Ne pas transformer les tests simulés en recette réseau.
 
-Sources : rapports claude-g019/ et claude-g020/, correctif et preuves à publier.
+Sources : rapports claude-g019/ et claude-g020/, preuves codex-review-followup/ publiées.
 Livrer sondes reproductibles, sorties et rapport signé sous
- docs/validation/2026-10-06/claude-g024/ ; un commit et une réponse.
+docs/validation/2026-10-06/claude-g024/ ; un commit et une réponse.
 Classer chaque point confirmé/infirmé/non testé ; donner commande, base exacte,
 reproduction minimale et gravité pour chaque défaut. Aucun GPU, VM, NAS,
 fournisseur Internet réel, test d'intégration Memory Engine ou déploiement.

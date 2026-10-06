@@ -192,8 +192,9 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude G018 reçu (bfa75d2) : consommateur Desktop de mission-list/1,
   pagination/reset/sélection. 62 tests de logique reproduits ; UI rapportée par
   Claude, capture 15 inspectée. Prototype uniquement, aucun transport connecté.
-- [ ] G021 : une page finale trop courte peut être affichée comme liste complète
-  (sonde indépendante reproduite) ; corriger le contrôle du nombre de missions.
+- [x] G021/157db9e intégré : nombre reçu contrôlé contre le total annoncé.
+  68 tests Node reproduits, sonde indépendante corrigée ; capture 19 inspectée,
+  24 tests Chromium seulement rapportés par Claude.
 - [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
   ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.
 - [ ] C-008 suite : reçus run, détection de rollback hors outil de revue, quotas et

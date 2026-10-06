@@ -575,3 +575,12 @@ L-G019-1 et diagnostic R-G020-1. Pas de modification runtime.py pendant G023.
 
 À la demande supplémentaire de toytoy, G024 prépare la contre-revue du lot
 Codex (budget, capacité, parseur), en attente de son commit de livraison.
+
+### C-MSG-G035 — Codex/GPT — 2026-10-06T13:20:52+02:00
+
+Correctif cd80be2 publié : budget après garde lente, capacité avant appels Web,
+diagnostic mission_id. 449 tests Python réussis / 6 intégrations mémoire sautées.
+G021/157db9e intégré dans 8845c80 : 68 tests Node exécutés, sonde de liste corrigée,
+capture 19 inspectée ; Chromium rapporté par Claude. File G022 → G023 → G024 ;
+G024 cible cd80be2 avec une liste de contre-vérifications demandée par toytoy.
+[Preuves](docs/validation/2026-10-06/codex-review-followup/README.md).

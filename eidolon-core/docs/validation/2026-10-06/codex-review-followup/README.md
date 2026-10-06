@@ -58,3 +58,19 @@ Les tests d'intégration Memory Engine restent distincts et non exécutés ici.
 
 G023 (abandon d'une vérification indisponible) appartient à Claude ; ce lot ne
 modifie pas runtime.py/action_view.py. G024 doit contre-vérifier ces corrections.
+
+## Intégration G021 et contre-revues
+
+Correctif Python publié : cd80be28d239eceb24d46c01d7d6401c09fedd6e.
+Intégration G021/157db9e : 8845c800cc6af8c0a1bb0a37c61b0e65e4dfdf81.
+Aucun changement Python dans cette intégration ; la suite complète précède
+cette fusion documentaire/prototype. 68 tests de logique Node exécutés après
+fusion (model, commands, sync, g016, list, g021) : [sortie](g021-node.txt).
+La sonde indépendante refuse désormais la fin prématurée : [sortie](g021-probe.json).
+Capture 19 de Claude inspectée : alerte et état incomplet visibles. Les 24 tests
+Chromium restent rapportés par Claude ; non exécutés par Codex. Une première
+exécution Node sur copie partielle a échoué faute de fixtures docs/ ; l'exécution
+rapportée ici utilise ensuite l'arborescence intégrée complète.
+
+G022 reprend la restauration ; G023 implémente l'abandon ; G024 contre-vérifie
+le correctif cd80be2. Fiches prêtes, sans supposer la session Claude démarrée.
