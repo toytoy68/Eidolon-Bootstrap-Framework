@@ -248,3 +248,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G047](2026-10-06-gpt-C-MSG-G047.md) : publication API et première file bêta.
 
 - [G048](2026-10-06-gpt-C-MSG-G048.md) : six tâches G036–G041 et réservation C-009b.
+
+- [G049](2026-10-06-gpt-C-MSG-G049.md) : intégration G031 et publication C-009b.

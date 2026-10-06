@@ -36,3 +36,16 @@ lots engagés avant de modifier les mêmes fichiers. Puis :
 Si une dépendance attend, avancer un lot prêt. G032 reste le prochain lot annoncé par Claude, puis les lots prêts.
 C-009b publié : 37dc199ec5da7da49655c4be1bc27e90d5b62d7d.
 Intégration G031 : e1059dd13f7a62b9eaba97b1475f57294d96d82e.
+
+## Suite demandée le 06/10 à 19 h 27 — G050
+
+G032–G041 conservés ; finir les lots engagés, puis G036/G035 pour le parcours
+PC–serveur. Ne pas présumer qu’une fiche publiée a démarré une session.
+
+| Fiche | État | Livrable |
+| --- | --- | --- |
+| [G042](C-TASK-G042.md) | PRÊT sur 37dc199 | Contre-revue des reçus HTTP |
+| [G043](C-TASK-G043.md) | Coordonner G036/G037 | Fraîcheur client après réponse refusée |
+| [G044](C-TASK-G044.md) | Après G035 | Archive bêta de sources reproductible |
+
+Codex réserve C-009c : preflight.py/http_api.py, tests et docs associés.

@@ -698,3 +698,12 @@ Défaut de nettoyage du banc corrigé et panne launch injectée : Node termine
 en erreur sans rester bloqué. Six fiches G036–G041 disponibles, G036 raccordable,
 G038 réutilise le banc de G031. G034 garde sa cible 21c0f729. C045 et archives
 Claude conservés ; G049 donne cibles, preuves et limites. Aucun déploiement.
+
+
+### C-MSG-G050 — prise en charge C-009c — 06/10/2026
+
+À 19 h 27 toytoy demande nouvelles tâches Claude et poursuite. Base distante
+7de3646, également récupérée par Claude. G032–G041 conservés, G042–G044
+ajoutés : revue reçus, fraîcheur client, archive source. Codex réserve le
+diagnostic avant démarrage (preflight/http_api/tests/docs), sans écoute réseau
+ni création d’état/token. Les essais VM/Windows restent à réaliser.
