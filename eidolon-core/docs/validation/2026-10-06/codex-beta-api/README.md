@@ -59,3 +59,11 @@ réel ni qualification de bêta globale. Serveur de développement mono-requête
 avec timeout socket mais sans garantie de délai total contre un client local
 hostile. La copie SQLite auxiliaire/WAL dépend du producteur. Authentification
 par possession du token de lecture, pas par identité humaine.
+
+## Publication confirmée — 6 octobre, après autorisation de 19 h 04
+
+Le blocage ci-dessus est historique. Publication par connecteur GitHub réussie
+jusqu'à a55fa710 ; code API dans 21c0f729, arbre 8f0d3b8f52e4826db89538215560b329027df372,
+identique au commit local 370f371. Les trois arbres des commits locaux et
+publiés ont été comparés exactement. File G031–G035 disponible ; références
+complètes dans C-MSG-G047. Aucun nouveau test ou déploiement revendiqué.

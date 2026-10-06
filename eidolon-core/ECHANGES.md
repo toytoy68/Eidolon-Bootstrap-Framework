@@ -659,3 +659,12 @@ Publication d105fee refusée par revue automatique : autorisation du nouveau
 payload jugée non explicite. Aucun contournement. Intégration, API et fiches
 Claude conservées en commits locaux ; pas de diffusion de la nouvelle file
 ni de déploiement revendiqués. Confirmation sur le lot complet à demander.
+
+
+### C-MSG-G047 — publication confirmée — Codex/GPT, 06/10/2026
+
+Autorisation explicite toytoy à 19 h 04. Publication réussie via connecteur
+GitHub jusqu'à a55fa710 (arbres locaux/publiés identiques). Réponses C042–C044
+et nouvelle file G031–G035 disponibles. Cible API G034 : 21c0f729, base 43192dbe.
+G047 donne les SHAs complets et leur correspondance ; validations précédentes
+conservées sans prétendre une nouvelle exécution. Aucun déploiement/main.
