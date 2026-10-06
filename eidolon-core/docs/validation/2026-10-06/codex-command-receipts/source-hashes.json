@@ -1,0 +1,8 @@
+{
+  "src/eidolon_core/commands.py": "1646fd4a63cb108c641f807d38382ae3bef76f8904ec2de42507159e106b7bd5",
+  "src/eidolon_core/store.py": "28c7515b0c2df8f0cd0b90f1073723bbc06507897e2ada03bea9567fd2d5147d",
+  "src/eidolon_core/actions.py": "7c75dad9f217cf7aea79bb0bb7f721ee0642b31d051638cbb65fc0fa92825995",
+  "src/eidolon_core/cli.py": "563a8ef331ca2aa8dcec61411297fa95e81682bc373fac98ab5ddca4a315e3fd",
+  "tests/test_commands.py": "849ae21f4ba32c2f35872f2a2f5f89bb6cf0d7c7970c559b4a7ae0e323952dfd",
+  "examples/command_receipt_demo.py": "ba117ec56d07501ebb18c76e48e9b4ab8d3df773221340a272ada8cef793a7b3"
+}

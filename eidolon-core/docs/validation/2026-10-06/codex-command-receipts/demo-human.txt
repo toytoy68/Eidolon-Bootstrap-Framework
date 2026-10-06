@@ -1,0 +1,15 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#               Reçu après coupure simulée              #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+[OK] Décision retrouvée après perte de son accusé ; aucun outil lancé à ce stade.
+[OK] Commande répétée : même reçu, une seule décision enregistrée.
+[OK] Reprise explicite : un redémarrage fictif, résultat vérifié.
+[INFO] Tests locaux synthétiques ; aucun réseau, service personnel ou GPU.

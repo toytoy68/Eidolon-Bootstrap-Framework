@@ -139,20 +139,26 @@ class ActionRuntime(Runtime):
         if m["objective"]["kind"] == RESTART and decision == "no-effect" and self.world.receipt(m["id"]) is not None:
             raise ContractError("simulation has a committed effect receipt; reconcile its result or abandon")
 
+    def _prepare_decision(self, m, *, expected_sha256, decision, actor, reason):
+        """Validate and change an in-memory copy; caller holds the mission lock."""
+        if (m["status"] in TERMINAL | {"REVIEW_REQUIRED"} or self._cancelled(m)
+                or m["objective"]["kind"] != RESTART or len(m["calls"]) != 1
+                or m["calls"][0]["status"] != "PREPARED"):
+            raise ContractError("mission is not awaiting an action decision")
+        if m["configuration"] != self.configuration():
+            raise ContractError("decision requires the original configuration")
+        check_contract(m)
+        self._preflight(m)
+        entry = approvals.decide(m, m["calls"][0], expected_sha256=expected_sha256,
+                                 decision=decision, actor=actor, reason=reason)
+        m.update(status="BLOCKED", error={"code": "APPROVAL_" + m["proposal"]["status"],
+                                          "message": "decision recorded; no tool executed"})
+        return entry
+
     def decide(self, identity, *, expected_sha256, decision, actor, reason):
         with self.store.lock(identity):
             m = self.store.get(identity)
-            if (m["status"] in TERMINAL | {"REVIEW_REQUIRED"} or self._cancelled(m)
-                    or m["objective"]["kind"] != RESTART or len(m["calls"]) != 1
-                    or m["calls"][0]["status"] != "PREPARED"):
-                raise ContractError("mission is not awaiting an action decision")
-            if m["configuration"] != self.configuration():
-                raise ContractError("decision requires the original configuration")
-            check_contract(m)
-            self._preflight(m)
-            entry = approvals.decide(m, m["calls"][0], expected_sha256=expected_sha256,
-                                     decision=decision, actor=actor, reason=reason)
-            m.update(status="BLOCKED", error={"code": "APPROVAL_" + m["proposal"]["status"],
-                                              "message": "decision recorded; no tool executed"})
+            entry = self._prepare_decision(m, expected_sha256=expected_sha256,
+                                           decision=decision, actor=actor, reason=reason)
             self._save(m, "ACTION_DECISION", entry)
             return m

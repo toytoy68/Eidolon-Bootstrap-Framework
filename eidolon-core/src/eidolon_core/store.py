@@ -16,7 +16,7 @@ import re
 import sqlite3
 import uuid
 
-from .contracts import digest, encode
+from .contracts import ContractError, digest, encode
 from .objectives import assess, define
 
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "ABANDONED"}
@@ -49,6 +49,9 @@ class Store:
                 CREATE INDEX IF NOT EXISTS events_mission_sequence ON events(mission_id, sequence);
                 CREATE TABLE IF NOT EXISTS sync_metadata (
                     key TEXT PRIMARY KEY, value TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS command_receipts (
+                    client_id TEXT NOT NULL, command_key TEXT NOT NULL,
+                    body TEXT NOT NULL, PRIMARY KEY(client_id, command_key));
                 PRAGMA user_version=1;
             """)
             db.execute("INSERT OR IGNORE INTO sync_metadata (key,value) VALUES ('store_id',?)",
@@ -156,13 +159,24 @@ class Store:
         data.update(revision=row[0], cancel_requested=bool(row[1]))
         return data
 
-    def save(self, mission, kind, detail=None):
+    def save(self, mission, kind, detail=None, *, command=None):
         with self.connection() as db:
             db.execute("BEGIN IMMEDIATE")
             row = db.execute("SELECT revision,cancel_requested FROM missions WHERE id=?",
                              (mission["id"],)).fetchone()
             if row is None or row[0] != mission["revision"]:
                 raise Busy("stale mission revision")
+            if kind == "ACTION_DECISION" and row[1]:
+                raise ContractError("CANCEL_REQUESTED: decision cannot follow cancellation")
+            if command is not None:
+                self._check_command_store(db, command["store_id"])
+                if (kind != "ACTION_DECISION" or command["mission_id"] != mission["id"]
+                        or command["expected_revision"] != row[0]
+                        or command["proposal_sha256"] != mission["proposal"]["sha256"]
+                        or detail != mission["proposal"]["decisions"][-1]
+                        or any(detail.get(k) != command[k] for k in
+                               ("decision", "actor", "reason", "proposal_sha256"))):
+                    raise ContractError("COMMAND_BINDING: receipt must match decision")
             mission["cancel_requested"] = bool(row[1])
             # Close cancellation/success race inside the same transaction.
             if row[1] and mission["status"] == "SUCCEEDED":
@@ -187,8 +201,41 @@ class Store:
                        (mission["revision"], encode(mission), mission["id"]))
             event = {"status": mission["status"], "phase": mission["phase"],
                      "progress": mission["progress"], "outcome": mission["outcome"], **(detail or {})}
-            db.execute("INSERT INTO events (mission_id,at,kind,detail) VALUES (?,?,?,?)",
-                       (mission["id"], now(), kind, encode(event)))
+            recorded_at = now()
+            inserted = db.execute("INSERT INTO events (mission_id,at,kind,detail) VALUES (?,?,?,?)",
+                                  (mission["id"], recorded_at, kind, encode(event)))
+            receipt = None
+            if command is not None:
+                if max(mission["revision"], inserted.lastrowid) > 2**53 - 1:
+                    raise ContractError("COMMAND_BINDING: receipt exceeds JSON safe integer range")
+                receipt = {"protocol": "eidolon-command-receipt/1", "status": "RECORDED",
+                           "store_id": command["store_id"], "client_id": command["client_id"],
+                           "command_key": command["command_key"], "mission_id": mission["id"],
+                           "request_sha256": digest(command), "decision": command["decision"],
+                           "proposal_sha256": command["proposal_sha256"],
+                           "approval_status_at_recording": mission["proposal"]["status"],
+                           "mission_revision": mission["revision"],
+                           "event_sequence": inserted.lastrowid, "recorded_at": recorded_at,
+                           "execution_evidence": False}
+                db.execute("INSERT INTO command_receipts (client_id,command_key,body) VALUES (?,?,?)",
+                           (command["client_id"], command["command_key"], encode(receipt)))
+        return receipt
+
+    @staticmethod
+    def _check_command_store(db, expected):
+        row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
+        if row is None or row[0] != expected:
+            raise ContractError("STORE_CHANGED: resynchronize before any decision")
+
+    def command_receipt(self, client_id, command_key, *, store_id):
+        """One read transaction, no mission/runtime initialization or execution."""
+        with self.connection() as db:
+            db.execute("PRAGMA query_only=ON")
+            db.execute("BEGIN")
+            self._check_command_store(db, store_id)
+            row = db.execute("SELECT body FROM command_receipts WHERE client_id=? AND command_key=?",
+                             (client_id, command_key)).fetchone()
+            return json.loads(row[0]) if row is not None else None
 
     def request_cancel(self, identity):
         self.check_id(identity)

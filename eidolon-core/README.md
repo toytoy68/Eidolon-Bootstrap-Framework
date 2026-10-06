@@ -92,6 +92,22 @@ PYTHONPATH=src:. python -m examples.client_sync_demo --format human
 Démonstration vérifiée : mission synthétique, dix événements récupérés sur cinq
 pages, réponse répétée reconnue, un seul lancement d'outil. [Preuves](docs/validation/2026-10-06/codex-client-sync/README.md).
 
+## Reçu de décision après une coupure
+
+C-008b ajoute command-submit et command-receipt : décision, événement et reçu
+sont enregistrés ensemble. Un reçu retrouvé confirme cet enregistrement,
+jamais l'exécution d'un outil. approve/reject/revoke locaux et synthétiques
+uniquement ; pas encore d'API authentifiée ni de reçu pour cancel/run.
+[Contrat et limites](docs/COMMAND-RECEIPTS.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.command_receipt_demo --format human
+```
+
+Démo vérifiée : accusé perdu, reçu consulté après réouverture, commande répétée
+sans seconde décision, puis reprise explicite et un résultat d'outil vérifié.
+[Preuves : 344 tests réussis, 6 intégrations mémoire sautées](docs/validation/2026-10-06/codex-command-receipts/README.md).
+
 ## Tests simulés
 
 ```sh

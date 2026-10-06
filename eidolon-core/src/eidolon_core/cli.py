@@ -47,6 +47,12 @@ def main(argv=None):
     decide.add_argument("--decision", choices=("approve", "reject", "revoke"), required=True)
     decide.add_argument("--actor", required=True)
     decide.add_argument("--reason", required=True)
+    submit = commands.add_parser("command-submit", help="record a synthetic decision and durable receipt; no execution")
+    submit.add_argument("--request", required=True, help="JSON command file, at most 32768 bytes")
+    receipt = commands.add_parser("command-receipt", help="look up a historical command receipt; no runtime")
+    receipt.add_argument("--store-id", required=True)
+    receipt.add_argument("--client-id", required=True)
+    receipt.add_argument("--command-key", required=True)
     fixture = commands.add_parser("fixture", help="inspect or change ONLY the synthetic service state")
     fixture.add_argument("target")
     fixture.add_argument("--set-state", choices=("UP", "DOWN", "UNREACHABLE"))
@@ -81,10 +87,29 @@ def main(argv=None):
             raise ValueError("target options require a simulation profile")
         if args.command == "diagnose" and args.profile != "service-sim":
             raise ValueError("diagnose requires --profile service-sim")
-        if args.command in {"restart", "decide", "fixture"} and args.profile != "action-sim":
+        if args.command in {"restart", "decide", "fixture", "command-submit"} and args.profile != "action-sim":
             raise ValueError("action commands require --profile action-sim")
         if args.profile != "text" and args.command in {"demo", "create"}:
             raise ValueError("simulation missions are created with diagnose or restart")
+        if args.command == "command-receipt":
+            from .commands import lookup_receipt
+            if not (Path(args.state) / "missions.sqlite3").is_file():
+                raise FileNotFoundError("receipt lookup requires an existing mission store")
+            result = lookup_receipt(Store(args.state), store_id=args.store_id,
+                                    client_id=args.client_id, command_key=args.command_key)
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Reçu de décision locale") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 0 if result["status"] == "FOUND" else 2
+        command_request = None
+        if args.command == "command-submit":
+            from .commands import parse_command
+            with Path(args.request).open("rb") as handle:
+                command_request = parse_command(handle.read(32769))
+            if not (Path(args.state) / "missions.sqlite3").is_file():
+                raise FileNotFoundError("decision command requires an existing mission store")
         catalog = None
         if args.targets:
             path = Path(args.targets)
@@ -117,6 +142,15 @@ def main(argv=None):
                    if args.profile == "service-sim" else Runtime(store, **options))
         if args.profile == "action-sim":
             runtime = ActionRuntime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
+        if args.command == "command-submit":
+            from .commands import DecisionCommands
+            result = DecisionCommands(runtime).submit(command_request)
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Décision locale enregistrée") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 0  # Recording succeeded; no execution is claimed.
         if args.command == "fixture":
             result = (runtime.world.set_state(args.target, args.set_state) if args.set_state
                       else runtime.world.observe(args.target))

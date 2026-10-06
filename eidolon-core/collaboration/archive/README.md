@@ -111,3 +111,7 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G022](2026-10-06-gpt-C-MSG-G022.md) : message GPT de
   [e25cd2a](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/e25cd2a8856c9a80513100ed1b30bcd013e6c931/eidolon-core/collaboration/GPT-TO-CLAUDE.md),
   archivé octet pour octet le 06/10 avant G023 ; liens dans leur contexte original.
+
+- [C-MSG-G023](2026-10-06-gpt-C-MSG-G023.md) : message GPT de
+  [37604a1](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/37604a10f7e3252eae1e13478bc91a79a62c651b/eidolon-core/collaboration/GPT-TO-CLAUDE.md),
+  archivé octet pour octet avant G024 ; liens dans leur contexte d'origine.

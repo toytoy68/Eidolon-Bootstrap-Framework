@@ -156,7 +156,13 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   reset explicite, CLI et démo sans réseau ; 19 tests nouveaux.
 - [ ] Claude G012 : consommateur JS du protocole et scénarios de reconnexion
   dans le prototype ; ne pas reconstituer l'état depuis les événements.
-- [ ] C-008 suite : reçus de commandes, identité/appairage, API authentifiée ;
+- [x] C-008b : reçus atomiques approve/reject/revoke locaux, consultation et
+  déduplication, annulation avant commit protégée ; 22 nouveaux tests.
+  [Contrat](docs/COMMAND-RECEIPTS.md). Aucun effet externe, reçu != résultat.
+- [ ] Claude G014 : contre-revue des reçus, atomicité/coupures et interprétation
+  côté client, après G013/G012 ; pas de raccordement réseau.
+- [ ] C-008 suite : reçus cancel/run, génération après restauration, quotas et
+  rétention, identité/appairage, API authentifiée ;
   autorité et permissions restent dans Core. [Contrat livré](docs/CLIENT-SYNC.md).
 - [ ] C-003W : connecteur documents/médias Windows et permissions locales,
   séparé de la présence graphique. Voir [revue](docs/proposals/2026-10-05-codex-desktop-review/README.md).
