@@ -1,0 +1,33 @@
+python 3.11.15 | tree g028-8983d35
+
+== 1 capacity counted on ACTIVE pauses
+  256 ACTIVE + provider RELEASED: new origin -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses exchanges=0
+  release h0 (request_sent=False), no automatic call: exchanges=0
+  then new origin -> report ['READ'] status=READ_TARGET_MET readable=1 discovery=HITS_FOUND exchanges=1
+  rows kept: h0=('RELEASED', 2) provider p=('RELEASED', 2) total rows=257 audit events=259
+  re-observed RELEASED h1: ACTIVE rev 2->3 | release with old revision -> ContractError: STALE_PAUSE: inspect the new observation before release
+  255 ACTIVE (h0 released, h1 re-observed), one more new pause -> [{'id': 'p-1c700aa16f5d1ceeb9ab8993a33a000e014e3f0da822c4c5c
+  one free slot, redirect needing 2 -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses exchanges=['fresh.example/a']
+  same coordinator, two preflight refusals: PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses
+  last slot taken during the exchange: PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | next run same coordinator: PauseStorageError: PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse
+  storage gone: PauseStorageError: PAUSE_STORAGE_UNAVAILABLE | next: PauseStorageError: PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse
+  4000 RELEASED rows kept: one check_capacity takes 53 ms (scans and decodes every row)
+
+== 2 counting identical content once, keeping every receipt
+  tracking parameter                 exchanges=2 sent=['a', 'a?utm_source=x'] states=['READ', 'DUPLICATE_CONTENT'] readable=1 status=PARTIAL dup_of=set
+  functional parameter               exchanges=2 sent=['item?id=1', 'item?id=2'] states=['READ', 'DUPLICATE_CONTENT'] readable=1 status=PARTIAL dup_of=set
+  two domains (mirror)               exchanges=2 sent=['a', 'a'] states=['READ', 'DUPLICATE_CONTENT'] readable=1 status=PARTIAL dup_of=set
+  redirect to an already read final  exchanges=3 sent=['a', 'x', 'a'] states=['READ', 'DUPLICATE_FINAL'] readable=1 status=PARTIAL dup_of=None
+  nearly identical (one space)       exchanges=2 sent=['a', 'a'] states=['READ', 'READ'] readable=2 status=READ_TARGET_MET dup_of=None
+  same URL, body changed between runs (cache) -> run2 cache_hit=True text='version 1'
+  cached source + fresh mirror: states=['READ', 'DUPLICATE_CONTENT'] cache_hit=[True, False] readable=1
+
+== 3 discovery_status
+  all EMPTY                                          report [] status=NO_READABLE_SOURCE readable=0 discovery=EMPTY
+  all down                                           report [] status=NO_READABLE_SOURCE readable=0 discovery=UNAVAILABLE
+  one EMPTY, one down                                report [] status=NO_READABLE_SOURCE readable=0 discovery=INCOMPLETE
+  invalid result                                     report [] status=NO_READABLE_SOURCE readable=0 discovery=UNAVAILABLE
+  hits found, read fails                             report ['READER_ERROR'] status=NO_READABLE_SOURCE readable=0 discovery=HITS_FOUND
+  provider budget (3 configured, limit 2), all EMPTY report [] status=NO_READABLE_SOURCE readable=0 discovery=INCOMPLETE
+  cancelled before search                            report [] status=CANCELLED readable=0 discovery=INCOMPLETE
+  provider paused                                    report [] status=NO_READABLE_SOURCE readable=0 discovery=UNAVAILABLE

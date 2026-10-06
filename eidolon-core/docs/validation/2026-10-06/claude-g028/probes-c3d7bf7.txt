@@ -1,0 +1,23 @@
+python 3.11.15 | tree g028-c3d7bf7
+
+== 1 capacity counted on ACTIVE pauses
+  probe stopped: PauseStorageError: PAUSE_CAPACITY_REACHED
+
+== 2 counting identical content once, keeping every receipt
+  tracking parameter                 exchanges=2 sent=['a', 'a?utm_source=x'] states=['READ', 'READ'] readable=2 status=READ_TARGET_MET dup_of=None
+  functional parameter               exchanges=2 sent=['item?id=1', 'item?id=2'] states=['READ', 'READ'] readable=2 status=READ_TARGET_MET dup_of=None
+  two domains (mirror)               exchanges=2 sent=['a', 'a'] states=['READ', 'READ'] readable=2 status=READ_TARGET_MET dup_of=None
+  redirect to an already read final  exchanges=3 sent=['a', 'x', 'a'] states=['READ', 'DUPLICATE_FINAL'] readable=1 status=PARTIAL dup_of=None
+  nearly identical (one space)       exchanges=2 sent=['a', 'a'] states=['READ', 'READ'] readable=2 status=READ_TARGET_MET dup_of=None
+  same URL, body changed between runs (cache) -> run2 cache_hit=True text='version 1'
+  cached source + fresh mirror: states=['READ', 'READ'] cache_hit=[True, False] readable=2
+
+== 3 discovery_status
+  all EMPTY                                          report [] status=NO_READABLE_SOURCE readable=0 discovery=None
+  all down                                           report [] status=NO_READABLE_SOURCE readable=0 discovery=None
+  one EMPTY, one down                                report [] status=NO_READABLE_SOURCE readable=0 discovery=None
+  invalid result                                     report [] status=NO_READABLE_SOURCE readable=0 discovery=None
+  hits found, read fails                             report ['READER_ERROR'] status=NO_READABLE_SOURCE readable=0 discovery=None
+  provider budget (3 configured, limit 2), all EMPTY report [] status=NO_READABLE_SOURCE readable=0 discovery=None
+  cancelled before search                            report [] status=CANCELLED readable=0 discovery=None
+  provider paused                                    report [] status=NO_READABLE_SOURCE readable=0 discovery=None
