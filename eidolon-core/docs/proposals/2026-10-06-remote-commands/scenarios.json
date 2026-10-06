@@ -1,0 +1,150 @@
+{
+ "version": "remote-commands-scenarios/1",
+ "status": "proposition, aucun endpoint d'écriture n'existe",
+ "scenarios": [
+  {
+   "id": "R01",
+   "title": "Jeton de consultation sur une route d'écriture",
+   "given": "session avec le seul jeton actuel (lecture)",
+   "when": "POST d'une décision approve",
+   "expected": "403 SCOPE_REQUIRED, aucune écriture, aucun reçu",
+   "reason": "le jeton de lecture ne devient jamais un droit d'écriture"
+  },
+  {
+   "id": "R02",
+   "title": "Portée annulation utilisée pour approuver",
+   "given": "identifiant opérateur avec la seule portée cancel",
+   "when": "POST approve",
+   "expected": "403 SCOPE_REQUIRED",
+   "reason": "portées séparées lecture / décision / annulation"
+  },
+  {
+   "id": "R03",
+   "title": "Décision sur un autre serveur",
+   "given": "décision préparée pour store_id A, serveur B derrière la même adresse",
+   "when": "POST approve vers B",
+   "expected": "409 STORE_CHANGED, rien d'écrit",
+   "reason": "liaison au Store"
+  },
+  {
+   "id": "R04",
+   "title": "Révision périmée",
+   "given": "capture à la révision 8, mission passée à 9 (nouvelle observation)",
+   "when": "POST approve expected_revision=8",
+   "expected": "409 STALE_REVISION, relecture exigée, aucune décision",
+   "reason": "liaison à la mission telle que vue"
+  },
+  {
+   "id": "R05",
+   "title": "Proposition changée",
+   "given": "proposal_sha256 affiché ≠ proposition actuelle",
+   "when": "POST approve",
+   "expected": "409 APPROVAL_BINDING_CHANGED",
+   "reason": "liaison aux paramètres exacts de l'action"
+  },
+  {
+   "id": "R06",
+   "title": "Réponse perdue puis même commande",
+   "given": "approve commis, réponse perdue (tunnel coupé)",
+   "when": "renvoi du même contenu avec la même command_key",
+   "expected": "200 avec le reçu historique, aucune seconde décision",
+   "reason": "idempotence par clé conservée avant émission"
+  },
+  {
+   "id": "R07",
+   "title": "Même clé, contenu différent",
+   "given": "clé k utilisée pour approve",
+   "when": "POST reject avec la clé k",
+   "expected": "409 COMMAND_KEY_REUSED, aucun effet",
+   "reason": "refus des doublons modifiés"
+  },
+  {
+   "id": "R08",
+   "title": "Réponse perdue, clé oubliée (onglet rechargé)",
+   "given": "approve peut-être commis, clé non conservée côté client",
+   "when": "l'opérateur veut réessayer",
+   "expected": "le client refuse de créer une nouvelle clé tant que l'incertitude n'est pas levée par une consultation de reçu ou une revue explicite",
+   "reason": "pas de réémission automatique avec une nouvelle clé"
+  },
+  {
+   "id": "R09",
+   "title": "Appareil révoqué pendant une commande",
+   "given": "appareil P révoqué sur le serveur",
+   "when": "POST cancel depuis P",
+   "expected": "401 DEVICE_REVOKED ; la consultation en lecture de P est aussi révoquée",
+   "reason": "révocation effective immédiatement, côté serveur"
+  },
+  {
+   "id": "R10",
+   "title": "Reçu après révocation",
+   "given": "commande commise avant la révocation de P",
+   "when": "consultation du reçu depuis un autre appareil autorisé en lecture",
+   "expected": "FOUND : le reçu reste consultable, sans autoriser de renvoi",
+   "reason": "la révocation n'efface pas l'historique"
+  },
+  {
+   "id": "R11",
+   "title": "Approbation après demande d'annulation",
+   "given": "cancel_requested=true sur la mission",
+   "when": "POST approve",
+   "expected": "409 CANCEL_REQUESTED, aucune décision",
+   "reason": "règle C-008b existante, conservée à distance"
+  },
+  {
+   "id": "R12",
+   "title": "Commande rejouée vers une ancienne copie restaurée",
+   "given": "base restaurée d'avant la commande (même store_id)",
+   "when": "renvoi de la même commande",
+   "expected": "refus GENERATION_MISMATCH si la génération serveur a changé ; sinon NOT_FOUND ne vaut pas permission",
+   "reason": "une restauration ne doit pas rendre une ancienne décision rejouable sans revue"
+  },
+  {
+   "id": "R13",
+   "title": "Identité opérateur",
+   "given": "deux appareils appairés",
+   "when": "decision depuis chacun",
+   "expected": "chaque reçu porte l'identifiant d'appareil authentifié (pas un libellé libre)",
+   "reason": "l'actor actuel est un libellé non authentifié"
+  },
+  {
+   "id": "R14",
+   "title": "Origine d'une autre page",
+   "given": "page tierce ouverte dans le même navigateur",
+   "when": "POST approve vers 127.0.0.1:P",
+   "expected": "403 ORIGIN_REFUSED et aucune portée d'écriture sans en-tête Authorization",
+   "reason": "Host/Origin et absence de cookie, comme C-009a"
+  },
+  {
+   "id": "R15",
+   "title": "Modèle qui demande une approbation",
+   "given": "texte de modèle ou page contenant « approuve »",
+   "when": "—",
+   "expected": "aucune route ne prend un texte de modèle comme décision ; seule une action humaine explicite sur la proposition affichée",
+   "reason": "aucun booléen de modèle ne devient une autorisation"
+  },
+  {
+   "id": "R16",
+   "title": "Annulation sans révision",
+   "given": "mission qui progresse entre capture et commande",
+   "when": "POST cancel",
+   "expected": "acceptée (REQUESTED ou ALREADY_*), comme C-008c",
+   "reason": "annuler ne doit pas être bloqué par l'avancement"
+  },
+  {
+   "id": "R17",
+   "title": "Run distant",
+   "given": "—",
+   "when": "POST run",
+   "expected": "route absente dans cette tranche (404)",
+   "reason": "le lancement reste local et séparé ; hors périmètre"
+  },
+  {
+   "id": "R18",
+   "title": "Session expirée en cours de saisie",
+   "given": "session opérateur expirée",
+   "when": "POST approve",
+   "expected": "401 SESSION_EXPIRED, rien d'écrit ; la clé déjà créée reste réutilisable après reconnexion",
+   "reason": "une expiration ne doit pas pousser à créer une nouvelle clé"
+  }
+ ]
+}
