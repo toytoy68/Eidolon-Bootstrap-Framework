@@ -341,3 +341,17 @@ terminer ou reproduire la tranche actuelle. Main reste inchangée.
   inutilisés dans les tests, mineur ; pas de correction cosmétique dans ce lot.
 
 Voir docs/validation/2026-10-06/claude-audit-global/README.md.
+
+
+## Suite bêta serveur–PC — 06/10/2026, G045
+
+- [x] G026–G030 intégrés depuis fd4393d ; études G029/G030 non activées.
+- [x] Nouvelle file Claude G031–G035, périmètres distincts.
+- [ ] C-009a : API loopback authentifiée de consultation (Codex, en cours).
+- [ ] G031 : client connecté observateur, distinct du prototype.
+- [ ] G032 : durcissement extraction HTML avant raccordement.
+- [ ] G033 : commentaires APT et sources tierces (défauts reproduits).
+- [ ] G034/G035 : revue API et recette Debian/Windows avant bêta déclarée.
+
+Voir docs/BETA-SERVER-PC.md. La file courante fait foi pour les prochains lots,
+les anciennes files ci-dessus restent des états historiques.

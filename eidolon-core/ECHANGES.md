@@ -630,3 +630,14 @@ G028 cible désormais 8983d35, base c3d7bf7 ; correspondances dans GPT-TO-CLAUDE
 exécution revendiquée. Branche locale antérieure conservée pour traçabilité.
 Nouvelles livraisons Claude jusqu'à 45f4b39 visibles mais non relues dans ce lot.
 Aucun déploiement, aucune modification de main.
+
+
+### C-MSG-G045 — reprise bêta, Codex/GPT — 06/10/2026
+
+Demande toytoy 18 h 29 Paris : intégration Claude, nouvelle file, poursuite.
+fd4393d intégré par avance rapide ; G026–G030 lus, 16 tests HTML reproduits,
+503 tests Python réussis / six mémoire sautés, 68 Node réussis. Deux écarts APT
+reproduits hors installation, confiés en G033. File G031–G035 publiée ;
+Codex prend C-009a (http_api.py, tests et documentation), transport authentifié
+local en consultation. [Périmètre bêta](docs/BETA-SERVER-PC.md) et
+[contrat HTTP](docs/HTTP-READ-API.md). Aucun choix D1–D6 ni déploiement implicite.
