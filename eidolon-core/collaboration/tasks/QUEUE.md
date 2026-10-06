@@ -6,10 +6,10 @@ Nouvelle demande toytoy : intégrer, redistribuer et poursuivre, 18 h 29 Paris.
 | Ordre | Fiche | État | Livrable |
 | --- | --- | --- | --- |
 | 1 | [G031](C-TASK-G031.md) | INTÉGRÉ a613dc6 | Client HTTP connecté en consultation, desktop/connected/ |
-| 2 | [G032](C-TASK-G032.md) | PRÊT | Robustesse extraction HTML, corrections prouvées |
-| 3 | [G033](C-TASK-G033.md) | PRÊT | Frontières APT et commentaires, sans installation |
-| 4 | [G034](C-TASK-G034.md) | PRÊT | Contre-revue 21c0f729 et intégration client |
-| 5 | [G035](C-TASK-G035.md) | PRÊT | Recette serveur Debian / PC Windows |
+| 2 | [G032](C-TASK-G032.md) | INTÉGRÉ, C046 | Robustesse extraction HTML, 24 tests reproduits |
+| 3 | [G033](C-TASK-G033.md) | INTÉGRÉ, C047 | Frontières APT, 23 cas reproduits sans installation |
+| 4 | [G034](C-TASK-G034.md) | INTÉGRÉ, C048 | Revue figée ; D-G034-1 corrigé par C-009e |
+| 5 | [G035](C-TASK-G035.md) | INTÉGRÉ, C049 | Procédure Debian/Windows ; recette réelle utilisateur à faire |
 
 Enchaîner les lots prêts. Publier chaque livraison avec preuves et limites.
 Codex réserve http_api.py/tests HTTP et intégration serveur ; Claude conserve
@@ -33,7 +33,8 @@ lots engagés avant de modifier les mêmes fichiers. Puis :
 | 10 | [G040](C-TASK-G040.md) | Après G031/G035 | Lanceur candidat PowerShell/SSH |
 | 11 | [G041](C-TASK-G041.md) | PRÊT | Contrat des commandes distantes |
 
-Si une dépendance attend, avancer un lot prêt. G032 reste le prochain lot annoncé par Claude, puis les lots prêts.
+Si une dépendance attend, avancer un lot prêt. G032–G035 sont maintenant intégrés ;
+G036 est prioritaire à la reprise, puis G037–G041 (G041 : conception seulement).
 C-009b publié : 37dc199ec5da7da49655c4be1bc27e90d5b62d7d.
 Intégration G031 : e1059dd13f7a62b9eaba97b1475f57294d96d82e.
 
@@ -53,3 +54,12 @@ Codex réserve C-009c : preflight.py/http_api.py, tests et docs associés.
 C-009c livré (G051) : a8ae8fa949cc3fc54474285f8c1412eb23075b6c.
 G035/G040 peuvent intégrer `http_api --check` selon docs/HTTP-PREFLIGHT.md.
 Diagnostics disponibles, aucune validation Windows/SSH implicite.
+
+## Clôture de la séance du soir — G052
+
+G032–G035 intégrés depuis c73f788. C-009d/e/f/g livrent création du jeton,
+disponibilité bornée, projections vérifiées et jeu de recette synthétique.
+G036 peut utiliser docs/BETA-FIXTURE.md ; G040 doit respecter les dossiers
+uniques de la recette actualisée. Relire D-G034-1 sur le correctif intégré,
+en conservant la contre-revue figée. G042–G044 restent attribués après les
+six priorités. Aucun démarrage de session induit par cette file.

@@ -35,13 +35,13 @@ NAS/fichiers Windows, voix/caméra et robot restent des recettes séparées.
 - [ ] API et client intégrés, tests HTTP et UI de bout en bout réussis.
 - [ ] Parcours authentification, panne et reconnexion testé avec le vrai client.
 - [ ] Procédure testée sur Debian et Windows, états synthétiques uniquement.
-- [ ] Installation/démarrage/arrêt/retrait documentés sans exécuter Bootstrap.
-- [ ] Limites visibles : lecture seule, modèle simulé, aucune action distante.
+- [x] Installation/démarrage/arrêt/retrait documentés sans exécuter Bootstrap.
+- [x] Limites documentées : lecture seule, modèle simulé, aucune action distante.
 
 Les scripts Bootstrap restent hors du parcours sur serveur déjà installé.
-Le correctif APT reçu avec C040 a deux écarts reproduits : ajouts après un
-commentaire `#` (donc inactifs), et modification d'une source tierce contenant
-`main`. G033 les traite avant toute qualification d'installation Debian.
+Les deux écarts APT reçus avec C040 (ajouts après commentaire et modification
+d’une source tierce contenant `main`) sont corrigés par G033, intégré et vérifié
+sur fichiers fictifs. Cela ne qualifie pas une installation Debian.
 
 ## État intégré au 06/10, lot G049
 
@@ -50,3 +50,17 @@ et commandes/API, puis 18 tests Node reproduits dont quatre avec serveur réel.
 Les deux essais Chromium sont rapportés réussis par Claude sur sa livraison,
 mais sautés ici faute d’exécutable. Aucun test serveur/PC utilisateur ou tunnel
 SSH réel effectué ; les conditions ci-dessus restent à valider avant qualification.
+
+## Séance du soir — G052
+
+G032–G035 intégrés. La [recette serveur/PC](BETA-ACCEPTANCE.md) et le
+[jeu de six missions](BETA-FIXTURE.md) sont disponibles. C-009d/e/f/g apportent
+création privée du jeton, disponibilité HTTP bornée, validation des projections
+et préparation synthétique isolée. 608 tests Python réussis, six intégrations
+mémoire non exécutées ; 24 contrôles de recette locale avec processus réels.
+[Bilan détaillé](validation/2026-10-06/codex-evening/README.md).
+
+La prochaine file Claude est G036–G041 : reçus, accessibilité, navigateur/API,
+mesures, lanceur candidat et contrat des commandes. Les trois premières
+conditions de qualification ci-dessus restent ouvertes : elles exigent encore
+un navigateur et le parcours sur les machines de toytoy.

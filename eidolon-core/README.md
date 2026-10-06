@@ -71,6 +71,25 @@ les autres commandes. Le [standard commun](../standards/EIDOLON-PRESENTATION-v1.
 définit les règles à transmettre aux agents de tous les projets Eidolon ;
 le `AGENTS.md` à la racine y renvoie.
 
+## Bêta de consultation serveur–PC
+
+L’[API locale authentifiée](docs/HTTP-READ-API.md) et le
+[client connecté](desktop/connected/README.md) sont intégrés. Ils permettent
+de consulter les missions et leur évolution ; les reçus sont consultables
+par l’API, leur interface dédiée reste le lot G036. Aucune commande distante
+d’exécution, d’approbation ou d’annulation n’est exposée.
+
+Pour préparer la recette, suivre [BETA-ACCEPTANCE.md](docs/BETA-ACCEPTANCE.md).
+Le [jeu synthétique](docs/BETA-FIXTURE.md) crée six missions et trois reçus dans
+un dossier neuf, avec un jeton privé. Le diagnostic `http_api --check` vérifie
+les prérequis locaux avant un lancement explicite. Depuis le PC Windows, la
+page est destinée à être consultée par un tunnel SSH vers le serveur Linux.
+
+État du 06/10 au soir : 608 tests Python réussis, 6 intégrations mémoire non
+exécutées, 24 contrôles de recette locale réussis. Le navigateur, Windows,
+le tunnel SSH et le serveur de toytoy restent à valider.
+[Preuves et limites](docs/validation/2026-10-06/codex-evening/README.md).
+
 ## Prototype graphique autonome
 
 Le [prototype de Claude](desktop/prototype/README.md) s'ouvre depuis
@@ -82,8 +101,9 @@ Windows connecté à Core. [Revue d'intégration et limite connue](docs/validati
 
 La tranche C-008a fournit une projection locale en lecture seule et un journal
 paginé, avec curseurs persistants et réinitialisation explicite si l'historique
-ne correspond plus. CLI : client-snapshot / client-poll. Aucun serveur réseau
-ni client Windows livré. [Contrat et commandes](docs/CLIENT-SYNC.md).
+ne correspond plus. CLI : client-snapshot / client-poll. Cette tranche locale
+précède l’API et le client connecté décrits ci-dessus ; elle reste utilisable
+sans serveur. [Contrat et commandes](docs/CLIENT-SYNC.md).
 
 ```sh
 PYTHONPATH=src:. python -m examples.client_sync_demo --format human
@@ -97,7 +117,8 @@ pages, réponse répétée reconnue, un seul lancement d'outil. [Preuves](docs/v
 C-008b ajoute command-submit et command-receipt : décision, événement et reçu
 sont enregistrés ensemble. Un reçu retrouvé confirme cet enregistrement,
 jamais l'exécution d'un outil. approve/reject/revoke locaux et synthétiques
-uniquement ; pas encore d'API authentifiée ni de reçu pour run.
+uniquement ; l’API C-009b permet désormais de lire ces reçus, sans soumettre de
+décision. Aucun reçu pour run.
 [Contrat et limites](docs/COMMAND-RECEIPTS.md).
 
 ```sh
@@ -135,8 +156,9 @@ PYTHONPATH=src:. python -m examples.recovery_demo --format human
 
 C-008e ajoute `client-missions`, inventaire local paginé des missions sans
 exécution. Les pages utilisent les projections réduites du Core ; un changement
-entre deux pages impose une relecture explicite. Aucun raccordement Desktop ou
-serveur réseau. [Contrat et limites](docs/MISSION-LIST.md).
+entre deux pages impose une relecture explicite. Cet inventaire local est
+désormais réutilisé par l’API et le client connecté.
+[Contrat et limites](docs/MISSION-LIST.md).
 
 ```sh
 PYTHONPATH=src:. python -m examples.mission_list_demo --format human

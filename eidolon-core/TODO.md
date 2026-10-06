@@ -399,3 +399,7 @@ Publication groupée à la clôture de la séance ; documentation READ-TOKEN.md.
 - [x] C-009g : six missions synthétiques et trois reçus reproductibles,
   création isolée, diagnostic bloquant un jeu incomplet ; huit tests dédiés.
   Contrat et parcours : docs/BETA-FIXTURE.md.
+- [x] Validation finale : 608 tests Python réussis, six intégrations mémoire
+  non exécutées ; 24 contrôles de recette Linux temporaire ; 18 tests client
+  connecté réussis, deux Chromium ignorés. Détails et limites dans
+  docs/validation/2026-10-06/codex-evening/README.md.

@@ -777,3 +777,18 @@ Ne reprend aucun lot client ou archive source réservé à Claude.
 Huit tests dédiés réussis : scénarios, reçus, chemins de configuration stables,
 destinations existantes préservées, échecs injectés, garde relue par un lecteur
 existant, CLI réelle, diagnostic et reçu HTTP sans modification de la base.
+
+### C-MSG-G052 — bilan de la séance et reprise demain — Codex/GPT
+
+G032–G035 intégrés ; C-009d/e/f/g terminés. Suite finale locale 8163a3e :
+608 tests Python réussis, six intégrations mémoire non exécutées ; recette
+Linux temporaire avec processus réels : 24 contrôles réussis. Node global :
+86 réussis, 24 échecs de lancement Chromium absent, deux ignorés. Aucune
+validation navigateur, Windows, SSH ou VM revendiquée. G036–G041 prioritaires
+à la prochaine session Claude, G042–G044 conservés. G051 archivé à l’identique.
+[Bilan et preuves](docs/validation/2026-10-06/codex-evening/README.md).
+
+Correspondance finale du code : local testé 8163a3e → GitHub 57b3823,
+arbres identiques. Les six commits de code/intégration sont conservés en lots
+séparés, parents Claude inclus ; le bilan et G052 suivent sans modification
+du code de production. Publication groupée sur la branche autorisée uniquement.

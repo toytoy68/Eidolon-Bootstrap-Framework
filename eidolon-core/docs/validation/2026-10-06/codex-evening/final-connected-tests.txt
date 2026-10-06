@@ -1,0 +1,28 @@
+✔ served assets are the committed ones and app.js is the current bundle (1061.429523ms)
+✔ real server: list, snapshot, a cancellation written by another process seen by poll and relist (1142.430193ms)
+✔ real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes (1117.009334ms)
+✔ real server: another state behind the same address wipes the display (2010.070531ms)
+﹣ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (0.19926ms) # Chromium executable unavailable
+﹣ Chromium: a page opened through another Host is refused by the server, and the client says so (0.074842ms) # Chromium executable unavailable
+✔ token format is checked locally; nothing is sent for a malformed token (1.259706ms)
+✔ connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument (2.629878ms)
+✔ pagination sends next_cursor unchanged and stops at the end; never more than three pages (0.824741ms)
+✔ list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor (0.609607ms)
+✔ 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight (0.820515ms)
+✔ 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture (1.897666ms)
+✔ network failure: offline, data kept and dated; reconnect to the same store resumes (0.654325ms)
+✔ reconnection to another store wipes the previous display: no mixed identities (0.784701ms)
+✔ a list answering for another store than health is refused and nothing is shown (0.297568ms)
+✔ an answer for a previous selection never replaces the current one (0.675686ms)
+✔ disconnect forgets token and display; a late answer is dropped (0.333482ms)
+✔ poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload (1.540408ms)
+✔ an invalid or authority-claiming answer is rejected, never displayed (0.414023ms)
+✔ a malformed mission id is never turned into a request path (0.202455ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 5662.025526

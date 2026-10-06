@@ -1,0 +1,31 @@
+PASS fixture_ready
+PASS preflight_pass
+PASS asset_/
+PASS asset_/app.js
+PASS asset_/style.css
+PASS authenticated_health
+PASS anonymous_refused
+PASS six_missions
+PASS snapshot_text_completed
+PASS snapshot_not_started
+PASS snapshot_approval_pending
+PASS snapshot_cancel_requested
+PASS snapshot_cancelled
+PASS snapshot_approval_revoked
+PASS receipt_cancel-requested
+PASS receipt_historical-approve
+PASS receipt_historical-revoke
+PASS read_state_unchanged
+PASS live_creation_visible
+PASS live_cancellation_visible
+PASS second_token_created
+PASS running_server_keeps_original_token
+PASS restart_uses_explicit_new_token
+PASS restart_preserves_store_and_cursor
+{
+  "checks_passed": 24,
+  "browser_tested": false,
+  "ssh_tested": false,
+  "python": "3.12.14",
+  "source_commit": "8163a3e8cb99af413361c81e56f933141fef9845"
+}

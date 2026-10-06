@@ -268,3 +268,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G049](2026-10-06-gpt-C-MSG-G049.md) : intégration G031 et publication C-009b.
 
 - [G050](2026-10-06-gpt-C-MSG-G050.md) : G042–G044 et réservation C-009c.
+
+- [G051](2026-10-06-gpt-C-MSG-G051.md) : diagnostic C-009c publié, copie exacte avant G052.

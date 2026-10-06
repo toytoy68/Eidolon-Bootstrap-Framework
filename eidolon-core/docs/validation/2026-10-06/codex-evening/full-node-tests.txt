@@ -1,0 +1,506 @@
+✔ served assets are the committed ones and app.js is the current bundle (1072.369982ms)
+✔ real server: list, snapshot, a cancellation written by another process seen by poll and relist (1114.884379ms)
+✔ real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes (1152.829147ms)
+✔ real server: another state behind the same address wipes the display (2040.845014ms)
+﹣ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (0.306531ms) # Chromium executable unavailable
+﹣ Chromium: a page opened through another Host is refused by the server, and the client says so (0.109294ms) # Chromium executable unavailable
+✔ token format is checked locally; nothing is sent for a malformed token (2.091978ms)
+✔ connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument (4.184507ms)
+✔ pagination sends next_cursor unchanged and stops at the end; never more than three pages (1.188909ms)
+✔ list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor (0.931171ms)
+✔ 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight (0.992744ms)
+✔ 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture (2.55776ms)
+✔ network failure: offline, data kept and dated; reconnect to the same store resumes (1.293827ms)
+✔ reconnection to another store wipes the previous display: no mixed identities (1.034707ms)
+✔ a list answering for another store than health is refused and nothing is shown (0.415415ms)
+✔ an answer for a previous selection never replaces the current one (0.8173ms)
+✔ disconnect forgets token and display; a late answer is dropped (0.530748ms)
+✔ poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload (2.190676ms)
+✔ an invalid or authority-claiming answer is rejected, never displayed (0.690178ms)
+✔ a malformed mission id is never turned into a request path (1.032073ms)
+✔ G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable (4.635776ms)
+✔ G013: a cancellation request is allowed and tracked independently of the uncertain approval (0.779092ms)
+✔ G013: double click on revoke or cancel sends one request each (1.35573ms)
+✔ G013: no new decision while a previous one is unresolved, whatever the mission view shows (0.511299ms)
+✔ G013: out-of-order replies each settle their own command (0.615376ms)
+✔ G013: duplicate and late replies never change a resolved command or the history (0.879023ms)
+✔ G013: a reply for an unknown key is counted and changes nothing (0.304719ms)
+✔ G013: receipt not found keeps the command uncertain and blocks re-emission (3.099464ms)
+✔ G013: a server refusal is a definitive answer for that key only (0.548105ms)
+✔ G013: disconnection turns sending and checking into unknown, never into a resend (0.50544ms)
+✔ G013 retention: unresolved commands are never purged, resolved ones are bounded (2.911912ms)
+✔ G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence (1.566357ms)
+✔ G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective (2.261533ms)
+✔ G012-01: other validations are not relaxed (objective_kind must be a bounded string or null) (0.329766ms)
+✔ G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11) (0.462005ms)
+✔ G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested (1.328959ms)
+✔ G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored (0.596678ms)
+✔ G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED (0.382616ms)
+✔ G012-03: a cancellation on a running mission is labelled without promising the outcome (0.316686ms)
+✔ Codex's probe: a first page ending early (1 of 3) is refused, never complete (2.123245ms)
+✔ a later page ending early (2 of 3) keeps what was received, refused, not complete (0.617429ms)
+✔ announced total zero with an item, and an overflow across pages, are refused (3.025814ms)
+✔ has_more=true although every announced mission was received is refused (0.291749ms)
+✔ valid traces are unchanged: observed 3 pages complete, empty store, 250 → 200 shown and truncated (2.696057ms)
+✔ after a refusal: late pages are frozen, explicit relisting reads the generation completely (0.725972ms)
+✔ observed trace is kept verbatim with its SHA-256 (3.132454ms)
+✔ complete pagination of one generation: no loss, no duplicate, cursor sent back unchanged (1.330101ms)
+✔ a repeated or late page changes nothing (0.401033ms)
+✔ RESET_REQUIRED between pages: old inventory kept as stale, nothing asked, no merge, explicit relist (0.912994ms)
+✔ a page of another generation is refused even if structurally valid (0.286281ms)
+✔ disconnection: a page received offline is ignored; the same page is asked again with the same cursor (0.383908ms)
+✔ visible total bound: 250 announced, 200 shown, never claimed complete (4.472721ms)
+✔ validation: authority, unsafe integers, ordering, cursors, reset shape (0.633975ms)
+✔ empty store, null objective, review with cancellation: statuses are not confused (0.821106ms)
+✔ selection asks only a client-sync snapshot of that id; the list cursor is never an event cursor (1.554139ms)
+✔ an answer for an older selection never replaces the mission shown (0.534805ms)
+✔ selection from another store than the list is refused (0.255274ms)
+✔ nothing in the consumer can emit a command (0.36556ms)
+✔ approve sends one request and changes nothing before the acknowledgement (6.593062ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (1.982283ms)
+✔ refusal never leads to work or execution (1.50829ms)
+✔ offline: nothing is sent or queued, drafts stay local (1.060265ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (1.54187ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (0.652813ms)
+✔ revoking a recorded approval prevents execution (16.465608ms)
+✔ cancellation request before execution closes the mission without running it (0.735197ms)
+✔ review required: no automatic retry and no decision offered (0.560524ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.608005ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.680534ms)
+✔ local microphone stays signalled while Core is unreachable (0.271309ms)
+✔ closing the window decides and cancels nothing (0.401745ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.276116ms)
+✔ a decision on a changed proposal is reported as not recorded (0.25304ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.480673ms)
+✔ model functions are pure: the input state is never mutated (0.244588ms)
+✔ fixtures: the real trace is embedded unchanged and every derived case is labelled (1.614309ms)
+✔ 1. reconnection after progress: pages within the announced size, duplicates removed (2.323206ms)
+✔ 2. capture ahead of the page: the cursor keeps paging, the past is not replayed on the view (0.531259ms)
+✔ 3. out-of-order answers: an older one replaces neither the view nor the cursor (0.435435ms)
+✔ 4. cancellation at unchanged revision: visible through as_of_sequence, not shown as CANCELLED (0.73793ms)
+✔ 5a. RESET_REQUIRED is never applied silently; reload is explicit and starts a new epoch (0.503608ms)
+✔ 5b. store change goes through RESET only; wrong mission, unknown version and unsafe integers are rejected (0.661275ms)
+✔ 6. disconnection: last known state kept with its dates, nothing applied or queued (0.377348ms)
+✔ 7. approval axes stay separate; the protocol never authorizes execution (0.446311ms)
+✔ 8. hostile text is kept verbatim as data (1.465996ms)
+✔ a page that does not start right after our cursor leaves no hole: its capture only is taken (0.267432ms)
+✔ retention: references are bounded and the oldest are dropped first (26.059807ms)
+✔ functions are pure: inputs are never mutated (0.301534ms)
+✖ ui: no network request beyond the local files, no script error (17.686166ms)
+✖ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (3.480527ms)
+✖ ui: offline disables sending with a visible reason (2.145299ms)
+✖ ui: lost acknowledgement flow through the interface (2.45212ms)
+✖ ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable (7.359996ms)
+✖ ui: locked session toast is generic and opens nothing (4.456046ms)
+✖ ui: microphone indicator survives a Core disconnection (1.550843ms)
+✖ ui: targets, contrast and horizontal overflow in every scenario and view (1.615351ms)
+✖ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (1.833589ms)
+✖ ui: reduced motion stops the eye animation (1.703824ms)
+✖ ui: assisted reading previews exactly what will be sent and requires a fresh review (1.376031ms)
+✖ ui G012: catch-up after a cut, duplicates ignored, no network request (1.058623ms)
+✖ ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset (1.158243ms)
+✖ ui G012: cancellation requested, approval axes, review — labels and no active decision (1.177311ms)
+✖ ui G012: rejected answers listed; hostile text rendered as text only (1.22258ms)
+✖ ui G012: targets and contrast in every sync scenario, at the end of its script (1.354528ms)
+✖ ui G016: review stays primary next to a cancellation request; no relaunch or decision button (1.400928ms)
+✖ ui G016: observed Core capture with objective_kind=null is displayed, nothing invented (1.214447ms)
+✖ ui G018: complete pagination of observed pages, repeated page ignored, selection read, no network (1.036009ms)
+✖ ui G018: reset between pages keeps the old inventory as stale until an explicit relisting (1.092965ms)
+✖ ui G018: a late answer for the first selection does not replace the second (1.205995ms)
+✖ ui G018: statuses not confused, user selection by keyboard, hostile text, empty and truncated lists (1.099715ms)
+✖ ui G018: targets and contrast in every list scenario, at the end of its script (1.332115ms)
+✖ ui G021: a last page inconsistent with the announced total is refused, never shown as complete (1.326315ms)
+ℹ tests 112
+ℹ suites 0
+ℹ pass 86
+ℹ fail 24
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 5806.864986
+
+✖ failing tests:
+
+test at desktop/prototype/tests/ui.test.js:81:1
+✖ ui: no network request beyond the local files, no script error (17.686166ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:82:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:94:1
+✖ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (3.480527ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:95:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:119:1
+✖ ui: offline disables sending with a visible reason (2.145299ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:120:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:134:1
+✖ ui: lost acknowledgement flow through the interface (2.45212ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:135:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:156:1
+✖ ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable (7.359996ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:157:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:180:1
+✖ ui: locked session toast is generic and opens nothing (4.456046ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:181:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:193:1
+✖ ui: microphone indicator survives a Core disconnection (1.550843ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:194:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:204:1
+✖ ui: targets, contrast and horizontal overflow in every scenario and view (1.615351ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:205:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:231:1
+✖ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (1.833589ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:232:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:248:1
+✖ ui: reduced motion stops the eye animation (1.703824ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:249:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:262:1
+✖ ui: assisted reading previews exactly what will be sent and requires a fresh review (1.376031ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:263:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:294:1
+✖ ui G012: catch-up after a cut, duplicates ignored, no network request (1.058623ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:295:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:315:1
+✖ ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset (1.158243ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:316:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:341:1
+✖ ui G012: cancellation requested, approval axes, review — labels and no active decision (1.177311ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:342:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:359:1
+✖ ui G012: rejected answers listed; hostile text rendered as text only (1.22258ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:360:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:375:1
+✖ ui G012: targets and contrast in every sync scenario, at the end of its script (1.354528ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:376:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:395:1
+✖ ui G016: review stays primary next to a cancellation request; no relaunch or decision button (1.400928ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:396:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:410:1
+✖ ui G016: observed Core capture with objective_kind=null is displayed, nothing invented (1.214447ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:411:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:429:1
+✖ ui G018: complete pagination of observed pages, repeated page ignored, selection read, no network (1.036009ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:430:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:448:1
+✖ ui G018: reset between pages keeps the old inventory as stale until an explicit relisting (1.092965ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:449:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:472:1
+✖ ui G018: a late answer for the first selection does not replace the second (1.205995ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:473:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:490:1
+✖ ui G018: statuses not confused, user selection by keyboard, hostile text, empty and truncated lists (1.099715ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:491:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:520:1
+✖ ui G018: targets and contrast in every list scenario, at the end of its script (1.332115ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:521:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at desktop/prototype/tests/ui.test.js:539:1
+✖ ui G021: a last page inconsistent with the announced total is refused, never shown as complete (1.326315ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/prototype/tests/ui.test.js:540:34) {
+    name: 'Error',
+    log: []
+  }
