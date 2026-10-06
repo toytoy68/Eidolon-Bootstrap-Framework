@@ -70,6 +70,9 @@
     if (s.list.lastError) text += " — erreur Core : " + s.list.lastError;
     byId(doc, "list-status").textContent = s.phase === "disconnected" ? "" : text;
     var list = byId(doc, "mission-list");
+    // G037: the buttons are rebuilt on every render; keep the keyboard focus on the same mission.
+    var active = doc.activeElement;
+    var focusedId = active && active.dataset && list.contains(active) ? active.dataset.missionId : null;
     clear(list);
     var selectedId = s.list.selection ? s.list.selection.missionId : null;
     var oldInventory = !s.list.items.length && s.list.previous;
@@ -87,6 +90,7 @@
       if (note) button.appendChild(el(doc, "span", "mission-note", note));
       li.appendChild(button);
       list.appendChild(li);
+      if (m.id === focusedId) button.focus();
     });
   }
 

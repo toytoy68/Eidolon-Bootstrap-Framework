@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+ok 1 - keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+  ---
+  duration_ms: 2252.610212
+  type: 'test'
+  ...
+# Subtest: focus after a refused token goes back to the token field, with the status announced
+ok 2 - focus after a refused token goes back to the token field, with the status announced
+  ---
+  duration_ms: 1786.501691
+  type: 'test'
+  ...
+# Subtest: visible focus indicator on every control reached by Tab
+ok 3 - visible focus indicator on every control reached by Tab
+  ---
+  duration_ms: 1862.222332
+  type: 'test'
+  ...
+# Subtest: layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 4 - layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 1912.539624
+  type: 'test'
+  ...
+# Subtest: layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 5 - layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 2159.575042
+  type: 'test'
+  ...
+# Subtest: layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 6 - layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 1979.12111
+  type: 'test'
+  ...
+# Subtest: reduced motion: no animation or transition anywhere
+ok 7 - reduced motion: no animation or transition anywhere
+  ---
+  duration_ms: 1509.594676
+  type: 'test'
+  ...
+# Subtest: dark color scheme keeps contrast
+ok 8 - dark color scheme keeps contrast
+  ---
+  duration_ms: 1802.55107
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15633.187946

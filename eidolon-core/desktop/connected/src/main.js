@@ -46,7 +46,11 @@
       var input = document.getElementById("token");
       var value = input.value.trim();
       input.value = "";                    // the DOM never keeps the token
-      session.connect(value);
+      // G037: success moves the focus to the mission list; a refusal keeps it on the token field.
+      session.connect(value).then(function (ok) {
+        if (ok) document.getElementById("missions").focus();
+        else input.focus();
+      });
     });
     document.getElementById("disconnect").addEventListener("click", function () { stopAuto(); session.disconnect(); });
     document.getElementById("relist").addEventListener("click", function () { session.relist(); });

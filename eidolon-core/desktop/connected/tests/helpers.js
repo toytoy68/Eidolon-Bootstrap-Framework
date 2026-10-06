@@ -15,7 +15,8 @@ const os = require("node:os");
 const path = require("node:path");
 
 const CORE = path.resolve(__dirname, "..", "..", "..");
-const WEB_ROOT = path.resolve(__dirname, "..");
+// CONNECTED_WEB_ROOT lets a bench serve an older copy of the client (before/after comparisons).
+const WEB_ROOT = process.env.CONNECTED_WEB_ROOT ? path.resolve(process.env.CONNECTED_WEB_ROOT) : path.resolve(__dirname, "..");
 const PYTHON = process.env.PYTHON || "python3";
 const CAPTURES = process.env.CAPTURES || null;
 const ENV = Object.assign({}, process.env, { PYTHONPATH: path.join(CORE, "src"), PYTHONDONTWRITEBYTECODE: "1" });

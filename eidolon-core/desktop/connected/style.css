@@ -117,6 +117,7 @@ input[type="password"] {
   padding: 1rem 1.5rem;
 }
 .panel {
+  overflow-wrap: anywhere;   /* long identifiers or keys never widen the page (G037) */
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;

@@ -1,0 +1,138 @@
+TAP version 13
+# Subtest: keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+not ok 1 - keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+  ---
+  duration_ms: 1777.023672
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:75:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    after connection, focus goes to the mission list
+    + actual - expected
+    
+    + 'token'
+    - 'missions'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'missions'
+  actual: 'token'
+  operator: 'strictEqual'
+  stack: |-
+    /home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:78:12
+    async withPage (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:29:5)
+    async TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:76:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: focus after a refused token goes back to the token field, with the status announced
+ok 2 - focus after a refused token goes back to the token field, with the status announced
+  ---
+  duration_ms: 1759.220012
+  type: 'test'
+  ...
+# Subtest: visible focus indicator on every control reached by Tab
+ok 3 - visible focus indicator on every control reached by Tab
+  ---
+  duration_ms: 1872.844376
+  type: 'test'
+  ...
+# Subtest: layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 4 - layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 1779.240776
+  type: 'test'
+  ...
+# Subtest: layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+not ok 5 - layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 1948.541116
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:130:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        low: [],
+    +   overflow: 12,
+    -   overflow: 0,
+        small: []
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    low:
+    small:
+    overflow: 0
+  actual:
+    low:
+    small:
+    overflow: 12
+  operator: 'deepStrictEqual'
+  stack: |-
+    /home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:143:14
+    async withPage (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:29:5)
+    async TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:131:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+not ok 6 - layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 2139.038502
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:130:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        low: [],
+    +   overflow: 332,
+    -   overflow: 0,
+        small: []
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    low:
+    small:
+    overflow: 0
+  actual:
+    low:
+    small:
+    overflow: 332
+  operator: 'deepStrictEqual'
+  stack: |-
+    /home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:143:14
+    async withPage (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:29:5)
+    async TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/a11y.test.js:131:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: reduced motion: no animation or transition anywhere
+ok 7 - reduced motion: no animation or transition anywhere
+  ---
+  duration_ms: 1656.48441
+  type: 'test'
+  ...
+# Subtest: dark color scheme keeps contrast
+ok 8 - dark color scheme keeps contrast
+  ---
+  duration_ms: 1685.885978
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 5
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14984.222153
