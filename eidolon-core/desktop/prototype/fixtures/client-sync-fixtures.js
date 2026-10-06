@@ -1,6 +1,7 @@
 /* Généré par build-sync-fixtures.js — ne pas modifier à la main.
  * original : trace réelle de Codex (C-008a), recopiée sans changement.
- * derived  : cas construits pour G012, jamais des sorties Core observées. */
+ * observed : capture Core réelle relevée par Codex, recopiée sans changement.
+ * derived  : cas construits pour G012/G016, jamais des sorties Core observées. */
 (function (root) {
   var data = {
  "source": "docs/validation/2026-10-06/codex-client-sync/demo.json",
@@ -331,6 +332,49 @@
    "pages": 5,
    "tool_launches": 1,
    "unique_events": 10
+  }
+ },
+ "observed": {
+  "core_unsupported": {
+   "source": "docs/validation/2026-10-06/codex-g012-integration/core-unsupported.json",
+   "sha256": "8ddfe20bba3025b661cfe9e243e016ef4966ca9cb360c464add93db2149b6bc5",
+   "envelope": {
+    "protocol": "eidolon-client-sync/1",
+    "snapshot_only": true,
+    "authorizes_execution": false,
+    "store_id": "s-595431ad08cf47788ce38c1851cc0f9a",
+    "mission_id": "m-053d45f103bb470b971dc626876197ba",
+    "status": "SNAPSHOT",
+    "snapshot": {
+     "observed_at": "2026-10-06T07:08:51.662525+00:00",
+     "as_of_sequence": 2,
+     "event_count": 2,
+     "mission": {
+      "id": "m-053d45f103bb470b971dc626876197ba",
+      "revision": 1,
+      "status": "BLOCKED",
+      "phase": "RECALL",
+      "cancel_requested": false,
+      "progress": {
+       "completed": 0,
+       "total": null
+      },
+      "objective_kind": null,
+      "outcome_status": "CLARIFICATION",
+      "action_view": null
+     }
+    },
+    "events": [],
+    "cursor": {
+     "version": 1,
+     "store_id": "s-595431ad08cf47788ce38c1851cc0f9a",
+     "mission_id": "m-053d45f103bb470b971dc626876197ba",
+     "sequence": 2,
+     "event_count": 2,
+     "anchor_sha256": "2f43e8e4301d9e41af400797a1b5ec8b2cc5faed95fbe86f75abc12fe0d299a9"
+    },
+    "has_more": false
+   }
   }
  },
  "derived": {
@@ -826,6 +870,66 @@
        }
       },
       "cancel_requested": false,
+      "id": "m-ba9a07cb928144009b049aa05704fd88",
+      "objective_kind": "synthetic_service_restart",
+      "outcome_status": "PENDING",
+      "phase": "ACTION",
+      "progress": {
+       "completed": 0,
+       "total": null
+      },
+      "revision": 3,
+      "status": "REVIEW_REQUIRED"
+     },
+     "observed_at": "2026-10-06T03:44:34.377874+00:00"
+    },
+    "snapshot_only": true,
+    "status": "SNAPSHOT",
+    "store_id": "s-6d6774d4236f4d61850de210e881e0cc"
+   }
+  },
+  "review_with_cancel": {
+   "derived": true,
+   "why": "action_review avec cancel_requested=true : la revue doit rester l'état principal.",
+   "envelope": {
+    "authorizes_execution": false,
+    "cursor": {
+     "anchor_sha256": "572a3d90cb41f2d13069a17b51e4d3346bc8c10bbe82d5b44ef8a04595749970",
+     "event_count": 1,
+     "mission_id": "m-ba9a07cb928144009b049aa05704fd88",
+     "sequence": 1,
+     "store_id": "s-6d6774d4236f4d61850de210e881e0cc",
+     "version": 1
+    },
+    "events": [],
+    "has_more": false,
+    "mission_id": "m-ba9a07cb928144009b049aa05704fd88",
+    "protocol": "eidolon-client-sync/1",
+    "snapshot": {
+     "as_of_sequence": 1,
+     "event_count": 1,
+     "mission": {
+      "action_view": {
+       "version": 1,
+       "snapshot_only": true,
+       "authorizes_execution": false,
+       "proposal_sha256": "4cd9908ad66019de97e79bc8e829e94e92a4d59c46934304acb8e3c6dbb36d92",
+       "call_id": "c-1",
+       "attempt": 1,
+       "decision": {
+        "status": "USED",
+        "message": "Accord consommé au lancement ; cela ne prouve pas un effet."
+       },
+       "applicability": {
+        "code": "CONSUMED",
+        "message": "Accord déjà consommé ; consulter la preuve et la tentative, sans rejouer l'action."
+       },
+       "effect": {
+        "code": "UNKNOWN",
+        "message": "Effet inconnu ; aucune absence d'effet déduite du statut de l'accord."
+       }
+      },
+      "cancel_requested": true,
       "id": "m-ba9a07cb928144009b049aa05704fd88",
       "objective_kind": "synthetic_service_restart",
       "outcome_status": "PENDING",

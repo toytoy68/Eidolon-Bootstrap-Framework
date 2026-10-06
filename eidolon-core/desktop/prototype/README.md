@@ -68,7 +68,8 @@ télémétrie n'est présentée comme une observation en direct.
 | `tests/model.test.js` | 17 tests de transitions et d'absence d'envoi indu |
 | `tests/commands.test.js` | 12 tests du suivi des commandes par clé (G013) et de l'œil « Reçu à vérifier » (G012) |
 | `tests/sync.test.js` | 13 tests du consommateur sur la trace réelle et les cas dérivés |
-| `tests/ui.test.js` | 16 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation |
+| `tests/ui.test.js` | 18 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation, G016 |
+| `tests/g016.test.js` | 7 tests de régression des écarts G012-01/02/03 (C-TASK-G016) ; ils échouent sur `cc9a64b` |
 
 ## Suivi des commandes (C-TASK-G013)
 
@@ -131,6 +132,15 @@ Règles :
 - `RESET_REQUIRED` n'est jamais appliqué seul : la vue reste l'ancienne,
   l'interrogation s'arrête, et la raison est expliquée. Seul « Recharger
   explicitement la vue » la remplace. Cela ne relance rien et ne décide rien.
+- **Gel pendant un reset en attente** (G016) : toute réponse SNAPSHOT ou DELTA
+  qui arrive ensuite, même de la même époque, est ignorée et comptée
+  (`frozenAnswers`) ; ni la vue, ni le curseur, ni les références ne bougent,
+  et aucune requête n'est émise. Un second `RESET_REQUIRED` remplace le premier
+  (`supersededResets`) : l'acceptation applique le plus récent. Après
+  acceptation, les réponses de l'ancienne époque restent ignorées.
+- `objective_kind` vaut une chaîne bornée (80) ou `null` : Core renvoie `null`
+  pour un objectif hors catalogue. L'interface affiche « Aucun objectif reconnu
+  (hors catalogue) » et n'invente rien.
 - Rejetés sans effet : version de protocole inconnue, prétention d'autorité,
   curseur d'une autre mission ou d'une autre base sans `RESET`, entier hors de
   `Number.isSafeInteger`, enveloppe mal formée. Une erreur signalée par Core est
@@ -139,8 +149,20 @@ Règles :
   demandée, jamais une file d'actions.
 - `action_view` peut valoir `null`. Sinon, décision, applicabilité et effet
   restent trois lignes distinctes, et aucun bouton d'accord n'est rendu.
-- Annulation demandée : « Annulation demandée — pas encore confirmée » tant que
+- Annulation demandée : « Annulation demandée — issue non confirmée » tant que
   la capture ne dit pas `CANCELLED`, même à révision inchangée.
+- **`REVIEW_REQUIRED` reste l'état principal** (G016), même avec
+  `cancel_requested=true` : « Revue requise — effet à vérifier ». La demande
+  d'annulation est montrée sur une ligne à part (« Annulation demandée :
+  enregistrée, issue non garantie »), l'effet inconnu et les preuves restent
+  affichés, aucun texte n'annonce une capture `CANCELLED` à venir et aucun
+  bouton n'est rendu.
+
+Scénarios du banc ajoutés par G016 : `sync-objectif-null` (capture Core
+**observée**, recopiée telle quelle avec son empreinte) et
+`sync-revue-annulation` (cas **dérivé** `review_with_cancel`). Le scénario
+`sync-reset` livre en plus une réponse tardive pendant l'attente, puis un
+second reset.
 - **Rétention** : 200 références au plus (les plus anciennes partent d'abord,
   et sont comptées), 20 rejets et 20 erreurs Core au plus.
 

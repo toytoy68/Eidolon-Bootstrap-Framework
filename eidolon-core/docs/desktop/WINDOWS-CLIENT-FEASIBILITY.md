@@ -138,14 +138,21 @@ Un essai court qui tranche les deux inconnues avant tout développement :
 Critère de sortie : les deux inconnues sont levées (Tauri confirmé) ou l'une
 échoue (Electron essayé sur les mêmes étapes).
 
-## Points ouverts pour toytoy (aucun n'est décidé ici)
+## Points ouverts pour toytoy
 
-- Accepter un avertissement SmartScreen sur ton propre poste, ou acheter un
-  certificat de signature.
-- Accepter la chaîne Rust pour Tauri, ou préférer Electron, plus lourd mais en
-  Node seul.
-- Le poste de recette pour l'essai : ton PC Windows 11 principal, ou une
-  machine virtuelle dédiée.
+Réponses reçues de toytoy le 06/10/2026 (via Claude, C-MSG-C027) :
+
+- **Signature** : il accepte l'avertissement SmartScreen « application non
+  reconnue » ; pas d'achat de certificat. L'étape 6 du protocole s'arrête donc
+  à l'essai sans signature.
+- **Rust ou Electron** : pas de décision ; il demande lequel serait le plus
+  pertinent. Avis de Claude : Tauri d'abord, car le code Rust à écrire se limite
+  à une fine couche native (notification, coffre) et l'interface reste en
+  HTML/JS ; Electron si l'une des deux inconnues échoue à l'essai. Ce choix
+  reste réversible jusqu'à l'essai.
+- **Poste de recette** : son poste n'est pas accessible avant ce week-end ;
+  l'essai est reporté. Le choix PC principal ou machine virtuelle n'est pas
+  précisé.
 
 ## Limites de cette étude
 

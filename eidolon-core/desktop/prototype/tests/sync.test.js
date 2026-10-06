@@ -75,7 +75,7 @@ test("4. cancellation at unchanged revision: visible through as_of_sequence, not
   assert.equal(c.view.mission.revision, revision, "revision alone would hide the request");
   assert.equal(c.view.mission.cancel_requested, true);
   assert.equal(c.view.mission.status, "RUNNING");
-  assert.match(S.missionLabel(c.view.mission), /Annulation demandée — pas encore confirmée/);
+  assert.match(S.missionLabel(c.view.mission), /Annulation demandée — issue non confirmée/);
   assert.doesNotMatch(S.missionLabel(c.view.mission), /^Annulée/);
 });
 

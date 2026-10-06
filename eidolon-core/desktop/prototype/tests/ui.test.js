@@ -319,9 +319,15 @@ test("ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset"
     await playSync(page, "sync-reset", 3);
     assert.equal(await page.isVisible("#sync-reset"), true);
     assert.match(await page.textContent("#sync-reset"), /ANCHOR_CHANGED/);
+    const cursorText = await page.textContent("#sync-cursor");
+    const stateText = await page.textContent("#sync-state");
+    await page.click("#server-step"); // G016: a late answer of the same epoch arrives during the wait
+    assert.equal(await page.textContent("#sync-cursor"), cursorText, "cursor frozen");
+    assert.equal(await page.textContent("#sync-state"), stateText, "view frozen");
+    assert.match(await page.textContent("#app"), /réponses ignorées pendant le reset : 1/);
     const before = await page.evaluate(() => window.EidolonPrototype.getSync().index);
     await page.click("#server-step");
-    assert.equal(await page.evaluate(() => window.EidolonPrototype.getSync().index), before, "nothing delivered while waiting");
+    assert.equal(await page.evaluate(() => window.EidolonPrototype.getSync().index), before, "nothing polled while waiting");
     await shot(page, "10-sync-reset");
     await page.click("#sync-accept-reset");
     assert.equal(await page.locator("#sync-reset").count(), 0);
@@ -337,7 +343,7 @@ test("ui G012: cancellation requested, approval axes, review — labels and no a
   try {
     const { context, page } = await open(browser, "sync-annulation");
     await playSync(page, "sync-annulation", 2);
-    assert.equal(await page.textContent("#sync-state"), "Annulation demandée — pas encore confirmée");
+    assert.equal(await page.textContent("#sync-state"), "Annulation demandée — issue non confirmée");
     await shot(page, "11-sync-annulation");
     await playSync(page, "sync-accord", 1);
     assert.equal(await page.textContent("#sync-state"), "À décider");
@@ -383,4 +389,34 @@ test("ui G012: targets and contrast in every sync scenario, at the end of its sc
   assert.deepEqual([...new Set(report.flatMap((r) => r.small))], []);
   assert.ok(worst.ratio >= worst.needed);
   assert.ok(report.every((r) => r.overflow <= 0));
+});
+
+
+test("ui G016: review stays primary next to a cancellation request; no relaunch or decision button", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page } = await open(browser, "sync-revue-annulation");
+    await playSync(page, "sync-revue-annulation", 1);
+    assert.equal(await page.textContent("#sync-state"), "Revue requise — effet à vérifier");
+    assert.match(await page.textContent("#sync-cancel"), /Annulation demandée : enregistrée, issue non garantie/);
+    assert.match(await page.textContent("#app"), /UNKNOWN/);
+    assert.doesNotMatch(await page.textContent("#app"), /attendre la capture CANCELLED/);
+    assert.equal(await page.locator("#app button").count(), 0, "no relaunch, approve or cancel button");
+    await shot(page, "13-g016-revue-et-annulation");
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G016: observed Core capture with objective_kind=null is displayed, nothing invented", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "sync-objectif-null");
+    await playSync(page, "sync-objectif-null", 1);
+    assert.equal(await page.textContent("#sync-objective"), "Aucun objectif reconnu (hors catalogue)");
+    assert.equal(await page.textContent("#sync-state"), "Bloquée — précision demandée");
+    assert.equal(await page.locator("#sync-rejected").count(), 0, "not rejected");
+    assert.deepEqual(errors, []);
+    await shot(page, "14-g016-objectif-nul");
+    await context.close();
+  } finally { await browser.close(); }
 });

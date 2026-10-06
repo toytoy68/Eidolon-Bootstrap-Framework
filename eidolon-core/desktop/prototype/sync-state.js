@@ -46,7 +46,7 @@
       connection: "online",
       lastContactAt: null,    // local reception time of the last accepted envelope
       lastError: null,        // last Core error code (INVALID_CURSOR, ...), never a capture
-      stats: { duplicateRefs: 0, staleViews: 0, staleAnswers: 0, gapAnswers: 0, rejected: [], coreErrors: [] }
+      stats: { duplicateRefs: 0, staleViews: 0, staleAnswers: 0, gapAnswers: 0, frozenAnswers: 0, supersededResets: 0, rejected: [], coreErrors: [] }
     };
   }
 
@@ -88,7 +88,8 @@
     if (!isObject(snap) || !safeInt(snap.as_of_sequence, 1) || !safeInt(snap.event_count, 1) || !text(snap.observed_at, 64)) return "INVALID_SNAPSHOT";
     var m = snap.mission;
     if (!isObject(m) || m.id !== env.mission_id || !safeInt(m.revision, 0) || !text(m.status, 40) || !text(m.phase, 40)
-        || typeof m.cancel_requested !== "boolean" || !text(m.objective_kind, 80) || !text(m.outcome_status, 40)
+        || typeof m.cancel_requested !== "boolean" || !(m.objective_kind === null || text(m.objective_kind, 80)) // null: no catalogue objective (G016)
+        || !text(m.outcome_status, 40)
         || !isObject(m.progress) || !safeInt(m.progress.completed, 0)
         || !(m.progress.total === null || safeInt(m.progress.total, 0))) return "INVALID_MISSION";
     var av = validateActionView(m.action_view);
@@ -132,11 +133,14 @@
 
     if (env.status === "RESET_REQUIRED") {
       // Never applied silently: the user reloads explicitly. Polling stops meanwhile.
+      // A later reset replaces the pending one (newest reason and capture); still not applied.
+      if (s.reset) s.stats.supersededResets += 1;
       s.reset = { reason: env.reason, snapshot: clone(env.snapshot), cursor: clone(env.cursor), receivedAt: request.receivedAt || null };
       s.lastContactAt = request.receivedAt || s.lastContactAt;
       s.lastError = null;
       return s;
     }
+    if (s.reset) { s.stats.frozenAnswers += 1; return s; } // G016: view and cursor frozen until the explicit reload
     if (s.storeId && env.store_id !== s.storeId) return reject(s, "STORE_CHANGED_WITHOUT_RESET", request.receivedAt);
 
     if (env.status === "SNAPSHOT") {
@@ -232,12 +236,14 @@
   function missionLabel(mission) {
     if (!mission) return "Aucune capture";
     var av = mission.action_view;
-    if (mission.cancel_requested && !/^(CANCELLED|SUCCEEDED|FAILED|ABANDONED)$/.test(mission.status)) return "Annulation demandée — pas encore confirmée";
+    if (mission.status === "REVIEW_REQUIRED") return "Revue requise — effet à vérifier"; // stays primary, even with a cancel request
+    if (mission.cancel_requested && !/^(CANCELLED|SUCCEEDED|FAILED|ABANDONED)$/.test(mission.status)) return "Annulation demandée — issue non confirmée";
     switch (mission.status) {
       case "NEW": return "Nouvelle";
       case "RUNNING": return "En cours (capture ; ne prouve pas qu'un processus vit encore)";
       case "BLOCKED":
         if (av && av.decision.status === "PENDING" && av.applicability.code === "AWAITING_DECISION") return "À décider";
+        if (mission.outcome_status === "CLARIFICATION") return "Bloquée — précision demandée";
         return "Bloquée — motif à consulter";
       case "REVIEW_REQUIRED": return "Revue requise — effet à vérifier";
       case "SUCCEEDED": return mission.outcome_status === "ACHIEVED" ? "Réussie — résultat daté" : "Terminée (issue " + mission.outcome_status + ")";
@@ -246,6 +252,13 @@
       case "ABANDONED": return "Abandonnée";
       default: return "État " + mission.status;
     }
+  }
+
+  // Secondary line, shown next to the main label; never a promise of a future outcome.
+  function cancelNote(mission) {
+    if (!mission || !mission.cancel_requested) return null;
+    if (/^(CANCELLED|SUCCEEDED|FAILED|ABANDONED)$/.test(mission.status)) return "Annulation demandée avant la fin ; issue capturée : " + mission.status;
+    return "Annulation demandée : enregistrée, issue non garantie";
   }
 
   function summary(state) {
@@ -262,7 +275,7 @@
 
   var api = { PROTOCOL: PROTOCOL, MAX_REFS: MAX_REFS, createState: createState, validateEnvelope: validateEnvelope,
     receive: receive, receiveError: receiveError, acceptReset: acceptReset, setConnection: setConnection,
-    nextRequest: nextRequest, missionLabel: missionLabel, summary: summary };
+    nextRequest: nextRequest, missionLabel: missionLabel, cancelNote: cancelNote, summary: summary };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonSync = api;
 })(typeof window !== "undefined" ? window : this);

@@ -88,15 +88,28 @@ withView("action_review", "Capture initiale dérivée : REVIEW_REQUIRED, accord 
   { code: "CONSUMED", message: "Accord déjà consommé ; consulter la preuve et la tentative, sans rejouer l'action." },
   { code: "UNKNOWN", message: "Effet inconnu ; aucune absence d'effet déduite du statut de l'accord." });
 
+// G016: a REVIEW_REQUIRED capture that also carries a cancellation request.
+const reviewCancel = copy(derived.action_review.envelope);
+reviewCancel.snapshot.mission.cancel_requested = true;
+derive("review_with_cancel", "action_review avec cancel_requested=true : la revue doit rester l'état principal.", reviewCancel);
+
+// G016: real Core capture observed by Codex (out-of-catalogue request, objective_kind=null), kept verbatim.
+const OBSERVED = path.resolve(__dirname, "../../../docs/validation/2026-10-06/codex-g012-integration/core-unsupported.json");
+const observedRaw = fs.readFileSync(OBSERVED);
+const observed = { core_unsupported: { source: "docs/validation/2026-10-06/codex-g012-integration/core-unsupported.json",
+  sha256: crypto.createHash("sha256").update(observedRaw).digest("hex"), envelope: JSON.parse(observedRaw) } };
+
 const payload = {
   source: "docs/validation/2026-10-06/codex-client-sync/demo.json",
   source_sha256: crypto.createHash("sha256").update(raw).digest("hex"),
   original: trace,
+  observed,
   derived
 };
 const header = "/* Généré par build-sync-fixtures.js — ne pas modifier à la main.\n"
   + " * original : trace réelle de Codex (C-008a), recopiée sans changement.\n"
-  + " * derived  : cas construits pour G012, jamais des sorties Core observées. */\n";
+  + " * observed : capture Core réelle relevée par Codex, recopiée sans changement.\n"
+  + " * derived  : cas construits pour G012/G016, jamais des sorties Core observées. */\n";
 fs.writeFileSync(OUT, header + "(function (root) {\n  var data = " + JSON.stringify(payload, null, 1)
   + ";\n  if (typeof module === \"object\" && module.exports) module.exports = data;\n  else root.EidolonSyncFixtures = data;\n"
   + "})(typeof window !== \"undefined\" ? window : this);\n");

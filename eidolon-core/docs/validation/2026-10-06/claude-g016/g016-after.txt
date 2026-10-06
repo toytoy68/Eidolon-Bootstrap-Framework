@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+ok 1 - G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+  ---
+  duration_ms: 2.137642
+  type: 'test'
+  ...
+# Subtest: G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+ok 2 - G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+  ---
+  duration_ms: 0.455979
+  type: 'test'
+  ...
+# Subtest: G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+ok 3 - G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+  ---
+  duration_ms: 0.812297
+  type: 'test'
+  ...
+# Subtest: G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+ok 4 - G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+  ---
+  duration_ms: 2.021576
+  type: 'test'
+  ...
+# Subtest: G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+ok 5 - G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+  ---
+  duration_ms: 0.714813
+  type: 'test'
+  ...
+# Subtest: G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+ok 6 - G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+  ---
+  duration_ms: 0.548034
+  type: 'test'
+  ...
+# Subtest: G012-03: a cancellation on a running mission is labelled without promising the outcome
+ok 7 - G012-03: a cancellation on a running mission is labelled without promising the outcome
+  ---
+  duration_ms: 0.781808
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 134.614935

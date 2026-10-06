@@ -1,0 +1,414 @@
+TAP version 13
+# Subtest: G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable
+ok 1 - G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable
+  ---
+  duration_ms: 4.955756
+  type: 'test'
+  ...
+# Subtest: G013: a cancellation request is allowed and tracked independently of the uncertain approval
+ok 2 - G013: a cancellation request is allowed and tracked independently of the uncertain approval
+  ---
+  duration_ms: 1.577564
+  type: 'test'
+  ...
+# Subtest: G013: double click on revoke or cancel sends one request each
+ok 3 - G013: double click on revoke or cancel sends one request each
+  ---
+  duration_ms: 0.961108
+  type: 'test'
+  ...
+# Subtest: G013: no new decision while a previous one is unresolved, whatever the mission view shows
+ok 4 - G013: no new decision while a previous one is unresolved, whatever the mission view shows
+  ---
+  duration_ms: 1.665444
+  type: 'test'
+  ...
+# Subtest: G013: out-of-order replies each settle their own command
+ok 5 - G013: out-of-order replies each settle their own command
+  ---
+  duration_ms: 1.086448
+  type: 'test'
+  ...
+# Subtest: G013: duplicate and late replies never change a resolved command or the history
+ok 6 - G013: duplicate and late replies never change a resolved command or the history
+  ---
+  duration_ms: 2.777622
+  type: 'test'
+  ...
+# Subtest: G013: a reply for an unknown key is counted and changes nothing
+ok 7 - G013: a reply for an unknown key is counted and changes nothing
+  ---
+  duration_ms: 0.873528
+  type: 'test'
+  ...
+# Subtest: G013: receipt not found keeps the command uncertain and blocks re-emission
+ok 8 - G013: receipt not found keeps the command uncertain and blocks re-emission
+  ---
+  duration_ms: 0.856954
+  type: 'test'
+  ...
+# Subtest: G013: a server refusal is a definitive answer for that key only
+ok 9 - G013: a server refusal is a definitive answer for that key only
+  ---
+  duration_ms: 0.86176
+  type: 'test'
+  ...
+# Subtest: G013: disconnection turns sending and checking into unknown, never into a resend
+ok 10 - G013: disconnection turns sending and checking into unknown, never into a resend
+  ---
+  duration_ms: 0.985408
+  type: 'test'
+  ...
+# Subtest: G013 retention: unresolved commands are never purged, resolved ones are bounded
+ok 11 - G013 retention: unresolved commands are never purged, resolved ones are bounded
+  ---
+  duration_ms: 2.088277
+  type: 'test'
+  ...
+# Subtest: G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence
+ok 12 - G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence
+  ---
+  duration_ms: 1.445436
+  type: 'test'
+  ...
+# Subtest: G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+ok 13 - G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+  ---
+  duration_ms: 4.072458
+  type: 'test'
+  ...
+# Subtest: G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+ok 14 - G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+  ---
+  duration_ms: 0.578921
+  type: 'test'
+  ...
+# Subtest: G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+ok 15 - G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+  ---
+  duration_ms: 0.948084
+  type: 'test'
+  ...
+# Subtest: G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+ok 16 - G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+  ---
+  duration_ms: 4.099927
+  type: 'test'
+  ...
+# Subtest: G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+ok 17 - G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+  ---
+  duration_ms: 1.486498
+  type: 'test'
+  ...
+# Subtest: G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+ok 18 - G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+  ---
+  duration_ms: 0.846027
+  type: 'test'
+  ...
+# Subtest: G012-03: a cancellation on a running mission is labelled without promising the outcome
+ok 19 - G012-03: a cancellation on a running mission is labelled without promising the outcome
+  ---
+  duration_ms: 1.175378
+  type: 'test'
+  ...
+# Subtest: approve sends one request and changes nothing before the acknowledgement
+ok 20 - approve sends one request and changes nothing before the acknowledgement
+  ---
+  duration_ms: 6.546423
+  type: 'test'
+  ...
+# Subtest: recorded approval is not execution; execution and verified result are later, distinct events
+ok 21 - recorded approval is not execution; execution and verified result are later, distinct events
+  ---
+  duration_ms: 3.760281
+  type: 'test'
+  ...
+# Subtest: refusal never leads to work or execution
+ok 22 - refusal never leads to work or execution
+  ---
+  duration_ms: 3.183005
+  type: 'test'
+  ...
+# Subtest: offline: nothing is sent or queued, drafts stay local
+ok 23 - offline: nothing is sent or queued, drafts stay local
+  ---
+  duration_ms: 1.258944
+  type: 'test'
+  ...
+# Subtest: lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission
+ok 24 - lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission
+  ---
+  duration_ms: 3.085247
+  type: 'test'
+  ...
+# Subtest: a consumed approval cannot be undone; revocation and cancellation are separate requests
+ok 25 - a consumed approval cannot be undone; revocation and cancellation are separate requests
+  ---
+  duration_ms: 1.463832
+  type: 'test'
+  ...
+# Subtest: revoking a recorded approval prevents execution
+ok 26 - revoking a recorded approval prevents execution
+  ---
+  duration_ms: 0.789869
+  type: 'test'
+  ...
+# Subtest: cancellation request before execution closes the mission without running it
+ok 27 - cancellation request before execution closes the mission without running it
+  ---
+  duration_ms: 0.88219
+  type: 'test'
+  ...
+# Subtest: review required: no automatic retry and no decision offered
+ok 28 - review required: no automatic retry and no decision offered
+  ---
+  duration_ms: 0.944677
+  type: 'test'
+  ...
+# Subtest: offline endpoint view: last known state is dated, nothing claimed about now
+ok 29 - offline endpoint view: last known state is dated, nothing claimed about now
+  ---
+  duration_ms: 0.971424
+  type: 'test'
+  ...
+# Subtest: locked session: generic notification, no decision through toast, silence or closing
+ok 30 - locked session: generic notification, no decision through toast, silence or closing
+  ---
+  duration_ms: 0.7302
+  type: 'test'
+  ...
+# Subtest: local microphone stays signalled while Core is unreachable
+ok 31 - local microphone stays signalled while Core is unreachable
+  ---
+  duration_ms: 0.22646
+  type: 'test'
+  ...
+# Subtest: closing the window decides and cancels nothing
+ok 32 - closing the window decides and cancels nothing
+  ---
+  duration_ms: 0.190083
+  type: 'test'
+  ...
+# Subtest: a sequence gap asks for a snapshot instead of guessing
+ok 33 - a sequence gap asks for a snapshot instead of guessing
+  ---
+  duration_ms: 0.170665
+  type: 'test'
+  ...
+# Subtest: a decision on a changed proposal is reported as not recorded
+ok 34 - a decision on a changed proposal is reported as not recorded
+  ---
+  duration_ms: 0.229512
+  type: 'test'
+  ...
+# Subtest: assisted reading sends exactly the reviewed text, and any edit requires a new review
+ok 35 - assisted reading sends exactly the reviewed text, and any edit requires a new review
+  ---
+  duration_ms: 0.331425
+  type: 'test'
+  ...
+# Subtest: model functions are pure: the input state is never mutated
+ok 36 - model functions are pure: the input state is never mutated
+  ---
+  duration_ms: 0.171615
+  type: 'test'
+  ...
+# Subtest: fixtures: the real trace is embedded unchanged and every derived case is labelled
+ok 37 - fixtures: the real trace is embedded unchanged and every derived case is labelled
+  ---
+  duration_ms: 3.290885
+  type: 'test'
+  ...
+# Subtest: 1. reconnection after progress: pages within the announced size, duplicates removed
+ok 38 - 1. reconnection after progress: pages within the announced size, duplicates removed
+  ---
+  duration_ms: 3.936534
+  type: 'test'
+  ...
+# Subtest: 2. capture ahead of the page: the cursor keeps paging, the past is not replayed on the view
+ok 39 - 2. capture ahead of the page: the cursor keeps paging, the past is not replayed on the view
+  ---
+  duration_ms: 1.193219
+  type: 'test'
+  ...
+# Subtest: 3. out-of-order answers: an older one replaces neither the view nor the cursor
+ok 40 - 3. out-of-order answers: an older one replaces neither the view nor the cursor
+  ---
+  duration_ms: 0.891988
+  type: 'test'
+  ...
+# Subtest: 4. cancellation at unchanged revision: visible through as_of_sequence, not shown as CANCELLED
+ok 41 - 4. cancellation at unchanged revision: visible through as_of_sequence, not shown as CANCELLED
+  ---
+  duration_ms: 1.845348
+  type: 'test'
+  ...
+# Subtest: 5a. RESET_REQUIRED is never applied silently; reload is explicit and starts a new epoch
+ok 42 - 5a. RESET_REQUIRED is never applied silently; reload is explicit and starts a new epoch
+  ---
+  duration_ms: 1.029028
+  type: 'test'
+  ...
+# Subtest: 5b. store change goes through RESET only; wrong mission, unknown version and unsafe integers are rejected
+ok 43 - 5b. store change goes through RESET only; wrong mission, unknown version and unsafe integers are rejected
+  ---
+  duration_ms: 2.110727
+  type: 'test'
+  ...
+# Subtest: 6. disconnection: last known state kept with its dates, nothing applied or queued
+ok 44 - 6. disconnection: last known state kept with its dates, nothing applied or queued
+  ---
+  duration_ms: 0.37163
+  type: 'test'
+  ...
+# Subtest: 7. approval axes stay separate; the protocol never authorizes execution
+ok 45 - 7. approval axes stay separate; the protocol never authorizes execution
+  ---
+  duration_ms: 0.583579
+  type: 'test'
+  ...
+# Subtest: 8. hostile text is kept verbatim as data
+ok 46 - 8. hostile text is kept verbatim as data
+  ---
+  duration_ms: 0.657417
+  type: 'test'
+  ...
+# Subtest: a page that does not start right after our cursor leaves no hole: its capture only is taken
+ok 47 - a page that does not start right after our cursor leaves no hole: its capture only is taken
+  ---
+  duration_ms: 0.27061
+  type: 'test'
+  ...
+# Subtest: retention: references are bounded and the oldest are dropped first
+ok 48 - retention: references are bounded and the oldest are dropped first
+  ---
+  duration_ms: 20.405176
+  type: 'test'
+  ...
+# Subtest: functions are pure: inputs are never mutated
+ok 49 - functions are pure: inputs are never mutated
+  ---
+  duration_ms: 0.355576
+  type: 'test'
+  ...
+# Subtest: ui: no network request beyond the local files, no script error
+ok 50 - ui: no network request beyond the local files, no script error
+  ---
+  duration_ms: 692.759783
+  type: 'test'
+  ...
+# Subtest: ui: keyboard alone reaches and uses the decision; the click shows sending, not success
+ok 51 - ui: keyboard alone reaches and uses the decision; the click shows sending, not success
+  ---
+  duration_ms: 689.887515
+  type: 'test'
+  ...
+# Subtest: ui: offline disables sending with a visible reason
+ok 52 - ui: offline disables sending with a visible reason
+  ---
+  duration_ms: 444.399373
+  type: 'test'
+  ...
+# Subtest: ui: lost acknowledgement flow through the interface
+ok 53 - ui: lost acknowledgement flow through the interface
+  ---
+  duration_ms: 727.417082
+  type: 'test'
+  ...
+# Subtest: ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable
+ok 54 - ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable
+  ---
+  duration_ms: 859.865176
+  type: 'test'
+  ...
+# Subtest: ui: locked session toast is generic and opens nothing
+ok 55 - ui: locked session toast is generic and opens nothing
+  ---
+  duration_ms: 338.898665
+  type: 'test'
+  ...
+# Subtest: ui: microphone indicator survives a Core disconnection
+ok 56 - ui: microphone indicator survives a Core disconnection
+  ---
+  duration_ms: 366.362051
+  type: 'test'
+  ...
+# Subtest: ui: targets, contrast and horizontal overflow in every scenario and view
+ok 57 - ui: targets, contrast and horizontal overflow in every scenario and view
+  ---
+  duration_ms: 4662.607115
+  type: 'test'
+  ...
+# views audited: 35; worst contrast 4.70:1 (needs 4.5) on "Étape suivante de Core"
+# Subtest: ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll
+ok 58 - ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll
+  ---
+  duration_ms: 539.649146
+  type: 'test'
+  ...
+# Subtest: ui: reduced motion stops the eye animation
+ok 59 - ui: reduced motion stops the eye animation
+  ---
+  duration_ms: 297.263088
+  type: 'test'
+  ...
+# Subtest: ui: assisted reading previews exactly what will be sent and requires a fresh review
+ok 60 - ui: assisted reading previews exactly what will be sent and requires a fresh review
+  ---
+  duration_ms: 646.351967
+  type: 'test'
+  ...
+# Subtest: ui G012: catch-up after a cut, duplicates ignored, no network request
+ok 61 - ui G012: catch-up after a cut, duplicates ignored, no network request
+  ---
+  duration_ms: 878.582445
+  type: 'test'
+  ...
+# Subtest: ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset
+ok 62 - ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset
+  ---
+  duration_ms: 723.970695
+  type: 'test'
+  ...
+# Subtest: ui G012: cancellation requested, approval axes, review — labels and no active decision
+ok 63 - ui G012: cancellation requested, approval axes, review — labels and no active decision
+  ---
+  duration_ms: 681.187591
+  type: 'test'
+  ...
+# Subtest: ui G012: rejected answers listed; hostile text rendered as text only
+ok 64 - ui G012: rejected answers listed; hostile text rendered as text only
+  ---
+  duration_ms: 724.709721
+  type: 'test'
+  ...
+# Subtest: ui G012: targets and contrast in every sync scenario, at the end of its script
+ok 65 - ui G012: targets and contrast in every sync scenario, at the end of its script
+  ---
+  duration_ms: 4296.025412
+  type: 'test'
+  ...
+# sync views audited: 9; worst contrast 4.70:1 on "Réponse suivante"
+# Subtest: ui G016: review stays primary next to a cancellation request; no relaunch or decision button
+ok 66 - ui G016: review stays primary next to a cancellation request; no relaunch or decision button
+  ---
+  duration_ms: 488.393248
+  type: 'test'
+  ...
+# Subtest: ui G016: observed Core capture with objective_kind=null is displayed, nothing invented
+ok 67 - ui G016: observed Core capture with objective_kind=null is displayed, nothing invented
+  ---
+  duration_ms: 432.747537
+  type: 'test'
+  ...
+1..67
+# tests 67
+# suites 0
+# pass 67
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19113.45627

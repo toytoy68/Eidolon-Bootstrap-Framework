@@ -25,6 +25,15 @@
       return patch ? patch(env) : env; } };
   }
   var asSnapshot = function (env) { env.status = "SNAPSHOT"; env.events = []; return env; };
+  function observed(name, label) {
+    return { type: "deliver", label: label + " (capture Core observée)", env: function () {
+      return JSON.parse(JSON.stringify(F.observed[name].envelope)); } };
+  }
+  // A late answer to the request sent before the reset (same epoch): it must change nothing.
+  function late(path, label) {
+    var step = real(path, label);
+    return { type: "late", label: label + " (réponse tardive, trace réelle)", env: step.env };
+  }
 
   var SCENARIOS = {
     "sync-rattrapage": { label: "Sync : reconnexion et rattrapage paginé", summary: "Capture initiale, coupure, puis cinq pages de la trace C-008a, dont une répétée.",
@@ -38,7 +47,7 @@
       steps: [derived("cancel_before", "Capture RUNNING", asSnapshot), derived("cancel_requested_same_revision", "Événement CANCEL_REQUESTED")] },
     "sync-reset": { label: "Sync : RESET_REQUIRED et rechargement explicite", summary: "Historique changé puis base changée : rien n'est remplacé sans ton geste.",
       steps: [real("initial", "Capture initiale"), real("pages.0", "Page 1"), real("reset_example", "RESET_REQUIRED (ANCHOR_CHANGED)"),
-        derived("reset_store_changed", "RESET_REQUIRED (STORE_CHANGED)")] },
+        late("pages.1", "Page 2 arrivant après le reset"), derived("reset_store_changed", "RESET_REQUIRED (STORE_CHANGED)")] },
     "sync-rejets": { label: "Sync : réponses rejetées et texte hostile", summary: "Mauvaise mission, version inconnue, entier non exact, erreur Core, puis texte HTML affiché comme texte.",
       steps: [real("initial", "Capture initiale"), derived("wrong_mission_cursor", "Curseur d'une autre mission"),
         derived("unknown_protocol", "Version de protocole inconnue"), derived("unsafe_integer", "Entier 2^53"),
@@ -46,6 +55,10 @@
         derived("hostile_text", "Texte HTML dans les données")] },
     "sync-accord": { label: "Sync : accord en attente (axes séparés)", summary: "Décision, applicabilité et effet affichés séparément ; aucun bouton actif.",
       steps: [derived("action_pending", "Capture avec proposition PENDING", asSnapshot)] },
+    "sync-objectif-null": { label: "Sync : demande hors catalogue (objectif nul)", summary: "Vraie capture Core : BLOCKED, issue CLARIFICATION, objective_kind=null. Aucun objectif inventé.",
+      steps: [observed("core_unsupported", "Capture hors catalogue")] },
+    "sync-revue-annulation": { label: "Sync : revue requise et annulation demandée", summary: "La revue reste l'état principal ; la demande d'annulation est affichée à part, sans promettre d'issue.",
+      steps: [derived("review_with_cancel", "Capture REVIEW_REQUIRED avec annulation demandée", asSnapshot)] },
     "sync-revue": { label: "Sync : revue requise, effet inconnu", summary: "Accord consommé, effet inconnu : aucune relance proposée.",
       steps: [derived("action_review", "Capture REVIEW_REQUIRED", asSnapshot)] }
   };
@@ -61,7 +74,7 @@
 
   function nextLabel(sync) {
     var step = SCENARIOS[sync.key].steps[sync.index];
-    if (sync.state.reset) return "En attente : recharge la vue explicitement dans la fenêtre Eidolon.";
+    if (sync.state.reset && !(step && step.type === "late")) return "En attente : recharge la vue explicitement dans la fenêtre Eidolon.";
     return step ? "Prochaine étape : " + step.label : "Fin du scénario.";
   }
 
@@ -69,13 +82,15 @@
     var s = JSON.parse(JSON.stringify(sync));
     var st = SCENARIOS[s.key].steps[s.index];
     if (!st) return s;
-    if (s.state.reset && st.type !== "offline" && st.type !== "online") return s; // a real transport stops polling too
+    if (s.state.reset && st.type === "deliver") return s; // a real transport stops polling too ("late" answers still arrive)
     s.minute += 1;
     var at = clock(s.minute);
     if (st.type === "offline") s.state = S.setConnection(s.state, "offline");
     else if (st.type === "online") s.state = S.setConnection(s.state, "online");
     else {
-      var request = S.nextRequest(s.state) || { kind: "poll", epoch: s.state.epoch, cursorSequence: null };
+      var request = st.type === "late" && s.lastRequest ? JSON.parse(JSON.stringify(s.lastRequest))
+        : (S.nextRequest(s.state) || { kind: "poll", epoch: s.state.epoch, cursorSequence: null });
+      if (st.type !== "late") s.lastRequest = JSON.parse(JSON.stringify(request));
       request.receivedAt = at;
       s.state = st.type === "error" ? S.receiveError(s.state, st.code, request) : S.receive(s.state, st.env(), request);
     }
@@ -134,11 +149,11 @@
     if (m) {
       var av = m.action_view;
       card += '<dl class="facts">'
-        + "<dt>Objectif</dt><dd id=\"sync-objective\">" + t(m.objective_kind) + "</dd>"
+        + "<dt>Objectif</dt><dd id=\"sync-objective\">" + (m.objective_kind === null ? "Aucun objectif reconnu (hors catalogue)" : t(m.objective_kind)) + "</dd>"
         + "<dt>Statut Core</dt><dd>" + t(m.status) + " · phase " + t(m.phase) + " · révision " + t(m.revision) + "</dd>"
         + "<dt>Issue</dt><dd>" + t(m.outcome_status) + "</dd>"
         + "<dt>Progression</dt><dd>" + t(m.progress.completed) + " / " + t(m.progress.total === null ? "?" : m.progress.total) + "</dd>"
-        + "<dt>Annulation demandée</dt><dd>" + (m.cancel_requested ? "oui — attendre la capture CANCELLED" : "non") + "</dd>"
+        + "<dt>Annulation demandée</dt><dd id=\"sync-cancel\">" + (m.cancel_requested ? h.esc(S.cancelNote(m)) : "non") + "</dd>"
         + "<dt>Capture</dt><dd>jusqu'à l'événement " + t(st.view.asOf) + ", faite par le serveur à " + t(st.view.observedAt)
         + " (ne prouve pas la santé actuelle)</dd>"
         + '<dt>Journal reçu</dt><dd id="sync-cursor">jusqu\'à l\'événement ' + t(sum.cursorSequence)
@@ -163,7 +178,8 @@
     var journal = "<h3>Références d'événements reçues</h3>"
       + '<p class="small muted">Des références d\'historique, pas des changements appliqués à la vue. Doublons ignorés : '
       + st.stats.duplicateRefs + " · réponses périmées ignorées : " + st.stats.staleAnswers + " · captures plus anciennes ignorées : "
-      + st.stats.staleViews + (st.droppedRefs ? " · anciennes références retirées : " + st.droppedRefs : "") + ".</p>"
+      + st.stats.staleViews + (st.stats.frozenAnswers ? " · réponses ignorées pendant le reset : " + st.stats.frozenAnswers : "")
+      + (st.droppedRefs ? " · anciennes références retirées : " + st.droppedRefs : "") + ".</p>"
       + '<ul class="small" id="sync-refs" aria-label="Références d\'événements">' + refs + "</ul>";
     var problems = st.stats.rejected.map(function (r) { return "<li>Réponse ignorée : " + t(r.code) + "</li>"; }).join("")
       + st.stats.coreErrors.map(function (r) { return "<li>Erreur signalée par Core : " + t(r.code) + " — aucune capture n'en est déduite.</li>"; }).join("");
