@@ -10,6 +10,10 @@ Suite livrée : G006/G007 intégrés dans `534f4f4`, transport durci et
 premier prototype ; le contrat du lecteur détaille les nouvelles observations
 HTTP, contrôles entre sauts, suspensions et reçus tardifs.
 
+Le rapport courant est en **version 2** : [contrat URL/cache](RESEARCH-REPORT-V2.md).
+Les URL exposées sont minimisées, avec empreintes ; le transport/cache garde
+ses URL canoniques complètes. Le texte reçu n'est pas anonymisé.
+
 ## Fonctionnement livré
 
 Le coordinateur reçoit une requête explicite et un nombre de pages à lire.
@@ -106,6 +110,8 @@ Le délai global est **coopératif** : un résolveur/fournisseur/lecteur bloquan
 peut le dépasser. Le coordinateur ne le tue pas ; il constate ensuite le délai.
 Le raccordement aux exécutants à délai de Core reste nécessaire avant exposition
 réelle. Une annulation constatée après une lecture ne jette pas son reçu.
+Une opération interrompue ne conserve aucune nouvelle entrée de cache ; une
+revalidation DNS du cache interrompue n'adopte pas son texte.
 
 ## Démonstration reproductible
 

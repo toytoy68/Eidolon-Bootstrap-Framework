@@ -24,6 +24,7 @@ import time
 from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
 from .research_pauses import ResearchPauses, PauseStorageError, provider_scope, origin_scope
+from .research_report import project_report
 
 FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
             "POLICY_REFUSED", "TOO_LARGE", "TRUNCATED", "UNSUPPORTED_CONTENT", "INVALID_RESPONSE", "TLS_ERROR",
@@ -219,7 +220,7 @@ class ResearchCoordinator:
                   "required_pages": required_pages, "readable_pages": 0, "read_calls": 0,
                   "providers": [], "sources": [], "status": None,
                   "scope": "retrieved text only; no claim verification or mission success"}
-        seen, final_seen = {}, set()
+        seen, final_seen, new_cache_keys = {}, set(), set()
 
         def stop():
             if cancelled():
@@ -309,6 +310,8 @@ class ResearchCoordinator:
                     # Revalidate the cached FINAL destination against current DNS too.
                     final = decide(cached[1]["final_url"], self.resolver, self.policy)
                     if final.allowed:
+                        if stop():
+                            continue  # No cached receipt adopted after slow DNS/cancellation.
                         source.update(snapshot(cached[1]), cache_hit=True)
                         self._cache.move_to_end(key)
                     else:
@@ -391,8 +394,9 @@ class ResearchCoordinator:
                             if retrieval is not None:
                                 evidence["retrieval"] = retrieval
                             source.update(evidence)
-                            if not page.deadline_exceeded:
+                            if not page.deadline_exceeded and not stop():
                                 self._cache[key] = (self.clock() + self.limits.cache_seconds, snapshot(evidence))
+                                new_cache_keys.add(key)
                             while len(self._cache) > self.limits.cache_entries:
                                 self._cache.popitem(last=False)
                     except PauseStorageError:
@@ -415,6 +419,11 @@ class ResearchCoordinator:
                 break
         report["status"] = stop() or ("READ_TARGET_MET" if enough() else
             "PARTIAL" if report["readable_pages"] else "NO_READABLE_SOURCE")
+        if report["status"] in {"CANCELLED", "DEADLINE"}:
+            # Keep receipts in this report, but do not publish fresh cache
+            # entries from an interrupted operation (including earlier pages).
+            for key in new_cache_keys:
+                self._cache.pop(key, None)
         report["limitation"] = ("READ_BUDGET" if not enough() and report["read_calls"] >= self.limits.reads
             else "PROVIDER_BUDGET" if not enough() and len(self.providers) > self.limits.providers else None)
-        return report
+        return project_report(report)

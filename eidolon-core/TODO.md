@@ -148,10 +148,15 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] G008 : D1 attente 429/503 ambiguë, D2 base de temps et C5 redirection
   sans destination corrigés ; dix tests nouveaux, 303 réussis / 6 sautés.
 - [x] Claude G011 : contre-revue indépendante de ces correctifs.
+- [x] Suites G008 C1/C4 : pas de nouveau cache après interruption ; rapport v2
+  avec paramètres/fragment retirés des champs URL, empreintes distinctes.
+  [Contrat et limites](docs/RESEARCH-REPORT-V2.md).
+- [ ] G027 : contre-revue indépendante C1/C4 ; cible à la livraison du lot.
+- [ ] G025 : rejouer le corpus Web G007 sur la base courante après revue Claude.
+- [ ] G026 : extracteur HTML autonome borné, sans raccordement au coordinateur.
 - [ ] Suites G008 : L1 délai dur, L2 interruptions avant persistance (pauses commises
   couvertes par C-002c), L3 paramètres TLS,
-  C1 cache tardif/annulé et C4 minimisation des URL ; C2/C3 explicités dans le
-  contrat. [Tri](docs/validation/2026-10-05/codex-g008-fixes/README.md).
+  C2/C3 explicités dans le contrat. [Tri](docs/validation/2026-10-05/codex-g008-fixes/README.md).
 
 ### Client bureau Eidolon — propositions et recette distinctes
 

@@ -1,0 +1,113 @@
+test_fragment_and_refused_credentials_are_never_reported (tests.test_research_disclosure.ResearchDisclosureTests.test_fragment_and_refused_credentials_are_never_reported) ... FAIL
+test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) ... 
+  test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) (cause='cancel') ... FAIL
+  test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) (cause='timeout') ... FAIL
+test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) ... 
+  test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) (cause='cancel') ... FAIL
+  test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) (cause='coordinator_timeout') ... FAIL
+test_late_stop_does_not_leave_new_cache_entries (tests.test_research_disclosure.ResearchDisclosureTests.test_late_stop_does_not_leave_new_cache_entries) ... FAIL
+test_projection_does_not_mutate_cache_or_erase_content (tests.test_research_disclosure.ResearchDisclosureTests.test_projection_does_not_mutate_cache_or_erase_content) ... ok
+test_queries_distinguish_sources_even_when_display_urls_match (tests.test_research_disclosure.ResearchDisclosureTests.test_queries_distinguish_sources_even_when_display_urls_match) ... FAIL
+test_query_removed_from_report_but_used_for_transport_and_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_query_removed_from_report_but_used_for_transport_and_cache) ... FAIL
+test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) ... 
+  test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=200) ... FAIL
+  test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=403) ... FAIL
+  test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=429) ... FAIL
+
+======================================================================
+FAIL: test_fragment_and_refused_credentials_are_never_reported (tests.test_research_disclosure.ResearchDisclosureTests.test_fragment_and_refused_credentials_are_never_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 143, in test_fragment_and_refused_credentials_are_never_reported
+    self.assertNotIn('SECRET', json.dumps(result))
+AssertionError: 'SECRET' unexpectedly found in '{"version": 1, "query_sha256": "85da8434c70bf817c2ac9335166317668a0ec40e2b135919aa200edbd2e9d23a", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "required_pages": 1, "readable_pages": 1, "read_calls": 1, "providers": [{"provider_id": "p", "status": "OK"}], "sources": [{"id": "s-5161fdb9c555068bddfb2a744ccc4e4d3aa26851db9af7c1688eb47240b8073a", "found_by": [{"provider_id": "p", "title": "fixture", "snippet": ""}], "state": "READ", "url": "https://docs.example/a?token=SECRET", "final_url": "https://docs.example/a?token=SECRET", "text": "Ne pas confirmer sans preuve.", "cache_hit": false, "http_status": 200, "retry_after": null, "retry_review_required": false, "deadline_exceeded": false, "observed_at": "2026-10-06T12:06:05.844787+00:00", "body_sha256": "53c4109458e843d65126db03f60862434dbbf44f339403a2ed12d07eb76b4f8f", "body_bytes": 29, "media_type": "text/plain", "reader_id": "synthetic-reader/1", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f"}], "status": "READ_TARGET_MET", "scope": "retrieved text only; no claim verification or mission success", "limitation": null}'
+
+======================================================================
+FAIL: test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) (cause='cancel')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 60, in test_interrupt_during_cached_final_dns_does_not_adopt_cached_text
+    self.assertEqual(result['readable_pages'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) (cause='timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 60, in test_interrupt_during_cached_final_dns_does_not_adopt_cached_text
+    self.assertEqual(result['readable_pages'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) (cause='cancel')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 41, in test_interrupted_receipt_is_retained_but_not_reused_from_cache
+    self.assertEqual(len(reader.calls), 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) (cause='coordinator_timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 41, in test_interrupted_receipt_is_retained_but_not_reused_from_cache
+    self.assertEqual(len(reader.calls), 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_late_stop_does_not_leave_new_cache_entries (tests.test_research_disclosure.ResearchDisclosureTests.test_late_stop_does_not_leave_new_cache_entries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 77, in test_late_stop_does_not_leave_new_cache_entries
+    self.assertEqual(len(reader.calls), 3)
+AssertionError: 2 != 3
+
+======================================================================
+FAIL: test_queries_distinguish_sources_even_when_display_urls_match (tests.test_research_disclosure.ResearchDisclosureTests.test_queries_distinguish_sources_even_when_display_urls_match)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 105, in test_queries_distinguish_sources_even_when_display_urls_match
+    self.assertEqual(a['url'], b['url'])
+AssertionError: 'https://docs.example/a?variant=one' != 'https://docs.example/a?variant=two'
+- https://docs.example/a?variant=one
+?                                 --
++ https://docs.example/a?variant=two
+?                                ++
+
+
+======================================================================
+FAIL: test_query_removed_from_report_but_used_for_transport_and_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_query_removed_from_report_but_used_for_transport_and_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 84, in test_query_removed_from_report_but_used_for_transport_and_cache
+    self.assertEqual(first['version'], 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=200)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 118, in test_redirect_and_refusal_minimize_both_urls_and_retrieval
+    self.assertNotIn('SECRET_', json.dumps(result))
+AssertionError: 'SECRET_' unexpectedly found in '{"version": 1, "query_sha256": "85da8434c70bf817c2ac9335166317668a0ec40e2b135919aa200edbd2e9d23a", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "required_pages": 1, "readable_pages": 1, "read_calls": 1, "providers": [{"provider_id": "p", "status": "OK"}], "sources": [{"id": "s-440395a652ef052c298346d0dafb67316091e8ddf1dfe687350bc51f21fc4e07", "found_by": [{"provider_id": "p", "title": "fixture", "snippet": ""}], "state": "READ", "url": "https://docs.example.com/a?start=SECRET_A", "final_url": "https://cdn.example.com/b?end=SECRET_B", "text": "hello", "cache_hit": false, "http_status": 200, "retry_after": null, "retry_review_required": false, "deadline_exceeded": false, "retrieval": {"address": "93.184.215.15", "content_type": "text/plain", "deadline_exceeded": false, "final_url": "https://cdn.example.com/b?end=SECRET_B", "hops": [{"address": "93.184.215.14", "port": 443, "query_sha256": "9f8f373b6c05f76698146b3537516ea9ab2fca8ac8ca1819a74248ea1672fdda", "status": 302, "url": "https://docs.example.com/a"}, {"address": "93.184.215.15", "port": 443, "query_sha256": "ac58c86e78496739ee15c7853c3061fc29c26a9caba4451565d9caf675f0afcd", "status": 200, "url": "https://cdn.example.com/b"}], "limits": ["Received bytes only; their content is unverified data, not instructions.", "Proves an observation at observed_at, not current content."], "observed_at": "2026-10-06T12:06:05.851874+00:00", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "port": 443, "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824", "size": 5, "status": 200}, "observed_at": "2026-10-06T12:06:05.851874+00:00", "body_sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824", "body_bytes": 5, "media_type": "text/plain", "reader_id": "web-reader/2/ee2b18b8243196bcd220b625", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f"}], "status": "READ_TARGET_MET", "scope": "retrieved text only; no claim verification or mission success", "limitation": null}'
+
+======================================================================
+FAIL: test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=403)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 118, in test_redirect_and_refusal_minimize_both_urls_and_retrieval
+    self.assertNotIn('SECRET_', json.dumps(result))
+AssertionError: 'SECRET_' unexpectedly found in '{"version": 1, "query_sha256": "85da8434c70bf817c2ac9335166317668a0ec40e2b135919aa200edbd2e9d23a", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "required_pages": 1, "readable_pages": 0, "read_calls": 1, "providers": [{"provider_id": "p", "status": "OK"}], "sources": [{"id": "s-440395a652ef052c298346d0dafb67316091e8ddf1dfe687350bc51f21fc4e07", "found_by": [{"provider_id": "p", "title": "fixture", "snippet": ""}], "state": "ACCESS_DENIED", "url": "https://docs.example.com/a?start=SECRET_A", "final_url": "https://cdn.example.com/b?end=SECRET_B", "text": null, "cache_hit": false, "http_status": 403, "retry_after": null, "retry_review_required": false, "deadline_exceeded": false, "retrieval": {"address": "93.184.215.15", "final_url": "https://cdn.example.com/b?end=SECRET_B", "headers_validated": true, "hops": [{"address": "93.184.215.14", "port": 443, "query_sha256": "9f8f373b6c05f76698146b3537516ea9ab2fca8ac8ca1819a74248ea1672fdda", "status": 302, "url": "https://docs.example.com/a"}, {"address": "93.184.215.15", "port": 443, "query_sha256": "ac58c86e78496739ee15c7853c3061fc29c26a9caba4451565d9caf675f0afcd", "status": 403, "url": "https://cdn.example.com/b"}], "kind": "http_headers", "observed_at": "2026-10-06T12:06:05.852755+00:00", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "port": 443, "retry_after": null, "retry_review_required": false, "status": 403}}], "status": "NO_READABLE_SOURCE", "scope": "retrieved text only; no claim verification or mission success", "limitation": null}'
+
+======================================================================
+FAIL: test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) (status=429)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_disclosure.py", line 118, in test_redirect_and_refusal_minimize_both_urls_and_retrieval
+    self.assertNotIn('SECRET_', json.dumps(result))
+AssertionError: 'SECRET_' unexpectedly found in '{"version": 1, "query_sha256": "85da8434c70bf817c2ac9335166317668a0ec40e2b135919aa200edbd2e9d23a", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "required_pages": 1, "readable_pages": 0, "read_calls": 1, "providers": [{"provider_id": "p", "status": "OK"}], "sources": [{"id": "s-440395a652ef052c298346d0dafb67316091e8ddf1dfe687350bc51f21fc4e07", "found_by": [{"provider_id": "p", "title": "fixture", "snippet": ""}], "state": "RATE_LIMITED", "url": "https://docs.example.com/a?start=SECRET_A", "final_url": "https://cdn.example.com/b?end=SECRET_B", "text": null, "cache_hit": false, "http_status": 429, "retry_after": null, "retry_review_required": false, "deadline_exceeded": false, "retrieval": {"address": "93.184.215.15", "final_url": "https://cdn.example.com/b?end=SECRET_B", "headers_validated": true, "hops": [{"address": "93.184.215.14", "port": 443, "query_sha256": "9f8f373b6c05f76698146b3537516ea9ab2fca8ac8ca1819a74248ea1672fdda", "status": 302, "url": "https://docs.example.com/a"}, {"address": "93.184.215.15", "port": 443, "query_sha256": "ac58c86e78496739ee15c7853c3061fc29c26a9caba4451565d9caf675f0afcd", "status": 429, "url": "https://cdn.example.com/b"}], "kind": "http_headers", "observed_at": "2026-10-06T12:06:05.853306+00:00", "policy_id": "d519d6072bab720abb9e7aad87af547bcfc208cf0a1b8e2c89bac448d1e7700f", "port": 443, "retry_after": null, "retry_review_required": false, "status": 429}}], "status": "NO_READABLE_SOURCE", "scope": "retrieved text only; no claim verification or mission success", "limitation": null}'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.010s
+
+FAILED (failures=11)

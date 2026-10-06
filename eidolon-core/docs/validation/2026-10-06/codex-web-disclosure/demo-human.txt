@@ -1,0 +1,17 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                Reçus et URL Web simulés               #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Données et lectures synthétiques ; aucun réseau.
+[OK] Annulation : reçu conservé, aucune entrée de cache créée.
+[OK] Nouvelle demande : lecture refaite, puis cache normal vérifié.
+[OK] Paramètre absent des URL du rapport ; empreinte exacte vérifiée.
+[ATTENTION] Chemins et textes non anonymisés ; une lecture ne confirme aucun fait.
