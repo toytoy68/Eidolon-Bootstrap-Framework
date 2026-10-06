@@ -56,6 +56,11 @@
       var button = event.target.closest("button[data-mission-id]");
       if (button) session.selectMission(button.dataset.missionId);
     });
+    document.getElementById("receipt-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      session.lookupReceipt(document.getElementById("receipt-client").value.trim(),
+        document.getElementById("receipt-key").value.trim());
+    });
     document.getElementById("auto").addEventListener("change", function (event) {
       if (!event.target.checked) { stopAuto(); return; }
       autoTimer = setInterval(function () { session.refreshSelection(); }, AUTO_MS);

@@ -63,6 +63,18 @@
       <div id="details-body" aria-live="polite">
         <p class="empty">Sélectionner une mission dans la liste.</p>
       </div>
+      <section id="receipt" class="receipt" aria-labelledby="receipt-title" hidden>
+        <h3 id="receipt-title">Reçu historique d'une commande</h3>
+        <p class="help">Consulte l'enregistrement d'une commande déjà envoyée pour cette mission. Ne prouve ni exécution ni absence d'effet ; l'état actuel reste celui affiché au-dessus.</p>
+        <form id="receipt-form" class="receipt-form" autocomplete="off" novalidate>
+          <label for="receipt-client">Identifiant client</label>
+          <input id="receipt-client" name="client" type="text" maxlength="80" spellcheck="false" autocomplete="off">
+          <label for="receipt-key">Clé de commande</label>
+          <input id="receipt-key" name="key" type="text" maxlength="80" spellcheck="false" autocomplete="off">
+          <button id="receipt-lookup" type="submit">Consulter le reçu</button>
+        </form>
+        <div id="receipt-result" aria-live="polite"></div>
+      </section>
     </section>
   </main>
 

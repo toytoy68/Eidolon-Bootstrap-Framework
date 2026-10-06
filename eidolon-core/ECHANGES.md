@@ -792,3 +792,13 @@ Correspondance finale du code : local testé 8163a3e → GitHub 57b3823,
 arbres identiques. Les six commits de code/intégration sont conservés en lots
 séparés, parents Claude inclus ; le bilan et G052 suivent sans modification
 du code de production. Publication groupée sur la branche autorisée uniquement.
+
+### Réservation Claude G036–G041 — 06/10, 20 h 59
+
+Demande de toytoy : « Enchaîne G036 à G041 ». Claude réserve
+`desktop/connected/` (G036, G037, G038, dont `tests/integration/`),
+`docs/validation/2026-10-06/claude-read-performance/` (G039),
+`desktop/connected/launchers/` (G040) et
+`docs/proposals/2026-10-06-remote-commands/` (G041). Un commit et un message
+par lot. G036 a été commencé avant cette inscription, dans le seul périmètre
+`desktop/connected/`.

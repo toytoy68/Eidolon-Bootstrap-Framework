@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+ok 1 - real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+  ---
+  duration_ms: 1663.078386
+  type: 'test'
+  ...
+# Subtest: real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+ok 2 - real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+  ---
+  duration_ms: 2890.100851
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: receipt lookup shown next to the current capture, no command button
+ok 3 - Chromium on the real server: receipt lookup shown next to the current capture, no command button
+  ---
+  duration_ms: 2367.859627
+  type: 'test'
+  ...
+# Subtest: served assets are the committed ones and app.js is the current bundle
+ok 4 - served assets are the committed ones and app.js is the current bundle
+  ---
+  duration_ms: 1213.678732
+  type: 'test'
+  ...
+# Subtest: real server: list, snapshot, a cancellation written by another process seen by poll and relist
+ok 5 - real server: list, snapshot, a cancellation written by another process seen by poll and relist
+  ---
+  duration_ms: 1181.364788
+  type: 'test'
+  ...
+# Subtest: real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+ok 6 - real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+  ---
+  duration_ms: 1288.799333
+  type: 'test'
+  ...
+# Subtest: real server: another state behind the same address wipes the display
+ok 7 - real server: another state behind the same address wipes the display
+  ---
+  duration_ms: 2241.266812
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+ok 8 - Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+  ---
+  duration_ms: 2015.734101
+  type: 'test'
+  ...
+# Subtest: Chromium: a page opened through another Host is refused by the server, and the client says so
+ok 9 - Chromium: a page opened through another Host is refused by the server, and the client says so
+  ---
+  duration_ms: 1261.746129
+  type: 'test'
+  ...
+# Subtest: token format is checked locally; nothing is sent for a malformed token
+ok 10 - token format is checked locally; nothing is sent for a malformed token
+  ---
+  duration_ms: 1.401212
+  type: 'test'
+  ...
+# Subtest: connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+ok 11 - connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+  ---
+  duration_ms: 3.593585
+  type: 'test'
+  ...
+# Subtest: pagination sends next_cursor unchanged and stops at the end; never more than three pages
+ok 12 - pagination sends next_cursor unchanged and stops at the end; never more than three pages
+  ---
+  duration_ms: 0.913269
+  type: 'test'
+  ...
+# Subtest: list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+ok 13 - list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+  ---
+  duration_ms: 0.838624
+  type: 'test'
+  ...
+# Subtest: 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+ok 14 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+  ---
+  duration_ms: 1.928542
+  type: 'test'
+  ...
+# Subtest: 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+ok 15 - 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+  ---
+  duration_ms: 0.916292
+  type: 'test'
+  ...
+# Subtest: network failure: offline, data kept and dated; reconnect to the same store resumes
+ok 16 - network failure: offline, data kept and dated; reconnect to the same store resumes
+  ---
+  duration_ms: 0.844175
+  type: 'test'
+  ...
+# Subtest: reconnection to another store wipes the previous display: no mixed identities
+ok 17 - reconnection to another store wipes the previous display: no mixed identities
+  ---
+  duration_ms: 0.747679
+  type: 'test'
+  ...
+# Subtest: a list answering for another store than health is refused and nothing is shown
+ok 18 - a list answering for another store than health is refused and nothing is shown
+  ---
+  duration_ms: 0.387491
+  type: 'test'
+  ...
+# Subtest: an answer for a previous selection never replaces the current one
+ok 19 - an answer for a previous selection never replaces the current one
+  ---
+  duration_ms: 0.742103
+  type: 'test'
+  ...
+# Subtest: disconnect forgets token and display; a late answer is dropped
+ok 20 - disconnect forgets token and display; a late answer is dropped
+  ---
+  duration_ms: 0.510412
+  type: 'test'
+  ...
+# Subtest: poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+ok 21 - poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+  ---
+  duration_ms: 1.502325
+  type: 'test'
+  ...
+# Subtest: an invalid or authority-claiming answer is rejected, never displayed
+ok 22 - an invalid or authority-claiming answer is rejected, never displayed
+  ---
+  duration_ms: 0.451234
+  type: 'test'
+  ...
+# Subtest: a malformed mission id is never turned into a request path
+ok 23 - a malformed mission id is never turned into a request path
+  ---
+  duration_ms: 0.99592
+  type: 'test'
+  ...
+# Subtest: G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+ok 24 - G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+  ---
+  duration_ms: 1.242932
+  type: 'test'
+  ...
+# Subtest: G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+ok 25 - G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+  ---
+  duration_ms: 0.419588
+  type: 'test'
+  ...
+# Subtest: G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+ok 26 - G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+  ---
+  duration_ms: 0.442701
+  type: 'test'
+  ...
+# Subtest: G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+ok 27 - G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+  ---
+  duration_ms: 0.704012
+  type: 'test'
+  ...
+# Subtest: G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+ok 28 - G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+  ---
+  duration_ms: 0.785162
+  type: 'test'
+  ...
+# Subtest: G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+ok 29 - G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+  ---
+  duration_ms: 0.793207
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9543.85004

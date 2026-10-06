@@ -312,3 +312,121 @@ test("a malformed mission id is never turned into a request path", async () => {
   for (const bad of ["../health", "m-1/../../x", id(1) + "?x=1", ""]) assert.equal(await s.selectMission(bad), false);
   assert.equal(t.calls.length, 2);
 });
+
+// ---- G036: historical command receipts --------------------------------------------------------
+const Q = (n, key) => ({ store_id: STORE, client_id: "beta-fixture", command_key: key, mission_id: id(n) });
+function decisionReceipt(n, key, decision, approval) {
+  return { protocol: "eidolon-command-receipt/1", store_id: STORE, client_id: "beta-fixture", command_key: key,
+    mission_id: id(n), decision, approval_status_at_recording: approval, status: "RECORDED", execution_evidence: false,
+    recorded_at: "2026-10-06T18:55:47+00:00", event_sequence: 36, mission_revision: 9,
+    proposal_sha256: HEX, request_sha256: HEX };
+}
+function receiptAnswer(q, status, receipt) {
+  return Object.assign({ protocol: "eidolon-http-receipt/1" }, q, { status, receipt: receipt === undefined ? null : receipt,
+    execution_evidence: false, effect_absence_evidence: false, authorizes_resend: false, authorizes_execution: false });
+}
+const av = (status) => ({ snapshot_only: true, authorizes_execution: false,
+  decision: { status, message: "m" }, applicability: { code: "NOT_APPLICABLE", message: "m" }, effect: { code: "NOT_STARTED", message: "m" } });
+
+async function receiptSession(answers, missionExtra) {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1, 2]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT", { mission: missionExtra }))],
+    ["GET /v1/missions/" + id(2)]: [ok(sync(2, "SNAPSHOT"))],
+    "POST /v1/command-receipt": answers });
+  const s = session(t);
+  await s.connect(TOKEN);
+  await s.selectMission(id(1));
+  return { s, t };
+}
+
+test("G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged", async () => {
+  const { s, t } = await receiptSession([ok(receiptAnswer(Q(1, "historical-approve"), "FOUND", decisionReceipt(1, "historical-approve", "approve", "APPROVED"))),
+    ok(receiptAnswer(Q(1, "historical-revoke"), "FOUND", decisionReceipt(1, "historical-revoke", "revoke", "REVOKED")))],
+  { status: "BLOCKED", phase: "READY", action_view: av("REVOKED") });
+  const before = JSON.stringify(s.state().list.selection.sync);
+  assert.equal(await s.lookupReceipt("beta-fixture", "historical-approve"), true);
+  let st = s.state();
+  assert.equal(st.receipt.status, "FOUND");
+  assert.equal(st.receipt.receipt.approval_status_at_recording, "APPROVED");
+  assert.equal(JSON.stringify(st.list.selection.sync), before, "the snapshot is untouched by a receipt");
+  assert.equal(st.list.selection.sync.view.mission.action_view.decision.status, "REVOKED");
+  await s.lookupReceipt("beta-fixture", "historical-revoke");
+  assert.equal(s.state().receipt.receipt.decision, "revoke");
+  const sent = t.calls.filter((c) => c.path === "/v1/command-receipt");
+  assert.deepEqual(sent[0].body, Q(1, "historical-approve"), "exact four fields, store and mission from the session");
+  assert.ok(sent.every((c) => c.method === "POST"));
+});
+
+test("G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop", async () => {
+  const cancel = { protocol: "eidolon-cancel-receipt/1", store_id: STORE, client_id: "beta-fixture", command_key: "cancel-requested",
+    mission_id: id(1), cancel_outcome: "REQUESTED", cancel_requested_at_recording: true, mission_status_at_recording: "NEW",
+    status: "RECORDED", execution_evidence: false, effect_absence_evidence: false, recorded_at: "2026-10-06T18:55:46+00:00",
+    event_sequence: 23, mission_revision: 0, request_sha256: HEX };
+  const { s } = await receiptSession([ok(receiptAnswer(Q(1, "cancel-requested"), "FOUND", cancel))], { cancel_requested: true });
+  await s.lookupReceipt("beta-fixture", "cancel-requested");
+  const st = s.state();
+  assert.equal(st.receipt.receipt.cancel_outcome, "REQUESTED");
+  assert.equal(st.list.selection.sync.view.mission.status, "NEW", "current capture still NEW");
+});
+
+test("G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent", async () => {
+  const { s, t } = await receiptSession([ok(receiptAnswer(Q(1, "absente"), "NOT_FOUND"))]);
+  await s.lookupReceipt("beta-fixture", "absente");
+  assert.equal(s.state().receipt.status, "NOT_FOUND");
+  assert.equal(s.state().receipt.receipt, null);
+  assert.equal(t.calls.filter((c) => c.path === "/v1/command-receipt").length, 1);
+});
+
+test("G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local", async () => {
+  const { s, t } = await receiptSession([err(409, "RECEIPT_MISSION_MISMATCH"), err(503, "RECEIPT_UNAVAILABLE"), err(409, "STORE_CHANGED")]);
+  await s.lookupReceipt("beta-fixture", "k1");
+  assert.equal(s.state().receipt.code, "RECEIPT_MISSION_MISMATCH");
+  await s.lookupReceipt("beta-fixture", "k2");
+  assert.equal(s.state().receipt.code, "RECEIPT_UNAVAILABLE");
+  assert.equal(s.state().phase, "connected", "a damaged receipt does not take the session offline");
+  await s.lookupReceipt("beta-fixture", "k3");
+  const st = s.state();
+  assert.equal(st.resyncRequired, true);
+  assert.match(st.notice, /resynchroniser/);
+  assert.equal(await s.lookupReceipt("beta-fixture", "k4"), false);
+  assert.equal(t.calls.filter((c) => c.path === "/v1/command-receipt").length, 3, "no lookup after STORE_CHANGED");
+});
+
+test("G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused", async () => {
+  const wrongEcho = receiptAnswer(Object.assign(Q(1, "k"), { mission_id: id(2) }), "NOT_FOUND");
+  const resend = Object.assign(receiptAnswer(Q(1, "k"), "NOT_FOUND"), { authorizes_resend: true });
+  const otherMissionReceipt = receiptAnswer(Q(1, "k"), "FOUND", decisionReceipt(2, "k", "approve", "APPROVED"));
+  const { s, t } = await receiptSession([ok(wrongEcho), ok(resend), ok(otherMissionReceipt)]);
+  for (const [client, key] of [["", "k"], ["-x", "k"], ["ok", "a b"], ["ok", "é"], ["ok", "x".repeat(81)]]) {
+    assert.equal(await s.lookupReceipt(client, key), false);
+    assert.equal(s.state().receipt.status, "INVALID_QUERY");
+  }
+  assert.equal(t.calls.filter((c) => c.path === "/v1/command-receipt").length, 0);
+  await s.lookupReceipt("beta-fixture", "k");
+  assert.equal(s.state().receipt.code, "QUERY_MISMATCH");
+  await s.lookupReceipt("beta-fixture", "k");
+  assert.equal(s.state().receipt.code, "AUTHORITY_CLAIMED");
+  await s.lookupReceipt("beta-fixture", "k");
+  assert.equal(s.state().receipt.code, "QUERY_MISMATCH");
+});
+
+test("G036 a receipt answer arriving after another selection, or after disconnect, is dropped", async () => {
+  let release;
+  const slow = new Promise((r) => { release = r; });
+  const { s } = await receiptSession([slow]);
+  const pending = s.lookupReceipt("beta-fixture", "historical-approve");
+  await s.selectMission(id(2));
+  release(ok(receiptAnswer(Q(1, "historical-approve"), "FOUND", decisionReceipt(1, "historical-approve", "approve", "APPROVED"))));
+  await pending;
+  const st = s.state();
+  assert.equal(st.receipt, null);
+  assert.equal(st.stats.staleReceipt, 1);
+  let release2;
+  const slow2 = new Promise((r) => { release2 = r; });
+  const second = await receiptSession([slow2]);
+  const p2 = second.s.lookupReceipt("beta-fixture", "x");
+  second.s.disconnect();
+  release2(ok(receiptAnswer(Q(1, "x"), "NOT_FOUND")));
+  await p2;
+  assert.equal(second.s.state().receipt, null);
+});
