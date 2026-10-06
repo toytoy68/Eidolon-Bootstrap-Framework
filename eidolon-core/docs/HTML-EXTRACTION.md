@@ -1,0 +1,80 @@
+# Extraction HTML autonome — C-TASK-G026
+
+Auteur : Claude, 06/10/2026. Module **candidat** `eidolon_core.html_extract`,
+protocole `eidolon-html-extract/1`. Bibliothèque standard seulement
+(`html.parser`). **Pas raccordé** à `research.py` ni à `WebReader` : ce
+raccordement, et la classification des pages de challenge, de connexion et de
+paywall, restent à faire par Codex.
+
+## API
+
+```python
+from eidolon_core.html_extract import ExtractLimits, extract
+result = extract(raw_bytes, ExtractLimits(input_bytes=128_000, output_chars=64_000, depth=128, segments=2_000))
+```
+
+Fonction pure : des octets en entrée, aucun accès réseau ou fichier, aucun
+JavaScript, aucune ressource distante, aucun modèle. Un `str`, `None` ou
+`bytearray` lève `ContractError`, de même que des limites invalides.
+
+| Champ | Sens |
+| --- | --- |
+| `status` | `OK`, `EMPTY` (rien de visible), `PARTIAL` (une borne atteinte), `REFUSED` (entrée trop grande ou UTF-8 invalide) |
+| `complete` | `true` seulement pour `OK` et `EMPTY`. Un texte `PARTIAL` n'est **jamais** une extraction complète |
+| `text` | segments séparés par une ligne vide ; `null` si rien ou refus |
+| `source_sha256` | empreinte des **octets reçus**, quelle que soit l'issue |
+| `text_sha256` | empreinte du **texte extrait** (UTF-8). Deux sources différentes peuvent avoir le même texte (miroir) |
+| `title` | `<title>` normalisé, 300 caractères au plus. Signal, pas contenu |
+| `signals` | `password_field`, `forms`, `classification=null` : signaux neutres pour un futur classement challenge/login/paywall |
+| `warnings` | codes bornés, voir ci-dessous |
+| `trust` / `authorizes_execution` | toujours `untrusted_external_text` / `false` |
+
+## Règles d'extraction (contrat explicite)
+
+- **Ignorés** :
+  - le contenu de `script`, `style`, `template`, `noscript`, `svg`, `math`,
+    `iframe`, `object`, `embed`, `canvas`, `select`, `datalist` et `head` ;
+  - les commentaires, déclarations et CDATA ;
+  - **tous les attributs**, donc `on*=`, `href` et `src`.
+- **Gardés** : le texte des liens, l'ordre des paragraphes, les négations (aucun
+  mot n'est filtré), les entités décodées.
+- **Mise en forme** : les listes sont préfixées `- ` ou `1. `. `<pre>` garde ses
+  retours à la ligne ; ailleurs, les espaces sont fusionnés et `<br>` commence
+  un nouveau segment.
+- **Caché**, et donc ignoré : l'attribut `hidden`, et un `style` en ligne
+  contenant `display:none` ou `visibility:hidden`. Avertissement
+  `HIDDEN_CONTENT_SKIPPED`.
+- **Pas caché** : `aria-hidden`, les classes CSS et les feuilles de style. Ce
+  module **ne reproduit pas le rendu CSS**.
+- **Encodage** : UTF-8 strict, BOM accepté. Sinon `REFUSED`/`INVALID_UTF8`,
+  sans remplacement de caractères ni devinette de charset.
+- **Caractères** : les caractères de contrôle C0 sont retirés
+  (`CONTROL_CHARACTERS_REMOVED`) ; les contrôles bidirectionnels sont signalés
+  (`BIDI_CONTROLS_PRESENT`), pas retirés.
+- **HTML mal formé** : toléré, comme `html.parser`. Les balises non fermées et
+  orphelines sont signalées (`UNCLOSED_ELEMENTS`, `UNBALANCED_TAGS`).
+
+## Bornes
+
+| Borne | Défaut | Dépassement |
+| --- | --- | --- |
+| `input_bytes` | 128 000 | `REFUSED` / `INPUT_TOO_LARGE`, aucun parsing |
+| `output_chars` | 64 000 | `PARTIAL` / `OUTPUT_LIMIT` |
+| `depth` | 128 éléments ouverts | `PARTIAL` / `DEPTH_LIMIT` |
+| `segments` | 2 000 | `PARTIAL` / `SEGMENT_LIMIT` |
+
+Pour `PARTIAL`, seuls des **segments entiers** sont gardés : une phrase n'est
+jamais coupée. Le segment en cours au moment d'une borne de profondeur est
+abandonné.
+
+## Limites
+
+- Pas de CSS, pas de JavaScript : un texte rendu par script est absent, et un
+  texte masqué par une classe CSS est présent.
+- Un challenge, une connexion ou un paywall sont extraits comme du texte
+  ordinaire. Il faudra les classer **avant** d'utiliser ce texte comme source,
+  au raccordement ; `signals` et `title` servent à cela.
+- Le texte reste une donnée externe non fiable : il n'est ni vérifié ni
+  autorisé.
+
+[Preuves](validation/2026-10-06/claude-g026/README.md).

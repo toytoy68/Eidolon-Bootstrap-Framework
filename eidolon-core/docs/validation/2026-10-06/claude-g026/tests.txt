@@ -1,0 +1,21 @@
+test_corpus_bodies_extract_without_network (tests.test_html_extract.HtmlExtractTests.test_corpus_bodies_extract_without_network) ... ok
+test_depth_limit_stops_and_says_partial (tests.test_html_extract.HtmlExtractTests.test_depth_limit_stops_and_says_partial) ... ok
+test_empty_and_whitespace_only (tests.test_html_extract.HtmlExtractTests.test_empty_and_whitespace_only) ... ok
+test_entities_negation_order_lists_and_link_text (tests.test_html_extract.HtmlExtractTests.test_entities_negation_order_lists_and_link_text) ... ok
+test_hidden_contract_and_what_is_not_hidden (tests.test_html_extract.HtmlExtractTests.test_hidden_contract_and_what_is_not_hidden) ... ok
+test_hostile_text_stays_untrusted_text (tests.test_html_extract.HtmlExtractTests.test_hostile_text_stays_untrusted_text) ... ok
+test_incomplete_and_malformed_html (tests.test_html_extract.HtmlExtractTests.test_incomplete_and_malformed_html) ... ok
+test_input_limit_refuses_before_parsing (tests.test_html_extract.HtmlExtractTests.test_input_limit_refuses_before_parsing) ... ok
+test_invalid_input_and_encoding_are_refused_not_guessed (tests.test_html_extract.HtmlExtractTests.test_invalid_input_and_encoding_are_refused_not_guessed) ... ok
+test_login_signal_is_exposed_not_classified (tests.test_html_extract.HtmlExtractTests.test_login_signal_is_exposed_not_classified) ... ok
+test_module_has_no_network_file_or_execution_dependency (tests.test_html_extract.HtmlExtractTests.test_module_has_no_network_file_or_execution_dependency) ... ok
+test_output_and_segment_limits_keep_whole_segments_and_say_partial (tests.test_html_extract.HtmlExtractTests.test_output_and_segment_limits_keep_whole_segments_and_say_partial) ... ok
+test_pre_keeps_line_breaks (tests.test_html_extract.HtmlExtractTests.test_pre_keeps_line_breaks) ... ok
+test_scripts_styles_templates_comments_and_attributes_are_not_text (tests.test_html_extract.HtmlExtractTests.test_scripts_styles_templates_comments_and_attributes_are_not_text) ... ok
+test_two_fingerprints_have_distinct_meanings (tests.test_html_extract.HtmlExtractTests.test_two_fingerprints_have_distinct_meanings) ... ok
+test_unicode_controls_and_bidi (tests.test_html_extract.HtmlExtractTests.test_unicode_controls_and_bidi) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.227s
+
+OK

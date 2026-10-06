@@ -1,0 +1,25 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#              Extraction HTML synthétique              #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Pages fictives lues sur disque ; aucun réseau, aucun script exécuté.
+[INFO] captcha-article.html : OK, 5 segment(s), mot de passe=False
+[INFO] challenge-200.html : OK, 2 segment(s), mot de passe=False
+[INFO] docs-contradiction.html : OK, 3 segment(s), mot de passe=False
+[INFO] docs-mirror.html : OK, 3 segment(s), mot de passe=False
+[INFO] docs-v2.html : OK, 3 segment(s), mot de passe=False
+[INFO] forbidden-403.html : OK, 2 segment(s), mot de passe=False
+[INFO] login.html : OK, 2 segment(s), mot de passe=True
+[INFO] paywall.html : OK, 3 segment(s), mot de passe=False
+[INFO] soft-404.html : OK, 2 segment(s), mot de passe=False
+[OK] Miroir détecté : empreintes de source différentes, empreinte de texte identique.
+[OK] Limite de sortie : statut PARTIAL, jamais présenté comme complet.
+[ATTENTION] Texte externe non fiable ; challenge, login et paywall restent à classer.
