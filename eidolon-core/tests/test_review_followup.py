@@ -85,14 +85,15 @@ class FollowupTests(unittest.TestCase):
         before = self.pauses.inspect()
         with patch('eidolon_core.research_pauses.MAX_RECORDS', 1):
             self.pauses.check_capacity([scope, scope])
-            with self.assertRaisesRegex(PauseStorageError, 'PAUSE_CAPACITY_REACHED'):
-                self.pauses.check_capacity([origin_scope('new.example', 443)])
+            # G024 follow-up: RELEASED preserves history but frees active capacity.
+            self.pauses.check_capacity([origin_scope('new.example', 443)])
+            self.assertEqual(self.pauses.inspect(), before)
             self.pauses.pause([scope], reason='ACCESS_DENIED')
         self.assertEqual(len(self.pauses.inspect()['pauses']), 1)
         self.assertEqual(self.pauses.inspect()['audit_events'], before['audit_events'] + 1)
 
     def test_full_store_blocks_new_provider_after_reconstruction(self):
-        self.released(provider_scope('old'))
+        self.pauses.pause([provider_scope('old')], reason='ACCESS_DENIED')
         provider, reader = Provider('p1', [hit()]), Reader()
         before = self.pauses.inspect()
         with patch('eidolon_core.research_pauses.MAX_RECORDS', 1):
@@ -108,19 +109,29 @@ class FollowupTests(unittest.TestCase):
     def test_full_store_blocks_new_origin_after_reconstruction(self):
         self.released(provider_scope('p1'))
         provider, reader = Provider('p1', [hit()]), Reader({hit().url: dict(status=429)})
-        before = self.pauses.inspect()
+        search = provider.search
+        # Another writer takes the last active slot after provider preflight.
+        def fill_slot(query, limit):
+            self.pauses.pause([provider_scope('other')], reason='ACCESS_DENIED')
+            return search(query, limit)
+        provider.search = fill_slot
         with patch('eidolon_core.research_pauses.MAX_RECORDS', 1):
             for _ in range(2):
+                occupied = self.pauses.active(provider_scope('other'))
+                if occupied:
+                    self.pauses.release(occupied['id'], expected_revision=occupied['revision'],
+                                        actor='test', reason='review competing fixture')
                 coordinator = ResearchCoordinator([provider], reader, resolver=dns,
                     pauses=ResearchPauses(self.path, clock=self.clock))
                 with self.assertRaisesRegex(PauseStorageError, 'PAUSE_CAPACITY_REACHED'):
                     coordinator.run('synthetic')
-        self.assertEqual(provider.calls, 2)  # existing provider remains eligible
+        self.assertEqual(provider.calls, 2)
         self.assertEqual(reader.calls, [])
-        self.assertEqual(self.pauses.inspect(), before)
+        self.assertIsNone(self.pauses.active(origin_scope('docs.example', 443)))
 
     def test_redirect_needs_capacity_for_initial_and_final_origins_together(self):
         self.released(provider_scope('p1'))
+        self.pauses.pause([origin_scope('occupied.example', 443)], reason='ACCESS_DENIED')
         connector = FakeConnector({(PUBLIC, '/a'): redirect('https://cdn.example.com/b'),
                                    (OTHER_PUBLIC, '/b'): ok()})
         before = self.pauses.inspect()
@@ -132,6 +143,7 @@ class FollowupTests(unittest.TestCase):
 
     def test_same_origin_redirect_fits_one_remaining_slot(self):
         self.released(provider_scope('p1'))
+        self.pauses.pause([origin_scope('occupied.example', 443)], reason='ACCESS_DENIED')
         connector = FakeConnector({(PUBLIC, '/a'): redirect('/b'),
                                    (PUBLIC, '/b'): RawResponse(429, (('Retry-After', '1'),), b'', True)})
         with patch('eidolon_core.research_pauses.MAX_RECORDS', 2):

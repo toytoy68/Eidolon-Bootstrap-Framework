@@ -1,0 +1,39 @@
+python 3.12.14 | tree bootstrap
+
+== 1 D-G019-1: slow pause lookup before an HTTP hop; budget and cancellation
+  budget 13 s, direct        exchanges=[] source=TIMEOUT status=DEADLINE elapsed=18s
+  budget 19 s, via redirect  exchanges=['docs.example'] source=TIMEOUT status=DEADLINE elapsed=24s
+  budget 60 s (normal read)  exchanges=['docs.example'] source=READ status=READ_TARGET_MET elapsed=18s
+  cancel during the hop lookup: exchanges=[] source=CANCELLED status=CANCELLED
+  429 received while the budget expires: source=RATE_LIMITED status=DEADLINE paused=True
+
+== 2 L-G019-1: capacity exhausted (256 rows, one RELEASED)
+  new refusing origin, two rebuilt coordinators: ['report RATE_LIMITED status=NO_READABLE_SOURCE', 'PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses'] | exchanges=['new.example']
+  known RELEASED origin h0 (no new row needed) -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses
+  known ACTIVE origin g1 -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | exchanges=['new.example']
+  same coordinator after a capacity refusal, then a known origin -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses
+  new provider with a full table -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | provider searched=0
+  255 rows, redirect fresh -> mirror (needs 2 rows): PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | exchanges=['fresh.example']
+  255 rows, single new origin refusing (needs 1 row) -> report RATE_LIMITED status=NO_READABLE_SOURCE | exchanges=['solo.example'] | rows now=256
+  last row taken by another writer during the exchange: PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | rebuilt -> PauseCapacityError: PAUSE_CAPACITY_REACHED: review and release active pauses | exchanges=['race.example']
+  storage gone before the capacity check -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE | exchanges=[]
+  check_capacity([]) -> ContractError: INVALID_PAUSE_SCOPE
+  check_capacity([{'kind': 'origin', 'host': 'a) -> ContractError: INVALID_PAUSE_SCOPE
+  check_capacity(x) -> ContractError: INVALID_PAUSE_SCOPE
+
+== 2b full table: known origin with and without a row for the provider
+  rows=256 (2 RELEASED: provider p, origin h0)
+  provider p (row exists), known origin h0 -> report READ status=READ_TARGET_MET
+  provider p (row exists), new origin that would not refuse -> report READ status=READ_TARGET_MET
+  provider q (no row), known origin h0 -> report READ status=READ_TARGET_MET | exchanges=['h0.example', 'new.example', 'h0.example']
+
+== 3 R-G020-1: invalid mission_id, text and bytes, decision and cancel
+  cancel text            -> ContractError: INVALID_COMMAND: invalid mission_id
+  cancel bytes           -> ContractError: INVALID_COMMAND: invalid mission_id
+  decision text          -> ContractError: INVALID_COMMAND: invalid mission_id
+  decision bytes         -> ContractError: INVALID_COMMAND: invalid mission_id
+  cancel mission_id=42   -> ContractError: INVALID_COMMAND: invalid mission_id
+  duplicate key          -> ContractError: INVALID_COMMAND: duplicate JSON key
+  wrong protocol         -> ContractError: INVALID_COMMAND: exact versioned cancellation fields required
+  bad client_id          -> ContractError: INVALID_COMMAND: invalid client_id
+  CLI command-cancel bad mission_id: exit=2 traceback=False | {"error":"ContractError","message":"INVALID_COMMAND: invalid mission_id"} | database unchanged=True

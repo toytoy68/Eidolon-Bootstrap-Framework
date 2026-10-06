@@ -128,8 +128,10 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   reçus tardifs et suspensions entre sauts ; démonstration sur serveur local.
 - [x] Banc G007 exécuté par Claude sur `99641df` : 9 PASS, 7 KNOWN_GAP,
   4 FINDING rapportés dans C018 ; non reproduit par Codex dans le lot Desktop.
-- [ ] Reproduire et trier ces écarts sur base actuelle ; ne pas assimiler une
-  page lue à une réponse démontrée ou à une source indépendante.
+- [x] Écarts retriés via G025 ; W14/W15 reproduits sur le corpus courant.
+  Une page lue n'est ni une réponse démontrée ni une source indépendante.
+- [ ] F-W20 : requêtes sortantes toujours transmises au fournisseur injecté ;
+  minimisation/confirmation à concevoir en G029 avant usage externe réel.
 - [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
@@ -137,9 +139,14 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude G019/G020 : revues reçues dans ff51313/cc9831f. Suites corrigées :
   budget après consultation lente, capacité avant appel et diagnostic mission_id.
   [Preuves](docs/validation/2026-10-06/codex-review-followup/README.md).
-- [ ] Claude G024 : contre-revue indépendante de ces trois suites.
-- [ ] Claude G023 : abandon explicite d'un résultat retourné mais invérifiable,
-  sans convertir l'abandon en preuve d'absence d'effet.
+- [x] Claude G024/a29bb21 reçue : contrôles de délai/parser confirmés ; deux
+  suites C-G024-1/2 prises par Codex (capacité et diagnostic), sondes rejouées.
+- [x] Suivi local G024 : plafond sur pauses ACTIVE, RELEASED garde révision/audit ;
+  refus de capacité en précontrôle distinct d'une écriture incertaine.
+  [Preuves et limites](docs/validation/2026-10-06/codex-web-availability/README.md).
+- [x] Claude G023/2730744 intégré : abandon explicite d'un résultat retourné
+  mais invérifiable, neuf tests reproduits ; preuves conservées, aucun appel.
+  [Contrat](docs/ABANDON-UNVERIFIED.md).
 - [ ] Journal préalable des appels Web en vol : interruption avant commit d'une
   pause à réconcilier avant toute reconstruction/reprise réelle du coordinateur.
 - [ ] Quotas globaux et rétention du journal, artefacts persistants, intégration
@@ -152,7 +159,13 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   avec paramètres/fragment retirés des champs URL, empreintes distinctes.
   [Contrat et limites](docs/RESEARCH-REPORT-V2.md).
 - [ ] G027 : contre-revue indépendante C1/C4, cible 2bad4e6.
-- [ ] G025 : rejouer le corpus Web G007 sur la base courante après revue Claude.
+- [x] G025/9147f82 reçu : 9 PASS, 7 KNOWN_GAP, 4 FINDING rapportés par Claude
+  sur 6d1661d. F-W14/15 traités localement via discovery_status ; F-W07 traité
+  seulement pour le comptage des corps pris en charge. L'oracle W07 « une seule
+  requête » et HTML restent ouverts, archives du corpus inchangées.
+- [ ] G028 : contre-revue du suivi G024/G025 ; cible publiée 8983d35 (équivalent exact du local a5dc404).
+- [ ] G029/G030 : propositions de minimisation des requêtes et journal préalable,
+  confiées à Claude dans la file locale, à publier après blocage du push.
 - [ ] G026 : extracteur HTML autonome borné, sans raccordement au coordinateur.
 - [ ] Suites G008 : L1 délai dur, L2 interruptions avant persistance (pauses commises
   couvertes par C-002c), L3 paramètres TLS,
@@ -191,7 +204,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude G017 : revue reçue (4fa543d) ; E1 reproduit, copie incrémentale
   sans transaction source prolongée, garde du fichier en attente et diagnostic
   RECOVERY_INCOMPLETE livrés. [Suivi](docs/validation/2026-10-06/codex-recovery-followup/README.md).
-- [ ] Claude G022 : contre-revue du suivi restauration publié dans 3f16d7d.
+- [x] Claude G022/c576a8d reçue et lue : aucun défaut nouveau, limites
+  conservées. Sondes longues rapportées par Claude, non toutes rejouées ici.
 - [x] C-008e : inventaire paginé local, projection minimale, reset entre pages
   si l'état évolue ; 18 tests et démo. [Contrat](docs/MISSION-LIST.md).
 - [x] Claude G018 reçu (bfa75d2) : consommateur Desktop de mission-list/1,

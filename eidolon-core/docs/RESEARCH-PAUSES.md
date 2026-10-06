@@ -46,17 +46,26 @@ une valeur extérieure reste une ambiguïté à examiner, pas une autorisation a
 
 ## Persistance et erreurs
 
-Base distincte `research-pauses.sqlite3` : table pauses (au plus 256 périmètres,
-libérés compris) et journal pause_events. Une transaction SQLite réunit changement
+Base distincte `research-pauses.sqlite3` : table pauses (au plus 256 périmètres
+**ACTIVE**) et journal pause_events. Une transaction SQLite réunit changement
 de pause et audit. Les pauses initiale/finale d'une redirection sont atomiques.
 Aucune éviction pour faire de la place : capacité atteinte = erreur bloquante.
 Avant un appel fournisseur, une lecture non cachée et chaque saut de WebReader,
 `check_capacity(scopes)` vérifie dans une transaction de lecture la place pour
 les périmètres à suspendre en cas de refus. Sur redirection, origines initiale
-et courante sont comptées ensemble, sans doublon. Les lignes RELEASED comptent
-toujours ; un périmètre déjà connu peut être réobservé sans nouvelle place.
-Une table pleine bloque donc un nouveau périmètre avant son appel, y compris
-après reconstruction du coordinateur. Aucune ligne ni audit n'est supprimé.
+et courante sont comptées ensemble, sans doublon.
+
+Depuis le suivi G024, une ligne **RELEASED libère une place active**, tout en
+conservant son identité, sa révision et son audit. Réobserver ce périmètre
+consomme une place et incrémente la révision existante ; une ancienne revue
+ne devient jamais valable par réutilisation d'un identifiant. Une observation
+ACTIVE existante peut évoluer à capacité pleine. Lever une pause exige toujours
+la revue explicite et le délai minimal ; aucune levée automatique pour gagner
+de la place. Le nombre total de lignes historiques peut dépasser 256.
+Le décompte valide les lignes en flux, sans les charger toutes en mémoire ;
+son coût est linéaire dans l'historique. Indexation, plafond disque et rétention
+restent des limites d'exploitation à traiter avant utilisation réelle.
+
 Ce contrôle ne réserve pas de place : un écrivain concurrent, un crash ou une
 panne de disque après l'appel restent soumis aux limites ci-dessous. Un lecteur
 injecté sans read_guarded ne fournit pas le contrôle des sauts intermédiaires.
@@ -68,7 +77,12 @@ Le journal n'est pas purgé automatiquement ; quotas/rétention restent à const
 
 Un échec de stockage lève PauseStorageError, sans corps SQL brut. Il interrompt la
 recherche au lieu de produire une liste vide ou de basculer sur un autre fournisseur.
-Le coordinateur concerné conserve aussi un blocage en RAM après cet échec. Examiner
+Le coordinateur concerné conserve aussi un blocage en RAM après cet échec.
+Exception précise : `PauseCapacityError` lors du **précontrôle en lecture seule**
+garde le diagnostic PAUSE_CAPACITY_REACHED sans blocage permanent de l'instance.
+Après revue et levée explicites, une nouvelle demande peut refaire les contrôles.
+Une capacité refusée pendant l'écriture d'une observation après échange garde le
+blocage prudent : le reçu peut avoir été perdu. Examiner
 l'état persistant avant de le reconstruire ; ne pas le traiter comme une erreur
 réseau permettant une nouvelle tentative automatique.
 

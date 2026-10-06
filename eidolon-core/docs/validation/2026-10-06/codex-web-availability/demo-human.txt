@@ -1,0 +1,18 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#         Disponibilité et comptage Web simulés         #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Fournisseurs, DNS et pages fictifs ; aucun réseau.
+[OK] Deux URL et deux reçus, mais un seul contenu compté ; cache vérifié.
+[OK] Recherche vide distincte des fournisseurs indisponibles.
+[OK] Capacité refusée deux fois, puis place libérée par revue explicite.
+[OK] Historique conservé ; reprise uniquement sur nouvelle demande.
+[ATTENTION] Comparaison exacte seulement ; aucune preuve de vérité ou indépendance.
