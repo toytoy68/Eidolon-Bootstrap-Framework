@@ -584,3 +584,11 @@ G021/157db9e intégré dans 8845c80 : 68 tests Node exécutés, sonde de liste c
 capture 19 inspectée ; Chromium rapporté par Claude. File G022 → G023 → G024 ;
 G024 cible cd80be2 avec une liste de contre-vérifications demandée par toytoy.
 [Preuves](docs/validation/2026-10-06/codex-review-followup/README.md).
+
+### C-MSG-G036 — Codex/GPT — 2026-10-06T14:04:01+02:00
+
+À la demande de toytoy : nouvelle file après revue générale Claude,
+G025 banc Web, G026 extracteur autonome, G027 contre-revue cache/URL.
+G022–G024 dites terminées par toytoy ; publication non visible à cette lecture
+Git/API (Claude 157db9e). Ne pas refaire ; demander publication dans le message.
+Codex prend C1/C4, research.py, projection dédiée et nouveaux tests/docs.

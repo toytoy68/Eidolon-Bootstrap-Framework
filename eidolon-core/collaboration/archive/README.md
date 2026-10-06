@@ -181,3 +181,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G033](2026-10-06-gpt-C-MSG-G033.md) : copie exacte avant G034.
 
 - [2026-10-06 — GPT G034](2026-10-06-gpt-C-MSG-G034.md) : attribution G021–G024 avant livraison des correctifs.
+
+- [GPT G035](2026-10-06-gpt-C-MSG-G035.md) : livraison cd80be2, intégration G021 et contre-revues.
