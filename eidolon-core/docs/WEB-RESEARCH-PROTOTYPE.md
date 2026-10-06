@@ -13,6 +13,10 @@ HTTP, contrôles entre sauts, suspensions et reçus tardifs.
 Le rapport courant est en **version 2** : [contrat URL/cache](RESEARCH-REPORT-V2.md).
 Les URL exposées sont minimisées, avec empreintes ; le transport/cache garde
 ses URL canoniques complètes. Le texte reçu n'est pas anonymisé.
+Suite G024/G025 : corps exactement identiques comptés une fois, et diagnostic
+`discovery_status` (HITS_FOUND/EMPTY/UNAVAILABLE/INCOMPLETE) distinct du bilan de
+lecture ; voir le contrat v2. Deux textes différents ne prouvent pas deux sources
+indépendantes.
 
 ## Fonctionnement livré
 

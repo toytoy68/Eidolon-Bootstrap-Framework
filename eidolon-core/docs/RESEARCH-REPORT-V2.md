@@ -74,3 +74,36 @@ PYTHONPATH=src:. python -m unittest tests.test_research_disclosure -v
 Données, DNS et lecteur simulés ; bibliothèque standard. Tests de redirection
 avec WebReader/FakeConnector sans socket ; recette VM et moteur mémoire réelle
 non couverte. [Preuves](validation/2026-10-06/codex-web-disclosure/README.md).
+
+## Suite G024/G025 — comptage et découverte
+
+Le rapport v2 ajoute `discovery_status` sans remplacer le statut de lecture :
+
+| Valeur | Sens |
+| --- | --- |
+| HITS_FOUND | Au moins un lot valide de liens reçu, même si la politique ou la lecture les refuse ensuite |
+| EMPTY | Tous les fournisseurs configurés ont répondu sans lien, sans interruption |
+| UNAVAILABLE | Tous les fournisseurs configurés sont indisponibles, suspendus ou en erreur, sans interruption globale |
+| INCOMPLETE | Aucun lien reçu mais couverture incomplète : mélange vide/erreur, fournisseurs non consultés, annulation ou délai |
+
+Un EMPTY ne prouve pas l'absence d'information sur Internet. NO_READABLE_SOURCE
+reste un bilan de lecture ; `discovery_status` précise désormais sa cause au
+niveau de la découverte. Les diagnostics individuels des fournisseurs restent
+présents. Aucun corps/texte d'erreur du fournisseur n'est recopié.
+
+`readable_pages` ne recompte plus un corps SHA-256 identique déjà retenu dans
+le rapport. La source supplémentaire garde son texte, son hash et sa provenance,
+avec `state=DUPLICATE_CONTENT` et `duplicate_of` référençant la première source
+comptée. Les URL de connexion et les clés de cache restent inchangées : un
+paramètre fonctionnel n'est jamais supprimé pour supposer qu'il est publicitaire.
+Même URL finale : DUPLICATE_FINAL conserve la priorité et ne compte pas un second
+document, y compris si le contenu a changé entre deux lectures.
+
+Les doublons sont recalculés à chaque rapport, y compris lors d'un cache hit ;
+une page précédemment doublonnée peut donc être la première source du rapport
+suivant. On conserve la comparaison **exacte des corps**, sans normalisation
+sémantique : un espace ou une date modifiés peuvent produire deux hashes. Cela
+ne démontre ni l'indépendance éditoriale ni la vérité de deux textes différents.
+Les reçus arrivés après interruption restent distincts du succès de recherche.
+
+Démo : `PYTHONPATH=src:. python -m examples.research_availability_demo --format human`.

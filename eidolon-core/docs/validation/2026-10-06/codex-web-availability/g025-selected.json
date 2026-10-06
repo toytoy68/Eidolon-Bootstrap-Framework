@@ -1,0 +1,29 @@
+[
+  {
+    "case": "W07",
+    "status": "NO_READABLE_SOURCE",
+    "discovery_status": "HITS_FOUND",
+    "readable_pages": 0,
+    "states": [
+      "UNSUPPORTED_CONTENT",
+      "UNSUPPORTED_CONTENT"
+    ],
+    "note": "W07 HTML original reste non pris en charge ; oracle une seule requete non satisfait"
+  },
+  {
+    "case": "W14",
+    "status": "NO_READABLE_SOURCE",
+    "discovery_status": "UNAVAILABLE",
+    "readable_pages": 0,
+    "states": [],
+    "note": "Diagnostic global distingue"
+  },
+  {
+    "case": "W15",
+    "status": "NO_READABLE_SOURCE",
+    "discovery_status": "EMPTY",
+    "readable_pages": 0,
+    "states": [],
+    "note": "Diagnostic global distingue"
+  }
+]

@@ -63,7 +63,7 @@ class ResearchDisclosureTests(unittest.TestCase):
 
     def test_late_stop_does_not_leave_new_cache_entries(self):
         clock = Clock()
-        reader = Reader()
+        reader = Reader({hit('b').url: dict(body=b'A distinct second document.')})
         c = ResearchCoordinator([Provider('p', [hit(), hit('b')])], reader, resolver=dns, clock=clock)
         read = reader.read
         def slow_second(url, policy):
@@ -97,7 +97,7 @@ class ResearchDisclosureTests(unittest.TestCase):
 
     def test_queries_distinguish_sources_even_when_display_urls_match(self):
         urls = [hit('a?variant=one').url, hit('a?variant=two').url]
-        reader = Reader()
+        reader = Reader({url: dict(body=f'Distinct document {i}'.encode()) for i, url in enumerate(urls)})
         c = ResearchCoordinator([Provider('p', [Hit(u, 'fixture') for u in urls])], reader, resolver=dns)
         report = c.run('synthetic', required_pages=2)
         self.assertEqual(report['readable_pages'], 2)

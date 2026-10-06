@@ -1,0 +1,10 @@
+{
+  "src/eidolon_core/research.py": "7f49a5a1994c8154c91980383d01a4ebfdf8109825d5242d2d35dfebe2fdfe7f",
+  "src/eidolon_core/research_pauses.py": "bde1c611c7ad510dd381847346b4544ab1452b5d6e06bbadfd861a7ff1606c86",
+  "src/eidolon_core/runtime.py": "1fcb102cb7c8f1ee100e84d701ea021bbd0d727f4cbd0d60eef93b1d90fda0df",
+  "tests/test_research_availability.py": "1cdc839f7b43cb4e577b444068999e60bbb248a507568d3ec8fe805af37d8ad2",
+  "tests/test_review_followup.py": "fef88abbc2e85681b8f7e36f6de7a1445d1843df9389b53464e26f3f596eb273",
+  "tests/test_research_disclosure.py": "f23eebc9d901132a02fe5674ab72133a2a07b0f2e5c1d6cd9fa0a2cb34f9626e",
+  "tests/test_abandon_verification.py": "44c3ee09b7441882387ecf8328ed8f72c60627be016d1823cb7cfed0d0ce3b03",
+  "examples/research_availability_demo.py": "6076227a95bd927c62808f4eb2d32aaf48cd9e939e61573b6bc80bc7431dbc57"
+}

@@ -23,7 +23,7 @@ import time
 
 from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
-from .research_pauses import ResearchPauses, PauseStorageError, provider_scope, origin_scope
+from .research_pauses import ResearchPauses, PauseStorageError, PauseCapacityError, provider_scope, origin_scope
 from .research_report import project_report
 
 FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
@@ -191,6 +191,13 @@ class ResearchCoordinator:
             return None
         try:
             return getattr(self.pauses, operation)(*args, **kwargs)
+        except PauseCapacityError:
+            # A refused read-only preflight has not lost any observation. Keep
+            # its actual diagnosis, and permit a later explicit run after review.
+            # A refused write follows an exchange: retain the conservative latch.
+            if operation != 'check_capacity':
+                self._pause_fault = True
+            raise
         except PauseStorageError:
             self._pause_fault = True
             raise  # never turn failed persistence into a fallback or empty gate
@@ -220,7 +227,7 @@ class ResearchCoordinator:
                   "required_pages": required_pages, "readable_pages": 0, "read_calls": 0,
                   "providers": [], "sources": [], "status": None,
                   "scope": "retrieved text only; no claim verification or mission success"}
-        seen, final_seen, new_cache_keys = {}, set(), set()
+        seen, final_seen, body_seen, new_cache_keys = {}, set(), {}, set()
 
         def stop():
             if cancelled():
@@ -412,9 +419,14 @@ class ResearchCoordinator:
                 if source["state"] == "READ":
                     if source["final_url"] in final_seen:
                         source["state"] = "DUPLICATE_FINAL"
+                    elif source["body_sha256"] in body_seen:
+                        source.update(state="DUPLICATE_CONTENT", duplicate_of=body_seen[source["body_sha256"]])
                     else:
-                        final_seen.add(source["final_url"])
+                        body_seen[source["body_sha256"]] = source['id']
                         report["readable_pages"] += 1
+                    # Even duplicate content has an observed final URL; a later
+                    # response from that same URL cannot count as a new page.
+                    final_seen.add(source["final_url"])
             if report["read_calls"] >= self.limits.reads and not enough():
                 break
         report["status"] = stop() or ("READ_TARGET_MET" if enough() else
@@ -426,4 +438,14 @@ class ResearchCoordinator:
                 self._cache.pop(key, None)
         report["limitation"] = ("READ_BUDGET" if not enough() and report["read_calls"] >= self.limits.reads
             else "PROVIDER_BUDGET" if not enough() and len(self.providers) > self.limits.providers else None)
+        statuses = [item['status'] for item in report['providers']]
+        discovery_complete = (len(statuses) == len(self.providers)
+                              and report['status'] not in {'CANCELLED', 'DEADLINE'})
+        # This describes discovery, independently of whether any page was read.
+        # EMPTY requires every configured provider to have answered successfully.
+        report['discovery_status'] = (
+            'HITS_FOUND' if report['sources'] else
+            'EMPTY' if discovery_complete and all(s == 'EMPTY' for s in statuses) else
+            'UNAVAILABLE' if discovery_complete and all(s not in {'EMPTY', 'OK'} for s in statuses) else
+            'INCOMPLETE')
         return project_report(report)

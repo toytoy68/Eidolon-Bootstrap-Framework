@@ -22,7 +22,7 @@ import time
 from .contracts import ContractError, digest, encode
 
 PROTOCOL = 'eidolon-research-pauses/1'
-MAX_RECORDS = 256
+MAX_RECORDS = 256  # ACTIVE scopes only; released records retain revision/history.
 MAX_INTEGER = 2**53 - 1
 REASONS = {'RATE_LIMITED', 'RETRY_WAIT', 'ACCESS_DENIED', 'CHALLENGE',
            'CHALLENGE_SUSPECTED', 'LOGIN_SUSPECTED'}
@@ -30,6 +30,10 @@ REASONS = {'RATE_LIMITED', 'RETRY_WAIT', 'ACCESS_DENIED', 'CHALLENGE',
 
 class PauseStorageError(ContractError):
     """Fatal to the research operation, never interpreted as an empty gate."""
+
+
+class PauseCapacityError(PauseStorageError):
+    """Known capacity refusal; a read-only preflight has no uncertain commit."""
 
 
 def provider_scope(identity):
@@ -143,6 +147,12 @@ class ResearchPauses:
             return {'protocol': PROTOCOL, 'authorizes_execution': False, 'automatic_release': False,
                     'pauses': rows, 'audit_events': count}
 
+    def _active_count(self, db):
+        # Validate rather than treating corrupt/unknown states as free capacity.
+        # Stream historical rows; retention/indexing is a separate future lot.
+        return sum(self._decode(identity, body)['status'] == 'ACTIVE'
+                   for identity, body in db.execute('SELECT id,body FROM pauses'))
+
     def check_capacity(self, scopes):
         """Read-only preflight, not a reservation across concurrent requests."""
         if type(scopes) not in (list, tuple) or not 1 <= len(scopes) <= 2:
@@ -151,16 +161,14 @@ class ResearchPauses:
         with self._connection() as db:
             db.execute('PRAGMA query_only=ON')
             db.execute('BEGIN')
-            total = db.execute('SELECT count(*) FROM pauses').fetchone()[0]
+            total = self._active_count(db)
             missing = 0
             for identity in identities:
                 row = db.execute('SELECT body FROM pauses WHERE id=?', (identity,)).fetchone()
-                if row is None:
+                if row is None or self._decode(identity, row[0])['status'] == 'RELEASED':
                     missing += 1
-                else:
-                    self._decode(identity, row[0])
             if total + missing > MAX_RECORDS:
-                raise PauseStorageError('PAUSE_CAPACITY_REACHED')
+                raise PauseCapacityError('PAUSE_CAPACITY_REACHED: review and release active pauses')
 
     def pause(self, scopes, *, reason, retry_after=None, review=False):
         if (type(scopes) not in (list, tuple) or not 1 <= len(scopes) <= 2 or type(reason) is not str or reason not in REASONS
@@ -174,12 +182,13 @@ class ResearchPauses:
         result = []
         with self._connection() as db:
             db.execute('BEGIN IMMEDIATE')
-            total = db.execute('SELECT count(*) FROM pauses').fetchone()[0]
+            total = self._active_count(db)
             for identity, scope in identities.items():
                 existing = db.execute('SELECT body FROM pauses WHERE id=?', (identity,)).fetchone()
                 old = self._decode(identity, existing[0]) if existing else None
-                if old is None and total >= MAX_RECORDS:
-                    raise PauseStorageError('PAUSE_CAPACITY_REACHED')
+                needs_slot = old is None or old['status'] == 'RELEASED'
+                if needs_slot and total >= MAX_RECORDS:
+                    raise PauseCapacityError('PAUSE_CAPACITY_REACHED: review and release active pauses')
                 if old and stamp < old['observed_at_ms']:
                     raise PauseStorageError('PAUSE_CLOCK_REGRESSION')
                 revision = old['revision'] + 1 if old else 1
@@ -194,7 +203,7 @@ class ResearchPauses:
                 db.execute('INSERT OR REPLACE INTO pauses (id,body) VALUES (?,?)', (identity, encode(record)))
                 db.execute('INSERT INTO pause_events (pause_id,at_ms,kind,body) VALUES (?,?,?,?)',
                            (identity, stamp, 'OBSERVED', encode(record)))
-                total += old is None
+                total += needs_slot
                 result.append(record)
         return result
 

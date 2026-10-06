@@ -1,0 +1,154 @@
+test_actual_storage_failure_keeps_conservative_latch (tests.test_research_availability.ActiveCapacityTests.test_actual_storage_failure_keeps_conservative_latch) ... ok
+test_capacity_preflight_does_not_poison_same_coordinator (tests.test_research_availability.ActiveCapacityTests.test_capacity_preflight_does_not_poison_same_coordinator) ... FAIL
+test_corrupt_historical_status_is_not_free_capacity (tests.test_research_availability.ActiveCapacityTests.test_corrupt_historical_status_is_not_free_capacity) ... FAIL
+test_redirect_rollback_preserves_released_record (tests.test_research_availability.ActiveCapacityTests.test_redirect_rollback_preserves_released_record) ... ok
+test_release_frees_capacity_but_preserves_revision_history (tests.test_research_availability.ActiveCapacityTests.test_release_frees_capacity_but_preserves_revision_history) ... ERROR
+test_released_scope_needs_a_slot_again (tests.test_research_availability.ActiveCapacityTests.test_released_scope_needs_a_slot_again) ... ERROR
+test_slot_taken_after_preflight_blocks_observation_without_partial_write (tests.test_research_availability.ActiveCapacityTests.test_slot_taken_after_preflight_blocks_observation_without_partial_write) ... ok
+test_two_processes_cannot_commit_into_the_same_last_slot (tests.test_research_availability.ActiveCapacityTests.test_two_processes_cannot_commit_into_the_same_last_slot) ... ok
+test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) ... 
+  test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='EMPTY') ... ERROR
+  test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='UNAVAILABLE') ... ERROR
+  test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='INCOMPLETE') ... ERROR
+test_hits_remain_discovered_when_policy_or_reader_refuses (tests.test_research_availability.DiscoveryStatusTests.test_hits_remain_discovered_when_policy_or_reader_refuses) ... ERROR
+test_invalid_search_batch_is_unavailable_not_empty (tests.test_research_availability.DiscoveryStatusTests.test_invalid_search_batch_is_unavailable_not_empty) ... ERROR
+test_persistent_provider_pause_reports_unavailable_without_sending (tests.test_research_availability.DiscoveryStatusTests.test_persistent_provider_pause_reports_unavailable_without_sending) ... ERROR
+test_unvisited_providers_and_cancellation_never_claim_empty_or_unavailable (tests.test_research_availability.DiscoveryStatusTests.test_unvisited_providers_and_cancellation_never_claim_empty_or_unavailable) ... ERROR
+test_cached_duplicates_are_recomputed_for_each_report (tests.test_research_availability.ResearchContentTests.test_cached_duplicates_are_recomputed_for_each_report) ... FAIL
+test_functional_parameters_and_different_contents_are_preserved (tests.test_research_availability.ResearchContentTests.test_functional_parameters_and_different_contents_are_preserved) ... ok
+test_identical_bodies_keep_receipts_without_meeting_two_page_target (tests.test_research_availability.ResearchContentTests.test_identical_bodies_keep_receipts_without_meeting_two_page_target) ... FAIL
+test_near_duplicates_are_not_claimed_detected (tests.test_research_availability.ResearchContentTests.test_near_duplicates_are_not_claimed_detected) ... ok
+test_same_final_url_remains_duplicate_even_with_changed_body (tests.test_research_availability.ResearchContentTests.test_same_final_url_remains_duplicate_even_with_changed_body) ... ok
+
+======================================================================
+ERROR: test_release_frees_capacity_but_preserves_revision_history (tests.test_research_availability.ActiveCapacityTests.test_release_frees_capacity_but_preserves_revision_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 39, in test_release_frees_capacity_but_preserves_revision_history
+    self.pauses.check_capacity([new_scope])
+  File "/tmp/core-before-wqgctx_v/tree/eidolon-core/src/eidolon_core/research_pauses.py", line 163, in check_capacity
+    raise PauseStorageError('PAUSE_CAPACITY_REACHED')
+eidolon_core.research_pauses.PauseStorageError: PAUSE_CAPACITY_REACHED
+
+======================================================================
+ERROR: test_released_scope_needs_a_slot_again (tests.test_research_availability.ActiveCapacityTests.test_released_scope_needs_a_slot_again)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 74, in test_released_scope_needs_a_slot_again
+    self.pauses.check_capacity([other, other])
+  File "/tmp/core-before-wqgctx_v/tree/eidolon-core/src/eidolon_core/research_pauses.py", line 163, in check_capacity
+    raise PauseStorageError('PAUSE_CAPACITY_REACHED')
+eidolon_core.research_pauses.PauseStorageError: PAUSE_CAPACITY_REACHED
+
+======================================================================
+ERROR: test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='EMPTY')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 210, in test_empty_and_unavailable_are_distinct_without_changing_read_status
+    self.assertEqual(report['discovery_status'], expected)
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='UNAVAILABLE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 210, in test_empty_and_unavailable_are_distinct_without_changing_read_status
+    self.assertEqual(report['discovery_status'], expected)
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_empty_and_unavailable_are_distinct_without_changing_read_status (tests.test_research_availability.DiscoveryStatusTests.test_empty_and_unavailable_are_distinct_without_changing_read_status) (expected='INCOMPLETE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 210, in test_empty_and_unavailable_are_distinct_without_changing_read_status
+    self.assertEqual(report['discovery_status'], expected)
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_hits_remain_discovered_when_policy_or_reader_refuses (tests.test_research_availability.DiscoveryStatusTests.test_hits_remain_discovered_when_policy_or_reader_refuses)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 218, in test_hits_remain_discovered_when_policy_or_reader_refuses
+    self.assertEqual(report['discovery_status'], 'HITS_FOUND')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_invalid_search_batch_is_unavailable_not_empty (tests.test_research_availability.DiscoveryStatusTests.test_invalid_search_batch_is_unavailable_not_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 232, in test_invalid_search_batch_is_unavailable_not_empty
+    self.assertEqual(report['discovery_status'], 'UNAVAILABLE')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_persistent_provider_pause_reports_unavailable_without_sending (tests.test_research_availability.DiscoveryStatusTests.test_persistent_provider_pause_reports_unavailable_without_sending)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 241, in test_persistent_provider_pause_reports_unavailable_without_sending
+    self.assertEqual(report['discovery_status'], 'UNAVAILABLE')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+ERROR: test_unvisited_providers_and_cancellation_never_claim_empty_or_unavailable (tests.test_research_availability.DiscoveryStatusTests.test_unvisited_providers_and_cancellation_never_claim_empty_or_unavailable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 224, in test_unvisited_providers_and_cancellation_never_claim_empty_or_unavailable
+    self.assertEqual(report['discovery_status'], 'INCOMPLETE')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'discovery_status'
+
+======================================================================
+FAIL: test_capacity_preflight_does_not_poison_same_coordinator (tests.test_research_availability.ActiveCapacityTests.test_capacity_preflight_does_not_poison_same_coordinator)
+----------------------------------------------------------------------
+eidolon_core.research_pauses.PauseStorageError: PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 57, in test_capacity_preflight_does_not_poison_same_coordinator
+    with self.assertRaisesRegex(PauseStorageError, '^PAUSE_CAPACITY_REACHED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^PAUSE_CAPACITY_REACHED" does not match "PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse"
+
+======================================================================
+FAIL: test_corrupt_historical_status_is_not_free_capacity (tests.test_research_availability.ActiveCapacityTests.test_corrupt_historical_status_is_not_free_capacity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 141, in test_corrupt_historical_status_is_not_free_capacity
+    with self.assertRaisesRegex(PauseStorageError, 'INVALID_PAUSE_RECORD'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: PauseStorageError not raised
+
+======================================================================
+FAIL: test_cached_duplicates_are_recomputed_for_each_report (tests.test_research_availability.ResearchContentTests.test_cached_duplicates_are_recomputed_for_each_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 177, in test_cached_duplicates_are_recomputed_for_each_report
+    self.assertEqual(report['readable_pages'], 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_identical_bodies_keep_receipts_without_meeting_two_page_target (tests.test_research_availability.ResearchContentTests.test_identical_bodies_keep_receipts_without_meeting_two_page_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_research_availability.py", line 154, in test_identical_bodies_keep_receipts_without_meeting_two_page_target
+    self.assertEqual((report['status'], report['readable_pages']), ('PARTIAL', 1))
+AssertionError: Tuples differ: ('READ_TARGET_MET', 3) != ('PARTIAL', 1)
+
+First differing element 0:
+'READ_TARGET_MET'
+'PARTIAL'
+
+- ('READ_TARGET_MET', 3)
++ ('PARTIAL', 1)
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.063s
+
+FAILED (failures=4, errors=9)
