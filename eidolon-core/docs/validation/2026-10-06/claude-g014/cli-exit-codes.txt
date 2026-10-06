@@ -1,0 +1,4 @@
+CLI command-receipt sur base temporaire (176c1d2), Python 3.11.15, mission BLOCKED :
+  NOT_FOUND           : exit=2 stdout={"authorizes_resend":false,"client_id":"probe","command_key":"absent","execution_evidence":false,"protocol":"eidolon-com stderr=
+  autre store_id      : exit=2 stdout= stderr={"error":"ContractError","message":"STORE_CHANGED: resynchronize before any decision"} 
+  client_id invalide  : exit=2 stdout= stderr={"error":"ContractError","message":"INVALID_COMMAND: invalid client_id"} 
