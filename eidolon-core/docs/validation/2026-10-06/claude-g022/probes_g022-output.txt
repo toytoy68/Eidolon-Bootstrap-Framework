@@ -1,0 +1,42 @@
+python 3.11.15 sqlite 3.45.1 | recovery.py sha=8cc5bf2e55ef4269
+
+== 1 writer in another process during prepare (default journal and WAL)
+  journal=delete step delay=0.4s writer every 0.02s: prepare 16.5s -> OK | backup steps=41
+      writer: 379 commits, worst wait 0.02s, failures=0 []
+      copy (missions, orphan events, missions w/o CREATED, unlinked receipts)=(381, 0, 0, 0) | capture_semantics=sqlite-online-backup | dest files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3']
+  journal=delete step delay=0.4s writer every 1.5s: prepare 15.4s -> OK | backup steps=38
+      writer: 6 commits, worst wait 0.00s, failures=0 []
+      copy (missions, orphan events, missions w/o CREATED, unlinked receipts)=(8, 0, 0, 0) | capture_semantics=sqlite-online-backup | dest files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3']
+  journal=wal    step delay=0.4s writer every 1.5s: prepare 15.3s -> OK | backup steps=38
+      writer: 6 commits, worst wait 0.00s, failures=0 []
+      copy (missions, orphan events, missions w/o CREATED, unlinked receipts)=(8, 0, 0, 0) | capture_semantics=sqlite-online-backup | dest files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3']
+  journal=delete step delay=0.0s writer every 0.02s: prepare 0.1s -> OK | backup steps=0
+      writer: 120 commits, worst wait 0.04s, failures=0 []
+      copy (missions, orphan events, missions w/o CREATED, unlinked receipts)=(10, 0, 0, 0) | capture_semantics=sqlite-online-backup | dest files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3']
+
+== 2 source identity changed (raw SQL) between preflight and end of backup
+  -> ContractError: RECOVERY_SOURCE_CHANGED: copied identity differs from preflight | dest files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] | Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files
+
+== 3 abrupt exit at each step; then manual marker removal (G017 L1)
+  during-backup                   exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | CLI inspect exit=2 {"error":"ContractError","message":"RECOVERY_INCOMPLETE: review copy was not pub
+      marker removed: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | files=['review.pending.sqlite3']
+  after-backup-before-guard       exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | CLI inspect exit=2 {"error":"ContractError","message":"RECOVERY_INCOMPLETE: review copy was not pub
+      marker removed: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | files=['review.pending.sqlite3']
+  after-guard-before-link         exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | CLI inspect exit=2 {"error":"ContractError","message":"RECOVERY_INCOMPLETE: review copy was not pub
+      marker removed: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files | files=['review.pending.sqlite3']
+  after-link-before-unlink        exit=77 files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK | CLI inspect exit=0 {"actor":"probe","artifacts_restored":["mission_sqlite_only"],"capture_semantics
+      marker removed: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK | files=['missions.sqlite3', 'review.pending.sqlite3']
+  after-publication-before-reply  exit=77 files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK | CLI inspect exit=0 {"actor":"probe","artifacts_restored":["mission_sqlite_only"],"capture_semantics
+      marker removed: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK | files=['missions.sqlite3']
+
+== 4 published copy: historical only, never activatable
+  report: capture_semantics=sqlite-online-backup execution_authority=False | APPROVED kept as history: APPROVED | marker removed, Store -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+  live directory holding a stray review.pending.sqlite3 -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | files=['review.pending.sqlite3']
+== 5 continuous writes for longer than the 30 s backup budget (default journal)
+  prepare 30.1s -> ContractError: RECOVERY_BACKUP_LIMIT: review copy is incomplete | writer 739 commits, failures=0, worst wait 0.02s
+  dest files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] | Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> ContractError: RECOVERY_INCOMPLETE: review copy was not published; retain its files
