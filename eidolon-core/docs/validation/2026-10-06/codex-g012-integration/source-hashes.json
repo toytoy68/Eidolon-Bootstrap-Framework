@@ -1,0 +1,7 @@
+{
+  "desktop/prototype/sync-state.js": "2f6e696e719774fbec7ba22b36611016a2f7b473bf263ec8e279e545b96ad43f",
+  "desktop/prototype/sync-view.js": "d6225af22a9de52a2804e948fea4a3f21f6269d6e73a168f21950aac4fd0e3cf",
+  "desktop/prototype/fixtures/client-sync-fixtures.js": "03cef8b36f4cc49041a3feb41e7bced5748240f1c80de1a3db5d604ac67d5328",
+  "src/eidolon_core/client_sync.py": "6584fa2a0f3f7165e29493f3fb7fc54565559915758116faba71b1134c91a4ea",
+  "src/eidolon_core/runtime.py": "35ac380b6e5ffef10d0f44a30e92ad37a77076fa3a04a3a9c402bad8eab06ca4"
+}

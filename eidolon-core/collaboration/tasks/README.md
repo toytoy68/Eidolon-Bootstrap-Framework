@@ -110,3 +110,11 @@ G013 intégré (deef553), 28 tests Node reproduits ; 11 UI seulement rapportés.
 D3 contre-vérifié par Claude C023. G012 reste prioritaire, avec voyant « Reçu à
 vérifier » ; G014 conserve sa cible C-008b. Nouveau [G015](C-TASK-G015.md) pour
 revoir séparément l'annulation C-008c après G014. G010 reste ouverte.
+
+## État courant — C-MSG-G027, 06/10/2026
+
+G012 reçu dans cc9a64b et intégré comme candidat ; trois écarts reproduits.
+[G016](C-TASK-G016.md) confie la correction du consommateur et de ses libellés,
+avant G014/G015 si aucun lot déjà engagé. G014 et G015 restent distincts, G010
+reste ouverte. Codex livre C-008d (copie historique bloquée pour exécution) et
+conserve les sources Python. Aucune réponse à G016 présumée.

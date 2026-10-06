@@ -1,0 +1,16 @@
+{
+  "realCoreUnsupported": {
+    "objective": null,
+    "status": "BLOCKED",
+    "rejection": "INVALID_MISSION"
+  },
+  "pendingReset": {
+    "before": 1,
+    "after": 11,
+    "resetStillPending": true
+  },
+  "cancelledReview": {
+    "status": "REVIEW_REQUIRED",
+    "label": "Annulation demandée — pas encore confirmée"
+  }
+}

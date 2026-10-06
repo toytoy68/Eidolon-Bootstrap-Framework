@@ -155,8 +155,11 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   framework non choisi, mesures OS et installation différées.
 - [x] C-008a : projection locale cohérente, curseur durable, rattrapage paginé,
   reset explicite, CLI et démo sans réseau ; 19 tests nouveaux.
-- [ ] Claude G012 : consommateur JS du protocole et scénarios de reconnexion
-  dans le prototype ; ne pas reconstituer l'état depuis les événements.
+- [x] Claude G012 : prototype candidat intégré depuis cc9a64b ; 42 tests de
+  logique reproduits, 16 UI seulement rapportés. Trois écarts encore ouverts :
+  [revue](docs/validation/2026-10-06/codex-g012-integration/README.md).
+- [ ] Claude G016 : objectif null, gel en attente de reset, priorité de la revue
+  sur l'annulation ; tests de régression et cas UI. Aucune API réelle raccordée.
 - [x] C-008b : reçus atomiques approve/reject/revoke locaux, consultation et
   déduplication, annulation avant commit protégée ; 22 nouveaux tests.
   [Contrat](docs/COMMAND-RECEIPTS.md). Aucun effet externe, reçu != résultat.

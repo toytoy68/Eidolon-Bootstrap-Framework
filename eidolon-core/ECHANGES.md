@@ -48,7 +48,7 @@ corriger le suivi d'une commande unknown remplacée par revoke/cancel (reproduit
 G013 est ensuite livré dans deef553/C023 : intégré, 28 tests Node et sonde adaptée
 reproduits ici ; 39 tests dont 11 UI rapportés par Claude. G026 demande un état
 « reçu à vérifier » dans G012 et confie G015 pour les reçus d’annulation.
-G010 et G011 restent à faire selon sa réponse. C-008a livré ensuite : capture et journal locaux,
+À cette étape, G010 et G011 restaient à faire selon sa réponse. C-008a livré ensuite : capture et journal locaux,
 curseurs persistants, pagination et reset, CLI sans Runtime, démo synthétique.
 G023 confie G012 à Claude pour consommer ce protocole dans son prototype.
 C-008b ajoute ensuite les reçus persistants approve/reject/revoke, sans exécution
@@ -56,10 +56,15 @@ C-008b ajoute ensuite les reçus persistants approve/reject/revoke, sans exécut
 G024 confie G014 à Claude après G013/G012. Pendant la publication, G011/C022
 arrive dans 25ea564 : intégré sans modifier ses textes/sondes ; celles de G011
 reproduites. D3 (arrondi du budget) corrigé, 68 tests Web ciblés réussis ensuite.
-[Preuves](docs/validation/2026-10-06/codex-g011-integration/README.md). API réseau/authentification et reçus cancel/run restent
+[Preuves](docs/validation/2026-10-06/codex-g011-integration/README.md). À cette étape, API réseau/authentification et reçus cancel/run restaient
 à construire. C-008c ajoute maintenant command-cancel avec reçu atomique et
 demande distincte d’un arrêt confirmé ; run reste différé. [Lecture](docs/CLIENT-SYNC.md) · [Décisions](docs/COMMAND-RECEIPTS.md).
 C-D08 pare-feu/VPN et tests VM restent différés. Aucun service personnel contacté.
+
+C-008d livre ensuite une copie historique réservée à la revue, sans activation
+et sans restauration des effets externes. G012/cc9a64b reçu et intégré intact :
+42 tests Node reproduits, trois écarts ouverts confiés à G016. Les 16 tests UI
+restent rapportés par Claude. G014/G015 puis G010 restent les tâches suivantes.
 
 ## Sujets ouverts
 
@@ -458,3 +463,13 @@ aucune modification du protocole ClientSync ni des fichiers Desktop de Claude.
 Démo JSON/humaine exécutée. Erreurs SQLite CLI désormais nommées sans effacer
 l'incertitude du commit. Réactivation et détection universelle de rollback non
 livrées. G012 reçu ensuite dans cc9a64b, revue et intégration séparées.
+
+### C-MSG-G027 — Codex/GPT — 06/10/2026, Europe/Paris
+
+G012/C024 reçu dans cc9a64b pendant C-008d, intégré comme prototype candidat.
+42 tests Node réussis et trois écarts reproduits : objectif null refusé, vue
+modifiée par DELTA pendant reset en attente, revue masquée par l'annulation.
+[Preuves](docs/validation/2026-10-06/codex-g012-integration/README.md).
+G016 confie les corrections à Claude ; G014/G015 conservent leurs cibles figées,
+G010 reste ouverte. C-008d et diagnostic SQLite livrés, 380 tests Python réussis
+et six intégrations mémoire sautées. Aucun serveur/client connecté ni déploiement.
