@@ -14,13 +14,17 @@ import argparse
 from contextlib import contextmanager
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import io
 import json
 import os
 from pathlib import Path
 import re
+import socket
 import sqlite3
 import stat
 import sys
+import threading
+import time
 
 from .client_sync import ClientSync, SyncError
 from .contracts import ContractError
@@ -33,6 +37,9 @@ PROTOCOL = "eidolon-http-read/1"
 MAX_REQUEST = 8192
 MAX_RESPONSE = 262144
 MAX_ASSET = 524288
+MAX_CONNECTIONS = 4
+IDLE_TIMEOUT_SECONDS = 3.0
+READ_DEADLINE_SECONDS = 5.0
 TOKEN_PATTERN = r"[A-Za-z0-9_-]{32,128}"
 MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
@@ -136,14 +143,36 @@ def _decode(raw):
         raise APIError(400, "INVALID_JSON") from exc
 
 
+class _DeadlineReader(io.RawIOBase):
+    """Bound the entire socket read phase, including trickled header/body bytes."""
+    def __init__(self, connection, deadline, idle_timeout):
+        self.connection = connection
+        self.deadline = deadline
+        self.idle_timeout = idle_timeout
+
+    def readable(self):
+        return True
+
+    def readinto(self, buffer):
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("read deadline")
+        self.connection.settimeout(min(self.idle_timeout, remaining))
+        return self.connection.recv_into(buffer)
+
+
 class _Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.0"
     server_version = "EidolonReadAPI"
     sys_version = ""
 
     def setup(self):
-        self.request.settimeout(3)
+        self.read_deadline = time.monotonic() + self.server.read_deadline_seconds
+        self.request.settimeout(self.server.idle_timeout_seconds)
         super().setup()
+        self.rfile.close()
+        self.rfile = io.BufferedReader(_DeadlineReader(
+            self.request, self.read_deadline, self.server.idle_timeout_seconds))
 
     def log_message(self, *_):
         pass  # Request paths, tokens and exception text never go to access logs.
@@ -153,6 +182,9 @@ class _Handler(BaseHTTPRequestHandler):
                     "METHOD_NOT_ALLOWED" if code == 501 else "HTTP_REQUEST_REJECTED")
 
     def _send(self, status, body, content_type="application/json; charset=utf-8"):
+        # Reading may have consumed its deadline; writes get a separate bounded
+        # socket timeout, including the final sanitized timeout response.
+        self.request.settimeout(self.server.idle_timeout_seconds)
         self.close_connection = True
         self.send_response(status)
         self.send_header("Content-Type", content_type)
@@ -184,6 +216,8 @@ class _Handler(BaseHTTPRequestHandler):
         return values[0] if values else None
 
     def _request(self):
+        if time.monotonic() >= self.read_deadline:
+            raise APIError(408, "REQUEST_TIMEOUT")
         if sum(len(k) + len(v) for k, v in self.headers.items()) > 16384:
             raise APIError(431, "HEADERS_TOO_LARGE")
         host = self._one("Host")
@@ -297,7 +331,7 @@ def read_assets(web_root):
 
 
 class ReadServer(HTTPServer):
-    """Single-request server, deliberately local; no unbounded worker pool."""
+    """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None):
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -306,8 +340,56 @@ class ReadServer(HTTPServer):
         self.authorization = ("Bearer " + token).encode("ascii")
         self.store = ReadOnlyStore(state)
         self.assets = read_assets(web_root)
+        self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
+        self.read_deadline_seconds = READ_DEADLINE_SECONDS
+        self._worker_lock = threading.Lock()
+        self._workers = {}
+        self._closing = False
         super().__init__(("127.0.0.1", port), _Handler)
         self.allowed_hosts = {f"127.0.0.1:{self.server_port}", f"localhost:{self.server_port}"}
+
+    def process_request(self, request, client_address):
+        with self._worker_lock:
+            if not self._closing and len(self._workers) < MAX_CONNECTIONS:
+                worker = threading.Thread(target=self._serve_connection,
+                                          args=(request, client_address), name="eidolon-read-connection")
+                self._workers[request] = worker
+                try:
+                    worker.start()
+                except BaseException:
+                    self._workers.pop(request, None)
+                    self.shutdown_request(request)
+                    raise
+                return
+        # Capacity refusal happens before parsing/authentication, without a
+        # retry queue or another thread. A dropped socket is not a command result.
+        self.shutdown_request(request)
+
+    def _serve_connection(self, request, client_address):
+        try:
+            self.finish_request(request, client_address)
+        except Exception:
+            self.handle_error(request, client_address)
+        finally:
+            try:
+                self.shutdown_request(request)
+            finally:
+                with self._worker_lock:
+                    self._workers.pop(request, None)
+
+    def server_close(self):
+        with self._worker_lock:
+            self._closing = True
+            active = list(self._workers.items())
+        super().server_close()
+        for connection, _ in active:
+            try:
+                connection.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+        for _, worker in active:
+            if worker is not threading.current_thread():
+                worker.join()
 
     def handle_error(self, request, client_address):
         pass  # No request/exception dump; public server monitoring is out of scope.

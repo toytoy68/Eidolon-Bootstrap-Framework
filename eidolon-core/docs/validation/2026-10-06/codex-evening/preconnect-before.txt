@@ -1,0 +1,29 @@
+test_browser_preconnect_does_not_block_health (tests.test_http_availability.HTTPAvailabilityTests.test_browser_preconnect_does_not_block_health) ... ERROR
+
+======================================================================
+ERROR: test_browser_preconnect_does_not_block_health (tests.test_http_availability.HTTPAvailabilityTests.test_browser_preconnect_does_not_block_health)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_http_availability.py", line 74, in test_browser_preconnect_does_not_block_health
+    status, data = self.health()
+                   ^^^^^^^^^^^^^
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_http_availability.py", line 65, in health
+    r = c.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 304, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+----------------------------------------------------------------------
+Ran 1 test in 0.817s
+
+FAILED (errors=1)

@@ -8,7 +8,7 @@ Basée sur le code publié : API `http_api` (C-009a, diagnostic C-009c
 
 ## Ce que cette recette teste, et ce qu'elle ne teste pas
 
-**Testé** : depuis le navigateur du PC, par un tunnel SSH, **consulter** les
+**Parcours à tester** : depuis le navigateur du PC, par un tunnel SSH, **consulter** les
 missions d'un état Core **synthétique** du serveur ; voir une modification
 faite sur le serveur ; survivre à une coupure du tunnel ou à un redémarrage du
 serveur sans mélange ni action.
@@ -43,8 +43,10 @@ extrémités** : le serveur vérifie `Host: 127.0.0.1:<port>`.
 **S1 — Récupérer le code.** Dossier séparé ; rien n'est installé.
 
 ```sh
-git clone --branch feat/eidolon-core-v0.1 https://github.com/toytoy68/Eidolon-Bootstrap-Framework.git ~/eidolon-recette
-cd ~/eidolon-recette/eidolon-core
+EIDOLON_RECIPE_CODE="$(mktemp -d "$HOME/eidolon-recette-XXXXXX")"
+git clone --branch feat/eidolon-core-v0.1 https://github.com/toytoy68/Eidolon-Bootstrap-Framework.git "$EIDOLON_RECIPE_CODE"
+# En cas d’échec du clone, arrêter ici ; ne pas continuer dans un ancien checkout.
+cd "$EIDOLON_RECIPE_CODE/eidolon-core"
 git log -1 --format=%H        # noter ce commit dans la checklist
 ```
 
@@ -53,11 +55,14 @@ ces commandes.
 
 ```sh
 export PYTHONPATH=src
-BETA="$HOME/eidolon-beta"
-mkdir -p "$BETA"
+BETA="$(mktemp -d "$HOME/eidolon-beta-XXXXXX")"
 python3 -m eidolon_core --state "$BETA/state" demo > "$BETA/demo.json"
-python3 -c 'import os,secrets,sys; fd=os.open(sys.argv[1],os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); os.write(fd,(secrets.token_urlsafe(32)+"\n").encode()); os.close(fd)' "$BETA/read-token"
+python3 -m eidolon_core.access_token --output "$BETA/read-token" --format human
 ```
+
+Noter les chemins BETA et EIDOLON_RECIPE_CODE de cette exécution pour la
+seconde session SSH et le retrait. Arrêter la recette si une commande échoue ;
+ne pas réutiliser silencieusement un état ou jeton d’une ancienne tentative.
 
 **S3 — Diagnostic sans démarrer.** Attendu : quatre `[OK]`, code 0. Un PASS
 ne qualifie pas la bêta.
@@ -108,14 +113,18 @@ python3 -m eidolon_core --state "$BETA/state" cancel m-IDENTIFIANT
 puis relancer la commande S4.
 
 **S8 — Arrêt.** Ctrl+C dans la session 1. Si le serveur a été lancé en
-arrière-plan (`&`, script), Ctrl+C et `kill -INT` **n'ont aucun effet** :
-utiliser `kill <PID>`.
+arrière-plan par un script non interactif, il peut hériter de SIGINT ignoré :
+utiliser `kill <PID>` (TERM), uniquement avec le PID du serveur de cette recette.
 
 **S9 — Retrait.** Rien d'autre n'a été créé ; aucun service à retirer.
 
 ```sh
-rm -rf "$HOME/eidolon-beta"
-rm -rf "$HOME/eidolon-recette"     # si le code n'est plus utile
+# Vérifier d’abord que ce sont les deux dossiers uniques créés en S1/S2.
+# Ne pas lancer ce retrait dans une autre session sans avoir rétabli ces chemins.
+printf '%s\n' "$BETA" "$EIDOLON_RECIPE_CODE"
+# Après fermeture du serveur/tunnel et vérification des chemins :
+case "$BETA" in "$HOME"/eidolon-beta-??????) rm -rf -- "$BETA" ;; *) echo "Retrait refusé : chemin inattendu" ;; esac
+case "$EIDOLON_RECIPE_CODE" in "$HOME"/eidolon-recette-??????) rm -rf -- "$EIDOLON_RECIPE_CODE" ;; *) echo "Retrait refusé : chemin inattendu" ;; esac
 ```
 
 ## Étapes PC Windows (PowerShell)
@@ -182,23 +191,29 @@ remplies par toytoy. Le commit testé est noté à S1.
 
 ## Blocages et risques connus
 
-1. **Lenteur ou blocage (D-G034-1)**. Le serveur traite une requête à la
-   fois, avec un délai de 3 s par lecture.
-   - Une connexion restée ouverte (préconnexion du navigateur, tunnel) peut
-     retarder une réponse d'environ 3 s.
-   - Un client local lent peut bloquer la consultation.
-   - Si la page affiche « injoignable » alors que le tunnel tourne, attendre
-     puis « Actualiser ».
-2. **Arrêt** : un serveur lancé en arrière-plan ignore Ctrl+C et
-   `kill -INT` ; utiliser `kill <PID>`. Vérifié dans le conteneur.
+1. **Disponibilité (D-G034-1, corrigé par C-009e)** : quatre connexions au
+   maximum, 3 s d’inactivité et 5 s de lecture totale. Une préconnexion isolée
+   ne bloque plus health ; saturation = connexion refusée/fermée, pas une
+   garantie d’accès sous toute charge. Les sondes G034 ont été rejouées par
+   Codex sur ce correctif, distinct de la revue figée de Claude.
+2. **Arrêt** : un serveur lancé par un script non interactif peut ignorer
+   `kill -INT` ; utiliser TERM sur son PID exact.
 3. **Accès au dépôt** : si le dépôt est privé, `git clone` demande une
    authentification GitHub sur le serveur. Ne pas mettre de jeton GitHub dans
    l'URL ni dans un fichier du dépôt.
 4. **Python 3.13** (Debian 13) : non essayé ici, seulement 3.11.
-5. **Branche** : les correctifs G032–G035 sont publiés sur la branche Claude
-   tant que Codex ne les a pas intégrés à `feat/eidolon-core-v0.1`. Le
-   client et l'API utilisés par cette recette y sont déjà.
+5. **Branche** : G032–G035 ont été intégrés par Codex dans la séance du soir.
+   Utiliser le commit final publié dans le bilan, et noter le SHA testé en S1.
 6. **Pas de TLS** : le tunnel SSH protège le trajet. Ne jamais exposer 8765 sur
    le réseau ni ouvrir de port dans le pare-feu pour cette recette.
 
 [Preuves de la séquence serveur exécutée dans le conteneur](validation/2026-10-06/claude-g035/README.md).
+
+## Mise à jour Codex, séance du 06/10 au soir
+
+C-009d remplace la commande inline de création du jeton ; C-009e corrige le
+blocage derrière une préconnexion. Dossiers uniques par mktemp pour éviter
+qu’un retrait de recette efface un dossier préexistant. Les preuves historiques
+de Claude ci-dessus restent celles de sa version ; elles ne valent pas
+exécution de ces retouches ni validation VM/Windows.
+[Lot intégré et preuves](validation/2026-10-06/codex-evening/README.md).

@@ -59,9 +59,14 @@ modifier `desktop/prototype/`, dont les scénarios doivent rester simulés.
 
 ## Limites
 
-Serveur local de développement mono-requête, délai socket et volumes bornés ;
-pas de garantie de délai total face à un client local hostile, pas de serveur
-public. Pas de TLS intégré : le tunnel SSH protège le trajet PC–serveur.
+Serveur local de développement, **quatre connexions simultanées au plus**.
+Une connexion supplémentaire est fermée sans attente ni nouveau thread ; le
+client peut constater une erreur réseau. Lecture : délai d’inactivité 3 s et
+échéance totale de 5 s pour ligne, en-têtes et corps, même si des octets arrivent
+régulièrement. Écriture : délai socket séparé de 3 s. Les connexions en attente
+de lecture sont interrompues à la fermeture du serveur, puis ses workers joints.
+Ce n’est pas un délai total garanti pour le traitement SQLite/CPU, ni une
+protection contre tout déni de service local ; pas de serveur public. Pas de TLS intégré : le tunnel SSH protège le trajet PC–serveur.
 Pas de service systemd installé, pas de découverte/appairage automatique.
 La consultation ne valide ni le modèle, ni les effets, ni le fonctionnement
 du serveur complet. SQLite ouvert en mode ro ; ses fichiers auxiliaires WAL

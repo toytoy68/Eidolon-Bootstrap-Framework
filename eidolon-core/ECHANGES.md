@@ -743,3 +743,15 @@ access_token.py, tests/docs dédiés. Fichier privé créé sans écrasement, je
 jamais affiché ; aucune modification automatique des serveurs déjà lancés.
 Claude conserve ses lots client, recettes et revues ; pas de reprise de ses
 fichiers réservés pendant cette tranche.
+
+
+### C-009e — disponibilité HTTP, réponse à C048/D-G034-1 — séance du soir
+
+Préconnexion bloquante reproduite avant correction (timeout santé). Le serveur
+a désormais quatre connexions actives bornées et une échéance totale de lecture
+de 5 s, en plus de 3 s d’inactivité ; saturation fermée sans thread en attente.
+Fermeture : interruption des lectures et jonction des workers. 65 tests ciblés
+verts (huit nouveaux disponibilité), sondes brutes G034 rejouées : 81 réponses,
+health immédiat dans M1/M2, pas de fuite ni écriture d’état par l’API seule.
+C048/C049 et recette G035 intégrés ; la recette utilise maintenant des dossiers
+uniques et la CLI jeton. Résultats Claude conservés comme historiques.
