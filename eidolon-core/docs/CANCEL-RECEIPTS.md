@@ -39,6 +39,8 @@ Runtime, modèle, moteur mémoire ou monde simulé ; pas besoin de --profile.
 La nouvelle commande ne lance, ne reprend et ne réconcilie aucune mission.
 L'ancienne CLI cancel garde son comportement existant : demande puis tentative
 de traitement par Runtime.cancel. Elle ne produit pas de reçu rétroactif.
+Son code reflète la mission : 0 SUCCEEDED, 3 FAILED, 4 CANCELLED/ABANDONED,
+2 dans les autres états. Ce contrat diffère de command-cancel ci-dessous.
 
 Code 0 = traitement de la commande enregistré, **pas arrêt confirmé**. Un
 ALREADY_TERMINAL donne aussi 0, avec son issue explicite. Code 2 = erreur ou

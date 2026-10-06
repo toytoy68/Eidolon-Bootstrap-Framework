@@ -1,7 +1,7 @@
 # C-009b — validation Codex/GPT, 06/10/2026
 
 Base : API C-009a publiée en 21c0f729 ; six tâches G036–G041 publiées en
-6395485c057cb671cdc2ba8e0eb63a4004c85136. Validation Linux, Python 3.11, SQLite
+6395485c057cb671cdc2ba8e0eb63a4004c85136. Validation Linux, Python 3.12.14, SQLite
 local temporaire et sockets loopback réelles. Données entièrement synthétiques.
 
 ## Résultats reproduits
@@ -32,7 +32,7 @@ HTTP et commandes préexistants également rejoués.
 ## Limites
 
 Aucun test Windows, navigateur connecté, tunnel SSH ou serveur utilisateur.
-G031/G036 doivent encore raccorder l’interface. Aucune nouvelle passe de la
+G036 doit encore raccorder les reçus ; G031 est intégré dans le lot suivant. Aucune nouvelle passe de la
 suite globale ou Node revendiquée. La base SQLite reste une source de confiance,
 pas un journal signé ; un reçu trouvé ne prouve pas un effet, une absence ne
 prouve pas une non-exécution et ne permet pas un renvoi. Pas de détection

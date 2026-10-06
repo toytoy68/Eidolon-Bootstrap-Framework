@@ -60,7 +60,7 @@ node desktop/connected/build.js --check  # échoue si app.js est en retard
 NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/*.test.js"
 ```
 
-Sans Python 3.11 ou sans Playwright, les tests concernés sont marqués
+Sans Python 3.11, sans Playwright ou sans exécutable Chromium, les tests concernés sont marqués
 « skipped », jamais réussis.
 
 ## Lancer

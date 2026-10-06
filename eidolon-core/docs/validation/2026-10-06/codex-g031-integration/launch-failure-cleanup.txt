@@ -1,0 +1,30 @@
+✖ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (995.267599ms)
+✖ Chromium: a page opened through another Host is refused by the server, and the client says so (1023.312243ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2344.882841
+
+✖ failing tests:
+
+test at desktop/connected/tests/server.test.js:194:1
+✖ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (995.267599ms)
+  Error: INJECTED_CHROMIUM_LAUNCH_FAILURE
+      at chromium.launch (/tmp/eidolon-launch-failure.cjs:3:39)
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/connected/tests/server.test.js:199:30)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at desktop/connected/tests/server.test.js:265:1
+✖ Chromium: a page opened through another Host is refused by the server, and the client says so (1023.312243ms)
+  Error: INJECTED_CHROMIUM_LAUNCH_FAILURE
+      at chromium.launch (/tmp/eidolon-launch-failure.cjs:3:39)
+      at TestContext.<anonymous> (/workspace/scratch/f771896569e9/eidolon/eidolon-core/desktop/connected/tests/server.test.js:270:30)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

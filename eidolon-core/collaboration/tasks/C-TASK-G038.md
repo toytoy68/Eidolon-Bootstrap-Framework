@@ -10,3 +10,9 @@ Un commit/message par livraison, sources et preuves séparées des constats
 rapportés. Publier sur ta branche pour intégration. Ne pas modifier les fichiers
 réservés Codex (http_api.py, receipt_lookup.py, tests Python associés).
 Aucun déploiement, VM/NAS/GPU ou service personnel à contacter ici.
+
+Mise à jour G049 : G031 a déjà livré desktop/connected/tests/server.test.js.
+Réutiliser et étendre ce banc, sans recréer les quatre scénarios déjà présents ;
+priorité aux reçus, à la pagination et au nettoyage de tous les chemins d’échec.
+Codex a corrigé le nettoyage quand Chromium ne démarre pas et le saut explicite
+si son exécutable manque. Conserver ces protections dans les extensions.

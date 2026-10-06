@@ -29,6 +29,8 @@ const CAPTURES = process.env.CAPTURES || null;
 const ENV = Object.assign({}, process.env, { PYTHONPATH: path.join(CORE, "src"), PYTHONDONTWRITEBYTECODE: "1" });
 let chromium = null;
 try { ({ chromium } = require("playwright")); } catch (err) { chromium = null; }
+const chromiumUnavailable = !chromium ? "playwright unavailable"
+  : !fs.existsSync(chromium.executablePath()) ? "Chromium executable unavailable" : false;
 const hasPython = spawnSync(PYTHON, ["-c", "import sys; assert sys.version_info >= (3, 11)"]).status === 0;
 
 function cli(state, args, profile) {
@@ -189,11 +191,12 @@ test("real server: another state behind the same address wipes the display", { s
   }
 });
 
-test("Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout", { skip: (!hasPython && "python3 unavailable") || (!chromium && "playwright unavailable") }, async () => {
+test("Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout", { skip: (!hasPython && "python3 unavailable") || chromiumUnavailable }, async () => {
   const env = makeState();
   const server = await startServer(env, WEB_ROOT);
-  const browser = await chromium.launch();
+  let browser;
   try {
+    browser = await chromium.launch();
     const context = await browser.newContext({ viewport: { width: 1280, height: 860 } });
     const page = await context.newPage();
     const requests = [], errors = [];
@@ -251,23 +254,28 @@ test("Chromium on the real server: token, list, details, no storage, no foreign 
     assert.ok(requests.every((u) => u.startsWith(server.base + "/")), "same origin only: " + requests.join(" "));
     await context.close();
   } finally {
-    await browser.close();
-    await stop(server);
-    fs.rmSync(env.dir, { recursive: true, force: true });
+    try { if (browser) await browser.close(); }
+    finally {
+      try { await stop(server); }
+      finally { fs.rmSync(env.dir, { recursive: true, force: true }); }
+    }
   }
 });
 
-test("Chromium: a page opened through another Host is refused by the server, and the client says so", { skip: (!hasPython && "python3 unavailable") || (!chromium && "playwright unavailable") }, async () => {
+test("Chromium: a page opened through another Host is refused by the server, and the client says so", { skip: (!hasPython && "python3 unavailable") || chromiumUnavailable }, async () => {
   const env = makeState();
   const server = await startServer(env, WEB_ROOT);
-  const browser = await chromium.launch({ args: ["--host-resolver-rules=MAP eidolon.test 127.0.0.1"] });
+  let browser;
   try {
+    browser = await chromium.launch({ args: ["--host-resolver-rules=MAP eidolon.test 127.0.0.1"] });
     const page = await browser.newPage();
     const res = await page.goto("http://eidolon.test:" + server.port + "/");
     assert.equal(res.status(), 403, "assets are refused for an unknown Host too");
   } finally {
-    await browser.close();
-    await stop(server);
-    fs.rmSync(env.dir, { recursive: true, force: true });
+    try { if (browser) await browser.close(); }
+    finally {
+      try { await stop(server); }
+      finally { fs.rmSync(env.dir, { recursive: true, force: true }); }
+    }
   }
 });

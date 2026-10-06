@@ -15,7 +15,8 @@ travail, pas une qualification ni une livraison promise à date certaine.
 
 Ce premier jalon est un **observateur connecté**, pas encore le chatbot
 généraliste, l'application Windows installable ou une autorisation d'actions.
-Une deuxième tranche ajoutera les commandes authentifiées et leurs reçus,
+La consultation HTTP des reçus locaux est livrée (C-009b), son affichage attend
+G036. Une deuxième tranche ajoutera l’envoi de commandes authentifiées,
 puis le modèle réel et le rappel mémoire revalidé. L'accès externe Web,
 NAS/fichiers Windows, voix/caméra et robot restent des recettes séparées.
 
@@ -41,3 +42,11 @@ Les scripts Bootstrap restent hors du parcours sur serveur déjà installé.
 Le correctif APT reçu avec C040 a deux écarts reproduits : ajouts après un
 commentaire `#` (donc inactifs), et modification d'une source tierce contenant
 `main`. G033 les traite avant toute qualification d'installation Debian.
+
+## État intégré au 06/10, lot G049
+
+API C-009b et client G031 réunis ; 87 tests Python ciblés réussis pour les reçus
+et commandes/API, puis 18 tests Node reproduits dont quatre avec serveur réel.
+Les deux essais Chromium sont rapportés réussis par Claude sur sa livraison,
+mais sautés ici faute d’exécutable. Aucun test serveur/PC utilisateur ou tunnel
+SSH réel effectué ; les conditions ci-dessus restent à valider avant qualification.

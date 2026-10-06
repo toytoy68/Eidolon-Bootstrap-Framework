@@ -86,11 +86,10 @@ est généré dans un fichier privé, jamais affiché par le serveur. Le consult
 localement pour le saisir dans le client ; ne pas le publier ou le coller dans
 les échanges. Une rotation se fait avec un nouveau fichier puis un redémarrage.
 
-Quand **G031 sera intégré**, ajouter à la dernière commande
-`--web-root desktop/connected`. Avant cette livraison, `/` renvoie 404 : aucune
-interface connectée n'est encore livrée par ce lot. Le prototype autonome
-existant n'est pas compatible avec ces trois assets et ne doit pas être passé
-comme web-root.
+**G031 est intégré** : ajouter à la dernière commande
+`--web-root desktop/connected` pour servir le [client connecté](../desktop/connected/README.md).
+Sans web-root, `/` renvoie 404. Le prototype autonome existant ne doit pas être
+passé comme web-root. La consultation des reçus dans le client attend G036.
 
 Sur le PC, tunnel SSH (remplacer les deux valeurs entre chevrons) :
 
@@ -98,7 +97,7 @@ Sur le PC, tunnel SSH (remplacer les deux valeurs entre chevrons) :
 ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 <utilisateur>@<serveur>
 ```
 
-Puis ouvrir `http://127.0.0.1:8765` après intégration du client. Le tunnel doit
+Puis ouvrir `http://127.0.0.1:8765`. Le tunnel doit
 garder le même port local ; un port occupé nécessite un autre port **aux deux
 extrémités** et le même `--port` côté serveur. Arrêter le tunnel ne stoppe pas
 Core. Aucun essai de tunnel ou Windows réel revendiqué ici.

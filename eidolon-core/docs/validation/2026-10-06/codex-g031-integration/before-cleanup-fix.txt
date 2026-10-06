@@ -1,0 +1,6 @@
+✔ served assets are the committed ones and app.js is the current bundle (1174.029515ms)
+✔ real server: list, snapshot, a cancellation written by another process seen by poll and relist (1216.47536ms)
+✔ real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes (1142.823901ms)
+✔ real server: another state behind the same address wipes the display (2081.611266ms)
+✖ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (1066.029083ms)
+✖ Chromium: a page opened through another Host is refused by the server, and the client says so (968.575887ms)

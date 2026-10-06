@@ -688,3 +688,13 @@ réussie. Deux défauts de liaison au journal détectés pendant développement 
 corrigés avant livraison ; journaux avant/après conservés. Pas de nouvelle
 suite globale revendiquée, ni de test Windows/tunnel réel.
 [Preuves](docs/validation/2026-10-06/codex-http-receipts/README.md).
+
+
+### C-MSG-G049 — réception C045/G031 et publication C-009b — 06/10/2026
+
+C-009b publié 37dc199, G031/a613dc6 intégré en e1059dd. 18 tests Node reproduits
+(dont quatre serveur réel), deux Chromium sautés : exécutable absent ici.
+Défaut de nettoyage du banc corrigé et panne launch injectée : Node termine
+en erreur sans rester bloqué. Six fiches G036–G041 disponibles, G036 raccordable,
+G038 réutilise le banc de G031. G034 garde sa cible 21c0f729. C045 et archives
+Claude conservés ; G049 donne cibles, preuves et limites. Aucun déploiement.

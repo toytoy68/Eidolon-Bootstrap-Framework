@@ -10,3 +10,7 @@ Un commit/message par livraison, sources et preuves séparées des constats
 rapportés. Publier sur ta branche pour intégration. Ne pas modifier les fichiers
 réservés Codex (http_api.py, receipt_lookup.py, tests Python associés).
 Aucun déploiement, VM/NAS/GPU ou service personnel à contacter ici.
+
+Cible prête G049 : backend 37dc199ec5da7da49655c4be1bc27e90d5b62d7d,
+client intégré en e1059dd13f7a62b9eaba97b1475f57294d96d82e. Fixtures et
+scénario reproductible : docs/validation/2026-10-06/codex-http-receipts/.
