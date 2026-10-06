@@ -1,0 +1,11 @@
+== refusals that persist (W02 with durable pauses, coordinator rebuilt)
+  reads over two coordinators=1 last state=RETRY_WAIT paused=True
+== cache after a delay or a cancellation
+  page with deadline_exceeded  run1=DEADLINE run2 cache_hit=False reads=2
+  normal page                  run1=READ_TARGET_MET run2 cache_hit=True reads=1
+  budget expires during page 2: run1=DEADLINE (sources ['READ', 'READ']) | run2 cache_hit page1=False reads=3
+== displayed URLs after minimisation (duplicates and distinct documents)
+  tracking parameter (W07)   reads=2 readable=2 shown=[('https://news.example/a', '95bbca1f', 'READ'), ('https://news.example/a', '0ee31ad4', 'READ')]
+  two documents, same path   reads=2 readable=2 shown=[('https://news.example/item', '89fc1a99', 'READ'), ('https://news.example/item', '81b943ef', 'READ')]
+== snippets only, and personal data in the query (W06, W20)
+  snippet only: readable=0 text=None status=NO_READABLE_SOURCE | query in report=False | query sent to provider='joindre jean@example.invalid au 01 23 45 67 89'

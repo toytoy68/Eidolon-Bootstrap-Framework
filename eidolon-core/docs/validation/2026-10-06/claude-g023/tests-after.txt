@@ -1,0 +1,14 @@
+test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) ... ok
+test_busy_lock_refuses_without_change (tests.test_abandon_verification.AbandonUnverifiedTests.test_busy_lock_refuses_without_change) ... ok
+test_cli_reconcile_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_cli_reconcile_abandon) ... ok
+test_nothing_runs_after_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_nothing_runs_after_abandon) ... ok
+test_old_cancelled_mission_with_returned_call_is_not_reopened (tests.test_abandon_verification.AbandonUnverifiedTests.test_old_cancelled_mission_with_returned_call_is_not_reopened) ... ok
+test_other_decisions_output_and_invalid_labels_are_refused_without_change (tests.test_abandon_verification.AbandonUnverifiedTests.test_other_decisions_output_and_invalid_labels_are_refused_without_change) ... ok
+test_partial_verified_evidence_stays_partial (tests.test_abandon_verification.AbandonUnverifiedTests.test_partial_verified_evidence_stays_partial) ... ok
+test_refused_for_terminal_prepared_or_missing_result (tests.test_abandon_verification.AbandonUnverifiedTests.test_refused_for_terminal_prepared_or_missing_result) ... ok
+test_unknown_effect_abandon_is_unchanged (tests.test_abandon_verification.AbandonUnverifiedTests.test_unknown_effect_abandon_is_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 7.584s
+
+OK

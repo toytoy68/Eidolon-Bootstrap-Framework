@@ -1,0 +1,18 @@
+test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) ... ok
+test_cancel_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_cancel_during_redirect_gate_stops_second_exchange) ... ok
+test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows (tests.test_review_followup.FollowupTests.test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows) ... ok
+test_capacity_failure_is_sticky_and_does_not_fallback (tests.test_review_followup.FollowupTests.test_capacity_failure_is_sticky_and_does_not_fallback) ... ok
+test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) ... ok
+test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) ... ok
+test_deadline_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_deadline_during_redirect_gate_stops_second_exchange) ... ok
+test_full_store_blocks_new_origin_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_origin_after_reconstruction) ... ok
+test_full_store_blocks_new_provider_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_provider_after_reconstruction) ... ok
+test_late_receipt_is_preserved_and_normal_read_works (tests.test_review_followup.FollowupTests.test_late_receipt_is_preserved_and_normal_read_works) ... ok
+test_redirect_needs_capacity_for_initial_and_final_origins_together (tests.test_review_followup.FollowupTests.test_redirect_needs_capacity_for_initial_and_final_origins_together) ... ok
+test_same_origin_redirect_fits_one_remaining_slot (tests.test_review_followup.FollowupTests.test_same_origin_redirect_fits_one_remaining_slot) ... ok
+test_slow_hop_lookup_does_not_start_exchange_after_budget (tests.test_review_followup.FollowupTests.test_slow_hop_lookup_does_not_start_exchange_after_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.140s
+
+OK
