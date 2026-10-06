@@ -1,0 +1,29 @@
+Q01 PERSONAL        attendu=EMAIL,PHONE        obtenu=EMAIL,PHONE        ok
+Q02 PERSONAL        attendu=-                  obtenu=-                  ok / NON SIGNALÉ
+Q03 PERSONAL        attendu=PHONE              obtenu=PHONE              ok
+Q04 PERSONAL        attendu=PHONE              obtenu=PHONE              ok
+Q05 PERSONAL        attendu=IBAN               obtenu=IBAN               ok
+Q06 SECRET          attendu=URL_QUERY          obtenu=URL_QUERY          ok
+Q07 PUBLIC          attendu=URL                obtenu=URL                ok / FAUX POSITIF
+Q08 PERSONAL        attendu=LOCAL_PATH         obtenu=LOCAL_PATH         ok
+Q09 PERSONAL        attendu=LOCAL_PATH         obtenu=LOCAL_PATH         ok
+Q10 PERSONAL        attendu=LOCAL_PATH         obtenu=LOCAL_PATH         ok
+Q11 PERSONAL        attendu=QUOTED             obtenu=QUOTED             ok
+Q12 PUBLIC          attendu=QUOTED             obtenu=QUOTED             ok / FAUX POSITIF
+Q13 PERSONAL        attendu=-                  obtenu=-                  ok / NON SIGNALÉ
+Q14 PUBLIC          attendu=-                  obtenu=-                  ok
+Q15 PUBLIC          attendu=-                  obtenu=-                  ok
+Q16 PUBLIC          attendu=-                  obtenu=-                  ok
+Q17 PUBLIC          attendu=-                  obtenu=-                  ok
+Q18 AMBIGUOUS       attendu=PHONE              obtenu=PHONE              ok
+Q19 SECRET          attendu=-                  obtenu=-                  ok / NON SIGNALÉ
+Q20 SECRET          attendu=-                  obtenu=-                  ok / NON SIGNALÉ
+Q21 PERSONAL        attendu=NETWORK_ADDRESS    obtenu=NETWORK_ADDRESS    ok
+Q22 SENSITIVE_TOPIC attendu=-                  obtenu=-                  ok / NON SIGNALÉ
+Q23 PERSONAL        attendu=EMAIL,LOCAL_PATH   obtenu=EMAIL,LOCAL_PATH   ok
+Q24 PUBLIC          attendu=-                  obtenu=-                  ok
+Q25 PUBLIC          attendu=-                  obtenu=-                  ok
+Q26 PERSONAL        attendu=EMAIL              obtenu=EMAIL              ok
+Q27 PERSONAL        attendu=EMAIL              obtenu=EMAIL              ok
+
+27 requêtes ; à protéger non signalées : 5/19 ; publiques signalées : 2/8

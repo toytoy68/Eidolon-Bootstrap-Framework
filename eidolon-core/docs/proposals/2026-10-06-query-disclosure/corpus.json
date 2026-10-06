@@ -1,0 +1,278 @@
+{
+ "version": "query-disclosure-corpus/1",
+ "scope": "synthétique ; domaines réservés (.example, .invalid), adresses de documentation, aucun secret réel",
+ "labels": {
+  "PUBLIC": "rien à protéger",
+  "PERSONAL": "donnée personnelle ou locale",
+  "SECRET": "secret ou jeton",
+  "AMBIGUOUS": "seul l'utilisateur sait",
+  "SENSITIVE_TOPIC": "sujet sensible sans identifiant"
+ },
+ "signals": [
+  "EMAIL",
+  "PHONE",
+  "IBAN",
+  "URL",
+  "URL_QUERY",
+  "LOCAL_PATH",
+  "QUOTED",
+  "NETWORK_ADDRESS"
+ ],
+ "queries": [
+  {
+   "id": "Q01",
+   "query": "joindre jean@example.invalid au 01 23 45 67 89",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "EMAIL",
+    "PHONE"
+   ],
+   "note": "cas W20 du banc G007"
+  },
+  {
+   "id": "Q02",
+   "query": "écrire à jean point dupont arobase example point invalid",
+   "label": "PERSONAL",
+   "expected_signals": [],
+   "note": "courriel épelé : un motif simple ne le voit pas"
+  },
+  {
+   "id": "Q03",
+   "query": "+33 1 23 45 67 89 horaires d'ouverture",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "PHONE"
+   ],
+   "note": "format international"
+  },
+  {
+   "id": "Q04",
+   "query": "0123456789 opérateur inconnu",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "PHONE"
+   ],
+   "note": "chiffres collés"
+  },
+  {
+   "id": "Q05",
+   "query": "FR76 0000 0000 0000 0000 0000 000 banque correspondante",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "IBAN"
+   ],
+   "note": "IBAN fictif, clé non valide : on signale la forme, sans vérifier"
+  },
+  {
+   "id": "Q06",
+   "query": "https://intranet.example/doc?token=SYNTH-0000&id=42 explication",
+   "label": "SECRET",
+   "expected_signals": [
+    "URL_QUERY"
+   ],
+   "note": "paramètre de type jeton dans une URL collée"
+  },
+  {
+   "id": "Q07",
+   "query": "https://docs.example/guide erreur 404",
+   "label": "PUBLIC",
+   "expected_signals": [
+    "URL"
+   ],
+   "note": "URL sans paramètre : signal faible"
+  },
+  {
+   "id": "Q08",
+   "query": "C:\\Users\\alice\\Documents\\bilan-synthetique.xlsx formule",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "LOCAL_PATH"
+   ],
+   "note": "chemin Windows avec nom de compte"
+  },
+  {
+   "id": "Q09",
+   "query": "/home/alice/projets/demo/.env variable manquante",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "LOCAL_PATH"
+   ],
+   "note": "chemin Unix vers un fichier de configuration"
+  },
+  {
+   "id": "Q10",
+   "query": "\\\\nas-fictif\\partage\\rapport.pdf introuvable",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "LOCAL_PATH"
+   ],
+   "note": "chemin UNC : révèle un nom de machine"
+  },
+  {
+   "id": "Q11",
+   "query": "\"Le client Martin a refusé la clause 4.2 du contrat du 12 mars\" signification",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "QUOTED"
+   ],
+   "note": "passage cité d'un document privé"
+  },
+  {
+   "id": "Q12",
+   "query": "\"to be or not to be\" auteur",
+   "label": "PUBLIC",
+   "expected_signals": [
+    "QUOTED"
+   ],
+   "note": "citation publique : faux positif du signal QUOTED"
+  },
+  {
+   "id": "Q13",
+   "query": "Camille Fictif-Exemple adresse domicile",
+   "label": "PERSONAL",
+   "expected_signals": [],
+   "note": "nom propre + intention : aucun motif fiable"
+  },
+  {
+   "id": "Q14",
+   "query": "Victor Hugo biographie",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "nom propre public : indiscernable de Q13 par motif"
+  },
+  {
+   "id": "Q15",
+   "query": "python 3.11.15 release notes",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "suite de chiffres qui n'est pas un téléphone"
+  },
+  {
+   "id": "Q16",
+   "query": "norme ISO 8601 2026-10-06",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "date et numéro de norme"
+  },
+  {
+   "id": "Q17",
+   "query": "syntaxe @decorator python",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "arobase sans courriel"
+  },
+  {
+   "id": "Q18",
+   "query": "référence produit 0612345678 notice",
+   "label": "AMBIGUOUS",
+   "expected_signals": [
+    "PHONE"
+   ],
+   "note": "forme de téléphone, sens inconnu : seul l'utilisateur sait"
+  },
+  {
+   "id": "Q19",
+   "query": "mot de passe wifi Synth3tique-Corail-42 ne marche pas",
+   "label": "SECRET",
+   "expected_signals": [],
+   "note": "secret sans motif reconnaissable"
+  },
+  {
+   "id": "Q20",
+   "query": "clé licence AAAA-BBBB-CCCC-DDDD activation",
+   "label": "SECRET",
+   "expected_signals": [],
+   "note": "clé de format libre"
+  },
+  {
+   "id": "Q21",
+   "query": "192.0.2.10 port ouvert service",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "NETWORK_ADDRESS"
+   ],
+   "note": "adresse de documentation (RFC 5737) ; une vraie adresse révélerait le réseau"
+  },
+  {
+   "id": "Q22",
+   "query": "résultats analyse sanguine taux élevé que faire",
+   "label": "SENSITIVE_TOPIC",
+   "expected_signals": [],
+   "note": "sujet sensible sans identifiant : hors de portée d'un motif"
+  },
+  {
+   "id": "Q23",
+   "query": "mail de paul@example.invalid sur /home/paul/notes.txt",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "EMAIL",
+    "LOCAL_PATH"
+   ],
+   "note": "deux signaux"
+  },
+  {
+   "id": "Q24",
+   "query": "météo Lyon demain",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "requête ordinaire"
+  },
+  {
+   "id": "Q25",
+   "query": "erreur sqlite database is locked",
+   "label": "PUBLIC",
+   "expected_signals": [],
+   "note": "requête technique ordinaire"
+  },
+  {
+   "id": "Q26",
+   "query": "jean＠example.invalid contact",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "EMAIL"
+   ],
+   "note": "arobase pleine chasse : à normaliser (NFKC) avant détection"
+  },
+  {
+   "id": "Q27",
+   "query": "jean​@example.invalid contact",
+   "label": "PERSONAL",
+   "expected_signals": [
+    "EMAIL"
+   ],
+   "note": "espace de largeur nulle dans le courriel"
+  }
+ ],
+ "residues": [
+  {
+   "id": "R01",
+   "where": "titre ou extrait renvoyé par le fournisseur",
+   "example": "Contact : jean@example.invalid — Annuaire fictif",
+   "note": "le fournisseur peut renvoyer la donnée de la requête ; elle entre dans le rapport via sources[].title/snippet"
+  },
+  {
+   "id": "R02",
+   "where": "chemin d'URL d'un résultat",
+   "example": "https://annuaire.example/personnes/jean-dupont",
+   "note": "le rapport v2 garde les chemins (non anonymisés)"
+  },
+  {
+   "id": "R03",
+   "where": "texte lu",
+   "example": "page qui reflète la requête : « Résultats pour 01 23 45 67 89 »",
+   "note": "le contenu lu peut réécrire la requête ; il reste un texte externe non fiable"
+  },
+  {
+   "id": "R04",
+   "where": "cache RAM du coordinateur",
+   "example": "page de Q01 gardée pendant le TTL",
+   "note": "la clé de cache est l'URL, pas la requête ; le contenu, lui, peut la contenir"
+  },
+  {
+   "id": "R05",
+   "where": "journaux du fournisseur et du réseau",
+   "example": "requête Q01 reçue par le moteur",
+   "note": "hors de portée d'Eidolon une fois envoyée : seule la non-émission protège"
+  }
+ ]
+}
