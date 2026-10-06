@@ -1,0 +1,69 @@
+Python 3.11.15; only 127.0.0.1 contacted; fake connectors elsewhere.
+
+== P1 429 with anomalous headers: is the domain still suspended?
+  control: normal 429                  run1 states=['RATE_LIMITED', 'RATE_LIMITED'] run1 contacted=['a.example/one'] | run2 contacted=[]
+  duplicate Retry-After                run1 states=['RATE_LIMITED', 'RATE_LIMITED'] run1 contacted=['a.example/one'] | run2 contacted=[]
+  duplicate Content-Type               run1 states=['RATE_LIMITED', 'RATE_LIMITED'] run1 contacted=['a.example/one'] | run2 contacted=[]
+  Content-Length + Transfer-Encoding   run1 states=['RATE_LIMITED', 'RATE_LIMITED'] run1 contacted=['a.example/one'] | run2 contacted=[]
+  invalid Content-Length               run1 states=['RATE_LIMITED', 'RATE_LIMITED'] run1 contacted=['a.example/one'] | run2 contacted=[]
+
+== P2 Retry-After on 429 (value -> retry_after, review)
+  '0'                                      retry_after=0 review=False
+  '120'                                    retry_after=120 review=False
+  '86400'                                  retry_after=86400 review=False
+  '86401'                                  retry_after=None review=True
+  '0000000120'                             retry_after=120 review=False
+  '99999999999'                            retry_after=None review=True
+  '-5'                                     retry_after=None review=True
+  '1.5'                                    retry_after=None review=True
+  '  60  '                                 retry_after=60 review=False
+  '120, 60'                                retry_after=None review=True
+  '١٢٠'                                    retry_after=None review=True
+  ''                                       retry_after=None review=True
+  'Tue, 06 Oct 2026 04:10:57 GMT'          retry_after=0 review=False
+  'Tue, 06 Oct 2026 06:10:57 GMT'          retry_after=3600 review=False
+  'Fri, 31 Dec 9999 23:59:59 GMT'          retry_after=None review=True
+  '2026-10-05T18:00:00Z'                   retry_after=None review=True
+  'Fri, 07 Aug 2026 11:07:16 +0200'        retry_after=0 review=False
+
+== P3 redirect / 503 carrying Retry-After
+  302 Retry-After='30'     status=302 retry=30 review=False contacted=['a.example/'] coordinator_state=HTTP_ERROR
+  302 Retry-After='0'      status=200 retry=None review=False contacted=['a.example/', 'b.example/target'] coordinator_state=READ
+  302 Retry-After='never'  status=302 retry=None review=True contacted=['a.example/'] coordinator_state=HTTP_ERROR
+  503 Retry-After='30'     status=503 retry=30 review=False contacted=['a.example/'] coordinator_state=HTTP_ERROR
+  503 Retry-After=None     status=503 retry=None review=False contacted=['a.example/'] coordinator_state=HTTP_ERROR
+
+== P4 alternative URL redirecting to a suspended domain
+  same run:        states=['RATE_LIMITED', 'RETRY_WAIT'] contacted=['b.example/x', 'a.example/y']
+  next run, same coordinator: states=['RETRY_WAIT'] contacted=['a.example/y']
+  new coordinator:            states=['READ'] contacted=['a.example/y', 'b.example/z'] (suspension is RAM-only)
+
+== P5 complete receipt after transport deadline, research deadline, cancellation
+  (a) transport late: run1 status=DEADLINE state=READ readable=1 deadline_exceeded=True | run2 cache_hit=False reads=2
+  (b) research late:  run1 status=DEADLINE state=READ readable=1 | run2 status=READ_TARGET_MET cache_hit=True same observed_at=True reads=1
+  (c) cancelled:      run1 status=CANCELLED state=READ | run2 status=READ_TARGET_MET cache_hit=True reads=1
+
+== P6 cache provenance and error body
+  cache_hit=True identical ('observed_at', 'body_sha256', 'body_bytes')=True hops_kept=True hops=2
+  429: body in report=False state=RATE_LIMITED retrieval.kind=http_headers
+  403: body in report=False state=ACCESS_DENIED retrieval.kind=http_headers
+  500: body in report=False state=HTTP_ERROR retrieval.kind=http_headers
+
+== P7 query string in evidence
+  hops[0]=https://a.example/p (query hashed) | final_url=https://a.example/p?token=abc123
+
+== P8 TLS context mutated after StdlibConnector construction
+  verify_mode=CERT_NONE (control)    -> ContractError
+  minimum_version=TLSv1_1            -> WebTransportError CONNECTION_FAILED
+  set_ciphers SECLEVEL=0             -> WebTransportError CONNECTION_FAILED
+  verify_flags cleared               -> WebTransportError CONNECTION_FAILED
+
+== P9 drip server vs total_seconds=1 (cooperative budget)
+  /drip-body     elapsed=  7.8s for total_seconds=1 -> returned size=40 deadline_exceeded=True
+  /drip-headers  elapsed= 15.4s for total_seconds=1 -> WebTransportError DEADLINE_EXCEEDED
+
+== P10 injected reader clock vs StdlibConnector (fast healthy page)
+  time.monotonic() here = 182
+  real monotonic             -> status=200 bytes=30 deadline_exceeded=False
+  fake clock fixed at 0      -> status=200 bytes=30 deadline_exceeded=False
+  fake clock fixed at 1e9    -> status=200 bytes=30 deadline_exceeded=False
