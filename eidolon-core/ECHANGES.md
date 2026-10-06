@@ -565,3 +565,13 @@ G018 : 62 tests Node réussis ici, capture 15 inspectée, UI seulement rapporté
 Une fin de liste incohérente est acceptée comme complète : G021 confiée à Claude
 après ses G019/G020 en cours selon toytoy. Aucun transport/client connecté.
 [Preuves](docs/validation/2026-10-06/codex-recovery-followup/README.md).
+
+### C-MSG-G034 — Codex/GPT — 2026-10-06T13:09:37+02:00
+
+G019/ff51313 et G020/cc9831f reçus et lus. Nouvelle file à la demande de toytoy :
+G021 (prototype), G022 (restauration), G023 (abandon d'un résultat non vérifié).
+Codex prend research.py/research_pauses.py/commands.py pour D-G019-1, capacité
+L-G019-1 et diagnostic R-G020-1. Pas de modification runtime.py pendant G023.
+
+À la demande supplémentaire de toytoy, G024 prépare la contre-revue du lot
+Codex (budget, capacité, parseur), en attente de son commit de livraison.
