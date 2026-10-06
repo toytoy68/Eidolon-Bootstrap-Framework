@@ -72,7 +72,8 @@ télémétrie n'est présentée comme une observation en direct.
 | `tests/commands.test.js` | 12 tests du suivi des commandes par clé (G013) et de l'œil « Reçu à vérifier » (G012) |
 | `tests/sync.test.js` | 13 tests du consommateur sur la trace réelle et les cas dérivés |
 | `tests/list.test.js` | 13 tests du consommateur mission-list/1 (G018) |
-| `tests/ui.test.js` | 23 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation, G016, inventaire G018 |
+| `tests/g021.test.js` | 6 tests de régression G021 (total annoncé, nombre reçu, `has_more`) ; ils échouent sur `bfa75d2` |
+| `tests/ui.test.js` | 24 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation, G016, inventaire G018 |
 | `tests/g016.test.js` | 7 tests de régression des écarts G012-01/02/03 (C-TASK-G016) ; ils échouent sur `cc9a64b` |
 
 ## Suivi des commandes (C-TASK-G013)
@@ -229,6 +230,14 @@ Règles de `mission-list-state.js` :
   arrête les requêtes. Seul « Relire la liste » commence une nouvelle lecture
   (nouvelle époque) ; l'ancien inventaire reste affiché comme périmé jusqu'à la
   fin de la nouvelle lecture.
+- **Total annoncé** (G021) : `generation.mission_count` lie toute la lecture.
+  Avant de prendre une page, le client vérifie le nombre cumulé reçu : plus que
+  le total (`COUNT_EXCEEDED`), fin avant le total (`LIST_ENDED_EARLY`) ou
+  `has_more=true` alors que tout est reçu (`HAS_MORE_INCONSISTENT`) sont
+  refusés. La page n'est pas prise, la lecture s'arrête (« Liste incomplète »),
+  rien n'est déclaré complet ni inventé ; seule « Relire la liste » repart.
+  Ce contrôle relève du protocole ; le plafond de 200 n'est qu'une borne
+  d'affichage.
 - **Plafond visible** : 200 missions. Au-delà, « Liste tronquée : 200 affichées
   sur N annoncées », jamais « entièrement lue ».
 - **Sélection** : « Voir la mission » demande seulement une capture client-sync/1

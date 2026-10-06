@@ -4863,6 +4863,164 @@
     "store_id": "s-7ab364b84e0442069e3e875e712c1379"
    }
   },
+  "ended_early": {
+   "derived": true,
+   "why": "fresh_pages[1] présentée comme dernière page (has_more=false) alors que la génération annonce 3 missions et que 2 seulement auraient été reçues.",
+   "value": {
+    "authorizes_execution": false,
+    "generation": {
+     "anchor_sha256": "b3f89402c606d3ba391b0167402a6c18db9afc5c5ddf8bfe7a1ba8a47691a26d",
+     "event_count": 4,
+     "mission_count": 3,
+     "sequence": 4
+    },
+    "has_more": false,
+    "items": [
+     {
+      "as_of_sequence": 3,
+      "mission": {
+       "action_view": null,
+       "cancel_requested": false,
+       "id": "m-60837ab702f3434bb44764c2c5953744",
+       "objective_kind": "recalled_text_statistics",
+       "outcome_status": "PENDING",
+       "phase": "RECALL",
+       "progress": {
+        "completed": 0,
+        "total": null
+       },
+       "revision": 0,
+       "status": "NEW"
+      }
+     }
+    ],
+    "next_cursor": null,
+    "observed_at": "2026-10-06T08:19:28.792504+00:00",
+    "protocol": "eidolon-mission-list/1",
+    "snapshot_only": true,
+    "status": "PAGE",
+    "store_id": "s-7ab364b84e0442069e3e875e712c1379"
+   }
+  },
+  "has_more_inconsistent": {
+   "derived": true,
+   "why": "varied_page avec has_more=true alors que ses 4 missions sont les 4 annoncées.",
+   "value": {
+    "protocol": "eidolon-mission-list/1",
+    "snapshot_only": true,
+    "authorizes_execution": false,
+    "store_id": "s-c9d1608d3f387d307fb2463cb1d52af6",
+    "status": "PAGE",
+    "observed_at": "2026-10-06T09:00:00.000000+00:00",
+    "generation": {
+     "sequence": 16,
+     "event_count": 16,
+     "mission_count": 4,
+     "anchor_sha256": "5dc170db37b5a24d75307ada1fecae442199bcb93bd638ec329c8dd46ba2814e"
+    },
+    "items": [
+     {
+      "as_of_sequence": 9,
+      "mission": {
+       "action_view": {
+        "version": 1,
+        "snapshot_only": true,
+        "authorizes_execution": false,
+        "proposal_sha256": "4cd9908ad66019de97e79bc8e829e94e92a4d59c46934304acb8e3c6dbb36d92",
+        "call_id": "c-1",
+        "attempt": 1,
+        "decision": {
+         "status": "USED",
+         "message": "Accord consommé au lancement ; cela ne prouve pas un effet."
+        },
+        "applicability": {
+         "code": "CONSUMED",
+         "message": "Accord déjà consommé ; consulter la preuve et la tentative, sans rejouer l'action."
+        },
+        "effect": {
+         "code": "UNKNOWN",
+         "message": "Effet inconnu ; aucune absence d'effet déduite du statut de l'accord."
+        }
+       },
+       "cancel_requested": true,
+       "id": "m-0b2f55a61e44e4411e714d81292c6ea8",
+       "objective_kind": "synthetic_service_restart",
+       "outcome_status": "PENDING",
+       "phase": "ACTION",
+       "progress": {
+        "completed": 0,
+        "total": null
+       },
+       "revision": 3,
+       "status": "REVIEW_REQUIRED"
+      }
+     },
+     {
+      "as_of_sequence": 15,
+      "mission": {
+       "action_view": null,
+       "cancel_requested": false,
+       "id": "m-6922804e671432ec9610f1e3bcfccdbf",
+       "objective_kind": "recalled_text_statistics",
+       "outcome_status": "ACHIEVED",
+       "phase": "DONE",
+       "progress": {
+        "completed": 1,
+        "total": 1
+       },
+       "revision": 10,
+       "status": "SUCCEEDED"
+      }
+     },
+     {
+      "as_of_sequence": 12,
+      "mission": {
+       "action_view": null,
+       "cancel_requested": true,
+       "id": "m-dfd9c2e861eabf6f686505cfbf8f869a",
+       "objective_kind": "recalled_text_statistics",
+       "outcome_status": "PENDING",
+       "phase": "CALL",
+       "progress": {
+        "completed": 1,
+        "total": 1
+       },
+       "revision": 4,
+       "status": "RUNNING"
+      }
+     },
+     {
+      "as_of_sequence": 3,
+      "mission": {
+       "id": "m-f95a36d4e2b84a7898a1faf0191427d6",
+       "revision": 1,
+       "status": "BLOCKED",
+       "phase": "RECALL",
+       "cancel_requested": false,
+       "progress": {
+        "completed": 0,
+        "total": null
+       },
+       "objective_kind": null,
+       "outcome_status": "CLARIFICATION",
+       "action_view": null
+      }
+     }
+    ],
+    "has_more": true,
+    "next_cursor": {
+     "version": 1,
+     "store_id": "s-c9d1608d3f387d307fb2463cb1d52af6",
+     "generation": {
+      "sequence": 16,
+      "event_count": 16,
+      "mission_count": 4,
+      "anchor_sha256": "5dc170db37b5a24d75307ada1fecae442199bcb93bd638ec329c8dd46ba2814e"
+     },
+     "after_id": "m-f95a36d4e2b84a7898a1faf0191427d6"
+    }
+   }
+  },
   "selection_snapshots": {
    "derived": true,
    "why": "Enveloppes client-sync/1 SNAPSHOT construites depuis les projections de la liste (pages observées et page dérivée varied_page ; même store, id, statut) ; ancre et heure dérivées.",
