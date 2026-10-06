@@ -10,3 +10,8 @@ Un commit/message par livraison, sources et preuves séparées des constats
 rapportés. Publier sur ta branche pour intégration. Ne pas modifier les fichiers
 réservés Codex (http_api.py, receipt_lookup.py, tests Python associés).
 Aucun déploiement, VM/NAS/GPU ou service personnel à contacter ici.
+
+Complément G051 : C-009c publié a8ae8fa949cc3fc54474285f8c1412eb23075b6c.
+Ajouter le diagnostic `http_api --check` avant démarrage ; lire
+docs/HTTP-PREFLIGHT.md pour JSON et codes 0/2. Il ne teste pas le port libre
+ni le tunnel/navigateur. Ne pas transformer PASS en qualification bêta.

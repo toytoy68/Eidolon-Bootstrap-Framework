@@ -279,6 +279,23 @@ class _Handler(BaseHTTPRequestHandler):
     do_GET = do_POST = do_HEAD = do_PUT = do_DELETE = do_PATCH = do_OPTIONS = _dispatch
 
 
+def read_assets(web_root):
+    """Load the same bounded, fixed asset set for startup and diagnostics."""
+    assets = {}
+    if web_root is not None:
+        root = Path(web_root).resolve(strict=True)
+        for url, (name, _) in ASSETS.items():
+            path = root / name
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("INVALID_WEB_ROOT")
+            with path.open("rb") as handle:
+                body = handle.read(MAX_ASSET + 1)
+            if len(body) > MAX_ASSET:
+                raise ValueError("ASSET_TOO_LARGE")
+            assets[url] = body
+    return assets
+
+
 class ReadServer(HTTPServer):
     """Single-request server, deliberately local; no unbounded worker pool."""
     def __init__(self, state, token, *, port=8765, web_root=None):
@@ -288,18 +305,7 @@ class ReadServer(HTTPServer):
             raise ValueError("INVALID_PORT")
         self.authorization = ("Bearer " + token).encode("ascii")
         self.store = ReadOnlyStore(state)
-        self.assets = {}
-        if web_root is not None:
-            root = Path(web_root).resolve(strict=True)
-            for url, (name, _) in ASSETS.items():
-                path = root / name
-                if path.is_symlink() or not path.is_file():
-                    raise ValueError("INVALID_WEB_ROOT")
-                with path.open("rb") as handle:
-                    body = handle.read(MAX_ASSET + 1)
-                if len(body) > MAX_ASSET:
-                    raise ValueError("ASSET_TOO_LARGE")
-                self.assets[url] = body
+        self.assets = read_assets(web_root)
         super().__init__(("127.0.0.1", port), _Handler)
         self.allowed_hosts = {f"127.0.0.1:{self.server_port}", f"localhost:{self.server_port}"}
 
@@ -313,7 +319,16 @@ def main(argv=None):
     parser.add_argument("--token-file", required=True)
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--web-root")
+    parser.add_argument("--check", action="store_true", help="Diagnostic local, sans ouvrir de port")
+    parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
+    if args.format and not args.check:
+        parser.error("--format exige --check")
+    if args.check:
+        from .preflight import inspect, render
+        report = inspect(args.state, args.token_file, port=args.port, web_root=args.web_root)
+        print(render(report, args.format or "json"))
+        return 0 if report["status"] == "PASS" else 2
     try:
         token = read_token(args.token_file)
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root) as server:

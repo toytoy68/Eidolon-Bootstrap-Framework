@@ -1,0 +1,17 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#               Diagnostic de consultation              #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.

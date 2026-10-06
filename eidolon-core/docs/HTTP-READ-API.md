@@ -101,3 +101,10 @@ Puis ouvrir `http://127.0.0.1:8765`. Le tunnel doit
 garder le même port local ; un port occupé nécessite un autre port **aux deux
 extrémités** et le même `--port` côté serveur. Arrêter le tunnel ne stoppe pas
 Core. Aucun essai de tunnel ou Windows réel revendiqué ici.
+
+## Vérifier les prérequis sans démarrer
+
+Ajouter `--check --format human` à la commande de lancement ci-dessus. Le
+[diagnostic C-009c](HTTP-PREFLIGHT.md) contrôle état, jeton et assets existants
+sans ouvrir de port. JSON par défaut, codes de retour 0/2. Il ne teste ni la
+disponibilité du port, ni le navigateur ou le tunnel.
