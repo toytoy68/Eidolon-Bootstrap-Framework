@@ -1,0 +1,15 @@
+ruff 0.15.20
+src/eidolon_core/egress.py:195:17: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+src/eidolon_core/egress.py:198:17: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+src/eidolon_core/egress.py:200:17: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+src/eidolon_core/ollama_model.py:139:19: S310 Audit URL open for permitted schemes. Allowing use of `file:` or custom schemes is often unexpected.
+src/eidolon_core/openai_chat_model.py:152:19: S310 Audit URL open for permitted schemes. Allowing use of `file:` or custom schemes is often unexpected.
+Found 5 errors.
+--- pyflakes-level (F) on src tests examples
+tests/test_actions.py:23:51: F401 [*] `eidolon_core.contracts.digest` imported but unused
+tests/test_cancel_commands.py:11:8: F401 [*] `json` imported but unused
+tests/test_core.py:14:58: F401 [*] `eidolon_core.memory.SyntheticMemory` imported but unused
+tests/test_integration_review.py:18:39: F401 [*] `eidolon_core.ollama_model.OllamaConfig` imported but unused
+tests/test_qualification.py:10:8: F401 [*] `copy` imported but unused
+Found 5 errors.
+[*] 5 fixable with the `--fix` option.

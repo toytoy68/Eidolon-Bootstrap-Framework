@@ -1,0 +1,48 @@
+i/crlf  w/crlf  attr/                 	01-system.sh
+i/crlf  w/crlf  attr/                 	02-nvidia.sh
+i/crlf  w/crlf  attr/                 	03-docker.sh
+01-system.sh: line 142: syntax error near unexpected token `$'{\r''
+01-system.sh: line 142: `separator() {'
+02-nvidia.sh: line 18: syntax error near unexpected token `$'{\r''
+02-nvidia.sh: line 18: `separator() {'
+03-docker.sh: line 132: syntax error near unexpected token `$'{\r''
+03-docker.sh: line 132: `separator() {'
+--- after CRLF->LF (copies in scratch, repo untouched)
+syntax ok 01-system.sh
+syntax ok 02-nvidia.sh
+syntax ok 03-docker.sh
+ShellCheck - shell script analysis tool
+version: 0.11.0
+01-system.sh:20:10: warning: COMPANY_NAME appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:21:10: warning: COMPANY_SHORT appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:22:10: warning: COMPANY_MOTTO appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:28:10: warning: FRAMEWORK_NAME appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:29:10: warning: FRAMEWORK_VERSION appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:30:10: warning: FRAMEWORK_STANDARD appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:36:10: warning: COMPONENT_NAME appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:37:10: warning: COMPONENT_TITLE appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:38:10: warning: COMPONENT_VERSION appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:39:10: warning: COMPONENT_STATUS appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:47:10: warning: DOMAIN appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:58:10: warning: STATIC_IP appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:59:10: warning: GATEWAY appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:61:10: warning: DNS_SERVERS appears unused. Verify use (or export if used externally). [SC2034]
+01-system.sh:233:8: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
+02-nvidia.sh:107:8: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
+03-docker.sh:20:10: warning: COMPANY_NAME appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:21:10: warning: COMPANY_SHORT appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:22:10: warning: COMPANY_MOTTO appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:28:10: warning: FRAMEWORK_NAME appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:29:10: warning: FRAMEWORK_VERSION appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:30:10: warning: FRAMEWORK_STANDARD appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:36:10: warning: COMPONENT_NAME appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:37:10: warning: COMPONENT_TITLE appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:38:10: warning: COMPONENT_VERSION appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:39:10: warning: COMPONENT_STATUS appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:40:10: warning: COMPONENT_NEXT appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:47:10: warning: DOMAIN appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:51:10: warning: TIMEZONE appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:52:10: warning: LOCALE appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:58:10: warning: EIDOLON_HOME appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:60:10: warning: LOGFILE appears unused. Verify use (or export if used externally). [SC2034]
+03-docker.sh:377:19: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
