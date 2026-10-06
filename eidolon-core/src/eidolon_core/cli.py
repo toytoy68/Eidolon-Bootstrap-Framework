@@ -73,6 +73,9 @@ def main(argv=None):
         command.add_argument("mission_id")
         if name == "show":
             command.add_argument("--events", action="store_true")
+    listing = commands.add_parser("client-missions", help="list bounded mission projections; local read-only")
+    listing.add_argument("--cursor", help="JSON continuation cursor from a previous page")
+    listing.add_argument("--limit", type=int, default=50)
     capture = commands.add_parser("client-snapshot", help="local read-only client projection; no network")
     capture.add_argument("mission_id")
     poll = commands.add_parser("client-poll", help="read event references after a saved cursor")
@@ -150,6 +153,21 @@ def main(argv=None):
             if path.stat().st_size > 1_000_000:
                 raise ValueError("catalog file exceeds 1 MB")
             catalog = Catalog.from_config(json.loads(path.read_text(encoding="utf-8")))
+        if args.command == "client-missions":
+            from .mission_list import MissionList, parse_cursor
+            if not (Path(args.state) / "missions.sqlite3").is_file():
+                raise FileNotFoundError("mission listing requires an existing mission store")
+            cursor = None
+            if args.cursor:
+                with Path(args.cursor).open("rb") as handle:
+                    cursor = parse_cursor(handle.read(4097))
+            result = MissionList(Store(args.state)).page(cursor=cursor, limit=args.limit)
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Inventaire des missions") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 2 if result["status"] == "RESET_REQUIRED" else 0
         if args.command in {"client-snapshot", "client-poll"}:
             from .client_sync import ClientSync
             if not (Path(args.state) / "missions.sqlite3").is_file():

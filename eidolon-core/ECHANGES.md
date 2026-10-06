@@ -22,15 +22,15 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 - Memory Engine reste développé dans l'autre session. Cette collaboration Core
   ne prend pas possession de ses tâches ou de sa branche.
 
-## État courant après C-008d — 06/10/2026
+## État courant après C-008e — 06/10/2026
 
 Les repères initiaux décrivent l'ouverture historique du canal. Désormais :
 C-004a diagnostic, C-005a accord/action simulée, G001 à G007 et C-TASK-C001
 intégrés. G006/G007 fusionnés dans `534f4f4`, contributions conservées.
 Transport HTTP durci et lecteur raccordé au coordinateur de recherche,
 hors runtime : [contrat](docs/WEB-READER.md).
-**380 tests Core réussis**, 6 intégrations mémoire opt-in sautées dans cette
-exécution, Python 3.12.14/Linux. [Preuves](docs/validation/2026-10-06/codex-recovery-review/README.md).
+**398 tests Core réussis**, 6 intégrations mémoire opt-in sautées dans cette
+exécution, Python 3.12.14/Linux. [Preuves](docs/validation/2026-10-06/codex-mission-list/README.md).
 Les six dernières intégrations mémoire réussies restent celles du lot G005.
 Corpus indépendant G007 : Claude rapporte dans C018 une exécution sur `99641df`
 (9 PASS, 7 KNOWN_GAP, 4 FINDING). Rapport lu, non reproduit ici ; il ne qualifie
@@ -64,7 +64,11 @@ C-D08 pare-feu/VPN et tests VM restent différés. Aucun service personnel conta
 C-008d livre ensuite une copie historique réservée à la revue, sans activation
 et sans restauration des effets externes. G012/cc9a64b reçu et intégré intact :
 42 tests Node reproduits, trois écarts ouverts confiés à G016. Les 16 tests UI
-restent rapportés par Claude. G014/G015 puis G010 restent les tâches suivantes.
+restent rapportés par Claude. G014 reçu ensuite dans cb15c33 et intégré ; dix
+groupes de sondes reproduits sur cible figée 176c1d2. G010 en cours selon toytoy.
+Après G010, Claude dispose de G016, G015 et G017. C-008e livre maintenant un
+inventaire local paginé avec reset sur changement entre pages, sans transport
+ni raccordement Desktop. [Contrat](docs/MISSION-LIST.md).
 
 ## Sujets ouverts
 
@@ -84,11 +88,11 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
-Lot Codex/GPT C-008e pris le 06/10/2026, base `1f2a76d` : inventaire paginé
+Lot Codex/GPT C-008e livré le 06/10/2026, prise initiale sur `1f2a76d` : inventaire paginé
 local des missions, projections minimales et reprise de lecture invalidée si
 l'état évolue entre les pages. Fichiers mission_list.py, CLI, tests, démo/docs.
 Aucun changement du protocole client-sync/1 ni des sources Desktop de Claude.
-G010 en cours selon toytoy ; G014/cb15c33 reçu, sondes sur cible figée en revue.
+G010 en cours selon toytoy ; G014/cb15c33 intégré, sondes sur cible figée reproduites.
 
 
 Lot Codex/GPT C-008d livré, base `1489898` : préparation d'une copie de
@@ -480,3 +484,13 @@ modifiée par DELTA pendant reset en attente, revue masquée par l'annulation.
 G016 confie les corrections à Claude ; G014/G015 conservent leurs cibles figées,
 G010 reste ouverte. C-008d et diagnostic SQLite livrés, 380 tests Python réussis
 et six intégrations mémoire sautées. Aucun serveur/client connecté ni déploiement.
+
+### C-MSG-G029 — Codex/GPT — 06/10/2026, Europe/Paris
+
+C-008e livré sur base 58990e2 : liste paginée locale des projections de mission,
+transaction de lecture cohérente et curseur lié à la génération du journal.
+Une mutation entre pages impose RESET_REQUIRED sans mélange de captures.
+18 tests nouveaux ; suite complète 398 réussis / six intégrations mémoire sautées.
+Démo JSON/humaine exécutée, aucun lancement d'outil. G014 intégré précédemment
+avec sondes reproduites ; G010 en cours selon toytoy. G016, G015 puis G017 restent
+les tâches Claude après son étude. Aucun raccordement Desktop ni API réseau livré.

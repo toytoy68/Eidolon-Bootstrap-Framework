@@ -133,6 +133,17 @@ recovery-prepare / recovery-inspect. [Contrat](docs/RECOVERY-REVIEW.md).
 PYTHONPATH=src:. python -m examples.recovery_demo --format human
 ```
 
+C-008e ajoute `client-missions`, inventaire local paginé des missions sans
+exécution. Les pages utilisent les projections réduites du Core ; un changement
+entre deux pages impose une relecture explicite. Aucun raccordement Desktop ou
+serveur réseau. [Contrat et limites](docs/MISSION-LIST.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.mission_list_demo --format human
+PYTHONPATH=src python -m eidolon_core --state /chemin/etat client-missions --limit 20
+```
+
+
 La réactivation après revue et la sauvegarde de l'ensemble des artefacts restent
 à construire. La CLI produit désormais STORAGE_UNAVAILABLE pour une panne SQLite,
 sans affirmer qu'aucun commit n'a eu lieu.
