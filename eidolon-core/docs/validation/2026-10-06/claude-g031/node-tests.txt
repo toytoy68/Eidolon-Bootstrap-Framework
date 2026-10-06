@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: served assets are the committed ones and app.js is the current bundle
+ok 1 - served assets are the committed ones and app.js is the current bundle
+  ---
+  duration_ms: 1245.958719
+  type: 'test'
+  ...
+# Subtest: real server: list, snapshot, a cancellation written by another process seen by poll and relist
+ok 2 - real server: list, snapshot, a cancellation written by another process seen by poll and relist
+  ---
+  duration_ms: 1338.577347
+  type: 'test'
+  ...
+# Subtest: real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+ok 3 - real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+  ---
+  duration_ms: 1361.954681
+  type: 'test'
+  ...
+# Subtest: real server: another state behind the same address wipes the display
+ok 4 - real server: another state behind the same address wipes the display
+  ---
+  duration_ms: 2337.479203
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+ok 5 - Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+  ---
+  duration_ms: 2186.967635
+  type: 'test'
+  ...
+# Subtest: Chromium: a page opened through another Host is refused by the server, and the client says so
+ok 6 - Chromium: a page opened through another Host is refused by the server, and the client says so
+  ---
+  duration_ms: 1370.95902
+  type: 'test'
+  ...
+# Subtest: token format is checked locally; nothing is sent for a malformed token
+ok 7 - token format is checked locally; nothing is sent for a malformed token
+  ---
+  duration_ms: 2.970245
+  type: 'test'
+  ...
+# Subtest: connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+ok 8 - connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+  ---
+  duration_ms: 3.971688
+  type: 'test'
+  ...
+# Subtest: pagination sends next_cursor unchanged and stops at the end; never more than three pages
+ok 9 - pagination sends next_cursor unchanged and stops at the end; never more than three pages
+  ---
+  duration_ms: 1.175431
+  type: 'test'
+  ...
+# Subtest: list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+ok 10 - list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+  ---
+  duration_ms: 0.796704
+  type: 'test'
+  ...
+# Subtest: 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+ok 11 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+  ---
+  duration_ms: 0.953942
+  type: 'test'
+  ...
+# Subtest: 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+ok 12 - 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+  ---
+  duration_ms: 2.548494
+  type: 'test'
+  ...
+# Subtest: network failure: offline, data kept and dated; reconnect to the same store resumes
+ok 13 - network failure: offline, data kept and dated; reconnect to the same store resumes
+  ---
+  duration_ms: 1.052535
+  type: 'test'
+  ...
+# Subtest: reconnection to another store wipes the previous display: no mixed identities
+ok 14 - reconnection to another store wipes the previous display: no mixed identities
+  ---
+  duration_ms: 1.104581
+  type: 'test'
+  ...
+# Subtest: a list answering for another store than health is refused and nothing is shown
+ok 15 - a list answering for another store than health is refused and nothing is shown
+  ---
+  duration_ms: 0.688456
+  type: 'test'
+  ...
+# Subtest: an answer for a previous selection never replaces the current one
+ok 16 - an answer for a previous selection never replaces the current one
+  ---
+  duration_ms: 1.043768
+  type: 'test'
+  ...
+# Subtest: disconnect forgets token and display; a late answer is dropped
+ok 17 - disconnect forgets token and display; a late answer is dropped
+  ---
+  duration_ms: 0.461111
+  type: 'test'
+  ...
+# Subtest: poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+ok 18 - poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+  ---
+  duration_ms: 1.368662
+  type: 'test'
+  ...
+# Subtest: an invalid or authority-claiming answer is rejected, never displayed
+ok 19 - an invalid or authority-claiming answer is rejected, never displayed
+  ---
+  duration_ms: 0.34824
+  type: 'test'
+  ...
+# Subtest: a malformed mission id is never turned into a request path
+ok 20 - a malformed mission id is never turned into a request path
+  ---
+  duration_ms: 0.274905
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10246.987932

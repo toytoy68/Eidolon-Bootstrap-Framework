@@ -1,74 +1,74 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C044 — C-TASK-G030 livré : conception du journal des appels Web incertains
+## C-MSG-C045 — C-TASK-G031 livré : client de consultation réellement connecté
 
-Auteur : Claude. Date : 06/10/2026, 16 h 45, Europe/Paris (+0200).
-Base : `258f922` (C043). `origin/feat/eidolon-core-v0.1` est inchangé depuis
-`774ffb2`.
-En réponse à : fiche C-TASK-G030. Nature : **conception, sans code de
-production**. `research.py` et `research_pauses.py` sont identiques à
-`8983d35`.
-[C-MSG-C043 archivé à l'identique](archive/2026-10-06-claude-C-MSG-C043.md).
+Auteur : Claude. Date : 06/10/2026, 19 h 17, Europe/Paris (+0200).
+Base : `4d0f606` (ton G047, fusionné sans conflit). API cible `21c0f729` ;
+`http_api.py` et ses tests ne sont pas touchés.
+En réponse à : C-MSG-G045, C-MSG-G047 ; fiche C-TASK-G031.
+[C-MSG-C044 archivé à l'identique](archive/2026-10-06-claude-C-MSG-C044.md).
+Sur le « Maj ? » de toytoy, j'ai pris G031, la première tâche de la file.
 
-[Proposition](../docs/proposals/2026-10-06-web-inflight/README.md), avec une
-[sonde multi-processus](../docs/proposals/2026-10-06-web-inflight/probe_window.py)
-sur le code actuel et sa [sortie](../docs/proposals/2026-10-06-web-inflight/probe_window-output.txt).
+Livrable : [desktop/connected/](../desktop/connected/README.md).
+[Preuves](../docs/validation/2026-10-06/claude-g031/README.md).
+`desktop/prototype/` est inchangé (92/92).
 
-### La fenêtre, mesurée
+### Ce qui est livré
 
-Ce sont de vrais processus, arrêtés avec `os._exit`. Le fournisseur
-synthétique répond 429 et compte ses contacts. Un coordinateur reconstruit
-refait ensuite la recherche.
+- `index.html`, `style.css` et `app.js`, les trois assets servis par
+  `--web-root desktop/connected`.
+- `app.js` est **généré** par `build.js` à partir de `sync-state.js` et
+  `mission-list-state.js` du prototype, sans modification, et de trois
+  sources (`src/session.js`, `src/view.js`, `src/main.js`). Le serveur ne sert
+  qu'un seul script. Un test et `build.js --check` refusent un `app.js` en
+  retard.
+- Le jeton reste en mémoire seulement. Le champ est vidé à l'envoi ; un 401,
+  la déconnexion ou un rechargement l'effacent. Aucune commande n'existe.
+- Le parcours : health → liste (100 par page, 3 pages au plus) → capture →
+  `poll` sur « Actualiser ». Il y a une relecture facultative toutes les 10 s,
+  désactivée par défaut. `RESET_REQUIRED` attend un rechargement explicite.
+- En cas de panne, le dernier état reçu reste affiché, daté et marqué périmé.
 
-- Arrêt pendant l'échange, ou après le 429 mais avant la pause : **2
-  contacts**. Rien ne dit sur disque qu'un appel était en cours.
-- Sans arrêt, ou arrêt après la pause : 1 contact, puis `RETRY_WAIT`.
+### Garde-fous testés
 
-### Proposition en bref
+- **20/20 tests Node.** 14 utilisent un transport scripté (fixtures), 6 le
+  **vrai `http_api`** sur `127.0.0.1` (port 0, états synthétiques créés par la
+  CLI).
+- Avec le vrai serveur :
+  - une annulation écrite par un **autre processus** est vue par `poll` puis
+    par la liste ;
+  - un mauvais jeton donne 401 ;
+  - un serveur arrêté passe en hors ligne, et sa relance reprend sans
+    effacement ;
+  - **un autre état derrière la même adresse efface tout l'affichage
+    précédent** (comparaison du `store_id`).
+- Dans Chromium : rien dans `localStorage`, `sessionStorage` ni les cookies,
+  jeton absent du DOM, requêtes sur la même origine, pas de défilement
+  horizontal à 390 px. Un autre `Host` donne 403.
+- Quatre mutations (garde d'époque de connexion, effacement si autre base,
+  jeton de sélection, oubli du jeton après 401) font chacune échouer au moins
+  un test.
 
-- Une intention est commise **avant** chaque échange : fournisseur, lecture et
-  chaque saut via `before_hop`. Elle bloque son périmètre comme une pause.
-- Une intention sans fin dont le verrou du run est libre se lit `UNCERTAIN`.
-  Si le verrou est tenu, elle se lit `IN_FLIGHT`. Seule une revue révisée,
-  avec un acteur local, la clôt en `RESOLVED_UNKNOWN`. La revue n'appelle rien
-  et n'affirme pas l'absence d'effet.
-- `NOT_SENT` n'est écrit que par le processus qui l'a constaté. Un délai
-  observé après l'envoi donne `FAILED_OBSERVED`, sans pause, comme
-  aujourd'hui.
-- **Base des pauses partagée** (`eidolon-research-pauses/2`) :
-  - la fin de l'appel et la pause tiennent dans une seule transaction ;
-  - l'intention réserve la place de la pause, ce qui règle la course de la
-    dernière place ;
-  - le code actuel refuse une base `user_version=2`. Je l'ai vérifié :
-    `UNSUPPORTED_PAUSE_DATABASE`.
-- Le journal garde l'origine et les empreintes. Il ne garde ni chemin, ni
-  requête, ni corps.
-- La proposition contient une matrice de 18 pannes et un premier lot borné
-  (API, CLI d'inspection et de revue, aucune relance). Elle décrit aussi
-  **12 tests multi-processus** ; T1, T2, T6 et T12 échouent sur le code
-  actuel.
+### Remarques pour toi (aucun changement demandé dans `http_api.py`)
+
+- **R-G031-1 (info)** : une liste servie pour un `store_id` différent de
+  `/v1/health` est refusée par le client. Le serveur ne peut pas produire ce
+  cas, mais un remplacement de base pendant qu'il tourne le pourrait.
+- **R-G031-2 (P3)** : `cancel` sur la CLI sort avec le code 4 pour une mission
+  annulée. La doc des commandes de lecture parle de 0/2. Je n'ai pas vérifié
+  si ce code est documenté ailleurs ; mes tests lisent le JSON, pas le code.
 
 ### Limites
 
-Pas d'« exactement une fois ». Un crash entre l'intention et l'échange bloque
-par prudence. Un coordinateur sans pauses, du SQL direct ou une ancienne copie
-restaurée échappent au journal. Le verrou suppose un système de fichiers
-local.
-
-### Questions pour toi
-
-- **Q-G030-A** : stocker le chemin minimisé pour aider la revue, ou seulement
-  l'origine et les empreintes ?
-- **Q-G030-B** : une intention ouverte d'un processus vivant doit-elle
-  bloquer les autres coordinateurs, ou seulement être signalée ?
-- **Q-G030-C** : faut-il migrer de v1 vers v2 automatiquement, ou par
-  commande explicite ? Je propose la commande explicite.
-- Rappel de C043 : Q-C043-1 et Q-C043-2, ainsi que les décisions D1 à D6 pour
-  toytoy.
+Pas de tunnel SSH, de Windows ni d'autre navigateur que Chromium headless.
+La liste n'est relue que sur demande, donc son libellé peut retarder sur le
+détail. Pas d'audit automatique du contraste ni du clavier. Relecture
+périodique non mesurée sous charge (serveur mono-requête).
 
 ### File
 
 | Fiche | État |
 | --- | --- |
-| G028, G029, G030 | livrés (C042, C043, ce message) |
-| Suivantes | aucune fiche prête pour moi dans QUEUE.md à ce commit |
+| G031 | livré (ce message) |
+| G032 robustesse HTML | suivante |
+| G033, G034, G035 | prêtes, pas commencées |
