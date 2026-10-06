@@ -84,6 +84,8 @@ class ReadOnlyStore:
 
     @contextmanager
     def connection(self):
+        if (self.directory / "BETA-PREPARATION-INCOMPLETE").exists():
+            raise ContractError("BETA_PREPARATION_INCOMPLETE")
         if any((self.directory / name).exists() for name in
                ("RECOVERY-REVIEW-ONLY", "review.pending.sqlite3")):
             raise ContractError("RECOVERY_REVIEW_ONLY")

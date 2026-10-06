@@ -765,3 +765,15 @@ ClientSync/MissionList : liaison d’identité, doublons JSON refusés, annulati
 0/1, champs exportés typés/bornés, entiers sûrs et références d’événement
 validées. Ne répare ni ne modifie la mission. 91 tests ciblés verts (neuf
 nouveaux), dont refus HTTP sans contenu privé et base inchangée.
+
+### C-009g — prise en charge, jeu de recette synthétique — Codex/GPT
+
+Nouveau beta_fixture.py, tests et documentation dédiés. Création exclusive
+d’un dossier privé neuf, scénarios via les runtimes synthétiques existants,
+jeton local et manifeste de consultation. Aucun serveur lancé ni commande
+distante ; garde API de préparation incomplète jusqu’aux vérifications finales.
+Ne reprend aucun lot client ou archive source réservé à Claude.
+
+Huit tests dédiés réussis : scénarios, reçus, chemins de configuration stables,
+destinations existantes préservées, échecs injectés, garde relue par un lecteur
+existant, CLI réelle, diagnostic et reçu HTTP sans modification de la base.

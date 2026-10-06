@@ -350,9 +350,9 @@ Voir docs/validation/2026-10-06/claude-audit-global/README.md.
 - [x] C-009a : API loopback authentifiée de consultation, livrée/testée, publiée en 21c0f729 ; correspondances dans C-MSG-G047.
 - [x] G031 : client connecté observateur intégré depuis a613dc6 ; 18 tests
   Node reproduits, deux Chromium sautés faute d’exécutable local.
-- [ ] G032 : durcissement extraction HTML avant raccordement.
-- [ ] G033 : commentaires APT et sources tierces (défauts reproduits).
-- [ ] G034/G035 : revue API et recette Debian/Windows avant bêta déclarée.
+- [x] G032 : durcissement extraction HTML intégré ; raccordement toujours différé.
+- [x] G033 : commentaires APT et sources tierces corrigés, 23 cas reproduits.
+- [x] G034/G035 : revue API et procédure Debian/Windows intégrées ; recette réelle à effectuer.
 
 Voir docs/BETA-SERVER-PC.md. La file courante fait foi pour les prochains lots,
 les anciennes files ci-dessus restent des états historiques.
@@ -374,7 +374,8 @@ les anciennes files ci-dessus restent des états historiques.
 - [x] `http_api --check` : diagnostic local JSON/humain, validateurs partagés,
   absence de création d’état/token ou d’écoute réseau vérifiée.
 - [x] 57 tests Python ciblés réussis, dont 12 nouveaux.
-- [ ] G035/G040 : intégrer cette étape à la recette et au lanceur candidat.
+- [x] G035 : diagnostic intégré à la recette.
+- [ ] G040 : intégrer le diagnostic au lanceur candidat.
 
 Voir docs/HTTP-PREFLIGHT.md et docs/validation/2026-10-06/codex-preflight/.
 
@@ -395,3 +396,6 @@ Publication groupée à la clôture de la séance ; documentation READ-TOKEN.md.
   deux défauts reproduits puis corrigés, 91 tests ciblés verts.
 - [x] G034/G035 reçus et intégrés ; preuves Claude préservées et limites
   VM/Windows maintenues.
+- [x] C-009g : six missions synthétiques et trois reçus reproductibles,
+  création isolée, diagnostic bloquant un jeu incomplet ; huit tests dédiés.
+  Contrat et parcours : docs/BETA-FIXTURE.md.

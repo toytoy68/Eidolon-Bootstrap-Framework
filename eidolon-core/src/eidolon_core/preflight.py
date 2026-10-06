@@ -22,8 +22,10 @@ KNOWN_ERRORS = {
     "TOKEN_FILE_NOT_PRIVATE", "INVALID_TOKEN", "STATE_NOT_FOUND",
     "RECOVERY_REVIEW_ONLY", "UNSUPPORTED_READ_SCHEMA", "INVALID_STORE_ID",
     "INVALID_WEB_ROOT", "ASSET_TOO_LARGE",
+    "BETA_PREPARATION_INCOMPLETE",
 }
 TEXT = {
+    "BETA_PREPARATION_INCOMPLETE": "Jeu synthétique incomplet ; choisir une nouvelle destination et relancer sa préparation.",
     "TOKEN_VALID": "Jeton lisible, privé et au format attendu.",
     "TOKEN_FILE_NOT_PRIVATE": "Le jeton doit être un fichier régulier privé, appartenant à cet utilisateur.",
     "INVALID_TOKEN": "Format du jeton invalide.",

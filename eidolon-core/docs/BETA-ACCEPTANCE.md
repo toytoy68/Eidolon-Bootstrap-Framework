@@ -217,3 +217,8 @@ qu’un retrait de recette efface un dossier préexistant. Les preuves historiqu
 de Claude ci-dessus restent celles de sa version ; elles ne valent pas
 exécution de ces retouches ni validation VM/Windows.
 [Lot intégré et preuves](validation/2026-10-06/codex-evening/README.md).
+
+Pour une recette de consultation plus riche, [BETA-FIXTURE.md](BETA-FIXTURE.md)
+prépare en une commande six missions synthétiques et trois reçus dans un dossier
+neuf. Ce jeu est indépendant de la démonstration minimale S1–S8 ; ne pas mélanger
+leurs chemins d’état ou leurs jetons. Aucun serveur n’est lancé par sa préparation.

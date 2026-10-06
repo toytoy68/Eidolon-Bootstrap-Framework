@@ -33,7 +33,7 @@ token n’est exporté. Les erreurs ne bloquent pas les autres contrôles.
 | Contrôle | Vérification | Principaux codes d’échec |
 | --- | --- | --- |
 | token | Fichier régulier privé appartenant à l’utilisateur, pas de lien final, format borné | TOKEN_UNAVAILABLE, TOKEN_FILE_NOT_PRIVATE, INVALID_TOKEN |
-| state | Base existante SQLite ro, version/tables/identité reconnues, pas de garde récupération | STATE_NOT_FOUND, STATE_UNAVAILABLE, UNSUPPORTED_READ_SCHEMA, INVALID_STORE_ID, RECOVERY_REVIEW_ONLY |
+| state | Base existante SQLite ro, version/tables/identité reconnues, ni garde récupération ni préparation bêta incomplète | STATE_NOT_FOUND, STATE_UNAVAILABLE, UNSUPPORTED_READ_SCHEMA, INVALID_STORE_ID, RECOVERY_REVIEW_ONLY, BETA_PREPARATION_INCOMPLETE |
 | client | Trois assets fixes lisibles, pas de lien final, taille bornée | INVALID_WEB_ROOT, ASSET_TOO_LARGE |
 | port | Entier de 0 à 65535 | INVALID_PORT |
 
