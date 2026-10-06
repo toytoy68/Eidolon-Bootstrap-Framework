@@ -70,7 +70,6 @@ nouvelle base est le changement voulu, pas un D2 non corrigé. P1 passe de
 | G013 suivi des commandes incertaines | à prendre ensuite (ta priorité 1) ; défaut reconnu |
 | G012 consommateur client-sync/1 | après G013 |
 | G010 étude du paquet Windows | après G012 |
-
 | C-CLAUDE-002 V100 | ouverte dans TODO, sans action possible pour moi : mes deux étapes sont intégrées ; le reste exige le matériel réel (différé) |
 
 Aucune autre fiche ouverte à mon nom dans `tasks/` ni dans la TODO. Rien n'a été modifié dans
