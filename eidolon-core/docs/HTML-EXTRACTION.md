@@ -33,7 +33,8 @@ JavaScript, aucune ressource distante, aucun modèle. Un `str`, `None` ou
 
 - **Ignorés** :
   - le contenu de `script`, `style`, `template`, `noscript`, `svg`, `math`,
-    `iframe`, `object`, `embed`, `canvas`, `select`, `datalist` et `head` ;
+    `iframe`, `object`, `embed`, `canvas`, `select`, `datalist`, `head` et
+    `title` (un titre n'est jamais du texte visible, même dans `body`) ;
   - les commentaires, déclarations et CDATA ;
   - **tous les attributs**, donc `on*=`, `href` et `src`.
 - **Gardés** : le texte des liens, l'ordre des paragraphes, les négations (aucun
@@ -42,14 +43,24 @@ JavaScript, aucune ressource distante, aucun modèle. Un `str`, `None` ou
   retours à la ligne ; ailleurs, les espaces sont fusionnés et `<br>` commence
   un nouveau segment.
 - **Caché**, et donc ignoré : l'attribut `hidden`, et un `style` en ligne
-  contenant `display:none` ou `visibility:hidden`. Avertissement
-  `HIDDEN_CONTENT_SKIPPED`.
+  contenant `display:none`, `visibility:hidden`, `visibility:collapse` ou
+  `content-visibility:hidden`. Avertissement `HIDDEN_CONTENT_SKIPPED`.
+- **Fermetures implicites** (G032), comme le HTML valide : un bloc ferme un
+  `<p>` ouvert ; un `<li>` ferme le `<li>` précédent de la même liste ; un
+  `<dd>`/`<dt>` ferme le précédent. Ces fermetures et l'absence de balise de
+  fin facultative (`p`, `li`, `dd`, `dt`, `tr`, `td`…) ne sont ni comptées en
+  profondeur ni signalées comme malformation.
+- **Titre** : le premier `<title>` du document seulement ; un `<title>` d'icône
+  SVG ou MathML n'en est pas un.
 - **Pas caché** : `aria-hidden`, les classes CSS et les feuilles de style. Ce
   module **ne reproduit pas le rendu CSS**.
 - **Encodage** : UTF-8 strict, BOM accepté. Sinon `REFUSED`/`INVALID_UTF8`,
   sans remplacement de caractères ni devinette de charset.
-- **Caractères** : les caractères de contrôle C0 sont retirés
-  (`CONTROL_CHARACTERS_REMOVED`) ; les contrôles bidirectionnels sont signalés
+- **Caractères** : CR et saut de page sont des espaces HTML, normalisés (CR
+  seul ou CRLF → saut de ligne ; saut de page → espace), jamais retirés, pour
+  ne pas coller deux mots (« ne\rpas »). Les autres contrôles C0, DEL et les
+  contrôles C1 sont retirés (`CONTROL_CHARACTERS_REMOVED`), y compris après
+  décodage d'une entité. Les contrôles bidirectionnels sont signalés
   (`BIDI_CONTROLS_PRESENT`), pas retirés.
 - **HTML mal formé** : toléré, comme `html.parser`. Les balises non fermées et
   orphelines sont signalées (`UNCLOSED_ELEMENTS`, `UNBALANCED_TAGS`).
@@ -65,7 +76,13 @@ JavaScript, aucune ressource distante, aucun modèle. Un `str`, `None` ou
 
 Pour `PARTIAL`, seuls des **segments entiers** sont gardés : une phrase n'est
 jamais coupée. Le segment en cours au moment d'une borne de profondeur est
-abandonné.
+abandonné. Un premier segment plus long que `output_chars` donne donc
+`PARTIAL` **sans texte** (`text=null`).
+
+`limits` absent vaut les valeurs par défaut ; toute autre valeur qu'un
+`ExtractLimits`, y compris `{}`, `0` ou `False`, lève `ContractError`.
+Coût mesuré sur une entrée maximale de 128 000 octets : 10 à 60 ms
+(imbrication profonde : le plus lent), voir les preuves G032.
 
 ## Limites
 
@@ -77,4 +94,9 @@ abandonné.
 - Le texte reste une donnée externe non fiable : il n'est ni vérifié ni
   autorisé.
 
-[Preuves](validation/2026-10-06/claude-g026/README.md).
+- Pas d'arbre HTML complet : seules les fermetures implicites ci-dessus sont
+  reproduites. Tables, formulaires et contenu de `<title>` non fermé suivent
+  encore `html.parser`, pas le navigateur.
+
+[Preuves G026](validation/2026-10-06/claude-g026/README.md) ;
+[robustesse G032](validation/2026-10-06/claude-g032/README.md).

@@ -25,15 +25,27 @@ VERSION = "eidolon-html-extract/1"
 
 # Content of these elements is never text: code, templates, embedded documents.
 SKIPPED = {"script", "style", "template", "noscript", "svg", "math", "iframe", "object", "embed",
-           "canvas", "select", "datalist", "head"}
+           "canvas", "select", "datalist", "head", "title"}
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param",
         "source", "track", "wbr"}
 BLOCKS = {"address", "article", "aside", "blockquote", "body", "caption", "dd", "details", "dialog",
           "div", "dl", "dt", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3",
           "h4", "h5", "h6", "header", "hr", "html", "legend", "li", "main", "nav", "ol", "p", "pre",
           "section", "summary", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "ul"}
-HIDDEN_STYLE = re.compile(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)", re.I)
-CONTROLS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+# Valid HTML closes these implicitly (WHATWG "close a p element", li/dd/dt start tags);
+# without it, unclosed <p>/<li> would reach the depth bound or stay hidden after a hidden one.
+P_CLOSERS = {"address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div",
+             "dl", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5",
+             "h6", "header", "hgroup", "hr", "li", "dd", "dt", "listing", "main", "menu", "nav", "ol",
+             "p", "pre", "search", "section", "summary", "table", "ul", "xmp"}
+# End tag optional in HTML: closing them implicitly is not a malformation.
+OPTIONAL_END = {"html", "head", "body", "p", "li", "dd", "dt", "option", "optgroup", "rt", "rp",
+                "tbody", "thead", "tfoot", "tr", "td", "th", "colgroup", "caption"}
+SCOPE = {"applet", "button", "caption", "html", "marquee", "object", "table", "td", "template", "th"}
+HIDDEN_STYLE = re.compile(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)"
+                          r"|content-visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)", re.I)
+# C0 except tab/LF (CR and FF are HTML whitespace, normalised before), DEL and C1.
+CONTROLS = re.compile(r"[\x00-\x08\x0b\x0e-\x1f\x7f-\x9f]")
 BIDI = re.compile(r"[‪-‮⁦-⁩]")
 SPACES = re.compile(r"[ \t\r\n\f ]+")
 
@@ -65,7 +77,8 @@ class _Parser(HTMLParser):
         self.lists = []             # "ul" / ["ol", n]
         self.warnings = set()
         self.halted = None          # limit code once a bound is reached
-        self.title, self.in_title = [], 0
+        self.title, self.title_open, self.title_done = [], False, False
+        self.controls = False       # a control character came from an entity
         self.password_field, self.forms, self.hidden_skipped, self.unbalanced = False, 0, 0, 0
 
     # ---- segments ---------------------------------------------------------------------------
@@ -75,6 +88,8 @@ class _Parser(HTMLParser):
         text = text if self.pre else SPACES.sub(" ", text).strip()
         if self.pre:
             text = text.strip("\n")
+        if CONTROLS.search(text):
+            text, self.controls = CONTROLS.sub("", text), True
         if not text.strip():
             self.prefix = ""
             return
@@ -93,17 +108,18 @@ class _Parser(HTMLParser):
             self.password_field = True
         if tag == "form":
             self.forms += 1
-        if tag == "title":
-            self.in_title += 1
         if tag in VOID:
             if tag == "br" and self.pre and not self.skip:
                 self.current.append("\n")
             elif tag in {"br", "hr"} and not self.skip:
                 self._flush()  # a line break outside <pre> starts a new segment
             return
+        self._implicit_close(tag)
         if len(self.stack) >= self.limits.depth:
             self.halted = "DEPTH_LIMIT"
             return
+        if tag == "title" and not self.title_done and not any(n in {"svg", "math"} for n, _ in self.stack):
+            self.title_open = True  # first document title only; an SVG/MathML title is not one
         hidden = "hidden" in values or HIDDEN_STYLE.search(values.get("style") or "") is not None
         excluded = tag in SKIPPED or hidden
         if hidden and not self.skip:
@@ -135,19 +151,37 @@ class _Parser(HTMLParser):
         if tag not in VOID and self.stack and self.stack[-1][0] == tag:
             self.handle_endtag(tag)
 
+    def _implicit_close(self, tag):
+        targets = ({"li"} if tag == "li" else {"dd", "dt"} if tag in {"dd", "dt"} else set())
+        for name, _ in reversed(self.stack):
+            if name in targets:
+                self._close(name, implicit=True)
+                break
+            if name in SCOPE or (targets and name in BLOCKS and name not in {"address", "div", "p"}):
+                break
+        if tag in P_CLOSERS:
+            for name, _ in reversed(self.stack):
+                if name == "p":
+                    self._close("p", implicit=True)
+                    break
+                if name in SCOPE:
+                    break
+
     def handle_endtag(self, tag):
-        if tag == "title" and self.in_title:
-            self.in_title -= 1
         if self.halted or tag in VOID:
             return
-        names = [name for name, _ in self.stack]
-        if tag not in names:
+        if tag not in [name for name, _ in self.stack]:
             self.unbalanced += 1      # stray end tag: ignored
             return
+        self._close(tag)
+
+    def _close(self, tag, implicit=False):
         while self.stack:
             name, excluded = self.stack.pop()
-            if name != tag:
-                self.unbalanced += 1  # implicitly closed element
+            if name != tag and not implicit and name not in OPTIONAL_END:
+                self.unbalanced += 1  # element closed by a mismatched end tag
+            if name == "title" and self.title_open:
+                self.title_open, self.title_done = False, True
             if excluded:
                 self.skip -= 1
             elif not self.skip:
@@ -161,7 +195,7 @@ class _Parser(HTMLParser):
                 break
 
     def handle_data(self, data):
-        if self.in_title and len("".join(self.title)) < 300:
+        if self.title_open and len("".join(self.title)) < 300:
             self.title.append(data)
         if self.halted or self.skip:
             return
@@ -179,7 +213,7 @@ def extract(data, limits=None):
     """Return a structured, bounded extraction of the visible text of UTF-8 HTML bytes."""
     if type(data) is not bytes:
         raise ContractError("INVALID_HTML_INPUT: bytes required")
-    limits = limits or ExtractLimits()
+    limits = ExtractLimits() if limits is None else limits  # {} or 0 is an error, not the defaults
     if not isinstance(limits, ExtractLimits):
         raise ContractError("INVALID_EXTRACT_LIMITS")
     result = {"version": VERSION, "status": None, "complete": False, "text": None,
@@ -198,6 +232,8 @@ def extract(data, limits=None):
         result.update(status="REFUSED", warnings=["INVALID_UTF8"])
         return result
     warnings = set()
+    # CR and FF are HTML whitespace: removing them would glue words ("ne\rpas" -> "nepas").
+    decoded = decoded.replace("\r\n", "\n").replace("\r", "\n").replace("\f", " ")
     if CONTROLS.search(decoded):
         warnings.add("CONTROL_CHARACTERS_REMOVED")
         decoded = CONTROLS.sub("", decoded)
@@ -210,10 +246,12 @@ def extract(data, limits=None):
         return result
     if not parser.halted:
         parser._flush()
-    if parser.stack and not parser.halted:
+    if not parser.halted and any(name not in OPTIONAL_END for name, _ in parser.stack):
         warnings.add("UNCLOSED_ELEMENTS")
     if parser.unbalanced:
         warnings.add("UNBALANCED_TAGS")
+    if parser.controls:
+        warnings.add("CONTROL_CHARACTERS_REMOVED")
     if parser.hidden_skipped:
         warnings.add("HIDDEN_CONTENT_SKIPPED")
     # Whole segments only: a cut never splits a sentence or drops a following negation silently.

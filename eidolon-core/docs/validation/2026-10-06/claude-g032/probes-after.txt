@@ -1,0 +1,31 @@
+P1 200 <p> sans fermeture, profondeur 128: status='OK' | warnings=[]
+P2 <li> sans fermeture, profondeur 20: status='OK' | warnings=[]
+P3 <li hidden> puis <li> visible: status='OK' | text='- visible : ne pas conclure' | title='T' | warnings=['HIDDEN_CONTENT_SKIPPED']
+P4 <p hidden> puis <div> visible: status='OK' | text='visible' | title='T' | warnings=['HIDDEN_CONTENT_SKIPPED']
+P5 <dt>/<dd> non fermés: status='OK' | text='terme\n\ndéfinition\n\nterme 2\n\ndéf 2' | warnings=[]
+T1 <title> dans <svg>: status='OK' | text='texte' | title='T' | warnings=[]
+T2 deux <title>: status='OK' | text='a' | title='premier' | warnings=[]
+T3 <title> dans <body> (non affiché): status='OK' | text='texte' | title='titre' | warnings=[]
+C1 CR seul entre deux mots: status='OK' | text='ne pas conclure' | title=None | warnings=[]
+C2 CRLF ordinaire: status='OK' | text='ligne suite' | title=None | warnings=[]
+C3 saut de page entre deux mots: status='OK' | text='ne pas' | title=None | warnings=[]
+C4 contrôle par entité &#7;: status='OK' | text='ab' | title=None | warnings=[]
+C5 C1 brut U+0085: status='OK' | text='ab' | title=None | warnings=['CONTROL_CHARACTERS_REMOVED']
+C6 bidi par entité &#x202E;: text='abc\u202edef' | warnings=['BIDI_CONTROLS_PRESENT']
+C7 NUL par entité &#0;: status='OK' | text='a�b' | title=None | warnings=[]
+L1 limits={}: refusé INVALID_EXTRACT_LIMITS
+L1 limits=0: refusé INVALID_EXTRACT_LIMITS
+L1 limits='': refusé INVALID_EXTRACT_LIMITS
+L1 limits=[]: refusé INVALID_EXTRACT_LIMITS
+L1 limits=False: refusé INVALID_EXTRACT_LIMITS
+S1 segment unique de 200 > 80: status='PARTIAL' | text=None | warnings=['OUTPUT_LIMIT']
+H1 style='display:none': text='visible'
+H1 style='DISPLAY : NONE': text='visible'
+H1 style='display:none!important': text='visible'
+H1 style='color:red;display:none': text='visible'
+H1 style='display: none ; color:red': text='visible'
+H1 style='visibility:collapse': text='visible'
+H1 style='content-visibility:hidden': text='visible'
+K1 paragraphes 127889 octets: PARTIAL ['OUTPUT_LIMIT'] 13 ms
+K1 imbrication 128000 octets: PARTIAL ['DEPTH_LIMIT'] 51 ms
+K1 entités 128000 octets: OK [] 8 ms

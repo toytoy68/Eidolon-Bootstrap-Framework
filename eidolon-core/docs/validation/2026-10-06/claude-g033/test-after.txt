@@ -1,0 +1,23 @@
+PASS L1 commentaire en fin de ligne : composants AVANT le #
+PASS L2 source tierce avec main : intacte et signalée
+PASS L3 domaine piège deb.debian.org.evil.example : intact
+PASS L4 chemin piège mirror.example/deb.debian.org/debian : intact
+PASS L5 ligne commentée : intacte
+PASS L6 sans main : intacte
+PASS L7 options entre crochets avec espaces
+PASS L8 sécurité https, barre finale, composants partiels
+PASS L9 miroir national ftp.fr.debian.org
+PASS L10 dépôt Docker (sans main) et cdrom commenté intacts
+PASS L11 options [ non fermées : intacte et signalée
+PASS D1 strophe officielle
+PASS D2 strophe tierce avec main : intacte et signalée
+PASS D3 URIs mêlées officielle + tierce : intacte
+PASS D4 Components sur plusieurs lignes : intacte et signalée
+PASS D5 URI tierce en ligne de continuation : intacte
+PASS D6 deux strophes : seule l'officielle change, commentaire gardé
+PASS D7 noms de champ en minuscules
+PASS W1 droits 0644 gardés après réécriture
+PASS W2 second passage : contenu identique et fichier non réécrit
+PASS W3 aucun fichier temporaire laissé
+PASS W4 fichier absent : échec, rien créé
+ÉCHECS : 0

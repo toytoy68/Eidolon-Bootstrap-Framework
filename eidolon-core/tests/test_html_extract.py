@@ -134,6 +134,56 @@ class HtmlExtractTests(unittest.TestCase):
                 self.assertIn(r['status'], {'OK', 'EMPTY'})
                 self.assertEqual(r['source_sha256'], hashlib.sha256(path.read_bytes()).hexdigest())
 
+    # ---- G032: defects found by the robustness probes ----------------------------------------
+    def test_g032_implicitly_closed_p_li_dd_are_not_depth_or_malformation(self):
+        r = extract(b'<p>x' * 200)
+        self.assertEqual((r['status'], r['warnings'], r['segments']), ('OK', [], 200))
+        r = extract(page('<ul>' + '<li>item' * 30 + '</ul><p>ne pas oublier</p>'), ExtractLimits(depth=20))
+        self.assertEqual((r['status'], r['warnings']), ('OK', []))
+        self.assertTrue(r['text'].endswith('ne pas oublier'))
+        r = extract(page('<dl><dt>terme<dd>définition<dt>terme 2<dd>déf 2</dl>'))
+        self.assertEqual((r['text'], r['warnings']), ('terme\n\ndéfinition\n\nterme 2\n\ndéf 2', []))
+        nested = extract(page('<ul><li>a<ul><li>b</ul><li>c</ul>'))
+        self.assertEqual(nested['text'], '- a\n\n- b\n\n- c')
+
+    def test_g032_text_after_an_implicitly_closed_hidden_element_stays_visible(self):
+        r = extract(page('<ul><li hidden>caché<li>visible : ne pas conclure</ul>'))
+        self.assertEqual(r['text'], '- visible : ne pas conclure')
+        self.assertEqual(extract(page('<p hidden>caché<div>visible</div>'))['text'], 'visible')
+        self.assertIn('HIDDEN_CONTENT_SKIPPED', extract(page('<p hidden>caché<div>visible</div>'))['warnings'])
+
+    def test_g032_title_is_the_first_document_title_and_never_visible_text(self):
+        self.assertEqual(extract(page('<svg><title>icône</title></svg><p>texte</p>'))['title'], 'Titre fictif')
+        r = extract(page('<p>a</p><title>second</title>', head='<title>premier</title>'))
+        self.assertEqual((r['title'], r['text']), ('premier', 'a'))
+        r = extract(b'<body><title>titre</title><p>texte</p></body>')
+        self.assertEqual((r['title'], r['text']), ('titre', 'texte'))
+
+    def test_g032_cr_and_form_feed_are_whitespace_not_removed_controls(self):
+        for raw in (b'<p>ne\rpas conclure</p>', b'<p>ne\x0cpas conclure</p>', b'<p>ne\r\npas conclure</p>'):
+            with self.subTest(raw=raw):
+                r = extract(raw)
+                self.assertEqual((r['text'], r['warnings']), ('ne pas conclure', []))
+        self.assertEqual(extract(b'<pre>a\rb</pre>')['text'], 'a\nb')
+
+    def test_g032_c1_controls_are_removed_and_reported(self):
+        r = extract('<p>a\u0085b\u009bc</p>'.encode())
+        self.assertEqual((r['text'], r['warnings']), ('abc', ['CONTROL_CHARACTERS_REMOVED']))
+
+    def test_g032_falsy_limits_are_refused_not_replaced_by_defaults(self):
+        for value in ({}, 0, '', [], False):
+            with self.subTest(value=value), self.assertRaises(ContractError):
+                extract(b'<p>x</p>', limits=value)
+
+    def test_g032_hidden_also_covers_visibility_collapse_and_content_visibility(self):
+        for style in ('visibility:collapse', 'content-visibility: hidden'):
+            with self.subTest(style=style):
+                self.assertEqual(extract(page(f'<p style="{style}">caché</p><p>visible</p>'))['text'], 'visible')
+
+    def test_g032_one_segment_longer_than_the_output_bound_gives_no_text(self):
+        r = extract(page('<p>' + 'mot ' * 50 + '</p>'), ExtractLimits(output_chars=80))
+        self.assertEqual((r['status'], r['text'], r['complete'], r['warnings']), ('PARTIAL', None, False, ['OUTPUT_LIMIT']))
+
     def test_module_has_no_network_file_or_execution_dependency(self):
         source = Path(html_extract.__file__).read_text(encoding='utf-8')
         for word in ('socket', 'urllib', 'http.client', 'open(', 'subprocess', 'eval(', 'exec('):
