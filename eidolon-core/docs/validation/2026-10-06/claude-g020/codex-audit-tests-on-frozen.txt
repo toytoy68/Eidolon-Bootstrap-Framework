@@ -1,0 +1,15 @@
+test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) ... ok
+test_cancel_between_processes_preserves_pending_verification (tests.test_audit_regressions.AuditCancellationTests.test_cancel_between_processes_preserves_pending_verification) ... ok
+test_cancellation_does_not_start_next_planned_tool (tests.test_audit_regressions.AuditCancellationTests.test_cancellation_does_not_start_next_planned_tool) ... ok
+test_invalid_output_is_not_accepted_because_cancelled (tests.test_audit_regressions.AuditCancellationTests.test_invalid_output_is_not_accepted_because_cancelled) ... ok
+test_reconciled_receipt_can_be_verified_after_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_reconciled_receipt_can_be_verified_after_cancellation) ... ok
+test_verification_failure_remains_resumable_with_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_verification_failure_remains_resumable_with_cancellation) ... ok
+test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) ... ok
+test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) ... ok
+test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) ... ok
+test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.109s
+
+OK

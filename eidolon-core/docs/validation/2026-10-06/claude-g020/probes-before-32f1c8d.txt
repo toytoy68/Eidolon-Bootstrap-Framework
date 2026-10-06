@@ -1,0 +1,56 @@
+python 3.11.15 | tree: eidolon-core@g020-before
+
+== 1 cancellation vs verification
+  cancel at TOOL_RETURNED  -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1 | run again -> CANCELLED
+  cancel at RESULT_SAVED   -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1 | run again -> CANCELLED
+  cancel DURING verification (REQUESTED) -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+  verifier down + cancel -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+      run again (still down) -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+      reconcile abandon      -> ValueError: mission has no uncertain call to reconcile | now CANCELLED
+      second cancel command  -> 'ALREADY_TERMINAL' | now CANCELLED
+      legacy runtime.cancel  -> status=CANCELLED | now CANCELLED
+      verifier back -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+  wrong output + cancel -> CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+  REVIEW + cancel + observed-result, run -> CANCELLED/VERIFY err=CANCELLED outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+
+== 1b mission closed by the OLD code (E1 state), then opened by this tree
+  written by 32f1c8d: CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1
+  run with this tree: CANCELLED/VERIFY err=VERIFICATION_UNAVAILABLE outcome=NOT_ACHIEVED result=None calls=['RETURNED'] effect=RESULT_UNVERIFIED restarts=1 CALL_STARTED=1 | reopened=False revision 15->15
+
+== 2a refusal after a redirect to ANOTHER origin, then final DNS fails / turns private (real WebReader/fetch)
+  403 via redirect, final DNS fails  : exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=ACCESS_DENIED
+  403 via redirect, final DNS private: exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=ACCESS_DENIED
+  429 via redirect, final DNS fails  : exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=RATE_LIMITED
+  429 via redirect, final DNS private: exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=RATE_LIMITED
+  503 via redirect, final DNS fails  : exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=HTTP_ERROR
+  503 via redirect, final DNS private: exchanges=['docs.example', 'mirror.example', 'docs.example', 'mirror.example'] | run1 source=POLICY_REFUSED text=None | paused docs=False mirror=True | run2=POLICY_REFUSED direct-to-mirror=HTTP_ERROR
+
+== 2b refusal with truncated / oversized body: injected Reader vs real WebReader
+  401 truncated | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=ACCESS_DENIED paused=True
+  401 too large | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=ACCESS_DENIED paused=True
+  403 truncated | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=ACCESS_DENIED paused=True
+  403 too large | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=ACCESS_DENIED paused=True
+  429 truncated | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=RATE_LIMITED paused=True
+  429 too large | injected Reader: reads=2 paused docs=False mirror=False | WebReader: exchanges=1 state=RATE_LIMITED paused=True
+
+== 2c 200 OK but the final destination resolves private after the response
+  source=POLICY_REFUSED reason=DESTINATION_NOT_GLOBAL text=None final_url=None readable=0
+
+== 3 command parsers: diagnostics
+  cancel parse empty object         -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse duplicate key        -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse None                 -> AttributeError: 'NoneType' object has no attribute 'encode'
+  cancel parse int                  -> AttributeError: 'int' object has no attribute 'encode'
+  cancel parse dict                 -> AttributeError: 'dict' object has no attribute 'encode'
+  cancel parse invalid UTF-8 bytes  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse lone surrogate       -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse BOM                  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse NaN                  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse bad mission id       -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse actor spaces         -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse too large            -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  cancel parse deep nesting         -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  decision parse bad mission id  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  CLI command-cancel duplicate key   exit=2 traceback=False | {"error":"ContractError","message":"INVALID_COMMAND: invalid bounded UTF-8 JSON command"}
+  CLI command-cancel invalid UTF-8   exit=2 traceback=False | {"error":"ContractError","message":"INVALID_COMMAND: invalid bounded UTF-8 JSON command"}
+  CLI command-cancel bad mission id  exit=2 traceback=False | {"error":"ContractError","message":"INVALID_COMMAND: invalid bounded UTF-8 JSON command"}
