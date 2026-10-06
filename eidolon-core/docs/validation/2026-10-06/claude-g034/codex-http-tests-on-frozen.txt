@@ -1,0 +1,30 @@
+test_absent_wrong_duplicate_or_query_token_never_reads (tests.test_http_api.HTTPReadTests.test_absent_wrong_duplicate_or_query_token_never_reads) ... ok
+test_assets_are_explicit_public_bounded_and_same_origin (tests.test_http_api.HTTPReadTests.test_assets_are_explicit_public_bounded_and_same_origin) ... ok
+test_authenticated_health_and_loopback_only (tests.test_http_api.HTTPReadTests.test_authenticated_health_and_loopback_only) ... ok
+test_bad_cursor_unknown_keys_and_limits (tests.test_http_api.HTTPReadTests.test_bad_cursor_unknown_keys_and_limits) ... ok
+test_bad_json_duplicate_fields_and_numbers_are_rejected (tests.test_http_api.HTTPReadTests.test_bad_json_duplicate_fields_and_numbers_are_rejected) ... ok
+test_body_type_and_size_are_bounded (tests.test_http_api.HTTPReadTests.test_body_type_and_size_are_bounded) ... ok
+test_cli_process_reads_existing_state_and_prints_no_token (tests.test_http_api.HTTPReadTests.test_cli_process_reads_existing_state_and_prints_no_token) ... ok
+test_host_origin_and_duplicate_host_are_refused (tests.test_http_api.HTTPReadTests.test_host_origin_and_duplicate_host_are_refused) ... ok
+test_list_reset_after_concurrent_creation (tests.test_http_api.HTTPReadTests.test_list_reset_after_concurrent_creation) ... ok
+test_listing_snapshot_poll_observe_external_writer_without_mutation (tests.test_http_api.HTTPReadTests.test_listing_snapshot_poll_observe_external_writer_without_mutation) ... ok
+test_missing_database_is_never_recreated (tests.test_http_api.HTTPReadTests.test_missing_database_is_never_recreated) ... ok
+test_no_command_routes_or_paths (tests.test_http_api.HTTPReadTests.test_no_command_routes_or_paths) ... ok
+test_no_migration_and_sql_write_forbidden (tests.test_http_api.HTTPReadTests.test_no_migration_and_sql_write_forbidden) ... ok
+test_pagination_covers_all_missions_once (tests.test_http_api.HTTPReadTests.test_pagination_covers_all_missions_once) ... ok
+test_pending_recovery_and_database_guard_refused (tests.test_http_api.HTTPReadTests.test_pending_recovery_and_database_guard_refused) ... ok
+test_recovery_marker_added_after_start_blocks_reads (tests.test_http_api.HTTPReadTests.test_recovery_marker_added_after_start_blocks_reads) ... ok
+test_request_private_text_and_storage_errors_do_not_leak (tests.test_http_api.HTTPReadTests.test_request_private_text_and_storage_errors_do_not_leak) ... ok
+test_response_limit_is_explicit_and_server_remains_usable (tests.test_http_api.HTTPReadTests.test_response_limit_is_explicit_and_server_remains_usable) ... ok
+test_truncated_and_ambiguous_http_bodies (tests.test_http_api.HTTPReadTests.test_truncated_and_ambiguous_http_bodies) ... ok
+test_unconfigured_static_route_never_exposes_cwd (tests.test_http_api.HTTPReadTests.test_unconfigured_static_route_never_exposes_cwd) ... ok
+test_unknown_mission_is_distinct_from_corrupt_mission (tests.test_http_api.HTTPReadTests.test_unknown_mission_is_distinct_from_corrupt_mission) ... ok
+test_empty_short_large_unicode_and_multiline_refused (tests.test_http_api.TokenFileTests.test_empty_short_large_unicode_and_multiline_refused) ... ok
+test_private_valid_token (tests.test_http_api.TokenFileTests.test_private_valid_token) ... ok
+test_public_or_symlink_token_refused (tests.test_http_api.TokenFileTests.test_public_or_symlink_token_refused) ... ok
+test_startup_error_is_sanitized_and_creates_no_state (tests.test_http_api.TokenFileTests.test_startup_error_is_sanitized_and_creates_no_state) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.677s
+
+OK

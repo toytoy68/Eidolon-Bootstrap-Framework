@@ -1,0 +1,107 @@
+== A. jeton
+A1 sans Authorization: 401 UNAUTHORIZED
+A2 jeton erroné: 401 UNAUTHORIZED
+A3 Authorization dupliquée (bon + bon): 401 UNAUTHORIZED
+A4 jeton dans l'URL: 401 UNAUTHORIZED
+A5 schéma en minuscules 'bearer': 401 UNAUTHORIZED
+A6 deux espaces après Bearer: 401 UNAUTHORIZED
+A7 jeton + octet nul: 401 UNAUTHORIZED
+A8 jeton correct: 200 200-json
+== B. Host / Origin
+B1 sans Host: 403 HOST_REFUSED
+B2 Host autre: 403 HOST_REFUSED
+B3 Host dupliqué: 400 DUPLICATE_HEADER
+B4 Host LOCALHOST majuscules: 403 HOST_REFUSED
+B5 Host sans port: 403 HOST_REFUSED
+B6 Host [::1]: 403 HOST_REFUSED
+B7 Origin null: 403 ORIGIN_REFUSED
+B8 Origin autre: 403 ORIGIN_REFUSED
+B9 Origin https même hôte: 403 ORIGIN_REFUSED
+B10 Origin dupliqué: 400 DUPLICATE_HEADER
+B11 Origin exact: 200 200-json
+B12 Host localhost + Origin 127.0.0.1: 403 ORIGIN_REFUSED
+== C. URL
+C GET /v1/health?x=1: 404 NOT_FOUND
+C GET /v1/health/: 404 NOT_FOUND
+C GET //v1/health: 200 200-json
+C GET /v1/%68ealth: 404 NOT_FOUND
+C GET /../v1/health: 404 NOT_FOUND
+C GET /v1/./health: 404 NOT_FOUND
+C GET /v1/missions/M-E26FC369450146D2A570040172E5E5CA: 404 NOT_FOUND
+C GET /v1/missions/m-e26fc369450146d2a570040172e5e5ca/: 404 NOT_FOUND
+C GET http://127.0.0.1:45893/v1/health: 404 NOT_FOUND
+C GET /v1/health#f: 404 NOT_FOUND
+C long chemin 70 000: 414 HTTP_REQUEST_REJECTED
+== D. JSON
+D UTF-8 invalide: 400 INVALID_JSON
+D clé dupliquée: 400 INVALID_JSON
+D NaN: 400 INVALID_JSON
+D 1e400: 400 INVALID_JSON
+D profondeur 17: 400 INVALID_JSON
+D tableau racine: 400 INVALID_JSON
+D champ inconnu: 400 UNKNOWN_FIELD
+D limit true: 400 INVALID_PAGE_LIMIT
+D limit 0: 400 INVALID_PAGE_LIMIT
+D limit 101: 400 INVALID_PAGE_LIMIT
+D limit texte 5: 400 INVALID_PAGE_LIMIT
+D limit 2.0: 400 INVALID_PAGE_LIMIT
+D surrogate isolé: 400 INVALID_JSON
+D vide: 400 INVALID_JSON
+D poll sans curseur: 400 CURSOR_REQUIRED
+D poll curseur d'une autre mission: 400 CURSOR_MISSION_MISMATCH
+== E. corps
+E1 tronqué (CL=50, 10 octets, fermeture écriture): 400 INCOMPLETE_BODY
+   durée 0.00 s
+E2 8193 octets: 413 REQUEST_TOO_LARGE
+E3 octets en trop après CL: 200 200-json
+E4 requête collée après le corps : 200 200-json ; réponses HTTP dans le flux = 1
+E5 Content-Length dupliqué: 400 DUPLICATE_HEADER
+E6 chunked: 400 UNSUPPORTED_TRANSFER
+E7 GET avec corps: 400 UNEXPECTED_BODY
+E8 Content-Length négatif: 400 INVALID_CONTENT_LENGTH
+E9 type text/plain: 415 JSON_REQUIRED
+E10 type JSON charset latin-1: 415 JSON_REQUIRED
+== F. méthodes
+F PUT avec jeton: 405 METHOD_NOT_ALLOWED
+F DELETE avec jeton: 405 METHOD_NOT_ALLOWED
+F PATCH avec jeton: 405 METHOD_NOT_ALLOWED
+F OPTIONS avec jeton: 405 METHOD_NOT_ALLOWED
+F TRACE avec jeton: 405 METHOD_NOT_ALLOWED
+F HEAD avec jeton: 405 0 octets
+F FOO avec jeton: 405 METHOD_NOT_ALLOWED
+F get avec jeton: 405 METHOD_NOT_ALLOWED
+F CONNECT avec jeton: 405 METHOD_NOT_ALLOWED
+F OPTIONS préflight sans jeton: 403 ORIGIN_REFUSED
+== G. statique sans --web-root
+G GET /: 404 NOT_FOUND
+G GET /app.js: 404 NOT_FOUND
+G GET /style.css: 404 NOT_FOUND
+G GET /index.html: 401 UNAUTHORIZED
+G GET /../state/missions.sqlite3: 401 UNAUTHORIZED
+== H. garde de restauration ajoutée pendant l'exécution
+H1 marqueur présent: 503 STATE_UNAVAILABLE
+H2 marqueur retiré: 200 200-json
+J1 fichiers d'état modifiés par les sections A à H (API seule) : []
+== L. pagination / reset / poll après écriture d'une CLI distincte
+L1 page 1 : 2 items, has_more=True
+L2 page 2 après création par la CLI : RESET_REQUIRED STATE_CHANGED items=0
+L3 poll après annulation par la CLI : DELTA événements=['CANCEL_REQUESTED', 'CANCELLED'] statut=CANCELLED
+== M. client lent (limite connue : serveur mono-requête)
+M1 requête légitime pendant un client qui envoie un en-tête toutes les 2 s : - après 8.0 s
+M2 requête légitime derrière une connexion ouverte sans rien envoyer : 200 après 2.8 s
+== I. base absente / corrompue
+I démarrage base absente : refusé ValueError: STATE_NOT_FOUND ; fichiers=[]
+I démarrage base corrompue : refusé DatabaseError: file is not a database ; fichiers=['missions.sqlite3']
+I3 base remplacée par des zéros pendant l'exécution: 503 STATE_UNAVAILABLE
+== J. mutation
+J2 fichiers modifiés au total, CLI de L comprise : ['m-e26fc369450146d2a570040172e5e5ca.lock', 'missions.sqlite3']
+== K. fuites dans toutes les réponses
+K jeton : absent
+K chemin d'état : absent
+K texte privé de la requête : absent
+K Traceback : absent
+K sqlite : absent
+K SQL : absent
+K réponses examinées : 81
+== N. processus CLI : sorties
+N code=0 jeton dans stdout/stderr=non ; stdout=513 car. stderr=0 car.
