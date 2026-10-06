@@ -63,7 +63,42 @@ télémétrie n'est présentée comme une observation en direct.
 | `app.js` | Rendu et interactions ; uniquement des contrôles natifs (`button`, `select`, `input`, `textarea`) |
 | `styles.css` | Thème sombre, polices système, cibles de 44 px, animations coupées si le système le demande |
 | `tests/model.test.js` | 17 tests de transitions et d'absence d'envoi indu |
-| `tests/ui.test.js` | 10 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée |
+| `tests/commands.test.js` | 11 tests du suivi des commandes par clé (C-TASK-G013) |
+| `tests/ui.test.js` | 11 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013 |
+
+## Suivi des commandes (C-TASK-G013)
+
+Chaque demande envoyée (accord, refus, révocation, demande d'annulation) a sa
+propre entrée dans `client.commands`, identifiée par sa clé. Une nouvelle
+demande n'efface jamais l'incertitude d'une précédente.
+
+| Phase | Sens | Résolue ? |
+| --- | --- | --- |
+| `sending` | envoyée, pas encore d'accusé | non |
+| `unknown` | accusé perdu (coupure) : enregistrement à vérifier | non |
+| `checking` | consultation du reçu en cours | non |
+| `not-found` | reçu introuvable : **pas** la preuve que rien n'a eu lieu | non |
+| `acknowledged` | accusé ou reçu trouvé pour cette clé | oui |
+| `refused` | le serveur a répondu non à cette requête (proposition changée) | oui |
+
+- Une réponse (accusé ou reçu) ne touche que la commande de même clé. Une
+  réponse pour une clé inconnue ou déjà purgée est comptée (`strayReplies`) ;
+  un doublon ou une réponse tardive sur une commande résolue est compté
+  (`duplicateReplies`). Dans les deux cas, rien ne change et rien n'est émis.
+- Un événement de mission partagé ne vaut jamais réponse à une commande.
+- Aucun nouvel accord ni refus tant qu'une décision précédente n'est pas
+  résolue, même si la mission affiche déjà « accord enregistré ». Une
+  révocation ou une demande d'annulation reste possible : elle est suivie à part.
+  Un double clic n'envoie qu'une révocation et qu'une annulation.
+- Une coupure fait passer `sending` et `checking` à `unknown`, jamais à un renvoi.
+- **Rétention** : les commandes non résolues ne sont jamais purgées ; on garde
+  au plus 10 commandes résolues (les plus anciennes partent d'abord) et 50
+  entrées d'historique de décisions. La liste d'envoi (`outbox`) reste
+  complète : c'est la trace que vérifient les tests, pas un état d'interface.
+
+Ces règles suivent le contrat de reçus C-008b de Codex (`docs/COMMAND-RECEIPTS.md`) :
+un reçu introuvable n'autorise pas à réémettre. Les noms d'états et de messages
+restent ceux du prototype, pas ceux du contrat.
 
 ## Tests
 

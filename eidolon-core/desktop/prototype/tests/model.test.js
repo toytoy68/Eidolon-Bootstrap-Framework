@@ -12,15 +12,16 @@ const assert = require("node:assert/strict");
 const M = require("../model.js");
 
 const sent = (s, type) => s.client.outbox.filter((o) => !type || o.type === type);
+const cmd = (s, kind) => s.client.commands.filter((x) => !kind || x.kind === kind).slice(-1)[0];
 function steps(s, n) { for (let i = 0; i < n; i++) s = M.serverStep(s); return s; }
 function run(s, ...intents) { for (const i of intents) s = M.dispatch(s, typeof i === "string" ? { type: i } : i); return s; }
 
 test("approve sends one request and changes nothing before the acknowledgement", () => {
   let s = run(M.initialState("accord-succes"), "approve");
   assert.equal(sent(s, "DECIDE").length, 1);
-  assert.equal(s.client.command.phase, "sending");
+  assert.equal(cmd(s).phase, "sending");
   assert.equal(s.client.mission.proposal.status, "PENDING");
-  assert.match(M.commandLabel(s.client.command), /envoi en cours/);
+  assert.match(M.commandLabel(cmd(s)), /envoi en cours/);
   assert.equal(M.eye(s).mode, "attention");
   s = run(s, "approve");
   assert.equal(sent(s, "DECIDE").length, 1, "no second emission while one is in flight");
@@ -71,7 +72,7 @@ test("offline: nothing is sent or queued, drafts stay local", () => {
 test("lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission", () => {
   let s = steps(run(M.initialState("accuse-perdu"), "approve"), 1);
   assert.equal(s.client.connection, "offline");
-  assert.equal(s.client.command.phase, "unknown");
+  assert.equal(cmd(s).phase, "unknown");
   assert.equal(s.sim.mission.proposal.status, "APPROVED", "Core recorded it");
   assert.equal(s.client.mission.proposal.status, "PENDING", "the client does not know yet");
   s = run(s, "sim-reconnect", "approve");
@@ -80,10 +81,10 @@ test("lost acknowledgement: unknown decision, replay without duplicate, receipt 
   assert.ok(s.client.duplicatesIgnored >= 1);
   assert.equal(new Set(s.client.seen).size, s.client.seen.length);
   assert.equal(s.client.mission.proposal.status, "APPROVED");
-  assert.equal(s.client.command.phase, "unknown", "a shared event is not this client's receipt");
+  assert.equal(cmd(s).phase, "unknown", "a shared event is not this client's receipt");
   s = steps(run(s, "check-receipt"), 1);
-  assert.equal(s.client.command.phase, "acknowledged");
-  assert.equal(s.client.command.viaReceipt, true);
+  assert.equal(cmd(s).phase, "acknowledged");
+  assert.equal(cmd(s).viaReceipt, true);
   assert.equal(sent(s, "DECIDE").length, 1);
   s = steps(s, 2);
   assert.equal(s.client.mission.status, "SUCCEEDED");
@@ -182,7 +183,7 @@ test("a decision on a changed proposal is reported as not recorded", () => {
   let s = run(M.initialState("accord-succes"), "approve");
   s.sim.mission.revision += 1; // someone else changed the mission meanwhile
   s = steps(s, 1);
-  assert.equal(s.client.command.phase, "not-recorded");
+  assert.equal(cmd(s).phase, "refused");
   assert.equal(s.sim.mission.proposal.status, "PENDING");
 });
 

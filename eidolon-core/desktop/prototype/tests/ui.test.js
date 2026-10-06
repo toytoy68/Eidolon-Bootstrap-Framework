@@ -102,7 +102,7 @@ test("ui: keyboard alone reaches and uses the decision; the click shows sending,
     }
     assert.ok(reached, "Autoriser reachable with Tab");
     await page.keyboard.press("Enter");
-    assert.match(await page.textContent("#command-state"), /envoi en cours/);
+    assert.match(await page.textContent("#commands"), /envoi en cours/);
     assert.equal(await page.textContent("#decision-state"), "Accord attendu");
     await page.click("#server-step");
     assert.equal(await page.textContent("#decision-state"), "Accord enregistré — pas encore exécuté");
@@ -137,17 +137,42 @@ test("ui: lost acknowledgement flow through the interface", { skip }, async () =
     const { context, page } = await open(browser, "accuse-perdu");
     await page.click("#approve");
     await page.click("#server-step");
-    assert.match(await page.textContent("#command-state"), /à vérifier/);
+    assert.match(await page.textContent("#commands"), /à vérifier/);
     assert.equal(await page.locator("#approve").count(), 0, "no second decision offered");
     await shot(page, "03-accuse-perdu");
     await page.click("text=Rétablir la connexion");
     await page.click("#server-step");
-    assert.equal(await page.isDisabled("#check-receipt"), false);
-    await page.click("#check-receipt");
+    const receipt = page.locator("[data-intent=check-receipt]").first();
+    assert.equal(await receipt.isDisabled(), false);
+    await receipt.click();
     await page.click("#server-step");
-    assert.match(await page.textContent("#command-state"), /confirmé en consultant le reçu/);
+    assert.match(await page.textContent("#commands"), /confirmé en consultant le reçu/);
     const decides = await page.evaluate(() => window.EidolonPrototype.getState().client.outbox.filter((o) => o.type === "DECIDE").length);
     assert.equal(decides, 1);
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page } = await open(browser, "accuse-perdu");
+    await page.click("#approve");
+    await page.click("#server-step");
+    await page.click("text=Rétablir la connexion");
+    await page.click("#server-step");
+    await page.click("#revoke");
+    assert.equal(await page.locator("#commands li").count(), 2);
+    await page.click("#server-step");
+    const phases = await page.$$eval("#commands li", (items) => items.map((li) => li.dataset.phase));
+    assert.deepEqual(phases, ["unknown", "acknowledged"]);
+    const receipt = page.locator("#commands li[data-phase=unknown] [data-intent=check-receipt]");
+    assert.equal(await receipt.isDisabled(), false, "the approval's receipt is still reachable");
+    await shot(page, "08-g013-revocation-et-accord-incertain");
+    await receipt.click();
+    await page.click("#server-step");
+    const after = await page.$$eval("#commands li", (items) => items.map((li) => li.dataset.phase));
+    assert.deepEqual(after, ["acknowledged", "acknowledged"]);
     await context.close();
   } finally { await browser.close(); }
 });

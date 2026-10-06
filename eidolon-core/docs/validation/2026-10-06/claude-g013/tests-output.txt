@@ -1,0 +1,48 @@
+✔ G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable (4.619264ms)
+✔ G013: a cancellation request is allowed and tracked independently of the uncertain approval (0.713498ms)
+✔ G013: double click on revoke or cancel sends one request each (0.693079ms)
+✔ G013: no new decision while a previous one is unresolved, whatever the mission view shows (0.391664ms)
+✔ G013: out-of-order replies each settle their own command (0.502163ms)
+✔ G013: duplicate and late replies never change a resolved command or the history (1.733486ms)
+✔ G013: a reply for an unknown key is counted and changes nothing (0.354266ms)
+✔ G013: receipt not found keeps the command uncertain and blocks re-emission (0.532639ms)
+✔ G013: a server refusal is a definitive answer for that key only (0.418284ms)
+✔ G013: disconnection turns sending and checking into unknown, never into a resend (0.727971ms)
+✔ G013 retention: unresolved commands are never purged, resolved ones are bounded (1.390989ms)
+✔ approve sends one request and changes nothing before the acknowledgement (3.569357ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (1.308038ms)
+✔ refusal never leads to work or execution (1.502256ms)
+✔ offline: nothing is sent or queued, drafts stay local (0.656795ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (0.672046ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (2.02125ms)
+✔ revoking a recorded approval prevents execution (0.391433ms)
+✔ cancellation request before execution closes the mission without running it (0.557911ms)
+✔ review required: no automatic retry and no decision offered (0.519171ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.564715ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.478956ms)
+✔ local microphone stays signalled while Core is unreachable (0.132319ms)
+✔ closing the window decides and cancels nothing (0.168436ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.103796ms)
+✔ a decision on a changed proposal is reported as not recorded (0.143854ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.23133ms)
+✔ model functions are pure: the input state is never mutated (0.159771ms)
+✔ ui: no network request beyond the local files, no script error (1686.488819ms)
+✔ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (834.918043ms)
+✔ ui: offline disables sending with a visible reason (558.6063ms)
+✔ ui: lost acknowledgement flow through the interface (734.839376ms)
+✔ ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable (775.597491ms)
+✔ ui: locked session toast is generic and opens nothing (424.698491ms)
+✔ ui: microphone indicator survives a Core disconnection (351.342935ms)
+✔ ui: targets, contrast and horizontal overflow in every scenario and view (4429.074715ms)
+ℹ views audited: 35; worst contrast 4.70:1 (needs 4.5) on "Étape suivante de Core"
+✔ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (536.800421ms)
+✔ ui: reduced motion stops the eye animation (257.443586ms)
+✔ ui: assisted reading previews exactly what will be sent and requires a fresh review (652.956883ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11811.653754
