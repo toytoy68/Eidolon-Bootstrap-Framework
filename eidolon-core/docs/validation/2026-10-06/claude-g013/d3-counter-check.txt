@@ -1,0 +1,10 @@
+Contre-vérification D3 sur 476acc1 : probes_g011.py (G011, inchangé) avec PYTHONPATH=src, Python 3.11.15.
+Lignes Q4 concernées, puis différence avec la sortie G011 d'origine (hors durées et version) :
+  frozen reader clock 237.965, default 30 s        elapsed= 0.0s -> returned status=200 deadline_exceeded=False | (c+t)-c=30.00000000000003
+  frozen reader clock 238.0, default 30 s (control) elapsed= 0.0s -> returned status=200 deadline_exceeded=False
+  coordinator, reader clock frozen at 237.965 -> state=READ server_hits={'/p': 1}
+---
+42c42
+<   coordinator, reader clock frozen at 237.965 -> state=READER_ERROR server_hits={}
+---
+>   coordinator, reader clock frozen at 237.965 -> state=READ server_hits={'/p': 1}

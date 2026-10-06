@@ -1,0 +1,4 @@
+Sonde Codex d origine (inchangée) rejouée après G013 : code de sortie 1.
+AssertionError à probe-command.cjs:15 : before.phase vaut undefined, attendu unknown.
+Cause : le champ client.command n existe plus (remplacé par client.commands).
+Échec structurel, pas une mesure de comportement ; voir probe-command-adapted.cjs.

@@ -169,33 +169,40 @@
     var label = M.missionLabel(m);
     var p = m.proposal;
     var blocker = M.decisionBlocker(state);
-    var cmd = M.commandLabel(c.command);
+    var off = c.connection !== "online";
+    var openDecision = M.unresolvedCommands(state, "decision").length > 0;
     var actions = [];
-    if (p.status === "PENDING" && m.status === "BLOCKED" && !(c.command && c.command.phase !== "acknowledged" && c.command.phase !== "not-recorded")) {
+    if (p.status === "PENDING" && m.status === "BLOCKED" && !openDecision) {
       actions.push(btn("Autoriser", "approve", { kind: "primary", id: "approve", disabled: Boolean(blocker), describedby: blocker ? "decision-reason" : null }));
       actions.push(btn("Refuser", "reject", { id: "reject", disabled: Boolean(blocker), describedby: blocker ? "decision-reason" : null }));
     }
-    if (c.command && (c.command.phase === "unknown" || c.command.phase === "checking")) {
-      var off = c.connection !== "online";
-      actions.push(btn("Consulter le reçu", "check-receipt", { kind: "primary", id: "check-receipt",
-        disabled: off || c.command.phase === "checking", describedby: off ? "decision-reason" : null }));
-    }
     if (p.status === "APPROVED" && m.status === "BLOCKED") {
-      actions.push(btn("Révoquer l'accord", "revoke", { kind: "danger", id: "revoke", disabled: Boolean(M.sendBlocker(state)) }));
+      actions.push(btn("Révoquer l'accord", "revoke", { kind: "danger", id: "revoke",
+        disabled: Boolean(M.sendBlocker(state)) || M.unresolvedCommands(state, "revoke").length > 0 }));
     }
     if ((m.status === "RUNNING" || (m.status === "BLOCKED" && p.status === "APPROVED")) && !m.cancelRequested) {
-      actions.push(btn("Demander l'annulation de la mission", "request-cancel", { id: "request-cancel", disabled: Boolean(M.sendBlocker(state)) }));
+      actions.push(btn("Demander l'annulation de la mission", "request-cancel", { id: "request-cancel",
+        disabled: Boolean(M.sendBlocker(state)) || M.unresolvedCommands(state, "cancel").length > 0 }));
     }
     actions.push(btn("Voir les preuves", "set-tab", { arg: "missions", id: "see-evidence" }));
+    var uncertain = c.commands.some(function (x) { return x.phase === "unknown" || x.phase === "not-found"; });
     var reason = "";
-    if (c.command && c.command.phase === "unknown" && c.connection !== "online") reason = "Hors ligne : le reçu sera consultable au retour de la connexion.";
+    if (uncertain && off) reason = "Hors ligne : les reçus seront consultables au retour de la connexion.";
     else if (blocker && p.status === "PENDING" && m.status === "BLOCKED") reason = blocker;
     var notes = [];
     if (p.status === "USED") notes.push("Accord consommé : il ne peut plus être révoqué.");
     if (m.status === "REVIEW_REQUIRED") notes.push("Aucune relance automatique : l'effet de la première tentative doit d'abord être établi par une revue.");
-    if (c.command && c.command.phase === "unknown" && p.status !== "PENDING") {
-      notes.push("La mission indique une décision enregistrée ; seul le reçu dira si c'est la tienne.");
+    if (openDecision && p.status !== "PENDING") {
+      notes.push("La mission indique une décision enregistrée ; seul le reçu de ta demande dira si c'est la tienne.");
     }
+    var commands = c.commands.length ? '<h4 class="small">Demandes envoyées</h4><ul class="commands" id="commands" aria-label="Demandes envoyées">'
+      + c.commands.map(function (x) {
+        var check = (x.phase === "unknown" || x.phase === "not-found" || x.phase === "checking")
+          ? btn("Consulter le reçu", "check-receipt", { arg: x.key, id: "receipt-" + x.key, disabled: off || x.phase === "checking",
+            aria: "Consulter le reçu de la demande " + x.key }) : "";
+        return '<li class="command" id="command-' + esc(x.key) + '" data-phase="' + esc(x.phase) + '"><span>' + esc(M.commandLabel(x))
+          + ' <code class="muted">' + esc(x.key) + "</code></span>" + check + "</li>";
+      }).join("") + "</ul>" : "";
     return '<section class="card ' + (stateClass(m) === "wait" ? "awaiting" : "") + '" aria-labelledby="card-title">'
       + '<div class="card-head"><h3 id="card-title">' + esc(m.title) + ' <span class="synthetic">SIMULÉ</span></h3>'
       + '<span class="state ' + stateClass(m) + '" id="mission-state">' + esc(label.text) + "</span></div>"
@@ -207,7 +214,7 @@
       + '<dt>Accord</dt><dd id="decision-state">' + esc(M.DECISION_LABELS[p.status] || p.status) + "</dd>"
       + '<dt>Effet</dt><dd id="effect-state">' + esc(M.EFFECT_LABELS[m.effect] || m.effect) + "</dd>"
       + "</dl>"
-      + (cmd ? '<p class="command" role="status" id="command-state">' + esc(cmd) + "</p>" : "")
+      + commands
       + notes.map(function (n) { return '<p class="small">' + esc(n) + "</p>"; }).join("")
       + '<div class="row">' + actions.join("") + "</div>"
       + (reason ? '<p class="reason" id="decision-reason">' + esc(reason) + "</p>" : "")
@@ -339,7 +346,8 @@
     document.getElementById("app").innerHTML = renderApp();
     document.getElementById("windows").innerHTML = renderWindows();
     document.getElementById("dialog-root").innerHTML = renderDialog();
-    var live = [state.client.notice, M.commandLabel(state.client.command), M.eye(state).label].filter(Boolean).join(" ");
+    var live = [state.client.notice].concat(M.unresolvedCommands(state).map(M.commandLabel), [M.eye(state).label])
+      .filter(Boolean).join(" ");
     if (live !== lastLive) { document.getElementById("live").textContent = live; lastLive = live; }
     var target = focused && document.getElementById(focused);
     if (state.client.reading.open && !document.getElementById("reading-dialog").contains(target)) {
@@ -366,6 +374,7 @@
     var arg = el.getAttribute("data-arg");
     if (intent.type === "set-view") intent.view = arg;
     if (intent.type === "set-tab") intent.tab = arg;
+    if (intent.type === "check-receipt") intent.key = arg;
     act(intent);
   });
 

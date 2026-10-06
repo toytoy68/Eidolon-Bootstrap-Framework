@@ -22,6 +22,12 @@
   "use strict";
 
   var EPOCH = Date.UTC(2026, 9, 5, 14, 0, 0); // synthetic clock origin, labelled as such in the UI
+  // Commands awaiting a receipt are never purged; resolved ones are kept up to this bound.
+  var MAX_RESOLVED_COMMANDS = 10;
+  var MAX_DECISION_HISTORY = 50;
+  var UNRESOLVED = { sending: true, unknown: true, checking: true, "not-found": true };
+  var FAMILY = { approve: "decision", reject: "decision", revoke: "revoke", cancel: "cancel" };
+
   var PROPOSAL_SHA = "9f2c41d07ab35e18c6f0d2a4b7e91c5304f6a8d2e1b0c9f7a6e5d4c3b2a19081";
 
   function clone(value) {
@@ -128,7 +134,9 @@
       snapshotRequested: false,
       lastContact: 0,
       mission: null,             // projection built from events
-      command: null,             // the one decision in flight
+      commands: [],              // one entry per command key, until resolved (see purgeCommands)
+      strayReplies: 0,           // replies whose key this client never sent, or already purged
+      duplicateReplies: 0,       // repeated replies for an already resolved command
       decisionHistory: [],
       outbox: [],                // everything the client SENT (assertable)
       messages: [],
@@ -193,19 +201,63 @@
   }
 
   // Direct, unsequenced reply to the requesting client (acknowledgement or receipt).
-  // Shared mission events never carry a client's request key.
+  // Shared mission events never carry a client's request key. A reply only ever
+  // touches the command with the same key; it never triggers a new emission.
   function reply(state, message) {
     if (state.client.connection !== "online") return;
-    var c = state.client;
-    if (!c.command || c.command.key !== message.key) return;
+    receive(state.client, message, state.sim.minute);
+  }
+
+  function findCommand(c, key) {
+    for (var i = 0; i < c.commands.length; i++) if (c.commands[i].key === key) return c.commands[i];
+    return null;
+  }
+
+  function isUnresolved(command) {
+    return Boolean(UNRESOLVED[command.phase]);
+  }
+
+  function receive(c, message, minute) {
+    var command = findCommand(c, message.key);
+    if (!command) { c.strayReplies += 1; return; }
+    if (!isUnresolved(command)) { c.duplicateReplies += 1; return; }
     if (message.found) {
-      c.command.phase = "acknowledged";
-      c.command.receipt = message.receipt;
-      c.command.viaReceipt = message.type === "RECEIPT";
-      c.decisionHistory.push({ kind: c.command.kind, key: message.key, receipt: message.receipt });
+      command.phase = "acknowledged";
+      command.receipt = message.receipt;
+      command.viaReceipt = message.type === "RECEIPT";
+      command.resolvedMinute = minute;
+      c.decisionHistory.push({ kind: command.kind, key: command.key, receipt: message.receipt });
+      if (c.decisionHistory.length > MAX_DECISION_HISTORY) c.decisionHistory.shift();
+      purgeCommands(c);
+    } else if (message.type === "ACK") {
+      // The server answered this request and refused it (proposal changed or already decided).
+      command.phase = "refused";
+      command.resolvedMinute = minute;
+      purgeCommands(c);
     } else {
-      c.command.phase = "not-recorded";
+      // Receipt not found: NOT proof that nothing happened. Stays unresolved, never resent.
+      command.phase = "not-found";
     }
+  }
+
+  // Unresolved commands are always kept; only the oldest resolved ones are dropped.
+  function purgeCommands(c) {
+    var resolved = c.commands.filter(function (x) { return !isUnresolved(x); });
+    var excess = resolved.length - MAX_RESOLVED_COMMANDS;
+    if (excess <= 0) return;
+    var drop = resolved.slice(0, excess).map(function (x) { return x.key; });
+    c.commands = c.commands.filter(function (x) { return drop.indexOf(x.key) === -1; });
+  }
+
+  function unresolvedOf(c, family) {
+    return c.commands.filter(function (x) { return isUnresolved(x) && (!family || FAMILY[x.kind] === family); });
+  }
+
+  // Pure entry point for tests and future transports: deliver one direct reply.
+  function receiveReply(state, message) {
+    var s = clone(state);
+    receive(s.client, message, s.sim.minute);
+    return s;
   }
 
   // The client applies sequenced events once. A gap asks for a fresh snapshot.
@@ -366,7 +418,7 @@
 
   function goOffline(c) {
     c.connection = "offline";
-    if (c.command && c.command.phase === "sending") c.command.phase = "unknown";
+    c.commands.forEach(function (x) { if (x.phase === "sending" || x.phase === "checking") x.phase = "unknown"; });
   }
 
   // ---- Client intents -----------------------------------------------------------------------
@@ -376,7 +428,7 @@
     if (c.connection !== "online") return "Hors ligne : aucune décision ne peut partir, et rien n'est mis en file.";
     if (c.session !== "open") return "Session verrouillée : déverrouille Windows pour voir et décider.";
     if (!c.windowOpen) return "Ouvre la fenêtre d'Eidolon pour décider.";
-    if (c.command && c.command.phase !== "acknowledged") return "Une demande est déjà en cours ; attends son accusé ou consulte son reçu.";
+    if (unresolvedOf(c, "decision").length) return "Une décision précédente n'est pas réconciliée : consulte son reçu ; rien n'est renvoyé.";
     if (!m || m.proposal.status !== "PENDING" || m.status !== "BLOCKED") return "Aucune décision n'est attendue sur cette proposition.";
     return null;
   }
@@ -386,6 +438,11 @@
     if (c.connection !== "online") return "Hors ligne : rien n'est envoyé ni mis en file.";
     if (c.session !== "open") return "Session verrouillée.";
     return null;
+  }
+
+  function newCommand(kind, key, minute) {
+    return { kind: kind, key: key, phase: "sending", receipt: null, viaReceipt: false,
+      sentMinute: minute, resolvedMinute: null };
   }
 
   function newKey(state) {
@@ -403,7 +460,7 @@
         blocked = decisionBlocker(s);
         if (blocked) { c.notice = blocked; return s; }
         var key = newKey(s);
-        c.command = { kind: intent.type, key: key, phase: "sending", receipt: null };
+        c.commands.push(newCommand(intent.type, key, s.sim.minute));
         c.outbox.push({ type: "DECIDE", decision: intent.type, key: key, proposalSha: m.proposal.sha256,
           expectedRevision: m.revision, minute: s.sim.minute });
         return s;
@@ -416,27 +473,39 @@
             : "Aucun accord révocable.";
           return s;
         }
+        if (unresolvedOf(c, "revoke").length) {
+          c.notice = "Une révocation est déjà en cours ; elle n'est pas renvoyée.";
+          return s;
+        }
         var rk = newKey(s);
-        c.command = { kind: "revoke", key: rk, phase: "sending", receipt: null };
+        c.commands.push(newCommand("revoke", rk, s.sim.minute));
         c.outbox.push({ type: "REVOKE", key: rk, minute: s.sim.minute });
         return s;
       case "request-cancel":
         blocked = sendBlocker(s);
         if (blocked) { c.notice = blocked; return s; }
+        if (unresolvedOf(c, "cancel").length) {
+          c.notice = "Une demande d'annulation est déjà en cours ; elle n'est pas renvoyée.";
+          return s;
+        }
         if (!m || !(m.status === "RUNNING" || m.status === "BLOCKED") || m.cancelRequested) {
           c.notice = "Aucune annulation possible pour cet état de mission.";
           return s;
         }
         var ck = newKey(s);
-        c.command = { kind: "cancel", key: ck, phase: "sending", receipt: null };
+        c.commands.push(newCommand("cancel", ck, s.sim.minute));
         c.outbox.push({ type: "CANCEL_REQUEST", key: ck, minute: s.sim.minute });
         return s;
-      case "check-receipt":
-        if (!c.command || (c.command.phase !== "unknown" && c.command.phase !== "checking")) return s;
+      case "check-receipt": {
+        // A receipt query reads; it never re-emits the command itself.
+        var target = intent.key ? findCommand(c, intent.key)
+          : c.commands.filter(function (x) { return x.phase === "unknown" || x.phase === "not-found"; })[0];
+        if (!target || (target.phase !== "unknown" && target.phase !== "not-found")) return s;
         if (c.connection !== "online") { c.notice = "Hors ligne : le reçu sera consultable au retour de la connexion."; return s; }
-        c.command.phase = "checking";
-        c.outbox.push({ type: "RECEIPT_QUERY", key: c.command.key, minute: s.sim.minute });
+        target.phase = "checking";
+        c.outbox.push({ type: "RECEIPT_QUERY", key: target.key, minute: s.sim.minute });
         return s;
+      }
       case "close-window":
         c.windowOpen = false; // closes the window only: no decision, no mission change
         return s;
@@ -591,7 +660,8 @@
         + (command.viaReceipt ? ", confirmé en consultant le reçu." : ".");
       case "unknown": return what + " : enregistrement à vérifier. L'accusé n'est pas arrivé ; rien n'a été renvoyé.";
       case "checking": return what + " : consultation du reçu en cours.";
-      case "not-recorded": return what + " : le serveur n'a rien enregistré (proposition changée ou déjà décidée).";
+      case "not-found": return what + " : reçu introuvable. Ce n'est pas la preuve que rien n'a eu lieu ; rien n'est renvoyé.";
+      case "refused": return what + " : refusé par le serveur (proposition changée ou déjà décidée).";
       default: return null;
     }
   }
@@ -645,6 +715,8 @@
     SCENARIOS: SCENARIOS, initialState: initialState, dispatch: dispatch, serverStep: serverStep,
     applyEvent: applyEvent, eye: eye, indicators: indicators, missionLabel: missionLabel,
     commandLabel: commandLabel, decisionBlocker: decisionBlocker, sendBlocker: sendBlocker,
+    receiveReply: receiveReply, unresolvedCommands: function (state, family) { return unresolvedOf(state.client, family); },
+    MAX_RESOLVED_COMMANDS: MAX_RESOLVED_COMMANDS,
     nextServerStep: nextServerStep, toastText: toastText, clockLabel: clockLabel,
     syntheticTime: syntheticTime, DECISION_LABELS: DECISION_LABELS, EFFECT_LABELS: EFFECT_LABELS
   };
