@@ -132,13 +132,18 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   page lue à une réponse démontrée ou à une source indépendante.
 - [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
-- [ ] Attente/quotas durables par fournisseur, artefacts persistants, intégration
+- [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
+  explicite versionnée, audit, CLI et démo sans réseau. [Contrat](docs/RESEARCH-PAUSES.md).
+- [ ] Journal préalable des appels Web en vol : interruption avant commit d'une
+  pause à réconcilier avant toute reconstruction/reprise réelle du coordinateur.
+- [ ] Quotas globaux et rétention du journal, artefacts persistants, intégration
   mission et critères de qualité distincts du seul nombre de pages lues.
 
 - [x] G008 : D1 attente 429/503 ambiguë, D2 base de temps et C5 redirection
   sans destination corrigés ; dix tests nouveaux, 303 réussis / 6 sautés.
 - [x] Claude G011 : contre-revue indépendante de ces correctifs.
-- [ ] Suites G008 : L1 délai dur, L2 suspensions durables, L3 paramètres TLS,
+- [ ] Suites G008 : L1 délai dur, L2 interruptions avant persistance (pauses commises
+  couvertes par C-002c), L3 paramètres TLS,
   C1 cache tardif/annulé et C4 minimisation des URL ; C2/C3 explicités dans le
   contrat. [Tri](docs/validation/2026-10-05/codex-g008-fixes/README.md).
 

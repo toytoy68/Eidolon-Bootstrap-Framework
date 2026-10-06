@@ -450,3 +450,20 @@ permet arrêt/délai, **pas un bac à sable de sécurité**. Aucune extension no
 commande shell, réseau ou effet externe n'est exposé. Les permissions sont
 indépendantes du contenu du modèle et des sources ; cela ne constitue pas une
 qualification générale contre les injections pour un futur LLM.
+
+
+### Suspensions Web persistantes (C-002c)
+
+Le coordinateur candidat accepte une base `ResearchPauses` optionnelle. Les pauses
+commises par fournisseur ou origine survivent à sa reconstruction ; leur levée
+locale exige une révision, un acteur et une raison et n'envoie aucune requête.
+Sans ce paramètre, les anciens exemples conservent leurs pauses RAM. Aucun
+fournisseur réel ni droit réseau nouveau. [Contrat et limites](docs/RESEARCH-PAUSES.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.research_pauses_demo --format human
+```
+
+`research-pauses` consulte une base existante, `research-release` lève une pause
+après revue explicite. Une réponse reçue mais non commise avant un crash reste
+une interruption à examiner ; aucun redémarrage aveugle garanti sûr.

@@ -23,6 +23,7 @@ import time
 
 from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
+from .research_pauses import ResearchPauses, PauseStorageError, provider_scope, origin_scope
 
 FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
             "POLICY_REFUSED", "TOO_LARGE", "TRUNCATED", "UNSUPPORTED_CONTENT", "INVALID_RESPONSE", "TLS_ERROR",
@@ -159,8 +160,10 @@ class ResearchCoordinator:
     reader.read(canonical_url, policy) -> Page; reader.reader_id
     Reader MUST enforce policy on every redirect/actual connection. This class
     prechecks candidates and checks the final URL but cannot sandbox a provider.
+    Optional ResearchPauses persists refusals until explicit local review/release.
+    Without it, legacy cooldowns remain RAM-only; no durability is claimed.
     """
-    def __init__(self, providers, reader, *, resolver, policy=None, limits=None, clock=time.monotonic):
+    def __init__(self, providers, reader, *, resolver, policy=None, limits=None, clock=time.monotonic, pauses=None):
         if not isinstance(providers, (list, tuple)) or not 1 <= len(providers) <= 8:
             raise ContractError("one to eight providers required")
         identities = [p.provider_id for p in providers]
@@ -174,8 +177,25 @@ class ResearchCoordinator:
             raise ContractError("invalid research configuration")
         self.clock, self._cache, self._cooldowns = clock, OrderedDict(), {}
         self._pause_until = 0
+        if pauses is not None and not isinstance(pauses, ResearchPauses):
+            raise ContractError("invalid persistent pause store")
+        self.pauses, self._pause_fault = pauses, False
+
+    def _persistent(self, operation, *args, **kwargs):
+        if self._pause_fault:
+            raise PauseStorageError("PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse")
+        if self.pauses is None:
+            return None
+        try:
+            return getattr(self.pauses, operation)(*args, **kwargs)
+        except PauseStorageError:
+            self._pause_fault = True
+            raise  # never turn failed persistence into a fallback or empty gate
+
 
     def _rate_limit(self, domain, retry_after, review=False, state="RATE_LIMITED"):
+        if self.pauses is not None:
+            return  # durable gate owns release, including after coordinator reconstruction
         until = float("inf") if review else self.clock() + (retry_after if retry_after is not None else 60)
         if len(self._cooldowns) >= 64 and domain not in self._cooldowns:
             # Bound memory without forgetting an active refusal: pause all reads.
@@ -185,6 +205,8 @@ class ResearchCoordinator:
             self._cooldowns[domain] = (until, state, review)
 
     def run(self, query, *, required_pages=1, cancelled=lambda: False):
+        if self._pause_fault:
+            raise PauseStorageError("PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse")
         _text(query, 1000)
         if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
             raise ContractError("required_pages must fit the read budget")
@@ -211,6 +233,8 @@ class ResearchCoordinator:
             interrupted = stop()
             if interrupted:
                 raise AccessFailure("CANCELLED" if interrupted == "CANCELLED" else "TIMEOUT")
+            if self._persistent('active', origin_scope(decision.host, decision.port)):
+                raise AccessFailure("RETRY_WAIT")
             until = self._cooldowns.get((decision.host, decision.port), (0,))[0]
             if max(self._pause_until, until) > self.clock():
                 raise AccessFailure("RETRY_WAIT")
@@ -220,6 +244,15 @@ class ResearchCoordinator:
                 break
             provider_record = {"provider_id": provider.provider_id, "status": "OK"}
             report["providers"].append(provider_record)
+            held = self._persistent('active', provider_scope(provider.provider_id))
+            if held:
+                provider_record.update(status="RETRY_WAIT", pause_id=held['id'], pause_revision=held['revision'],
+                                       retry_review_required=True)
+                continue
+            interrupted = stop()  # SQLite gate lookup may itself consume the remaining budget.
+            if interrupted:
+                provider_record['status'] = interrupted
+                break
             try:
                 hits = list(islice(provider.search(query, self.limits.hits_per_provider),
                                    self.limits.hits_per_provider + 1))
@@ -231,7 +264,12 @@ class ResearchCoordinator:
                     _text(hit.url, 2048); _text(hit.title, 500); _text(hit.snippet, 1000, empty=True)
                 if not hits:
                     provider_record["status"] = "EMPTY"
+            except PauseStorageError:
+                raise
             except AccessFailure as exc:
+                if exc.code in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE"} or exc.retry_after is not None:
+                    self._persistent('pause', [provider_scope(provider.provider_id)],
+                                     reason=exc.code if exc.code in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE"} else "RETRY_WAIT", retry_after=exc.retry_after)
                 provider_record.update(status=exc.code, retry_after=exc.retry_after)
                 continue
             except Exception:
@@ -269,11 +307,18 @@ class ResearchCoordinator:
                 else:
                     self._cache.pop(key, None)
                     domain = (decision.host, decision.port)
+                    held = self._persistent('active', origin_scope(*domain))
+                    if held:
+                        source.update(state="RETRY_WAIT", pause_id=held['id'], pause_revision=held['revision'],
+                                      retry_review_required=True)
+                        continue
                     until, waiting_state, review = self._cooldowns.get(domain, (0, "RETRY_WAIT", False))
                     if max(self._pause_until, until) > self.clock():
                         source.update(state=waiting_state,
                                       retry_review_required=review or self._pause_until == float("inf"))
                         continue
+                    if stop():
+                        continue  # no read after a slow gate lookup exhausts the budget
                     if report["read_calls"] >= self.limits.reads:
                         source["state"] = "READ_BUDGET"
                         continue
@@ -309,6 +354,12 @@ class ResearchCoordinator:
                         late_receipt = late_receipt or page.deadline_exceeded
                         if retrieval is not None:
                             source["retrieval"] = retrieval
+                        if (state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"}
+                                or page.retry_after is not None or page.retry_review_required):
+                            pause_reason = state if state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"} else "RETRY_WAIT"
+                            self._persistent('pause', [origin_scope(*domain), origin_scope(final.host, final.port)],
+                                             reason=pause_reason, retry_after=page.retry_after,
+                                             review=page.retry_review_required)
                         if state == "RATE_LIMITED" or page.retry_after is not None or page.retry_review_required:
                             wait_state = "RATE_LIMITED" if state == "RATE_LIMITED" else "RETRY_WAIT"
                             self._rate_limit(domain, page.retry_after, page.retry_review_required, wait_state)
@@ -327,7 +378,11 @@ class ResearchCoordinator:
                                 self._cache[key] = (self.clock() + self.limits.cache_seconds, snapshot(evidence))
                             while len(self._cache) > self.limits.cache_entries:
                                 self._cache.popitem(last=False)
+                    except PauseStorageError:
+                        raise
                     except AccessFailure as exc:
+                        if exc.code in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE"} or exc.retry_after is not None:
+                            self._persistent('pause', [origin_scope(*domain)], reason=exc.code if exc.code in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE"} else "RETRY_WAIT", retry_after=exc.retry_after)
                         source.update(state=exc.code, retry_after=exc.retry_after)
                         if exc.code == "RATE_LIMITED":
                             self._rate_limit(domain, exc.retry_after)

@@ -15,7 +15,7 @@ une nouvelle attribution ; signaler un blocage et prendre un lot indépendant.
 Ne pas recommencer G010/G014/G016 : intégrés et clos pour leurs livrables.
 Le suivi des tests, des livraisons et des défauts prime sur un simple statut.
 
-Travail Codex réservé : C-002b, suspensions Web persistantes ; research_pauses.py,
+Travail Codex réservé : C-002c, suspensions Web persistantes ; research_pauses.py,
 research.py, CLI et tests Python. Claude garde desktop/prototype/ et ses revues
 sous docs/validation/. Branches/checkouts distincts, aucune modification main.
 

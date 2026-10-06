@@ -148,3 +148,13 @@ et les tests VM restent différés. Les hypothèses de G007 sont intégrées com
 propositions ; son corpus a été exécuté par Claude sur `99641df` (C018), résultat rapporté
 non requalifié par ce lot de correctifs du transport. READ_TARGET_MET ne peut pas être traduit en ANSWERED sans contrat
 supplémentaire sur la question, ses sources et les contradictions.
+
+
+## Complément C-002c — pauses persistantes optionnelles
+
+[ResearchPauses](RESEARCH-PAUSES.md) peut être fourni au coordinateur pour
+conserver les suspensions par fournisseur/origine. WebReader utilise le contrôle
+avant chaque saut déjà présent ; aucun transport ni identité réseau modifiés.
+Avec cette option, toutes les pauses exigent une levée explicite. Sans elle,
+les pauses décrites dans le présent document restent en RAM. La persistance ne
+couvre pas une réponse perdue avant son enregistrement : voir les limites du lot.

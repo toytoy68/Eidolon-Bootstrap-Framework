@@ -1,0 +1,7 @@
+{
+  "src/eidolon_core/research_pauses.py": "4ddd688f54d1969fb7c4563044747a82aedd61f9b1802efae73cf66906ed3cbe",
+  "src/eidolon_core/research.py": "f5fac2a21ee3a7d16dfede1b8e1eface70acfc4259cc8bc804e748f4cf434ecf",
+  "src/eidolon_core/cli.py": "51f236985818ca47b0ed373776295362f50add7966f0a2db8d6bf1448ac1f21b",
+  "tests/test_research_pauses.py": "fc1fa85a16331a745c9fad0f8161ef71830b2a1611b6fc67a9022e6b7a8654d0",
+  "examples/research_pauses_demo.py": "f23c308ddf3bd9cca4c4fe1145af5942c407ef51e45c65af35c0d2a3a4b57880"
+}
