@@ -61,6 +61,15 @@ function makeFixture() {
   return { dir, state: path.join(out, "state"), token, tokenFile, manifest, role };
 }
 
+// n extra NEW missions in ONE Python process (the CLI would start n processes). Same Runtime.create
+// as `eidolon_core create`; requests are synthetic and numbered.
+function bulkCreate(state, n) {
+  const code = "import sys\nfrom eidolon_core.store import Store\nfrom eidolon_core.runtime import Runtime\n"
+    + "r = Runtime(Store(sys.argv[1]))\nfor i in range(int(sys.argv[2])): r.create('mission synthétique de banc %04d' % i)\n";
+  const r = spawnSync(PYTHON, ["-c", code, state, String(n)], { cwd: CORE, env: ENV, encoding: "utf8" });
+  if (r.status !== 0) throw new Error("bulkCreate failed: " + r.stderr);
+}
+
 function startServer(env, webRoot) {
   return new Promise((resolve, reject) => {
     const args = ["-m", "eidolon_core.http_api", "--state", env.state, "--token-file", env.tokenFile, "--port", "0"];
@@ -110,4 +119,4 @@ async function cleanup({ browser, servers = [], dirs = [] }) {
 }
 
 module.exports = { CORE, WEB_ROOT, PYTHON, CAPTURES, ENV, chromium, chromiumUnavailable, hasPython, noPython,
-  cli, makeState, makeFixture, startServer, stop, nodeTransport, cleanup };
+  cli, makeState, makeFixture, bulkCreate, startServer, stop, nodeTransport, cleanup };

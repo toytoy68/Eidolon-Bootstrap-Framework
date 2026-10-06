@@ -57,6 +57,8 @@ avec un délai de 10 s.
 | `tests/session.test.js` | 20 tests sur transport scripté (fixtures), dont 6 reçus |
 | `tests/server.test.js` | 6 tests sur le **vrai serveur** Python et dans Chromium |
 | `tests/receipts.test.js` | 3 tests reçus sur le vrai serveur et le jeu bêta C-009g (dont 1 Chromium) |
+| `tests/a11y.test.js` | 8 tests Chromium : clavier, focus, zoom 200 %, 320×640, contraste, mouvement réduit (G037) |
+| `tests/integration/e2e.test.js` | 6 tests de bout en bout : pagination réelle, troncature à 200, reset entre deux pages, absence de réémission, nettoyage sur échec, 150 missions dans Chromium (G038) |
 | `tests/helpers.js` | outils partagés des bancs réels (CLI, jeu bêta, serveur, nettoyage) |
 
 Le serveur ne sert que trois fichiers (`/`, `/app.js`, `/style.css`) : d'où le
@@ -66,7 +68,7 @@ fichier unique `app.js`. Après toute modification d'une source :
 cd eidolon-core
 node desktop/connected/build.js          # régénère app.js
 node desktop/connected/build.js --check  # échoue si app.js est en retard
-NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/*.test.js"
+NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/**/*.test.js"
 ```
 
 Sans Python 3.11, sans Playwright ou sans exécutable Chromium, les tests concernés sont marqués

@@ -804,6 +804,12 @@
             return;
           }
           state.lastSuccessAt = meta.receivedAt;
+          if (state.list.items.length >= L.MAX_ITEMS && state.list.nextCursor) {
+            // G038: the display bound is reached; a further page would be read then discarded.
+            state.list = clone(state.list);
+            state.list.truncated = true;
+            state.list.nextCursor = null;
+          }
         } else if (r.code) {
           state.list = L.receiveError(state.list, r.code, meta);
         }
