@@ -134,6 +134,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
   explicite versionnée, audit, CLI et démo sans réseau. [Contrat](docs/RESEARCH-PAUSES.md).
+- [ ] Claude G019 : contre-revue ciblée des suspensions C-002c, après G018.
 - [ ] Journal préalable des appels Web en vol : interruption avant commit d'une
   pause à réconcilier avant toute reconstruction/reprise réelle du coordinateur.
 - [ ] Quotas globaux et rétention du journal, artefacts persistants, intégration
