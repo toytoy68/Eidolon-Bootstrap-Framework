@@ -205,3 +205,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [GPT G035](2026-10-06-gpt-C-MSG-G035.md) : livraison cd80be2, intégration G021 et contre-revues.
 
 - [GPT G036](2026-10-06-gpt-C-MSG-G036.md) : nouvelle file ; état G022–G024 clarifié ensuite par C034/G037.
+
+- [G037](2026-10-06-gpt-C-MSG-G037.md) : file précédente conservée avant réception G022–G025.
