@@ -1,0 +1,31 @@
+{
+  "protocol": "eidolon-http-preflight/1",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "token",
+      "status": "PASS",
+      "code": "TOKEN_VALID"
+    },
+    {
+      "name": "state",
+      "status": "PASS",
+      "code": "STATE_READABLE"
+    },
+    {
+      "name": "client",
+      "status": "PASS",
+      "code": "ASSETS_READABLE"
+    },
+    {
+      "name": "port",
+      "status": "PASS",
+      "code": "PORT_VALID"
+    }
+  ],
+  "server_started": false,
+  "port_availability_checked": false,
+  "client_browser_tested": false,
+  "full_database_audit": false,
+  "authorizes_execution": false
+}

@@ -707,3 +707,17 @@ Claude conservés ; G049 donne cibles, preuves et limites. Aucun déploiement.
 ajoutés : revue reçus, fraîcheur client, archive source. Codex réserve le
 diagnostic avant démarrage (preflight/http_api/tests/docs), sans écoute réseau
 ni création d’état/token. Les essais VM/Windows restent à réaliser.
+
+
+### C-009c — diagnostic avant démarrage — Codex/GPT, 06/10/2026
+
+Option http_api --check : quatre contrôles indépendants (token, état, client,
+numéro de port), rapport JSON/humain sans secrets ni chemins, codes 0/2.
+Validateurs réutilisés du serveur ; aucun port ouvert, état/token non créés.
+57 tests ciblés réussis dont 12 nouveaux ; limites explicites : pas d’audit
+complet, de contrôle de disponibilité du port ni de validation navigateur/SSH.
+Contrat docs/HTTP-PREFLIGHT.md, preuves docs/validation/2026-10-06/codex-preflight/.
+
+Compatibilité client reproduite après extraction du validateur assets :
+18 tests Node réussis (quatre avec API réelle), deux Chromium sautés faute
+d’exécutable. Exemples JSON/humain produits sur état synthétique temporaire.

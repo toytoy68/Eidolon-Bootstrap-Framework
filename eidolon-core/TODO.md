@@ -366,3 +366,14 @@ les anciennes files ci-dessus restent des états historiques.
 - [x] 87 tests ciblés réussis, dont 20 nouveaux ; démo HTTP réelle sur données
   synthétiques, sans exécution d’outil. [Preuves](docs/validation/2026-10-06/codex-http-receipts/README.md).
 - [ ] Raccordement client G036 et validation sur serveur/PC réels.
+
+
+## C-009c — diagnostic de consultation — 06/10/2026
+
+- [x] Nouvelles fiches Claude G042–G044 publiées, anciens lots conservés.
+- [x] `http_api --check` : diagnostic local JSON/humain, validateurs partagés,
+  absence de création d’état/token ou d’écoute réseau vérifiée.
+- [x] 57 tests Python ciblés réussis, dont 12 nouveaux.
+- [ ] G035/G040 : intégrer cette étape à la recette et au lanceur candidat.
+
+Voir docs/HTTP-PREFLIGHT.md et docs/validation/2026-10-06/codex-preflight/.
