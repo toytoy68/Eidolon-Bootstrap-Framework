@@ -1,0 +1,43 @@
+python 3.11.15 sqlite 3.45.1
+
+== 1 pause survives reconstruction; delays, stale revision, new refusal after release, audit
+  429 RA=30: run1 RATE_LIMITED | rebuilt run2 RETRY_WAIT | exchanges=1 | not_before-observed=30s rev=1
+  release at +10 s -> ContractError: RETRY_DELAY_PENDING
+  later 429 RA=5 keeps the longest known minimum: not_before still +30s from first, rev=2
+  release with the OLD revision -> ContractError: STALE_PAUSE: inspect the new observation before release
+  release with current revision -> {"protocol": "eidolon-research-pauses/1", "status": "RELEASED", "pause_id": "p-b5b42623307a7806c009af51767691df713bd1a8e62ad60acf11014196601708", "revision": 3, "authorizes_execution": false, "request_sent": false} | exchanges during release: 0
+  after release: run3 ACCESS_DENIED (1 new exchange) -> new pause ACCESS_DENIED rev=4 | run4 RETRY_WAIT | exchanges total=2
+  audit events=4 kinds=['OBSERVED', 'OBSERVED', 'RELEASED', 'OBSERVED'] | query text in pause DB=False body in pause DB=False | body or query in reports=False
+  429 ambiguous Retry-After: reason=RATE_LIMITED review_required=True not_before=+60s | immediate release -> ContractError: RETRY_DELAY_PENDING
+  503 ambiguous Retry-After: reason=RETRY_WAIT review_required=True not_before=None | immediate release -> {'protocol': 'eidolon-research-pauses/1', 'status': 'RELEASED', 'pause_id': 'p-b5b42623307a7806c009af51767691d
+  provider 429 RA=120: provider searched 1 time(s) over two rebuilt coordinators | paused=True
+
+== 2 redirect origins, blocked hop before connection, capacity without eviction
+  302 -> mirror 429: exchanges=['docs.example', 'mirror.example'] paused docs=True mirror=True | OBSERVED events=2 same timestamp=True
+  fresh -> 302 -> paused mirror: exchanges=['fresh.example'] source=RETRY_WAIT
+  table full (256, one released): run1 -> PauseStorageError: PAUSE_CAPACITY_REACHED | rebuilt run2 -> PauseStorageError: PAUSE_CAPACITY_REACHED | exchanges with the refusing origin=2
+  table full, an origin that does not refuse -> report READ status=READ_TARGET_MET
+
+== 3 storage absent, corrupt, failing inside the reader hop check, locked after the response
+  file deleted -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE | again same coordinator -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse | provider searches=0 exchanges=0 recreated=False
+  corrupt record -> PauseStorageError: INVALID_PAUSE_RECORD | exchanges=0
+  garbage file -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE
+  storage fails in the reader's hop check -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE | exchanges=0 | next run -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse
+  pause DB locked >5 s right after a 429 -> PauseStorageError: PAUSE_STORAGE_UNAVAILABLE | rebuilt coordinator -> report RATE_LIMITED status=NO_READABLE_SOURCE | exchanges=2
+
+== 4 release, policy after release, slow lookups vs the research budget, wall clock
+  released, but the origin now resolves private -> POLICY_REFUSED reason=DESTINATION_NOT_GLOBAL exchanges=0
+  each lookup costs 6 s, budget 10 s: exchanges=0 source=DISCOVERED status=DEADLINE elapsed=12s
+  each lookup costs 6 s, budget 13 s: exchanges=1 source=READ status=DEADLINE elapsed=18s
+  wall clock back 120 s: new observation -> PauseStorageError: PAUSE_CLOCK_REGRESSION | release -> ContractError: PAUSE_CLOCK_REGRESSION
+  wall clock forward past the minimum: active still=True (no automatic release) | explicit release -> 'RELEASED'
+
+== 5 cache and cancellation
+  origin paused after a cached read: same coordinator -> READ cache_hit=True exchanges=1 | new coordinator -> RETRY_WAIT exchanges=1
+  cancelled after the first hop: exchanges=['docs.example'] source=CANCELLED status=CANCELLED
+
+== 6 CLI on the synthetic copy
+  research-pauses           exit=0 traceback=False | {"audit_events":1,"authorizes_execu
+  release, stale revision   exit=2 traceback=False | {"error":"ContractError","message":"STALE_PAUSE: inspect the new observation before release"}
+  release, current revision exit=0 traceback=False | {"authorizes_execution":false,"pause_id":"p-b5b42623307a7806c009af51767691df713bd1a8e62ad60acf11014196601708","protocol"
+  research-pauses, no DB    exit=2 created=False | {"error":"FileNotFoundError","message":"research pauses require an existing pause database
