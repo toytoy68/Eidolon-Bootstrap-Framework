@@ -118,3 +118,10 @@ G012 reçu dans cc9a64b et intégré comme candidat ; trois écarts reproduits.
 avant G014/G015 si aucun lot déjà engagé. G014 et G015 restent distincts, G010
 reste ouverte. Codex livre C-008d (copie historique bloquée pour exécution) et
 conserve les sources Python. Aucune réponse à G016 présumée.
+
+## État courant — C-MSG-G028, 06/10/2026
+
+G010 en cours selon toytoy : terminer cette étude. G014/cb15c33 reçu, intégré,
+sondes reproduites sur cible figée. Après G010 : G016 (correctifs du prototype),
+G015 (annulation), nouveau [G017](C-TASK-G017.md) (copies historiques C-008d).
+Codex prend C-008e, inventaire paginé local des missions, hors prototype.

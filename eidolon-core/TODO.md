@@ -151,7 +151,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   absent). Aucune application Windows livrée.
 - [x] Claude G013 : suivi séparé des commandes incertaines livré dans deef553 ;
   28 tests Node et sonde adaptée reproduits ; 11 UI réussis rapportés par Claude.
-- [ ] Claude G010 : comparaison Tauri/PySide/Electron et recette Windows ;
+- [ ] Claude G010 (en cours selon toytoy, 06/10) : comparaison Tauri/PySide/Electron et recette Windows ;
   framework non choisi, mesures OS et installation différées.
 - [x] C-008a : projection locale cohérente, curseur durable, rattrapage paginé,
   reset explicite, CLI et démo sans réseau ; 19 tests nouveaux.
@@ -163,8 +163,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] C-008b : reçus atomiques approve/reject/revoke locaux, consultation et
   déduplication, annulation avant commit protégée ; 22 nouveaux tests.
   [Contrat](docs/COMMAND-RECEIPTS.md). Aucun effet externe, reçu != résultat.
-- [ ] Claude G014 : contre-revue des reçus, atomicité/coupures et interprétation
-  côté client, après G013/G012 ; pas de raccordement réseau.
+- [x] Claude G014 : revue reçue dans cb15c33, dix groupes de sondes reproduits
+  sur cible figée 176c1d2 ; aucun nouveau défaut confirmé.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
 - [ ] Claude G015 : contre-revue des reçus d’annulation, sous verrou et après effet.
@@ -172,6 +172,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   conservée, pas de traceback/message SQL brut.
 - [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
   garde avant migration/exécution ; [contrat](docs/RECOVERY-REVIEW.md).
+- [ ] Claude G017 : contre-revue C-008d, cible figée et sondes indépendantes.
+- [ ] C-008e en cours Codex : inventaire paginé des missions, lecture seule.
 - [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
   ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.
 - [ ] C-008 suite : reçus run, détection de rollback hors outil de revue, quotas et

@@ -1,0 +1,58 @@
+Python 3.12.14; temporary stores only; no network, no real service.
+
+== R1 injected SQLite faults: decision, event and receipt all-or-nothing
+  fault BEFORE INSERT command_receipts  -> IntegrityError: g014 injected | revision/events (8, 9)->(8, 9) | lookup=NOT_FOUND | after removing fault: RECORDED rev=9 seq=10, decisions=1
+  fault BEFORE INSERT events            -> IntegrityError: g014 injected | revision/events (8, 9)->(8, 9) | lookup=NOT_FOUND | after removing fault: RECORDED rev=9 seq=10, decisions=1
+  fault AFTER UPDATE missions          -> IntegrityError: g014 injected | revision/events (8, 9)->(8, 9) | lookup=NOT_FOUND | after removing fault: RECORDED rev=9 seq=10, decisions=1
+
+== R2 concurrent processes: same key on two missions, same command twice
+  key shared by 2 missions: [('23562b', 'ContractError: COMMAND_KEY_REUSED: key already bound to another request'), ('e6ec5f', 'RECORDED rev=9 seq=19')]
+  decisions A=0 B=1 revisions A=8 B=9 lookup=e6ec5f
+  same command x4 processes: ['Busy: mission already running/reconciling', 'Busy: mission already running/reconciling', 'Busy: mission already running/reconciling', 'RECORDED rev=9 seq=10']
+  decisions=1 revision 8->9
+
+== R3 replay after progression; R4 key reuse, other client, new key
+  after run (status SUCCEEDED, approval USED): replay identical=True, events 17->17, restarts=1, receipt still says approval_status_at_recording=APPROVED
+  same key, decision revoke    -> ContractError: COMMAND_KEY_REUSED: key already bound to another request
+  same key, other reason       -> ContractError: COMMAND_KEY_REUSED: key already bound to another request
+  other client, same content   -> ContractError: STALE_REVISION: refresh and review the proposal
+  new key, same old revision   -> ContractError: STALE_REVISION: refresh and review the proposal
+  decisions recorded in total: 1
+
+== R5 cancellation: before the command, and between preparation and commit
+  cancel first (revision 8->8): ContractError: mission is not awaiting an action decision | lookup=NOT_FOUND
+  cancel races the decision: ContractError: CANCEL_REQUESTED: decision cannot follow cancellation | lookup=NOT_FOUND | decisions=0 cancel_requested=True
+  wrong proposal_sha256: ContractError: decision must name the exact proposal sha256 | lookup=NOT_FOUND
+
+== R6 mission lock held by another process (as during run)
+  during lock: submit -> Busy: mission already running/reconciling; lookup -> NOT_FOUND (0.00s, no wait) | after release: RECORDED rev=9 seq=10
+
+== R7 answer lost after commit; NOT_FOUND while the first emission is in flight
+  submit -> RuntimeError: answer lost after commit (injected) | lookup=FOUND authorizes_resend=False | same-key resend -> RECORDED rev=9 seq=10 | new-key resend -> ContractError: STALE_REVISION: refresh and review the proposal | decisions=1
+  in flight: lookup=NOT_FOUND; same-key resend -> Busy: mission already running/reconciling | first emission -> RECORDED rev=9 seq=10 | decisions=1
+
+== R8 historical receipt APPROVED after a later revoke
+  approve receipt: APPROVED rev 9 | revoke receipt: REVOKED rev 10 | current capture: REVOKED | receipt fields mention current state: False
+  run after revoke -> status=BLOCKED approval=REVOKED error=APPROVAL_REVOKED restarts=0
+
+== R9 restore of an older copy, clone of the store (documented limits)
+  restored copy: same store_id=True lookup=NOT_FOUND | same command resubmitted -> RECORDED rev=9 seq=10 (a second 'first' recording)
+  clone: same store_id=True lookup in clone=FOUND (STORE_CHANGED not raised)
+
+== R10 command JSON edge cases; receipt confidentiality
+  valid                    -> accepted (expected_revision=8)
+  revision NaN             -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  revision 1.0             -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  revision true            -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  revision 2^53-1          -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  revision 2^53-2          -> accepted (expected_revision=9007199254740990)
+  revision -0              -> accepted (expected_revision=0)
+  lone surrogate in actor  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  duplicate key            -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  extra field              -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  UTF-8 BOM                -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  invalid UTF-8 bytes      -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  deep nesting             -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  32769 bytes              -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+  receipt/lookup contain actor=False reason=False | integers safe=True
+  lookup with another store_id -> ContractError: STORE_CHANGED: resynchronize before any decision
