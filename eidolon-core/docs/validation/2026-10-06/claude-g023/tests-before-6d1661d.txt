@@ -1,0 +1,78 @@
+test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) ... 
+  test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) (cancel=False) ... ERROR
+  test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) (cancel=True) ... ERROR
+test_busy_lock_refuses_without_change (tests.test_abandon_verification.AbandonUnverifiedTests.test_busy_lock_refuses_without_change) ... ok
+test_cli_reconcile_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_cli_reconcile_abandon) ... FAIL
+test_nothing_runs_after_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_nothing_runs_after_abandon) ... ERROR
+test_old_cancelled_mission_with_returned_call_is_not_reopened (tests.test_abandon_verification.AbandonUnverifiedTests.test_old_cancelled_mission_with_returned_call_is_not_reopened) ... ok
+test_other_decisions_output_and_invalid_labels_are_refused_without_change (tests.test_abandon_verification.AbandonUnverifiedTests.test_other_decisions_output_and_invalid_labels_are_refused_without_change) ... ok
+test_partial_verified_evidence_stays_partial (tests.test_abandon_verification.AbandonUnverifiedTests.test_partial_verified_evidence_stays_partial) ... ERROR
+test_refused_for_terminal_prepared_or_missing_result (tests.test_abandon_verification.AbandonUnverifiedTests.test_refused_for_terminal_prepared_or_missing_result) ... ok
+test_unknown_effect_abandon_is_unchanged (tests.test_abandon_verification.AbandonUnverifiedTests.test_unknown_effect_abandon_is_unchanged) ... ok
+
+======================================================================
+ERROR: test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) (cancel=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 75, in test_abandon_keeps_returned_evidence_with_or_without_cancellation
+    closed = self.abandon(blocked['id'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 64, in abandon
+    return self.runtime.reconcile(identity, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/src/eidolon_core/runtime.py", line 341, in reconcile
+    raise ValueError("mission has no uncertain call to reconcile")
+ValueError: mission has no uncertain call to reconcile
+
+======================================================================
+ERROR: test_abandon_keeps_returned_evidence_with_or_without_cancellation (tests.test_abandon_verification.AbandonUnverifiedTests.test_abandon_keeps_returned_evidence_with_or_without_cancellation) (cancel=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 75, in test_abandon_keeps_returned_evidence_with_or_without_cancellation
+    closed = self.abandon(blocked['id'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 64, in abandon
+    return self.runtime.reconcile(identity, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/src/eidolon_core/runtime.py", line 341, in reconcile
+    raise ValueError("mission has no uncertain call to reconcile")
+ValueError: mission has no uncertain call to reconcile
+
+======================================================================
+ERROR: test_nothing_runs_after_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_nothing_runs_after_abandon)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 92, in test_nothing_runs_after_abandon
+    closed = self.abandon(self.blocked_restart()['id'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 64, in abandon
+    return self.runtime.reconcile(identity, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/src/eidolon_core/runtime.py", line 341, in reconcile
+    raise ValueError("mission has no uncertain call to reconcile")
+ValueError: mission has no uncertain call to reconcile
+
+======================================================================
+ERROR: test_partial_verified_evidence_stays_partial (tests.test_abandon_verification.AbandonUnverifiedTests.test_partial_verified_evidence_stays_partial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 151, in test_partial_verified_evidence_stays_partial
+    closed = runtime.reconcile(identity, decision='abandon', actor=ACTOR, reason=REASON)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/src/eidolon_core/runtime.py", line 341, in reconcile
+    raise ValueError("mission has no uncertain call to reconcile")
+ValueError: mission has no uncertain call to reconcile
+
+======================================================================
+FAIL: test_cli_reconcile_abandon (tests.test_abandon_verification.AbandonUnverifiedTests.test_cli_reconcile_abandon)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g023-before/tests/test_abandon_verification.py", line 180, in test_cli_reconcile_abandon
+    self.assertEqual(done.returncode, 0, done.stderr)
+AssertionError: 2 != 0 : {"error":"ValueError","message":"mission has no uncertain call to reconcile"}
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 8.123s
+
+FAILED (failures=1, errors=4)

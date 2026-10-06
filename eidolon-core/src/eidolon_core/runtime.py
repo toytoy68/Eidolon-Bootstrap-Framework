@@ -326,6 +326,26 @@ class Runtime:
         except Busy:
             return self.store.get(identity)
 
+    def _abandon_unverified(self, m, *, decision, actor, reason, output):
+        """Close a returned result whose verification stays unavailable; caller holds the lock.
+
+        The RETURNED call, its output, fingerprint and origin are kept as they are:
+        abandoning is neither a verification nor a claim that nothing happened.
+        No model, memory, tool or verifier is called.
+        """
+        if decision != "abandon":
+            raise ValueError("an unverified returned result is verified by run or explicitly abandoned")
+        if output is not None:
+            raise ValueError("abandon does not accept output")
+        call = m["calls"][-1]
+        detail = {"decision": "abandon", "actor": actor, "reason": reason,
+                  "call_id": call["id"], "attempt": call["attempt"],
+                  "result_state": "RETURNED_UNVERIFIED", "output_sha256": call.get("output_sha256")}
+        m.update(status="ABANDONED", phase="DONE", result=None,
+                 error={"code": "RESULT_UNVERIFIED", "message": "closed without verifying the returned result"})
+        self._save(m, "ABANDONED", detail)
+        return m
+
     def reconcile(self, identity, *, decision, actor, reason, output=None, confirm_no_effect=False):
         if (not isinstance(actor, str) or not actor.strip() or len(actor) > 200
                 or not isinstance(reason, str) or not reason.strip() or len(reason) > 4000):
@@ -337,6 +357,9 @@ class Runtime:
             raise ValueError("unknown reconciliation decision")
         with self.store.lock(identity):
             m = self.store.get(identity)
+            if (m["status"] == "BLOCKED" and m["phase"] == "VERIFY" and m["calls"]
+                    and m["calls"][-1]["status"] == "RETURNED"):
+                return self._abandon_unverified(m, decision=decision, actor=actor, reason=reason, output=output)
             if m["status"] != "REVIEW_REQUIRED" or not m["calls"]:
                 raise ValueError("mission has no uncertain call to reconcile")
             call = m["calls"][-1]
