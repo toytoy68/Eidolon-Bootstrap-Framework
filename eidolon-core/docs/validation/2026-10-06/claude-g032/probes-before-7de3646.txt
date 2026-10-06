@@ -1,0 +1,31 @@
+P1 200 <p> sans fermeture, profondeur 128: status='PARTIAL' | warnings=['DEPTH_LIMIT']
+P2 <li> sans fermeture, profondeur 20: status='PARTIAL' | warnings=['DEPTH_LIMIT']
+P3 <li hidden> puis <li> visible: status='EMPTY' | text=None | title='T' | warnings=['HIDDEN_CONTENT_SKIPPED', 'UNBALANCED_TAGS']
+P4 <p hidden> puis <div> visible: status='EMPTY' | text=None | title='T' | warnings=['HIDDEN_CONTENT_SKIPPED', 'UNBALANCED_TAGS']
+P5 <dt>/<dd> non fermés: status='OK' | text='terme\n\ndéfinition\n\nterme 2\n\ndéf 2' | warnings=['UNBALANCED_TAGS']
+T1 <title> dans <svg>: status='OK' | text='texte' | title='Ticône' | warnings=[]
+T2 deux <title>: status='OK' | text='a\n\nsecond' | title='premiersecond' | warnings=[]
+T3 <title> dans <body> (non affiché): status='OK' | text='titre\n\ntexte' | title='titre' | warnings=[]
+C1 CR seul entre deux mots: status='OK' | text='nepas conclure' | title=None | warnings=['CONTROL_CHARACTERS_REMOVED']
+C2 CRLF ordinaire: status='OK' | text='ligne suite' | title=None | warnings=['CONTROL_CHARACTERS_REMOVED']
+C3 saut de page entre deux mots: status='OK' | text='nepas' | title=None | warnings=['CONTROL_CHARACTERS_REMOVED']
+C4 contrôle par entité &#7;: status='OK' | text='ab' | title=None | warnings=[]
+C5 C1 brut U+0085: status='OK' | text='a\x85b' | title=None | warnings=[]
+C6 bidi par entité &#x202E;: text='abc\u202edef' | warnings=['BIDI_CONTROLS_PRESENT']
+C7 NUL par entité &#0;: status='OK' | text='a�b' | title=None | warnings=[]
+L1 limits={}: ACCEPTÉ (défauts utilisés)
+L1 limits=0: ACCEPTÉ (défauts utilisés)
+L1 limits='': ACCEPTÉ (défauts utilisés)
+L1 limits=[]: ACCEPTÉ (défauts utilisés)
+L1 limits=False: ACCEPTÉ (défauts utilisés)
+S1 segment unique de 200 > 80: status='PARTIAL' | text=None | warnings=['OUTPUT_LIMIT']
+H1 style='display:none': text='visible'
+H1 style='DISPLAY : NONE': text='visible'
+H1 style='display:none!important': text='visible'
+H1 style='color:red;display:none': text='visible'
+H1 style='display: none ; color:red': text='visible'
+H1 style='visibility:collapse': text='caché\n\nvisible'
+H1 style='content-visibility:hidden': text='caché\n\nvisible'
+K1 paragraphes 127889 octets: PARTIAL ['OUTPUT_LIMIT'] 12 ms
+K1 imbrication 128000 octets: PARTIAL ['DEPTH_LIMIT'] 58 ms
+K1 entités 128000 octets: OK [] 11 ms
