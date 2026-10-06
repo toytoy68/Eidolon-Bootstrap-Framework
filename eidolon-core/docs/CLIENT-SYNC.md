@@ -141,3 +141,24 @@ signifie pas exécution externe exactement une fois. API, notifications OS,
 Windows et validation VM restent distincts de cette tranche.
 
 [Preuves](validation/2026-10-06/codex-client-sync/README.md).
+
+## Durcissement de lecture C-009f — Codex, séance du 06/10 au soir
+
+Le corps JSON de mission doit porter l’identité de la ligne sélectionnée.
+Snapshot et inventaire utilisent le même décodage : clés JSON dupliquées
+refusées, drapeau SQLite d’annulation limité à 0/1, révision entière sûre.
+La projection vérifie les types et les longueurs des métadonnées, les compteurs
+de progression et de tentative dans la plage entière exacte JavaScript ;
+aucune conversion d’une chaîne ou d’un objet en statut affichable.
+Les références d’événement ont une séquence sûre et des libellés/date bornés.
+
+Une structure non exportable donne une erreur de lecture (HTTP 503
+STATE_UNAVAILABLE), sans renvoyer le contenu divergent. Les accords sans
+preuve d’effet restent ainsi ; aucune réparation, migration ou nouvelle
+exécution. Objectif hors catalogue = null, toujours admis. Une preuve
+d’action incohérente mais structurellement valide conserve son diagnostic
+d’incohérence ; une structure arbitraire n’est pas rendue au client.
+
+Ce contrôle est celui des données exportées ; il ne certifie pas tout le
+contenu privé de la mission ni une base modifiée cohérentement à la main.
+[Preuves avant/après](validation/2026-10-06/codex-evening/README.md).

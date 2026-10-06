@@ -388,3 +388,10 @@ Voir docs/HTTP-PREFLIGHT.md et docs/validation/2026-10-06/codex-preflight/.
 - [x] 52 tests ciblés du lot jeton/préflight/API réussis (15 nouveaux jeton).
 
 Publication groupée à la clôture de la séance ; documentation READ-TOKEN.md.
+
+- [x] C-009e : préconnexions non bloquantes, quatre workers au plus,
+  échéance totale de lecture ; D-G034-1 reproduit puis corrigé.
+- [x] C-009f : capture liée à l’identité SQL, projections typées/bornées ;
+  deux défauts reproduits puis corrigés, 91 tests ciblés verts.
+- [x] G034/G035 reçus et intégrés ; preuves Claude préservées et limites
+  VM/Windows maintenues.

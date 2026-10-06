@@ -31,13 +31,87 @@ class SyncError(ValueError):
 
 def project_mission(mission):
     """Allowlist: no request, context, raw output, configuration or event details."""
-    return {"id": mission["id"], "revision": mission["revision"],
-            "status": mission["status"], "phase": mission["phase"],
-            "cancel_requested": mission["cancel_requested"],
-            "progress": {k: mission["progress"][k] for k in ("completed", "total")},
-            "objective_kind": mission["objective"]["kind"],
-            "outcome_status": mission["outcome"]["status"],
-            "action_view": action_view(mission)}
+    try:
+        result = {"id": mission["id"], "revision": mission["revision"],
+                  "status": mission["status"], "phase": mission["phase"],
+                  "cancel_requested": mission["cancel_requested"],
+                  "progress": {k: mission["progress"][k] for k in ("completed", "total")},
+                  "objective_kind": mission["objective"]["kind"],
+                  "outcome_status": mission["outcome"]["status"],
+                  "action_view": action_view(mission)}
+        if type(result["id"]) is not str or not re.fullmatch(r"m-[0-9a-f]{32}", result["id"]):
+            raise SyncError("INVALID_MISSION_IDENTITY")
+        if type(result["cancel_requested"]) is not bool:
+            raise SyncError("INVALID_MISSION_PROJECTION")
+        _integer(result["revision"])
+        for key in ("status", "phase", "outcome_status"):
+            _text(result[key], 40)
+        if result["objective_kind"] is not None:
+            _text(result["objective_kind"], 80)
+        _integer(result["progress"]["completed"])
+        if result["progress"]["total"] is not None:
+            _integer(result["progress"]["total"])
+        view = result["action_view"]
+        if view is not None:
+            if type(view["proposal_sha256"]) is not str or not re.fullmatch(r"[0-9a-f]{64}", view["proposal_sha256"]):
+                raise SyncError("INVALID_MISSION_PROJECTION")
+            _text(view["call_id"], 80)
+            _integer(view["attempt"], 1)
+            for key in ("decision", "applicability", "effect"):
+                _text(view[key]["status" if key == "decision" else "code"], 64)
+                _text(view[key]["message"], 500)
+        return result
+    except SyncError:
+        raise
+    except (ValueError, TypeError, KeyError, IndexError, RecursionError):
+        raise SyncError("INVALID_MISSION_PROJECTION") from None
+
+
+def _integer(value, minimum=0):
+    if type(value) is not int or not minimum <= value <= MAX_SAFE_INTEGER:
+        raise SyncError("UNSUPPORTED_INTEGER_RANGE")
+
+
+def _text(value, maximum):
+    if type(value) is not str or not 1 <= len(value) <= maximum:
+        raise SyncError("INVALID_MISSION_PROJECTION")
+    value.encode("utf-8")  # no escaped isolated surrogate may leave the reader
+
+
+def decode_mission(identity, revision, cancel, body):
+    """Bind a durable JSON body to its actual selected row, without coercion."""
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate field")
+            result[key] = value
+        return result
+
+    def nonfinite(_):
+        raise ValueError("nonfinite number")
+
+    try:
+        mission = json.loads(body, object_pairs_hook=unique, parse_constant=nonfinite)
+    except (ValueError, TypeError, RecursionError):
+        raise SyncError("INVALID_MISSION_JSON") from None
+    if type(mission) is not dict or mission.get("id") != identity:
+        raise SyncError("INVALID_MISSION_IDENTITY")
+    if type(cancel) is not int or cancel not in (0, 1):
+        raise SyncError("INVALID_CANCEL_FLAG")
+    _integer(revision)
+    mission.update(revision=revision, cancel_requested=bool(cancel))
+    return mission
+
+
+def _event_reference(row):
+    _integer(row[0], 1)
+    try:
+        _text(row[2], 64)
+        _text(row[3], 64)
+    except (SyncError, UnicodeError):
+        raise SyncError("INVALID_EVENT_REFERENCE") from None
+    return {"sequence": row[0], "at": row[2], "kind": row[3]}
 
 
 def _anchor(row):
@@ -91,14 +165,14 @@ class ClientSync:
                              (identity,)).fetchone()
             if row is None:
                 raise KeyError("mission not found")
-            mission = json.loads(row[2])
-            mission.update(revision=row[0], cancel_requested=bool(row[1]))
+            mission = decode_mission(identity, *row)
             fields = "sequence,mission_id,at,kind,detail"
             head = db.execute(f"SELECT {fields} FROM events WHERE mission_id=? ORDER BY sequence DESC LIMIT 1",
                               (identity,)).fetchone()
             count = db.execute("SELECT count(*) FROM events WHERE mission_id=?", (identity,)).fetchone()[0]
             if head is None:
                 raise SyncError("HISTORY_MISSING")
+            _event_reference(head)
             if (not 1 <= head[0] <= MAX_SAFE_INTEGER or not 1 <= count <= MAX_SAFE_INTEGER
                     or type(row[0]) is not int or not 0 <= row[0] <= MAX_SAFE_INTEGER):
                 raise SyncError("UNSUPPORTED_INTEGER_RANGE")
@@ -131,7 +205,7 @@ class ClientSync:
                               "ORDER BY sequence LIMIT ?", (identity, cursor["sequence"], limit+1)).fetchall()
             page = rows[:limit]
             response.update(status="DELTA", has_more=len(rows) > limit,
-                            events=[{"sequence": r[0], "at": r[2], "kind": r[3]} for r in page],
+                            events=[_event_reference(r) for r in page],
                             cursor=_cursor(store_id, identity, page[-1], cursor["event_count"]+len(page))
                             if page else dict(cursor))
             return response

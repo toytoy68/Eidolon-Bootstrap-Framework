@@ -755,3 +755,13 @@ verts (huit nouveaux disponibilité), sondes brutes G034 rejouées : 81 réponse
 health immédiat dans M1/M2, pas de fuite ni écriture d’état par l’API seule.
 C048/C049 et recette G035 intégrés ; la recette utilise maintenant des dossiers
 uniques et la CLI jeton. Résultats Claude conservés comme historiques.
+
+
+### C-009f — cohérence et forme des projections — séance du soir
+
+Deux écarts reproduits : snapshot acceptant un id de corps différent de la
+ligne SQL, et statut de type objet exporté tel quel. Décodage partagé
+ClientSync/MissionList : liaison d’identité, doublons JSON refusés, annulation
+0/1, champs exportés typés/bornés, entiers sûrs et références d’événement
+validées. Ne répare ni ne modifie la mission. 91 tests ciblés verts (neuf
+nouveaux), dont refus HTTP sans contenu privé et base inchangée.

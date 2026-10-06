@@ -1,0 +1,25 @@
+test_body_identity_must_match_selected_row_for_snapshot_and_list (tests.test_projection_guards.ProjectionGuardTests.test_body_identity_must_match_selected_row_for_snapshot_and_list) ... 
+  test_body_identity_must_match_selected_row_for_snapshot_and_list (tests.test_projection_guards.ProjectionGuardTests.test_body_identity_must_match_selected_row_for_snapshot_and_list) (reader=<function ProjectionGuardTests.test_body_identity_must_match_selected_row_for_snapshot_and_list.<locals>.<lambda> at 0x7fc4d151f4c0>) ... FAIL
+test_corrupt_projection_returns_no_payload_on_snapshot_or_list (tests.test_projection_guards.HTTPProjectionGuardTests.test_corrupt_projection_returns_no_payload_on_snapshot_or_list) ... FAIL
+
+======================================================================
+FAIL: test_body_identity_must_match_selected_row_for_snapshot_and_list (tests.test_projection_guards.ProjectionGuardTests.test_body_identity_must_match_selected_row_for_snapshot_and_list) (reader=<function ProjectionGuardTests.test_body_identity_must_match_selected_row_for_snapshot_and_list.<locals>.<lambda> at 0x7fc4d151f4c0>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_projection_guards.py", line 40, in test_body_identity_must_match_selected_row_for_snapshot_and_list
+    with self.assertRaises(SyncError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SyncError not raised
+
+======================================================================
+FAIL: test_corrupt_projection_returns_no_payload_on_snapshot_or_list (tests.test_projection_guards.HTTPProjectionGuardTests.test_corrupt_projection_returns_no_payload_on_snapshot_or_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_projection_guards.py", line 136, in test_corrupt_projection_returns_no_payload_on_snapshot_or_list
+    self.assertEqual(status, 503)
+AssertionError: 200 != 503
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.018s
+
+FAILED (failures=2)

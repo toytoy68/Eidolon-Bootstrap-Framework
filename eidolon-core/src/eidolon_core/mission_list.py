@@ -13,7 +13,7 @@ The generation detects normal Core writes, not arbitrary SQL/history rewrites.
 import json
 import re
 
-from .client_sync import MAX_SAFE_INTEGER, SyncError, project_mission
+from .client_sync import MAX_SAFE_INTEGER, SyncError, decode_mission, project_mission
 from .contracts import digest
 from .store import now
 
@@ -124,10 +124,7 @@ class MissionList:
                 self.store.check_id(identity)
                 revision, cancel, body = db.execute(
                     'SELECT revision,cancel_requested,body FROM missions WHERE id=?', (identity,)).fetchone()
-                mission = json.loads(body)
-                if mission['id'] != identity:
-                    raise SyncError('INVALID_MISSION_IDENTITY')
-                mission.update(revision=revision, cancel_requested=bool(cancel))
+                mission = decode_mission(identity, revision, cancel, body)
                 sequence = db.execute('SELECT max(sequence) FROM events WHERE mission_id=?',
                                       (identity,)).fetchone()[0]
                 if sequence is None:
