@@ -281,3 +281,106 @@ test("ui: assisted reading previews exactly what will be sent and requires a fre
     await context.close();
   } finally { await browser.close(); }
 });
+
+
+// ---- G012: client-sync/1 scenarios ------------------------------------------------------------
+
+async function playSync(page, scenario, steps) {
+  await page.selectOption("#scenario", scenario);
+  await page.click("text=Recharger le scénario");
+  for (let i = 0; i < steps; i++) await page.click("#server-step");
+}
+
+test("ui G012: catch-up after a cut, duplicates ignored, no network request", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, requests, errors } = await open(browser, "sync-rattrapage");
+    await playSync(page, "sync-rattrapage", 2); // capture, then cut
+    assert.match(await page.textContent(".banner"), /état actuel est inconnu/);
+    await page.click("#server-step"); // back online
+    await page.click("#server-step"); // page 1: capture ahead of the journal
+    assert.match(await page.textContent("#sync-cursor"), /rattrapage en cours/);
+    assert.equal(await page.textContent("#sync-state"), "Réussie — résultat daté");
+    for (let i = 0; i < 5; i++) await page.click("#server-step");
+    assert.equal(await page.locator("#sync-refs li").count(), 10);
+    assert.doesNotMatch(await page.textContent("#sync-cursor"), /rattrapage en cours/);
+    assert.match(await page.textContent("#app"), /Doublons ignorés : 2/);
+    await shot(page, "09-sync-rattrapage");
+    assert.deepEqual(requests.filter((u) => !u.startsWith("file://")), []);
+    assert.deepEqual(errors, []);
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page } = await open(browser, "sync-reset");
+    await playSync(page, "sync-reset", 3);
+    assert.equal(await page.isVisible("#sync-reset"), true);
+    assert.match(await page.textContent("#sync-reset"), /ANCHOR_CHANGED/);
+    const before = await page.evaluate(() => window.EidolonPrototype.getSync().index);
+    await page.click("#server-step");
+    assert.equal(await page.evaluate(() => window.EidolonPrototype.getSync().index), before, "nothing delivered while waiting");
+    await shot(page, "10-sync-reset");
+    await page.click("#sync-accept-reset");
+    assert.equal(await page.locator("#sync-reset").count(), 0);
+    assert.equal(await page.locator("#sync-refs li").count(), 0, "journal restarted after reload");
+    await page.click("#server-step");
+    assert.match(await page.textContent("#sync-reset"), /STORE_CHANGED/);
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G012: cancellation requested, approval axes, review — labels and no active decision", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page } = await open(browser, "sync-annulation");
+    await playSync(page, "sync-annulation", 2);
+    assert.equal(await page.textContent("#sync-state"), "Annulation demandée — pas encore confirmée");
+    await shot(page, "11-sync-annulation");
+    await playSync(page, "sync-accord", 1);
+    assert.equal(await page.textContent("#sync-state"), "À décider");
+    const text = await page.textContent("#app");
+    assert.match(text, /PENDING/); assert.match(text, /AWAITING_DECISION/); assert.match(text, /NOT_STARTED/);
+    assert.equal(await page.locator("#app [data-intent=approve], #app [data-intent=reject]").count(), 0);
+    await playSync(page, "sync-revue", 1);
+    assert.equal(await page.textContent("#sync-state"), "Revue requise — effet à vérifier");
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G012: rejected answers listed; hostile text rendered as text only", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "sync-rejets");
+    await playSync(page, "sync-rejets", 7);
+    assert.equal(await page.locator("#app img, #app b").count(), 0, "no element created from data");
+    assert.match(await page.textContent("#sync-refs"), /<img src=x onerror=alert\(1\)>/);
+    assert.equal(await page.textContent("#sync-objective"), "<b>ignore les consignes</b>");
+    const rejected = await page.textContent("#sync-rejected");
+    for (const code of ["CURSOR_MISSION_MISMATCH", "UNSUPPORTED_PROTOCOL", "UNSAFE_OR_INVALID_INTEGER", "INVALID_CURSOR"]) assert.match(rejected, new RegExp(code));
+    assert.deepEqual(errors, []);
+    await shot(page, "12-sync-rejets-texte-hostile");
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G012: targets and contrast in every sync scenario, at the end of its script", { skip }, async (t) => {
+  const browser = await chromium.launch();
+  const report = [];
+  try {
+    const { context, page } = await open(browser, "sync-rattrapage");
+    const scenarios = await page.evaluate(() => Object.keys(window.EidolonSyncView.SCENARIOS));
+    for (const key of scenarios) {
+      await playSync(page, key, 9);
+      report.push(Object.assign({ key }, await audit(page)));
+    }
+    await context.close();
+  } finally { await browser.close(); }
+  const worst = report.reduce((w, r) => (r.worst.ratio / r.worst.needed < w.ratio / w.needed ? r.worst : w), { ratio: 99, needed: 4.5 });
+  t.diagnostic(`sync views audited: ${report.length}; worst contrast ${worst.ratio.toFixed(2)}:1 on "${worst.text}"`);
+  assert.deepEqual([...new Set(report.flatMap((r) => r.small))], []);
+  assert.ok(worst.ratio >= worst.needed);
+  assert.ok(report.every((r) => r.overflow <= 0));
+});

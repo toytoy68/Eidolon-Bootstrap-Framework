@@ -672,6 +672,9 @@
     if (c.connection !== "online") return { mode: "offline", label: "Injoignable", detail: "Dernières nouvelles " + clockLabel(c.lastContact) };
     if (c.mic === "on") return { mode: "listen", label: "À l'écoute", detail: "Capture micro locale active (simulée)" };
     if (c.silence) return { mode: "silence", label: "Silence", detail: "Aucune notification ; rien n'est accepté" };
+    // Visual attention only: no state change, no sound, no resend.
+    var uncertain = c.commands.filter(function (x) { return x.phase === "unknown" || x.phase === "not-found"; }).length;
+    if (uncertain) return { mode: "attention", label: "Reçu à vérifier", detail: uncertain + (uncertain > 1 ? " demandes incertaines" : " demande incertaine") };
     if (m && m.status === "BLOCKED" && m.proposal.status === "PENDING") return { mode: "attention", label: "Attend ton accord", detail: "1 décision" };
     if (m && m.status === "REVIEW_REQUIRED") return { mode: "attention", label: "Revue à faire", detail: "Effet d'une tentative inconnu" };
     if (m && m.status === "RUNNING") return { mode: "work", label: "Au travail", detail: "Mission en cours observée" };

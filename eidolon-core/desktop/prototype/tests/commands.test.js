@@ -153,3 +153,17 @@ test("G013 retention: unresolved commands are never purged, resolved ones are bo
   s = M.receiveReply(s, { type: "ACK", key: "synthetic-0", found: true, receipt: "r-0" });
   assert.equal(s.client.strayReplies, 1, "a reply for a purged command is counted, not applied");
 });
+
+test("G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence", () => {
+  let s = uncertainApproval();
+  s = run(s, "revoke"); s = steps(s, 1); // mission view REVOKED, approval still unknown
+  assert.equal(M.eye(s).label, "Reçu à vérifier");
+  assert.equal(M.eye(s).mode, "attention");
+  assert.equal(M.eye(run(s, "toggle-silence")).mode, "silence");
+  assert.equal(M.eye(run(s, "sim-mic")).mode, "listen");
+  assert.equal(M.eye(run(s, "sim-disconnect")).mode, "offline");
+  const outbox = sent(s).length;
+  assert.equal(sent(run(s, "toggle-silence", "close-window")).length, outbox, "no resend, no decision");
+  s = steps(run(s, "check-receipt"), 1);
+  assert.notEqual(M.eye(s).label, "Reçu à vérifier");
+});

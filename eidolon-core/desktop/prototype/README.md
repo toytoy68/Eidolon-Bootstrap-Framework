@@ -62,9 +62,13 @@ télémétrie n'est présentée comme une observation en direct.
 | `model.js` | États et transitions, purs et déterministes. `state.client` (ce que sait la fenêtre) et `state.sim` (serveur simulé) sont séparés : la fenêtre ne change sa vue d'une mission qu'en appliquant des événements numérotés |
 | `app.js` | Rendu et interactions ; uniquement des contrôles natifs (`button`, `select`, `input`, `textarea`) |
 | `styles.css` | Thème sombre, polices système, cibles de 44 px, animations coupées si le système le demande |
+| `sync-state.js` | Consommateur pur du protocole `eidolon-client-sync/1` (C-TASK-G012) : aucune requête, aucune commande |
+| `sync-view.js` | Scénarios de synchronisation du banc et leur rendu (texte posé par `textContent`) |
+| `fixtures/build-sync-fixtures.js` | Génère `client-sync-fixtures.js` depuis la trace réelle de Codex, inchangée, plus des cas dérivés étiquetés |
 | `tests/model.test.js` | 17 tests de transitions et d'absence d'envoi indu |
-| `tests/commands.test.js` | 11 tests du suivi des commandes par clé (C-TASK-G013) |
-| `tests/ui.test.js` | 11 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013 |
+| `tests/commands.test.js` | 12 tests du suivi des commandes par clé (G013) et de l'œil « Reçu à vérifier » (G012) |
+| `tests/sync.test.js` | 13 tests du consommateur sur la trace réelle et les cas dérivés |
+| `tests/ui.test.js` | 16 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation |
 
 ## Suivi des commandes (C-TASK-G013)
 
@@ -99,6 +103,59 @@ demande n'efface jamais l'incertitude d'une précédente.
 Ces règles suivent le contrat de reçus C-008b de Codex (`docs/COMMAND-RECEIPTS.md`) :
 un reçu introuvable n'autorise pas à réémettre. Les noms d'états et de messages
 restent ceux du prototype, pas ceux du contrat.
+
+## Synchronisation client-sync/1 (C-TASK-G012)
+
+Le banc propose un second groupe de scénarios, « Synchronisation client-sync/1 ».
+Le bouton « Réponse suivante » livre des enveloppes enregistrées : la trace
+réelle de Codex (C-008a, `docs/validation/2026-10-06/codex-client-sync/demo.json`,
+recopiée sans changement) et des cas **dérivés**, chacun étiqueté avec ce qui a
+été modifié. Aucun n'est présenté comme une sortie réellement observée.
+
+`sync-state.js` garde séparément :
+
+- **la vue** : la dernière capture de mission, ordonnée par `as_of_sequence`.
+  Une capture plus ancienne ou égale ne la remplace jamais ;
+- **le curseur** : la dernière référence d'événement reçue, qui peut être en
+  retard sur la vue (« rattrapage en cours ») ;
+- **les références d'événements** : de l'historique, jamais des changements
+  appliqués à la vue. Elles sont dédupliquées par séquence ;
+- **la connectivité locale**, et l'**époque** des requêtes : un rechargement
+  explicite rend périmées les réponses à des requêtes plus anciennes.
+
+Règles :
+
+- Une page dont le premier événement ne suit pas le curseur (contrôle par
+  `event_count`, pas par +1 sur les séquences) ne fait ni avancer le curseur ni
+  ajouter de références. Sa capture reste prise si elle est plus récente.
+- `RESET_REQUIRED` n'est jamais appliqué seul : la vue reste l'ancienne,
+  l'interrogation s'arrête, et la raison est expliquée. Seul « Recharger
+  explicitement la vue » la remplace. Cela ne relance rien et ne décide rien.
+- Rejetés sans effet : version de protocole inconnue, prétention d'autorité,
+  curseur d'une autre mission ou d'une autre base sans `RESET`, entier hors de
+  `Number.isSafeInteger`, enveloppe mal formée. Une erreur signalée par Core est
+  listée ; aucune capture n'en est déduite.
+- Hors ligne : rien n'est appliqué ni demandé. Au retour, seule une lecture est
+  demandée, jamais une file d'actions.
+- `action_view` peut valoir `null`. Sinon, décision, applicabilité et effet
+  restent trois lignes distinctes, et aucun bouton d'accord n'est rendu.
+- Annulation demandée : « Annulation demandée — pas encore confirmée » tant que
+  la capture ne dit pas `CANCELLED`, même à révision inchangée.
+- **Rétention** : 200 références au plus (les plus anciennes partent d'abord,
+  et sont comptées), 20 rejets et 20 erreurs Core au plus.
+
+Le passage du prototype G009 (événements internes comme `MISSION_RUNNING`) au
+protocole réel n'est pas fait dans la fenêtre principale. Les deux mondes
+coexistent dans le banc, sans inventer d'événements G009 à partir de
+client-sync/1.
+
+## Œil : « Reçu à vérifier »
+
+Quand une demande reste incertaine (`unknown` ou `not-found`), l'œil passe en
+attention avec ce libellé. Priorité : injoignable > écoute (capture locale) >
+silence > reçu à vérifier > décision ou revue en attente > au travail > veille.
+Cela change l'attention visuelle seulement : aucun état métier, aucun son,
+aucun renvoi. Silence et fermeture de fenêtre gardent leurs règles.
 
 ## Tests
 
