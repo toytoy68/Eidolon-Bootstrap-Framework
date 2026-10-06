@@ -131,3 +131,10 @@ Codex prend C-008e, inventaire paginé local des missions, hors prototype.
 
 C-MSG-G029 : C-008e livré (mission-list/1, 18 tests). L'ordre Claude reste G010
 engagé, puis G016/G015/G017. Aucun quatrième lot Desktop ajouté avant ces tâches.
+
+## État courant — C-MSG-G031, 06/10/2026
+
+G010/G016 reçus et intégrés, G015 engagé selon toytoy. Ordre à suivre dans
+[QUEUE.md](QUEUE.md) : G015 → G017 → G018 → G019. G018 consomme l'inventaire de
+missions sans réseau ; G019 revoit les pauses Web persistantes C-002c. Pas de
+nouvelle session déclenchée par cette liste ; un commit et des preuves par lot.

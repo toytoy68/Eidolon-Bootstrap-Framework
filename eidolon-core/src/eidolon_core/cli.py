@@ -42,6 +42,12 @@ def main(argv=None):
     recovery.add_argument("--reason", required=True)
     inspect = commands.add_parser("recovery-inspect", help="inspect a historical review copy without starting Core")
     inspect.add_argument("--mission-id")
+    commands.add_parser("research-pauses", help="inspect existing durable Web pauses; no network")
+    release = commands.add_parser("research-release", help="release one reviewed pause; does not send a request")
+    release.add_argument("pause_id")
+    release.add_argument("--revision", type=int, required=True)
+    release.add_argument("--actor", required=True)
+    release.add_argument("--reason", required=True)
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="create and run the deterministic synthetic mission")
     diagnose = commands.add_parser("diagnose", help="observe one synthetic service, requires --profile service-sim")
@@ -103,6 +109,20 @@ def main(argv=None):
             else:
                 print(encode(result))
             return 0  # Copy/inspection completed, never permission to resume.
+        if args.command in {"research-pauses", "research-release"}:
+            from .research_pauses import ResearchPauses
+            path = Path(args.state) / "research-pauses.sqlite3"
+            if not path.is_file():
+                raise FileNotFoundError("research pauses require an existing pause database")
+            pauses = ResearchPauses(path)
+            result = (pauses.inspect() if args.command == "research-pauses" else
+                      pauses.release(args.pause_id, expected_revision=args.revision, actor=args.actor, reason=args.reason))
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Suspensions Web") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 0  # inspection/release completed; no request was sent
         if args.command == "presentation-preview":
             text = preview()
             print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
