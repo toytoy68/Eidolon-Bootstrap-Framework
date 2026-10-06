@@ -1,0 +1,15 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#            Restauration préparée pour revue           #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+[OK] Copie historique cohérente créée ; source inchangée.
+[OK] Identité renouvelée ; démarrage de Core refusé sur cette copie.
+[ATTENTION] Ancien accord APPROVED conservé comme historique, sans autorité d’exécution.
+[INFO] Zéro redémarrage fictif ; réactivation non implémentée.

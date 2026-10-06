@@ -124,7 +124,8 @@ lors du run séparé ; seuls ses résultats vérifiés peuvent conclure la missi
   même consultation et le même espace de clés ; vérifier receipt.protocol.
   Pas encore de reçus pour run, create ou reconcile. Aucun outil externe exécuté
   par submit.
-- Identité copiée avec la base : une restauration/clonage conserve store_id et
+- [C-008d](RECOVERY-REVIEW.md) prépare une copie historique gardée avec nouvelle
+  identité ; aucune réactivation. Hors de cet outil, identité copiée avec la base : une restauration/clonage conserve store_id et
   peut perdre des reçus récents. Pas de détection universelle de rollback ni de
   garantie « exactement une fois ». Après restauration, revue opérateur avant
   réémission ; une génération serveur sera à définir pour l'API distante.
