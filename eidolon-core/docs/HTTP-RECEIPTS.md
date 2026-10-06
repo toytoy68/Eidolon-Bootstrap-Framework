@@ -1,6 +1,7 @@
 # Consultation HTTP des reçus — C-009b
 
-Codex/GPT, 06/10/2026. Contrat réservé pour réalisation C-009b, base 4d0f606.
+Codex/GPT, 06/10/2026. C-009b implémenté et testé, base API 4d0f606.
+[Preuves et démonstration](validation/2026-10-06/codex-http-receipts/README.md).
 Extension additive de [HTTP-READ-API.md](HTTP-READ-API.md). Aucun envoi de
 commande, aucune permission d’écriture ajoutée au token de lecture.
 
@@ -45,7 +46,12 @@ copie de la base peuvent produire ce résultat.
 
 Lecture SQLite en une transaction : identité Store, clé, mission liée et
 événement de référence. Aucun verrou d’exécution ni runtime. Schéma, types,
-taille (reçu stocké ≤32 768 octets), identifiants et lien d’événement contrôlés.
+taille (reçu et détail d’événement chacun ≤32 768 octets), identifiants et lien
+d’événement contrôlés. La commande est reconstruite avec les champs privés de
+l’événement pour comparer son empreinte au reçu ; ces champs ne sont jamais
+exportés. Cela détecte notamment une décision ou une empreinte altérée isolément.
+Les états historiques du reçu ne constituent pas un audit complet des mutations
+de la mission, notamment la révision et le statut historiques d’annulation.
 Pas de signature cryptographique ni de preuve contre un opérateur qui modifie
 cohérentement toute la base ; pas de détection universelle de restauration.
 
@@ -61,5 +67,5 @@ Authentification et erreurs générales restent celles de C-009a. Ni 409 ni 503
 n’exposent le reçu ou ses données divergentes. Une mission devenue terminale
 n’empêche pas la consultation du reçu historique valide.
 
-G036 développe l’affichage seulement, après publication du code et validation
-des fixtures. Toujours distinguer enregistrement, état actuel et effet vérifié.
+G036 développe l’affichage seulement ; les fixtures synthétiques validées sont
+dans le dossier de preuves, avec leur générateur dans examples/http_receipt_demo.py. Toujours distinguer enregistrement, état actuel et effet vérifié.

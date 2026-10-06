@@ -1,0 +1,58 @@
+{
+  "synthetic": true,
+  "transport": "HTTP_LOOPBACK",
+  "query": {
+    "store_id": "s-7c899f8c035045bf8f8b58e231a046f8",
+    "client_id": "demo-client",
+    "command_key": "cancel-001",
+    "mission_id": "m-2ed85fbfdd2d439c92d9ce44f535c762"
+  },
+  "before_recording": {
+    "protocol": "eidolon-http-receipt/1",
+    "store_id": "s-7c899f8c035045bf8f8b58e231a046f8",
+    "client_id": "demo-client",
+    "command_key": "cancel-001",
+    "mission_id": "m-2ed85fbfdd2d439c92d9ce44f535c762",
+    "status": "NOT_FOUND",
+    "receipt": null,
+    "execution_evidence": false,
+    "effect_absence_evidence": false,
+    "authorizes_resend": false,
+    "authorizes_execution": false
+  },
+  "after_recording": {
+    "protocol": "eidolon-http-receipt/1",
+    "store_id": "s-7c899f8c035045bf8f8b58e231a046f8",
+    "client_id": "demo-client",
+    "command_key": "cancel-001",
+    "mission_id": "m-2ed85fbfdd2d439c92d9ce44f535c762",
+    "status": "FOUND",
+    "receipt": {
+      "cancel_outcome": "REQUESTED",
+      "cancel_requested_at_recording": true,
+      "client_id": "demo-client",
+      "command_key": "cancel-001",
+      "effect_absence_evidence": false,
+      "event_sequence": 2,
+      "execution_evidence": false,
+      "mission_id": "m-2ed85fbfdd2d439c92d9ce44f535c762",
+      "mission_revision": 0,
+      "mission_status_at_recording": "NEW",
+      "protocol": "eidolon-cancel-receipt/1",
+      "recorded_at": "2026-10-06T17:19:36.036200+00:00",
+      "request_sha256": "615bb127bcdb1eece84b6ba50ad2146141006bd19f5c8ced766e24071a4d2a09",
+      "status": "RECORDED",
+      "store_id": "s-7c899f8c035045bf8f8b58e231a046f8"
+    },
+    "execution_evidence": false,
+    "effect_absence_evidence": false,
+    "authorizes_resend": false,
+    "authorizes_execution": false
+  },
+  "same_receipt_on_repeat": true,
+  "database_unchanged_by_reads": true,
+  "mission_status_now": "NEW",
+  "stop_confirmed": false,
+  "tool_executed": false,
+  "checks_passed": true
+}

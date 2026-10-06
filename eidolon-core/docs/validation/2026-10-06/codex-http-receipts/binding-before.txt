@@ -1,0 +1,30 @@
+test_decision_receipt_cannot_change_its_recorded_meaning (tests.test_receipt_lookup.ReceiptLookupTests.test_decision_receipt_cannot_change_its_recorded_meaning) ... FAIL
+test_corrupt_fields_and_new_versions_are_not_exported (tests.test_receipt_lookup.ReceiptLookupTests.test_corrupt_fields_and_new_versions_are_not_exported) ... 
+  test_corrupt_fields_and_new_versions_are_not_exported (tests.test_receipt_lookup.ReceiptLookupTests.test_corrupt_fields_and_new_versions_are_not_exported) (value="{'protocol': 'eidolon-cancel-receipt/1', 'status': 'RECORDED', 'store_id': 's-49a1ea3de13c4eb78001bf067068da43', 'client") ... FAIL
+
+======================================================================
+FAIL: test_decision_receipt_cannot_change_its_recorded_meaning (tests.test_receipt_lookup.ReceiptLookupTests.test_decision_receipt_cannot_change_its_recorded_meaning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_receipt_lookup.py", line 116, in test_decision_receipt_cannot_change_its_recorded_meaning
+    self.assert_error("RECEIPT_UNAVAILABLE", query_for(command))
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_receipt_lookup.py", line 54, in assert_error
+    with self.assertRaises(ReceiptLookupError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ReceiptLookupError not raised
+
+======================================================================
+FAIL: test_corrupt_fields_and_new_versions_are_not_exported (tests.test_receipt_lookup.ReceiptLookupTests.test_corrupt_fields_and_new_versions_are_not_exported) (value="{'protocol': 'eidolon-cancel-receipt/1', 'status': 'RECORDED', 'store_id': 's-49a1ea3de13c4eb78001bf067068da43', 'client")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_receipt_lookup.py", line 175, in test_corrupt_fields_and_new_versions_are_not_exported
+    self.assert_error("RECEIPT_UNAVAILABLE")
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_receipt_lookup.py", line 54, in assert_error
+    with self.assertRaises(ReceiptLookupError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ReceiptLookupError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.385s
+
+FAILED (failures=2)

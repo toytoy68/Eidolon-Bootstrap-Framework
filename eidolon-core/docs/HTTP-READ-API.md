@@ -24,9 +24,10 @@ doit être servi par ce même serveur, pas ouvert via `file://`.
 | GET `/v1/health` | aucun | `protocol: eidolon-http-read/1`, `mode: read_only`, `store_id`, `authorizes_execution: false` |
 | POST `/v1/missions` | `{}` ou `{limit: 1..100, cursor: objet}` | réponse existante `eidolon-mission-list/1` inchangée |
 | GET `/v1/missions/m-ID` | aucun | réponse `eidolon-client-sync/1`, SNAPSHOT |
+| POST `/v1/command-receipt` | `{store_id, client_id, command_key, mission_id}` | reçu historique ou absence, selon [C-009b](HTTP-RECEIPTS.md) |
 | POST `/v1/missions/m-ID/poll` | `{cursor: objet, limit?: 1..100}` | DELTA ou RESET_REQUIRED selon ClientSync |
 
-Le POST transporte un curseur sans le mettre dans l'URL ; **aucune écriture**.
+Le POST transporte un curseur ou une clé de reçu sans le mettre dans l'URL ; **aucune écriture**.
 La première page omet le curseur (null également accepté pour la liste).
 Seul `application/json` (avec charset=utf-8 facultatif) est accepté en POST.
 Pas de paramètres d'URL, de clés inconnues, de clés JSON dupliquées ni de NaN.
@@ -37,7 +38,7 @@ base absente ou copie de restauration en revue refusée, sans création/migratio
 Erreurs JSON : `{protocol: 'eidolon-http-read/1', error: CODE,
 authorizes_execution: false}`. HTTP 401 authentification, 403 Host/Origin,
 400 entrée/curseur, 404 mission/route, 405 méthode, 413 volume requête,
-415 type, 503 stockage/état indisponible ou réponse trop volumineuse.
+409 identité Store/mission du reçu divergente, 415 type, 503 stockage/état indisponible ou réponse trop volumineuse.
 Aucune exception brute/chemin/SQL renvoyé. RESET_REQUIRED reste HTTP 200 :
 c'est une réponse de protocole à appliquer explicitement, pas une panne réseau.
 

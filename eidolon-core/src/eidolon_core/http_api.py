@@ -26,6 +26,7 @@ from .client_sync import ClientSync, SyncError
 from .contracts import ContractError
 from .mission_list import MissionList
 from .presentation import header, message
+from .receipt_lookup import ReceiptLookupError, lookup as lookup_receipt
 from .store import Store
 
 PROTOCOL = "eidolon-http-read/1"
@@ -225,7 +226,8 @@ class _Handler(BaseHTTPRequestHandler):
             self._exists(match[1])
             self._json(200, ClientSync(self.server.store).snapshot(match[1]))
             return
-        if self.command != "POST" or not (self.path == "/v1/missions" or match and match[2]):
+        if self.command != "POST" or not (self.path in {"/v1/missions", "/v1/command-receipt"}
+                                          or match and match[2]):
             raise APIError(404, "NOT_FOUND")
         content_type = self._one("Content-Type")
         if content_type is None or content_type.lower() not in {
@@ -235,6 +237,9 @@ class _Handler(BaseHTTPRequestHandler):
         if len(raw) != size:
             raise APIError(400, "INCOMPLETE_BODY")
         data = _decode(raw)
+        if self.path == "/v1/command-receipt":
+            self._json(200, lookup_receipt(self.server.store, data))
+            return
         if set(data) - {"cursor", "limit"}:
             raise APIError(400, "UNKNOWN_FIELD")
         if self.path == "/v1/missions":
@@ -255,6 +260,8 @@ class _Handler(BaseHTTPRequestHandler):
         try:
             self._request()
         except APIError as exc:
+            self._error(exc.status, exc.code)
+        except ReceiptLookupError as exc:
             self._error(exc.status, exc.code)
         except SyncError as exc:
             bad_request = {"INVALID_CURSOR", "CURSOR_MISSION_MISMATCH",

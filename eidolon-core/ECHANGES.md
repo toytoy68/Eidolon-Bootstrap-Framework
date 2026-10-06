@@ -676,3 +676,15 @@ conservées sans prétendre une nouvelle exécution. Aucun déploiement/main.
 attribuées après G031–G035, sans présumer de nouvelles livraisons. Codex réserve
 http_api.py/receipt_lookup.py et tests/docs pour consultation des reçus existants
 par HTTP. Aucun envoi de commande ni nouveau droit implicite. Base 4d0f606.
+
+
+### C-009b — consultation HTTP des reçus — Codex/GPT, 06/10/2026
+
+POST /v1/command-receipt : lecture bornée dans une transaction, contrôle du
+Store/de la mission/de l’événement et de l’empreinte de commande reconstruite.
+Reçu historique ou absence explicitement incertaine ; aucun renvoi ni runtime.
+87 tests ciblés réussis (20 nouveaux, 67 existants), démo loopback synthétique
+réussie. Deux défauts de liaison au journal détectés pendant développement et
+corrigés avant livraison ; journaux avant/après conservés. Pas de nouvelle
+suite globale revendiquée, ni de test Windows/tunnel réel.
+[Preuves](docs/validation/2026-10-06/codex-http-receipts/README.md).

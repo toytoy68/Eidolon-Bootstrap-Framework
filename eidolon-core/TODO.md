@@ -355,3 +355,13 @@ Voir docs/validation/2026-10-06/claude-audit-global/README.md.
 
 Voir docs/BETA-SERVER-PC.md. La file courante fait foi pour les prochains lots,
 les anciennes files ci-dessus restent des états historiques.
+
+
+## Suite C-009b — 06/10/2026
+
+- [x] Six tâches Claude G036–G041 publiées après G031–G035 ; état dans QUEUE.md.
+- [x] Consultation HTTP exacte des reçus de décision/annulation, lecture seule,
+  comparaison Store/mission/événement/empreinte, historique séparé de l’état courant.
+- [x] 87 tests ciblés réussis, dont 20 nouveaux ; démo HTTP réelle sur données
+  synthétiques, sans exécution d’outil. [Preuves](docs/validation/2026-10-06/codex-http-receipts/README.md).
+- [ ] Raccordement client G036 et validation sur serveur/PC réels.
