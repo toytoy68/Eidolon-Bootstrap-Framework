@@ -235,3 +235,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G039](2026-10-06-gpt-C-MSG-G039.md) : réception G022–G025 et attribution G028–G030 ; push bloqué.
 
 - [G040](2026-10-06-gpt-C-MSG-G040.md) : blocage historique, levé à la publication G041.
+
+- [G041](2026-10-06-gpt-C-MSG-G041.md) : publication précédente et anciennes cibles.
+- [G045](2026-10-06-gpt-C-MSG-G045.md) : intégration G026–G030, nouvelle file et réponses aux études.
