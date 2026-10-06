@@ -121,14 +121,16 @@ def classify_page(page, limits):
             or (page.retry_after is not None and (type(page.retry_after) is not int
                 or not 0 <= page.retry_after <= 86400))):
         raise ContractError("invalid page envelope")
-    if len(page.body) > limits.body_bytes:
-        return "TOO_LARGE", None
-    if not page.complete:
-        return "TRUNCATED", None
+    # Refusal is known from the validated status even when its body is unusable.
+    # Never downgrade a quota/access refusal into a retryable content problem.
     if page.status == 429:
         return "RATE_LIMITED", None
     if page.status in {401, 403}:
         return "ACCESS_DENIED", None
+    if len(page.body) > limits.body_bytes:
+        return "TOO_LARGE", None
+    if not page.complete:
+        return "TRUNCATED", None
     if page.status != 200:
         return "HTTP_ERROR", None
     try:
@@ -344,10 +346,7 @@ class ResearchCoordinator:
                                     or retrieval.get("size") != len(page.body)):
                                 raise ContractError("retrieval body mismatch")
                         final = decide(page.url, self.resolver, self.policy)
-                        if not final.allowed:
-                            source.update(state="POLICY_REFUSED", reason=final.code)
-                            continue
-                        source.update(state=state, final_url=final.url,
+                        source.update(state=state, final_url=final.url if final.allowed else None,
                                       http_status=page.status, retry_after=page.retry_after,
                                       retry_review_required=page.retry_review_required,
                                       deadline_exceeded=page.deadline_exceeded)
@@ -357,14 +356,24 @@ class ResearchCoordinator:
                         if (state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"}
                                 or page.retry_after is not None or page.retry_review_required):
                             pause_reason = state if state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"} else "RETRY_WAIT"
-                            self._persistent('pause', [origin_scope(*domain), origin_scope(final.host, final.port)],
+                            scopes = [origin_scope(*domain)]
+                            # A parsed origin can be suspended even if its DNS
+                            # has failed/changed since the completed request.
+                            # Recording a refusal does not authorize a connection.
+                            if final.host is not None and final.port is not None:
+                                scopes.append(origin_scope(final.host, final.port))
+                            self._persistent('pause', scopes,
                                              reason=pause_reason, retry_after=page.retry_after,
                                              review=page.retry_review_required)
                         if state == "RATE_LIMITED" or page.retry_after is not None or page.retry_review_required:
                             wait_state = "RATE_LIMITED" if state == "RATE_LIMITED" else "RETRY_WAIT"
                             self._rate_limit(domain, page.retry_after, page.retry_review_required, wait_state)
                             # A quota returned after redirect applies to the final domain too.
-                            self._rate_limit((final.host, final.port), page.retry_after, page.retry_review_required, wait_state)
+                            if final.host is not None and final.port is not None:
+                                self._rate_limit((final.host, final.port), page.retry_after, page.retry_review_required, wait_state)
+                        if not final.allowed:
+                            source.update(state="POLICY_REFUSED", reason=final.code)
+                            continue
                         if state == "READ":
                             evidence = {"state": "READ", "final_url": final.url, "text": content,
                                         "observed_at": retrieval["observed_at"] if retrieval else datetime.now(timezone.utc).isoformat(),

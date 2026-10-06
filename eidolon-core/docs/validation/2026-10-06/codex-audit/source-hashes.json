@@ -1,0 +1,23 @@
+{
+  "src/eidolon_core/runtime.py": "7bbad1a91f21b1b06483f9c70073b10678e403dbe126b4d858247fa50c6eff36",
+  "src/eidolon_core/worker.py": "abbf7fc3e82d5fca776f9d568c958324dd9ed808e93558ea476439b1ed2fa6e7",
+  "src/eidolon_core/store.py": "18f188009144dc161d6a2616852b085db9413b13166386f8fd46b838f44cf8a3",
+  "src/eidolon_core/commands.py": "4fd7bb381984a2b8e00cf9f7909f39816a777a1a6c57ac16c9d21c7bfdc0307b",
+  "src/eidolon_core/tools.py": "e3b7f93f2edf87742b3dbc4104a73a862170c4b84121d1e1506961590a38e48d",
+  "src/eidolon_core/contracts.py": "3ec4a5eda7570116bb2439b02788ba2f7a4eb0babb00c4741b16c2ba472300b0",
+  "src/eidolon_core/objectives.py": "5d1eab1e17c6db32c146399b828f7abe9f3e39892eb0bf7c435ec95d110c13a7",
+  "src/eidolon_core/actions.py": "7c75dad9f217cf7aea79bb0bb7f721ee0642b31d051638cbb65fc0fa92825995",
+  "src/eidolon_core/approvals.py": "22d53da7b04869a8fb73c0c0c757fa074b810167f9039e44497245d7a9fcc788",
+  "src/eidolon_core/simulation.py": "eb2b9c66ba701f78d546c441a9021cea5115170d9fd0e33c3f3f4fd960d51f1f",
+  "src/eidolon_core/research.py": "831da99c032ab16aa01482e27a8a633854b18e1e169e853831664361fc1625bc",
+  "src/eidolon_core/research_pauses.py": "4ddd688f54d1969fb7c4563044747a82aedd61f9b1802efae73cf66906ed3cbe",
+  "src/eidolon_core/web_reader.py": "6f43e1b24009a6f7e78438b09fc3bb26a494af347a675bcf7efb657ad2b739e3",
+  "src/eidolon_core/web_transport.py": "aa605c2fef6a096a48283e7f415046f7382095f2303ff88f9f2f48d03eca22e3",
+  "src/eidolon_core/egress.py": "ee089a27a62339913a8402f8dcfa39384c60c7038b33deffe19d54528f69f091",
+  "src/eidolon_core/client_sync.py": "6584fa2a0f3f7165e29493f3fb7fc54565559915758116faba71b1134c91a4ea",
+  "src/eidolon_core/mission_list.py": "81f2d1f47839e67f6e5848884c2af3acbfe8eae477fc3eae109b6f74af67d988",
+  "src/eidolon_core/recovery.py": "4d47088f446c42949be2ed42e4e5c202b91857cff9d623c7eca99f0966c988f4",
+  "src/eidolon_core/ollama_model.py": "2b7379a6e9054c99e82308b68071b10835df0deb8d6925fac03a70287ff6b3ef",
+  "src/eidolon_core/openai_chat_model.py": "976844e61c6777fb4366f662cd95dcd44cc8d1b755ebfdef974bf8667aa68b90",
+  "tests/test_audit_regressions.py": "209371f71dc9b8cb23ecf87e3f40d59679279c8a18435f9d4112140267ba9654"
+}

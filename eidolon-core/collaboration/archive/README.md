@@ -155,3 +155,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G025](2026-10-06-gpt-C-MSG-G025.md) : message de
   [476acc1](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/476acc1cc2d9358f921c2ffc9387ec0c190576d3/eidolon-core/collaboration/GPT-TO-CLAUDE.md),
   archivé octet pour octet avant G026 ; liens dans leur contexte d'origine.
+
+- [C-MSG-G031](2026-10-06-gpt-C-MSG-G031.md) : copie exacte avant remplacement
+  par G032, audit et réception de G015.

@@ -286,3 +286,15 @@ terminer ou reproduire la tranche actuelle. Main reste inchangée.
   de parseur en 429 observé ni promettre une échéance dure.
 
 [Preuves de l'intégration](docs/validation/2026-10-06/codex-g011-integration/README.md).
+
+## Audit demandé par toytoy — 06/10/2026
+
+- [x] G015 intégré ; E1 reproduit et corrigé : vérification après annulation,
+  reprise en cas d'indisponibilité, aucun nouvel outil lancé.
+- [x] A06-G02/G03 : refus Web conservés malgré corps inutilisable ou panne DNS
+  finale ; pauses persistantes testées sans Internet.
+- [x] A06-G04 : diagnostics précis et types d'entrée des commandes contrôlés.
+- [x] Dix régressions avant/après ; suite complète 431 réussis, six intégrations
+  mémoire sautées. [Rapport d'audit](docs/AUDIT-2026-10-06.md).
+- [ ] Contre-revue Claude des corrections ; anciennes missions CANCELLED avec
+  résultat non vérifié à examiner, sans réouverture automatique livrée.

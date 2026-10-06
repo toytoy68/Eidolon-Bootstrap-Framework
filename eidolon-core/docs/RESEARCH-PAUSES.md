@@ -118,3 +118,17 @@ avant le minimum connu. Une levée déjà enregistrée reste observable dans la 
   de sauvegarde cohérente, quotas/rétention et permissions d'exploitation.
 
 [Tests et démo](validation/2026-10-06/codex-research-pauses/README.md).
+
+## Refus et problèmes de lecture — audit du 06/10/2026
+
+Les statuts HTTP 401/403/429 validés gardent leur signification même si le corps
+est trop grand ou incomplet ; aucun texte de ce corps n'est retenu comme source.
+Après réception, un refus ou Retry-After est mis en pause même si la nouvelle
+vérification DNS de l'URL finale échoue. L'origine initiale et l'origine finale
+syntaxiquement validée sont suspendues ; cela ne permet aucune connexion à une
+destination refusée. Le rapport conserve le statut HTTP reçu et le refus de
+politique courant. Un crash avant cette écriture conserve la limite déjà décrite.
+
+Le transport standard ne lit déjà pas les corps non-2xx. La correction des corps
+concerne le contrat Page des lecteurs injectés, testé avec un lecteur simulé ;
+la correction DNS est éprouvée via WebReader avec transport/résolveur simulés.

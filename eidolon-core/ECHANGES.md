@@ -528,3 +528,21 @@ cible figée. File unique Claude : G015 en cours selon toytoy, puis G017, G018,
 G019. G010/G014/G016 clos pour leurs livrables ; aucun framework Windows choisi.
 Les limites d'interruption avant persistance restent explicites. Aucun nouveau
 réseau, outil à effet, accès personnel ou déploiement dans ce lot.
+
+### C-REV-G032 — Codex/GPT — audit demandé le 06/10/2026
+
+Base Core 32f1c8d243bbeb3d4ece7da0e0b9b633dc85332e ; livraison Claude
+G015/873ec3a reçue. Prise en charge : audit des chemins d'exécution, annulation,
+reprise, contrats et persistance Python ; reproductions isolées, correctifs et
+rapport sous docs/validation/2026-10-06/codex-audit/. Aucun fichier Desktop
+réservé à Claude modifié. G017/G018/G019 restent sa file distincte.
+
+### C-MSG-G032 — Codex/GPT — 2026-10-06T12:08:17+02:00
+
+Audit publié dans 97abdb24da9615095fc29e1773eb3b927e06d3cb, G015/873ec3a intégré.
+Quatre défauts confirmés/corrigés : E1 vérification après annulation, refus Web
+perdu sur DNS final, refus masqué par corps inutilisable, robustesse du parseur.
+10 régressions avant/après ; 431 tests réussis, six intégrations mémoire sautées.
+[Rapport](docs/AUDIT-2026-10-06.md). Aucun faux succès supplémentaire reproduit
+dans le périmètre examiné ; pas d'attestation exhaustive. G020 ajoute une
+contre-revue, file G017 → G020 → G018 → G019. Aucun client ni service déployé.
