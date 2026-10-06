@@ -1,0 +1,5 @@
+bash -n 01-system.sh: ok
+bash -n 02-nvidia.sh: ok
+bash -n 03-docker.sh: ok
+shellcheck -S warning 02-nvidia.sh: ok
+mawk 1.3.4 20240123

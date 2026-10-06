@@ -1,0 +1,23 @@
+FAIL L1 commentaire en fin de ligne : composants AVANT le # — rc=0 got='deb https://deb.debian.org/debian trixie main # commentaire contrib non-free non-free-firmware\n' stderr=''
+FAIL L2 source tierce avec main : intacte et signalée — rc=0 got='deb https://vendor.example/debian trixie main contrib non-free non-free-firmware\n' stderr=''
+FAIL L3 domaine piège deb.debian.org.evil.example : intact — rc=0 got='deb http://deb.debian.org.evil.example/debian trixie main contrib non-free non-free-firmware\n' stderr=''
+FAIL L4 chemin piège mirror.example/deb.debian.org/debian : intact — rc=0 got='deb http://mirror.example/deb.debian.org/debian trixie main contrib non-free non-free-firmware\n' stderr=''
+PASS L5 ligne commentée : intacte
+PASS L6 sans main : intacte
+PASS L7 options entre crochets avec espaces
+PASS L8 sécurité https, barre finale, composants partiels
+PASS L9 miroir national ftp.fr.debian.org
+PASS L10 dépôt Docker (sans main) et cdrom commenté intacts
+FAIL L11 options [ non fermées : intacte et signalée — rc=0 got='deb [arch=amd64 http://deb.debian.org/debian trixie main contrib non-free non-free-firmware\n' stderr=''
+PASS D1 strophe officielle
+FAIL D2 strophe tierce avec main : intacte et signalée — rc=0 got='Types: deb\nURIs: https://vendor.example/debian\nSuites: trixie\nComponents: main contrib non-free non-free-firmware\nSigned-By: /etc/apt/keyrings/vendor.gpg\n' stderr=''
+FAIL D3 URIs mêlées officielle + tierce : intacte — rc=0 got='Types: deb\nURIs: http://deb.debian.org/debian https://vendor.example/debian\nSuites: trixie\nComponents: main contrib non-free non-free-firmware\n' stderr=''
+FAIL D4 Components sur plusieurs lignes : intacte et signalée — rc=0 got='Types: deb\nURIs: http://deb.debian.org/debian\nSuites: trixie\nComponents: main contrib non-free non-free-firmware\n non-free-firmware\n' stderr=''
+FAIL D5 URI tierce en ligne de continuation : intacte — rc=0 got='Types: deb\nURIs: http://deb.debian.org/debian\n https://vendor.example/debian\nSuites: trixie\nComponents: main contrib non-free non-free-firmware\n' stderr=''
+FAIL D6 deux strophes : seule l'officielle change, commentaire gardé — rc=0 got='# commentaire\nTypes: deb\nURIs: http://deb.debian.org/debian\nSuites: trixie trixie-updates\nComponents: main contrib non-free non-free-firmware\n\nTypes: deb\nURIs: https://vendor.example/debian\nSuites: trixie\nComponents: main contrib non-free non-free-firmware\nSigned-By: /etc/apt/keyrings/vendor.gpg\n' stderr=''
+FAIL D7 noms de champ en minuscules — rc=0 got='types: deb\nuris: https://deb.debian.org/debian\nsuites: trixie\ncomponents: main\n' stderr=''
+PASS W1 droits 0644 gardés après réécriture
+FAIL W2 second passage : contenu identique et fichier non réécrit
+PASS W3 aucun fichier temporaire laissé
+FAIL W4 fichier absent : échec, rien créé
+ÉCHECS : 13

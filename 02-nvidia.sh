@@ -165,30 +165,136 @@ fi
 
 title "Configuration des dépôts Debian"
 
-# Ajoute contrib, non-free et non-free-firmware aux seules entrées Debian
-# qui contiennent déjà « main », sans doublon : relancer le script ne
-# modifie plus rien. Formats pris en charge : ligne « deb … » (sources.list)
-# et champ « Components: » (deb822, debian.sources). Le fichier n'est
-# remplacé qu'après une écriture complète.
+# Ajoute contrib, non-free et non-free-firmware aux seules entrées des
+# miroirs Debian officiels (deb.debian.org, security.debian.org,
+# ftp.debian.org, ftp.<pays>.debian.org ; chemin /debian ou
+# /debian-security) qui contiennent déjà « main », sans doublon : relancer
+# le script ne modifie plus rien. Formats : ligne « deb … » (sources.list),
+# commentaire de fin de ligne compris, et strophe deb822 (debian.sources).
+# Sources tierces, lignes commentées et formes non prises en charge restent
+# intactes ; les deux dernières sont signalées sur la sortie d'erreur.
+# Le fichier n'est remplacé que s'il change, après une écriture complète,
+# en gardant ses droits et son propriétaire.
 add_debian_components() {
 
     local file="$1"
-    local tmp="${file}.eidolon-tmp"
+    local deb822=0
+    local tmp
 
-    awk '
-        function add_missing(first,    i, w, found) {
-            for (w = 1; w <= 3; w++) {
-                found = 0
-                for (i = first; i <= NF; i++) if ($i == wanted[w]) found = 1
-                if (!found) $0 = $0 " " wanted[w]
-            }
-        }
+    [[ "$file" == *.sources ]] && deb822=1
+
+    tmp=$(mktemp "${file}.eidolon-XXXXXX") || return 1
+
+    if ! awk -v deb822="$deb822" '
         BEGIN { split("contrib non-free non-free-firmware", wanted, " ") }
-        /^[[:space:]]*deb(-src)?[[:space:]]/ || /^Components:/ {
-            for (i = 2; i <= NF; i++) if ($i == "main") { add_missing(2); break }
+
+        function note(message) {
+            print FILENAME ":" (at ? at : FNR) ": " message " ; laissé intact" > "/dev/stderr"
         }
-        { print }
-    ' "$file" >"$tmp" && mv -f "$tmp" "$file"
+
+        # Miroir officiel : hôte exact et chemin exact, jamais une sous-chaîne.
+        function official(uri,    rest, slash, host, path) {
+            if (substr(uri, 1, 7) == "http://") rest = substr(uri, 8)
+            else if (substr(uri, 1, 8) == "https://") rest = substr(uri, 9)
+            else return 0
+            slash = index(rest, "/")
+            if (slash == 0) return 0
+            host = substr(rest, 1, slash - 1)
+            path = substr(rest, slash)
+            sub(/\/+$/, "", path)
+            if (host != "deb.debian.org" && host != "security.debian.org" \
+                && host != "ftp.debian.org" && host !~ /^ftp\.[a-z][a-z]\.debian\.org$/) return 0
+            return path == "/debian" || path == "/debian-security"
+        }
+
+        function has(list, word,    n, i, words) {
+            n = split(list, words, /[ \t]+/)
+            for (i = 1; i <= n; i++) if (words[i] == word) return 1
+            return 0
+        }
+
+        function missing(list,    w, out) {
+            out = ""
+            for (w = 1; w <= 3; w++) if (!has(list, wanted[w])) out = out " " wanted[w]
+            return out
+        }
+
+        function one_line(line,    body, comment, gap, p, type, rest, n, t, uri, components, i) {
+            if (line !~ /^[ \t]*deb(-src)?[ \t]/) { print line; return }
+            body = line; comment = ""
+            p = index(body, "#")
+            if (p) { comment = substr(body, p); body = substr(body, 1, p - 1) }
+            gap = ""
+            if (match(body, /[ \t]+$/)) { gap = substr(body, RSTART); body = substr(body, 1, RSTART - 1) }
+            match(body, /^[ \t]*deb(-src)?/)
+            rest = substr(body, RLENGTH + 1)
+            sub(/^[ \t]+/, "", rest)
+            if (substr(rest, 1, 1) == "[") {
+                p = index(rest, "]")
+                if (!p) { note("options [ ] non fermées"); print line; return }
+                rest = substr(rest, p + 1)
+            }
+            n = split(rest, t, /[ \t]+/)
+            if (t[1] == "") { for (i = 1; i < n; i++) t[i] = t[i + 1]; n-- }
+            if (n < 3) { print line; return }
+            uri = t[1]; components = ""
+            for (i = 3; i <= n; i++) components = components " " t[i]
+            if (!has(components, "main")) { print line; return }
+            if (!official(uri)) { note("source non Debian officielle (" uri ")"); print line; return }
+            print body missing(components) (comment == "" ? gap : (gap == "" ? " " : gap) comment)
+        }
+
+        # deb822 : une strophe est modifiée seulement si toutes ses URIs sont
+        # officielles et si « Components: » tient sur une ligne.
+        function flush(    i, name, value, field, uris, comp_line, comp_multi, n, u, ok, components) {
+            uris = ""; comp_line = 0; comp_multi = 0; field = ""; at = first
+            for (i = 1; i <= count; i++) {
+                if (lines[i] ~ /^#/) continue
+                if (lines[i] ~ /^[ \t]/) {
+                    if (field == "uris") uris = uris " " lines[i]
+                    if (field == "components") comp_multi = 1
+                    continue
+                }
+                name = tolower(lines[i]); sub(/:.*/, "", name)
+                value = lines[i]; sub(/^[^:]*:/, "", value)
+                field = name
+                if (name == "uris") uris = value
+                if (name == "components") comp_line = i
+            }
+            if (comp_line) {
+                components = lines[comp_line]; sub(/^[^:]*:/, "", components)
+                if (has(components, "main")) {
+                    n = split(uris, u, /[ \t]+/); ok = 0
+                    for (i = 1; i <= n; i++) if (u[i] != "") { if (!official(u[i])) { ok = -1; break } ok = 1 }
+                    if (comp_multi) note("Components sur plusieurs lignes, non pris en charge")
+                    else if (ok != 1) note("strophe avec une URI non Debian officielle")
+                    else { sub(/[ \t]+$/, "", lines[comp_line]); lines[comp_line] = lines[comp_line] missing(components) }
+                }
+            }
+            for (i = 1; i <= count; i++) print lines[i]
+            count = 0; at = 0
+        }
+
+        deb822 && /^[ \t]*$/ { flush(); print; next }
+        deb822 { if (!count) first = FNR; lines[++count] = $0; next }
+        { one_line($0) }
+        END { if (deb822) flush() }
+    ' "$file" >"$tmp"; then
+        rm -f "$tmp"
+        return 1
+    fi
+
+    if cmp -s "$file" "$tmp"; then
+        rm -f "$tmp"
+        return 0
+    fi
+
+    if ! chmod --reference="$file" "$tmp" \
+        || ! chown --reference="$file" "$tmp" \
+        || ! mv -f "$tmp" "$file"; then
+        rm -f "$tmp"
+        return 1
+    fi
 
 }
 
