@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- ==========================================================
+     Projet      : Eidolon Core
+     Organisation: Eidolon Core Technologies (ECT)
+     Fichier     : index.html
+     Description : Prototype autonome du client bureau Eidolon (C-TASK-G009)
+     Standard    : Eidolon Presentation Standard v1
+     ========================================================== -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>Eidolon — prototype</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#app">Aller à la fenêtre Eidolon</a>
+<div class="layout">
+  <section id="bench" class="bench" aria-labelledby="bench-title"></section>
+  <div class="stage">
+    <main id="app" class="app" tabindex="-1"></main>
+    <aside id="windows" class="windows" aria-labelledby="windows-title"></aside>
+  </div>
+</div>
+<div id="live" class="visually-hidden" aria-live="polite"></div>
+<div id="dialog-root"></div>
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+✔ approve sends one request and changes nothing before the acknowledgement (5.168656ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (1.726704ms)
+✔ refusal never leads to work or execution (2.225004ms)
+✔ offline: nothing is sent or queued, drafts stay local (0.870251ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (1.227976ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (1.632248ms)
+✔ revoking a recorded approval prevents execution (0.741092ms)
+✔ cancellation request before execution closes the mission without running it (0.724675ms)
+✔ review required: no automatic retry and no decision offered (0.608199ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.726762ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.586316ms)
+✔ local microphone stays signalled while Core is unreachable (0.157867ms)
+✔ closing the window decides and cancels nothing (0.115127ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.097364ms)
+✔ a decision on a changed proposal is reported as not recorded (0.141106ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.266064ms)
+✔ model functions are pure: the input state is never mutated (0.149358ms)
+✔ ui: no network request beyond the local files, no script error (585.964059ms)
+✔ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (595.583493ms)
+✔ ui: offline disables sending with a visible reason (448.209563ms)
+✔ ui: lost acknowledgement flow through the interface (713.370537ms)
+✔ ui: locked session toast is generic and opens nothing (368.856486ms)
+✔ ui: microphone indicator survives a Core disconnection (384.162605ms)
+✔ ui: targets, contrast and horizontal overflow in every scenario and view (3960.901313ms)
+ℹ views audited: 35; worst contrast 4.70:1 (needs 4.5) on "Étape suivante de Core"
+✔ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (526.361874ms)
+✔ ui: reduced motion stops the eye animation (277.866155ms)
+✔ ui: assisted reading previews exactly what will be sent and requires a fresh review (638.282121ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8951.535602
