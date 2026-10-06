@@ -1,0 +1,74 @@
+python 3.11.15 | target source: /tmp/claude-0/-home-user-Eidolon-Bootstrap-Framework/596dd934-3383-54c6-a6b5-c1754939dbdc/scratchpad/g015-frozen/eidolon-core/src/eidolon_core
+
+== R1a injected SQLite faults: flag, event and receipt all-or-nothing
+  fault missions BEFORE UPDATE         -> IntegrityError: g015 injected | mission+events unchanged=True lookup=NOT_FOUND | after removing fault: REQUESTED at=BLOCKED rev=8 seq=10, CANCEL_REQUESTED=1
+  fault events AFTER INSERT            -> IntegrityError: g015 injected | mission+events unchanged=True lookup=NOT_FOUND | after removing fault: REQUESTED at=BLOCKED rev=8 seq=10, CANCEL_REQUESTED=1
+  fault command_receipts AFTER INSERT  -> IntegrityError: g015 injected | mission+events unchanged=True lookup=NOT_FOUND | after removing fault: REQUESTED at=BLOCKED rev=8 seq=10, CANCEL_REQUESTED=1
+
+== R1b real process killed after all three writes, before COMMIT; then after COMMIT
+  kill inside transaction: exit=91 | mission+events unchanged=True | lookup=NOT_FOUND
+  kill after commit: exit=92 | lookup=FOUND flag=True | resubmit identical to lookup=True events 10->10
+
+== R1c real concurrent processes
+  same command x4: outcomes=['REQUESTED', 'REQUESTED', 'REQUESTED', 'REQUESTED'] distinct receipts=1 events={'CANCEL_REQUESTED': 1, 'CANCEL_COMMAND_RECORDED': 0}
+  4 different keys, same mission: outcomes=['ALREADY_REQUESTED', 'ALREADY_REQUESTED', 'ALREADY_REQUESTED', 'REQUESTED'] events={'CANCEL_REQUESTED': 1, 'CANCEL_COMMAND_RECORDED': 3} revision=8->8
+  same key on two missions: outcomes=['ContractError: COMMAND_KEY_REUSED: key already bound to another r', 'REQUESTED'] flags A=True B=False
+  same key, sequential approve then cancel: DECISION RECORDED rev=9 | ContractError: COMMAND_KEY_REUSED: key already bound to another request | flag=False
+  same key, cancel vs approve on one mission (x4): outcomes=['ContractError: COMMAND_KEY_REUSED: key already bound to another r', 'REQUESTED'] flag=True approval=PENDING decisions=0
+
+== R1d execution lock held by another process; SQLite write lock held >5 s
+  mission lock held elsewhere: cancel -> REQUESTED at=BLOCKED rev=8 seq=10 in 0.00s | decision (other key) -> Busy: mission already running/reconciling
+  write lock held 12 s: API -> OperationalError: database is locked after 5.0s | flag=False lookup=NOT_FOUND
+  same situation via CLI command-cancel (other key): exit=1 traceback=True last stderr line: sqlite3.OperationalError: database is locked | flag after CLI=False
+  after the lock is released, same command -> REQUESTED at=BLOCKED rev=8 seq=10
+
+== R2a cancel before a decision; no revision needed while the mission progresses
+  cancel -> REQUESTED at=BLOCKED rev=8 seq=10
+  approve after cancel (other key) -> ContractError: mission is not awaiting an action decision
+  run -> status=CANCELLED phase=READY error=CANCELLED result=None calls=['PREPARED'] approval=PENDING effect=NOT_STARTED outcome=NOT_ACHIEVED cancel_requested=True restarts=0
+  revision seen by client=0, mission progressed to 8 (BLOCKED); cancel -> REQUESTED receipt mission_revision=8
+
+== R2b cancel committed at each step of an approved run (another writer, no lock)
+  at ACTION_CONDITION_CHECKED   cancel=['REQUESTED'] -> status=CANCELLED phase=READY error=CANCELLED result=None calls=['PREPARED'] approval=APPROVED effect=NOT_STARTED outcome=NOT_ACHIEVED cancel_requested=True restarts=0 | run again: CANCELLED | events {'CALL_STARTED': 0, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+  at inside approvals.consume   cancel=['REQUESTED'] -> status=CANCELLED phase=READY error=CANCELLED result=None calls=['PREPARED'] approval=USED effect=NOT_AUTHORIZED outcome=NOT_ACHIEVED cancel_requested=True restarts=0 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+  at CALL_STARTED               cancel=['REQUESTED'] -> status=CANCELLED phase=READY error=CANCELLED result=None calls=['PREPARED'] approval=USED effect=NOT_AUTHORIZED outcome=NOT_ACHIEVED cancel_requested=True restarts=0 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+  at WORKER_SPAWNED             cancel=['REQUESTED'] -> status=CANCELLED phase=READY error=CANCELLED result=None calls=['PREPARED'] approval=USED effect=NOT_AUTHORIZED outcome=NOT_ACHIEVED cancel_requested=True restarts=0 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+  at TOOL_RETURNED              cancel=['REQUESTED'] -> status=CANCELLED phase=VERIFY error=VERIFICATION_UNAVAILABLE result=None calls=['RETURNED'] approval=USED effect=RESULT_UNVERIFIED outcome=NOT_ACHIEVED cancel_requested=True restarts=1 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+      reconcile use-receipt -> ValueError: mission has no uncertain call to reconcile
+      reconcile abandon -> ValueError: mission has no uncertain call to reconcile
+  at RESULT_SAVED               cancel=['REQUESTED'] -> status=CANCELLED phase=VERIFY error=VERIFICATION_UNAVAILABLE result=None calls=['RETURNED'] approval=USED effect=RESULT_UNVERIFIED outcome=NOT_ACHIEVED cancel_requested=True restarts=1 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+      reconcile use-receipt -> ValueError: mission has no uncertain call to reconcile
+      reconcile abandon -> ValueError: mission has no uncertain call to reconcile
+  at RESULT_VERIFIED            cancel=['REQUESTED'] -> status=CANCELLED phase=DONE error=CANCELLED result=None calls=['VERIFIED'] approval=USED effect=VERIFIED_PAST_EFFECT outcome=ACHIEVED cancel_requested=True restarts=1 | run again: CANCELLED | events {'CALL_STARTED': 1, 'SUCCEEDED': 0, 'CANCELLED': 1, 'REVIEW_REQUIRED': 0}
+
+== R2c success already committed; other terminal states
+  after SUCCEEDED: ALREADY_TERMINAL at=SUCCEEDED | mission body unchanged=True flag=False result kept=True | event={'CANCEL_COMMAND_RECORDED': 1}
+
+== R3 effect committed by the child (child dies after commit), then cancellation
+  before cancel: status=REVIEW_REQUIRED phase=EXECUTING error=WORKER_LOST result=None calls=['STARTED'] approval=USED effect=UNKNOWN outcome=NOT_ACHIEVED cancel_requested=False restarts=1
+  cancel -> REQUESTED at=REVIEW_REQUIRED effect_absence_evidence=False | run -> status=REVIEW_REQUIRED phase=EXECUTING error=WORKER_LOST result=None calls=['STARTED'] approval=USED effect=UNKNOWN outcome=NOT_ACHIEVED cancel_requested=True
+  reconcile no-effect          -> ContractError: simulation has a committed effect receipt; reconcile its result or aba | then run -> status=REVIEW_REQUIRED phase=EXECUTING error=WORKER_LOST result=None calls=['STARTED'] approval=USED effect=UNKNOWN outcome=NOT_ACHIEVED cancel_requested=True restarts=1 world receipt kept=True
+  reconcile no-effect+confirm  -> ContractError: simulation has a committed effect receipt; reconcile its result or aba | then run -> status=REVIEW_REQUIRED phase=EXECUTING error=WORKER_LOST result=None calls=['STARTED'] approval=USED effect=UNKNOWN outcome=NOT_ACHIEVED cancel_requested=True restarts=1 world receipt kept=True
+  reconcile observed-result    -> 'BLOCKED' | then run -> status=CANCELLED phase=VERIFY error=CANCELLED result=None calls=['RETURNED'] approval=USED effect=RESULT_UNVERIFIED outcome=NOT_ACHIEVED cancel_requested=True restarts=1 world receipt kept=True
+  reconcile abandon            -> 'ABANDONED' | then run -> status=ABANDONED phase=DONE error=EFFECT_UNKNOWN result=None calls=['UNKNOWN'] approval=USED effect=UNKNOWN outcome=NOT_ACHIEVED cancel_requested=True restarts=1 world receipt kept=True
+
+== R4 lookup of both receipt protocols, ClientSync exposure, parsing
+  lookup decision: status=FOUND protocol=eidolon-command-receipt/1 authorizes_resend=False execution_evidence=False receipt keys=['approval_status_at_recording', 'client_id', 'command_key', 'decision', 'event_sequence', 'execution_evidence', 'mission_id', 'mission_revision', 'proposal_sha256', 'protocol', 'recorded_at', 'request_sha256', 'status', 'store_id']
+  lookup cancel  : status=FOUND protocol=eidolon-cancel-receipt/1 authorizes_resend=False execution_evidence=False receipt keys=['cancel_outcome', 'cancel_requested_at_recording', 'client_id', 'command_key', 'effect_absence_evidence', 'event_sequence', 'execution_evidence', 'mission_id', 'mission_revision', 'mission_status_at_recording', 'protocol', 'recorded_at', 'request_sha256', 'status', 'store_id']
+  ClientSync: revision 9->9 cursor 10->11 cancel_requested False->True status=BLOCKED applicability=CANCEL_REQUESTED
+  poll after cancel: events=['CANCEL_REQUESTED'] keys=['at', 'kind', 'sequence'] actor/reason leaked=False
+  lookup with another store_id -> ContractError: STORE_CHANGED: resynchronize before any decision
+  same command, JSON keys reordered -> REQUESTED at=BLOCKED rev=9 seq=11
+  same key, actor with trailing space -> ContractError: COMMAND_KEY_REUSED: key already bound to another request
+  parse extra expected_revision  -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ContractError: INVALID_COMMAND: exact versioned cancellation fields required
+  parse NaN in reason            -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ContractError: value is not finite UTF-8 JSON
+  parse BOM                      -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0
+  parse uppercase mission id     -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ValueError: invalid mission id
+  parse actor only spaces        -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ContractError: INVALID_COMMAND: bounded explicit actor required
+  parse decision protocol        -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ContractError: INVALID_COMMAND: exact versioned cancellation fields required
+  parse 32769 bytes              -> ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command | validator alone: ContractError: INVALID_COMMAND: bounded explicit reason required
+
+== R4b CLI exit codes for command-cancel
+  ALREADY_TERMINAL  exit=0 stdout: {"cancel_outcome":"ALREADY_TERMINAL","cancel_requested_at_recording":false,"client_id":"probe-deskto
+  missing mission   exit=2 stderr: {"error":"KeyError","message":"'mission not found'"}
+  other store_id    exit=2 stderr: {"error":"ContractError","message":"STORE_CHANGED: resynchronize before any decision"}
