@@ -1,0 +1,20 @@
+test_actual_cli_reports_success_and_collision_without_secret (tests.test_access_token.AccessTokenTests.test_actual_cli_reports_success_and_collision_without_secret) ... ok
+test_cleanup_failure_does_not_erase_published_token (tests.test_access_token.AccessTokenTests.test_cleanup_failure_does_not_erase_published_token) ... ok
+test_concurrent_creators_publish_exactly_one_complete_token (tests.test_access_token.AccessTokenTests.test_concurrent_creators_publish_exactly_one_complete_token) ... ok
+test_creates_private_compatible_secret_without_exporting_it (tests.test_access_token.AccessTokenTests.test_creates_private_compatible_secret_without_exporting_it) ... ok
+test_directory_sync_failure_keeps_published_token_and_reports_uncertainty (tests.test_access_token.AccessTokenTests.test_directory_sync_failure_keeps_published_token_and_reports_uncertainty) ... ok
+test_existing_file_is_unchanged_even_on_repeat (tests.test_access_token.AccessTokenTests.test_existing_file_is_unchanged_even_on_repeat) ... ok
+test_file_sync_failure_never_publishes (tests.test_access_token.AccessTokenTests.test_file_sync_failure_never_publishes) ... ok
+test_link_failure_never_changes_destination (tests.test_access_token.AccessTokenTests.test_link_failure_never_changes_destination) ... ok
+test_missing_or_symlink_parent_is_not_created_or_followed (tests.test_access_token.AccessTokenTests.test_missing_or_symlink_parent_is_not_created_or_followed) ... ok
+test_new_files_have_distinct_tokens (tests.test_access_token.AccessTokenTests.test_new_files_have_distinct_tokens) ... ok
+test_partial_writes_are_completed (tests.test_access_token.AccessTokenTests.test_partial_writes_are_completed) ... ok
+test_publication_exposes_complete_written_inode_only (tests.test_access_token.AccessTokenTests.test_publication_exposes_complete_written_inode_only) ... ok
+test_restrictive_umask_still_creates_private_readable_file (tests.test_access_token.AccessTokenTests.test_restrictive_umask_still_creates_private_readable_file) ... ok
+test_symlink_directory_and_fifo_destinations_are_never_replaced (tests.test_access_token.AccessTokenTests.test_symlink_directory_and_fifo_destinations_are_never_replaced) ... ok
+test_write_zero_or_exception_leaves_no_destination_or_staging (tests.test_access_token.AccessTokenTests.test_write_zero_or_exception_leaves_no_destination_or_staging) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.116s
+
+OK

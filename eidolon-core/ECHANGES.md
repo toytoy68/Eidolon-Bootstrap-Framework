@@ -729,3 +729,17 @@ Diagnostic livré en a8ae8fa, base 7c7631f ; arbre identique au local 973a1e8.
 57 tests Python / 18 Node réussis, deux Chromium sautés. G035/G040 informés
 du contrat --check, G042–G044 publiés après les lots existants. Aucun
 déploiement ni recette serveur utilisateur/Windows.
+
+
+### Séance bornée du 06/10, 19 h 36–20 h 36 Paris — Codex/GPT
+
+Demande toytoy : poursuivre une heure, publier les lots clos puis reprendre
+demain. Base 6ae125c. G032/C046 et G033/C047 intégrés localement depuis
+6f8b695, fusion 4a909b6 ; 24 tests HTML et 23 cas APT reproduits sans
+exécuter/source d’installateur. Publication groupée prévue à la clôture.
+
+Codex réserve **C-009d**, création locale de jeton de consultation : nouveau
+access_token.py, tests/docs dédiés. Fichier privé créé sans écrasement, jeton
+jamais affiché ; aucune modification automatique des serveurs déjà lancés.
+Claude conserve ses lots client, recettes et revues ; pas de reprise de ses
+fichiers réservés pendant cette tranche.

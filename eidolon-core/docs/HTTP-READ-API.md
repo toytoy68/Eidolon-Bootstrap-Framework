@@ -76,7 +76,7 @@ passent. Ne pas lancer les scripts Bootstrap pour cette recette.
 export PYTHONPATH=src:.
 EIDOLON_BETA_STATE="$(mktemp -d /tmp/eidolon-beta-XXXXXX)"
 python -m eidolon_core --state "$EIDOLON_BETA_STATE" demo
-python -c 'import os,secrets,sys; fd=os.open(sys.argv[1],os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); f=os.fdopen(fd,"w"); f.write(secrets.token_urlsafe(32)+"\n"); f.close()' "$EIDOLON_BETA_STATE/read-token"
+python -m eidolon_core.access_token --output "$EIDOLON_BETA_STATE/read-token" --format human
 python -m eidolon_core.http_api --state "$EIDOLON_BETA_STATE" \
   --token-file "$EIDOLON_BETA_STATE/read-token" --port 8765
 ```
@@ -108,3 +108,7 @@ Ajouter `--check --format human` à la commande de lancement ci-dessus. Le
 [diagnostic C-009c](HTTP-PREFLIGHT.md) contrôle état, jeton et assets existants
 sans ouvrir de port. JSON par défaut, codes de retour 0/2. Il ne teste ni la
 disponibilité du port, ni le navigateur ou le tunnel.
+
+La création locale du jeton est documentée dans [READ-TOKEN.md](READ-TOKEN.md).
+Un refus avec `CREATED_REVIEW_REQUIRED` exige un examen local ; ne pas
+supposer que le nouveau fichier est absent parce que le code de retour vaut 2.

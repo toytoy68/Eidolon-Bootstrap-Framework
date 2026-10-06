@@ -377,3 +377,14 @@ les anciennes files ci-dessus restent des états historiques.
 - [ ] G035/G040 : intégrer cette étape à la recette et au lanceur candidat.
 
 Voir docs/HTTP-PREFLIGHT.md et docs/validation/2026-10-06/codex-preflight/.
+
+
+## Séance du 06/10 au soir — C-009d et intégration
+
+- [x] G032/G033 intégrés depuis 6f8b695 ; 24 tests HTML, 23 cas APT
+  reproduits sans exécuter les installateurs.
+- [x] Création de jeton local privé sans écrasement, publication complète,
+  erreurs après publication distinguées de l’absence de création.
+- [x] 52 tests ciblés du lot jeton/préflight/API réussis (15 nouveaux jeton).
+
+Publication groupée à la clôture de la séance ; documentation READ-TOKEN.md.
