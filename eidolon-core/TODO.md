@@ -165,9 +165,13 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
 - [ ] Claude G015 : contre-revue des reçus d’annulation, sous verrou et après effet.
-- [ ] Diagnostic CLI cohérent pour les erreurs SQLite ; conserver l’incertitude
-  du commit et orienter vers la consultation du reçu.
-- [ ] C-008 suite : reçus run, génération après restauration, quotas et
+- [x] Diagnostic CLI STORAGE_UNAVAILABLE pour les erreurs SQLite ; incertitude
+  conservée, pas de traceback/message SQL brut.
+- [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
+  garde avant migration/exécution ; [contrat](docs/RECOVERY-REVIEW.md).
+- [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
+  ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.
+- [ ] C-008 suite : reçus run, détection de rollback hors outil de revue, quotas et
   rétention, identité/appairage, API authentifiée ;
   autorité et permissions restent dans Core. [Contrat livré](docs/CLIENT-SYNC.md).
 - [ ] C-003W : connecteur documents/médias Windows et permissions locales,

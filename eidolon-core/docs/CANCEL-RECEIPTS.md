@@ -133,7 +133,8 @@ garantie exactement une fois ni effacement de l'incertitude. Un effet déjà
 commis peut persister après annulation ; réconciliation ou abandon explicite
 reste nécessaire selon la mission.
 
-Mêmes limites de stockage que C-008b : identité copiée avec sauvegarde/clone,
+C-008d fournit une [copie historique gardée](RECOVERY-REVIEW.md), sans réactivation.
+Hors de cet outil, mêmes limites que C-008b : identité copiée avec sauvegarde/clone,
 reçus récents perdus lors d'une restauration ancienne, rétention sans purge ni
 quota. Coupure électrique, NAS, Windows et VM non qualifiés. Les autres appels
 Store restent des interfaces internes de confiance ; un opérateur pouvant

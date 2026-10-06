@@ -59,9 +59,18 @@ class Store:
 
     @contextmanager
     def connection(self):
+        if (self.directory / "RECOVERY-REVIEW-ONLY").exists():
+            raise ContractError("RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked")
         db = sqlite3.connect(self.path, timeout=5)
-        db.execute("PRAGMA synchronous=FULL")
         try:
+            # Prepared recovery copies are historical evidence, never a runtime
+            # store. Check on EVERY connection, also for an already-open Store.
+            meta = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sync_metadata'").fetchone()
+            if meta is not None:
+                mode = db.execute("SELECT value FROM sync_metadata WHERE key='recovery_mode'").fetchone()
+                if mode is not None:
+                    raise ContractError("RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked")
+            db.execute("PRAGMA synchronous=FULL")
             with db:
                 yield db
         finally:

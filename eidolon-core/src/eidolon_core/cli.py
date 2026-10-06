@@ -11,6 +11,7 @@ import argparse
 import json
 from pathlib import Path
 import sys
+import sqlite3
 
 from .contracts import encode
 from .action_view import presented_mission
@@ -34,6 +35,13 @@ def main(argv=None):
     parser.add_argument("--format", choices=("json", "human"), default="json",
                         help="JSON for automation (default), human for the Eidolon console presentation")
     commands = parser.add_subparsers(dest="command", required=True)
+    recovery = commands.add_parser("recovery-prepare", help="copy one mission database to a NEW review-only directory")
+    recovery.add_argument("--source", required=True, help="source mission SQLite database; opened read-only")
+    recovery.add_argument("--destination", required=True, help="new directory outside the source state")
+    recovery.add_argument("--actor", required=True)
+    recovery.add_argument("--reason", required=True)
+    inspect = commands.add_parser("recovery-inspect", help="inspect a historical review copy without starting Core")
+    inspect.add_argument("--mission-id")
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="create and run the deterministic synthetic mission")
     diagnose = commands.add_parser("diagnose", help="observe one synthetic service, requires --profile service-sim")
@@ -81,6 +89,17 @@ def main(argv=None):
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
     args = parser.parse_args(argv)
     try:
+        if args.command in {"recovery-prepare", "recovery-inspect"}:
+            from .recovery import inspect_review, prepare_review
+            result = (prepare_review(args.source, args.destination, actor=args.actor, reason=args.reason)
+                      if args.command == "recovery-prepare" else
+                      inspect_review(args.state, mission_id=args.mission_id))
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Copie historique en revue") + message("ATTENTION", encode(result)))
+            else:
+                print(encode(result))
+            return 0  # Copy/inspection completed, never permission to resume.
         if args.command == "presentation-preview":
             text = preview()
             print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
@@ -210,6 +229,12 @@ def main(argv=None):
         if args.command in {"show", "create", "reconcile", "decide"} or (args.command == "diagnose" and args.create_only):
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)
+    except sqlite3.Error as exc:
+        diagnostic = "storage unavailable; preserve uncertainty and inspect state/receipts before any resend"
+        print(render_error("STORAGE_UNAVAILABLE", diagnostic) if args.format == "human"
+              else encode({"error": "STORAGE_UNAVAILABLE", "message": diagnostic,
+                           "cause_type": type(exc).__name__}), file=sys.stderr)
+        return 2
     except (ValueError, KeyError, OSError, Busy) as exc:
         print(render_error(type(exc).__name__, str(exc)) if args.format == "human"
               else encode({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)

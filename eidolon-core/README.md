@@ -122,6 +122,21 @@ PYTHONPATH=src:. python -m examples.cancel_receipt_demo --format human
 Deux scénarios vérifiés : annulation avant exécution et interruption conservée
 en revue. Le reçu se consulte via la même commande command-receipt.
 
+## Examiner une sauvegarde sans la réactiver
+
+C-008d prépare une copie SQLite cohérente dans un nouveau dossier, renouvelle
+son identité et bloque son utilisation par Core. Les accords et reçus restent
+historiques ; aucun effet externe n'est supposé annulé. Deux commandes :
+recovery-prepare / recovery-inspect. [Contrat](docs/RECOVERY-REVIEW.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.recovery_demo --format human
+```
+
+La réactivation après revue et la sauvegarde de l'ensemble des artefacts restent
+à construire. La CLI produit désormais STORAGE_UNAVAILABLE pour une panne SQLite,
+sans affirmer qu'aucun commit n'a eu lieu.
+
 ## Tests simulés
 
 ```sh
