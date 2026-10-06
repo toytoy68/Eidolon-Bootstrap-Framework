@@ -1,0 +1,85 @@
+== P0 analyse syntaxique
+erreurs de syntaxe : 0
+
+== P1 entrées refusées avant ssh
+$ eidolon-tunnel.ps1 -Server -oProxyCommand=calc -User toytoy -Port 18765
+[ERREUR] Nom de serveur invalide (lettres, chiffres, points, tirets).
+code: 2
+
+$ eidolon-tunnel.ps1 -Server serveur.local -User a b -Port 18765
+[ERREUR] Nom d'utilisateur invalide.
+code: 2
+
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 80
+[31;1meidolon-tunnel.ps1: [31;1mCannot validate argument on parameter 'Port'. The 80 argument is less than the minimum allowed range of 1024. Supply an argument that is greater than or equal to 1024 and then try the command again.[0m
+code: 1
+
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18765 -RemoteCore x
+[ERREUR] Diagnostic distant : donner -RemoteCore, -RemoteState et -RemoteTokenFile ensemble.
+code: 2
+
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18765 -RemoteCore a;rm -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : a;rm
+code: 2
+
+appels ssh après P1 : 0
+
+== P2 aperçu par défaut
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18765 -RemoteCore ~/eidolon-recette/eidolon-core -RemoteState ~/eidolon-beta/state -RemoteTokenFile ~/eidolon-beta/read-token
+[OK] Client SSH : <dossier temporaire>/bin/ssh.exe
+[OK] Port local 18765 libre sur 127.0.0.1.
+[INFO] Mode aperçu : aucune connexion établie.
+[INFO] Diagnostic distant prévu : ssh -- toytoy@serveur.local "cd 'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state 'eidolon-beta/state' --token-file 'eidolon-beta/read-token' --web-root desktop/connected --port 18765 --check --format human"
+[INFO] Tunnel prévu : ssh -N -L 127.0.0.1:18765:127.0.0.1:18765 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -- toytoy@serveur.local
+[INFO] Adresse locale : http://127.0.0.1:18765/
+[INFO] Relancer avec -Connect pour ouvrir le tunnel. Le serveur Core doit déjà tourner (recette BETA-ACCEPTANCE.md, S4).
+code: 0
+
+appels ssh après P2 : 0
+
+== P3 port local occupé
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18766 -Connect
+[OK] Client SSH : <dossier temporaire>/bin/ssh.exe
+[ERREUR] Le port local 18766 est déjà utilisé. Choisir un autre port, identique sur le serveur (--port).
+code: 2
+
+== P4 diagnostic distant en échec : pas de tunnel
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18767 -Connect -RemoteCore c -RemoteState s -RemoteTokenFile t
+[OK] Client SSH : <dossier temporaire>/bin/ssh.exe
+[OK] Port local 18767 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+[OK] diagnostic simulé
+[ERREUR] Diagnostic distant en échec (code 2) : corriger sur le serveur avant d'ouvrir le tunnel.
+code: 2
+
+dernier appel ssh : -- toytoy@serveur.local cd 'c' && PYTHONPATH=src python3 -m eidolon_core.http_api --state 's' --token-file 't' --web-root desktop/connected --port 18767 --check --format human
+
+== P5 connexion avec diagnostic réussi
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18768 -Connect -RemoteCore c -RemoteState s -RemoteTokenFile t
+[OK] Client SSH : <dossier temporaire>/bin/ssh.exe
+[OK] Port local 18768 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+[OK] diagnostic simulé
+[OK] Diagnostic distant réussi. Ce n'est pas une qualification de la bêta.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 14579) : http://127.0.0.1:18768/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18768
+code: 0
+
+-- toytoy@serveur.local cd 'c' && PYTHONPATH=src python3 -m eidolon_core.http_api --state 's' --token-file 't' --web-root desktop/connected --port 18768 --check --format human
+-N -L 127.0.0.1:18768:127.0.0.1:18768 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -- toytoy@serveur.local
+tunnel-18768.json
+
+== P6 relance : tunnel déjà actif détecté
+$ eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18768 -Connect
+[OK] Client SSH : <dossier temporaire>/bin/ssh.exe
+[ERREUR] Le port local 18768 est déjà utilisé. Choisir un autre port, identique sur le serveur (--port).
+code: 2
+
+== P7 arrêt : sous Linux le processus s'appelle ssh.exe (pas ssh) : refus attendu de l'arrêter
+$ eidolon-tunnel.ps1 -Stop -Port 18768
+[INFO] Le PID 14579 n'est plus le tunnel enregistré (arrêté ou réutilisé) ; enregistrement retiré, aucun processus arrêté.
+code: 0
+
+tunnel simulé toujours vivant (non tué par le script)
