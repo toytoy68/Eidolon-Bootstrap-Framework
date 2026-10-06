@@ -1,0 +1,36 @@
+✔ G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable (2.548544ms)
+✔ G013: a cancellation request is allowed and tracked independently of the uncertain approval (0.521514ms)
+✔ G013: double click on revoke or cancel sends one request each (0.494564ms)
+✔ G013: no new decision while a previous one is unresolved, whatever the mission view shows (0.324959ms)
+✔ G013: out-of-order replies each settle their own command (0.399962ms)
+✔ G013: duplicate and late replies never change a resolved command or the history (0.333722ms)
+✔ G013: a reply for an unknown key is counted and changes nothing (0.269716ms)
+✔ G013: receipt not found keeps the command uncertain and blocks re-emission (1.566336ms)
+✔ G013: a server refusal is a definitive answer for that key only (0.469497ms)
+✔ G013: disconnection turns sending and checking into unknown, never into a resend (0.377208ms)
+✔ G013 retention: unresolved commands are never purged, resolved ones are bounded (1.344142ms)
+✔ approve sends one request and changes nothing before the acknowledgement (2.105807ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (1.210411ms)
+✔ refusal never leads to work or execution (0.938231ms)
+✔ offline: nothing is sent or queued, drafts stay local (0.587774ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (0.587905ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (0.356747ms)
+✔ revoking a recorded approval prevents execution (1.172915ms)
+✔ cancellation request before execution closes the mission without running it (0.433072ms)
+✔ review required: no automatic retry and no decision offered (0.37236ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.391999ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.422656ms)
+✔ local microphone stays signalled while Core is unreachable (0.168263ms)
+✔ closing the window decides and cancels nothing (0.177277ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.134231ms)
+✔ a decision on a changed proposal is reported as not recorded (0.209516ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.397888ms)
+✔ model functions are pure: the input state is never mutated (0.256716ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.865965

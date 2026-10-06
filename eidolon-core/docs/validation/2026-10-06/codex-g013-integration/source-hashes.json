@@ -1,0 +1,7 @@
+{
+  "desktop/prototype/model.js": "358dea59d48fe316635ede1ec63bac666580155b26f28a163fc763752ea28cc5",
+  "desktop/prototype/app.js": "d81fc10648f4e6ea98e1778bf287623efdd9273ceedb98fd58f832bad0a5391a",
+  "desktop/prototype/styles.css": "dbb123c568d7813ada27cd75fa499eaab8f03d2d1e46985ed795c249d47644b9",
+  "desktop/prototype/tests/commands.test.js": "5916195b1742d8d94b13181dd9ea3cdcbabd9b8964ed17f15b20157c9a7e2e59",
+  "desktop/prototype/tests/model.test.js": "10908f4b935ed25998d8b1a999c6054f18530ec3a173d2401b1cf2cd442f6224"
+}

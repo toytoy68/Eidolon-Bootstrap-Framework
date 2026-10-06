@@ -149,8 +149,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude G009 : prototype autonome reçu dans 111da40, 17 tests de logique
   reproduits ; 27 réussis rapportés par Claude (10 UI non démarrés ici, Chromium
   absent). Aucune application Windows livrée.
-- [ ] Claude G013 : garder le suivi de chaque commande incertaine lors d'une
-  révocation/annulation ; sonde Codex reproduite sur le prototype.
+- [x] Claude G013 : suivi séparé des commandes incertaines livré dans deef553 ;
+  28 tests Node et sonde adaptée reproduits ; 11 UI réussis rapportés par Claude.
 - [ ] Claude G010 : comparaison Tauri/PySide/Electron et recette Windows ;
   framework non choisi, mesures OS et installation différées.
 - [x] C-008a : projection locale cohérente, curseur durable, rattrapage paginé,
@@ -164,6 +164,9 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   côté client, après G013/G012 ; pas de raccordement réseau.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
+- [ ] Claude G015 : contre-revue des reçus d’annulation, sous verrou et après effet.
+- [ ] Diagnostic CLI cohérent pour les erreurs SQLite ; conserver l’incertitude
+  du commit et orienter vers la consultation du reçu.
 - [ ] C-008 suite : reçus run, génération après restauration, quotas et
   rétention, identité/appairage, API authentifiée ;
   autorité et permissions restent dans Core. [Contrat livré](docs/CLIENT-SYNC.md).
@@ -259,7 +262,7 @@ terminer ou reproduire la tranche actuelle. Main reste inchangée.
 - [x] G011/C022 (25ea564) intégré ; sondes G011 reproduites, D3 arrondi corrigé ;
   68 tests Web ciblés réussis. Les trois fichiers source Web inchangés depuis
   la cible de Claude jusqu'à la reproduction ; correction transport ensuite.
-- [ ] Courte contre-vérification Claude de D3 sur le commit G025.
+- [x] Courte contre-vérification Claude de D3 sur le commit G025 reçue dans C023.
 - [ ] Propositions Claude : pause explicite après échec de parseur sans statut,
   borne du délai socket au budget restant ; à éprouver sans transformer l'échec
   de parseur en 429 observé ni promettre une échéance dure.

@@ -1,0 +1,48 @@
+{
+  "node": "v24.19.0",
+  "scope": "simulation pure, aucun réseau ni effet réel",
+  "results": [
+    {
+      "intent": "revoke",
+      "commands": [
+        {
+          "kind": "approve",
+          "key": "k0-0",
+          "phase": "acknowledged"
+        },
+        {
+          "kind": "revoke",
+          "key": "k2-2",
+          "phase": "acknowledged"
+        }
+      ],
+      "outbox": [
+        "DECIDE",
+        "SYNC",
+        "REVOKE",
+        "RECEIPT_QUERY"
+      ]
+    },
+    {
+      "intent": "request-cancel",
+      "commands": [
+        {
+          "kind": "approve",
+          "key": "k0-0",
+          "phase": "acknowledged"
+        },
+        {
+          "kind": "cancel",
+          "key": "k2-2",
+          "phase": "acknowledged"
+        }
+      ],
+      "outbox": [
+        "DECIDE",
+        "SYNC",
+        "CANCEL_REQUEST",
+        "RECEIPT_QUERY"
+      ]
+    }
+  ]
+}

@@ -103,3 +103,10 @@ contre-vérification demandée. G013 puis G012 restent prioritaires. Nouvelle
 ces deux lots ; G010 reste l'étude Windows suivante. C-CLAUDE-002 : étude et
 adaptateur intégrés, qualification matérielle différée, pas une tâche code en
 attente de Claude. Les paragraphes antérieurs sont des états historiques.
+
+## État courant — C-MSG-G026, 06/10/2026
+
+G013 intégré (deef553), 28 tests Node reproduits ; 11 UI seulement rapportés.
+D3 contre-vérifié par Claude C023. G012 reste prioritaire, avec voyant « Reçu à
+vérifier » ; G014 conserve sa cible C-008b. Nouveau [G015](C-TASK-G015.md) pour
+revoir séparément l'annulation C-008c après G014. G010 reste ouverte.
