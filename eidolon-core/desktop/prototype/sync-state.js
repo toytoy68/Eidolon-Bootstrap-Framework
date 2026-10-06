@@ -75,6 +75,16 @@
     return null;
   }
 
+  // Mission projection shared by client-sync/1 and mission-list/1 (same Core project_mission).
+  function validateMission(m) {
+    if (!isObject(m) || !text(m.id, 80) || !m.id || !safeInt(m.revision, 0) || !text(m.status, 40) || !text(m.phase, 40)
+        || typeof m.cancel_requested !== "boolean" || !(m.objective_kind === null || text(m.objective_kind, 80)) // null: no catalogue objective (G016)
+        || !text(m.outcome_status, 40)
+        || !isObject(m.progress) || !safeInt(m.progress.completed, 0)
+        || !(m.progress.total === null || safeInt(m.progress.total, 0))) return "INVALID_MISSION";
+    return validateActionView(m.action_view);
+  }
+
   function validateEnvelope(env) {
     if (!isObject(env)) return "NOT_AN_OBJECT";
     if (env.protocol !== PROTOCOL) return "UNSUPPORTED_PROTOCOL";
@@ -87,13 +97,9 @@
         .some(function (v) { return typeof v === "number" && Number.isInteger(v) && !Number.isSafeInteger(v); })) return "UNSAFE_OR_INVALID_INTEGER";
     if (!isObject(snap) || !safeInt(snap.as_of_sequence, 1) || !safeInt(snap.event_count, 1) || !text(snap.observed_at, 64)) return "INVALID_SNAPSHOT";
     var m = snap.mission;
-    if (!isObject(m) || m.id !== env.mission_id || !safeInt(m.revision, 0) || !text(m.status, 40) || !text(m.phase, 40)
-        || typeof m.cancel_requested !== "boolean" || !(m.objective_kind === null || text(m.objective_kind, 80)) // null: no catalogue objective (G016)
-        || !text(m.outcome_status, 40)
-        || !isObject(m.progress) || !safeInt(m.progress.completed, 0)
-        || !(m.progress.total === null || safeInt(m.progress.total, 0))) return "INVALID_MISSION";
-    var av = validateActionView(m.action_view);
-    if (av) return av;
+    var bad = validateMission(m);
+    if (bad) return bad;
+    if (m.id !== env.mission_id) return "INVALID_MISSION";
     var cur = validateCursor(env.cursor, env.store_id, env.mission_id);
     if (cur) return cur;
     if (env.cursor.sequence > snap.as_of_sequence) return "CURSOR_AFTER_SNAPSHOT";
@@ -273,7 +279,7 @@
     };
   }
 
-  var api = { PROTOCOL: PROTOCOL, MAX_REFS: MAX_REFS, createState: createState, validateEnvelope: validateEnvelope,
+  var api = { PROTOCOL: PROTOCOL, MAX_REFS: MAX_REFS, createState: createState, validateEnvelope: validateEnvelope, validateMission: validateMission,
     receive: receive, receiveError: receiveError, acceptReset: acceptReset, setConnection: setConnection,
     nextRequest: nextRequest, missionLabel: missionLabel, cancelNote: cancelNote, summary: summary };
   if (typeof module === "object" && module.exports) module.exports = api;

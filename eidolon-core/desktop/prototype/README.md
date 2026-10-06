@@ -64,11 +64,15 @@ télémétrie n'est présentée comme une observation en direct.
 | `styles.css` | Thème sombre, polices système, cibles de 44 px, animations coupées si le système le demande |
 | `sync-state.js` | Consommateur pur du protocole `eidolon-client-sync/1` (C-TASK-G012) : aucune requête, aucune commande |
 | `sync-view.js` | Scénarios de synchronisation du banc et leur rendu (texte posé par `textContent`) |
+| `mission-list-state.js` | Consommateur pur du protocole `eidolon-mission-list/1` (C-TASK-G018) : pages d'une seule génération, reset, sélection |
+| `list-view.js` | Scénarios d'inventaire du banc et leur rendu (texte posé par `textContent`) |
+| `fixtures/build-list-fixtures.js` | Génère `mission-list-fixtures.js` : trace Core C-008e inchangée (« observé ») et cas dérivés étiquetés |
 | `fixtures/build-sync-fixtures.js` | Génère `client-sync-fixtures.js` depuis la trace réelle de Codex, inchangée, plus des cas dérivés étiquetés |
 | `tests/model.test.js` | 17 tests de transitions et d'absence d'envoi indu |
 | `tests/commands.test.js` | 12 tests du suivi des commandes par clé (G013) et de l'œil « Reçu à vérifier » (G012) |
 | `tests/sync.test.js` | 13 tests du consommateur sur la trace réelle et les cas dérivés |
-| `tests/ui.test.js` | 18 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation, G016 |
+| `tests/list.test.js` | 13 tests du consommateur mission-list/1 (G018) |
+| `tests/ui.test.js` | 23 tests dans Chromium : réseau, clavier, parcours, cibles, contraste, zoom, animations, lecture assistée, G013, synchronisation, G016, inventaire G018 |
 | `tests/g016.test.js` | 7 tests de régression des écarts G012-01/02/03 (C-TASK-G016) ; ils échouent sur `cc9a64b` |
 
 ## Suivi des commandes (C-TASK-G013)
@@ -205,3 +209,35 @@ Résultats obtenus et ce qui est mesuré : voir
   noms d'événements sont ceux du prototype, pas une API.
 - Aucune réponse de conversation n'est générée : un message envoyé est
   seulement enregistré dans la liste d'envoi.
+
+## Inventaire mission-list/1 (C-TASK-G018)
+
+Troisième groupe du banc : « Inventaire mission-list/1 ». Chaque ligne et chaque
+capture porte sa provenance : **observé** (trace Core C-008e de Codex, recopiée
+avec son SHA-256) ou **dérivé : nom du cas** (construit et étiqueté). Le badge
+de la carte client-sync dit maintenant la même chose, au lieu de « TRACE C-008a ».
+
+Règles de `mission-list-state.js` :
+
+- **Une génération** : les pages assemblées ont le même `store_id` et la même
+  `generation`. Une page d'une autre génération est refusée (`GENERATION_MIXED`),
+  jamais fusionnée.
+- **Pagination** : seule la réponse à la requête attendue (curseur renvoyé tel
+  quel) est prise. Page répétée ou tardive : comptée, sans effet. Hors ligne :
+  ignorée ; au retour, la même page est redemandée avec le même curseur.
+- **Reset** : `RESET_REQUIRED` garde l'ancien inventaire, marqué **périmé**, et
+  arrête les requêtes. Seul « Relire la liste » commence une nouvelle lecture
+  (nouvelle époque) ; l'ancien inventaire reste affiché comme périmé jusqu'à la
+  fin de la nouvelle lecture.
+- **Plafond visible** : 200 missions. Au-delà, « Liste tronquée : 200 affichées
+  sur N annoncées », jamais « entièrement lue ».
+- **Sélection** : « Voir la mission » demande seulement une capture client-sync/1
+  de cet identifiant (`sync-state.js`). Le `next_cursor` de la liste n'est
+  jamais un curseur d'événements. Une réponse pour une sélection antérieure
+  est ignorée et comptée ; une capture d'un autre `store_id` est refusée.
+- Aucun bouton d'exécution : les seuls boutons lisent (« Voir la mission »,
+  « Relire la liste »).
+
+Les traces Core ne contiennent aucune capture client-sync pour les missions de
+la liste : les captures de sélection sont **dérivées** des projections de la
+liste, et étiquetées comme telles.

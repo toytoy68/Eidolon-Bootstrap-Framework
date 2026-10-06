@@ -1,0 +1,523 @@
+TAP version 13
+# Subtest: G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable
+ok 1 - G013 reproduction inverted: revoke keeps the uncertain approval tracked and resolvable
+  ---
+  duration_ms: 4.150111
+  type: 'test'
+  ...
+# Subtest: G013: a cancellation request is allowed and tracked independently of the uncertain approval
+ok 2 - G013: a cancellation request is allowed and tracked independently of the uncertain approval
+  ---
+  duration_ms: 0.676785
+  type: 'test'
+  ...
+# Subtest: G013: double click on revoke or cancel sends one request each
+ok 3 - G013: double click on revoke or cancel sends one request each
+  ---
+  duration_ms: 0.576326
+  type: 'test'
+  ...
+# Subtest: G013: no new decision while a previous one is unresolved, whatever the mission view shows
+ok 4 - G013: no new decision while a previous one is unresolved, whatever the mission view shows
+  ---
+  duration_ms: 0.291691
+  type: 'test'
+  ...
+# Subtest: G013: out-of-order replies each settle their own command
+ok 5 - G013: out-of-order replies each settle their own command
+  ---
+  duration_ms: 0.380853
+  type: 'test'
+  ...
+# Subtest: G013: duplicate and late replies never change a resolved command or the history
+ok 6 - G013: duplicate and late replies never change a resolved command or the history
+  ---
+  duration_ms: 1.273399
+  type: 'test'
+  ...
+# Subtest: G013: a reply for an unknown key is counted and changes nothing
+ok 7 - G013: a reply for an unknown key is counted and changes nothing
+  ---
+  duration_ms: 0.471077
+  type: 'test'
+  ...
+# Subtest: G013: receipt not found keeps the command uncertain and blocks re-emission
+ok 8 - G013: receipt not found keeps the command uncertain and blocks re-emission
+  ---
+  duration_ms: 0.43734
+  type: 'test'
+  ...
+# Subtest: G013: a server refusal is a definitive answer for that key only
+ok 9 - G013: a server refusal is a definitive answer for that key only
+  ---
+  duration_ms: 0.375838
+  type: 'test'
+  ...
+# Subtest: G013: disconnection turns sending and checking into unknown, never into a resend
+ok 10 - G013: disconnection turns sending and checking into unknown, never into a resend
+  ---
+  duration_ms: 0.619133
+  type: 'test'
+  ...
+# Subtest: G013 retention: unresolved commands are never purged, resolved ones are bounded
+ok 11 - G013 retention: unresolved commands are never purged, resolved ones are bounded
+  ---
+  duration_ms: 1.334995
+  type: 'test'
+  ...
+# Subtest: G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence
+ok 12 - G012 eye: an uncertain command shows « Reçu à vérifier », below offline, microphone and silence
+  ---
+  duration_ms: 0.782602
+  type: 'test'
+  ...
+# Subtest: G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+ok 13 - G012-01: the observed Core capture with objective_kind=null is accepted and shown without an invented objective
+  ---
+  duration_ms: 1.559118
+  type: 'test'
+  ...
+# Subtest: G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+ok 14 - G012-01: other validations are not relaxed (objective_kind must be a bounded string or null)
+  ---
+  duration_ms: 0.349473
+  type: 'test'
+  ...
+# Subtest: G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+ok 15 - G012-02: Codex's sequence — a late DELTA after RESET_REQUIRED no longer moves the view (1 → 11)
+  ---
+  duration_ms: 0.465427
+  type: 'test'
+  ...
+# Subtest: G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+ok 16 - G012-02: while a reset is pending, late SNAPSHOT and DELTA are frozen out; nothing is requested
+  ---
+  duration_ms: 2.084133
+  type: 'test'
+  ...
+# Subtest: G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+ok 17 - G012-02: a second reset replaces the pending one; acceptance applies the latest, older-epoch answers stay ignored
+  ---
+  duration_ms: 0.572534
+  type: 'test'
+  ...
+# Subtest: G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+ok 18 - G012-03: REVIEW_REQUIRED stays primary with a cancellation request; nothing promises CANCELLED
+  ---
+  duration_ms: 0.473065
+  type: 'test'
+  ...
+# Subtest: G012-03: a cancellation on a running mission is labelled without promising the outcome
+ok 19 - G012-03: a cancellation on a running mission is labelled without promising the outcome
+  ---
+  duration_ms: 0.570146
+  type: 'test'
+  ...
+# Subtest: observed trace is kept verbatim with its SHA-256
+ok 20 - observed trace is kept verbatim with its SHA-256
+  ---
+  duration_ms: 2.344335
+  type: 'test'
+  ...
+# Subtest: complete pagination of one generation: no loss, no duplicate, cursor sent back unchanged
+ok 21 - complete pagination of one generation: no loss, no duplicate, cursor sent back unchanged
+  ---
+  duration_ms: 1.035103
+  type: 'test'
+  ...
+# Subtest: a repeated or late page changes nothing
+ok 22 - a repeated or late page changes nothing
+  ---
+  duration_ms: 0.364676
+  type: 'test'
+  ...
+# Subtest: RESET_REQUIRED between pages: old inventory kept as stale, nothing asked, no merge, explicit relist
+ok 23 - RESET_REQUIRED between pages: old inventory kept as stale, nothing asked, no merge, explicit relist
+  ---
+  duration_ms: 1.833092
+  type: 'test'
+  ...
+# Subtest: a page of another generation is refused even if structurally valid
+ok 24 - a page of another generation is refused even if structurally valid
+  ---
+  duration_ms: 0.383857
+  type: 'test'
+  ...
+# Subtest: disconnection: a page received offline is ignored; the same page is asked again with the same cursor
+ok 25 - disconnection: a page received offline is ignored; the same page is asked again with the same cursor
+  ---
+  duration_ms: 0.215465
+  type: 'test'
+  ...
+# Subtest: visible total bound: 250 announced, 200 shown, never claimed complete
+ok 26 - visible total bound: 250 announced, 200 shown, never claimed complete
+  ---
+  duration_ms: 1.996605
+  type: 'test'
+  ...
+# Subtest: validation: authority, unsafe integers, ordering, cursors, reset shape
+ok 27 - validation: authority, unsafe integers, ordering, cursors, reset shape
+  ---
+  duration_ms: 0.291866
+  type: 'test'
+  ...
+# Subtest: empty store, null objective, review with cancellation: statuses are not confused
+ok 28 - empty store, null objective, review with cancellation: statuses are not confused
+  ---
+  duration_ms: 0.71066
+  type: 'test'
+  ...
+# Subtest: selection asks only a client-sync snapshot of that id; the list cursor is never an event cursor
+ok 29 - selection asks only a client-sync snapshot of that id; the list cursor is never an event cursor
+  ---
+  duration_ms: 1.025062
+  type: 'test'
+  ...
+# Subtest: an answer for an older selection never replaces the mission shown
+ok 30 - an answer for an older selection never replaces the mission shown
+  ---
+  duration_ms: 0.444547
+  type: 'test'
+  ...
+# Subtest: selection from another store than the list is refused
+ok 31 - selection from another store than the list is refused
+  ---
+  duration_ms: 0.214651
+  type: 'test'
+  ...
+# Subtest: nothing in the consumer can emit a command
+ok 32 - nothing in the consumer can emit a command
+  ---
+  duration_ms: 0.345497
+  type: 'test'
+  ...
+# Subtest: approve sends one request and changes nothing before the acknowledgement
+ok 33 - approve sends one request and changes nothing before the acknowledgement
+  ---
+  duration_ms: 4.525538
+  type: 'test'
+  ...
+# Subtest: recorded approval is not execution; execution and verified result are later, distinct events
+ok 34 - recorded approval is not execution; execution and verified result are later, distinct events
+  ---
+  duration_ms: 1.847649
+  type: 'test'
+  ...
+# Subtest: refusal never leads to work or execution
+ok 35 - refusal never leads to work or execution
+  ---
+  duration_ms: 2.525518
+  type: 'test'
+  ...
+# Subtest: offline: nothing is sent or queued, drafts stay local
+ok 36 - offline: nothing is sent or queued, drafts stay local
+  ---
+  duration_ms: 0.975737
+  type: 'test'
+  ...
+# Subtest: lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission
+ok 37 - lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission
+  ---
+  duration_ms: 2.675464
+  type: 'test'
+  ...
+# Subtest: a consumed approval cannot be undone; revocation and cancellation are separate requests
+ok 38 - a consumed approval cannot be undone; revocation and cancellation are separate requests
+  ---
+  duration_ms: 0.705245
+  type: 'test'
+  ...
+# Subtest: revoking a recorded approval prevents execution
+ok 39 - revoking a recorded approval prevents execution
+  ---
+  duration_ms: 0.667052
+  type: 'test'
+  ...
+# Subtest: cancellation request before execution closes the mission without running it
+ok 40 - cancellation request before execution closes the mission without running it
+  ---
+  duration_ms: 0.888012
+  type: 'test'
+  ...
+# Subtest: review required: no automatic retry and no decision offered
+ok 41 - review required: no automatic retry and no decision offered
+  ---
+  duration_ms: 0.930692
+  type: 'test'
+  ...
+# Subtest: offline endpoint view: last known state is dated, nothing claimed about now
+ok 42 - offline endpoint view: last known state is dated, nothing claimed about now
+  ---
+  duration_ms: 0.945408
+  type: 'test'
+  ...
+# Subtest: locked session: generic notification, no decision through toast, silence or closing
+ok 43 - locked session: generic notification, no decision through toast, silence or closing
+  ---
+  duration_ms: 0.832852
+  type: 'test'
+  ...
+# Subtest: local microphone stays signalled while Core is unreachable
+ok 44 - local microphone stays signalled while Core is unreachable
+  ---
+  duration_ms: 0.330335
+  type: 'test'
+  ...
+# Subtest: closing the window decides and cancels nothing
+ok 45 - closing the window decides and cancels nothing
+  ---
+  duration_ms: 0.249958
+  type: 'test'
+  ...
+# Subtest: a sequence gap asks for a snapshot instead of guessing
+ok 46 - a sequence gap asks for a snapshot instead of guessing
+  ---
+  duration_ms: 0.220013
+  type: 'test'
+  ...
+# Subtest: a decision on a changed proposal is reported as not recorded
+ok 47 - a decision on a changed proposal is reported as not recorded
+  ---
+  duration_ms: 0.251843
+  type: 'test'
+  ...
+# Subtest: assisted reading sends exactly the reviewed text, and any edit requires a new review
+ok 48 - assisted reading sends exactly the reviewed text, and any edit requires a new review
+  ---
+  duration_ms: 0.460856
+  type: 'test'
+  ...
+# Subtest: model functions are pure: the input state is never mutated
+ok 49 - model functions are pure: the input state is never mutated
+  ---
+  duration_ms: 0.269858
+  type: 'test'
+  ...
+# Subtest: fixtures: the real trace is embedded unchanged and every derived case is labelled
+ok 50 - fixtures: the real trace is embedded unchanged and every derived case is labelled
+  ---
+  duration_ms: 1.779522
+  type: 'test'
+  ...
+# Subtest: 1. reconnection after progress: pages within the announced size, duplicates removed
+ok 51 - 1. reconnection after progress: pages within the announced size, duplicates removed
+  ---
+  duration_ms: 2.119646
+  type: 'test'
+  ...
+# Subtest: 2. capture ahead of the page: the cursor keeps paging, the past is not replayed on the view
+ok 52 - 2. capture ahead of the page: the cursor keeps paging, the past is not replayed on the view
+  ---
+  duration_ms: 0.619643
+  type: 'test'
+  ...
+# Subtest: 3. out-of-order answers: an older one replaces neither the view nor the cursor
+ok 53 - 3. out-of-order answers: an older one replaces neither the view nor the cursor
+  ---
+  duration_ms: 0.394119
+  type: 'test'
+  ...
+# Subtest: 4. cancellation at unchanged revision: visible through as_of_sequence, not shown as CANCELLED
+ok 54 - 4. cancellation at unchanged revision: visible through as_of_sequence, not shown as CANCELLED
+  ---
+  duration_ms: 0.629632
+  type: 'test'
+  ...
+# Subtest: 5a. RESET_REQUIRED is never applied silently; reload is explicit and starts a new epoch
+ok 55 - 5a. RESET_REQUIRED is never applied silently; reload is explicit and starts a new epoch
+  ---
+  duration_ms: 0.349813
+  type: 'test'
+  ...
+# Subtest: 5b. store change goes through RESET only; wrong mission, unknown version and unsafe integers are rejected
+ok 56 - 5b. store change goes through RESET only; wrong mission, unknown version and unsafe integers are rejected
+  ---
+  duration_ms: 0.518959
+  type: 'test'
+  ...
+# Subtest: 6. disconnection: last known state kept with its dates, nothing applied or queued
+ok 57 - 6. disconnection: last known state kept with its dates, nothing applied or queued
+  ---
+  duration_ms: 1.710826
+  type: 'test'
+  ...
+# Subtest: 7. approval axes stay separate; the protocol never authorizes execution
+ok 58 - 7. approval axes stay separate; the protocol never authorizes execution
+  ---
+  duration_ms: 0.512794
+  type: 'test'
+  ...
+# Subtest: 8. hostile text is kept verbatim as data
+ok 59 - 8. hostile text is kept verbatim as data
+  ---
+  duration_ms: 0.4285
+  type: 'test'
+  ...
+# Subtest: a page that does not start right after our cursor leaves no hole: its capture only is taken
+ok 60 - a page that does not start right after our cursor leaves no hole: its capture only is taken
+  ---
+  duration_ms: 0.244068
+  type: 'test'
+  ...
+# Subtest: retention: references are bounded and the oldest are dropped first
+ok 61 - retention: references are bounded and the oldest are dropped first
+  ---
+  duration_ms: 18.517487
+  type: 'test'
+  ...
+# Subtest: functions are pure: inputs are never mutated
+ok 62 - functions are pure: inputs are never mutated
+  ---
+  duration_ms: 0.272656
+  type: 'test'
+  ...
+# Subtest: ui: no network request beyond the local files, no script error
+ok 63 - ui: no network request beyond the local files, no script error
+  ---
+  duration_ms: 718.187056
+  type: 'test'
+  ...
+# Subtest: ui: keyboard alone reaches and uses the decision; the click shows sending, not success
+ok 64 - ui: keyboard alone reaches and uses the decision; the click shows sending, not success
+  ---
+  duration_ms: 676.456614
+  type: 'test'
+  ...
+# Subtest: ui: offline disables sending with a visible reason
+ok 65 - ui: offline disables sending with a visible reason
+  ---
+  duration_ms: 504.120576
+  type: 'test'
+  ...
+# Subtest: ui: lost acknowledgement flow through the interface
+ok 66 - ui: lost acknowledgement flow through the interface
+  ---
+  duration_ms: 710.986675
+  type: 'test'
+  ...
+# Subtest: ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable
+ok 67 - ui: G013 — revoking during an uncertain approval keeps the approval's receipt reachable
+  ---
+  duration_ms: 849.91181
+  type: 'test'
+  ...
+# Subtest: ui: locked session toast is generic and opens nothing
+ok 68 - ui: locked session toast is generic and opens nothing
+  ---
+  duration_ms: 353.727604
+  type: 'test'
+  ...
+# Subtest: ui: microphone indicator survives a Core disconnection
+ok 69 - ui: microphone indicator survives a Core disconnection
+  ---
+  duration_ms: 394.749263
+  type: 'test'
+  ...
+# Subtest: ui: targets, contrast and horizontal overflow in every scenario and view
+ok 70 - ui: targets, contrast and horizontal overflow in every scenario and view
+  ---
+  duration_ms: 4543.403342
+  type: 'test'
+  ...
+# views audited: 35; worst contrast 4.70:1 (needs 4.5) on "Étape suivante de Core"
+# Subtest: ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll
+ok 71 - ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll
+  ---
+  duration_ms: 566.108196
+  type: 'test'
+  ...
+# Subtest: ui: reduced motion stops the eye animation
+ok 72 - ui: reduced motion stops the eye animation
+  ---
+  duration_ms: 337.932541
+  type: 'test'
+  ...
+# Subtest: ui: assisted reading previews exactly what will be sent and requires a fresh review
+ok 73 - ui: assisted reading previews exactly what will be sent and requires a fresh review
+  ---
+  duration_ms: 679.687739
+  type: 'test'
+  ...
+# Subtest: ui G012: catch-up after a cut, duplicates ignored, no network request
+ok 74 - ui G012: catch-up after a cut, duplicates ignored, no network request
+  ---
+  duration_ms: 810.648729
+  type: 'test'
+  ...
+# Subtest: ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset
+ok 75 - ui G012: RESET_REQUIRED waits for an explicit reload, then a second reset
+  ---
+  duration_ms: 781.781557
+  type: 'test'
+  ...
+# Subtest: ui G012: cancellation requested, approval axes, review — labels and no active decision
+ok 76 - ui G012: cancellation requested, approval axes, review — labels and no active decision
+  ---
+  duration_ms: 662.833133
+  type: 'test'
+  ...
+# Subtest: ui G012: rejected answers listed; hostile text rendered as text only
+ok 77 - ui G012: rejected answers listed; hostile text rendered as text only
+  ---
+  duration_ms: 727.467054
+  type: 'test'
+  ...
+# Subtest: ui G012: targets and contrast in every sync scenario, at the end of its script
+ok 78 - ui G012: targets and contrast in every sync scenario, at the end of its script
+  ---
+  duration_ms: 4452.486824
+  type: 'test'
+  ...
+# sync views audited: 9; worst contrast 4.70:1 on "E"
+# Subtest: ui G016: review stays primary next to a cancellation request; no relaunch or decision button
+ok 79 - ui G016: review stays primary next to a cancellation request; no relaunch or decision button
+  ---
+  duration_ms: 529.577885
+  type: 'test'
+  ...
+# Subtest: ui G016: observed Core capture with objective_kind=null is displayed, nothing invented
+ok 80 - ui G016: observed Core capture with objective_kind=null is displayed, nothing invented
+  ---
+  duration_ms: 442.351815
+  type: 'test'
+  ...
+# Subtest: ui G018: complete pagination of observed pages, repeated page ignored, selection read, no network
+ok 81 - ui G018: complete pagination of observed pages, repeated page ignored, selection read, no network
+  ---
+  duration_ms: 773.980317
+  type: 'test'
+  ...
+# Subtest: ui G018: reset between pages keeps the old inventory as stale until an explicit relisting
+ok 82 - ui G018: reset between pages keeps the old inventory as stale until an explicit relisting
+  ---
+  duration_ms: 776.060208
+  type: 'test'
+  ...
+# Subtest: ui G018: a late answer for the first selection does not replace the second
+ok 83 - ui G018: a late answer for the first selection does not replace the second
+  ---
+  duration_ms: 753.414469
+  type: 'test'
+  ...
+# Subtest: ui G018: statuses not confused, user selection by keyboard, hostile text, empty and truncated lists
+ok 84 - ui G018: statuses not confused, user selection by keyboard, hostile text, empty and truncated lists
+  ---
+  duration_ms: 1300.670946
+  type: 'test'
+  ...
+# Subtest: ui G018: targets and contrast in every list scenario, at the end of its script
+ok 85 - ui G018: targets and contrast in every list scenario, at the end of its script
+  ---
+  duration_ms: 3971.4551
+  type: 'test'
+  ...
+# list views audited: 8; worst contrast 4.70:1 on "Réponse suivante"
+1..85
+# tests 85
+# suites 0
+# pass 85
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26804.722568

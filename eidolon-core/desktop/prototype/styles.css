@@ -171,3 +171,10 @@ th { color: var(--muted); font-weight: 500; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Mission inventory (G018) */
+ul.list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+.list-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.5rem 0.75rem; border: 1px solid var(--line); border-radius: 0.5rem; }
+.list-row.selected { border-color: var(--accent); }
+.list-main { min-width: 0; flex: 1 1 18rem; overflow-wrap: anywhere; }
+.list-main .state { margin-left: 0.25rem; }

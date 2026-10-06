@@ -420,3 +420,118 @@ test("ui G016: observed Core capture with objective_kind=null is displayed, noth
     await context.close();
   } finally { await browser.close(); }
 });
+
+
+// ---- G018: mission-list/1 inventory -----------------------------------------------------------
+
+const EXECUTION_WORDS = /Approuver|Refuser|Lancer|Relancer|Exécuter|Demander l'annulation|Révoquer/;
+
+test("ui G018: complete pagination of observed pages, repeated page ignored, selection read, no network", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, requests, errors } = await open(browser, "liste-pagination");
+    await playSync(page, "liste-pagination", 6);
+    assert.equal(await page.textContent("#list-status"), "Capture entièrement lue (3)");
+    assert.equal(await page.locator("#list-items li").count(), 3);
+    assert.match(await page.textContent("#list-stats"), /pages répétées ou tardives ignorées : 1/);
+    assert.equal(await page.locator("#list-items .synthetic", { hasText: "observé : trace Core C-008e" }).count(), 3);
+    assert.match(await page.textContent("#sel-title"), /dérivé : selection_snapshots/);
+    assert.match(await page.textContent("#sel-state"), /Annulation demandée — issue non confirmée/);
+    assert.doesNotMatch(await page.textContent("#app"), EXECUTION_WORDS);
+    assert.deepEqual(requests.filter((u) => !u.startsWith("file://")), []);
+    assert.deepEqual(errors, []);
+    await shot(page, "15-g018-pagination-et-selection");
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G018: reset between pages keeps the old inventory as stale until an explicit relisting", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "liste-reset");
+    await playSync(page, "liste-reset", 3);
+    assert.equal(await page.isVisible("#list-reset"), true);
+    assert.match(await page.textContent("#list-reset"), /STATE_CHANGED/);
+    assert.match(await page.textContent("#list-title"), /PÉRIMÉE/);
+    assert.match(await page.textContent("#list-stats"), /réponses ignorées pendant le reset : 1/);
+    const index = await page.evaluate(() => window.EidolonPrototype.getSync().index);
+    await page.click("#server-step");
+    assert.equal(await page.evaluate(() => window.EidolonPrototype.getSync().index), index, "nothing asked while stale");
+    await shot(page, "16-g018-reset-entre-pages");
+    await page.click("#list-relist");
+    assert.equal(await page.locator("#list-reset").count(), 0);
+    assert.match(await page.textContent("#list-status"), /Ancien inventaire périmé affiché/);
+    for (let i = 0; i < 3; i++) await page.click("#server-step");
+    assert.equal(await page.textContent("#list-status"), "Capture entièrement lue (3)");
+    assert.doesNotMatch(await page.textContent("#list-title"), /PÉRIMÉE/);
+    assert.deepEqual(errors, []);
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G018: a late answer for the first selection does not replace the second", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "liste-selection-en-vol");
+    await playSync(page, "liste-selection-en-vol", 6); // pages, choice A, choice B, late answer for A
+    const ids = await page.evaluate(() => window.EidolonListFixtures.observed.trace.fresh_pages.map((p) => p.items[0].mission.id));
+    assert.match(await page.textContent("#sel-title"), new RegExp(ids[1].slice(0, 12)));
+    assert.equal(await page.textContent("#sel-state"), "Lecture client-sync demandée…");
+    assert.match(await page.textContent("#list-stats"), /réponses de sélection périmées : 1/);
+    await page.click("#server-step");
+    assert.match(await page.textContent("#sel-title"), new RegExp(ids[1].slice(0, 12)));
+    assert.equal(await page.textContent("#sel-state"), "Nouvelle");
+    assert.deepEqual(errors, []);
+    await shot(page, "17-g018-selection-en-vol");
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G018: statuses not confused, user selection by keyboard, hostile text, empty and truncated lists", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "liste-variee");
+    await playSync(page, "liste-variee", 1);
+    const text = await page.textContent("#list-items");
+    for (const label of ["Revue requise — effet à vérifier", "Annulation demandée — issue non confirmée", "Bloquée — précision demandée", "aucun reconnu (hors catalogue)"]) assert.ok(text.includes(label), label);
+    assert.doesNotMatch(await page.textContent("#app"), EXECUTION_WORDS);
+    assert.equal(await page.locator("#app button").filter({ hasNotText: /Voir la mission/ }).count(), 0, "only read buttons");
+    await page.click("#list-items li:nth-child(1) button");
+    assert.equal(await page.textContent("#sel-state"), "Revue requise — effet à vérifier");
+    assert.match(await page.textContent("#sel-effect"), /^UNKNOWN/);
+    await page.focus("#list-items li:nth-child(2) button");
+    await page.keyboard.press("Enter");
+    assert.match(await page.textContent("#sel-state"), /Revue requise|Annulation|Bloquée|Réussie|Terminée/);
+    await shot(page, "18-g018-statuts-varies");
+    await playSync(page, "liste-rejets", 6);
+    assert.equal(await page.locator("#app img").count(), 0);
+    assert.ok((await page.textContent("#list-items")).includes("<img src=x onerror=alert(1)>"));
+    const rejected = await page.textContent("#list-rejected");
+    for (const code of ["AUTHORITY_CLAIMED", "UNSAFE_OR_INVALID_INTEGER", "GENERATION_MIXED"]) assert.match(rejected, new RegExp(code));
+    await playSync(page, "liste-vide", 1);
+    assert.equal(await page.textContent("#list-empty"), "Aucune mission sur ce serveur dans cette capture.");
+    await playSync(page, "liste-tronquee", 3);
+    assert.equal(await page.textContent("#list-status"), "Liste tronquée : 200 affichées sur 250 annoncées");
+    assert.deepEqual(errors, []);
+    await context.close();
+  } finally { await browser.close(); }
+});
+
+test("ui G018: targets and contrast in every list scenario, at the end of its script", { skip }, async (t) => {
+  const browser = await chromium.launch();
+  const report = [];
+  try {
+    const { context, page } = await open(browser, "liste-pagination");
+    const scenarios = await page.evaluate(() => Object.keys(window.EidolonListView.SCENARIOS));
+    for (const key of scenarios) {
+      await playSync(page, key, 8);
+      report.push(Object.assign({ key }, await audit(page)));
+    }
+    await context.close();
+  } finally { await browser.close(); }
+  const worst = report.reduce((w, r) => (r.worst.ratio / r.worst.needed < w.ratio / w.needed ? r.worst : w), { ratio: 99, needed: 4.5 });
+  t.diagnostic(`list views audited: ${report.length}; worst contrast ${worst.ratio.toFixed(2)}:1 on "${worst.text}"`);
+  assert.deepEqual([...new Set(report.flatMap((r) => r.small))], []);
+  assert.ok(worst.ratio >= worst.needed);
+  assert.ok(report.every((r) => r.overflow <= 0));
+});

@@ -16,23 +16,23 @@
   var S = root.EidolonSync, F = root.EidolonSyncFixtures;
 
   function real(path, label) {
-    return { type: "deliver", label: label + " (trace réelle)", env: function () {
+    return { type: "deliver", source: "observé : trace Core C-008a", label: label + " (trace réelle)", env: function () {
       return path.split(".").reduce(function (o, k) { return o[k]; }, F.original); } };
   }
   function derived(name, label, patch) {
-    return { type: "deliver", label: label + " (cas dérivé)", env: function () {
+    return { type: "deliver", source: "dérivé : " + name, label: label + " (cas dérivé)", env: function () {
       var env = JSON.parse(JSON.stringify(F.derived[name].envelope));
       return patch ? patch(env) : env; } };
   }
   var asSnapshot = function (env) { env.status = "SNAPSHOT"; env.events = []; return env; };
   function observed(name, label) {
-    return { type: "deliver", label: label + " (capture Core observée)", env: function () {
+    return { type: "deliver", source: "observé : capture Core " + name, label: label + " (capture Core observée)", env: function () {
       return JSON.parse(JSON.stringify(F.observed[name].envelope)); } };
   }
   // A late answer to the request sent before the reset (same epoch): it must change nothing.
   function late(path, label) {
     var step = real(path, label);
-    return { type: "late", label: label + " (réponse tardive, trace réelle)", env: step.env };
+    return { type: "late", source: step.source, label: label + " (réponse tardive, trace réelle)", env: step.env };
   }
 
   var SCENARIOS = {
@@ -92,7 +92,9 @@
         : (S.nextRequest(s.state) || { kind: "poll", epoch: s.state.epoch, cursorSequence: null });
       if (st.type !== "late") s.lastRequest = JSON.parse(JSON.stringify(request));
       request.receivedAt = at;
+      var before = s.state.view && s.state.view.asOf;
       s.state = st.type === "error" ? S.receiveError(s.state, st.code, request) : S.receive(s.state, st.env(), request);
+      if (st.source && s.state.view && s.state.view.asOf !== before) s.source = st.source; // provenance of the capture shown
     }
     s.log.push(at + " — " + st.label);
     if (s.log.length > 30) s.log.shift();
@@ -144,7 +146,7 @@
         + '<div class="row">' + h.btn("Recharger explicitement la vue", "sync-accept-reset", { kind: "primary", id: "sync-accept-reset" }) + "</div></div>";
     }
     var card = '<section class="card" aria-labelledby="sync-title"><div class="card-head"><h3 id="sync-title">Mission '
-      + (m ? t(m.id) : "—") + ' <span class="synthetic">TRACE C-008a</span></h3>'
+      + (m ? t(m.id) : "—") + ' <span class="synthetic" id="sync-source">' + t(sync.source || "aucune capture") + "</span></h3>"
       + '<span class="state" id="sync-state">' + h.esc(S.missionLabel(m)) + "</span></div>";
     if (m) {
       var av = m.action_view;
