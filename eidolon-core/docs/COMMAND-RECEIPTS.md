@@ -119,8 +119,11 @@ lors du run séparé ; seuls ses résultats vérifiés peuvent conclure la missi
 - client_id et actor sont des libellés, **pas une authentification**. Ne pas
   exposer ces fonctions directement sur le réseau. Appairage, session et
   autorisations par identité sont une tranche distincte.
-- approve/reject/revoke seulement. Pas encore de reçus pour cancel, run, create
-  ou reconcile. Aucun outil externe exécuté par submit.
+- Cette interface reste limitée à approve/reject/revoke. C-008c ajoute une
+  interface distincte [d’annulation avec reçu](CANCEL-RECEIPTS.md), utilisant la
+  même consultation et le même espace de clés ; vérifier receipt.protocol.
+  Pas encore de reçus pour run, create ou reconcile. Aucun outil externe exécuté
+  par submit.
 - Identité copiée avec la base : une restauration/clonage conserve store_id et
   peut perdre des reçus récents. Pas de détection universelle de rollback ni de
   garantie « exactement une fois ». Après restauration, revue opérateur avant

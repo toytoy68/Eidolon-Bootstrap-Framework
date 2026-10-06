@@ -18,9 +18,11 @@ PROTOCOL = "eidolon-decision-command/1"
 MAX_SAFE_INTEGER = 2**53 - 1
 FIELDS = {"protocol", "store_id", "client_id", "command_key", "mission_id",
           "expected_revision", "proposal_sha256", "decision", "actor", "reason"}
+CANCEL_PROTOCOL = "eidolon-cancel-command/1"
+CANCEL_FIELDS = {"protocol", "store_id", "client_id", "command_key", "mission_id", "actor", "reason"}
 
 
-def parse_command(raw):
+def _parse_command(raw, validator):
     def unique(pairs):
         result = {}
         for key, value in pairs:
@@ -34,9 +36,17 @@ def parse_command(raw):
             raise ContractError("INVALID_COMMAND: command exceeds 32768 bytes")
         if isinstance(raw, bytes):
             raw = raw.decode("utf-8")
-        return validate_command(json.loads(raw, object_pairs_hook=unique))
+        return validator(json.loads(raw, object_pairs_hook=unique))
     except (ValueError, RecursionError) as exc:
         raise ContractError("INVALID_COMMAND: invalid bounded UTF-8 JSON command") from exc
+
+
+def parse_command(raw):
+    return _parse_command(raw, validate_command)
+
+
+def parse_cancel_command(raw):
+    return _parse_command(raw, validate_cancel_command)
 
 
 def _identifier(value, pattern, name):
@@ -66,6 +76,28 @@ def validate_command(value):
         if not isinstance(text, str) or not text.strip() or len(text) > bound:
             raise ContractError("INVALID_COMMAND: bounded explicit " + name + " required")
     return value
+
+
+def validate_cancel_command(value):
+    value = snapshot(value)
+    if not isinstance(value, dict) or set(value) != CANCEL_FIELDS or value["protocol"] != CANCEL_PROTOCOL:
+        raise ContractError("INVALID_COMMAND: exact versioned cancellation fields required")
+    validate_scope(value["store_id"], value["client_id"], value["command_key"])
+    Store.check_id(value["mission_id"])
+    for name, bound in (("actor", 200), ("reason", 4000)):
+        text = value[name]
+        if not isinstance(text, str) or not text.strip() or len(text) > bound:
+            raise ContractError("INVALID_COMMAND: bounded explicit " + name + " required")
+    return value
+
+
+class CancelCommands:
+    """Record a stop request without acquiring the runtime's mission lock."""
+    def __init__(self, store):
+        self.store = store
+
+    def submit(self, value):
+        return self.store.record_cancellation(validate_cancel_command(value))
 
 
 def lookup_receipt(store, *, store_id, client_id, command_key):

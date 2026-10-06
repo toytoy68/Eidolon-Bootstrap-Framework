@@ -1,0 +1,7 @@
+{
+  "src/eidolon_core/commands.py": "d9518b655b93e55a9646d29089d922d8fee2aa8132bfe8b5271822105c43b88b",
+  "src/eidolon_core/store.py": "2217c9baad6807b56cf7d32770b1e0f337840ae2f2c021f5a18d1abc9cc9dcd3",
+  "src/eidolon_core/cli.py": "3c1b96f5c949f005c5258cc9d0bc589602ba63f3ad62f09dc765587a591906b7",
+  "tests/test_cancel_commands.py": "69e1063b9f2cb97ea511846c9cdbdc176ff38f5a110d2f7a659adb8d9337beef",
+  "examples/cancel_receipt_demo.py": "89796f268a9b0f9eaed1fc128415d870160fcc7e74015ec11ad4b10ee4ed39ff"
+}

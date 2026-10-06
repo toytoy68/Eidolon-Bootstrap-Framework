@@ -250,6 +250,54 @@ class Store:
                            (identity, now(), "CANCEL_REQUESTED", "{}"))
         return self.get(identity)
 
+    def record_cancellation(self, command):
+        """Flag, audit event and command receipt share a single transaction.
+
+        This does not take the execution lock, call run, kill a worker or
+        reconcile an effect. Only CancelCommands supplies validated requests.
+        """
+        with self.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            self._check_command_store(db, command["store_id"])
+            prior = db.execute("SELECT body FROM command_receipts WHERE client_id=? AND command_key=?",
+                               (command["client_id"], command["command_key"])).fetchone()
+            if prior is not None:
+                receipt = json.loads(prior[0])
+                if receipt["request_sha256"] != digest(command):
+                    raise ContractError("COMMAND_KEY_REUSED: key already bound to another request")
+                return receipt
+            row = db.execute("SELECT revision,cancel_requested,body FROM missions WHERE id=?",
+                             (command["mission_id"],)).fetchone()
+            if row is None:
+                raise KeyError("mission not found")
+            status = json.loads(row[2])["status"]
+            requested = bool(row[1])
+            outcome = ("ALREADY_TERMINAL" if status in TERMINAL else
+                       "ALREADY_REQUESTED" if requested else "REQUESTED")
+            kind = "CANCEL_COMMAND_RECORDED"
+            if outcome == "REQUESTED":
+                db.execute("UPDATE missions SET cancel_requested=1 WHERE id=?", (command["mission_id"],))
+                requested = True
+                kind = "CANCEL_REQUESTED"
+            recorded_at = now()
+            detail = {"client_id": command["client_id"], "command_key": command["command_key"],
+                      "actor": command["actor"], "reason": command["reason"], "cancel_outcome": outcome}
+            event = db.execute("INSERT INTO events (mission_id,at,kind,detail) VALUES (?,?,?,?)",
+                               (command["mission_id"], recorded_at, kind, encode(detail)))
+            if not 0 <= row[0] <= 2**53 - 1 or not 1 <= event.lastrowid <= 2**53 - 1:
+                raise ContractError("COMMAND_BINDING: receipt exceeds JSON safe integer range")
+            receipt = {"protocol": "eidolon-cancel-receipt/1", "status": "RECORDED",
+                       "store_id": command["store_id"], "client_id": command["client_id"],
+                       "command_key": command["command_key"], "mission_id": command["mission_id"],
+                       "request_sha256": digest(command), "cancel_outcome": outcome,
+                       "mission_status_at_recording": status, "mission_revision": row[0],
+                       "cancel_requested_at_recording": requested, "event_sequence": event.lastrowid,
+                       "recorded_at": recorded_at, "execution_evidence": False,
+                       "effect_absence_evidence": False}
+            db.execute("INSERT INTO command_receipts (client_id,command_key,body) VALUES (?,?,?)",
+                       (command["client_id"], command["command_key"], encode(receipt)))
+        return receipt
+
     def events(self, identity):
         self.get(identity)
         with self.connection() as db:

@@ -97,7 +97,7 @@ pages, réponse répétée reconnue, un seul lancement d'outil. [Preuves](docs/v
 C-008b ajoute command-submit et command-receipt : décision, événement et reçu
 sont enregistrés ensemble. Un reçu retrouvé confirme cet enregistrement,
 jamais l'exécution d'un outil. approve/reject/revoke locaux et synthétiques
-uniquement ; pas encore d'API authentifiée ni de reçu pour cancel/run.
+uniquement ; pas encore d'API authentifiée ni de reçu pour run.
 [Contrat et limites](docs/COMMAND-RECEIPTS.md).
 
 ```sh
@@ -107,6 +107,20 @@ PYTHONPATH=src:. python -m examples.command_receipt_demo --format human
 Démo vérifiée : accusé perdu, reçu consulté après réouverture, commande répétée
 sans seconde décision, puis reprise explicite et un résultat d'outil vérifié.
 [Preuves : 344 tests réussis, 6 intégrations mémoire sautées](docs/validation/2026-10-06/codex-command-receipts/README.md).
+
+## Annuler et retrouver le reçu de la demande
+
+C-008c ajoute command-cancel sans construire de runtime. La demande et son reçu
+sont enregistrés ensemble, même sous verrou d'exécution. Le reçu confirme la
+demande ; un effet inconnu reste en revue et un succès déjà commis est conservé.
+[Contrat et limites](docs/CANCEL-RECEIPTS.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.cancel_receipt_demo --format human
+```
+
+Deux scénarios vérifiés : annulation avant exécution et interruption conservée
+en revue. Le reçu se consulte via la même commande command-receipt.
 
 ## Tests simulés
 

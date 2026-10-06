@@ -49,6 +49,8 @@ def main(argv=None):
     decide.add_argument("--reason", required=True)
     submit = commands.add_parser("command-submit", help="record a synthetic decision and durable receipt; no execution")
     submit.add_argument("--request", required=True, help="JSON command file, at most 32768 bytes")
+    cancel_command = commands.add_parser("command-cancel", help="record a cancellation request and receipt; no runtime")
+    cancel_command.add_argument("--request", required=True, help="JSON cancellation file, at most 32768 bytes")
     receipt = commands.add_parser("command-receipt", help="look up a historical command receipt; no runtime")
     receipt.add_argument("--store-id", required=True)
     receipt.add_argument("--client-id", required=True)
@@ -91,6 +93,19 @@ def main(argv=None):
             raise ValueError("action commands require --profile action-sim")
         if args.profile != "text" and args.command in {"demo", "create"}:
             raise ValueError("simulation missions are created with diagnose or restart")
+        if args.command == "command-cancel":
+            from .commands import CancelCommands, parse_cancel_command
+            with Path(args.request).open("rb") as handle:
+                command = parse_cancel_command(handle.read(32769))
+            if not (Path(args.state) / "missions.sqlite3").is_file():
+                raise FileNotFoundError("cancellation requires an existing mission store")
+            result = CancelCommands(Store(args.state)).submit(command)
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Demande d'annulation") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 0  # Request recorded; worker termination/effect absence are not claimed.
         if args.command == "command-receipt":
             from .commands import lookup_receipt
             if not (Path(args.state) / "missions.sqlite3").is_file():

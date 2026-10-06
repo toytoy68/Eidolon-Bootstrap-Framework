@@ -162,7 +162,9 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   [Contrat](docs/COMMAND-RECEIPTS.md). Aucun effet externe, reçu != résultat.
 - [ ] Claude G014 : contre-revue des reçus, atomicité/coupures et interprétation
   côté client, après G013/G012 ; pas de raccordement réseau.
-- [ ] C-008 suite : reçus cancel/run, génération après restauration, quotas et
+- [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
+  runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
+- [ ] C-008 suite : reçus run, génération après restauration, quotas et
   rétention, identité/appairage, API authentifiée ;
   autorité et permissions restent dans Core. [Contrat livré](docs/CLIENT-SYNC.md).
 - [ ] C-003W : connecteur documents/médias Windows et permissions locales,

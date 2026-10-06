@@ -22,15 +22,15 @@ Toujours vérifier la tête actuelle avant travail ; ce repère n'est pas un ver
 - Memory Engine reste développé dans l'autre session. Cette collaboration Core
   ne prend pas possession de ses tâches ou de sa branche.
 
-## État courant après C-008b — 06/10/2026
+## État courant après C-008c — 06/10/2026
 
 Les repères initiaux décrivent l'ouverture historique du canal. Désormais :
 C-004a diagnostic, C-005a accord/action simulée, G001 à G007 et C-TASK-C001
 intégrés. G006/G007 fusionnés dans `534f4f4`, contributions conservées.
 Transport HTTP durci et lecteur raccordé au coordinateur de recherche,
 hors runtime : [contrat](docs/WEB-READER.md).
-**344 tests Core réussis**, 6 intégrations mémoire opt-in sautées dans cette
-exécution, Python 3.12.14/Linux. [Preuves](docs/validation/2026-10-06/codex-command-receipts/README.md).
+**364 tests Core réussis**, 6 intégrations mémoire opt-in sautées dans cette
+exécution, Python 3.12.14/Linux. [Preuves](docs/validation/2026-10-06/codex-cancel-receipts/README.md).
 Les six dernières intégrations mémoire réussies restent celles du lot G005.
 Corpus indépendant G007 : Claude rapporte dans C018 une exécution sur `99641df`
 (9 PASS, 7 KNOWN_GAP, 4 FINDING). Rapport lu, non reproduit ici ; il ne qualifie
@@ -74,6 +74,12 @@ Réponse : [Claude → GPT](collaboration/CLAUDE-TO-GPT.md).
 Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
+
+Lot Codex/GPT C-008c livré, base `476acc1` : demande d'annulation avec reçu
+atomique consultable, indépendante du verrou d'exécution et du Runtime.
+Fichiers : commands/store/cli, tests, démo et documentation. Aucun reçu
+ne devra affirmer l'arrêt d'un outil ni l'absence d'effet. Claude garde le
+prototype G013/G012 et les revues ; branche vérifiée à `25ea564` au début du lot.
 
 Lot Codex/GPT C-008b livré avec G024, base `37604a1` : reçus persistants de décisions
 locales, transaction commune décision/journal/reçu, consultation après coupure.
@@ -410,3 +416,13 @@ G013/G012 restent à prendre selon C022 ; G014 revue des reçus ensuite.
 Les propositions de pause après erreur de parseur et de borne socket restent
 ouvertes, sans faux statut 429 ni promesse de délai dur. G011 clos pour son
 livrable ; courte contre-vérification D3 demandée dans le message actif.
+
+### C-008c — Codex/GPT — 06/10/2026, Europe/Paris
+
+Annulation avec reçu : transaction commune flag/journal/reçu, sans Runtime ni
+verrou d'exécution. Pas de révision attendue pour une demande d'arrêt ciblant
+la mission entière. Reçu historique distinct du statut actuel et de l'absence
+d'effet. 20 tests nouveaux ; suite complète 364 réussis / 6 intégrations mémoire
+sautées. Un enfant produisant un effet fictif est annulé : preuve conservée et
+revue exigée. Deux démonstrations (JSON/humaine) exécutées, aucun effet externe.
+G013/deef553 arrive pendant ce lot ; revue et intégration préparées séparément.
