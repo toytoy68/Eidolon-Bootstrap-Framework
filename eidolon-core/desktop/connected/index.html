@@ -1,0 +1,73 @@
+<!doctype html>
+<!-- ==========================================================
+     Projet      : Eidolon Core
+     Organisation: Eidolon Core Technologies (ECT)
+     Fichier     : index.html
+     Description : Client de consultation connecté (C-TASK-G031), servi par http_api --web-root
+     Standard    : Eidolon Presentation Standard v1
+     ========================================================== -->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Eidolon — consultation</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#missions">Aller à la liste des missions</a>
+  <header class="top">
+    <div class="brand">
+      <h1>Eidolon Core</h1>
+      <span class="badge" title="Aucune commande : ni accord, ni lancement, ni annulation">Consultation seule</span>
+    </div>
+    <form id="connect-form" class="connect" autocomplete="off" novalidate>
+      <label for="token">Jeton de lecture</label>
+      <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
+             inputmode="text" maxlength="128" aria-describedby="token-help">
+      <button id="connect" type="submit">Se connecter</button>
+      <button id="disconnect" type="button" disabled>Se déconnecter</button>
+      <p id="token-help" class="help">Gardé en mémoire de cette page uniquement ; effacé à la déconnexion ou au rechargement.</p>
+    </form>
+  </header>
+
+  <section id="connection" class="connection" aria-live="polite" aria-atomic="true">
+    <p id="connection-status" class="status">Non connecté.</p>
+    <p id="connection-detail" class="detail"></p>
+    <p id="connection-notice" class="notice" hidden></p>
+  </section>
+
+  <main class="layout">
+    <section id="missions" class="panel" aria-labelledby="missions-title" tabindex="-1">
+      <div class="panel-head">
+        <h2 id="missions-title">Missions</h2>
+        <button id="relist" type="button" disabled>Relire la liste</button>
+      </div>
+      <p id="list-status" class="status" aria-live="polite"></p>
+      <ul id="mission-list" class="mission-list"></ul>
+    </section>
+
+    <section id="details" class="panel" aria-labelledby="details-title">
+      <div class="panel-head">
+        <h2 id="details-title">Détails</h2>
+        <div class="actions">
+          <button id="refresh" type="button" disabled>Actualiser</button>
+          <label class="check"><input id="auto" type="checkbox" disabled> Relire toutes les 10 s</label>
+        </div>
+      </div>
+      <div id="reset-banner" class="banner" role="alert" hidden>
+        <p id="reset-text"></p>
+        <button id="accept-reset" type="button">Recharger la capture</button>
+      </div>
+      <div id="details-body" aria-live="polite">
+        <p class="empty">Sélectionner une mission dans la liste.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Lecture seule : rien ici n'approuve, ne lance ni n'annule. Une capture datée n'est pas une preuve qu'un processus vit encore.</p>
+  </footer>
+</body>
+</html>

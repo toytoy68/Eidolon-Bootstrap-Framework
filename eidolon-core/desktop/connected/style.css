@@ -1,0 +1,174 @@
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : style.css
+ * Description : Mise en page du client de consultation connecté (C-TASK-G031)
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --ink: #17202a;
+  --muted: #4a5663;
+  --line: #c9d1da;
+  --accent: #1f4e8c;
+  --accent-ink: #ffffff;
+  --ok: #1d6b3a;
+  --warn: #8a4b00;
+  --bad: #a3231b;
+  --stale-bg: #fff6e5;
+  --focus: #b35c00;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11161c;
+    --panel: #1a2129;
+    --ink: #e8edf2;
+    --muted: #b3bfcc;
+    --line: #3a4652;
+    --accent: #8fb8ee;
+    --accent-ink: #0d1520;
+    --ok: #7fd49c;
+    --warn: #f0b45c;
+    --bad: #ff9a8f;
+    --stale-bg: #2e2617;
+    --focus: #ffb366;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+h1, h2, h3 { margin: 0; line-height: 1.25; }
+h1 { font-size: 1.35rem; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1rem; margin-top: 1rem; }
+
+.skip { position: absolute; left: -999px; top: 0; }
+.skip:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--panel); color: var(--ink); padding: .5rem 1rem; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+button {
+  font: inherit;
+  min-height: 44px;
+  padding: .5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+button[disabled] { opacity: .55; cursor: not-allowed; }
+#disconnect, #relist, #refresh { background: var(--panel); color: var(--accent); }
+
+input[type="password"] {
+  font: inherit;
+  min-height: 44px;
+  min-width: 16rem;
+  padding: .5rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; gap: .75rem; align-items: center; }
+.badge {
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  border-radius: 999px;
+  padding: .1rem .7rem;
+  font-size: .9rem;
+  font-weight: 600;
+}
+.connect { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.connect label { font-weight: 600; }
+.help { flex-basis: 100%; margin: 0; color: var(--muted); font-size: .9rem; }
+
+.connection { padding: .75rem 1.5rem; border-bottom: 1px solid var(--line); }
+.connection p { margin: .15rem 0; }
+.detail { color: var(--muted); font-size: .92rem; overflow-wrap: anywhere; }
+.notice { color: var(--warn); font-weight: 600; }
+.status { font-weight: 600; }
+.phase-connected { color: var(--ok); }
+.phase-offline, .phase-unavailable, .phase-connecting { color: var(--warn); }
+.phase-unauthorized, .phase-refused { color: var(--bad); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 2fr) minmax(18rem, 3fr);
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 0;
+}
+.panel-head { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.check { display: inline-flex; gap: .4rem; align-items: center; min-height: 44px; }
+.check input { width: 1.2rem; height: 1.2rem; }
+
+.mission-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.mission-button {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: .15rem;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.mission-button[aria-pressed="true"] { border: 2px solid var(--accent); }
+.mission-label { font-weight: 600; }
+.mission-meta { color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
+.mission-note { color: var(--warn); font-size: .9rem; }
+.mission.stale .mission-button { background: var(--stale-bg); }
+
+.banner {
+  border: 2px solid var(--warn);
+  background: var(--stale-bg);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  margin-bottom: 1rem;
+}
+.banner p { margin: 0 0 .5rem; }
+.mission-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 .5rem; }
+.stale-note { color: var(--warn); font-weight: 600; }
+.empty { color: var(--muted); }
+.fields { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem; margin: 0; }
+.fields dt { color: var(--muted); }
+.fields dd { margin: 0; overflow-wrap: anywhere; }
+.events { padding-left: 1.25rem; margin: .25rem 0; font-size: .92rem; }
+
+.foot { padding: 0 1.5rem 1.5rem; color: var(--muted); font-size: .9rem; }
+
+@media (max-width: 760px) {
+  .top, .connection, .layout, .foot { padding-left: 1rem; padding-right: 1rem; }
+  .layout { grid-template-columns: 1fr; }
+  input[type="password"] { min-width: 0; width: 100%; }
+  .fields { grid-template-columns: 1fr; }
+  .fields dd { margin-bottom: .4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

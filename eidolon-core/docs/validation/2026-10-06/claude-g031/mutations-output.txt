@@ -1,0 +1,4 @@
+garde connEpoch retirée: 1 échec(s) — not ok 5 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+pas d'effacement si autre base: 1 échec(s) — not ok 8 - reconnection to another store wipes the previous display: no mixed identities
+jeton de sélection ignoré: 1 échec(s) — not ok 10 - an answer for a previous selection never replaces the current one
+jeton gardé après 401: 1 échec(s) — not ok 5 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
