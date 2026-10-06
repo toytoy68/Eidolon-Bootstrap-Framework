@@ -134,7 +134,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
   explicite versionnée, audit, CLI et démo sans réseau. [Contrat](docs/RESEARCH-PAUSES.md).
-- [ ] Claude G019 : contre-revue ciblée des suspensions C-002c, après G018.
+- [ ] Claude G019 : contre-revue ciblée des suspensions C-002c, en cours selon toytoy le 06/10 à 12 h 57 ; G020 également.
 - [ ] Journal préalable des appels Web en vol : interruption avant commit d'une
   pause à réconcilier avant toute reconstruction/reprise réelle du coordinateur.
 - [ ] Quotas globaux et rétention du journal, artefacts persistants, intégration
@@ -173,16 +173,21 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   sur cible figée 176c1d2 ; aucun nouveau défaut confirmé.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
-- [ ] Claude G015 (en cours selon toytoy) : contre-revue des reçus d’annulation, sous verrou et après effet.
+- [x] Claude G015 : revue reçue ; E1 corrigé dans 97abdb2, contre-revue G020 en cours selon toytoy.
 - [x] Diagnostic CLI STORAGE_UNAVAILABLE pour les erreurs SQLite ; incertitude
   conservée, pas de traceback/message SQL brut.
 - [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
   garde avant migration/exécution ; [contrat](docs/RECOVERY-REVIEW.md).
-- [ ] Claude G017 : contre-revue C-008d, cible figée et sondes indépendantes.
+- [x] Claude G017 : revue reçue (4fa543d) ; E1 reproduit, copie incrémentale
+  sans transaction source prolongée, garde du fichier en attente et diagnostic
+  RECOVERY_INCOMPLETE livrés. [Suivi](docs/validation/2026-10-06/codex-recovery-followup/README.md).
 - [x] C-008e : inventaire paginé local, projection minimale, reset entre pages
   si l'état évolue ; 18 tests et démo. [Contrat](docs/MISSION-LIST.md).
-- [ ] Claude G018 : consommateur Desktop de mission-list/1 : pages cohérentes, reset et sélection
-  vers client-sync/1 ; autorisations distantes et mesures de charge différées.
+- [x] Claude G018 reçu (bfa75d2) : consommateur Desktop de mission-list/1,
+  pagination/reset/sélection. 62 tests de logique reproduits ; UI rapportée par
+  Claude, capture 15 inspectée. Prototype uniquement, aucun transport connecté.
+- [ ] G021 : une page finale trop courte peut être affichée comme liste complète
+  (sonde indépendante reproduite) ; corriger le contrôle du nombre de missions.
 - [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
   ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.
 - [ ] C-008 suite : reçus run, détection de rollback hors outil de revue, quotas et

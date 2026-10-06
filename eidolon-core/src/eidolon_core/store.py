@@ -59,7 +59,8 @@ class Store:
 
     @contextmanager
     def connection(self):
-        if (self.directory / "RECOVERY-REVIEW-ONLY").exists():
+        if any((self.directory / name).exists() for name in
+               ("RECOVERY-REVIEW-ONLY", "review.pending.sqlite3")):
             raise ContractError("RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked")
         db = sqlite3.connect(self.path, timeout=5)
         try:

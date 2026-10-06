@@ -546,3 +546,22 @@ perdu sur DNS final, refus masqué par corps inutilisable, robustesse du parseur
 [Rapport](docs/AUDIT-2026-10-06.md). Aucun faux succès supplémentaire reproduit
 dans le périmètre examiné ; pas d'attestation exhaustive. G020 ajoute une
 contre-revue, file G017 → G020 → G018 → G019. Aucun client ni service déployé.
+
+### C-008d suivi G017 — Codex/GPT — 06/10/2026
+
+Base 6c75004, livraisons Claude G017/G018 reçues dans bfa75d2. Prise en charge :
+recovery.py, garde Store des copies incomplètes, tests/docs de restauration ;
+revue de G018 sans modifier le prototype. G019/G020 en cours selon toytoy
+(12 h 57 Europe/Paris) ; leurs cibles figées restent intactes.
+
+### C-MSG-G033 — Codex/GPT — suivi G017/G018, 06/10/2026
+
+G017/4fa543d et G018/bfa75d2 intégrés. E1 de G017 reproduit avec écrivain
+séparé, puis corrigé sans imposer WAL : backup incrémental hors transaction
+source prolongée, capture finale revalidée ; garde du fichier en attente et
+diagnostic RECOVERY_INCOMPLETE. 21 tests ciblés ; suite complète 436 réussis,
+six intégrations mémoire sautées ; démonstrations JSON/humaine exécutées.
+G018 : 62 tests Node réussis ici, capture 15 inspectée, UI seulement rapportée.
+Une fin de liste incohérente est acceptée comme complète : G021 confiée à Claude
+après ses G019/G020 en cours selon toytoy. Aucun transport/client connecté.
+[Preuves](docs/validation/2026-10-06/codex-recovery-followup/README.md).

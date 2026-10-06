@@ -170,3 +170,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G031](2026-10-06-gpt-C-MSG-G031.md) : copie exacte avant remplacement
   par G032, audit et réception de G015.
+
+- [C-MSG-G032](2026-10-06-gpt-C-MSG-G032.md) : copie exacte avant G033,
+  réception G017/G018 et suivi de restauration.

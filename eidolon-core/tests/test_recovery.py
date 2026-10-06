@@ -160,11 +160,12 @@ class RecoveryTests(unittest.TestCase):
                 def __init__(self, db): self.db = db
                 def __getattr__(self, name): return getattr(self.db, name)
                 def backup(self, destination, **kwargs):
-                    owner.runtime.create(DEMO_REQUEST)  # committed after the source read snapshot began
+                    owner.runtime.create(DEMO_REQUEST)  # committed after preflight, before backup
                     self.db.backup(destination, **kwargs)
             with patch.object(recovery, '_readonly', side_effect=lambda path: Proxy(readonly(path))):
                 report = self.prepare()
-            self.assertEqual(report['counts']['missions'], 2)
+            self.assertEqual(report['counts']['missions'], 3)
+            self.assertEqual(report['capture_semantics'], 'sqlite-online-backup')
             self.assertEqual(len(self.rows(self.store.path, 'missions')), 3)
             self.assertEqual(inspect_review(self.target, mission_id=second['id'])['mission']['status_at_snapshot'], 'NEW')
 

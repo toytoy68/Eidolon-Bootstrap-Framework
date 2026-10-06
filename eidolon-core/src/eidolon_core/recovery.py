@@ -62,8 +62,8 @@ def prepare_review(source_database, destination, *, actor, reason):
         raise FileExistsError("recovery destination must not already exist")
     if source.stat().st_size > MAX_DATABASE_BYTES:
         raise ContractError("RECOVERY_SIZE_LIMIT: database exceeds 256 MiB")
-    # Validate before creating the destination; read transaction pins the source
-    # snapshot even if its owner commits additional missions during the backup.
+    # Validate in a short transaction, then release it BEFORE incremental backup.
+    # Pinning it for the whole copy starves commits in rollback-journal mode.
     with closing(_readonly(source)) as original:
         original.execute("BEGIN")
         source_id = _source_identity(original)
@@ -71,6 +71,7 @@ def prepare_review(source_database, destination, *, actor, reason):
         size = original.execute("PRAGMA page_size").fetchone()[0]
         if pages * size > MAX_DATABASE_BYTES:
             raise ContractError("RECOVERY_SIZE_LIMIT: logical database exceeds 256 MiB")
+        original.rollback()
         target.mkdir(mode=0o700)  # no overwrite, no auto-created parent hierarchy
         with (target / "RECOVERY-REVIEW-ONLY").open("x", encoding="utf-8") as marker:
             marker.write("Historical recovery copy. Use recovery-inspect; never start a runtime here.\n")
@@ -85,8 +86,15 @@ def prepare_review(source_database, destination, *, actor, reason):
 
         with closing(sqlite3.connect(pending)) as copied:
             original.backup(copied, pages=256, progress=progress, sleep=0.01)
+            # External commits can restart SQLite's backup. Validate the finished
+            # snapshot itself; never attach stale preflight identity/schema to it.
+            if _source_identity(copied) != source_id:
+                raise ContractError("RECOVERY_SOURCE_CHANGED: copied identity differs from preflight")
+            copied_pages = copied.execute("PRAGMA page_count").fetchone()[0]
+            copied_size = copied.execute("PRAGMA page_size").fetchone()[0]
+            if copied_pages * copied_size > MAX_DATABASE_BYTES:
+                raise ContractError("RECOVERY_SIZE_LIMIT: completed snapshot exceeds 256 MiB")
             copied.execute("PRAGMA journal_mode=DELETE")
-        original.rollback()
     # Digest describes the snapshot BEFORE its new identity and guard, not a
     # checksum of a concurrently changing source file or an external effect.
     with pending.open("rb") as handle:
@@ -95,6 +103,7 @@ def prepare_review(source_database, destination, *, actor, reason):
               "mode": "REVIEW_ONLY", "source_store_id": source_id,
               "store_id": "s-" + uuid.uuid4().hex, "source_snapshot_sha256": source_snapshot_sha,
               "prepared_at": now(), "actor": actor, "reason": reason,
+              "capture_semantics": "sqlite-online-backup",
               "historical_only": True, "execution_authority": False,
               "external_effects_reconciled": False, "artifacts_restored": ["mission_sqlite_only"]}
     with closing(sqlite3.connect(pending)) as copied:
@@ -121,7 +130,11 @@ def prepare_review(source_database, destination, *, actor, reason):
 
 def inspect_review(directory, *, mission_id=None):
     """Read historical metadata and optionally one mission; never construct Store."""
-    path = Path(directory).resolve() / "missions.sqlite3"
+    root = Path(directory).resolve()
+    path = root / "missions.sqlite3"
+    if not path.exists() and any((root / name).exists() for name in
+                                ("RECOVERY-REVIEW-ONLY", "review.pending.sqlite3")):
+        raise ContractError("RECOVERY_INCOMPLETE: review copy was not published; retain its files")
     with closing(_readonly(path)) as db:
         db.execute("BEGIN")
         mode = db.execute("SELECT value FROM sync_metadata WHERE key='recovery_mode'").fetchone()

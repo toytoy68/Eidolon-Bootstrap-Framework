@@ -1,0 +1,97 @@
+test_incomplete_inspection_and_cli_are_specific_and_do_not_create_database (tests.test_recovery_followup.RecoveryFollowupTests.test_incomplete_inspection_and_cli_are_specific_and_do_not_create_database) ... ERROR
+test_pending_copy_blocks_store_even_without_marker (tests.test_recovery_followup.RecoveryFollowupTests.test_pending_copy_blocks_store_even_without_marker) ... FAIL
+test_repeated_restarts_keep_deadline_and_no_publication (tests.test_recovery_followup.RecoveryFollowupTests.test_repeated_restarts_keep_deadline_and_no_publication) ... ERROR
+test_source_identity_changed_during_backup_is_rejected (tests.test_recovery_followup.RecoveryFollowupTests.test_source_identity_changed_during_backup_is_rejected) ... ERROR
+test_writer_commits_between_steps_in_delete_and_wal_modes (tests.test_recovery_followup.RecoveryFollowupTests.test_writer_commits_between_steps_in_delete_and_wal_modes) ... 
+  test_writer_commits_between_steps_in_delete_and_wal_modes (tests.test_recovery_followup.RecoveryFollowupTests.test_writer_commits_between_steps_in_delete_and_wal_modes) (journal='DELETE') ... FAIL
+  test_writer_commits_between_steps_in_delete_and_wal_modes (tests.test_recovery_followup.RecoveryFollowupTests.test_writer_commits_between_steps_in_delete_and_wal_modes) (journal='WAL') ... FAIL
+
+======================================================================
+ERROR: test_incomplete_inspection_and_cli_are_specific_and_do_not_create_database (tests.test_recovery_followup.RecoveryFollowupTests.test_incomplete_inspection_and_cli_are_specific_and_do_not_create_database)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 133, in test_incomplete_inspection_and_cli_are_specific_and_do_not_create_database
+    recovery.inspect_review(self.target)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/recovery.py", line 125, in inspect_review
+    with closing(_readonly(path)) as db:
+                 ^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/recovery.py", line 32, in _readonly
+    db = sqlite3.connect(path.as_uri() + "?mode=ro", uri=True, timeout=5)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: unable to open database file
+
+======================================================================
+ERROR: test_repeated_restarts_keep_deadline_and_no_publication (tests.test_recovery_followup.RecoveryFollowupTests.test_repeated_restarts_keep_deadline_and_no_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 115, in test_repeated_restarts_keep_deadline_and_no_publication
+    with self.assertRaisesRegex(ContractError, 'RECOVERY_BACKUP_LIMIT'): self.prepare()
+                                                                         ^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 38, in prepare
+    return recovery.prepare_review(self.store.path, self.target, actor='synthetic', reason='G017 follow-up')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/recovery.py", line 87, in prepare_review
+    original.backup(copied, pages=256, progress=progress, sleep=0.01)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 51, in backup
+    return self.db.backup(destination, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 48, in progress
+    callback(status, remaining, total)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 112, in write_each_step
+    db.commit()
+sqlite3.OperationalError: database is locked
+
+======================================================================
+ERROR: test_source_identity_changed_during_backup_is_rejected (tests.test_recovery_followup.RecoveryFollowupTests.test_source_identity_changed_during_backup_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 100, in test_source_identity_changed_during_backup_is_rejected
+    self.prepare()
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 38, in prepare
+    return recovery.prepare_review(self.store.path, self.target, actor='synthetic', reason='G017 follow-up')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/recovery.py", line 87, in prepare_review
+    original.backup(copied, pages=256, progress=progress, sleep=0.01)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 51, in backup
+    return self.db.backup(destination, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 48, in progress
+    callback(status, remaining, total)
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 94, in change_identity
+    db.commit()
+sqlite3.OperationalError: database is locked
+
+======================================================================
+FAIL: test_pending_copy_blocks_store_even_without_marker (tests.test_recovery_followup.RecoveryFollowupTests.test_pending_copy_blocks_store_even_without_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 125, in test_pending_copy_blocks_store_even_without_marker
+    with self.assertRaisesRegex(ContractError, 'RECOVERY_REVIEW_ONLY'): Store(self.target)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_writer_commits_between_steps_in_delete_and_wal_modes (tests.test_recovery_followup.RecoveryFollowupTests.test_writer_commits_between_steps_in_delete_and_wal_modes) (journal='DELETE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 77, in test_writer_commits_between_steps_in_delete_and_wal_modes
+    self.assertEqual(writers[0].returncode, 0, writers[0].stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/src/eidolon_core/store.py", line 42, in __init__
+    db.executescript("""
+sqlite3.OperationalError: database is locked
+
+
+======================================================================
+FAIL: test_writer_commits_between_steps_in_delete_and_wal_modes (tests.test_recovery_followup.RecoveryFollowupTests.test_writer_commits_between_steps_in_delete_and_wal_modes) (journal='WAL')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_recovery_followup.py", line 81, in test_writer_commits_between_steps_in_delete_and_wal_modes
+    self.assertEqual(db.execute('SELECT count(*) FROM missions WHERE id=?', (created,)).fetchone()[0], 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.396s
+
+FAILED (failures=3, errors=3)
