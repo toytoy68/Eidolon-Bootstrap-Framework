@@ -1,0 +1,23 @@
+test_action_view_is_read_only_and_does_not_expire_pending (eidolon-core.tests.test_mission_list.MissionListTests.test_action_view_is_read_only_and_does_not_expire_pending) ... ok
+test_cancel_invalidates_pages_even_without_revision_change (eidolon-core.tests.test_mission_list.MissionListTests.test_cancel_invalidates_pages_even_without_revision_change) ... ok
+test_changed_head_or_removed_event_requires_reset (eidolon-core.tests.test_mission_list.MissionListTests.test_changed_head_or_removed_event_requires_reset) ... ok
+test_cli_missing_store_does_not_create_it (eidolon-core.tests.test_mission_list.MissionListTests.test_cli_missing_store_does_not_create_it) ... ok
+test_cli_no_runtime_json_human_and_explicit_reset_exit (eidolon-core.tests.test_mission_list.MissionListTests.test_cli_no_runtime_json_human_and_explicit_reset_exit) ... ok
+test_cli_sqlite_failure_keeps_diagnostic_without_raw_message (eidolon-core.tests.test_mission_list.MissionListTests.test_cli_sqlite_failure_keeps_diagnostic_without_raw_message) ... ok
+test_cursor_fields_types_and_ranges_are_strict (eidolon-core.tests.test_mission_list.MissionListTests.test_cursor_fields_types_and_ranges_are_strict) ... ok
+test_cursor_from_another_store_returns_reset_without_items (eidolon-core.tests.test_mission_list.MissionListTests.test_cursor_from_another_store_returns_reset_without_items) ... ok
+test_cursor_parser_rejects_duplicates_deep_invalid_utf8_and_oversize (eidolon-core.tests.test_mission_list.MissionListTests.test_cursor_parser_rejects_duplicates_deep_invalid_utf8_and_oversize) ... ok
+test_empty_existing_store_is_a_complete_empty_page (eidolon-core.tests.test_mission_list.MissionListTests.test_empty_existing_store_is_a_complete_empty_page) ... ok
+test_invalid_limit_rejected_before_opening_store (eidolon-core.tests.test_mission_list.MissionListTests.test_invalid_limit_rejected_before_opening_store) ... ok
+test_new_mission_and_progress_each_require_restart (eidolon-core.tests.test_mission_list.MissionListTests.test_new_mission_and_progress_each_require_restart) ... ok
+test_no_history_and_unsafe_integer_fail_without_partial_page (eidolon-core.tests.test_mission_list.MissionListTests.test_no_history_and_unsafe_integer_fail_without_partial_page) ... ok
+test_pages_cover_sorted_ids_once_and_survive_reader_restart (eidolon-core.tests.test_mission_list.MissionListTests.test_pages_cover_sorted_ids_once_and_survive_reader_restart) ... ok
+test_projection_excludes_private_content_and_does_not_write (eidolon-core.tests.test_mission_list.MissionListTests.test_projection_excludes_private_content_and_does_not_write) ... ok
+test_review_copy_cannot_be_listed_by_stale_store (eidolon-core.tests.test_mission_list.MissionListTests.test_review_copy_cannot_be_listed_by_stale_store) ... ok
+test_unknown_anchor_id_is_not_a_silent_skip (eidolon-core.tests.test_mission_list.MissionListTests.test_unknown_anchor_id_is_not_a_silent_skip) ... ok
+test_wal_writer_cannot_mix_generation_and_mission_view (eidolon-core.tests.test_mission_list.MissionListTests.test_wal_writer_cannot_mix_generation_and_mission_view) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.406s
+
+OK

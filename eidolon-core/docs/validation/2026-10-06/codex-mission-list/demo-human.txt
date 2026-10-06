@@ -1,0 +1,16 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                Inventaire des missions                #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Données synthétiques ; aucun réseau ni outil exécuté.
+[OK] Trois missions sur trois pages cohérentes, sans doublon.
+[OK] Changement entre pages détecté : RESET_REQUIRED, puis lecture recommencée.
+[ATTENTION] Une annulation demandée n'est pas un arrêt confirmé.

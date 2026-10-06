@@ -1,0 +1,8 @@
+{
+  "src/eidolon_core/mission_list.py": "81f2d1f47839e67f6e5848884c2af3acbfe8eae477fc3eae109b6f74af67d988",
+  "src/eidolon_core/cli.py": "faad12a295a12a6a5b98bb587389030228b13001ff84a73bbdaca0c0666281b7",
+  "src/eidolon_core/client_sync.py": "6584fa2a0f3f7165e29493f3fb7fc54565559915758116faba71b1134c91a4ea",
+  "src/eidolon_core/store.py": "18f188009144dc161d6a2616852b085db9413b13166386f8fd46b838f44cf8a3",
+  "tests/test_mission_list.py": "8ddd2240af6183c12d2c6ce0c00d70cd27113b351ad010f59211621a16c460ba",
+  "examples/mission_list_demo.py": "b461e6b8db7729582f0dc9fcc54b6ad8e6cc0b7028edecf18c2d017134588094"
+}

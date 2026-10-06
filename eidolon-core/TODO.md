@@ -173,7 +173,10 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
   garde avant migration/exécution ; [contrat](docs/RECOVERY-REVIEW.md).
 - [ ] Claude G017 : contre-revue C-008d, cible figée et sondes indépendantes.
-- [ ] C-008e en cours Codex : inventaire paginé des missions, lecture seule.
+- [x] C-008e : inventaire paginé local, projection minimale, reset entre pages
+  si l'état évolue ; 18 tests et démo. [Contrat](docs/MISSION-LIST.md).
+- [ ] Consommateur Desktop de mission-list/1 : pages cohérentes, reset et sélection
+  vers client-sync/1 ; autorisations distantes et mesures de charge différées.
 - [ ] Reprise après restauration : inventaire des artefacts, revue des effets et
   ouvriers, activation explicite ; aucun déverrouillage livré par C-008d.
 - [ ] C-008 suite : reçus run, détection de rollback hors outil de revue, quotas et

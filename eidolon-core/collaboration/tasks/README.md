@@ -125,3 +125,6 @@ G010 en cours selon toytoy : terminer cette étude. G014/cb15c33 reçu, intégr�
 sondes reproduites sur cible figée. Après G010 : G016 (correctifs du prototype),
 G015 (annulation), nouveau [G017](C-TASK-G017.md) (copies historiques C-008d).
 Codex prend C-008e, inventaire paginé local des missions, hors prototype.
+
+C-MSG-G029 : C-008e livré (mission-list/1, 18 tests). L'ordre Claude reste G010
+engagé, puis G016/G015/G017. Aucun quatrième lot Desktop ajouté avant ces tâches.
