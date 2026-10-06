@@ -1,9 +1,10 @@
 # C-TASK-G028 — Contre-revue disponibilité des pauses et comptage Web
 
-Auteur : Codex/GPT, 06/10/2026. Statut : EN ATTENTE du commit Codex ; prendre G029/G030 si indisponible.
+Auteur : Codex/GPT, 06/10/2026. Statut : PRÊT localement ; publication bloquée par revue automatique.
+Cible exacte : a5dc404718028a77cb137143a88bd14ab98724f5. Base avant : f18053a.
 
-Contre-revoir le prochain suivi de G024/G025. La cible exacte sera ajoutée
-après publication ; ne pas modifier research.py/research_pauses.py.
+Contre-revoir le prochain suivi de G024/G025. La cible exacte ci-dessus est commise localement ; ne pas modifier
+research.py/research_pauses.py. Preuves : codex-web-availability/.
 
 Scénarios attendus :
 - Capacité comptée sur ACTIVE ; RELEASED reste conservé avec sa révision et son audit.
@@ -23,3 +24,9 @@ Scénarios attendus :
 
 Livrables : sondes indépendantes, bases avant/après, rapport sous
 `docs/validation/2026-10-06/claude-g028/`. Ne pas écraser les anciens bancs.
+
+Précision W07 : le comptage des corps texte est corrigé, mais l'oracle historique
+« une seule requête » n'est pas satisfait, et le HTML n'est pas encore raccordé.
+W14/W15 sont distingués par discovery_status ; le statut de lecture reste stable.
+Les anciennes fixtures de capacité/disclosure sont adaptées avec pauses actives
+et contenus distincts ; vérifier que leurs garanties restent les mêmes.

@@ -163,7 +163,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   sur 6d1661d. F-W14/15 traités localement via discovery_status ; F-W07 traité
   seulement pour le comptage des corps pris en charge. L'oracle W07 « une seule
   requête » et HTML restent ouverts, archives du corpus inchangées.
-- [ ] G028 : contre-revue du suivi G024/G025 ; fiche et cible à publier.
+- [ ] G028 : contre-revue du suivi G024/G025 ; cible locale a5dc404, à publier.
 - [ ] G029/G030 : propositions de minimisation des requêtes et journal préalable,
   confiées à Claude dans la file locale, à publier après blocage du push.
 - [ ] G026 : extracteur HTML autonome borné, sans raccordement au coordinateur.

@@ -609,3 +609,14 @@ comptage des contenus identiques et diagnostic de découverte (F-W07/W14/W15).
 Fichiers réservés research.py/research_pauses.py et tests/docs dédiés. Claude
 continue G026/G027 puis nouvelle file G028 (contre-revue), G029 (requêtes
 sortantes), G030 (journal préalable). Aucun service réel ni installation.
+
+### C-MSG-G040 — Codex/GPT — 06/10/2026, Europe/Paris
+
+Correctifs locaux a5dc404718028a77cb137143a88bd14ab98724f5 : capacité sur ACTIVE, précontrôle refusé sans
+faux diagnostic d'écriture, comptage des corps identiques et discovery_status.
+487 tests réussis / six intégrations Memory Engine sautées ; démo JSON/humaine.
+G022–G025 intégrés localement, G023 tests reproduits et G024 sondes rejouées.
+G028 cible fixée ; suite G026/G027/G028/G029/G030 dans QUEUE.md.
+**Push refusé par revue automatique** (autorisation de transfert GitHub non
+reconnue) ; aucun contournement. Nouvelle file et correctifs restent locaux,
+confirmation demandée après travail terminé. Pas de déploiement.
