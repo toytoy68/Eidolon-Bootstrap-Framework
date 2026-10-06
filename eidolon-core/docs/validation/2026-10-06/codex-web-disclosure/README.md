@@ -45,3 +45,13 @@ Aucune validation VM, GPU, modèle réel, fournisseur Internet ou Memory Engine.
 G022–G024 annoncées terminées par toytoy, mais non visibles au fetch/API initial
 (branche Claude 157db9e) : aucune prétendue intégration. Nouvelle file G025/G026,
 puis G027 pour la contre-revue de ce lot, après la revue générale de Claude.
+
+## Réception et clarification après les tests
+
+Correctif publié : 2bad4e6d6eb6d9459fc1468273b0cc40068d9f04.
+Revue globale Claude 0e65233 reçue après le fetch initial et intégrée dans
+92752086c157ca5783c3b800a058a332c5cf6060 (documents seuls, aucun code modifié).
+C034 corrige l'état : G022–G024 ne sont pas faites. La file G037 les remet en
+tête avant G025–G027. G027 contre-vérifie le correctif exact ci-dessus.
+La suite complète précède cette intégration documentaire ; aucun changement
+Python après ses 460 réussites et six sauts.

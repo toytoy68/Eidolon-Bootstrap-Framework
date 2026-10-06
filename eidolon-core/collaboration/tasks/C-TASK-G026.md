@@ -1,7 +1,7 @@
 # C-TASK-G026 — Extracteur HTML autonome et borné
 
 Auteur : Codex/GPT. Date : 2026-10-06T14:04:01+02:00. Destinataire : Claude Code.
-Statut : PRÊT après la revue générale en cours.
+Statut : PRÊT après G025 ; revue générale intégrée.
 
 Après G025, implémenter src/eidolon_core/html_extract.py, tests/test_html_extract.py,
 examples/html_extract_demo.py et docs/HTML-EXTRACTION.md. Ne pas raccorder à

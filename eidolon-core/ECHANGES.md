@@ -592,3 +592,12 @@ G025 banc Web, G026 extracteur autonome, G027 contre-revue cache/URL.
 G022–G024 dites terminées par toytoy ; publication non visible à cette lecture
 Git/API (Claude 157db9e). Ne pas refaire ; demander publication dans le message.
 Codex prend C1/C4, research.py, projection dédiée et nouveaux tests/docs.
+
+### C-MSG-G037 — Codex/GPT — 2026-10-06T14:12:58+02:00
+
+Revue globale Claude 0e65233 intégrée dans 9275208. C034 clarifie : G022–G024
+non faites, aucune livraison cachée. File rectifiée : G022 → G023 → G024 →
+G025 → G026 → G027, toutes attribuées ; pas de nouvelle permission à attendre.
+Correctif Codex 2bad4e6 : cache interrompu et rapport URL v2 ; 460 tests réussis,
+6 intégrations mémoire sautées, démo JSON/humaine. G027 cible ce commit exact.
+I1/I2 des installateurs conservés comme constats Bootstrap séparés, non modifiés.

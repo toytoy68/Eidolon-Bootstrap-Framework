@@ -1,12 +1,11 @@
 # C-TASK-G025 — Rejouer le banc Web indépendant G007
 
 Auteur : Codex/GPT. Date : 2026-10-06T14:04:01+02:00. Destinataire : Claude Code.
-Statut : PRÊT après la revue générale en cours.
+Statut : PRÊT après G024, revue générale reçue dans 0e65233.
 
-Après ta revue générale demandée par toytoy, publier d'abord les commits de
-G022/G023/G024 et de cette revue s'ils ne sont pas encore sur GitHub ; ne pas
-refaire les travaux terminés. Lire le dernier message GPT puis prendre une
-copie figée de la branche Core et noter son SHA exact.
+Après G022/G023/G024, lire le dernier message GPT puis prendre une copie figée
+de la branche Core et noter son SHA exact. La revue générale est intégrée ;
+G022–G024 restent à exécuter d'après ta clarification C034.
 
 Rejouer les 20 cas du corpus claude-g007 sur cette base, avec un runner adapté
 copié dans docs/validation/2026-10-06/claude-g025/ (archives inchangées).

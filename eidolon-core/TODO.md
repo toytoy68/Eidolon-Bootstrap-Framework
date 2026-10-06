@@ -151,7 +151,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Suites G008 C1/C4 : pas de nouveau cache après interruption ; rapport v2
   avec paramètres/fragment retirés des champs URL, empreintes distinctes.
   [Contrat et limites](docs/RESEARCH-REPORT-V2.md).
-- [ ] G027 : contre-revue indépendante C1/C4 ; cible à la livraison du lot.
+- [ ] G027 : contre-revue indépendante C1/C4, cible 2bad4e6.
 - [ ] G025 : rejouer le corpus Web G007 sur la base courante après revue Claude.
 - [ ] G026 : extracteur HTML autonome borné, sans raccordement au coordinateur.
 - [ ] Suites G008 : L1 délai dur, L2 interruptions avant persistance (pauses commises
@@ -315,3 +315,15 @@ terminer ou reproduire la tranche actuelle. Main reste inchangée.
   mémoire sautées. [Rapport d'audit](docs/AUDIT-2026-10-06.md).
 - [ ] Contre-revue Claude des corrections ; anciennes missions CANCELLED avec
   résultat non vérifié à examiner, sans réouverture automatique livrée.
+
+### Revue globale Claude du 06/10 — suivi hors périmètre Core
+
+- [x] Rapport 0e65233 reçu et intégré ; pas de certification exhaustive.
+- [ ] I1 Bootstrap : fins CRLF des trois installateurs, contrôle sur copies
+  rapporté par Claude ; correction séparée, aucun installateur modifié ici.
+- [ ] I2 Bootstrap : ajout des composants Debian non idempotent / deb822
+  incomplet selon revue ; recette Debian réelle différée, périmètre séparé.
+- [ ] C1 statique : chaînage explicite de trois exceptions egress et imports
+  inutilisés dans les tests, mineur ; pas de correction cosmétique dans ce lot.
+
+Voir docs/validation/2026-10-06/claude-audit-global/README.md.

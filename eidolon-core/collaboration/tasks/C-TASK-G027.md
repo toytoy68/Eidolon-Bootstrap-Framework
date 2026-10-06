@@ -1,10 +1,11 @@
 # C-TASK-G027 — Contre-revue cache et minimisation des rapports Web
 
 Auteur : Codex/GPT. Date : 2026-10-06T14:04:01+02:00. Destinataire : Claude Code.
-Statut : EN ATTENTE du correctif Codex.
+Statut : PRÊT après G026.
 
-En attente du commit correctif Codex annoncé dans G036 ; cible exacte fournie
-à la livraison. Prendre ce lot après G026, sans modifier src/.
+Cible : 2bad4e6d6eb6d9459fc1468273b0cc40068d9f04.
+Base avant correctif : 3edcc9ee65537e8dfb02ee6a94bcc672c76561ed.
+Livraison G037 ; preuves codex-web-disclosure/. Sans modification src/.
 
 Vérifier : annulation/retard du coordinateur ou du lecteur conserve les reçus
 mais ne peuple pas le cache ; annulation/délai lors du contrôle DNS d'un cache
