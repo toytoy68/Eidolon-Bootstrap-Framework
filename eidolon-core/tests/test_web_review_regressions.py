@@ -78,7 +78,9 @@ class WebReviewRegressionTests(TestCase):
             self.assertIsNone(raised.exception.observation)
 
     def test_real_connector_accepts_offset_reader_clocks(self):
-        for offset in (0., 1e9):
+        # 237.965 previously produced 30.00000000000003 seconds, rejected
+        # before connecting. Exercise the real connector with that clock too.
+        for offset in (0., 1e9, 237.965):
             with self.subTest(offset=offset), raw_server(
                 b'HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\nhello'
             ) as port:

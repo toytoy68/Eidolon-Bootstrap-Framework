@@ -76,10 +76,11 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] [C-REV-003](collaboration/tasks/C-REV-003.md) : avis Claude intégré et suites traitées.
 - [x] [C-CLAUDE-001](collaboration/tasks/C-CLAUDE-001.md) : catalogue pur de cibles
   et capacités intégré avec tests ; raccordement runtime/permissions livré en C-004a.
-- [ ] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
+- [x] [C-CLAUDE-002](collaboration/tasks/C-CLAUDE-002.md) : étude 2 × V100 32 Go/NVLink
   reçue (`ec7582b`), précisions C-TASK-G003 intégrées (`a77e7cf`). Adaptateur candidat
-  simulé (étape 2) intégré ; Ollama à réévaluer,
-  aucun modèle réel qualifié et aucune activation CLI.
+  simulé (étape 2) intégré ; tâche de livraison Claude terminée. Qualification
+  matérielle et choix Ollama différés ci-dessous ; aucun modèle réel qualifié
+  et aucune activation CLI.
 - [x] C-004a/C-001b : [diagnostic synthétique](docs/SYNTHETIC-DIAGNOSTIC-C004A.md),
   cible résolue hors modèle, permission par capacité, observation datée vérifiée,
   CLI et reprise ; état DOWN distinct de l'échec de mission.
@@ -136,7 +137,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 
 - [x] G008 : D1 attente 429/503 ambiguë, D2 base de temps et C5 redirection
   sans destination corrigés ; dix tests nouveaux, 303 réussis / 6 sautés.
-- [ ] Claude G011 : contre-revue indépendante de ces correctifs.
+- [x] Claude G011 : contre-revue indépendante de ces correctifs.
 - [ ] Suites G008 : L1 délai dur, L2 suspensions durables, L3 paramètres TLS,
   C1 cache tardif/annulé et C4 minimisation des URL ; C2/C3 explicités dans le
   contrat. [Tri](docs/validation/2026-10-05/codex-g008-fixes/README.md).
@@ -250,3 +251,15 @@ explicités avant activation ; les accès réels ne sont pas supposés disponibl
 
 Ni Hermes, ni Qdrant, ni multi-agents, ni service permanent n'est requis pour
 terminer ou reproduire la tranche actuelle. Main reste inchangée.
+
+## Suivi G011 reçu pendant C-008b — 06/10/2026
+
+- [x] G011/C022 (25ea564) intégré ; sondes G011 reproduites, D3 arrondi corrigé ;
+  68 tests Web ciblés réussis. Les trois fichiers source Web inchangés depuis
+  la cible de Claude jusqu'à la reproduction ; correction transport ensuite.
+- [ ] Courte contre-vérification Claude de D3 sur le commit G025.
+- [ ] Propositions Claude : pause explicite après échec de parseur sans statut,
+  borne du délai socket au budget restant ; à éprouver sans transformer l'échec
+  de parseur en 429 observé ni promettre une échéance dure.
+
+[Preuves de l'intégration](docs/validation/2026-10-06/codex-g011-integration/README.md).

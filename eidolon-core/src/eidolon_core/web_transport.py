@@ -287,7 +287,9 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
         seen.add(decision.url)
         if before_hop is not None:
             before_hop(decision)  # may only further restrict a policy-approved hop
-        remaining = deadline - clock()
+        # Floating-point cancellation can make (start + budget) - start a
+        # fraction larger than budget, especially with a coarse/frozen clock.
+        remaining = min(deadline - clock(), limits.total_seconds)
         if remaining <= 0:
             raise WebTransportError("DEADLINE_EXCEEDED", f"before hop {decision.hop}")
         parts = urllib.parse.urlsplit(decision.url)

@@ -1,0 +1,4 @@
+{
+  "src/eidolon_core/web_transport.py": "aa605c2fef6a096a48283e7f415046f7382095f2303ff88f9f2f48d03eca22e3",
+  "tests/test_web_review_regressions.py": "fad9e3655eac56c3ac511379f1d1c1085104be26afb75b292652b4b8e0282921"
+}

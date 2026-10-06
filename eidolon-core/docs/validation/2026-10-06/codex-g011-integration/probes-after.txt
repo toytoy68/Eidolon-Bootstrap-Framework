@@ -1,0 +1,52 @@
+Python 3.12.14; only 127.0.0.1 contacted; fake connectors elsewhere.
+
+== Q1 D1 on doubles: anomalous 429/503 -> suspension, no second contact, even much later
+  429 duplicate Retry-After                states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  429 duplicate Content-Type               states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  429 Content-Length + Transfer-Encoding   states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  429 invalid Content-Length               states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  429 control char in value                states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  429 malformed header name                states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  429 101 header pairs                     states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  429 headers over max_header_bytes        states=['RATE_LIMITED', 'RATE_LIMITED'] contacts=1 late_run=RATE_LIMITED validated=False error=HEADERS_TOO_LARGE review=True raw_leak=False
+  503 duplicate Retry-After                states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  503 duplicate Content-Type               states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  503 Content-Length + Transfer-Encoding   states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=AMBIGUOUS_HEADER review=True raw_leak=False
+  503 invalid Content-Length               states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  503 control char in value                states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  503 malformed header name                states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  503 101 header pairs                     states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=BAD_HTTP_RESPONSE review=True raw_leak=False
+  503 headers over max_header_bytes        states=['HTTP_ERROR', 'RETRY_WAIT'] contacts=1 late_run=RETRY_WAIT validated=False error=HEADERS_TOO_LARGE review=True raw_leak=False
+
+== Q2 D1 on a loopback server (raw bytes) and parser failures before any status
+  429 duplicate Retry-After            states=['RATE_LIMITED', 'RATE_LIMITED'] hits={'/one': 1} error=AMBIGUOUS_HEADER status_seen=429 raw_leak=False
+  503 invalid Content-Length           states=['HTTP_ERROR', 'RETRY_WAIT'] hits={'/one': 1} error=BAD_HTTP_RESPONSE status_seen=503 raw_leak=False
+  429 control char in value            states=['RATE_LIMITED', 'RATE_LIMITED'] hits={'/one': 1} error=BAD_HTTP_RESPONSE status_seen=429 raw_leak=False
+  503 headers over max_header_bytes    states=['HTTP_ERROR', 'RETRY_WAIT'] hits={'/one': 1} error=HEADERS_TOO_LARGE status_seen=503 raw_leak=False
+  429 CL + TE                          states=['RATE_LIMITED', 'RATE_LIMITED'] hits={'/one': 1} error=AMBIGUOUS_HEADER status_seen=429 raw_leak=False
+  PARSER: 429 line over 65536          states=['INVALID_RESPONSE', 'READ'] hits={'/one': 1, '/two': 1} error=None status_seen=None raw_leak=False
+  PARSER: 429 with 101 headers         states=['INVALID_RESPONSE', 'READ'] hits={'/one': 1, '/two': 1} error=None status_seen=None raw_leak=False
+  PARSER: garbage status line          states=['INVALID_RESPONSE', 'READ'] hits={'/one': 1, '/two': 1} error=None status_seen=None raw_leak=False
+
+== Q3 controls: ambiguous 200 refused, bad status types never promoted, date/provenance kept
+  200 duplicate Content-Length -> INVALID_RESPONSE
+  status '429'  -> states=['INVALID_RESPONSE', 'READ'] contacts=2
+  status 429.0  -> states=['INVALID_RESPONSE', 'READ'] contacts=2
+  status True   -> states=['INVALID_RESPONSE', 'READ'] contacts=2
+  status 600    -> states=['INVALID_RESPONSE', 'READ'] contacts=2
+  status 99     -> states=['INVALID_RESPONSE', 'READ'] contacts=2
+  429 after redirect: status=429 final_url=https://a.example/q hops=[301, 429] observed_at_present=True policy_id_present=True keys=['address', 'final_url', 'header_error', 'headers_validated', 'hops', 'kind', 'observed_at', 'policy_id', 'port', 'retry_after', 'retry_review_required', 'status']
+
+== Q4 D2: decreasing budget across hops, guard time counted, connector's own time, float edge
+  remaining per hop (5 s exchange + 2 s guard): [28.0, 21.0, 14.0]
+  exhausted budget -> DEADLINE_EXCEEDED; contacted=['a.example/1', 'a.example/2']
+  server waits 1.5 s, remaining 0.5 s              elapsed= 1.5s -> WebTransportError DEADLINE_EXCEEDED DEADLINE_EXCEEDED: during body
+  frozen reader clock 237.965, default 30 s        elapsed= 0.0s -> returned status=200 deadline_exceeded=False | (c+t)-c=30.00000000000003
+  frozen reader clock 238.0, default 30 s (control) elapsed= 0.0s -> returned status=200 deadline_exceeded=False
+  coordinator, reader clock frozen at 237.965 -> state=READ server_hits={'/p': 1}
+
+== Q5 C5: redirect without Location; valid redirects still policy-checked
+  301 without Location               -> INVALID_RESPONSE; contacted=['a.example/']
+  302 to blocked network             -> POLICY_REFUSED; contacted=['a.example/']
+  302 to http (scheme not allowed)   -> POLICY_REFUSED; contacted=['a.example/']
+  302 to non-allowed port            -> POLICY_REFUSED; contacted=['a.example/']

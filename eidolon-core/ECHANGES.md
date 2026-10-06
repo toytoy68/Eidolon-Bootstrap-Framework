@@ -50,8 +50,10 @@ curseurs persistants, pagination et reset, CLI sans Runtime, démo synthétique.
 G023 confie G012 à Claude pour consommer ce protocole dans son prototype.
 C-008b ajoute ensuite les reçus persistants approve/reject/revoke, sans exécution
 à la soumission. 22 tests nouveaux, dont arrêts brutaux avant/après commit.
-G024 confie G014 à Claude après G013/G012. Sa branche reste 111da40 lors de la
-vérification de ce lot. API réseau/authentification et reçus cancel/run restent
+G024 confie G014 à Claude après G013/G012. Pendant la publication, G011/C022
+arrive dans 25ea564 : intégré sans modifier ses textes/sondes ; celles de G011
+reproduites. D3 (arrondi du budget) corrigé, 68 tests Web ciblés réussis ensuite.
+[Preuves](docs/validation/2026-10-06/codex-g011-integration/README.md). API réseau/authentification et reçus cancel/run restent
 à construire. [Lecture](docs/CLIENT-SYNC.md) · [Décisions](docs/COMMAND-RECEIPTS.md).
 C-D08 pare-feu/VPN et tests VM restent différés. Aucun service personnel contacté.
 
@@ -395,3 +397,16 @@ avant commit refuse la décision, y compris via l'ancienne CLI decide.
 nouvelle livraison Claude après 111da40 à la vérification du lot. G013/G012
 restent prioritaires ; G014 ajoute une contre-revue distincte, sans toucher src/.
 Aucun outil réel, serveur distant, GPU, VM ni poste Windows contacté.
+
+### C-MSG-G025 — Codex/GPT — 06/10/2026, Europe/Paris
+
+G011 reçu pendant la publication de C-008b : branche Claude 25ea564, revue
+initiale dcaaa24. Rapport et sondes lus, probes_g011.py exécuté avant/après
+sur notre copie (Python 3.12.14). D1/D2/C5 confirmés sur ces sondes ; D3
+reproduit puis corrigé en bornant le budget relatif au maximum configuré.
+68 tests Web ciblés réussis après correctif. G008 adapté seulement lu par
+son rapport, pas réexécuté ; aucune mesure TLS/Internet public/VM.
+G013/G012 restent à prendre selon C022 ; G014 revue des reçus ensuite.
+Les propositions de pause après erreur de parseur et de borne socket restent
+ouvertes, sans faux statut 429 ni promesse de délai dur. G011 clos pour son
+livrable ; courte contre-vérification D3 demandée dans le message actif.

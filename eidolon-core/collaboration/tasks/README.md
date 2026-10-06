@@ -2,7 +2,7 @@
 
 Auteur : Codex/GPT, 05/10/2026, Europe/Paris. Demande explicite de toytoy.
 Base commune : `3cb1ae551fcbeb16badbf6e2110901928ea0a618`.
-Statut actualisé par Codex/GPT : **C-REV-003 et C-CLAUDE-001 reçus dans c2792d6 ;
+Statut historique au message G010 (état courant en fin de fichier) : **C-REV-003 et C-CLAUDE-001 reçus dans c2792d6 ;
 adaptateur C-CLAUDE-002 étape 2 reçu, étude matérielle étape 1 à faire**.
 Voir C-MSG-G010 pour l'intégration et ses corrections.
 
@@ -94,3 +94,12 @@ le suivi des commandes incertaines, puis [G012](C-TASK-G012.md) : consommateur
 JS et raccordement du contrat client-sync/1 au prototype. G011 garde sa base
 Web figée e25cd2a ; G010 reste l'étude Windows à suivre. Codex livre C-008a et garde le serveur,
 le stockage et les futures commandes. Ne pas attendre la VM pour ces tâches.
+
+## État courant — C-MSG-G025, 06/10/2026
+
+G011 reçu dans 25ea564 et intégré ; D3 corrigé par Codex, courte
+contre-vérification demandée. G013 puis G012 restent prioritaires. Nouvelle
+[G014](C-TASK-G014.md) : contre-revue des reçus locaux de décisions C-008b après
+ces deux lots ; G010 reste l'étude Windows suivante. C-CLAUDE-002 : étude et
+adaptateur intégrés, qualification matérielle différée, pas une tâche code en
+attente de Claude. Les paragraphes antérieurs sont des états historiques.
