@@ -42,6 +42,11 @@ def verify_stats(parameters, context, result):
 
 @dataclass(frozen=True)
 class Tool:
+    """Trusted callbacks; verify must be read-only and may run after cancellation.
+
+    Verification inspects existing evidence; it must never retry execution or
+    create a new effect. Callbacks are not sandboxed by this registry.
+    """
     name: str
     version: str
     effect: str

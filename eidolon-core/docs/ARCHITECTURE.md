@@ -231,3 +231,12 @@ de la démo sont simulés. [Contrat](WEB-RESEARCH-PROTOTYPE.md).
   Démonstration exclusivement synthétique. Aucun historique utilisateur ingéré.
 - Mémoire figée pendant la mission. Un futur outil réel devra revalider la
   fraîcheur/applicabilité et les autorisations juste avant son effet.
+
+## Vérification après demande d'arrêt
+
+Le vérificateur d'un outil est un callback de confiance en lecture seule. Une
+demande d'annulation empêche tout nouvel appel d'exécution ; elle laisse vérifier
+une sortie déjà reçue, sous le délai d'appel habituel. Une indisponibilité de ce
+vérificateur reste reprenable en phase VERIFY. Le statut CANCELLED n'affirme
+jamais une absence d'effet ; preuves et couverture restent indépendantes.
+[Contrat détaillé](CANCEL-RECEIPTS.md#correction-e1--audit-du-06102026).

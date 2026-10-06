@@ -1,0 +1,327 @@
+test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) ... 
+  test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) (point='TOOL_RETURNED') ... FAIL
+  test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) (point='RESULT_SAVED') ... FAIL
+test_cancel_between_processes_preserves_pending_verification (tests.test_audit_regressions.AuditCancellationTests.test_cancel_between_processes_preserves_pending_verification) ... FAIL
+test_cancellation_does_not_start_next_planned_tool (tests.test_audit_regressions.AuditCancellationTests.test_cancellation_does_not_start_next_planned_tool) ... FAIL
+test_invalid_output_is_not_accepted_because_cancelled (tests.test_audit_regressions.AuditCancellationTests.test_invalid_output_is_not_accepted_because_cancelled) ... FAIL
+test_reconciled_receipt_can_be_verified_after_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_reconciled_receipt_can_be_verified_after_cancellation) ... FAIL
+test_verification_failure_remains_resumable_with_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_verification_failure_remains_resumable_with_cancellation) ... FAIL
+test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) ... 
+  test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) (parser='parse_command') ... FAIL
+  test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) (parser='parse_cancel_command') ... FAIL
+test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) ... 
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='None') ... ERROR
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='42') ... ERROR
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='{}') ... ERROR
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='None') ... ERROR
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='42') ... ERROR
+  test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='{}') ... ERROR
+test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) ... 
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=401, issue=['complete']) ... FAIL
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=401, issue=['body']) ... FAIL
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=403, issue=['complete']) ... FAIL
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=403, issue=['body']) ... FAIL
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=429, issue=['complete']) ... FAIL
+  test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=429, issue=['body']) ... FAIL
+test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) ... 
+  test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=403) ... FAIL
+  test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=429) ... FAIL
+  test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=503) ... FAIL
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='None')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 45, in parse_command
+    return _parse_command(raw, validate_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'encode'
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='42')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 45, in parse_command
+    return _parse_command(raw, validate_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'encode'
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_command', value='{}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 45, in parse_command
+    return _parse_command(raw, validate_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'encode'
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='None')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 49, in parse_cancel_command
+    return _parse_command(raw, validate_cancel_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'encode'
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='42')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 49, in parse_cancel_command
+    return _parse_command(raw, validate_cancel_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'encode'
+
+======================================================================
+ERROR: test_command_parse_rejects_non_text_inputs_with_contract_error (tests.test_audit_regressions.AuditCommandTests.test_command_parse_rejects_non_text_inputs_with_contract_error) (parser='parse_cancel_command', value='{}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 172, in test_command_parse_rejects_non_text_inputs_with_contract_error
+    with self.assertRaises(ContractError): parser(value)
+                                           ^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 49, in parse_cancel_command
+    return _parse_command(raw, validate_cancel_command)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 35, in _parse_command
+    if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
+                                              ^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'encode'
+
+======================================================================
+FAIL: test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) (point='TOOL_RETURNED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 61, in test_cancel_at_return_or_save_still_verifies_the_effect
+    self.assertVerifiedCancellation(self.runtime.run(identity))
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 46, in assertVerifiedCancellation
+    self.assertEqual(result['calls'][0]['status'], 'VERIFIED')
+AssertionError: 'RETURNED' != 'VERIFIED'
+- RETURNED
++ VERIFIED
+
+
+======================================================================
+FAIL: test_cancel_at_return_or_save_still_verifies_the_effect (tests.test_audit_regressions.AuditCancellationTests.test_cancel_at_return_or_save_still_verifies_the_effect) (point='RESULT_SAVED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 61, in test_cancel_at_return_or_save_still_verifies_the_effect
+    self.assertVerifiedCancellation(self.runtime.run(identity))
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 46, in assertVerifiedCancellation
+    self.assertEqual(result['calls'][0]['status'], 'VERIFIED')
+AssertionError: 'RETURNED' != 'VERIFIED'
+- RETURNED
++ VERIFIED
+
+
+======================================================================
+FAIL: test_cancel_between_processes_preserves_pending_verification (tests.test_audit_regressions.AuditCancellationTests.test_cancel_between_processes_preserves_pending_verification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 70, in test_cancel_between_processes_preserves_pending_verification
+    self.assertVerifiedCancellation(ActionRuntime(Store(self.temp.name)).run(identity))
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 46, in assertVerifiedCancellation
+    self.assertEqual(result['calls'][0]['status'], 'VERIFIED')
+AssertionError: 'RETURNED' != 'VERIFIED'
+- RETURNED
++ VERIFIED
+
+
+======================================================================
+FAIL: test_cancellation_does_not_start_next_planned_tool (tests.test_audit_regressions.AuditCancellationTests.test_cancellation_does_not_start_next_planned_tool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 119, in test_cancellation_does_not_start_next_planned_tool
+    self.assertEqual(result['calls'][0]['status'], 'VERIFIED')
+AssertionError: 'RETURNED' != 'VERIFIED'
+- RETURNED
++ VERIFIED
+
+
+======================================================================
+FAIL: test_invalid_output_is_not_accepted_because_cancelled (tests.test_audit_regressions.AuditCancellationTests.test_invalid_output_is_not_accepted_because_cancelled)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 106, in test_invalid_output_is_not_accepted_because_cancelled
+    self.assertEqual(result['status'], 'FAILED')
+AssertionError: 'CANCELLED' != 'FAILED'
+- CANCELLED
++ FAILED
+
+
+======================================================================
+FAIL: test_reconciled_receipt_can_be_verified_after_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_reconciled_receipt_can_be_verified_after_cancellation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 80, in test_reconciled_receipt_can_be_verified_after_cancellation
+    self.assertVerifiedCancellation(runtime.run(identity))
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 46, in assertVerifiedCancellation
+    self.assertEqual(result['calls'][0]['status'], 'VERIFIED')
+AssertionError: 'RETURNED' != 'VERIFIED'
+- RETURNED
++ VERIFIED
+
+
+======================================================================
+FAIL: test_verification_failure_remains_resumable_with_cancellation (tests.test_audit_regressions.AuditCancellationTests.test_verification_failure_remains_resumable_with_cancellation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 93, in test_verification_failure_remains_resumable_with_cancellation
+    self.assertEqual(blocked['status'], 'BLOCKED')
+AssertionError: 'CANCELLED' != 'BLOCKED'
+- CANCELLED
++ BLOCKED
+
+
+======================================================================
+FAIL: test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) (parser='parse_command')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 39, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 66, in validate_command
+    raise ContractError("INVALID_COMMAND: exact versioned decision fields required")
+eidolon_core.contracts.ContractError: INVALID_COMMAND: exact versioned decision fields required
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 164, in test_command_parse_keeps_specific_contract_diagnostic
+    with self.assertRaisesRegex(ContractError, 'exact versioned'): parser('{}')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "exact versioned" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_command_parse_keeps_specific_contract_diagnostic (tests.test_audit_regressions.AuditCommandTests.test_command_parse_keeps_specific_contract_diagnostic) (parser='parse_cancel_command')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 39, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/eidolon-audit-baseline-i02c_poc/src/eidolon_core/commands.py", line 84, in validate_cancel_command
+    raise ContractError("INVALID_COMMAND: exact versioned cancellation fields required")
+eidolon_core.contracts.ContractError: INVALID_COMMAND: exact versioned cancellation fields required
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 164, in test_command_parse_keeps_specific_contract_diagnostic
+    with self.assertRaisesRegex(ContractError, 'exact versioned'): parser('{}')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "exact versioned" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=401, issue=['complete'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=401, issue=['body'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=403, issue=['complete'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=403, issue=['body'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=429, issue=['complete'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_http_refusal_survives_truncated_or_oversized_body (tests.test_audit_regressions.AuditResearchTests.test_http_refusal_survives_truncated_or_oversized_body) (status=429, issue=['body'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 134, in test_http_refusal_survives_truncated_or_oversized_body
+    self.assertEqual(len(reader.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=403)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 156, in test_refusal_persists_even_if_post_response_dns_fails
+    self.assertEqual(connector.calls, 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=429)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 156, in test_refusal_persists_even_if_post_response_dns_fails
+    self.assertEqual(connector.calls, 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_refusal_persists_even_if_post_response_dns_fails (tests.test_audit_regressions.AuditResearchTests.test_refusal_persists_even_if_post_response_dns_fails) (status=503)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_audit_regressions.py", line 156, in test_refusal_persists_even_if_post_response_dns_fails
+    self.assertEqual(connector.calls, 1)
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.076s
+
+FAILED (failures=18, errors=6)

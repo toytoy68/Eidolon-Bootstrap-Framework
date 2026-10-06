@@ -32,11 +32,15 @@ def _parse_command(raw, validator):
         return result
 
     try:
+        if not isinstance(raw, (str, bytes)):
+            raise ContractError("INVALID_COMMAND: JSON text or bytes required")
         if len(raw if isinstance(raw, bytes) else raw.encode("utf-8")) > 32768:
             raise ContractError("INVALID_COMMAND: command exceeds 32768 bytes")
         if isinstance(raw, bytes):
             raw = raw.decode("utf-8")
         return validator(json.loads(raw, object_pairs_hook=unique))
+    except ContractError:
+        raise  # Preserve bounded contract diagnostics, including duplicate keys.
     except (ValueError, RecursionError) as exc:
         raise ContractError("INVALID_COMMAND: invalid bounded UTF-8 JSON command") from exc
 

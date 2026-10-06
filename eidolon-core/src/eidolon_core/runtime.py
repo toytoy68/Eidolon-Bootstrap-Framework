@@ -71,7 +71,7 @@ class Runtime:
     def _cancelled(self, m):
         return self.store.cancel_requested(m["id"])
 
-    def _invoke(self, m, function, *args, call=None):
+    def _invoke(self, m, function, *args, call=None, verification=False):
         def spawned(worker):
             call["worker"] = worker
             self._save(m, "WORKER_SPAWNED", {"call_id": call["id"],
@@ -79,7 +79,9 @@ class Runtime:
         lease = (self.store.worker_lease_path(m["id"], call["id"], call["attempt"])
                  if call is not None else None)
         return invoke(function, args, timeout=self.limits.call_seconds,
-                      cancelled=lambda: self._cancelled(m), lease_path=lease,
+                      # Only the trusted, read-only verifier may finish after
+                      # cancellation. It remains bounded by the call deadline.
+                      cancelled=lambda: False if verification else self._cancelled(m), lease_path=lease,
                       on_started=spawned if call is not None else None)
 
     def _retain_receipt(self, m, call, receipt, *, late=False, recovered=False):
@@ -155,7 +157,9 @@ class Runtime:
         if m["phase"] == "EXECUTING":
             return self._stop(m, "REVIEW_REQUIRED", "UNKNOWN_EFFECT",
                               "interrupted call: reconcile before any retry")
-        if self._cancelled(m):
+        pending_verification = (m['phase'] == 'VERIFY' and m['calls']
+                                and m['calls'][-1]['status'] == 'RETURNED')
+        if self._cancelled(m) and not pending_verification:
             return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested")
         if "objective" not in m:
             return self._stop(m, "BLOCKED", "MISSION_CONTRACT_REQUIRED",
@@ -231,7 +235,7 @@ class Runtime:
                 if call.get("output_sha256") != digest(call["output"]):
                     return self._stop(m, "FAILED", "EVIDENCE_MISMATCH", "verified output fingerprint changed")
                 continue
-            if self._cancelled(m):
+            if self._cancelled(m) and not (call and call['status'] == 'RETURNED'):
                 return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested")
             if call is None:
                 call = {"id": m["id"] + "/" + step["id"], "step": snapshot(step),
@@ -268,10 +272,12 @@ class Runtime:
             if call["status"] != "RETURNED":
                 return self._stop(m, "REVIEW_REQUIRED", "INVALID_CALL_STATE", "call needs review")
             try:
-                verified = self._invoke(m, tool.verify, step["parameters"], m["context"], call["output"])
+                verified = self._invoke(m, tool.verify, step["parameters"], m["context"], call["output"],
+                                        verification=True)
             except CallFailure as exc:
-                status = "CANCELLED" if self._cancelled(m) else "BLOCKED"
-                return self._stop(m, status, "VERIFICATION_UNAVAILABLE", str(exc))
+                # A returned result still needs a verdict. Retain a resumable
+                # verification even when an earlier stop request is present.
+                return self._stop(m, "BLOCKED", "VERIFICATION_UNAVAILABLE", str(exc))
             if verified is not True:
                 return self._stop(m, "FAILED", "VERIFICATION_FAILED", "output does not match expected result")
             if call.get("output_sha256") != digest(call["output"]):
@@ -280,6 +286,8 @@ class Runtime:
             m["progress"]["completed"] = index + 1
             m["phase"] = "READY"
             self._save(m, "RESULT_VERIFIED", {"call_id": call["id"], "verifier": tool.verifier_id})
+        if self._cancelled(m):
+            return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested; received results verified")
         m.update(status="SUCCEEDED", phase="DONE", error=None,
                  result={"summary": "Statistiques vérifiées sur les extraits conservés.",
                          "evidence": [{"call_id": c["id"], "attempt": c["attempt"],

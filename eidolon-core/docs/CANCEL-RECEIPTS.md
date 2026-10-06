@@ -144,3 +144,21 @@ Prochaine tranche : contre-revue de ces courses, stratégie de génération apr�
 restauration, appairage/authentification puis API distante. Les commandes run
 restent séparées et ne disposent pas encore de ce protocole de reçu.
 [Preuves](validation/2026-10-06/codex-cancel-receipts/README.md).
+
+## Correction E1 — audit du 06/10/2026
+
+Une annulation arrête les nouveaux appels d'outil, mais n'empêche plus le
+vérificateur de contrôler une sortie déjà reçue et persistée. Le vérificateur
+est un callback de confiance **sans mutation** : il ne doit jamais réexécuter
+l'action. Son délai par appel reste appliqué. Si son appel échoue ou dépasse
+le délai, la mission reste BLOCKED en phase VERIFY, même avec cancel_requested ;
+un run explicite reprend cette vérification, pas l'outil.
+
+Une sortie invalide donne FAILED/VERIFICATION_FAILED. Une sortie valide suivie
+d'une annulation donne CANCELLED, avec preuves VERIFIED et issue ACHIEVED ou
+PARTIAL selon la couverture ; result reste nul. Aucun outil suivant ne démarre.
+Un effet encore inconnu conserve REVIEW_REQUIRED et la réconciliation explicite.
+Les anciennes missions déjà terminales ne sont pas rouvertes automatiquement :
+leurs preuves peuvent être inspectées, aucune migration de leur statut livrée.
+
+[Audit, reproductions et limites](AUDIT-2026-10-06.md).

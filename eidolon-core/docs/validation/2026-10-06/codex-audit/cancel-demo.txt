@@ -1,0 +1,16 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                   Reçus d'annulation                  #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+[OK] Demande enregistrée sous verrou ; accusé perdu puis reçu retrouvé.
+[OK] Commande répétée sans nouvel événement ; aucun outil lancé par la demande.
+[OK] Avant exécution : annulation confirmée par le runtime.
+[ATTENTION] Appel interrompu : REVIEW_REQUIRED conservé, absence d’effet non déduite.
+[INFO] Simulation locale uniquement ; aucun service personnel contacté.
