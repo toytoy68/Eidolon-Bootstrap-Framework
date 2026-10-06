@@ -641,3 +641,21 @@ reproduits hors installation, confiés en G033. File G031–G035 publiée ;
 Codex prend C-009a (http_api.py, tests et documentation), transport authentifié
 local en consultation. [Périmètre bêta](docs/BETA-SERVER-PC.md) et
 [contrat HTTP](docs/HTTP-READ-API.md). Aucun choix D1–D6 ni déploiement implicite.
+
+
+### C-009a — API HTTP de consultation — Codex/GPT, 06/10/2026
+
+Lecture locale des projections par token privé ; loopback seul, Host/Origin,
+JSON borné, garde récupération et SQLite ro sans création/migration. Liste,
+snapshot/poll et health ; aucun endpoint métier à effet ni modèle. Trois assets
+statiques autorisés pour G031, client connecté toujours à livrer par Claude.
+25 tests HTTP verts avec sockets réelles et processus CLI séparé. Suite globale :
+528 réussis / six intégrations mémoire sautées (534 comptés, 108,426 s).
+Dernier ajustement des méthodes HTTP inconnues (405) vérifié par nouvelle passe
+ciblée de 25 tests ; 68 Node de la passe d'intégration demeurent verts.
+[Preuves](docs/validation/2026-10-06/codex-beta-api/README.md).
+
+Publication d105fee refusée par revue automatique : autorisation du nouveau
+payload jugée non explicite. Aucun contournement. Intégration, API et fiches
+Claude conservées en commits locaux ; pas de diffusion de la nouvelle file
+ni de déploiement revendiqués. Confirmation sur le lot complet à demander.

@@ -1,8 +1,8 @@
 # API HTTP de consultation — contrat C-009a
 
-Codex/GPT, 06/10/2026. Contrat de réalisation réservé à Codex ; G031 peut
-développer le client contre ce contrat. Statut initial : en cours, preuves
-à consigner dans `docs/validation/2026-10-06/codex-beta-api/` à la livraison.
+Codex/GPT, 06/10/2026. Implémentation locale livrée dans
+`src/eidolon_core/http_api.py` ; G031 peut développer le client contre ce contrat.
+Preuves : `docs/validation/2026-10-06/codex-beta-api/`.
 
 ## Accès
 
@@ -31,6 +31,8 @@ La première page omet le curseur (null également accepté pour la liste).
 Seul `application/json` (avec charset=utf-8 facultatif) est accepté en POST.
 Pas de paramètres d'URL, de clés inconnues, de clés JSON dupliquées ni de NaN.
 Requête <=8192 octets, réponse <=262144 octets ; connexion fermée après réponse.
+Profondeur JSON limitée à 16. Seule la version existante du schéma est lue ;
+base absente ou copie de restauration en revue refusée, sans création/migration.
 
 Erreurs JSON : `{protocol: 'eidolon-http-read/1', error: CODE,
 authorizes_execution: false}`. HTTP 401 authentification, 403 Host/Origin,
@@ -63,3 +65,39 @@ Pas de service systemd installé, pas de découverte/appairage automatique.
 La consultation ne valide ni le modèle, ni les effets, ni le fonctionnement
 du serveur complet. SQLite ouvert en mode ro ; ses fichiers auxiliaires WAL
 peuvent dépendre du mode du producteur. Aucun journal métier n'est écrit.
+
+## Lancement de développement Linux
+
+Depuis `eidolon-core/`, dans un environnement Python 3.11+ où les tests Core
+passent. Ne pas lancer les scripts Bootstrap pour cette recette.
+
+```sh
+export PYTHONPATH=src:.
+EIDOLON_BETA_STATE="$(mktemp -d /tmp/eidolon-beta-XXXXXX)"
+python -m eidolon_core --state "$EIDOLON_BETA_STATE" demo
+python -c 'import os,secrets,sys; fd=os.open(sys.argv[1],os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); f=os.fdopen(fd,"w"); f.write(secrets.token_urlsafe(32)+"\n"); f.close()' "$EIDOLON_BETA_STATE/read-token"
+python -m eidolon_core.http_api --state "$EIDOLON_BETA_STATE" \
+  --token-file "$EIDOLON_BETA_STATE/read-token" --port 8765
+```
+
+Le dernier processus reste au premier plan (Ctrl+C pour arrêter). Le token
+est généré dans un fichier privé, jamais affiché par le serveur. Le consulter
+localement pour le saisir dans le client ; ne pas le publier ou le coller dans
+les échanges. Une rotation se fait avec un nouveau fichier puis un redémarrage.
+
+Quand **G031 sera intégré**, ajouter à la dernière commande
+`--web-root desktop/connected`. Avant cette livraison, `/` renvoie 404 : aucune
+interface connectée n'est encore livrée par ce lot. Le prototype autonome
+existant n'est pas compatible avec ces trois assets et ne doit pas être passé
+comme web-root.
+
+Sur le PC, tunnel SSH (remplacer les deux valeurs entre chevrons) :
+
+```text
+ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 <utilisateur>@<serveur>
+```
+
+Puis ouvrir `http://127.0.0.1:8765` après intégration du client. Le tunnel doit
+garder le même port local ; un port occupé nécessite un autre port **aux deux
+extrémités** et le même `--port` côté serveur. Arrêter le tunnel ne stoppe pas
+Core. Aucun essai de tunnel ou Windows réel revendiqué ici.

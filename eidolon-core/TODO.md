@@ -347,7 +347,7 @@ Voir docs/validation/2026-10-06/claude-audit-global/README.md.
 
 - [x] G026–G030 intégrés depuis fd4393d ; études G029/G030 non activées.
 - [x] Nouvelle file Claude G031–G035, périmètres distincts.
-- [ ] C-009a : API loopback authentifiée de consultation (Codex, en cours).
+- [x] C-009a : API loopback authentifiée de consultation, livrée et testée localement ; publication en attente après refus automatique.
 - [ ] G031 : client connecté observateur, distinct du prototype.
 - [ ] G032 : durcissement extraction HTML avant raccordement.
 - [ ] G033 : commentaires APT et sources tierces (défauts reproduits).
