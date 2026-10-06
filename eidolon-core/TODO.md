@@ -134,7 +134,12 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
 - [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
   explicite versionnée, audit, CLI et démo sans réseau. [Contrat](docs/RESEARCH-PAUSES.md).
-- [ ] Claude G019 : contre-revue ciblée des suspensions C-002c, en cours selon toytoy le 06/10 à 12 h 57 ; G020 également.
+- [x] Claude G019/G020 : revues reçues dans ff51313/cc9831f. Suites corrigées :
+  budget après consultation lente, capacité avant appel et diagnostic mission_id.
+  [Preuves](docs/validation/2026-10-06/codex-review-followup/README.md).
+- [ ] Claude G024 : contre-revue indépendante de ces trois suites.
+- [ ] Claude G023 : abandon explicite d'un résultat retourné mais invérifiable,
+  sans convertir l'abandon en preuve d'absence d'effet.
 - [ ] Journal préalable des appels Web en vol : interruption avant commit d'une
   pause à réconcilier avant toute reconstruction/reprise réelle du coordinateur.
 - [ ] Quotas globaux et rétention du journal, artefacts persistants, intégration
@@ -173,7 +178,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
   sur cible figée 176c1d2 ; aucun nouveau défaut confirmé.
 - [x] C-008c : annulation avec reçu atomique sans verrou d'exécution, sans
   runtime ; demande/arrêt/effet distingués. [Contrat](docs/CANCEL-RECEIPTS.md).
-- [x] Claude G015 : revue reçue ; E1 corrigé dans 97abdb2, contre-revue G020 en cours selon toytoy.
+- [x] Claude G015 : revue reçue ; E1 corrigé dans 97abdb2, contre-revue G020 reçue et favorable.
 - [x] Diagnostic CLI STORAGE_UNAVAILABLE pour les erreurs SQLite ; incertitude
   conservée, pas de traceback/message SQL brut.
 - [x] C-008d : copie de restauration réservée à la revue, nouvelle identité,
@@ -181,6 +186,7 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [x] Claude G017 : revue reçue (4fa543d) ; E1 reproduit, copie incrémentale
   sans transaction source prolongée, garde du fichier en attente et diagnostic
   RECOVERY_INCOMPLETE livrés. [Suivi](docs/validation/2026-10-06/codex-recovery-followup/README.md).
+- [ ] Claude G022 : contre-revue du suivi restauration publié dans 3f16d7d.
 - [x] C-008e : inventaire paginé local, projection minimale, reset entre pages
   si l'état évolue ; 18 tests et démo. [Contrat](docs/MISSION-LIST.md).
 - [x] Claude G018 reçu (bfa75d2) : consommateur Desktop de mission-list/1,

@@ -143,6 +143,25 @@ class ResearchPauses:
             return {'protocol': PROTOCOL, 'authorizes_execution': False, 'automatic_release': False,
                     'pauses': rows, 'audit_events': count}
 
+    def check_capacity(self, scopes):
+        """Read-only preflight, not a reservation across concurrent requests."""
+        if type(scopes) not in (list, tuple) or not 1 <= len(scopes) <= 2:
+            raise ContractError('INVALID_PAUSE_SCOPE')
+        identities = {'p-' + digest(_scope(scope)) for scope in scopes}
+        with self._connection() as db:
+            db.execute('PRAGMA query_only=ON')
+            db.execute('BEGIN')
+            total = db.execute('SELECT count(*) FROM pauses').fetchone()[0]
+            missing = 0
+            for identity in identities:
+                row = db.execute('SELECT body FROM pauses WHERE id=?', (identity,)).fetchone()
+                if row is None:
+                    missing += 1
+                else:
+                    self._decode(identity, row[0])
+            if total + missing > MAX_RECORDS:
+                raise PauseStorageError('PAUSE_CAPACITY_REACHED')
+
     def pause(self, scopes, *, reason, retry_after=None, review=False):
         if (type(scopes) not in (list, tuple) or not 1 <= len(scopes) <= 2 or type(reason) is not str or reason not in REASONS
                 or type(review) is not bool or (retry_after is not None and

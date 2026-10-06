@@ -1,0 +1,976 @@
+test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) ... 
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='bytes') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='dict') ... ERROR
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='str') ... FAIL
+  test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='bytes') ... FAIL
+test_cancel_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_cancel_during_redirect_gate_stops_second_exchange) ... FAIL
+test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows (tests.test_review_followup.FollowupTests.test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows) ... ERROR
+test_capacity_failure_is_sticky_and_does_not_fallback (tests.test_review_followup.FollowupTests.test_capacity_failure_is_sticky_and_does_not_fallback) ... ERROR
+test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) ... 
+  test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) (cancelled=False) ... ERROR
+  test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) (cancelled=True) ... ERROR
+test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) ... 
+  test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=None) ... ERROR
+  test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[]) ... ERROR
+  test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[{}]) ... ERROR
+  test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[{'kind': 'provider', 'provider_id': 'p1'}, {'kind': 'provider', 'provider_id': 'p1'}, {'kind': 'provider', 'provider_id': 'p1'}]) ... ERROR
+test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) ... ERROR
+test_deadline_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_deadline_during_redirect_gate_stops_second_exchange) ... FAIL
+test_full_store_blocks_new_origin_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_origin_after_reconstruction) ... FAIL
+test_full_store_blocks_new_provider_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_provider_after_reconstruction) ... FAIL
+test_late_receipt_is_preserved_and_normal_read_works (tests.test_review_followup.FollowupTests.test_late_receipt_is_preserved_and_normal_read_works) ... ok
+test_redirect_needs_capacity_for_initial_and_final_origins_together (tests.test_review_followup.FollowupTests.test_redirect_needs_capacity_for_initial_and_final_origins_together) ... FAIL
+test_same_origin_redirect_fits_one_remaining_slot (tests.test_review_followup.FollowupTests.test_same_origin_redirect_fits_one_remaining_slot) ... ok
+test_slow_hop_lookup_does_not_start_exchange_after_budget (tests.test_review_followup.FollowupTests.test_slow_hop_lookup_does_not_start_exchange_after_budget) ... FAIL
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 208, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    if mode == 'dict': validator(command)
+                       ^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+======================================================================
+ERROR: test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows (tests.test_review_followup.FollowupTests.test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 87, in test_capacity_check_is_read_only_deduplicates_and_keeps_released_rows
+    self.pauses.check_capacity([scope, scope])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_failure_is_sticky_and_does_not_fallback (tests.test_review_followup.FollowupTests.test_capacity_failure_is_sticky_and_does_not_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 165, in test_capacity_failure_is_sticky_and_does_not_fallback
+    with patch.object(self.pauses, 'check_capacity', side_effect=PauseStorageError('PAUSE_STORAGE_UNAVAILABLE')):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <eidolon_core.research_pauses.ResearchPauses object at 0x7f7f8adc2900> does not have the attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) (cancelled=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 151, in test_capacity_gate_cannot_hide_timeout_or_cancel
+    check = self.pauses.check_capacity
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_gate_cannot_hide_timeout_or_cancel (tests.test_review_followup.FollowupTests.test_capacity_gate_cannot_hide_timeout_or_cancel) (cancelled=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 151, in test_capacity_gate_cannot_hide_timeout_or_cancel
+    check = self.pauses.check_capacity
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 173, in test_capacity_validates_scopes_and_does_not_recreate_deleted_storage
+    self.pauses.check_capacity(value)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 173, in test_capacity_validates_scopes_and_does_not_recreate_deleted_storage
+    self.pauses.check_capacity(value)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[{}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 173, in test_capacity_validates_scopes_and_does_not_recreate_deleted_storage
+    self.pauses.check_capacity(value)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage) (value=[{'kind': 'provider', 'provider_id': 'p1'}, {'kind': 'provider', 'provider_id': 'p1'}, {'kind': 'provider', 'provider_id': 'p1'}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 173, in test_capacity_validates_scopes_and_does_not_recreate_deleted_storage
+    self.pauses.check_capacity(value)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+ERROR: test_capacity_validates_scopes_and_does_not_recreate_deleted_storage (tests.test_review_followup.FollowupTests.test_capacity_validates_scopes_and_does_not_recreate_deleted_storage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 175, in test_capacity_validates_scopes_and_does_not_recreate_deleted_storage
+    with self.assertRaises(PauseStorageError): self.pauses.check_capacity([provider_scope('p1')])
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ResearchPauses' object has no attribute 'check_capacity'
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='../bad', mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=None, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=12, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity=[], mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity={}, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-decision-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 72, in validate_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='../bad', mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=None, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=12, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity=[], mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity={}, mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='str')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_invalid_mission_id_has_precise_diagnostic_for_both_protocols (tests.test_review_followup.CommandDiagnosticTests.test_invalid_mission_id_has_precise_diagnostic_for_both_protocols) (protocol='eidolon-cancel-command/1', identity='m-fffffffffffffffffffffffffffffff', mode='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 41, in _parse_command
+    return validator(json.loads(raw, object_pairs_hook=unique))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/commands.py", line 90, in validate_cancel_command
+    Store.check_id(value["mission_id"])
+  File "/tmp/tmp3u84tmi0/src/eidolon_core/store.py", line 83, in check_id
+    raise ValueError("invalid mission id")
+ValueError: invalid mission id
+
+The above exception was the direct cause of the following exception:
+
+eidolon_core.contracts.ContractError: INVALID_COMMAND: invalid bounded UTF-8 JSON command
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 207, in test_invalid_mission_id_has_precise_diagnostic_for_both_protocols
+    with self.assertRaisesRegex(ContractError, '^INVALID_COMMAND: invalid mission_id$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "^INVALID_COMMAND: invalid mission_id$" does not match "INVALID_COMMAND: invalid bounded UTF-8 JSON command"
+
+======================================================================
+FAIL: test_cancel_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_cancel_during_redirect_gate_stops_second_exchange)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 66, in test_cancel_during_redirect_gate_stops_second_exchange
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_deadline_during_redirect_gate_stops_second_exchange (tests.test_review_followup.FollowupTests.test_deadline_during_redirect_gate_stops_second_exchange)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 79, in test_deadline_during_redirect_gate_stops_second_exchange
+    self.assertEqual(len(connector.calls), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_full_store_blocks_new_origin_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_origin_after_reconstruction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 119, in test_full_store_blocks_new_origin_after_reconstruction
+    self.assertEqual(reader.calls, [])
+AssertionError: Lists differ: ['https://docs.example/a', 'https://docs.example/a'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'https://docs.example/a'
+
+- ['https://docs.example/a', 'https://docs.example/a']
++ []
+
+======================================================================
+FAIL: test_full_store_blocks_new_provider_after_reconstruction (tests.test_review_followup.FollowupTests.test_full_store_blocks_new_provider_after_reconstruction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 102, in test_full_store_blocks_new_provider_after_reconstruction
+    with self.assertRaisesRegex(PauseStorageError, 'PAUSE_CAPACITY_REACHED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: PauseStorageError not raised
+
+======================================================================
+FAIL: test_redirect_needs_capacity_for_initial_and_final_origins_together (tests.test_review_followup.FollowupTests.test_redirect_needs_capacity_for_initial_and_final_origins_together)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 128, in test_redirect_needs_capacity_for_initial_and_final_origins_together
+    with self.assertRaisesRegex(PauseStorageError, 'PAUSE_CAPACITY_REACHED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: PauseStorageError not raised
+
+======================================================================
+FAIL: test_slow_hop_lookup_does_not_start_exchange_after_budget (tests.test_review_followup.FollowupTests.test_slow_hop_lookup_does_not_start_exchange_after_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/aeef887fc8c0/bootstrap/eidolon-core/tests/test_review_followup.py", line 51, in test_slow_hop_lookup_does_not_start_exchange_after_budget
+    self.assertEqual(connector.calls, [])
+AssertionError: Lists differ: [{'scheme': 'https', 'host': 'docs.example[236 chars]e'}}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'scheme': 'https', 'host': 'docs.example.com', 'port': 443, 'address': '93.184.215.14', 'target': '/a', 'headers': {'Host': 'docs.example.com', 'User-Agent': 'EidolonCore/0.1 (read-only candidate transport)', 'Accept': '*/*', 'Accept-Encoding': 'identity', 'Connection': 'close'}}
+
++ []
+- [{'address': '93.184.215.14',
+-   'headers': {'Accept': '*/*',
+-               'Accept-Encoding': 'identity',
+-               'Connection': 'close',
+-               'Host': 'docs.example.com',
+-               'User-Agent': 'EidolonCore/0.1 (read-only candidate transport)'},
+-   'host': 'docs.example.com',
+-   'port': 443,
+-   'scheme': 'https',
+-   'target': '/a'}]
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.038s
+
+FAILED (failures=30, errors=21)

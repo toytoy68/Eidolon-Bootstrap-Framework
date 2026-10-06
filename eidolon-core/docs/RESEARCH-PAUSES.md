@@ -50,6 +50,20 @@ Base distincte `research-pauses.sqlite3` : table pauses (au plus 256 périmètre
 libérés compris) et journal pause_events. Une transaction SQLite réunit changement
 de pause et audit. Les pauses initiale/finale d'une redirection sont atomiques.
 Aucune éviction pour faire de la place : capacité atteinte = erreur bloquante.
+Avant un appel fournisseur, une lecture non cachée et chaque saut de WebReader,
+`check_capacity(scopes)` vérifie dans une transaction de lecture la place pour
+les périmètres à suspendre en cas de refus. Sur redirection, origines initiale
+et courante sont comptées ensemble, sans doublon. Les lignes RELEASED comptent
+toujours ; un périmètre déjà connu peut être réobservé sans nouvelle place.
+Une table pleine bloque donc un nouveau périmètre avant son appel, y compris
+après reconstruction du coordinateur. Aucune ligne ni audit n'est supprimé.
+Ce contrôle ne réserve pas de place : un écrivain concurrent, un crash ou une
+panne de disque après l'appel restent soumis aux limites ci-dessous. Un lecteur
+injecté sans read_guarded ne fournit pas le contrôle des sauts intermédiaires.
+
+Après les consultations persistantes, le budget et l'annulation sont revérifiés
+avant l'appel. Ce délai reste coopératif : il n'interrompt pas SQLite ou un
+adaptateur déjà en cours ; un résultat déjà reçu reste observable.
 Le journal n'est pas purgé automatiquement ; quotas/rétention restent à construire.
 
 Un échec de stockage lève PauseStorageError, sans corps SQL brut. Il interrompt la

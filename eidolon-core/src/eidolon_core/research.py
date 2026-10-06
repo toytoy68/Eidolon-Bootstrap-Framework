@@ -237,9 +237,15 @@ class ResearchCoordinator:
                 raise AccessFailure("CANCELLED" if interrupted == "CANCELLED" else "TIMEOUT")
             if self._persistent('active', origin_scope(decision.host, decision.port)):
                 raise AccessFailure("RETRY_WAIT")
+            # A refusal on this hop may need both initial and final scopes.
+            self._persistent('check_capacity', [origin_scope(*domain),
+                                               origin_scope(decision.host, decision.port)])
             until = self._cooldowns.get((decision.host, decision.port), (0,))[0]
             if max(self._pause_until, until) > self.clock():
                 raise AccessFailure("RETRY_WAIT")
+            interrupted = stop()  # Durable lookups can consume time or observe cancellation.
+            if interrupted:
+                raise AccessFailure("CANCELLED" if interrupted == "CANCELLED" else "TIMEOUT")
 
         for provider in self.providers[:self.limits.providers]:
             if stop() or enough():
@@ -251,6 +257,7 @@ class ResearchCoordinator:
                 provider_record.update(status="RETRY_WAIT", pause_id=held['id'], pause_revision=held['revision'],
                                        retry_review_required=True)
                 continue
+            self._persistent('check_capacity', [provider_scope(provider.provider_id)])
             interrupted = stop()  # SQLite gate lookup may itself consume the remaining budget.
             if interrupted:
                 provider_record['status'] = interrupted
@@ -314,6 +321,7 @@ class ResearchCoordinator:
                         source.update(state="RETRY_WAIT", pause_id=held['id'], pause_revision=held['revision'],
                                       retry_review_required=True)
                         continue
+                    self._persistent('check_capacity', [origin_scope(*domain)])
                     until, waiting_state, review = self._cooldowns.get(domain, (0, "RETRY_WAIT", False))
                     if max(self._pause_until, until) > self.clock():
                         source.update(state=waiting_state,

@@ -64,12 +64,19 @@ def validate_scope(store_id, client_id, command_key):
         _identifier(value, r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}", name)
 
 
+def _mission_id(value):
+    try:
+        Store.check_id(value)
+    except ValueError as exc:
+        raise ContractError("INVALID_COMMAND: invalid mission_id") from exc
+
+
 def validate_command(value):
     value = snapshot(value)
     if not isinstance(value, dict) or set(value) != FIELDS or value["protocol"] != PROTOCOL:
         raise ContractError("INVALID_COMMAND: exact versioned decision fields required")
     validate_scope(value["store_id"], value["client_id"], value["command_key"])
-    Store.check_id(value["mission_id"])
+    _mission_id(value["mission_id"])
     if type(value["expected_revision"]) is not int or not 0 <= value["expected_revision"] < MAX_SAFE_INTEGER:
         raise ContractError("INVALID_COMMAND: revision must be a safe nonnegative integer")
     _identifier(value["proposal_sha256"], r"[0-9a-f]{64}", "proposal_sha256")
@@ -87,7 +94,7 @@ def validate_cancel_command(value):
     if not isinstance(value, dict) or set(value) != CANCEL_FIELDS or value["protocol"] != CANCEL_PROTOCOL:
         raise ContractError("INVALID_COMMAND: exact versioned cancellation fields required")
     validate_scope(value["store_id"], value["client_id"], value["command_key"])
-    Store.check_id(value["mission_id"])
+    _mission_id(value["mission_id"])
     for name, bound in (("actor", 200), ("reason", 4000)):
         text = value[name]
         if not isinstance(text, str) or not text.strip() or len(text) > bound:

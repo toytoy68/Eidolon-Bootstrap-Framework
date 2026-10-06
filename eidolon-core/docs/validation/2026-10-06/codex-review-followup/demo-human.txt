@@ -1,0 +1,17 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                Suspensions Web simulées               #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] DNS, HTTP et horloge simulés ; base SQLite temporaire.
+[OK] Pause 429 conservée après redémarrage : aucun nouvel appel.
+[OK] Levée explicite journalisée, sans envoi de requête.
+[OK] Nouvelle recherche explicite : texte fictif reçu et identifié.
+[ATTENTION] Texte reçu ne signifie pas fait confirmé ; aucun accès Internet réel.
