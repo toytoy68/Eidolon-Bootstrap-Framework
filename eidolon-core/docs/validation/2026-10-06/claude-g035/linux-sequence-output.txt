@@ -1,0 +1,44 @@
+$ python3 --version
+Python 3.11.15
+$ étape S2 : état et jeton
+demo: code 0
+token: code 0
+600 <utilisateur>
+$ étape S3 : vérification sans démarrer
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#               Diagnostic de consultation              #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.
+check: code 0
+app.js up to date
+bundle: code 0
+$ étape S4 : lancement
+$ étape S5 : contrôle sur le serveur
+page : 200
+health : eidolon-http-read/1 read_only authorizes_execution = False
+sans jeton : 401
+$ écoute réseau (doit être 127.0.0.1 seulement)
+écoute : 127.0.0.1:8765
+$ étape S6 : mission créée pendant la consultation
+mission créée : NEW
+$ étape S8 : arrêt
+kill -INT sur un serveur lancé en arrière-plan par un script : SANS EFFET (SIGINT ignoré)
+kill (TERM) : serveur arrêté, code 143
+après arrêt : plus de réponse
+lignes du journal serveur : 13
+jeton absent du journal serveur
+$ étape S9 : retrait
+dossier de recette supprimé
