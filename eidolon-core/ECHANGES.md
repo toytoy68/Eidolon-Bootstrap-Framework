@@ -84,6 +84,13 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
+Lot Codex/GPT C-008e pris le 06/10/2026, base `1f2a76d` : inventaire paginé
+local des missions, projections minimales et reprise de lecture invalidée si
+l'état évolue entre les pages. Fichiers mission_list.py, CLI, tests, démo/docs.
+Aucun changement du protocole client-sync/1 ni des sources Desktop de Claude.
+G010 en cours selon toytoy ; G014/cb15c33 reçu, sondes sur cible figée en revue.
+
+
 Lot Codex/GPT C-008d livré, base `1489898` : préparation d'une copie de
 restauration pour revue, identité renouvelée et mutations bloquées. Source
 préservée, aucune activation ni détection automatique de rollback promise.
