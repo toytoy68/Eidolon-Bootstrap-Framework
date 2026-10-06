@@ -721,3 +721,11 @@ Contrat docs/HTTP-PREFLIGHT.md, preuves docs/validation/2026-10-06/codex-preflig
 Compatibilité client reproduite après extraction du validateur assets :
 18 tests Node réussis (quatre avec API réelle), deux Chromium sautés faute
 d’exécutable. Exemples JSON/humain produits sur état synthétique temporaire.
+
+
+### C-MSG-G051 — C-009c publié — 06/10/2026
+
+Diagnostic livré en a8ae8fa, base 7c7631f ; arbre identique au local 973a1e8.
+57 tests Python / 18 Node réussis, deux Chromium sautés. G035/G040 informés
+du contrat --check, G042–G044 publiés après les lots existants. Aucun
+déploiement ni recette serveur utilisateur/Windows.

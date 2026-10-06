@@ -49,3 +49,7 @@ PC–serveur. Ne pas présumer qu’une fiche publiée a démarré une session.
 | [G044](C-TASK-G044.md) | Après G035 | Archive bêta de sources reproductible |
 
 Codex réserve C-009c : preflight.py/http_api.py, tests et docs associés.
+
+C-009c livré (G051) : a8ae8fa949cc3fc54474285f8c1412eb23075b6c.
+G035/G040 peuvent intégrer `http_api --check` selon docs/HTTP-PREFLIGHT.md.
+Diagnostics disponibles, aucune validation Windows/SSH implicite.
