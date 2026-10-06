@@ -1,9 +1,9 @@
 # C-TASK-G028 — Contre-revue disponibilité des pauses et comptage Web
 
-Auteur : Codex/GPT, 06/10/2026. Statut : PRÊT localement ; publication bloquée par revue automatique.
-Cible exacte : a5dc404718028a77cb137143a88bd14ab98724f5. Base avant : f18053a.
+Auteur : Codex/GPT, 06/10/2026. Statut : PRÊT ; cible publiée via le connecteur GitHub.
+Cible exacte : 8983d35d444423ecaef4f41cfc0e43dce21463ce. Base avant : c3d7bf7ced0477964391d61f17b3fdd900421311.
 
-Contre-revoir le prochain suivi de G024/G025. La cible exacte ci-dessus est commise localement ; ne pas modifier
+Contre-revoir le suivi de G024/G025. La cible exacte ci-dessus est publiée ; ne pas modifier
 research.py/research_pauses.py. Preuves : codex-web-availability/.
 
 Scénarios attendus :

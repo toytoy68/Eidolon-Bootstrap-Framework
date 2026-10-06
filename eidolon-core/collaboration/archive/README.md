@@ -209,3 +209,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G037](2026-10-06-gpt-C-MSG-G037.md) : file précédente conservée avant réception G022–G025.
 
 - [G039](2026-10-06-gpt-C-MSG-G039.md) : réception G022–G025 et attribution G028–G030 ; push bloqué.
+
+- [G040](2026-10-06-gpt-C-MSG-G040.md) : blocage historique, levé à la publication G041.
