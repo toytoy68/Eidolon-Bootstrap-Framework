@@ -12,13 +12,10 @@
  */
 (function () {
   "use strict";
-  var M = window.EidolonModel;
-  var state = M.initialState(initialScenario());
-
-  function initialScenario() {
-    var wanted = (location.hash || "").replace("#", "");
-    return M.SCENARIOS[wanted] ? wanted : "accord-succes";
-  }
+  var M = window.EidolonModel, S = window.EidolonSync, V = window.EidolonSyncView;
+  var wanted = (location.hash || "").replace("#", "");
+  var state = M.initialState(M.SCENARIOS[wanted] ? wanted : "accord-succes");
+  var sync = V.SCENARIOS[wanted] ? V.create(wanted) : null; // client-sync/1 scenarios (G012)
 
   // ---- helpers ----------------------------------------------------------------------------
 
@@ -76,10 +73,25 @@
   // ---- simulation bench (not part of the application) -------------------------------------
 
   function renderBench() {
-    var options = Object.keys(M.SCENARIOS).map(function (k) {
-      return '<option value="' + k + '"' + (k === state.scenario ? " selected" : "") + ">" + esc(M.SCENARIOS[k].label) + "</option>";
-    }).join("");
+    var current = sync ? sync.key : state.scenario;
+    function group(label, table) {
+      return '<optgroup label="' + esc(label) + '">' + Object.keys(table).map(function (k) {
+        return '<option value="' + k + '"' + (k === current ? " selected" : "") + ">" + esc(table[k].label) + "</option>";
+      }).join("") + "</optgroup>";
+    }
+    var options = group("Prototype G009 (serveur simulé)", M.SCENARIOS) + group("Synchronisation client-sync/1 (trace C-008a)", V.SCENARIOS);
     var c = state.client;
+    if (sync) {
+      return '<h2 id="bench-title">Banc de simulation — hors application</h2>'
+        + "<p>Réponses enregistrées du protocole client-sync/1 : trace réelle de Codex et cas dérivés étiquetés. Aucune connexion réseau.</p>"
+        + '<div class="row"><label for="scenario">Scénario</label><select id="scenario">' + options + "</select>"
+        + btn("Recharger le scénario", "load-scenario") + "</div>"
+        + '<p class="small">' + esc(V.SCENARIOS[sync.key].summary) + "</p>"
+        + '<div class="row">' + btn("Réponse suivante", "server-step", { kind: "primary", id: "server-step" })
+        + '<span class="next-step" id="next-step">' + esc(V.nextLabel(sync)) + "</span></div>"
+        + '<div class="row">' + (sync.state.connection === "online" ? btn("Couper la connexion", "sim-disconnect") : btn("Rétablir la connexion", "sim-reconnect"))
+        + "</div>";
+    }
     return '<h2 id="bench-title">Banc de simulation — hors application</h2>'
       + "<p>Tout est synthétique : Core simulé, heures fictives, aucune connexion réseau ni accès au système.</p>"
       + '<div class="row"><label for="scenario">Scénario</label>'
@@ -343,14 +355,24 @@
   function render() {
     var focused = document.activeElement && document.activeElement.id;
     document.getElementById("bench").innerHTML = renderBench();
-    document.getElementById("app").innerHTML = renderApp();
-    document.getElementById("windows").innerHTML = renderWindows();
-    document.getElementById("dialog-root").innerHTML = renderDialog();
-    var live = [state.client.notice].concat(M.unresolvedCommands(state).map(M.commandLabel), [M.eye(state).label])
+    if (sync) {
+      var view = V.render(sync, { esc: esc, btn: btn, eyeSvg: eyeSvg });
+      var app = document.getElementById("app");
+      app.innerHTML = view.html;
+      V.fill(app, view.texts); // data from envelopes goes in as text only
+      document.getElementById("windows").innerHTML = '<h2 id="windows-title">Intégration Windows simulée</h2>'
+        + '<p class="small muted">Pas de notification pour les scénarios de synchronisation : ce protocole ne fait que lire.</p>';
+      document.getElementById("dialog-root").innerHTML = "";
+    } else {
+      document.getElementById("app").innerHTML = renderApp();
+      document.getElementById("windows").innerHTML = renderWindows();
+      document.getElementById("dialog-root").innerHTML = renderDialog();
+    }
+    var live = sync ? V.eye(sync).label : [state.client.notice].concat(M.unresolvedCommands(state).map(M.commandLabel), [M.eye(state).label])
       .filter(Boolean).join(" ");
     if (live !== lastLive) { document.getElementById("live").textContent = live; lastLive = live; }
     var target = focused && document.getElementById(focused);
-    if (state.client.reading.open && !document.getElementById("reading-dialog").contains(target)) {
+    if (!sync && state.client.reading.open && !document.getElementById("reading-dialog").contains(target)) {
       target = document.getElementById("reading-text");
     }
     if (target && !target.disabled) {
@@ -361,8 +383,17 @@
   }
 
   function act(intent) {
-    if (intent.type === "server-step") state = M.serverStep(state);
-    else if (intent.type === "load-scenario") state = M.initialState(document.getElementById("scenario").value);
+    if (intent.type === "load-scenario") {
+      var key = document.getElementById("scenario").value;
+      sync = V.SCENARIOS[key] ? V.create(key) : null;
+      if (!sync) state = M.initialState(key);
+    } else if (sync) {
+      // Only reads and explicit reloads exist in the sync scenarios.
+      if (intent.type === "server-step") sync = V.step(sync);
+      else if (intent.type === "sim-disconnect") sync.state = S.setConnection(sync.state, "offline");
+      else if (intent.type === "sim-reconnect") sync.state = S.setConnection(sync.state, "online");
+      else if (intent.type === "sync-accept-reset") sync.state = S.acceptReset(sync.state);
+    } else if (intent.type === "server-step") state = M.serverStep(state);
     else state = M.dispatch(state, intent);
     render();
   }
@@ -399,6 +430,6 @@
     if (event.key === "Escape" && state.client.reading.open) act({ type: "close-reading" });
   });
 
-  window.EidolonPrototype = { getState: function () { return state; } }; // read-only hook for tests
+  window.EidolonPrototype = { getState: function () { return state; }, getSync: function () { return sync; } }; // read-only hooks for tests
   render();
 })();
