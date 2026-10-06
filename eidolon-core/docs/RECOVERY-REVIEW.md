@@ -36,17 +36,28 @@ ne pas écraser son contenu ni réémettre automatiquement la préparation.
 ## Copie cohérente et publication
 
 prepare_review(source_database, destination, actor=..., reason=...) ouvre la
-source SQLite en mode ro/query_only et épingle une transaction de lecture. Il
+source SQLite en mode ro/query_only et valide dans une courte transaction de
+lecture, libérée avant la copie incrémentale. Il
 valide user_version=1, les quatre tables de cette tranche, l'identité du Store
 et l'absence de marqueur de restauration antérieur. Les bases anciennes sans
 command_receipts ne sont pas migrées en place : elles sont refusées ici.
 
 La copie utilise l'API SQLite backup, **pas une copie brute de missions.sqlite3**.
 Les pages du WAL présentes dans la capture sont donc incluses. Une écriture
-concurrente commise après l'ouverture de la capture reste hors de cette copie,
-sans mélanger les générations de lignes. Ce comportement est testé sous WAL.
-Sans WAL, une lecture peut retarder un écrivain ; aucun arrêt automatique du
-processus source n'est tenté. L'outil n'effectue aucune mutation SQL sur la
+concurrente peut faire recommencer la copie : la capture finale est cohérente,
+mais n'est plus promise à l'instant de la validation initiale. Des commits
+postérieurs à cette validation peuvent donc y figurer. L'identité, le schéma,
+la garde et la taille logique sont revérifiés dans la copie terminée, avant sa
+publication. Une identité différente donne RECOVERY_SOURCE_CHANGED.
+
+Suivi G017 : la transaction épinglée précédente pouvait faire échouer un écrivain
+après ses cinq secondes d'attente, en mode DELETE. Elle est maintenant libérée
+avant backup. Les verrous de lecture sont ceux des étapes SQLite, pas de toute
+la copie ; aucune garantie de latence dure ni d'absence de contention sur un
+vrai disque n'est annoncée. Une activité continue peut empêcher la copie de
+finir : son budget coopératif reste appliqué et la destination reste bloquée.
+Le mode de journal source est conservé ; aucun arrêt automatique du processus
+source n'est tenté. L'outil n'effectue aucune mutation SQL sur la
 source et ne prétend pas figer les effets de ses outils ou les autres bases.
 
 La destination est créée avec des droits 0700. Un fichier
@@ -68,7 +79,11 @@ Le fichier est fermé et synchronisé, puis publié sous missions.sqlite3 par
 lien dur atomique refusant une destination existante. Le nom temporaire est
 ensuite retiré et le dossier synchronisé. Tout échec peut laisser un répertoire
 incomplet pour diagnostic ; aucun nettoyage destructif automatique n'est fait.
-Avant publication, le marqueur de dossier interdit d'y créer un Store neuf.
+Avant publication, le marqueur de dossier et la présence du fichier
+review.pending.sqlite3 interdisent chacun d'y créer un Store neuf. Retirer
+manuellement le marqueur ne suffit plus à ouvrir un état vide à côté de la
+copie incomplète. Cela ne protège pas contre une manipulation arbitraire de tous
+les fichiers ni le renommage manuel d'une copie avec un ancien binaire.
 Après publication, le marqueur **et** la garde inscrite en base interdisent
 l'ouverture ordinaire. Une perte de réponse après publication laisse une copie
 consultable via recovery-inspect et toujours bloquée.
@@ -80,8 +95,8 @@ l'ensemble de l'opération (intégrité, hash, fsync et inspection inclus).
 
 ## Garde d'exécution et consultation historique
 
-Store.connection vérifie à chaque ouverture le marqueur de dossier, puis la
-présence de recovery_mode en base **avant sa migration additive**. Toute
+Store.connection vérifie à chaque ouverture le marqueur de dossier ou le fichier
+review.pending.sqlite3, puis la présence de recovery_mode en base **avant sa migration additive**. Toute
 valeur de ce champ bloque, y compris une valeur inconnue. Un Store déjà construit
 qui pointe vers une copie gardée est également refusé à sa prochaine connexion.
 
@@ -98,6 +113,8 @@ sans Store ni Runtime. Le rapport eidolon-recovery-review/1 indique :
 - historical_only=true, execution_authority=false,
   external_effects_reconciled=false et artifacts_restored=[mission_sqlite_only] ;
 - identités source/nouvelle, empreinte de la capture, provenance de préparation ;
+- pour les nouvelles copies, capture_semantics=sqlite-online-backup : la capture
+  peut inclure des commits après validation initiale (anciens rapports conservés) ;
 - nombres de missions, événements et reçus ; répartition des statuts historiques ;
 - sur demande d'une mission : statut/phase/révision/annulation/accord/appels
   **au moment de la capture**, sans requête, contexte mémoire ni résultat brut.
@@ -116,6 +133,22 @@ consultation d'état/reçu avant réémission : une erreur n'est pas une preuve
 que le commit n'a pas eu lieu. Cette protection couvre aussi les CLI de
 commandes des tranches précédentes. Les API Python internes conservent leurs
 exceptions SQLite d'origine.
+
+Un dossier de préparation sans missions.sqlite3 mais avec marqueur ou fichier
+en attente donne désormais RECOVERY_INCOMPLETE lors de l'inspection. Aucun
+fichier n'est créé, supprimé ou réactivé par ce diagnostic.
+
+## Références et validation du suivi G017
+
+Documentation officielle SQLite consultée le 06/10/2026 :
+[Online Backup API](https://www.sqlite.org/c3ref/backup_finish.html),
+[verrous et redémarrages](https://www.sqlite.org/backup.html#file_and_database_connection_locking).
+Les étapes libèrent leur verrou source entre appels ; un commit concurrent peut
+relancer la copie. Le test utilise un véritable écrivain séparé lancé entre
+étapes, sous DELETE et WAL. Il vérifie mission et événement liés dans la copie,
+la garde persistante, l'identité modifiée pendant copie et la borne de reprise.
+Les délais de progression sont simulés ; aucune mesure de disque réel.
+[Preuves du suivi](validation/2026-10-06/codex-recovery-followup/README.md).
 
 ## Ce qui reste à faire
 

@@ -1,0 +1,8 @@
+{
+  "src/eidolon_core/recovery.py": "8cc5bf2e55ef426929e1812af55f37f55f8d91f81b9252a949ccdfbe6f00a75a",
+  "src/eidolon_core/store.py": "3cdc314a9a28ab07182a32a58b2935cffd29086b40cecf1832394091bbff5ee4",
+  "tests/test_recovery.py": "6324f46e03202f151cc740245855a9ea2b86a02b74a3653da9f9de0ee6fa2c55",
+  "tests/test_recovery_followup.py": "f51e394e776bdd62f515cb7dcb79258dbfd92931bb759c324f2facc080e9cbf7",
+  "desktop/prototype/mission-list-state.js": "3040e14cdaa6247519111cf90e1eee8a9f27bf2276308438856cb8cd6cc3ae55",
+  "desktop/prototype/sync-state.js": "46b426e653b24c17760cce667413212f244be1c2845f99c668229878312d1b40"
+}
