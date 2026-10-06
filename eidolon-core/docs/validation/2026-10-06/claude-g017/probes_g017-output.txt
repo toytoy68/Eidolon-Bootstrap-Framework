@@ -1,0 +1,76 @@
+python 3.11.15 sqlite 3.45.1 | target: eidolon-core
+
+== 1 concurrent writer during prepare: default journal (as Store creates it) and WAL
+  journal=delete  backup step delay=0.0s prepare 0.1s -> OK keys=15
+      writer: 79 commits, worst latency 0.08s, failures=0 []
+      copy (missions, orphan events, missions without CREATED, receipts unlinked) = (12, 0, 0, 0); source missions now = 82
+  journal=delete  backup step delay=0.4s prepare 7.3s -> OK keys=15
+      writer: 66 commits, worst latency 5.01s, failures=1 ['OperationalError: database is locked']
+      copy (missions, orphan events, missions without CREATED, receipts unlinked) = (11, 0, 0, 0); source missions now = 69
+  journal=wal     backup step delay=0.4s prepare 7.3s -> OK keys=15
+      writer: 397 commits, worst latency 0.02s, failures=0 []
+      copy (missions, orphan events, missions without CREATED, receipts unlinked) = (12, 0, 0, 0); source missions now = 400
+
+== 2 guards on a published copy
+  source unchanged=True | copy files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3'] | simulation.sqlite3 in source=True artifacts_restored=['mission_sqlite_only']
+  Store(copy)                  -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+  source store still live: lookup -> OK keys=8
+  marker removed, Store(copy) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | files=['missions.sqlite3']
+  prebuilt Store, file replaced by guarded copy (no marker in that directory):
+      store.get                        -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      ClientSync.snapshot              -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      CancelCommands.submit (new id)   -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      lookup_receipt (new id)          -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      runtime.run (APPROVED mission)   -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      runtime.decide                   -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      ActionRuntime(prebuilt)          -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked
+      restarts in the live world: 0 | files=['m-4a5e6318cc214e9c9d4f3c9101c2412d.lock', 'm-be9e35061cc14b9dab693cc6e306eac9.lock', 'missions.sqlite3', 'simulation.sqlite3']
+  inspect APPROVED mission: status=BLOCKED approval=APPROVED calls=PREPARED
+  inspect leaks request text=False | report has source path=False actor/reason of preparation present=True
+  identity changed by raw SQL -> inspect: ContractError: RECOVERY_REPORT_MISMATCH
+
+== 3 abrupt exit at each step of prepare_review (real child process)
+  during-backup                   exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OperationalError: unable to open database file
+      prepare again, same destination -> FileExistsError: recovery destination must not already exist
+      CLI recovery-inspect exit=2 traceback=False | {"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert
+      after manual marker removal: Store(dest) -> OK <eidolon_core.store.Store object at 0x7fa03ab9c8d0> | files=['missions.sqlite3', 'review.pending.sqlite3'] | empty live store created=True
+  after-backup-before-guard       exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OperationalError: unable to open database file
+      prepare again, same destination -> FileExistsError: recovery destination must not already exist
+      CLI recovery-inspect exit=2 traceback=False | {"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert
+      after manual marker removal: Store(dest) -> OK <eidolon_core.store.Store object at 0x7fa039fca490> | files=['missions.sqlite3', 'review.pending.sqlite3'] | empty live store created=True
+  after-guard-before-link         exit=77 files=['RECOVERY-REVIEW-ONLY', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OperationalError: unable to open database file
+      prepare again, same destination -> FileExistsError: recovery destination must not already exist
+      CLI recovery-inspect exit=2 traceback=False | {"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert
+      after manual marker removal: Store(dest) -> OK <eidolon_core.store.Store object at 0x7fa039eda7d0> | files=['missions.sqlite3', 'review.pending.sqlite3'] | empty live store created=True
+  after-link-before-unlink        exit=77 files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3', 'review.pending.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK keys=15
+      prepare again, same destination -> FileExistsError: recovery destination must not already exist
+      CLI recovery-inspect exit=0 traceback=False | {"actor":"probe","artifacts_restored":["mission_sqlite_only"],"counts":{"command_receipts":1,"events":21,"miss
+      after manual marker removal: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | files=['missions.sqlite3', 'review.pending.sqlite3'] | empty live store created=False
+  after-publication-before-reply  exit=77 files=['RECOVERY-REVIEW-ONLY', 'missions.sqlite3'] source unchanged=True
+      Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | inspect -> OK keys=15
+      prepare again, same destination -> FileExistsError: recovery destination must not already exist
+      CLI recovery-inspect exit=0 traceback=False | {"actor":"probe","artifacts_restored":["mission_sqlite_only"],"counts":{"command_receipts":1,"events":21,"miss
+      after manual marker removal: Store(dest) -> ContractError: RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked | files=['missions.sqlite3'] | empty live store created=False
+
+== 4 CLI on a guarded copy, and SQLite errors
+  recovery-prepare exit=0 traceback=False
+  show m-…                                 exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  run m-…                                  exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  --profile action-sim run m-…             exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  cancel m-…                               exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  command-cancel --request /tmp/g017-3id67 exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  command-receipt --store-id s-96af274a896 exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  client-snapshot m-…                      exit=2 tb=False {"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime ac
+  recovery-inspect                         exit=0 tb=False {"actor":"probe-operator-G017","artifacts_restored":["mission_sqlite_only"],"counts":{"com
+  files created in the copy by these commands: []
+  prepare again on the same destination: exit=2 tb=False {"error":"FileExistsError","message":"recovery destination must not already exist"}
+  write lock held, command-cancel  exit=2 traceback=False raw SQL text=False | {"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert
+  write lock held, cancel          exit=2 traceback=False raw SQL text=False | {"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert
+  after the lock: lookup c-3 -> NOT_FOUND
+  corrupt file, show             exit=2 traceback=False raw SQL text=False | {"cause_type":"DatabaseError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve
+  corrupt file, recovery-inspect exit=2 traceback=False raw SQL text=False | {"cause_type":"DatabaseError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve
+  prepare from corrupt source: exit=2 tb=False destination created=False | {"cause_type":"DatabaseError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable
