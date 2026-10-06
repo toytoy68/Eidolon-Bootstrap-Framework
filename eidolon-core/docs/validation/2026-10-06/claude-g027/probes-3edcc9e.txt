@@ -1,0 +1,24 @@
+python 3.11.15 | tree g027-3edcc9e
+
+== 1 cache: interruptions keep receipts but never feed the cache
+  cancel after the read: run1 CANCELLED source=READ text=kept | run2 cache_hit=True | run3 cache_hit=True | reads=1
+  coordinator deadline after page 2: run1 DEADLINE states=['READ', 'READ'] | run2 page1 cache_hit=True reads=2
+  slow cache revalidation then deadline: status=DEADLINE state=READ cache_hit=True text=present readable=1 reads=1
+  normal cache: +30 s cache_hit=True | +91 s cache_hit=False | other coordinator cache_hit=False | reads=3
+  cache revalidation, final now private: POLICY_REFUSED cache_hit=False
+
+== 2 report v2: URL fields, fingerprints, transport untouched (real WebReader)
+  requests received by the peer: ['news.example/a?token=SECRET-G027&x=1', 'mirror.example/b?session=SECRET-G027']
+  version=1 url=https://news.example/a?token=SECRET-G027&x=1 final_url=https://mirror.example/b?session=SECRET-G027 retrieval.final_url=https://mirror.example/b?session=SECRET-G027
+  secret anywhere in report=True | 'frag' or '#' in URL fields=False
+  url_sha256 == sha(canonical requested URL without fragment)=False | final_url_sha256 == sha(final)=False | query hashes present=False
+  hops (keys)=[['address', 'port', 'query_sha256', 'status', 'url'], ['address', 'port', 'query_sha256', 'status', 'url']] urls=['https://news.example/a', 'https://mirror.example/b']
+  two URLs differing by query: shown=['https://news.example/item?id=1', 'https://news.example/item?id=2'] distinct sha=False
+  refusal 403: state=ACCESS_DENIED url=https://news.example/c?k=SECRET-G027 secret in report=True
+  cache hit report: cache_hit=True url=https://news.example/a?t=SECRET-G027 same sha=True secret=True
+
+== 3 hostile or unusual data (documented limits made concrete)
+  https://news.example/reset;jsessionid=SECRET-G027    shown=https://news.example/reset;jsessionid=SECRET-G027 secret in url field=True in title/snippet=True
+  https://news.example/a%3Ftoken%3DSECRET-G027         shown=https://news.example/a%3Ftoken%3DSECRET-G027 secret in url field=True in title/snippet=True
+  https://news.example/u/SECRET-G027/profile           shown=https://news.example/u/SECRET-G027/profile secret in url field=True in title/snippet=True
+  injected reader, plain page: state=READ version=1

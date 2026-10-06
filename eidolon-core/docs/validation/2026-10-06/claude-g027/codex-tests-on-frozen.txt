@@ -1,0 +1,16 @@
+test_fragment_and_refused_credentials_are_never_reported (tests.test_research_disclosure.ResearchDisclosureTests.test_fragment_and_refused_credentials_are_never_reported) ... ok
+test_interrupt_during_cached_final_dns_does_not_adopt_cached_text (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupt_during_cached_final_dns_does_not_adopt_cached_text) ... ok
+test_interrupted_receipt_is_retained_but_not_reused_from_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_interrupted_receipt_is_retained_but_not_reused_from_cache) ... ok
+test_late_stop_does_not_leave_new_cache_entries (tests.test_research_disclosure.ResearchDisclosureTests.test_late_stop_does_not_leave_new_cache_entries) ... ok
+test_malformed_optional_hops_are_omitted_with_diagnostic (tests.test_research_disclosure.ResearchDisclosureTests.test_malformed_optional_hops_are_omitted_with_diagnostic) ... ok
+test_projection_does_not_mutate_cache_or_erase_content (tests.test_research_disclosure.ResearchDisclosureTests.test_projection_does_not_mutate_cache_or_erase_content) ... ok
+test_queries_distinguish_sources_even_when_display_urls_match (tests.test_research_disclosure.ResearchDisclosureTests.test_queries_distinguish_sources_even_when_display_urls_match) ... ok
+test_query_removed_from_report_but_used_for_transport_and_cache (tests.test_research_disclosure.ResearchDisclosureTests.test_query_removed_from_report_but_used_for_transport_and_cache) ... ok
+test_redirect_and_refusal_minimize_both_urls_and_retrieval (tests.test_research_disclosure.ResearchDisclosureTests.test_redirect_and_refusal_minimize_both_urls_and_retrieval) ... ok
+test_report_projection_does_not_claim_to_redact_page_text_or_paths (tests.test_research_disclosure.ResearchDisclosureTests.test_report_projection_does_not_claim_to_redact_page_text_or_paths) ... ok
+test_structured_hops_are_minimized_without_inventing_full_url_hash (tests.test_research_disclosure.ResearchDisclosureTests.test_structured_hops_are_minimized_without_inventing_full_url_hash) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.011s
+
+OK
