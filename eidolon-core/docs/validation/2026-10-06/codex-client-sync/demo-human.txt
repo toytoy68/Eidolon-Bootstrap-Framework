@@ -1,0 +1,16 @@
+
+#########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                Reconnexion synthétique                #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[INFO] Client simulé ; aucun réseau, aucune commande distante.
+[OK] Mission vérifiée, 10 événements récupérés sur 5 pages ; un seul lancement d'outil.
+[OK] Livraison répétée reconnue ; curseur incohérent → RESET_REQUIRED.
+[ATTENTION] Prototype local : authentification, API réseau et Windows non livrés.

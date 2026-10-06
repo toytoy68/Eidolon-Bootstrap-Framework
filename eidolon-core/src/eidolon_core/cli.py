@@ -57,6 +57,12 @@ def main(argv=None):
         command.add_argument("mission_id")
         if name == "show":
             command.add_argument("--events", action="store_true")
+    capture = commands.add_parser("client-snapshot", help="local read-only client projection; no network")
+    capture.add_argument("mission_id")
+    poll = commands.add_parser("client-poll", help="read event references after a saved cursor")
+    poll.add_argument("mission_id")
+    poll.add_argument("--cursor", required=True, help="JSON file containing the cursor object only")
+    poll.add_argument("--limit", type=int, default=50)
     reconcile = commands.add_parser("reconcile")
     reconcile.add_argument("mission_id")
     reconcile.add_argument("--decision", choices=("no-effect", "observed-result", "use-receipt", "abandon"), required=True)
@@ -85,6 +91,25 @@ def main(argv=None):
             if path.stat().st_size > 1_000_000:
                 raise ValueError("catalog file exceeds 1 MB")
             catalog = Catalog.from_config(json.loads(path.read_text(encoding="utf-8")))
+        if args.command in {"client-snapshot", "client-poll"}:
+            from .client_sync import ClientSync
+            if not (Path(args.state) / "missions.sqlite3").is_file():
+                raise FileNotFoundError("client sync requires an existing mission store")
+            sync = ClientSync(Store(args.state))
+            if args.command == "client-snapshot":
+                result = sync.snapshot(args.mission_id)
+            else:
+                with Path(args.cursor).open("rb") as handle:
+                    raw_cursor = handle.read(4097)
+                if len(raw_cursor) > 4096:
+                    raise ValueError("cursor file exceeds 4096 bytes")
+                result = sync.poll(args.mission_id, json.loads(raw_cursor), limit=args.limit)
+            if args.format == "human":
+                from .presentation import header, message
+                print(header(title="Synchronisation locale") + message("INFO", encode(result)))
+            else:
+                print(encode(result))
+            return 2 if result["status"] == "RESET_REQUIRED" else 0
         store = Store(args.state)
         options = {"limits": Limits(args.timeout),
                    "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}

@@ -46,8 +46,13 @@ class Store:
                 CREATE TABLE IF NOT EXISTS events (
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT, mission_id TEXT NOT NULL,
                     at TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT NOT NULL);
+                CREATE INDEX IF NOT EXISTS events_mission_sequence ON events(mission_id, sequence);
+                CREATE TABLE IF NOT EXISTS sync_metadata (
+                    key TEXT PRIMARY KEY, value TEXT NOT NULL);
                 PRAGMA user_version=1;
             """)
+            db.execute("INSERT OR IGNORE INTO sync_metadata (key,value) VALUES ('store_id',?)",
+                       ("s-" + uuid.uuid4().hex,))
 
     @contextmanager
     def connection(self):

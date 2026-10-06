@@ -1,0 +1,24 @@
+test_cancel_request_is_visible_even_without_revision_change (tests.test_client_sync.ClientSyncTests.test_cancel_request_is_visible_even_without_revision_change) ... ok
+test_changed_anchor_requires_reset (tests.test_client_sync.ClientSyncTests.test_changed_anchor_requires_reset) ... ok
+test_changed_store_identity_requires_explicit_reset (tests.test_client_sync.ClientSyncTests.test_changed_store_identity_requires_explicit_reset) ... ok
+test_cli_does_not_create_missing_store (tests.test_client_sync.ClientSyncTests.test_cli_does_not_create_missing_store) ... ok
+test_cli_snapshot_and_poll_are_runtime_free (tests.test_client_sync.ClientSyncTests.test_cli_snapshot_and_poll_are_runtime_free) ... ok
+test_deleted_prefix_requires_reset_even_if_anchor_is_unchanged (tests.test_client_sync.ClientSyncTests.test_deleted_prefix_requires_reset_even_if_anchor_is_unchanged) ... ok
+test_interleaved_other_mission_events_do_not_leak_or_make_false_gaps (tests.test_client_sync.ClientSyncTests.test_interleaved_other_mission_events_do_not_leak_or_make_false_gaps) ... ok
+test_legacy_store_upgrade_preserves_mission_history (tests.test_client_sync.ClientSyncTests.test_legacy_store_upgrade_preserves_mission_history) ... ok
+test_malformed_or_wrong_mission_cursor_is_rejected (tests.test_client_sync.ClientSyncTests.test_malformed_or_wrong_mission_cursor_is_rejected) ... ok
+test_missing_history_or_mission_never_produces_a_valid_snapshot (tests.test_client_sync.ClientSyncTests.test_missing_history_or_mission_never_produces_a_valid_snapshot) ... ok
+test_pages_are_bounded_and_repeated_requests_return_same_references (tests.test_client_sync.ClientSyncTests.test_pages_are_bounded_and_repeated_requests_return_same_references) ... ok
+test_pending_action_remains_pending_after_reconnect (tests.test_client_sync.ClientSyncTests.test_pending_action_remains_pending_after_reconnect) ... ok
+test_projection_excludes_private_payloads_and_cannot_change_store (tests.test_client_sync.ClientSyncTests.test_projection_excludes_private_payloads_and_cannot_change_store) ... ok
+test_reopen_preserves_store_identity_and_cursor (tests.test_client_sync.ClientSyncTests.test_reopen_preserves_store_identity_and_cursor) ... ok
+test_restored_older_history_requires_reset (tests.test_client_sync.ClientSyncTests.test_restored_older_history_requires_reset) ... ok
+test_revision_outside_javascript_exact_range_is_not_exported (tests.test_client_sync.ClientSyncTests.test_revision_outside_javascript_exact_range_is_not_exported) ... ok
+test_sequence_outside_javascript_exact_range_fails_without_rounding (tests.test_client_sync.ClientSyncTests.test_sequence_outside_javascript_exact_range_fails_without_rounding) ... ok
+test_snapshot_and_idle_poll_do_not_modify_mission_or_events (tests.test_client_sync.ClientSyncTests.test_snapshot_and_idle_poll_do_not_modify_mission_or_events) ... ok
+test_transaction_does_not_mix_snapshot_with_concurrent_cancel (tests.test_client_sync.ClientSyncTests.test_transaction_does_not_mix_snapshot_with_concurrent_cancel) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.495s
+
+OK

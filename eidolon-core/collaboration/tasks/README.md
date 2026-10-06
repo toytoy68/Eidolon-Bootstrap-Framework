@@ -85,3 +85,12 @@ livraison n'est pas présumée. Nouveau [C-TASK-G011](C-TASK-G011.md) : contre-r
 D1/D2/C5, après son lot GUI engagé et avant G010 si possible. Codex livre les
 correctifs Web et garde le futur contrat serveur du client. Pas de modification
 simultanée du prototype ou des modules de production.
+
+## Répartition courante — C-MSG-G023, 06/10/2026
+
+G009 reçu ensuite dans 111da40, intégré intact ; 17 tests de logique reproduits,
+UI non rejouée ici faute de Chromium. Nouveau [G013](C-TASK-G013.md) : réparer
+le suivi des commandes incertaines, puis [G012](C-TASK-G012.md) : consommateur
+JS et raccordement du contrat client-sync/1 au prototype. G011 garde sa base
+Web figée e25cd2a ; G010 reste l'étude Windows à suivre. Codex livre C-008a et garde le serveur,
+le stockage et les futures commandes. Ne pas attendre la VM pour ces tâches.

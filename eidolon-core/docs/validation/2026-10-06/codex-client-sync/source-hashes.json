@@ -1,0 +1,7 @@
+{
+  "src/eidolon_core/client_sync.py": "6584fa2a0f3f7165e29493f3fb7fc54565559915758116faba71b1134c91a4ea",
+  "src/eidolon_core/store.py": "ae0f3d2b57b385e5443f2fc60fd4bceb6f68bd865427bb3553da0a7b07acb58b",
+  "src/eidolon_core/cli.py": "62e3394f7253cc745197cdd1de60425d079bbe354f84f6a508b37c46fc52a1a0",
+  "tests/test_client_sync.py": "720f8fe3fb84afd3034ce4a3cfae48d54eaf96c5a02894ffc38b878671ca0d4e",
+  "examples/client_sync_demo.py": "4f834d4f8282b95ff833fe117ee29f402b1f80886afd9c3923846b5021e3f40e"
+}

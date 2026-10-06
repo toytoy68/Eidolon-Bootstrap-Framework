@@ -1,0 +1,47 @@
+{
+  "source": "Claude 111da40",
+  "node": "v24.19.0",
+  "scope": "simulation pure, aucun réseau ni effet réel",
+  "results": [
+    {
+      "intent": "revoke",
+      "before": {
+        "kind": "approve",
+        "key": "k0-0",
+        "phase": "unknown",
+        "receipt": null
+      },
+      "after": {
+        "kind": "revoke",
+        "key": "k2-2",
+        "phase": "sending",
+        "receipt": null
+      },
+      "outbox": [
+        "DECIDE",
+        "SYNC",
+        "REVOKE"
+      ]
+    },
+    {
+      "intent": "request-cancel",
+      "before": {
+        "kind": "approve",
+        "key": "k0-0",
+        "phase": "unknown",
+        "receipt": null
+      },
+      "after": {
+        "kind": "cancel",
+        "key": "k2-2",
+        "phase": "sending",
+        "receipt": null
+      },
+      "outbox": [
+        "DECIDE",
+        "SYNC",
+        "CANCEL_REQUEST"
+      ]
+    }
+  ]
+}

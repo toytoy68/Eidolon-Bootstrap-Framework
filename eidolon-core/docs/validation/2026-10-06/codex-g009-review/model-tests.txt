@@ -1,0 +1,25 @@
+✔ approve sends one request and changes nothing before the acknowledgement (1.654659ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (1.359705ms)
+✔ refusal never leads to work or execution (0.853744ms)
+✔ offline: nothing is sent or queued, drafts stay local (0.501865ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (0.772121ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (0.376987ms)
+✔ revoking a recorded approval prevents execution (1.027797ms)
+✔ cancellation request before execution closes the mission without running it (0.457609ms)
+✔ review required: no automatic retry and no decision offered (0.461795ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.36538ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.51131ms)
+✔ local microphone stays signalled while Core is unreachable (0.168243ms)
+✔ closing the window decides and cancels nothing (0.131067ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.162445ms)
+✔ a decision on a changed proposal is reported as not recorded (0.195224ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.350969ms)
+✔ model functions are pure: the input state is never mutated (0.187232ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.870214

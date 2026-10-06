@@ -71,6 +71,27 @@ les autres commandes. Le [standard commun](../standards/EIDOLON-PRESENTATION-v1.
 définit les règles à transmettre aux agents de tous les projets Eidolon ;
 le `AGENTS.md` à la racine y renvoie.
 
+## Prototype graphique autonome
+
+Le [prototype de Claude](desktop/prototype/README.md) s'ouvre depuis
+`desktop/prototype/index.html`, sans serveur ni ressource distante. Tous ses
+accords, appareils, reçus et commandes sont simulés ; ce n'est pas le client
+Windows connecté à Core. [Revue d'intégration et limite connue](docs/validation/2026-10-06/codex-g009-review/README.md).
+
+## Premier contrat de reconnexion du client bureau
+
+La tranche C-008a fournit une projection locale en lecture seule et un journal
+paginé, avec curseurs persistants et réinitialisation explicite si l'historique
+ne correspond plus. CLI : client-snapshot / client-poll. Aucun serveur réseau
+ni client Windows livré. [Contrat et commandes](docs/CLIENT-SYNC.md).
+
+```sh
+PYTHONPATH=src:. python -m examples.client_sync_demo --format human
+```
+
+Démonstration vérifiée : mission synthétique, dix événements récupérés sur cinq
+pages, réponse répétée reconnue, un seul lancement d'outil. [Preuves](docs/validation/2026-10-06/codex-client-sync/README.md).
+
 ## Tests simulés
 
 ```sh

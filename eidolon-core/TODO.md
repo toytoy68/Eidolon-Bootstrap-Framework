@@ -145,12 +145,19 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 
 - [x] Huit maquettes Claude `176edac` reçues ; sources/contrats relus par Codex,
   trois comportements reproduits par sonde de logique, sans rendu visuel validé.
-- [ ] Claude G009 : prototype autonome hors ligne avec accords, refus, perte
-  d'accusé, reconnexion et états de preuve ; aucune application Windows livrée.
+- [x] Claude G009 : prototype autonome reçu dans 111da40, 17 tests de logique
+  reproduits ; 27 réussis rapportés par Claude (10 UI non démarrés ici, Chromium
+  absent). Aucune application Windows livrée.
+- [ ] Claude G013 : garder le suivi de chaque commande incertaine lors d'une
+  révocation/annulation ; sonde Codex reproduite sur le prototype.
 - [ ] Claude G010 : comparaison Tauri/PySide/Electron et recette Windows ;
   framework non choisi, mesures OS et installation différées.
-- [ ] Codex C-008 : contrat distant versionné, projection, reçus de commandes
-  et rattrapage des événements ; autorité et permissions restent dans Core.
+- [x] C-008a : projection locale cohérente, curseur durable, rattrapage paginé,
+  reset explicite, CLI et démo sans réseau ; 19 tests nouveaux.
+- [ ] Claude G012 : consommateur JS du protocole et scénarios de reconnexion
+  dans le prototype ; ne pas reconstituer l'état depuis les événements.
+- [ ] C-008 suite : reçus de commandes, identité/appairage, API authentifiée ;
+  autorité et permissions restent dans Core. [Contrat livré](docs/CLIENT-SYNC.md).
 - [ ] C-003W : connecteur documents/médias Windows et permissions locales,
   séparé de la présence graphique. Voir [revue](docs/proposals/2026-10-05-codex-desktop-review/README.md).
 

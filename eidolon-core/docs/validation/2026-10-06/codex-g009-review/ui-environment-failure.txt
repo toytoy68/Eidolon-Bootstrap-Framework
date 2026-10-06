@@ -1,0 +1,197 @@
+✔ approve sends one request and changes nothing before the acknowledgement (1.944144ms)
+✔ recorded approval is not execution; execution and verified result are later, distinct events (2.272859ms)
+✔ refusal never leads to work or execution (1.132283ms)
+✔ offline: nothing is sent or queued, drafts stay local (0.594284ms)
+✔ lost acknowledgement: unknown decision, replay without duplicate, receipt before any new emission (0.558139ms)
+✔ a consumed approval cannot be undone; revocation and cancellation are separate requests (1.550512ms)
+✔ revoking a recorded approval prevents execution (1.32986ms)
+✔ cancellation request before execution closes the mission without running it (0.444007ms)
+✔ review required: no automatic retry and no decision offered (0.341493ms)
+✔ offline endpoint view: last known state is dated, nothing claimed about now (0.420082ms)
+✔ locked session: generic notification, no decision through toast, silence or closing (0.43234ms)
+✔ local microphone stays signalled while Core is unreachable (0.174662ms)
+✔ closing the window decides and cancels nothing (0.13933ms)
+✔ a sequence gap asks for a snapshot instead of guessing (0.127171ms)
+✔ a decision on a changed proposal is reported as not recorded (0.209566ms)
+✔ assisted reading sends exactly the reviewed text, and any edit requires a new review (0.397158ms)
+✔ model functions are pure: the input state is never mutated (0.223186ms)
+✖ ui: no network request beyond the local files, no script error (16.872878ms)
+✖ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (13.438281ms)
+✖ ui: offline disables sending with a visible reason (2.134951ms)
+✖ ui: lost acknowledgement flow through the interface (1.625405ms)
+✖ ui: locked session toast is generic and opens nothing (1.609571ms)
+✖ ui: microphone indicator survives a Core disconnection (1.362269ms)
+✖ ui: targets, contrast and horizontal overflow in every scenario and view (1.395639ms)
+✖ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (1.438313ms)
+✖ ui: reduced motion stops the eye animation (1.510021ms)
+✖ ui: assisted reading previews exactly what will be sent and requires a fresh review (1.621389ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 17
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.916094
+
+✖ failing tests:
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:81:1
+✖ ui: no network request beyond the local files, no script error (16.872878ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:82:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:94:1
+✖ ui: keyboard alone reaches and uses the decision; the click shows sending, not success (13.438281ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:95:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:119:1
+✖ ui: offline disables sending with a visible reason (2.134951ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:120:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:134:1
+✖ ui: lost acknowledgement flow through the interface (1.625405ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:135:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:155:1
+✖ ui: locked session toast is generic and opens nothing (1.609571ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:156:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:168:1
+✖ ui: microphone indicator survives a Core disconnection (1.362269ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:169:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:179:1
+✖ ui: targets, contrast and horizontal overflow in every scenario and view (1.395639ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:180:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:206:1
+✖ ui: 200 % zoom equivalent (680 px wide) keeps the page without horizontal scroll (1.438313ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:207:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:223:1
+✖ ui: reduced motion stops the eye animation (1.510021ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:224:34) {
+    name: 'Error',
+    log: []
+  }
+
+test at eidolon-core/desktop/prototype/tests/ui.test.js:237:1
+✖ ui: assisted reading previews exactly what will be sent and requires a fresh review (1.621389ms)
+  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     npx playwright install                                 ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+      at TestContext.<anonymous> (/workspace/scratch/aeef887fc8c0/claude-g009-review/eidolon-core/desktop/prototype/tests/ui.test.js:238:34) {
+    name: 'Error',
+    log: []
+  }
