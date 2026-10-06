@@ -1,0 +1,4 @@
+{"crash": "none", "first_run": [0, "RATE_LIMITED"], "rebuilt_run": [0, "RETRY_WAIT"], "provider_contacts": 1}
+{"crash": "in_exchange", "first_run": [9, []], "rebuilt_run": [0, "RATE_LIMITED"], "provider_contacts": 2}
+{"crash": "before_pause_commit", "first_run": [9, []], "rebuilt_run": [0, "RATE_LIMITED"], "provider_contacts": 2}
+{"crash": "after_pause_commit", "first_run": [9, []], "rebuilt_run": [0, "RETRY_WAIT"], "provider_contacts": 1}
