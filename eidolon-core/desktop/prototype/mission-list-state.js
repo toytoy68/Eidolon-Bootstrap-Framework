@@ -51,6 +51,8 @@
       nextCursor: null,         // exact list cursor from Core, sent back unchanged
       pages: 0,
       stale: null,              // { reason, receivedAt } after RESET_REQUIRED: items are an OLD inventory
+      received: 0,              // items received for this generation, including those beyond MAX_ITEMS
+      halted: null,             // { code, receivedAt }: counts contradicted the announced total (G021)
       previous: null,           // { items, reason } kept, marked stale, while a new listing is assembled
       lastContactAt: null, lastError: null,
       selection: null,          // { missionId, token, sync, source }
@@ -121,7 +123,7 @@
 
   // The only list request: the first page (cursor null) or the exact next_cursor. Never a command.
   function nextPageRequest(state) {
-    if (state.connection !== "online" || state.stale || state.complete || state.truncated) return null;
+    if (state.connection !== "online" || state.stale || state.halted || state.complete || state.truncated) return null;
     if (state.pages > 0 && !state.nextCursor) return null;
     return { kind: "list", epoch: state.epoch, cursor: clone(state.nextCursor) };
   }
@@ -141,7 +143,7 @@
     if (code) return reject(s, code, at);
     if (request.epoch !== s.epoch) { s.stats.staleAnswers += 1; return s; }          // asked before a relisting
     if (s.connection !== "online") { s.stats.staleAnswers += 1; return s; }          // nothing applied offline
-    if (s.stale) { s.stats.frozenAnswers += 1; return s; }                           // waiting for an explicit relisting
+    if (s.stale || s.halted) { s.stats.frozenAnswers += 1; return s; }               // waiting for an explicit relisting
     if (s.complete || s.truncated) { s.stats.repeatedPages += 1; return s; }
     // Only the answer to the request we are waiting for: a repeated or late page changes nothing.
     if (!same(request.cursor === undefined ? null : request.cursor, s.nextCursor) || (s.pages > 0 && !s.nextCursor)) {
@@ -159,6 +161,18 @@
     }
     var last = s.items.length ? s.items[s.items.length - 1].mission.id : "";
     if (env.items.length && env.items[0].mission.id <= last) return reject(s, "ITEMS_OVERLAP", at);
+    // G021: the announced total (generation.mission_count) binds the whole listing. Checked
+    // BEFORE anything is taken: an early end, an overflow or an impossible has_more is refused
+    // and stops the listing (explicit relisting needed); nothing is ever declared complete by it.
+    var total = env.generation.mission_count, after = s.received + env.items.length;
+    var countError = after > total ? "COUNT_EXCEEDED"
+      : !env.has_more && after < total ? "LIST_ENDED_EARLY"
+      : env.has_more && after >= total ? "HAS_MORE_INCONSISTENT" : null;
+    if (countError) {
+      s.halted = { code: countError, receivedAt: at || null, announced: total, received: s.received };
+      s.nextCursor = null;
+      return reject(s, countError, at);
+    }
     s.storeId = env.store_id; s.generation = clone(env.generation);
     for (var i = 0; i < env.items.length; i++) {
       if (s.items.length >= MAX_ITEMS) { s.truncated = true; break; }
@@ -166,6 +180,7 @@
         source: text(request.source, 80) ? request.source : null });
     }
     s.pages += 1;
+    s.received = after;
     s.nextCursor = s.truncated ? null : clone(env.next_cursor);
     s.complete = !s.truncated && !env.has_more;
     if (s.complete) s.previous = null; // the new generation is fully read: the old one is no longer shown
@@ -187,10 +202,10 @@
   // Explicit "list again": the old inventory stays visible as stale until the new one is complete.
   function relist(state) {
     var s = clone(state);
-    if (s.items.length) s.previous = { items: s.items, reason: s.stale ? s.stale.reason : "RELISTED" };
+    if (s.items.length) s.previous = { items: s.items, reason: s.stale ? s.stale.reason : s.halted ? s.halted.code : "RELISTED" };
     s.epoch += 1;
     s.storeId = null; s.generation = null; s.items = []; s.complete = false; s.truncated = false;
-    s.nextCursor = null; s.pages = 0; s.stale = null;
+    s.nextCursor = null; s.pages = 0; s.stale = null; s.received = 0; s.halted = null;
     return s;
   }
 
@@ -244,13 +259,15 @@
     var announced = state.generation ? state.generation.mission_count : null;
     var status;
     if (state.stale) status = "Inventaire périmé (" + state.stale.reason + ") : nouvelle lecture explicite nécessaire";
+    else if (state.halted) status = "Liste incomplète : réponse incohérente (" + state.halted.code + "), " + state.items.length
+      + " reçues sur " + state.halted.announced + " annoncées ; nouvelle lecture explicite nécessaire";
     else if (!state.pages && state.previous) status = "Ancien inventaire périmé affiché ; nouvelle lecture en cours";
     else if (!state.pages) status = "Aucune page reçue";
     else if (state.truncated) status = "Liste tronquée : " + state.items.length + " affichées sur " + announced + " annoncées";
     else if (state.complete) status = state.items.length ? "Capture entièrement lue (" + state.items.length + ")" : "Aucune mission dans cette capture";
     else status = "Lecture partielle : " + state.items.length + " sur " + announced + " annoncées";
     return { status: status, shown: shown.length, announced: announced, complete: state.complete, truncated: state.truncated,
-      stale: Boolean(state.stale) || (!state.pages && Boolean(state.previous)), pages: state.pages };
+      stale: Boolean(state.stale) || (!state.pages && Boolean(state.previous)), halted: Boolean(state.halted), pages: state.pages };
   }
 
   var api = { PROTOCOL: PROTOCOL, MAX_ITEMS: MAX_ITEMS, createState: createState, validatePage: validatePage,

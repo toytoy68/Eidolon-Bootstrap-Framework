@@ -87,6 +87,13 @@ derive("mixed_generation", "fresh_pages[1] d'une autre génération (5) que la p
 const hostile = copy(obs[0]); hostile.items[0].mission.objective_kind = "<img src=x onerror=alert(1)>";
 derive("hostile_text", "fresh_pages[0] avec un objective_kind contenant du HTML : affiché comme texte.", hostile);
 
+// G021: counts that contradict the announced total (Core does not emit them; the client must refuse them).
+const endedEarly = copy(obs[1]); endedEarly.has_more = false; endedEarly.next_cursor = null;
+derive("ended_early", "fresh_pages[1] présentée comme dernière page (has_more=false) alors que la génération annonce 3 missions et que 2 seulement auraient été reçues.", endedEarly);
+const hasMoreBad = copy(derived.varied_page.value); hasMoreBad.has_more = true;
+hasMoreBad.next_cursor = { version: 1, store_id: hasMoreBad.store_id, generation: copy(hasMoreBad.generation), after_id: hasMoreBad.items[hasMoreBad.items.length - 1].mission.id };
+derive("has_more_inconsistent", "varied_page avec has_more=true alors que ses 4 missions sont les 4 annoncées.", hasMoreBad);
+
 // Selection: Core has no client-sync capture for these ids in the traces, so each snapshot is
 // DERIVED from the observed list projection (same store, id, revision, status), never measured.
 const selection = {};

@@ -58,6 +58,9 @@
       steps: [derivedPage("empty_store", "Page vide")] },
     "liste-tronquee": { label: "Liste : 250 missions, plafond de 200", summary: "Le client s'arrête à 200 et le dit : jamais « tout affiché ».",
       steps: [derivedPage("big_inventory", "Page 1/3", 0), derivedPage("big_inventory", "Page 2/3", 1), derivedPage("big_inventory", "Page 3/3", 2)] },
+    "liste-incoherente": { label: "Liste : fin de liste incohérente avec le total", summary: "Page 2 présentée comme la dernière alors que 3 missions sont annoncées : refusée, jamais « entièrement lue » ; relecture explicite.",
+      steps: [observed("fresh_pages.0", "Page 1"), derivedPage("ended_early", "Page 2 marquée comme dernière"),
+        observed("fresh_pages.0", "Page 1 (nouvelle lecture)"), observed("fresh_pages.1", "Page 2"), observed("fresh_pages.2", "Page 3")] },
     "liste-rejets": { label: "Liste : pages rejetées et texte hostile", summary: "Autorité prétendue, entier 2^53, génération mélangée : rejetés. Texte HTML affiché comme texte.",
       steps: [derivedPage("authority_claimed", "Page prétendant autoriser l'exécution"), derivedPage("unsafe_integer", "Entier 2^53"),
         observed("fresh_pages.0", "Page 1"), derivedPage("mixed_generation", "Page 2 d'une autre génération"),
@@ -75,7 +78,7 @@
 
   function nextLabel(b) {
     var st = SCENARIOS[b.key].steps[b.index];
-    if (b.state.stale && st && st.type === "page") return "En attente : relis la liste explicitement dans la fenêtre Eidolon.";
+    if ((b.state.stale || b.state.halted) && st && st.type === "page") return "En attente : relis la liste explicitement dans la fenêtre Eidolon.";
     return st ? "Prochaine étape : " + st.label : "Fin du scénario.";
   }
 
@@ -83,7 +86,7 @@
     var b = JSON.parse(JSON.stringify(bench));
     var st = SCENARIOS[b.key].steps[b.index];
     if (!st) return b;
-    if (b.state.stale && st.type === "page") return b; // a real transport stops asking too
+    if ((b.state.stale || b.state.halted) && st.type === "page") return b; // a real transport stops asking too
     b.minute += 1;
     var when = clock(b.minute);
     if (st.type === "offline" || st.type === "online") b.state = L.setConnection(b.state, st.type);
@@ -114,6 +117,7 @@
     var st = b.state;
     if (st.connection !== "online") return { mode: "offline", label: "Injoignable", detail: "Dernière réponse " + (st.lastContactAt || "aucune") };
     if (st.stale) return { mode: "attention", label: "Liste à relire", detail: "Le serveur a changé entre deux pages" };
+    if (st.halted) return { mode: "attention", label: "Liste à relire", detail: "Réponse incohérente avec le total annoncé" };
     var review = L.shownItems(st).some(function (it) { return it.mission.status === "REVIEW_REQUIRED"; });
     if (review) return { mode: "attention", label: "Une mission attend une revue", detail: "Lecture seule ici" };
     return { mode: "idle", label: "En veille", detail: L.summary(st).status };
@@ -141,6 +145,12 @@
     if (st.connection !== "online") {
       banners += '<div class="banner" role="status"><p><strong>Serveur Eidolon injoignable.</strong> Dernière réponse reçue à '
         + t(st.lastContactAt || "—") + ". Rien n'est demandé ni mis en file.</p></div>";
+    }
+    if (st.halted) {
+      banners += '<div class="banner" role="alert" id="list-halted"><p><strong>Liste incomplète (' + t(st.halted.code) + ").</strong> "
+        + "Le serveur a répondu de façon incohérente avec le nombre de missions qu'il annonce. Les missions déjà reçues restent affichées ; "
+        + "aucune n'est inventée et la liste n'est pas déclarée complète. Relire ne lance ni ne décide rien.</p>"
+        + '<div class="row">' + h.btn("Relire la liste", "list-relist", { kind: "primary", id: "list-relist" }) + "</div></div>";
     }
     if (st.stale) {
       banners += '<div class="banner" role="alert" id="list-reset"><p><strong>Liste périmée (' + t(st.stale.reason) + ").</strong> "

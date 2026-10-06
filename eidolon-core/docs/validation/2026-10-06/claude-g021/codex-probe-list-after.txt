@@ -1,0 +1,1 @@
+{"case":"terminal-page-shorter-than-announced","announced":3,"received":0,"complete":false,"summary":"Liste incomplète : réponse incohérente (LIST_ENDED_EARLY), 0 reçues sur 3 annoncées ; nouvelle lecture explicite nécessaire"}

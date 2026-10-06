@@ -535,3 +535,25 @@ test("ui G018: targets and contrast in every list scenario, at the end of its sc
   assert.ok(worst.ratio >= worst.needed);
   assert.ok(report.every((r) => r.overflow <= 0));
 });
+
+test("ui G021: a last page inconsistent with the announced total is refused, never shown as complete", { skip }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const { context, page, errors } = await open(browser, "liste-incoherente");
+    await playSync(page, "liste-incoherente", 2);
+    assert.equal(await page.isVisible("#list-halted"), true);
+    assert.match(await page.textContent("#list-halted"), /LIST_ENDED_EARLY/);
+    assert.match(await page.textContent("#list-status"), /Liste incomplète : réponse incohérente \(LIST_ENDED_EARLY\), 1 reçues sur 3 annoncées/);
+    assert.doesNotMatch(await page.textContent("#app"), /entièrement lue/);
+    assert.match(await page.textContent("#list-rejected"), /LIST_ENDED_EARLY/);
+    const index = await page.evaluate(() => window.EidolonPrototype.getSync().index);
+    await page.click("#server-step");
+    assert.equal(await page.evaluate(() => window.EidolonPrototype.getSync().index), index, "nothing asked while halted");
+    await shot(page, "19-g021-fin-incoherente");
+    await page.click("#list-relist");
+    for (let i = 0; i < 3; i++) await page.click("#server-step");
+    assert.equal(await page.textContent("#list-status"), "Capture entièrement lue (3)");
+    assert.deepEqual(errors, []);
+    await context.close();
+  } finally { await browser.close(); }
+});

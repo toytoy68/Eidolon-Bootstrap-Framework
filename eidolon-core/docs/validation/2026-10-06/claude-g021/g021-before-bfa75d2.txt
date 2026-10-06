@@ -1,0 +1,164 @@
+TAP version 13
+# Subtest: Codex's probe: a first page ending early (1 of 3) is refused, never complete
+not ok 1 - Codex's probe: a first page ending early (1 of 3) is refused, never complete
+  ---
+  duration_ms: 5.316905
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:32:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:34:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: a later page ending early (2 of 3) keeps what was received, refused, not complete
+not ok 2 - a later page ending early (2 of 3) keeps what was received, refused, not complete
+  ---
+  duration_ms: 2.257924
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   2,
+    +   true
+    -   1,
+    -   false
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1
+    1: false
+  actual:
+    0: 2
+    1: true
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:44:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: announced total zero with an item, and an overflow across pages, are refused
+not ok 3 - announced total zero with an item, and an overflow across pages, are refused
+  ---
+  duration_ms: 0.784596
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   'COUNT_EXCEEDED'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'COUNT_EXCEEDED'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:51:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: has_more=true although every announced mission was received is refused
+not ok 4 - has_more=true although every announced mission was received is refused
+  ---
+  duration_ms: 0.665986
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:60:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   'HAS_MORE_INCONSISTENT'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'HAS_MORE_INCONSISTENT'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:62:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: valid traces are unchanged: observed 3 pages complete, empty store, 250 → 200 shown and truncated
+ok 5 - valid traces are unchanged: observed 3 pages complete, empty store, 250 → 200 shown and truncated
+  ---
+  duration_ms: 3.350405
+  type: 'test'
+  ...
+# Subtest: after a refusal: late pages are frozen, explicit relisting reads the generation completely
+not ok 6 - after a refusal: late pages are frozen, explicit relisting reads the generation completely
+  ---
+  duration_ms: 0.399164
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    no page taken while the listing is halted
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/prototype/tests/g021.test.js:83:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 1
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 116.208192
