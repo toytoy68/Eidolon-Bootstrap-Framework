@@ -165,14 +165,40 @@ fi
 
 title "Configuration des dépôts Debian"
 
+# Ajoute contrib, non-free et non-free-firmware aux seules entrées Debian
+# qui contiennent déjà « main », sans doublon : relancer le script ne
+# modifie plus rien. Formats pris en charge : ligne « deb … » (sources.list)
+# et champ « Components: » (deb822, debian.sources). Le fichier n'est
+# remplacé qu'après une écriture complète.
+add_debian_components() {
+
+    local file="$1"
+    local tmp="${file}.eidolon-tmp"
+
+    awk '
+        function add_missing(first,    i, w, found) {
+            for (w = 1; w <= 3; w++) {
+                found = 0
+                for (i = first; i <= NF; i++) if ($i == wanted[w]) found = 1
+                if (!found) $0 = $0 " " wanted[w]
+            }
+        }
+        BEGIN { split("contrib non-free non-free-firmware", wanted, " ") }
+        /^[[:space:]]*deb(-src)?[[:space:]]/ || /^Components:/ {
+            for (i = 2; i <= NF; i++) if ($i == "main") { add_missing(2); break }
+        }
+        { print }
+    ' "$file" >"$tmp" && mv -f "$tmp" "$file"
+
+}
+
 if [[ -f /etc/apt/sources.list ]]; then
 
     [[ -f /etc/apt/sources.list.bak ]] || \
         cp /etc/apt/sources.list /etc/apt/sources.list.bak
 
-    sed -i \
-        -e 's/\bmain\b/main contrib non-free non-free-firmware/g' \
-        /etc/apt/sources.list
+    add_debian_components /etc/apt/sources.list \
+        || error "Impossible de configurer sources.list."
 
     ok "sources.list configuré"
 
@@ -184,9 +210,8 @@ if [[ -f /etc/apt/sources.list.d/debian.sources ]]; then
         cp /etc/apt/sources.list.d/debian.sources \
            /etc/apt/sources.list.d/debian.sources.bak
 
-    sed -i \
-        's/^Components: main$/Components: main contrib non-free non-free-firmware/' \
-        /etc/apt/sources.list.d/debian.sources
+    add_debian_components /etc/apt/sources.list.d/debian.sources \
+        || error "Impossible de configurer debian.sources."
 
     ok "debian.sources configuré"
 

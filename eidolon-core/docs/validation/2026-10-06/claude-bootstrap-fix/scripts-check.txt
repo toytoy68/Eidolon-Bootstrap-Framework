@@ -1,0 +1,11 @@
+bash -n ok 01-system.sh
+bash -n ok 02-nvidia.sh
+bash -n ok 03-docker.sh
+i/lf    w/lf    attr/text eol=lf      	01-system.sh
+i/lf    w/lf    attr/text eol=lf      	02-nvidia.sh
+i/lf    w/lf    attr/text eol=lf      	03-docker.sh
+version: 0.11.0
+01-system.sh:233:8: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
+02-nvidia.sh:107:8: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
+03-docker.sh:377:19: note: Not following: /etc/os-release was not specified as input (see shellcheck -x). [SC1091]
+SC2034 (variables d'identité inutilisées) : 30
