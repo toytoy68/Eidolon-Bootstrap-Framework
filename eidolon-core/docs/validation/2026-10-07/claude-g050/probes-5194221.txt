@@ -1,0 +1,52 @@
+== A. corpus G029 rejoué, comparé aux sorties Codex
+A 27/27 identiques (texte nettoyé et reçu)
+== B. cas ajoutés : ce qui reste
+B IP1 fin de phrase « 198.51.100.7. »: RESTE  <-- ÉCART → 'serveur 198.51.100.7.' {}
+B IP2 après deux-points « ip:198.51.100.7 »: RESTE  <-- ÉCART → 'ip:198.51.100.7 refuse' {}
+B IP3 avec port « 198.51.100.7:25565 »: RESTE  <-- ÉCART → 'minecraft :25565 lent' {'NETWORK_ADDRESS': 1}
+B IP4 zéros en tête « 198.051.100.007 »: RESTE  <-- ÉCART → 'routeur 198.051.100.007' {}
+B IP5 entre parenthèses: retiré → 'passerelle ( )' {'NETWORK_ADDRESS': 1}
+B IP6 IPv6 entre crochets avec port: retiré → 'joindre [ ]:8080' {'NETWORK_ADDRESS': 1}
+B IP7 IPv4 CIDR: retiré → 'réseau /24' {'NETWORK_ADDRESS': 1}
+B IP8 IPv4 chiffres pleine chasse: retiré → 'hôte' {'NETWORK_ADDRESS': 1}
+B IP9 IPv4 suivie d'une virgule: retiré → 'hôtes ,' {'NETWORK_ADDRESS': 2}
+B IB1 IBAN minuscules: RESTE  <-- ÉCART → 'virer sur fr76 3000 6000 0112 3456 7890 189' {}
+B IB2 IBAN avec tirets: RESTE  <-- ÉCART → 'iban FR76-3000-6000-0112-3456-7890-189' {}
+B IB3 IBAN collé: retiré → 'iban' {'IBAN_SHAPE': 1}
+B IB4 IBAN préfixé « IBAN: »: retiré → 'IBAN:' {'IBAN_SHAPE': 1}
+B T1 « 0033 6 12 34 56 78 »: RESTE  <-- ÉCART → 'appeler 0033 6 12 34 56 78' {}
+B T2 « +33 (0)6 12 34 56 78 »: RESTE  <-- ÉCART → 'appeler +33 (0)6 12 34 56 78' {}
+B T3 « tel:0612345678 »: retiré → 'tel: svp' {'PHONE_SHAPE': 1}
+B T4 « 06.12.34.56.78. » fin de phrase: retiré → 'rappeler le .' {'PHONE_SHAPE': 1}
+B T5 chiffres pleine chasse: retiré → 'appeler' {'PHONE_SHAPE': 1}
+B T6 « 06 12 34 56 78 » avec marques combinantes: RESTE  <-- ÉCART → 'appeler 0̲6 12 34 56 78' {}
+B E1 « ＠ » pleine chasse: retiré → 'écrire à' {'EMAIL': 1}
+B E2 espace autour de @: RESTE  <-- ÉCART → 'écrire à jean @ example.invalid' {}
+B E3 invisible U+200B dans l'adresse: retiré → 'écrire à' {'EMAIL': 1}
+B E4 « jean(at)example.invalid »: RESTE  <-- ÉCART → 'écrire jean(at)example.invalid' {}
+B U1 domaine + chemin sans schéma, jeton: RESTE  <-- ÉCART → 'ouvrir www.example.invalid/reset?token=AbC123secret' {}
+B U2 domaine nu sans www, jeton: RESTE  <-- ÉCART → 'ouvrir example.invalid/reset?token=AbC123secret' {}
+B U3 schéma en majuscules: retiré → '' {'URL': 1}
+B U4 URL entre chevrons: retiré → 'voir < >' {'URL': 1}
+B U5 schéma ssh://: retiré → 'ssh: :2222' {'EMAIL': 1}
+B U6 schéma smb:// et sftp://: RESTE  <-- ÉCART → 'smb://nas.local/partage/compta sftp://srv/backup' {}
+B P1 chemin /opt: RESTE  <-- ÉCART → 'lire /opt/eidolon/secrets/token.txt' {}
+B P2 chemin /srv: RESTE  <-- ÉCART → 'voir /srv/nas/compta/2026.xlsx' {}
+B P3 chemin relatif ./: RESTE  <-- ÉCART → 'ouvrir ./secrets/token.txt' {}
+B P4 chemin Windows avec espaces, non cité: RESTE  <-- ÉCART → 'ouvrir Dupont\\Documents\\impots.pdf' {'LOCAL_PATH': 1}
+B P5 chemin Windows avec « / »: retiré → 'ouvrir' {'LOCAL_PATH': 1}
+B P6 %USERPROFILE%: RESTE  <-- ÉCART → 'ouvrir %USERPROFILE%\\Documents\\impots.pdf' {}
+B P7 guillemets simples: RESTE  <-- ÉCART → "ouvrir ' impots.pdf'" {'LOCAL_PATH': 1}
+B F1 version logicielle 1.2.3.4: faux positif → 'changelog version' {'NETWORK_ADDRESS': 1}
+B F2 référence produit 10 chiffres: faux positif → 'pièce Bosch' {'PHONE_SHAPE': 1}
+B F3 heure « 12:30 »: gardé → 'rendez-vous 12:30' {}
+B F4 identifiant hexadécimal « dead:beef::1 »: faux positif → 'hash' {'NETWORK_ADDRESS': 1}
+B F5 norme ISO « DE44 5001 0517 5407 3249 31 » (forme IBAN): faux positif → 'exemple' {'IBAN_SHAPE': 1}
+B F6 « node.js/express » (forme domaine + chemin): gardé → 'tutoriel node.js/express' {}
+B F7 « README.md#install »: gardé → 'section README.md#install' {}
+B F8 texte « fr12 pour cela vous » (forme IBAN minuscule): gardé → 'code fr12 pour cela vous aide' {}
+B F9 « ./configure »: gardé → 'lancer ./configure puis make' {}
+B F10 ratio « 3.5/10 » et date « 07.10.2026 »: gardé → 'note 3.5/10 le 07.10.2026' {}
+B F11 numéro de série « 1234 5678 9012 »: gardé → 'série 1234 5678 9012' {}
+B écarts : 20/36
+== C-E non exécutés : coordinateur sans garde sur cette cible
