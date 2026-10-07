@@ -960,3 +960,12 @@ mémoire + 49 tests client réussis ; 12 Chromium non exécutés ici. Paquet
 installé 42 modules/24 contrôles, archive publiée 64 fichiers et trois scénarios
 HTTP sans exposition de requête privée. G055–G057 restent prêts pour Claude.
 [Bilan et correspondances de publication](docs/validation/2026-10-07/codex-hour-1056/README.md).
+
+
+### Reprise du 07/10 à 12 h Paris — C-MSG-G077 / C-022
+
+Nouvelle heure demandée par toytoy, publication toujours autorisée. Base 7b737f4.
+G055–G057 maintenus ; G058/G059 contre-revues C-019/C-021 et G060 affichage client
+ajoutés à Claude. Codex réserve runtime_inspect.py, CLI et tests/docs associés :
+diagnostic local borné, sans mutation/exécution/autorisation de reprise. Aucun
+changement des sources recherche examinées par Claude, aucun nouveau droit réseau.
