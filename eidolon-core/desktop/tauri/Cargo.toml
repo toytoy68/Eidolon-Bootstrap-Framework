@@ -1,0 +1,24 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : Cargo.toml
+# Description : Coquille Tauri 2 de consultation du client connecté (C-TASK-G053)
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+[package]
+name = "eidolon-consultation"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+description = "Read-only shell: opens the Core-served client on 127.0.0.1, nothing else"
+
+[build-dependencies]
+tauri-build = { version = "=2.7.1", default-features = false }
+
+[dependencies]
+# Exact versions read on 07/10/2026 (crates.io). No plugin, no extra feature.
+tauri = { version = "=2.12.1", default-features = false, features = ["wry", "compression"] }
+
+[profile.release]
+strip = true
