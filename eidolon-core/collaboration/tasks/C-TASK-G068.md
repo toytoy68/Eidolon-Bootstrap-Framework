@@ -33,3 +33,10 @@ G087 : proposition concrète g063-snapshot-close.patch et check-snapshot-close.p
 au même chemin de preuves. Sur copie : 21 tests réussis avec GC désactivé et
 4→4 descripteurs avant GC. Aucun source de la proposition modifié. Examiner et
 intégrer si pertinent ; compléter le diagnostic constant et le budget de copie.
+
+
+Sonde complémentaire g063-backup-contention.py : sous BEGIN EXCLUSIVE d'un
+writer SQLite synthétique externe, verify reste en cours après six secondes ;
+enfant arrêté explicitement, base inchangée, aucune archive créée. Cela ne prouve
+pas une attente infinie, mais justifie un budget coopératif du backup et un refus
+constant. Les fichiers temporaires du sous-processus sont isolés et nettoyés.

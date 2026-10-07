@@ -1,0 +1,11 @@
+{
+  "synthetic_external_sqlite_writer": true,
+  "verification_still_running_after_six_seconds": true,
+  "elapsed_seconds": 6.009,
+  "owned_child_stopped": true,
+  "active_database_unchanged": true,
+  "archives_created": 0,
+  "proves_infinite_wait": false,
+  "active_core_rotation_enabled": false,
+  "temporary_files_removed": true
+}

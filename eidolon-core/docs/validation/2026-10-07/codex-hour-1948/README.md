@@ -105,3 +105,18 @@ dix refus sur métadonnées invalides gardent 4→4 descripteurs avant toute col
 TypeError reste brut dans cette proposition minimale. G068 doit revoir/intégrer
 le correctif et compléter les autres limites. Voir check-snapshot-close.py,
 g063-proposed-close-tests.txt et g063-proposed-close.json. Rotation non activée.
+
+
+## Dernière sonde et clôture technique — 2026-10-07T20:46:29+02:00
+
+Sous verrou SQLite exclusif d'un writer synthétique externe, verify du prototype
+G063 reste en cours au-delà de six secondes. Le seul enfant créé est arrêté,
+la transaction du writer annulée, la base inchangée et aucun export créé.
+Cette observation ne prouve pas une attente infinie ; elle complète le besoin de
+budget de copie confié à G068. Preuves : g063-backup-contention.py/json.
+
+Code Core final testé : d44bad8 ; les publications suivantes ajoutent seulement
+preuves, documentation et coordination. Dernière tête Claude observée : 56aa33f
+(G063) ; aucune livraison G064–G071 reçue pendant cette séance. Les six nouvelles
+tâches sont disponibles. Arbres locaux/distants comparés, liens locaux du bilan
+et des nouveaux guides vérifiés. Aucune attente de permission utilisateur.
