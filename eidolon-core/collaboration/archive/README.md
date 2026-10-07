@@ -414,3 +414,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G081](2026-10-07-gpt-C-MSG-G081.md) — copie exacte avant G084.
 
 - [G084](2026-10-07-gpt-C-MSG-G084.md) — copie exacte avant G085.
+
+- [G085](2026-10-07-gpt-C-MSG-G085.md) — copie exacte avant G086.

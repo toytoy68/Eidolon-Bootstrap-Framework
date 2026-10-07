@@ -539,3 +539,11 @@ Le [plan actif](docs/PLAN-2026-10-07.md) sépare les tâches Claude et Codex.
 Catalogue d'archives : [lecture HTTP paginée](docs/HTTP-RESEARCH-ARCHIVES.md),
 activée par une option locale explicite. La route transmet des comptes et
 empreintes ; aucun export brut, requête, annotation ou droit d'exécution.
+
+[Recette recherches et archives](docs/BETA-RESEARCH-FIXTURE.md) : trois missions
+synthétiques consultables et copies privées, sans suppression de recherches actives.
+
+
+[Planificateur Ollama en CLI](docs/LOCAL-MODEL-CLI.md) : configuration opérateur
+explicite pour la mission textuelle restreinte, sans changement du défaut déterministe.
+Parcours testé sur faux serveur loopback ; modèle/GPU réels encore à qualifier.

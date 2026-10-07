@@ -31,6 +31,7 @@ def main(argv=None):
     parser.add_argument("--max-invocations", type=int, default=64,
                         help="durable per-mission invocation limit (1–4096); 0 explicitly uses the legacy unbounded configuration")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
+    parser.add_argument("--model-config", help="private Ollama JSON configuration; text demo/create/run only, literal loopback")
     parser.add_argument("--profile", choices=("text", "service-sim", "action-sim", "research-sim"), default="text")
     parser.add_argument("--research-scenario", choices=("readable","partial","empty","blocked"), default="readable",
                         help="fixed research fixtures only; no network")
@@ -55,7 +56,7 @@ def main(argv=None):
     release.add_argument("--actor", required=True)
     release.add_argument("--reason", required=True)
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
-    commands.add_parser("demo", help="create and run the deterministic synthetic mission")
+    commands.add_parser("demo", help="run the restricted text mission; deterministic unless --model-config")
     research = commands.add_parser("research", help="retrieve fixed synthetic pages, requires --profile research-sim")
     research.add_argument("query")
     research.add_argument("--required-pages",type=int,default=1)
@@ -108,6 +109,12 @@ def main(argv=None):
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
     args = parser.parse_args(argv)
     try:
+        model = None
+        if args.model_config is not None:
+            if args.profile != "text" or args.command not in {"demo", "create", "run"}:
+                raise ValueError("MODEL_CONFIG_COMMAND_NOT_SUPPORTED")
+            from .model_config import load_model
+            model = load_model(args.model_config)
         if args.command == "runtime-inspect":
             from .runtime_inspect import inspect_runtime, render_inspection
             result = inspect_runtime(args.state, args.mission_id)
@@ -231,6 +238,8 @@ def main(argv=None):
         store = Store(args.state)
         options = {"limits": Limits(args.timeout, None if args.max_invocations == 0 else args.max_invocations),
                    "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}
+        if model is not None:
+            options["model"] = model
         runtime = (synthetic_runtime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
                    if args.profile == "service-sim" else Runtime(store, **options))
         if args.profile == "research-sim":

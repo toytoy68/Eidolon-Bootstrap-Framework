@@ -1,0 +1,78 @@
+# Planificateur Ollama explicite dans la CLI — C-032
+
+Le profil text peut appeler l'adaptateur Ollama existant avec --model-config.
+Sans cette option, la démonstration reste déterministe et n'appelle aucun modèle.
+Ce raccordement prépare la qualification sur serveur ; les essais livrés utilisent
+un faux Ollama en HTTP loopback, pas un modèle, un GPU ou un serveur Ollama réel.
+
+## Configuration opérateur
+
+Créer localement un fichier JSON privé (permissions 0600), en choisissant le modèle
+**déjà installé** sur le serveur. Exemple de forme ; remplacer le nom proposé :
+
+```json
+{
+  "version": 1,
+  "provider": "ollama",
+  "endpoint": "http://127.0.0.1:11434",
+  "model": "MODELE_INSTALLE:ETIQUETTE",
+  "options": {"temperature": 0, "seed": 7, "num_predict": 512},
+  "timeout_seconds": 60
+}
+```
+
+Seuls 127.0.0.1 et ::1 littéraux sont acceptés par la CLI. Aucun hôte DNS,
+adresse LAN, allow_non_loopback, identifiant, clé API ou paramètre d'URL. Le
+transport ignore les proxies et refuse les redirections. Cela ne prouve pas
+l'identité d'un service local ; l'opérateur doit vérifier ce qui écoute au port.
+Un tunnel local configuré séparément peut mener ailleurs : le choisir signifie
+choisir le destinataire des données. Aucun tunnel n'est créé par Core.
+
+La requête de mission et le contexte mémoire rappelé sont transmis au modèle.
+La configuration vient du fichier opérateur, jamais du modèle, de la mémoire ou
+d'une requête. Un fichier manquant, public, lien symbolique, FIFO, JSON ambigu,
+clé inconnue ou fichier de plus de 16 Kio est refusé avant création d'état.
+Les messages d'erreur du chargeur sont constants, sans contenu ni chemin privé.
+
+num_predict est obligatoire, entier de 1 à 8192. Options autorisées : celles de
+l'adaptateur, avec valeurs finies ; num_ctx 256–262144, temperature 0–2,
+top_p dans ]0,1], seed/top_k entiers non négatifs bornés. Ces bornes ne garantissent
+pas que le modèle ou la machine puissent supporter la configuration demandée.
+Les budgets max_prompt_bytes, max_response_bytes et max_output_bytes sont
+facultatifs et reprennent les bornes de l'adaptateur.
+
+## Essai restreint
+
+```sh
+PYTHONPATH=src python -m eidolon_core --state /chemin/etat-neuf \
+  --timeout 90 --model-config /chemin/ollama-prive.json demo
+```
+
+L'option --timeout borne chaque appel du worker, démarrage inclus ; elle doit être
+choisie avec le timeout_seconds HTTP du fichier (60 secondes dans cet exemple).
+Aucun modèle n'est téléchargé ou choisi par Core. Pour reprendre une mission,
+utiliser les mêmes options et le même fichier puis run m-ID. Changer l'endpoint,
+le modèle, ses paramètres/budgets ou le timeout de mission modifie la configuration
+et bloque la reprise. Conserver la configuration avec l'état privé.
+
+create enregistre une mission sans appel modèle. --model-config est accepté
+uniquement pour demo/create/run et --profile text ; les commandes de consultation
+s'utilisent sans cette option. Les profils de recherche/service/action synthétiques
+conservent leurs modèles fixes. Aucun choix de modèle n'est exposé dans le client HTTP.
+
+## Ce qui peut réussir
+
+Ce n'est pas du chat généraliste. Seule la mission textuelle restreinte déjà
+supportée par Core est exécutable : rappel puis calcul text.stats sur les références.
+Une autre demande conserve son résultat de clarification/mission non supportée.
+Un plan produit par Ollama passe par les mêmes parseur, contrôles de permissions,
+budget d'invocations et vérificateurs indépendants. Une réponse hors contrat échoue ;
+une commande de service proposée ne peut pas être exécutée par ce profil.
+
+Échec réseau/modèle : BLOCKED / MODEL_UNAVAILABLE ; plan mal formé : FAILED /
+MODEL_INVALID ; plan non autorisé : BLOCKED / PREFLIGHT_REFUSED. Aucun plan de
+secours n'est fabriqué. Une mission terminée ne rappelle pas le modèle à la reprise.
+
+La qualité du modèle, sa stabilité sous charge, son contexte utile et ses performances
+V100 restent à mesurer sur la VM. Ce raccordement ne constitue pas une qualification.
+Voir [adaptateur](OLLAMA-ADAPTER.md) et [rapports de qualification](QUALIFICATION-REPORTS.md).

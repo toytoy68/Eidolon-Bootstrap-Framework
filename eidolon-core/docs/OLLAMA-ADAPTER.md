@@ -1,8 +1,9 @@
 # Adaptateur Ollama optionnel — `ollama-chat/1`
 
 Auteur : Claude, 05/10/2026, fiche [C-CLAUDE-002](../collaboration/tasks/C-CLAUDE-002.md).
-Base : `9620c47`. Statut : module livré **non raccordé à la CLI** et **non choisi
-par défaut**. La démonstration utilise toujours `DeterministicModel`.
+Base : `9620c47`. Statut initial : module livré non raccordé à la CLI. Depuis C-032,
+[raccordement explicite](LOCAL-MODEL-CLI.md) pour le profil text ; toujours
+**non choisi par défaut** et non qualifié sur modèle réel. La démonstration utilise toujours `DeterministicModel`.
 Liens : C-007, `contracts.Model`, C-BRAIN-006.
 
 Module : [`src/eidolon_core/ollama_model.py`](../src/eidolon_core/ollama_model.py).
@@ -101,8 +102,8 @@ les durées. Les conserver dans la mission demande d'étendre ce contrat
 2. Si Core tourne ailleurs : tunnel ou proxy TLS décidé par l'opérateur, puis
    `allow_non_loopback=True` dans une configuration revue. L'adresse de VM100
    fournie par toytoy n'est pas une URL Ollama et n'a pas été contactée.
-3. Raccordement CLI à faire dans les fichiers du lot Codex : une option
-   explicite (par exemple `--model-config fichier.json`), jamais un choix par défaut.
+3. Raccordement CLI C-032 livré : `--model-config fichier.json` explicite,
+   uniquement loopback littéral et mission textuelle restreinte. Suivre LOCAL-MODEL-CLI.md.
 4. Qualification séparée selon C-BRAIN-006 : la réussite des tests ci-dessus
    ne vaut pas qualification.
 

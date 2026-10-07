@@ -33,6 +33,8 @@ PROTOCOL = "eidolon-beta-fixture/1"
 QUERY_FIELDS = ("store_id", "client_id", "command_key", "mission_id")
 TEXT = {
     "FIXTURE_READY": "Six missions synthétiques vérifiées ; état de consultation prêt.",
+    "RESEARCH_FIXTURE_READY": "Trois recherches synthétiques et copies d'archives vérifiées ; aucune rotation active.",
+    "INVALID_PROFILE": "Profil de recette inconnu ; aucune destination créée.",
     "DESTINATION_EXISTS": "La destination existe déjà ; aucun contenu modifié.",
     "DESTINATION_UNAVAILABLE": "Choisir un nouveau dossier dans un parent existant de confiance.",
     "PREPARATION_FAILED": "Préparation incomplète ; conserver le dossier pour inspection et choisir une nouvelle destination.",
@@ -96,10 +98,13 @@ def _populate(directory):
             "server_started": False, "authorizes_execution": False}
 
 
-def create(destination):
+def create(destination, *, profile="missions"):
     report = {"protocol": PROTOCOL, "status": "NOT_CREATED",
               "code": "DESTINATION_UNAVAILABLE", "destination_created": False,
               "synthetic": True, "server_started": False, "authorizes_execution": False}
+    if type(profile) is not str or profile not in {"missions", "research-archives"}:
+        report["code"] = "INVALID_PROFILE"
+        return report
     try:
         root = Path(destination)
         # mkdir is exclusive, including for dangling symlinks and existing files.
@@ -117,7 +122,11 @@ def create(destination):
         state.chmod(0o700)
         marker = state / "BETA-PREPARATION-INCOMPLETE"
         marker.write_text("Synthetic fixture preparation is incomplete. Do not serve or resume.\n", encoding="utf-8")
-        manifest = _populate(state)
+        if profile == "research-archives":
+            from .beta_research_fixture import populate
+            manifest = populate(state)
+        else:
+            manifest = _populate(state)
         if create_token(root / "read-token")["status"] != "CREATED":
             return report
         with (root / "manifest.json").open("x", encoding="utf-8") as handle:
@@ -132,7 +141,8 @@ def create(destination):
         # CLI boundary: never expose raw exception contents, state or secrets.
         # KeyboardInterrupt/SystemExit still propagate; partial data is retained.
         return report
-    report.update(status="READY", code="FIXTURE_READY", mission_count=6, receipt_count=3)
+    report.update(status="READY", code="FIXTURE_READY" if profile == "missions" else "RESEARCH_FIXTURE_READY",
+                  mission_count=len(manifest["scenarios"]), receipt_count=len(manifest["receipt_queries"]))
     return report
 
 
@@ -147,11 +157,12 @@ def render(report, output_format):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Eidolon Core — préparer six missions synthétiques isolées")
+    parser = argparse.ArgumentParser(description="Eidolon Core — préparer un jeu de missions synthétiques isolé")
     parser.add_argument("--output", required=True, help="Nouveau dossier dans un parent existant de confiance")
     parser.add_argument("--format", choices=("json", "human"), default="json")
+    parser.add_argument("--profile", choices=("missions", "research-archives"), default="missions")
     args = parser.parse_args(argv)
-    report = create(args.output)
+    report = create(args.output, profile=args.profile)
     print(render(report, args.format))
     return 0 if report["status"] == "READY" else 2
 

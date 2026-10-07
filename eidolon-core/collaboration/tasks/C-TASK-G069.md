@@ -15,3 +15,6 @@ système. Pas de VM, SSH réel, Windows, GPU ou fournisseur réel.
 
 Publier résultat, tests exécutés, limites et commit séparé. Pas de main, déploiement
 ni modification Memory Engine. Si bloqué, avancer la prochaine tâche prête.
+
+Complément G086 : utiliser aussi beta_fixture --profile research-archives et
+le raccordement CLI LOCAL-MODEL-CLI sur faux serveur local ; aucun vrai modèle.

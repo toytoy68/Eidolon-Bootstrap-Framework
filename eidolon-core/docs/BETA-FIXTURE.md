@@ -77,3 +77,8 @@ les attentes du manifeste historiques. Aucun essai Windows/SSH réel n’est
 revendiqué par cette génération.
 
 Preuves : [séance du soir](validation/2026-10-06/codex-evening/README.md).
+
+
+Un profil complémentaire `--profile research-archives` prépare trois recherches
+et leurs copies d'archives privées : [guide C-031](BETA-RESEARCH-FIXTURE.md).
+Il utilise une destination distincte et n'active aucune rotation de la garde.

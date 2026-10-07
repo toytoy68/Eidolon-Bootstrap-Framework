@@ -1,0 +1,28 @@
+test_create_sends_nothing_and_changed_config_cannot_resume (tests.test_model_config.ModelCLITests.test_create_sends_nothing_and_changed_config_cannot_resume) ... ok
+test_default_demo_remains_deterministic_without_network (tests.test_model_config.ModelCLITests.test_default_demo_remains_deterministic_without_network) ... ok
+test_invalid_or_incompatible_config_does_not_create_state_or_contact_server (tests.test_model_config.ModelCLITests.test_invalid_or_incompatible_config_does_not_create_state_or_contact_server) ... ok
+test_real_cli_worker_calls_fake_ollama_then_verifies_and_never_replays_completed (tests.test_model_config.ModelCLITests.test_real_cli_worker_calls_fake_ollama_then_verifies_and_never_replays_completed) ... ok
+test_unavailable_and_invalid_model_remain_explicit (tests.test_model_config.ModelCLITests.test_unavailable_and_invalid_model_remain_explicit) ... ok
+test_ambiguous_json_unknown_keys_and_non_finite_values_refused (tests.test_model_config.ModelConfigurationTests.test_ambiguous_json_unknown_keys_and_non_finite_values_refused) ... ok
+test_loading_is_network_free_and_canonical (tests.test_model_config.ModelConfigurationTests.test_loading_is_network_free_and_canonical) ... ok
+test_only_literal_loopback_endpoint_without_credentials_or_redirect_path (tests.test_model_config.ModelConfigurationTests.test_only_literal_loopback_endpoint_without_credentials_or_redirect_path) ... ok
+test_private_regular_bounded_file_and_symlink_fifo_refusal (tests.test_model_config.ModelConfigurationTests.test_private_regular_bounded_file_and_symlink_fifo_refusal) ... ok
+test_endpoint_must_be_a_bare_loopback_base_url_unless_approved (tests.test_ollama_model.ConfigurationTests.test_endpoint_must_be_a_bare_loopback_base_url_unless_approved) ... ok
+test_model_id_reflects_the_canonical_configuration (tests.test_ollama_model.ConfigurationTests.test_model_id_reflects_the_canonical_configuration) ... ok
+test_no_default_endpoint_or_model (tests.test_ollama_model.ConfigurationTests.test_no_default_endpoint_or_model) ... ok
+test_options_and_budgets_are_validated (tests.test_ollama_model.ConfigurationTests.test_options_and_budgets_are_validated) ... ok
+test_connection_refused (tests.test_ollama_model.LoopbackServerTests.test_connection_refused) ... ok
+test_http_errors_redirects_size_and_timeout (tests.test_ollama_model.LoopbackServerTests.test_http_errors_redirects_size_and_timeout) ... ok
+test_plan_text_over_http (tests.test_ollama_model.LoopbackServerTests.test_plan_text_over_http) ... ok
+test_documented_latest_tag_is_the_same_model (tests.test_ollama_model.ProtocolTests.test_documented_latest_tag_is_the_same_model) ... ok
+test_failures_are_errors_never_an_empty_plan (tests.test_ollama_model.ProtocolTests.test_failures_are_errors_never_an_empty_plan) ... ok
+test_prompt_budget_is_checked_before_any_transport_call (tests.test_ollama_model.ProtocolTests.test_prompt_budget_is_checked_before_any_transport_call) ... ok
+test_request_follows_the_documented_non_streaming_chat_call (tests.test_ollama_model.ProtocolTests.test_request_follows_the_documented_non_streaming_chat_call) ... ok
+test_invalid_or_unauthorized_plans_are_refused_by_core (tests.test_ollama_model.RuntimeIntegrationTests.test_invalid_or_unauthorized_plans_are_refused_by_core) ... ok
+test_transport_failure_blocks_instead_of_planning (tests.test_ollama_model.RuntimeIntegrationTests.test_transport_failure_blocks_instead_of_planning) ... ok
+test_valid_plan_still_goes_through_core_checks (tests.test_ollama_model.RuntimeIntegrationTests.test_valid_plan_still_goes_through_core_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 5.149s
+
+OK

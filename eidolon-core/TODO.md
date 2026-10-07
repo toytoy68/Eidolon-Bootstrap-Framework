@@ -586,3 +586,20 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Un lecteur à la fois, budget coopératif et limites C-028 conservées.
 - [x] 73 tests associés réussis, dont 15 nouveaux tests d'API et de non-mutation.
 - [ ] G066 raccordement client, G071 contre-revue de l'API.
+
+
+## C-031 — jeu synthétique de recherches pour la bêta — 07/10/2026
+
+- [x] Profil beta_fixture research-archives : trois recherches via le vrai runtime synthétique.
+- [x] Copies d'exports liées, catalogue et liste.md ; trois preuves actives conservées.
+- [x] Jeton privé, manifeste explicite, destination exclusive et marqueur d'incomplétude.
+- [ ] Recette sur le serveur et le PC Windows de toytoy.
+
+
+## C-032 — planificateur Ollama explicite en CLI — 07/10/2026
+
+- [x] --model-config pour demo/create/run du profil text, aucun choix implicite.
+- [x] Fichier privé et borné, JSON strict, endpoint loopback littéral et sortie bornée.
+- [x] Création sans appel, reprise liée à la configuration et refus des outils hors profil.
+- [x] Neuf nouveaux tests, 23 tests du raccordement/adaptateur réussis sur faux HTTP local.
+- [ ] Qualification d'un vrai modèle et GPU, chat généraliste et autres adaptateurs CLI.

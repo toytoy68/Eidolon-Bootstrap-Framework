@@ -1123,3 +1123,32 @@ README/contrats et liste optionnelle de l'archive bêta. 73 tests associés pass
 G063 : deux contre-exemples désormais corrigés, test de conservation isolé réussi ;
 rejeu groupé : un comptage de descripteurs diminue de 7 à 4 et fait échouer une
 assertion d'égalité, à distinguer d'une fuite croissante ou d'une perte de données.
+
+### C-031 — recette synthétique de recherches et archives
+
+Codex réserve beta_research_fixture.py, tests et guide BETA-RESEARCH-FIXTURE,
+plus liens README et archive de sources. Préparer dans un dossier neuf trois
+missions réelles sur fixtures (lisible/partielle/vide), exports de démonstration
+validés et liste.md. Aucun retrait actif ; les copies restent explicitement non
+engagées. Jeton privé, marqueur d'incomplétude et refus de destination existante.
+
+C-031 validé : 39 tests associés, dont six nouveaux ; API réelle loopback,
+préparation incomplète et preuves actives vérifiées. C-030 suite globale :
+817 réussis, six ignorés. Rejeu G063 avec collecte avant mesures de descripteurs :
+21/21 ; la première baisse du compteur était liée à des objets antérieurs collectés.
+
+### C-032 — raccordement CLI explicite du planificateur Ollama
+
+Codex réserve model_config.py, option --model-config dans cli.py, tests et guide.
+Fichier opérateur privé, JSON strict borné, endpoint littéral loopback seulement,
+modèle et budget de sortie explicites. Profil text seulement ; démonstration et
+création/reprise de missions restreintes. Aucun accès réel exécuté : serveur de
+protocole synthétique pour les tests. G065 garde uniquement son erreur recovery.
+
+C-032 : neuf tests nouveaux, 23 avec l'adaptateur réussis. CLI exécutée en
+sous-processus vers un faux Ollama, reprise sans second appel, paramètres changés
+bloqués et plans non autorisés refusés. Aucun modèle ni GPU réel qualifié.
+
+C-031/C-032 recette globale : 838 découverts, 832 réussis, six ignorés. Paquet
+hors réseau installé : 47 modules identiques, 24 contrôles bêta, nouvelle recette
+recherche, catalogue HTTP et planificateur CLI vérifiés. Faux modèle uniquement.
