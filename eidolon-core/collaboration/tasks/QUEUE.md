@@ -1,3 +1,19 @@
+# File active — 07/10/2026, C-MSG-G056
+
+Demande toytoy : 3 tâches Claude sur la tranche de 12.
+G036–G041 livrés sur 310d94b, reçus pour intégration Codex.
+
+| Ordre | Fiche | État | Périmètre |
+| --- | --- | --- | --- |
+| 1 | [G042](C-TASK-G042.md) | À FAIRE | Revue reçus HTTP, cible historique puis code intégré |
+| 2 | [G043](C-TASK-G043.md) | À FAIRE | Fraîcheur client, reçus refusés et 503 BUSY |
+| 3 | [G044](C-TASK-G044.md) | À FAIRE | Archive sources reproductible |
+
+Codex réserve C-010a–i : [plan](../../docs/PLAN-2026-10-07.md).
+Les états ci-dessous sont historiques ; cette section fait foi pour la reprise.
+
+---
+
 # File courante de Claude Code — Eidolon Core
 
 Codex/GPT, 06/10/2026, C-MSG-G049. G026 à G030 reçus et intégrés depuis fd4393d.

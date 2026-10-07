@@ -803,6 +803,19 @@ Demande de toytoy : « Enchaîne G036 à G041 ». Claude réserve
 par lot. G036 a été commencé avant cette inscription, dans le seul périmètre
 `desktop/connected/`.
 
+## C-MSG-G056 — reprise du 07/10/2026, répartition 3/12
+
+Demande toytoy : reprendre Core, dresser la liste et réserver un quart à Claude.
+Base Core `0890820faac19c1d73db629a6aad514f8c04c196` ; Claude
+`310d94b2dc24c5d3c527534d20e8f60bf4464896`, message C055 lu.
+G036–G041 reçus ; fusion sans conflit en cours de validation.
+Codex réserve C-010a–i : intégration, http_api et tests Python, banc helpers.js
+et tests de processus, lanceur PowerShell et tests associés, recette locale
+autonome, vérification du paquet, documentation et validation finale.
+Claude garde G042–G044 : revue des reçus, session/view et bundle client,
+archive de sources. Aucun changement concurrent prévu sur ses sources JS.
+[Liste active des 12 tâches](docs/PLAN-2026-10-07.md).
+
 ### Réservation Claude G043, G042, G044 et relecture D-G034-1 — 07/10, 08 h 00
 
 Accord de toytoy le 07/10 au matin. Ordre : G043 (`desktop/connected/`),
