@@ -11,7 +11,7 @@ de main, installation système, service utilisateur ou déploiement.
 | C-013 | Nettoyage borné avant providers/replis ; vide = aucun contact | QUERY-CLEANUP.md |
 | C-014a | Garde globale optionnelle, intention durable, verrou POSIX, revue UNKNOWN | RESEARCH-GUARD.md |
 | C-015 | Budget d'invocations par mission, 64 par défaut, réservation avant worker | INVOCATION-BUDGET.md |
-| C-016 | SIGINT/SIGTERM de recette : nettoyage groupes possédés et temporaires | BETA-CHECK.md et beta_check.py |
+| C-016 | SIGINT/SIGTERM de recette : nettoyage groupes possédés et temporaires | BETA-LOCAL-CHECK.md et beta_check.py |
 | C-017 | Seuil transactionnel d'empreinte obligatoire pour les nouveaux reçus | HTTP-RECEIPTS.md |
 | C-018 | Trois cas G049 corrigés, extracteur version 2 | HTML-EXTRACTION.md |
 

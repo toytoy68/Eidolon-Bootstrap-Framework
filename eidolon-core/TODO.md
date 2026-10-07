@@ -13,7 +13,8 @@ arrêt propre de la recette, seuil de hash obligatoire des reçus et corrections
 HTML. [Bilan et limites](docs/validation/2026-10-07/codex-hour/README.md).
 
 Claude : **G050–G053 PRÊTS**, voir la [file active](collaboration/tasks/QUEUE.md).
-Suite Codex : conservation locale bornée de la requête nettoyée décidée en
+Suite Codex : [C-019, conservation locale bornée](docs/PLAN-C019-QUERY-HISTORY.md)
+de la requête nettoyée décidée en
 C-D15, puis raccordement contrôlé de la recherche au runtime ; aucune émission
 externe ni commande distante activée. Tauri est attribué à Claude en consultation.
 Les sections datées ci-dessous conservent l'historique.
