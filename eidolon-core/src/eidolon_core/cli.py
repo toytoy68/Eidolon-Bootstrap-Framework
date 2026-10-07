@@ -194,13 +194,14 @@ def main(argv=None):
             catalog = Catalog.from_config(json.loads(path.read_text(encoding="utf-8")))
         if args.command == "client-missions":
             from .mission_list import MissionList, parse_cursor
+            from .http_api import ReadOnlyStore
             if not (Path(args.state) / "missions.sqlite3").is_file():
                 raise FileNotFoundError("mission listing requires an existing mission store")
             cursor = None
             if args.cursor:
                 with Path(args.cursor).open("rb") as handle:
                     cursor = parse_cursor(handle.read(4097))
-            result = MissionList(Store(args.state)).page(cursor=cursor, limit=args.limit)
+            result = MissionList(ReadOnlyStore(args.state)).page(cursor=cursor, limit=args.limit)
             if args.format == "human":
                 from .presentation import header, message
                 print(header(title="Inventaire des missions") + message("INFO", encode(result)))
@@ -209,9 +210,10 @@ def main(argv=None):
             return 2 if result["status"] == "RESET_REQUIRED" else 0
         if args.command in {"client-snapshot", "client-poll"}:
             from .client_sync import ClientSync
+            from .http_api import ReadOnlyStore
             if not (Path(args.state) / "missions.sqlite3").is_file():
                 raise FileNotFoundError("client sync requires an existing mission store")
-            sync = ClientSync(Store(args.state))
+            sync = ClientSync(ReadOnlyStore(args.state))
             if args.command == "client-snapshot":
                 result = sync.snapshot(args.mission_id)
             else:

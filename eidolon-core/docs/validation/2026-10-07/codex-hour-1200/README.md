@@ -20,8 +20,9 @@ Claude ont été conservés lors des intégrations.
 
 ## Validation exécutée par Codex
 
-- [Suite Python](full-tests.txt) : **767 découverts, 761 réussis, six ignorés**,
-  en 145,051 s, sur les sources C-025.
+- [Suite Python](full-tests.txt) : **773 découverts, 767 réussis, six ignorés**,
+  en 139,895 s, sur les sources C-027. La [capture C-025](c025-full-tests.txt)
+  précédente reste conservée (767 découverts, 761 réussis).
 - [Intégrations Memory Engine](memory-integration.txt) : **six réussies** avec
   la copie isolée 7d99ded07b7e10aa8029655ce4a939af6e0a6c44 ; corpus temporaires.
 - [Client Node](node-tests.txt) : **49 réussis, 12 Chromium ignorés**. Inclut
@@ -31,9 +32,16 @@ Claude ont été conservés lors des intégrations.
   de deux pages, reprise inchangée, une entrée nettoyée liée ; runtime-inspect
   et recovery-inspect exécutés sans mutation de la base source. Copie de
   récupération toujours historique, sans autorité d’exécution.
+- [Parcours opérateur](operator-smoke.json) : six missions consultées par
+  inventaire/diagnostic, fichiers source inchangés ; copie de revue historique
+  conservant les six missions. [Script](operator-smoke.py).
+- [Archive C-025 publiée](source-archive-verify.json) : 67 fichiers vérifiés ;
+  trois scénarios de recherche reçus via HTTP et acceptés par le client JS,
+  [sans données privées exposées](archive-http-smoke.json).
 - Les preuves propres aux lots sont dans [C-022](../codex-runtime-inspect/README.md),
   [C-023](../codex-g055-followup/README.md), [C-024](../codex-g056-followup/README.md)
-  et [C-025](../codex-recovery-inspection/README.md).
+  [C-025](../codex-recovery-inspection/README.md) et
+  [C-027](../codex-cli-readonly/README.md).
 
 Commandes depuis eidolon-core :
 
@@ -60,5 +68,16 @@ cohérent et des délais physiques du stockage restent explicites.
 ## Coordination Claude
 
 G055 et G056 reçus pendant cette heure et intégrés, tête observée 8c5f649.
-G057 puis les nouvelles G058/G059/G060 sont prêts dans la file publiée.
+G057 puis les nouvelles G058/G059/G060/G061 sont prêts dans la file publiée.
+G061 porte sur la contre-revue des nouveaux diagnostics ; file renouvelée par G079.
 Un fichier de tâche ne démarre pas Claude et ne prouve pas sa présence continue.
+
+
+## Compléments C-026/C-027
+
+Le parcours opérateur DIAGNOSTIC-WORKFLOW relie les observations et leurs limites.
+Sa préparation a mis en évidence les écritures implicites des consultations CLI :
+les trois commandes client-missions/client-snapshot/client-poll utilisent maintenant
+ReadOnlyStore sans initialisation/migration. Une table manquante est refusée, pas
+recréée. 59 tests ciblés puis la suite globale et le paquet installé ont été rejoués.
+Les protocoles et curseurs restent identiques.

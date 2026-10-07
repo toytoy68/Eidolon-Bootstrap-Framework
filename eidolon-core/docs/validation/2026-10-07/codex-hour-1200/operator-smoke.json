@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "scenarios": [
+    {
+      "role": "text_completed",
+      "status": "SUCCEEDED",
+      "hints": [
+        "TERMINAL_STATE_RETAIN_EVIDENCE"
+      ]
+    },
+    {
+      "role": "not_started",
+      "status": "NEW",
+      "hints": [
+        "NO_AUTOMATIC_RESUME"
+      ]
+    },
+    {
+      "role": "approval_pending",
+      "status": "BLOCKED",
+      "hints": [
+        "BLOCKED_REVIEW_MISSION"
+      ]
+    },
+    {
+      "role": "cancel_requested",
+      "status": "NEW",
+      "hints": [
+        "NO_AUTOMATIC_RESUME",
+        "CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP"
+      ]
+    },
+    {
+      "role": "cancelled",
+      "status": "CANCELLED",
+      "hints": [
+        "TERMINAL_STATE_RETAIN_EVIDENCE",
+        "CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP"
+      ]
+    },
+    {
+      "role": "approval_revoked",
+      "status": "BLOCKED",
+      "hints": [
+        "BLOCKED_REVIEW_MISSION"
+      ]
+    }
+  ],
+  "consultations_preserve_all_source_files": true,
+  "review_missions": 6,
+  "historical_only": true,
+  "source_preserved_by_copy": true,
+  "temporary_files_removed": true
+}

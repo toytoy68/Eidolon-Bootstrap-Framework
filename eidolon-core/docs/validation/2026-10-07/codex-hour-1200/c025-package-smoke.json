@@ -17,7 +17,7 @@
   "isolated_install": true,
   "installed_modules_match_source": 43,
   "version": "0.1.0",
-  "wheel_sha256": "b1686f0000effc67e23cb5d2cc2742d177e82fcbe96ff6c6ff1d5f3e56f0dd30",
+  "wheel_sha256": "097974731b29e67670708aa2a7b0387fd4db93e3bff4dc162b9ebbd05719cbe1",
   "recipe": {
     "protocol": "eidolon-beta-check/1",
     "status": "PASS",

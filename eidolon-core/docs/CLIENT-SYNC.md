@@ -162,3 +162,16 @@ d’incohérence ; une structure arbitraire n’est pas rendue au client.
 Ce contrôle est celui des données exportées ; il ne certifie pas tout le
 contenu privé de la mission ni une base modifiée cohérentement à la main.
 [Preuves avant/après](validation/2026-10-06/codex-evening/README.md).
+
+
+## C-027 — CLI strictement en lecture seule, 07/10/2026
+
+Les branches client-missions, client-snapshot et client-poll utilisent désormais
+le même ReadOnlyStore que l’API HTTP : mode SQLite ro/query_only, budget SQL
+coopératif de deux secondes, refus des états bêta incomplets et des copies de
+revue. Elles ne construisent plus Store et ne migrent plus le schéma. Une base
+ancienne ou incomplète est refusée par UNSUPPORTED_READ_SCHEMA ; aucune table
+ou identité manquante n’est recréée pendant une consultation. Les protocoles,
+curseurs et projections restent inchangés.
+
+[Reproduction et vérification](validation/2026-10-07/codex-cli-readonly/README.md).

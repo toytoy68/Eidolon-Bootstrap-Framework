@@ -7,8 +7,8 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## État courant — reprise du 07/10/2026 à 12 h Paris
 
-C-010–C-025 livrés ; G036–G056 intégrés. C-019 conserve le texte nettoyé avant
-appel ; C-021 le raccorde aux missions sur fixtures fixes. 761 tests Python,
+C-010–C-027 livrés ; G036–G056 intégrés. C-019 conserve le texte nettoyé avant
+appel ; C-021 le raccorde aux missions sur fixtures fixes. 767 tests Python,
 six intégrations mémoire et 49 tests client réussis dans cette séance.
 [Preuves](docs/validation/2026-10-07/codex-hour-1200/README.md).
 
@@ -544,3 +544,11 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [ ] Inventaire paginé pour grandes copies, contre-revue et qualification du stockage réel.
 
 [Contrat](docs/RECOVERY-REVIEW.md), [preuves](docs/validation/2026-10-07/codex-recovery-inspection/README.md).
+
+
+## C-026/C-027 — parcours opérateur et consultation CLI — 07/10/2026
+
+- [x] Guide DIAGNOSTIC-WORKFLOW : interpréter les états sans déduire un droit de reprise.
+- [x] Mutations de consultation reproduites, trois commandes CLI passées à ReadOnlyStore.
+- [x] 59 tests ciblés réussis dont six nouveaux ; protocoles/pagination inchangés.
+- [x] Refus sans réparation des anciens schémas, tables manquantes et états bêta incomplets.

@@ -1031,3 +1031,25 @@ réussis ; 12 Chromium non exécutés ici. Paquet installé : 43 modules identiq
 24 contrôles bêta, recherche et diagnostics sans mutation source. G061 ajouté
 à Claude après G057–G060 : contre-revue C-022/C-025 sur base publiée figée.
 G055/G056 sont intégrés ; dernières livraisons effectivement observées 8c5f649.
+
+### C-026 — parcours opérateur de diagnostic, documentation réservée
+
+Codex prend docs/DIAGNOSTIC-WORKFLOW.md, liens README/recette et liste optionnelle
+archive. Relier runtime-inspect et recovery-inspect dans un parcours concret,
+avec codes de sortie et indications à interpréter ; ne proposer aucune reprise
+sur la seule base d’un verrou libre ou d’une copie historique. Sources Runtime,
+garde de recherche et client Desktop inchangées. G057–G061 restent à Claude.
+
+### C-027 — défaut confirmé dans la consultation CLI
+
+La recette C-026 a confirmé que client-missions modifie même une base courante
+et que client-snapshot recrée command_receipts manquante, via Store.__init__.
+Codex réserve les trois chemins CLI client-missions/client-snapshot/client-poll,
+un fichier de tests dédié et les contrats de lecture. Réutiliser ReadOnlyStore
+sans modifier les protocoles, curseurs ni routes HTTP. Les commandes ordinaires
+d'exécution gardent leur comportement d'initialisation explicite.
+
+
+C-027 validé sur 59 tests ciblés, dont six nouveaux. Les trois consultations
+préservent les octets et refusent schémas anciens/incomplets sans migration.
+Recette globale et paquet réexécutés sur ce dernier changement CLI.
