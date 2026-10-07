@@ -1,0 +1,76 @@
+== A. corpus G029 rejoué, comparé aux sorties Codex
+A 27/27 identiques (texte nettoyé et reçu)
+== B. cas ajoutés : ce qui reste
+B IP1 fin de phrase « 198.51.100.7. »: retiré → 'serveur .' {'NETWORK_ADDRESS': 1}
+B IP2 après deux-points « ip:198.51.100.7 »: retiré → 'ip: refuse' {'NETWORK_ADDRESS': 1}
+B IP3 avec port « 198.51.100.7:25565 »: retiré → 'minecraft lent' {'NETWORK_ADDRESS': 1}
+B IP4 zéros en tête « 198.051.100.007 »: retiré → 'routeur' {'NETWORK_ADDRESS': 1}
+B IP5 entre parenthèses: retiré → 'passerelle ( )' {'NETWORK_ADDRESS': 1}
+B IP6 IPv6 entre crochets avec port: retiré → 'joindre [ ]:8080' {'NETWORK_ADDRESS': 1}
+B IP7 IPv4 CIDR: retiré → 'réseau /24' {'NETWORK_ADDRESS': 1}
+B IP8 IPv4 chiffres pleine chasse: retiré → 'hôte' {'NETWORK_ADDRESS': 1}
+B IP9 IPv4 suivie d'une virgule: retiré → 'hôtes ,' {'NETWORK_ADDRESS': 2}
+B IB1 IBAN minuscules: retiré → 'virer sur' {'IBAN_SHAPE': 1}
+B IB2 IBAN avec tirets: retiré → 'iban' {'IBAN_SHAPE': 1}
+B IB3 IBAN collé: retiré → 'iban' {'IBAN_SHAPE': 1}
+B IB4 IBAN préfixé « IBAN: »: retiré → 'IBAN:' {'IBAN_SHAPE': 1}
+B T1 « 0033 6 12 34 56 78 »: retiré → 'appeler' {'PHONE_SHAPE': 1}
+B T2 « +33 (0)6 12 34 56 78 »: retiré → 'appeler' {'PHONE_SHAPE': 1}
+B T3 « tel:0612345678 »: retiré → 'tel: svp' {'PHONE_SHAPE': 1}
+B T4 « 06.12.34.56.78. » fin de phrase: retiré → 'rappeler le .' {'PHONE_SHAPE': 1}
+B T5 chiffres pleine chasse: retiré → 'appeler' {'PHONE_SHAPE': 1}
+B T6 « 06 12 34 56 78 » avec marques combinantes: RESTE  <-- ÉCART → 'appeler 0̲6 12 34 56 78' {}
+B E1 « ＠ » pleine chasse: retiré → 'écrire à' {'EMAIL': 1}
+B E2 espace autour de @: RESTE  <-- ÉCART → 'écrire à jean @ example.invalid' {}
+B E3 invisible U+200B dans l'adresse: retiré → 'écrire à' {'EMAIL': 1}
+B E4 « jean(at)example.invalid »: RESTE  <-- ÉCART → 'écrire jean(at)example.invalid' {}
+B U1 domaine + chemin sans schéma, jeton: retiré → 'ouvrir' {'URL': 1}
+B U2 domaine nu sans www, jeton: retiré → 'ouvrir' {'URL': 1}
+B U3 schéma en majuscules: retiré → '' {'URL': 1}
+B U4 URL entre chevrons: retiré → 'voir < >' {'URL': 1}
+B U5 schéma ssh://: retiré → '' {'URL': 1}
+B U6 schéma smb:// et sftp://: retiré → '' {'URL': 2}
+B P1 chemin /opt: retiré → 'lire' {'LOCAL_PATH': 1}
+B P2 chemin /srv: retiré → 'voir' {'LOCAL_PATH': 1}
+B P3 chemin relatif ./: retiré → 'ouvrir' {'LOCAL_PATH': 1}
+B P4 chemin Windows avec espaces, non cité: RESTE  <-- ÉCART → 'ouvrir Dupont\\Documents\\impots.pdf' {'LOCAL_PATH': 1}
+B P5 chemin Windows avec « / »: retiré → 'ouvrir' {'LOCAL_PATH': 1}
+B P6 %USERPROFILE%: retiré → 'ouvrir' {'LOCAL_PATH': 1}
+B P7 guillemets simples: retiré → 'ouvrir' {'LOCAL_PATH': 1}
+B F1 version logicielle 1.2.3.4: faux positif → 'changelog version' {'NETWORK_ADDRESS': 1}
+B F2 référence produit 10 chiffres: faux positif → 'pièce Bosch' {'PHONE_SHAPE': 1}
+B F3 heure « 12:30 »: gardé → 'rendez-vous 12:30' {}
+B F4 identifiant hexadécimal « dead:beef::1 »: faux positif → 'hash' {'NETWORK_ADDRESS': 1}
+B F5 norme ISO « DE44 5001 0517 5407 3249 31 » (forme IBAN): faux positif → 'exemple' {'IBAN_SHAPE': 1}
+B F6 « node.js/express » (forme domaine + chemin): gardé → 'tutoriel node.js/express' {}
+B F7 « README.md#install »: gardé → 'section README.md#install' {}
+B F8 texte « fr12 pour cela vous » (forme IBAN minuscule): gardé → 'code fr12 pour cela vous aide' {}
+B F9 « ./configure »: gardé → 'lancer ./configure puis make' {}
+B F10 ratio « 3.5/10 » et date « 07.10.2026 »: gardé → 'note 3.5/10 le 07.10.2026' {}
+B F11 numéro de série « 1234 5678 9012 »: gardé → 'série 1234 5678 9012' {}
+B écarts : 4/36
+== C. tous les fournisseurs et replis reçoivent le texte nettoyé
+C p0 (error) a reçu : ['documentation pont']
+C p1 (rate) a reçu : ['documentation pont']
+C p2 (hits) a reçu : ['documentation pont']
+C rapport : statut=NO_READABLE_SOURCE ; lecteur=1 ; valeurs retirées présentes dans le rapport : []
+C p0 (empty) a reçu : ['documentation pont']
+C p1 (error) a reçu : ['documentation pont']
+C p2 (hits) a reçu : ['documentation pont']
+C rapport : statut=NO_READABLE_SOURCE ; lecteur=1 ; valeurs retirées présentes dans le rapport : []
+C rapport.query_sha256 = empreinte de la requête BRUTE : True ; query_cleanup.original_sha256 = SHA-256 brut : True
+C requête téléphone seule : statut=NO_READABLE_SOURCE ; rapport.query_sha256 = digest(brut) : True
+== D. requête vide après nettoyage : aucun contact
+D courriel seul: statut=QUERY_EMPTY_AFTER_CLEANUP ; discovery=NOT_REQUESTED ; fournisseurs=0 lecteur=0 DNS=0
+D IP + téléphone: statut=QUERY_EMPTY_AFTER_CLEANUP ; discovery=NOT_REQUESTED ; fournisseurs=0 lecteur=0 DNS=0
+D URL seule: statut=QUERY_EMPTY_AFTER_CLEANUP ; discovery=NOT_REQUESTED ; fournisseurs=0 lecteur=0 DNS=0
+D avec garde : statut=QUERY_EMPTY_AFTER_CLEANUP ; fournisseurs=0 DNS=0 ; garde : [('COMPLETED', 'QUERY_EMPTY_AFTER_CLEANUP')]
+D fichiers de la garde contenant la valeur retirée : False
+D avec garde, requête normale ensuite : statut=NO_READABLE_SOURCE
+== E. diagnostics sans écho
+E contrôle U+0007: INVALID_CLEANUP_QUERY ; valeur dans le message : False
+E contrôle U+0007 via run : ContractError INVALID_CLEANUP_QUERY ; valeur dans le message : False
+E trop long: INVALID_CLEANUP_QUERY ; valeur dans le message : False
+E trop long via run : ContractError invalid bounded text ; valeur dans le message : False
+E NFKC trop long: NORMALIZED_QUERY_TOO_LARGE ; valeur dans le message : False
+E NFKC trop long via run : ContractError NORMALIZED_QUERY_TOO_LARGE ; valeur dans le message : False

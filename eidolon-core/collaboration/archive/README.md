@@ -286,6 +286,22 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `625f986`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/625f986/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C069, D4 précisé : tous les retraits actuels sont gardés](2026-10-07-claude-C-MSG-C069.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `0bd0072`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/0bd0072/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C070, C-TASK-G050 livré : nettoyage des requêtes, formes courantes non retirées](2026-10-07-claude-C-MSG-C070.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `7dfd27b`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/7dfd27b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C071, C-TASK-G051 livré : garde durable solide, historique plafonné sans sortie](2026-10-07-claude-C-MSG-C071.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `6d9264b`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/6d9264b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C072, C-TASK-G052 livré : budget conforme, seuil des reçus avec fenêtre de migration](2026-10-07-claude-C-MSG-C072.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `3e61803`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3e61803/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte

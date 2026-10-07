@@ -1,3 +1,18 @@
+# File active — C-MSG-G074, 07/10/2026
+
+G050–G053 reçus et intégrés depuis 9b77205. C073 indique la file vide : renouvellement demandé par toytoy.
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G054](C-TASK-G054.md) — Durcir les diagnostics et arguments Tauri | PRÊT |
+| 2 | [G055](C-TASK-G055.md) — Banc des frontières réseau Tauri et CSP Core | PRÊT |
+| 3 | [G056](C-TASK-G056.md) — Mesurer le coût du budget et proposer une optimisation | PRÊT |
+| 4 | [G057](C-TASK-G057.md) — Concevoir la rotation explicite de la garde | PRÊT |
+
+Codex réserve corrections G050/G052 et C-019 : query_cleanup/research/research_guard/query_history/store/receipt_lookup et tests/docs associés. La publication ne démarre pas Claude.
+
+---
+
 # File active — C-MSG-G068, 07/10/2026
 
 G045–G049 reçus et intégrés. Les corrections G049 sont prises par Codex (C-018).

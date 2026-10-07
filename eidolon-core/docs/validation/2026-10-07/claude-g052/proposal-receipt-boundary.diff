@@ -1,0 +1,32 @@
+diff --git a/eidolon-core/src/eidolon_core/receipt_lookup.py b/eidolon-core/src/eidolon_core/receipt_lookup.py
+index ba43a29..d177554 100644
+--- a/eidolon-core/src/eidolon_core/receipt_lookup.py
++++ b/eidolon-core/src/eidolon_core/receipt_lookup.py
+@@ -205,6 +205,9 @@ def lookup(store, query):
+                 if int(start) > db.execute('SELECT max(sequence) FROM events').fetchone()[0]:
+                     _fail()
+                 required = receipt['event_sequence'] >= int(start)
++                # A hashed receipt below the boundary means the boundary was moved.
++                if not required and b'"receipt_sha256"' in event[3]:
++                    _fail()
+             except (ValueError, TypeError, UnicodeError, AttributeError):
+                 _fail()
+         binding = _bind_event(receipt, event[3], require_hash=required)
+diff --git a/eidolon-core/src/eidolon_core/store.py b/eidolon-core/src/eidolon_core/store.py
+index 536bd0e..31b56bc 100644
+--- a/eidolon-core/src/eidolon_core/store.py
++++ b/eidolon-core/src/eidolon_core/store.py
+@@ -245,7 +245,12 @@ class Store:
+         """Pin the first receipt requiring an event hash, in its transaction."""
+         row = db.execute("SELECT value FROM sync_metadata WHERE key='receipt_hash_required_from'").fetchone()
+         if row is None:
+-            db.execute("INSERT INTO sync_metadata VALUES ('receipt_hash_required_from',?)", (str(sequence),))
++            # Receipts already hashed by C-012 (before this boundary existed) are covered too.
++            first = db.execute("SELECT min(sequence) FROM events WHERE kind IN "
++                               "('ACTION_DECISION','CANCEL_REQUESTED','CANCEL_COMMAND_RECORDED') "
++                               "AND json_extract(detail,'$.receipt_sha256') IS NOT NULL").fetchone()[0]
++            start = sequence if first is None else min(first, sequence)
++            db.execute("INSERT INTO sync_metadata VALUES ('receipt_hash_required_from',?)", (str(start),))
+         elif (type(row[0]) is not str or not re.fullmatch(r'[1-9][0-9]{0,15}', row[0])
+               or not 1 <= int(row[0]) <= sequence <= 2**53 - 1):
+             raise ContractError("INVALID_RECEIPT_HASH_BOUNDARY")
