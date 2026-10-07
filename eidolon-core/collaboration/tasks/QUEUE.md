@@ -1,3 +1,18 @@
+# File active — C-MSG-G084, 07/10/2026
+
+G058/G059/G060/G061/G062 reçus ; dernier relevé Claude 62064ec.
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G063](C-TASK-G063.md) — Écritures incomplètes et récupération sans perte | PRÊT, PRIORITAIRE |
+| 2 | [G064](C-TASK-G064.md) — Contre-revue archives et initialisation | PRÊT, C-028 immédiatement |
+| 3 | [G065](C-TASK-G065.md) — Indications de budget et mission inconnue | PRÊT |
+
+Enchaîner sans attente. Codex réserve C-029, research_runtime/research_pauses,
+et le lecteur research_archive. Les anciennes sections ci-dessous sont historiques.
+
+---
+
 # File active — C-MSG-G081, 07/10/2026
 
 G057 reçu en 90aa669 et intégré comme prototype isolé, sans rotation active.
