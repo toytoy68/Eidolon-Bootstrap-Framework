@@ -1,0 +1,25 @@
+== S1 clients séquentiels et simultanés (100 snapshots chacun)
+S1 1 client(s) : {'200': 100}
+S1 2 client(s) : {'200': 200}
+S1 3 client(s) : {'200': 298, '503': 2}
+S1 4 client(s) : {'200': 329, '503': 71}
+S1 5 client(s) : {'200': 215, '503': 285}
+== S2 réponse BUSY : identique quelle que soit la requête, avant authentification
+S2 réponses distinctes : 1 ; jeton présent : False
+S2 réponse : HTTP/1.0 503 Service Unavailable | Content-Type: application/json; charset=utf-8 | Cache-Control: no-store | X-Content-Type-Options: nosniff | Connection: close | Content-Length: 78 |  | {"protocol":"eidolon-http-read/1","error":"BUSY","authorizes_execution":false}
+== S3 POST de 8 Ko pendant la saturation (corps non lu par le serveur)
+S3 résultats : {'503': 50}
+== S4 retour au service après libération
+S4 première requête après fermeture des 4 connexions : 200 en 2 ms
+S4 connexions muettes laissées ouvertes : service revenu après 3.0 s (délai d'inactivité 3 s)
+== S5 budget SQL (2 s, gestionnaire de progression SQLite)
+S5 requête sans fin interrompue : interrupted après 2.00 s
+S5 travail Python de 2,2 s puis requête courte : interrompue ? non (2.20 s)
+S5 verrou 1,5 s puis requête sans fin : interrupted après 2.00 s (attente du verrou + budget)
+S5 connexions SQLite (donc budgets de 2 s) par requête health : 1
+S5 connexions SQLite (donc budgets de 2 s) par requête liste : 1
+S5 connexions SQLite (donc budgets de 2 s) par requête snapshot : 2
+S5 connexions SQLite (donc budgets de 2 s) par requête reçu : 1
+== S6 variante proposée : libérer la place AVANT de fermer la connexion
+S6 original : 3 clients {'200': 300} ; 4 clients {'200': 317, '503': 83} ; 5 clients {'200': 171, '503': 329}
+S6 release-first : 3 clients {'200': 300} ; 4 clients {'200': 381, '503': 19} ; 5 clients {'200': 169, '503': 331}
