@@ -104,6 +104,9 @@ Le [nettoyage des requêtes](docs/QUERY-CLEANUP.md), les pauses et la garde de
 recherche sont candidats pour le réseau réel ; seul le profil synthétique
 est raccordé au runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
 est disponible sur activation explicite, sans route HTTP ni fournisseur réel.
+Le [lecteur d’archives et son liste.md](docs/RESEARCH-ARCHIVES.md) vérifient
+les exports privés localement. La rotation automatique et son affichage Desktop
+restent à intégrer après correction du prototype.
 Le plafond de 256 recherches reste bloquant tant que la rotation n’est pas livrée.
 
 ## Diagnostic local avant reprise
