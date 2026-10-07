@@ -22,6 +22,7 @@
     connected: "Connecté en lecture seule.",
     offline: "Serveur injoignable : l'affichage est le dernier état reçu, périmé.",
     unavailable: "Base Core indisponible : l'affichage est le dernier état reçu, périmé.",
+    busy: "Serveur occupé (BUSY) : la dernière demande n'a pas été traitée. L'affichage date de la dernière lecture acceptée ; réessayer avec « Actualiser » ou « Relire la liste ».",
     unauthorized: "Jeton refusé : saisir de nouveau le jeton pour reprendre.",
     refused: "Accès refusé par le serveur : ouvrir l'adresse servie par Core (127.0.0.1 ou localhost, même port)."
   };
@@ -44,13 +45,13 @@
   function shortId(id) { return typeof id === "string" ? id.slice(0, 10) + "…" : "—"; }
 
   function renderConnection(doc, s) {
-    var online = s.phase === "connected";
+    var online = s.phase === "connected" || s.phase === "busy";   // explicit retries allowed when busy
     var status = byId(doc, "connection-status");
     status.textContent = PHASES[s.phase] || s.phase;
     status.className = "status phase-" + s.phase;
     var parts = [];
     if (s.storeId) parts.push("Base " + s.storeId);
-    parts.push("Dernière réponse reçue : " + (s.lastSuccessAt ? fmt(s.lastSuccessAt) : "aucune"));
+    parts.push("Dernière lecture acceptée : " + (s.lastSuccessAt ? fmt(s.lastSuccessAt) : "aucune"));
     if (s.problem) parts.push("Dernier problème : " + s.problem.code + " (" + fmt(s.problem.at) + ")");
     byId(doc, "connection-detail").textContent = parts.join(" · ");
     var notice = byId(doc, "connection-notice");
@@ -66,7 +67,7 @@
   function renderList(doc, s) {
     var summary = C.listSummary(s.list);
     var stale = s.phase !== "connected" && s.list.items.length > 0;
-    var text = summary.status + (stale ? " — périmé (hors connexion)" : "");
+    var text = summary.status + (!stale ? "" : s.phase === "busy" ? " — non actualisé (serveur occupé)" : " — périmé (hors connexion)");
     if (s.list.lastError) text += " — erreur Core : " + s.list.lastError;
     byId(doc, "list-status").textContent = s.phase === "disconnected" ? "" : text;
     var list = byId(doc, "mission-list");
@@ -124,7 +125,15 @@
     var sum = C.syncSummary(sync);
     var stale = s.phase !== "connected";
     body.appendChild(el(doc, "p", "mission-title", C.missionLabel(m)));
-    if (stale) body.appendChild(el(doc, "p", "stale-note", "Capture périmée : connexion interrompue."));
+    if (stale) body.appendChild(el(doc, "p", "stale-note", s.phase === "busy"
+      ? "Capture non actualisée : serveur occupé, la dernière demande n'a pas été traitée."
+      : "Capture périmée : connexion interrompue."));
+    else if (!C.viewIsCurrent(s)) {
+      // G043: a pending reset or a refused answer means the shown capture is not the current state.
+      body.appendChild(el(doc, "p", "stale-note", sync.reset
+        ? "Capture figée : rattrapage impossible, elle ne représente plus l'état actuel."
+        : "Capture non actualisée : la dernière réponse a été refusée (" + sync.lastError + ")."));
+    }
     var note = C.cancelNote(m);
     if (note) body.appendChild(el(doc, "p", "mission-note", note));
     var dl = el(doc, "dl", "fields");

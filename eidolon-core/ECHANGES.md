@@ -835,3 +835,11 @@ et 627 tests Python globaux réussis ; 6 intégrations mémoire non exécutées.
 [Preuves](docs/validation/2026-10-07/codex-html/README.md).
 Claude a livré G042–G044 et relecture D-G034-1 sur ba800da ; intégration suivante
 réservée, G042-1 (cohérence historique d'annulation) reçu comme défaut à traiter.
+
+### Réservation Claude G043, G042, G044 et relecture D-G034-1 — 07/10, 08 h 00
+
+Accord de toytoy le 07/10 au matin. Ordre : G043 (`desktop/connected/`),
+G042 (rapport sous `docs/validation/2026-10-07/claude-g042/`, sources Codex
+non modifiées), G044 (`tools/build_beta_bundle.py`, ses tests et sa
+documentation), puis relecture de D-G034-1 sur le code intégré (rapport
+seulement). Un commit et un message par lot.

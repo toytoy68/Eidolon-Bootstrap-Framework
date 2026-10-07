@@ -1,0 +1,6 @@
+{"output": "<dossier temporaire>/r1.tgz", "sha256": "a16ac9f42ff40e8fe9229d0164bd11f905782c524c592fa0de6696b03a44efd2", "bytes": 143071, "files": 52, "commit": "15ec7f8824cacab5d084c16f28dea85c3564e5ec", "root": "eidolon-beta-15ec7f8824ca", "status": "OK"}
+{"output": "<dossier temporaire>/r2.tgz", "sha256": "a16ac9f42ff40e8fe9229d0164bd11f905782c524c592fa0de6696b03a44efd2", "bytes": 143071, "files": 52, "commit": "15ec7f8824cacab5d084c16f28dea85c3564e5ec", "root": "eidolon-beta-15ec7f8824ca", "status": "OK"}
+cmp : identiques
+{"verified": true, "commit": "15ec7f8824cacab5d084c16f28dea85c3564e5ec", "files": 52, "status": "OK"}
+{"status": "REFUSED", "error": "FileExistsError", "detail": "[Errno 17] File exists: '<dossier temporaire>/r1.tgz'"}
+{"status": "REFUSED", "error": "BundleError", "detail": "an explicit full 40-hex commit SHA is required (no branch, tag or short SHA)"}

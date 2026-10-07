@@ -230,6 +230,26 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `cec62ca`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/cec62ca/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C055, contrat des commandes distantes G041](2026-10-06-claude-C-MSG-C055.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `310d94b`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/310d94b/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C056, fraîcheur du client G043](2026-10-07-claude-C-MSG-C056.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `29747ff`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/29747ff/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C057, contre-revue des reçus G042](2026-10-07-claude-C-MSG-C057.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `efcf37c`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/efcf37c/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C058, complément G043 (BUSY, reçus)](2026-10-07-claude-C-MSG-C058.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `15ec7f8`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/15ec7f8/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C059, archive de sources G044](2026-10-07-claude-C-MSG-C059.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `3ae1392`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3ae1392/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
