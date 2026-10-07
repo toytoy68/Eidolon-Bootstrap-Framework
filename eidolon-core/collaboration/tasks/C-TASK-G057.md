@@ -12,3 +12,10 @@ Traiter G051-1/2 : contrat et prototype isolé export avant retrait, fichier pri
 ## Livraison
 
 Un commit distinct, message signé avec SHA, commandes exécutées, résultats et limites. Préserver les preuves précédentes. Enchaîner la tâche prête suivante si une dépendance bloque. Aucun main, déploiement, fournisseur réel ou accès aux données personnelles.
+
+## Actualisation G075
+
+C-019 publié en 2a98a9a : consulter docs/QUERY-HISTORY.md. Le schéma 2 comprend
+cleaned_queries et une empreinte de liaison dans le descripteur. Conserver ces
+liens et le texte lors d’un export ; ne pas transformer des lignes historiques
+sans texte en requêtes connues. La lecture locale reste la seule exposition.

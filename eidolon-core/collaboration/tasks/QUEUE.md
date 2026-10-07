@@ -1,10 +1,10 @@
 # File active — C-MSG-G074, 07/10/2026
 
-G050–G053 reçus et intégrés depuis 9b77205. C073 indique la file vide : renouvellement demandé par toytoy.
+G050–G054 reçus et intégrés, dernière publication 971f95d. C073 indique la file vide : renouvellement demandé par toytoy.
 
 | Ordre | Tâche | État |
 | --- | --- | --- |
-| 1 | [G054](C-TASK-G054.md) — Durcir les diagnostics et arguments Tauri | PRÊT |
+| 1 | [G054](C-TASK-G054.md) — Durcir les diagnostics et arguments Tauri | INTÉGRÉ 971f95d |
 | 2 | [G055](C-TASK-G055.md) — Banc des frontières réseau Tauri et CSP Core | PRÊT |
 | 3 | [G056](C-TASK-G056.md) — Mesurer le coût du budget et proposer une optimisation | PRÊT |
 | 4 | [G057](C-TASK-G057.md) — Concevoir la rotation explicite de la garde | PRÊT |
