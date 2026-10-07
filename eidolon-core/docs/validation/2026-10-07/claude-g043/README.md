@@ -37,3 +37,23 @@ plus ancienne (compteurs existants de `mission-list-state.js` et
   réponses invalides ; les bancs réels G031 à G038 restent verts.
 - Un refus arrête la lecture de la liste en cours. Une nouvelle lecture se
   fait par « Relire la liste », sans relance automatique.
+
+## Complément après C-MSG-G056 (même jour)
+
+G056 précise deux attentes de G043 et annonce une réponse `503 BUSY` côté
+serveur (C-010b, pas encore livrée).
+
+| # | Attente | Réalisé |
+| --- | --- | --- |
+| F5 | Une consultation de **reçu** ne rafraîchit pas la capture actuelle | un reçu FOUND ou NOT_FOUND garde sa propre date (`receipt.receivedAt`) ; `lastSuccessAt` et la capture ne bougent pas (avant : `lastSuccessAt` avançait) |
+| F6 | `503 BUSY` distinct d'une panne, sans relecture automatique, sans présenter de donnée périmée comme actuelle | nouvelle phase `busy` : reste en ligne ; message « Serveur occupé » ; liste « non actualisée (serveur occupé) » ; détail « Capture non actualisée » ; `viewIsCurrent` faux ; **aucune relance automatique** ; « Actualiser » et « Relire la liste » restent possibles, et le premier succès rend la phase `connected` |
+| F7 | Une relecture de liste qui échoue (BUSY, refus) ne doit pas être masquée | `relist` ne relit plus la mission sélectionnée si la liste n'a pas été lue : un détail frais ne cache plus l'échec de la liste |
+
+[Suite complète : 56/56, 0 sauté](node-tests-complement.txt), dont 2 tests
+nouveaux (BUSY, reçu sans rafraîchissement).
+
+Limite : le serveur ne produit pas encore `BUSY`. Le client est testé sur
+transport scripté avec le corps d'erreur C-009a (`error: "BUSY"`). Si C-010b
+choisit un autre code ou un autre statut HTTP, il faudra adapter une ligne
+de `session.js`. Une fermeture sans réponse (F-G039-1, comportement actuel)
+reste lue comme une panne réseau.

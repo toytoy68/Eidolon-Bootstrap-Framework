@@ -107,7 +107,7 @@ input[type="password"] {
 .notice { color: var(--warn); font-weight: 600; }
 .status { font-weight: 600; }
 .phase-connected { color: var(--ok); }
-.phase-offline, .phase-unavailable, .phase-connecting { color: var(--warn); }
+.phase-offline, .phase-unavailable, .phase-connecting, .phase-busy { color: var(--warn); }
 .phase-unauthorized, .phase-refused { color: var(--bad); }
 
 .layout {

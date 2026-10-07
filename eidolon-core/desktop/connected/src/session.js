@@ -94,7 +94,7 @@
     return "accepted";
   }
 
-  // The shown capture is current only when connected, without a pending reset or a refusal since.
+  // The shown capture is current only when connected (not busy), without a pending reset or a refusal since.
   function viewIsCurrent(st) {
     var sel = st.list.selection;
     return Boolean(st.phase === "connected" && sel && sel.sync.view && !sel.sync.reset && !sel.sync.lastError);
@@ -130,6 +130,9 @@
       if (state.list.selection) state.list.selection.sync = S.setConnection(state.list.selection.sync, mode);
     }
 
+    // Explicit reads are allowed when connected, and after a BUSY answer (the user retries).
+    function canRead() { return state.phase === "connected" || state.phase === "busy"; }
+
     function forgetReceipt() { loops.receipt += 1; state.receipt = null; }
 
     function wipe() {
@@ -158,8 +161,18 @@
       }
       if (epoch !== state.connEpoch) { state.stats.staleConnection += 1; return { stale: true }; }
       var status = answer && answer.status, json = answer ? answer.json : null;
-      if (status === 200) return { ok: true, json: json };
       var code = errorCode(json);
+      if (status === 200) {
+        if (state.phase === "busy") state.phase = "connected";   // the server serves again
+        return { ok: true, json: json };
+      }
+      if (status === 503 && code === "BUSY") {
+        // G043: explicit saturation (C-010b). Not an outage: stay online, nothing retried
+        // automatically, and the shown data stop being presented as current.
+        state.phase = "busy";
+        state.problem = { code: "BUSY", at: now(), scope: scope };
+        return { ok: false, code: "BUSY", status: status };
+      }
       if (status === 401) {
         token = null; state.connEpoch += 1;  // every answer still in flight is now foreign
         fail("unauthorized", code || "UNAUTHORIZED", scope);
@@ -225,22 +238,23 @@
     }
 
     async function relist() {
-      if (state.phase !== "connected") return;
+      if (!canRead()) return;
       state.list = L.relist(state.list);
       emit();
-      await loadList();
-      if (state.list.selection) await refreshSelection();
+      // G043: a list that was not read (BUSY, refusal, error) does not trigger a selection refresh
+      // that would hide the failure behind a fresh-looking detail.
+      if (await loadList() && state.list.selection) await refreshSelection();
     }
 
     async function loadList() {
       var mine = ++loops.list;
       for (var i = 0; i < MAX_LIST_PAGES; i++) {
-        if (mine !== loops.list || state.phase !== "connected") return;
+        if (mine !== loops.list || !canRead()) return false;
         var req = L.nextPageRequest(state.list);
-        if (!req) return;
+        if (!req) return true;              // nothing more to read: listing done
         var body = req.cursor ? { cursor: req.cursor, limit: PAGE_LIMIT } : { limit: PAGE_LIMIT };
         var r = await call("POST", "/v1/missions", body, "list");
-        if (r.stale) return;
+        if (r.stale) return false;
         var meta = { kind: "list", epoch: req.epoch, cursor: req.cursor, receivedAt: now(), source: "serveur" };
         if (r.ok) {
           var beforeList = counters(state.list);
@@ -249,13 +263,13 @@
           if (result !== "accepted") {
             if (result === "rejected") state.problem = { code: lastRejection(state.list), at: meta.receivedAt, scope: "list" };
             emit();
-            return;
+            return false;
           }
           if (state.list.storeId && state.list.storeId !== state.storeId) {
             // The list answered for another store than /v1/health: never shown together.
             wipe(); fail("refused", "STORE_IDENTITY_CHANGED", "list");
             emit();
-            return;
+            return false;
           }
           state.lastSuccessAt = meta.receivedAt;
           if (state.list.items.length >= L.MAX_ITEMS && state.list.nextCursor) {
@@ -268,8 +282,9 @@
           state.list = L.receiveError(state.list, r.code, meta);
         }
         emit();
-        if (!r.ok) return;
+        if (!r.ok) return false;
       }
+      return true;
     }
 
     function selectMission(id) {
@@ -283,7 +298,7 @@
     async function refreshSelection() {
       var mine = ++loops.selection;
       for (var i = 0; i < MAX_POLLS; i++) {
-        if (mine !== loops.selection || state.phase !== "connected") return false;
+        if (mine !== loops.selection || !canRead()) return false;
         var req = L.selectionRequest(state.list);
         if (!req || !MISSION_ID.test(req.missionId)) return false;
         var path = "/v1/missions/" + req.missionId;
@@ -325,7 +340,7 @@
     // record, NOT_FOUND keeps the uncertainty, neither changes the snapshot or allows a resend.
     async function lookupReceipt(clientId, commandKey) {
       var sel = state.list.selection;
-      if (state.phase !== "connected" || state.resyncRequired || !sel || !state.storeId) return false;
+      if (!canRead() || state.resyncRequired || !sel || !state.storeId) return false;
       if (typeof clientId !== "string" || typeof commandKey !== "string" || !KEY.test(clientId) || !KEY.test(commandKey)) {
         state.receipt = { query: null, status: "INVALID_QUERY", receipt: null, code: "INVALID_QUERY", receivedAt: now() };
         emit();
@@ -347,8 +362,9 @@
           state.stats.invalidResponses += 1;
           state.receipt = { query: q, status: "ERROR", receipt: null, code: bad, receivedAt: at };
         } else {
+          // G043: a historical receipt is dated by its own receivedAt; it does not make the
+          // current capture (or the connection's last accepted read) look fresher.
           state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at };
-          state.lastSuccessAt = at;
         }
       } else {
         state.receipt = { query: q, status: "ERROR", receipt: null, code: r.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", receivedAt: at };

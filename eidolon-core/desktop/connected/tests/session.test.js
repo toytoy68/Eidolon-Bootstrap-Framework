@@ -519,3 +519,48 @@ test("G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is
   assert.equal(st.list.selection.sync.view.asOf, 10, "old view kept");
   assert.equal(C.viewIsCurrent(st), false, "a pending reset makes the shown capture not current");
 });
+
+test("G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1])), err(503, "BUSY"), ok(page([1, 2]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT"))],
+    ["POST /v1/missions/" + id(1) + "/poll"]: [err(503, "BUSY"), ok(sync(1, "DELTA", { seq: 10, asOf: 11 }))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.selectMission(id(1));
+  const fresh = s.state().lastSuccessAt;
+  await s.refreshSelection();
+  let st = s.state();
+  assert.equal(st.phase, "busy");
+  assert.equal(st.problem.code, "BUSY");
+  assert.equal(st.lastSuccessAt, fresh);
+  assert.equal(C.viewIsCurrent(st), false, "a busy answer: the capture is not presented as current");
+  assert.equal(st.list.connection, "online", "not treated as offline");
+  assert.equal(t.calls.filter((c) => c.path.endsWith("/poll")).length, 1, "no automatic retry");
+  await s.relist();                            // explicit retry: BUSY again
+  assert.equal(s.state().phase, "busy");
+  assert.equal(C.shownItems(s.state().list).length, 1);
+  await s.relist();                            // explicit retry: served
+  st = s.state();
+  assert.equal(st.phase, "connected");
+  assert.equal(st.list.items.length, 2);
+  assert.equal(C.viewIsCurrent(st), true, "the successful relist also refreshed the selection");
+  assert.equal(t.calls.filter((c) => c.path.endsWith("/poll")).length, 2, "poll only after an explicit, successful relist");
+});
+
+test("G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture", async () => {
+  const q = { store_id: STORE, client_id: "beta-fixture", command_key: "k", mission_id: id(1) };
+  const answer = Object.assign({ protocol: "eidolon-http-receipt/1" }, q, { status: "NOT_FOUND", receipt: null,
+    execution_evidence: false, effect_absence_evidence: false, authorizes_resend: false, authorizes_execution: false });
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT"))], "POST /v1/command-receipt": [ok(answer)] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.selectMission(id(1));
+  const before = s.state();
+  await s.lookupReceipt("beta-fixture", "k");
+  const after = s.state();
+  assert.equal(after.receipt.status, "NOT_FOUND");
+  assert.ok(after.receipt.receivedAt > before.lastSuccessAt, "the receipt has its own date");
+  assert.equal(after.lastSuccessAt, before.lastSuccessAt);
+  assert.deepEqual(after.list.selection.sync.view, before.list.selection.sync.view);
+});
