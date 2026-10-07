@@ -146,8 +146,10 @@ if ($remoteArgs.Count -eq 3) {
     $q = {
         param($p)
         if ($p.StartsWith('/')) { return "'" + $p + "'" }
-        if ($p -eq '~') { return '"$HOME"' }
-        return '"$HOME/' + ($p -replace '^~/', '') + '"'
+        # Single quotes survive Legacy native argument passing (PowerShell 5.1).
+        # A shell expands the unquoted tilde without splitting the home path.
+        if ($p -eq '~') { return '~' }
+        return "~/'" + ($p -replace '^~/', '') + "'"
     }
     $checkCommand = "cd $(& $q $RemoteCore) && PYTHONPATH=src python3 -m eidolon_core.http_api --state $(& $q $RemoteState) " +
                     "--token-file $(& $q $RemoteTokenFile) --web-root desktop/connected --port $Port --check --format human"

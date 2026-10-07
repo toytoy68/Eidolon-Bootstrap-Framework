@@ -16,3 +16,6 @@ privé, fichiers privés et CLI sans création ni relance.
 
 Garde globale optionnelle, pas le journal par saut complet. Pas de validation
 Windows, stockage réseau, coupure électrique ou fournisseur externe.
+
+Suite Python complète : 677 tests exécutés en 120,337 s, **671 réussis**,
+6 intégrations mémoire non exécutées. Journal full-python-tests.txt.

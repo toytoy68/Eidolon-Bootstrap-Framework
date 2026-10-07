@@ -61,6 +61,8 @@ test("the optional remote diagnostic is C-009c --check, which starts nothing", (
 // Static contract only; the PowerShell construction still requires Windows execution.
 test("remote relative paths keep their home anchor after cd; absolute paths remain literal", () => {
   assert.ok(text.includes(`if ($p.StartsWith('/')) { return "'" + $p + "'" }`));
-  assert.ok(text.includes(`return '\"$HOME/' + ($p -replace '^~/', '') + '\"'`));
+  assert.ok(text.includes(`return "~/'" + ($p -replace '^~/', '') + "'"`));
+  assert.ok(text.includes(`if ($p -eq '~') { return '~' }`));
+  assert.doesNotMatch(text, /return '\"\$HOME/);
   assert.ok(text.includes(`$path.StartsWith('~') -and $path -ne '~' -and -not $path.StartsWith('~/')`));
 });
