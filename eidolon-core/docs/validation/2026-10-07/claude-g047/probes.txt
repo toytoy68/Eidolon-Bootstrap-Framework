@@ -1,0 +1,41 @@
+== P1 depuis le checkout figé d9265fa
+P1 json : code 0 PASS 24 contrôles en 2.4 s ; restes : ([], [])
+P1 chaînes de type jeton dans la sortie JSON : 0
+P1 human : code 0 ; chaînes de type jeton : 0 ; restes : ([], [])
+== P2 hors du dossier source
+P2 cwd ailleurs, PYTHONPATH absolu, web-root absolu : code 0 PASS
+P2 web-root relatif depuis un autre dossier : code 2 LOCAL_RECIPE_FAILED
+== P3 à P6 erreurs et interruptions : nettoyage
+P3 serveur enfant tué (SIGKILL) en cours de recette : code 2 ('FAIL', 'LOCAL_RECIPE_FAILED') ; dossiers restants [] ; serveurs restants []
+P4 Ctrl+C (SIGINT) sur beta_check : code 2 ('FAIL', 'INTERRUPTED') ; dossiers restants [] ; serveurs restants []
+P5 SIGTERM sur beta_check : code -15 ('pas de JSON', None) ; dossiers restants ['eidolon-recipe-smoke-f1lzjacl'] ; serveurs restants []
+P6 web-root incomplet : code 2 LOCAL_RECIPE_FAILED en 0.1 s ; restes ([], [])
+== P7 paquet : wheel, venv temporaire, recette depuis le paquet installé
+P7 construction (setuptools système) : code 1 install_layout
+P7 construction avec SETUPTOOLS_USE_DISTUTILS=stdlib : code 0
+P7 wheel : eidolon_core-0.1.0-py3-none-any.whl
+P7 contenu : 43 entrées ; desktop False ; tests False ; beta_check True ; build_beta_bundle False
+P7 installation (sans réseau) : code 0
+P7 modules installés identiques aux sources : True []
+P7 recette depuis le paquet, cwd=/ , sans PYTHONPATH : code 0 PASS version 0.1.0 en 1.9 s
+P7 recette depuis le paquet sans client Web : code 2 ": false,
+  "python": "3.11.15",
+  "package_version": "0.1.0",
+  "error": "LOCAL_RECIPE_FAILED",
+  "checks_passed": 0
+}
+== P8 vérificateur G044 durci (0fdf18e)
+P8 construction de 0fdf18e : OK 55 fichiers
+P8 authentique : code 0 OK  (67 ms) authenticity_verified=False
+P8 membre dupliqué : code 2 REFUSED invalid, duplicate or oversized member (60 ms)
+P8 contenu modifié : code 2 REFUSED member size, mode or hash mismatch (47 ms)
+P8 membre ajouté hors manifeste : code 2 REFUSED archive and manifest member sets differ (39 ms)
+P8 membre du manifeste supprimé : code 2 REFUSED archive and manifest member sets differ (55 ms)
+P8 mode 0777 : code 2 REFUSED member size, mode or hash mismatch (54 ms)
+P8 START-HERE modifié : code 2 REFUSED start document mismatch (64 ms)
+P8 lien symbolique : code 2 REFUSED invalid, duplicate or oversized member (50 ms)
+P8 chemin ../ : code 2 REFUSED archive and manifest member sets differ (58 ms)
+P8 1100 membres en plus : code 2 REFUSED invalid, duplicate or oversized member (78 ms)
+P8 membre de 17 Mio : code 2 REFUSED invalid, duplicate or oversized member (53 ms)
+P8 gzip de 200 Mio de zéros (199 Kio) : code 2 REFUSED (46 ms)
+P8 aucun fichier extrait pendant les vérifications : []
