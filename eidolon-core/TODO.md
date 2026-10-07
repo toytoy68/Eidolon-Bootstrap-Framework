@@ -12,9 +12,10 @@ appel ; C-021 le raccorde aux missions sur fixtures fixes. 733 tests Python,
 six intégrations mémoire et 49 tests client réussis à la clôture précédente.
 [Preuves](docs/validation/2026-10-07/codex-hour-1056/README.md).
 
-Claude : G055 reçu en cours d’intégration ; G056–G060 disponibles,
+Claude : G055/G056 intégrés ; G057–G060 disponibles,
 voir la [file active](collaboration/tasks/QUEUE.md). Codex prend C-022 :
-diagnostic local de reprise sans mutation. Fournisseurs externes, commandes
+diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
+C-025 inspection historique durcie. Fournisseurs externes, commandes
 distantes, rotation G057 et recette Windows/VM restent des lots distincts.
 Les sections datées ci-dessous conservent l’historique.
 
@@ -532,3 +533,14 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Budget : seules réservations décodées, tous les ordinaux contrôlés ; six sondes d’altération conservées.
 - [x] Mesures synthétiques avant/après et 47 tests budget/diagnostic/recherche réussis.
 - [ ] Qualification VM/Windows ; la réécriture cohérente reste hors détection.
+
+
+## C-025 — inspection historique stricte — 07/10/2026
+
+- [x] Métadonnées contradictoires et mauvais type reproduits, puis refusés sans affichage trompeur.
+- [x] Clés/types/identités et indicateurs de revue validés, anciens rapports conservés.
+- [x] Lecture bornée en taille/nombre/durée coopérative, aucune réparation ni réactivation.
+- [x] 47 tests ciblés réussis, dont dix nouveaux et une interruption réelle de requête SQL.
+- [ ] Inventaire paginé pour grandes copies, contre-revue et qualification du stockage réel.
+
+[Contrat](docs/RECOVERY-REVIEW.md), [preuves](docs/validation/2026-10-07/codex-recovery-inspection/README.md).

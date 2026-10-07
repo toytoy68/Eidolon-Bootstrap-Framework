@@ -1,0 +1,3 @@
+contradictory_authority returned_execution_authority=True
+wrong_report_type AttributeError
+runtime remained blocked: source copy is only a review fixture

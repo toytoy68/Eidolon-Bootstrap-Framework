@@ -1006,3 +1006,19 @@ C-024 validé : banc avant/après exécuté sans chevauchement, 38,23 → 9,48 m
 à 4095 réservations ; six altérations isolées refusées avant et après, limite
 du retrait cohérent conservée. 47 tests ciblés passent. G078 confirme réception
 G055/G056 et maintien G057–G060. Aucun changement de schéma ni source recherche.
+
+
+### C-025 — inspection de copie historique, défaut confirmé
+
+Codex réserve recovery.py et tests/docs associés. Sondes sur copie synthétique :
+le lecteur réémet execution_authority=true si les métadonnées sont incohérentes,
+et un rapport liste provoque AttributeError hors diagnostic CLI. Le verrou de
+restauration empêche toujours le Runtime : aucune exécution n’a été obtenue.
+Valider le contrat du rapport et borner l’inspection des missions/SQL, sans
+réparer, réactiver ou supprimer une copie. Hors détection du rollback cohérent.
+
+
+C-025 validé : 47 tests ciblés, dont dix nouveaux. Rapports contradictoires,
+JSON invalide et états historiques malformés refusés ; taille/nombre et SQL
+bornés, aucun rapport partiel. Le Runtime reste bloqué sur les copies de revue.
+Prochaine étape : recette globale/paquet et intégration des retours Claude reçus.

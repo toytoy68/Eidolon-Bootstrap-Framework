@@ -169,3 +169,29 @@ Les délais de progression sont simulés ; aucune mesure de disque réel.
   programme. Les manipulations SQL brutes sont hors des interfaces protégées.
 
 [Preuves](validation/2026-10-06/codex-recovery-review/README.md).
+
+
+## C-025 — validation du lecteur et bornes d’inspection
+
+Le lecteur exige désormais les invariants du rapport avant de l’afficher :
+`REVIEW_ONLY`, historique uniquement, autorité false, effets non réconciliés,
+artefacts limités à la base de missions. Un rapport incohérent, de mauvais type
+ou avec champs inattendus est refusé par code constant, sans réémettre ses
+valeurs. Les anciens rapports sans `capture_semantics` restent lisibles.
+Les JSON dupliqués, non finis et non UTF-8 sont refusés.
+
+L’inspection parcourt au plus 10 000 missions, 16 Mio par corps, 32 Kio pour
+les métadonnées de rapport et 256 Mio logiques pour la base. Un budget de deux
+secondes couvre coopérativement la VM SQLite et les passages Python ; l’attente
+sur verrou SQLite est limitée à deux secondes. Le stockage physique peut encore
+bloquer hors de cette garantie. Dépassement : `RECOVERY_INSPECTION_LIMIT`, sans
+rapport partiel. Aucun changement de la copie ni autorisation de reprise.
+
+Une préparation peut déjà avoir publié sa copie avant que son inspection finale
+échoue : conserver le dossier gardé, ne pas répéter la préparation sur lui.
+L’indisponibilité du rapport n’invalide pas la garde de restauration et n’autorise
+pas sa suppression. Les grands historiques nécessiteront un futur inventaire
+paginé ; ce lot ne tronque pas leurs comptes pour paraître réussi.
+Les annotations acteur/raison et identifiants d’appel restent des textes fournis ;
+la validation ne les authentifie pas et n’en fait pas un rapport public anonymisé.
+[Preuves et limites](validation/2026-10-07/codex-recovery-inspection/README.md).
