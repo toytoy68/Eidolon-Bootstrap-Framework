@@ -248,9 +248,30 @@
 
   // ---- presentation (labels only; Core values stay the source) --------------------------------
 
+  // G060: readable names for catalogue objectives; an unknown kind stays shown as received.
+  var RESEARCH = "research_retrieval.synthetic";
+  var OBJECTIVES = { "research_retrieval.synthetic": "Recherche synthétique (pages fixes)" };
+  function objectiveLabel(kind) {
+    if (kind === null) return "hors catalogue";
+    return Object.prototype.hasOwnProperty.call(OBJECTIVES, kind) ? OBJECTIVES[kind] : kind;
+  }
+
+  // What the projection says about a research mission: retrieval of fixed synthetic pages,
+  // never the truth of their content. The query and the pages are NOT in the projection.
+  function researchNote(mission) {
+    if (!mission || mission.objective_kind !== RESEARCH) return null;
+    switch (mission.outcome_status) {
+      case "ACHIEVED": return "Récupération synthétique complète : les pages fixes demandées ont été lues et vérifiées. Ce n'est pas une information confirmée.";
+      case "PARTIAL": return "Récupération partielle : moins de pages que demandé. Preuves conservées dans Core ; objectif non atteint.";
+      case "NOT_ACHIEVED": return "Aucune page vérifiée : pas de preuve de récupération à cette capture.";
+      default: return "Issue " + mission.outcome_status + " : non interprétée par ce client.";
+    }
+  }
+
   function missionLabel(mission) {
     if (!mission) return "Aucune capture";
     var av = mission.action_view;
+    var research = mission.objective_kind === RESEARCH;
     if (mission.status === "REVIEW_REQUIRED") return "Revue requise — effet à vérifier"; // stays primary, even with a cancel request
     if (mission.cancel_requested && !/^(CANCELLED|SUCCEEDED|FAILED|ABANDONED)$/.test(mission.status)) return "Annulation demandée — issue non confirmée";
     switch (mission.status) {
@@ -259,9 +280,13 @@
       case "BLOCKED":
         if (av && av.decision.status === "PENDING" && av.applicability.code === "AWAITING_DECISION") return "À décider";
         if (mission.outcome_status === "CLARIFICATION") return "Bloquée — précision demandée";
+        if (research && mission.outcome_status === "PARTIAL") return "Bloquée — récupération partielle";
+        if (research && mission.outcome_status === "NOT_ACHIEVED") return "Bloquée — aucune page vérifiée";
         return "Bloquée — motif à consulter";
       case "REVIEW_REQUIRED": return "Revue requise — effet à vérifier";
-      case "SUCCEEDED": return mission.outcome_status === "ACHIEVED" ? "Réussie — résultat daté" : "Terminée (issue " + mission.outcome_status + ")";
+      case "SUCCEEDED":
+        if (research && mission.outcome_status === "ACHIEVED") return "Réussie — pages synthétiques récupérées";
+        return mission.outcome_status === "ACHIEVED" ? "Réussie — résultat daté" : "Terminée (issue " + mission.outcome_status + ")";
       case "FAILED": return "Échouée";
       case "CANCELLED": return "Annulée";
       case "ABANDONED": return "Abandonnée";
@@ -290,7 +315,8 @@
 
   var api = { PROTOCOL: PROTOCOL, MAX_REFS: MAX_REFS, createState: createState, validateEnvelope: validateEnvelope, validateMission: validateMission,
     receive: receive, receiveError: receiveError, acceptReset: acceptReset, setConnection: setConnection,
-    nextRequest: nextRequest, missionLabel: missionLabel, cancelNote: cancelNote, summary: summary };
+    nextRequest: nextRequest, missionLabel: missionLabel, cancelNote: cancelNote, summary: summary,
+    objectiveLabel: objectiveLabel, researchNote: researchNote };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonSync = api;
 })(typeof window !== "undefined" ? window : this);
@@ -968,7 +994,8 @@
 
   var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
     validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
-    errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
+    errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote,
+    objectiveLabel: S.objectiveLabel, researchNote: S.researchNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;
   else root.EidolonConnected = api;
@@ -1113,12 +1140,14 @@
     }
     var note = C.cancelNote(m);
     if (note) body.appendChild(el(doc, "p", "mission-note", note));
+    var research = C.researchNote(m);
+    if (research) body.appendChild(el(doc, "p", "mission-note research-note", research));
     var dl = el(doc, "dl", "fields");
     row(doc, dl, "Mission", m.id);
     row(doc, dl, "Statut / phase", m.status + " / " + m.phase);
     row(doc, dl, "Révision", m.revision);
     row(doc, dl, "Progression", m.progress.completed + " / " + (m.progress.total === null ? "inconnu" : m.progress.total));
-    row(doc, dl, "Objectif", m.objective_kind === null ? "hors catalogue" : m.objective_kind);
+    row(doc, dl, "Objectif", C.objectiveLabel(m.objective_kind));
     row(doc, dl, "Issue", m.outcome_status);
     if (m.action_view) {
       row(doc, dl, "Décision", m.action_view.decision.status + " — " + m.action_view.decision.message);

@@ -136,12 +136,14 @@
     }
     var note = C.cancelNote(m);
     if (note) body.appendChild(el(doc, "p", "mission-note", note));
+    var research = C.researchNote(m);
+    if (research) body.appendChild(el(doc, "p", "mission-note research-note", research));
     var dl = el(doc, "dl", "fields");
     row(doc, dl, "Mission", m.id);
     row(doc, dl, "Statut / phase", m.status + " / " + m.phase);
     row(doc, dl, "Révision", m.revision);
     row(doc, dl, "Progression", m.progress.completed + " / " + (m.progress.total === null ? "inconnu" : m.progress.total));
-    row(doc, dl, "Objectif", m.objective_kind === null ? "hors catalogue" : m.objective_kind);
+    row(doc, dl, "Objectif", C.objectiveLabel(m.objective_kind));
     row(doc, dl, "Issue", m.outcome_status);
     if (m.action_view) {
       row(doc, dl, "Décision", m.action_view.decision.status + " — " + m.action_view.decision.message);

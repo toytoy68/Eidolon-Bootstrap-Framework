@@ -389,7 +389,8 @@
 
   var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
     validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
-    errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
+    errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote,
+    objectiveLabel: S.objectiveLabel, researchNote: S.researchNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;
   else root.EidolonConnected = api;

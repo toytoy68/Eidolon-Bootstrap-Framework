@@ -34,6 +34,18 @@ Auteur : Claude, 06/10/2026. Contrat : [HTTP-READ-API.md](../../docs/HTTP-READ-A
 
   Aucun de ces cas n'est une signature ni une preuve d'exécution.
 
+- **Missions de recherche synthétique (G060)** : l'objectif
+  `research_retrieval.synthetic` s'affiche « Recherche synthétique (pages
+  fixes) ». Une note distingue :
+  - récupération **complète** (pages fixes lues et vérifiées, pas une
+    information confirmée) ;
+  - **partielle** (moins de pages que demandé, objectif non atteint) ;
+  - **sans preuve** (aucune page vérifiée).
+
+  La requête et le texte des pages ne sont **pas** dans la projection Core,
+  et ne s'affichent donc jamais. Un objectif ou une issue inconnus restent
+  affichés tels que reçus.
+
 Il n'y a **aucune commande** : ni accord, ni lancement, ni annulation.
 
 ## Garde-fous contre les mélanges
@@ -64,6 +76,7 @@ avec un délai de 10 s.
 | `tests/session.test.js` | tests sur transport scripté (fixtures), dont 7 reçus (G036, G048) |
 | `tests/server.test.js` | 6 tests sur le **vrai serveur** Python et dans Chromium |
 | `tests/receipts.test.js` | 3 tests reçus sur le vrai serveur et le jeu bêta C-009g (dont 1 Chromium) |
+| `tests/research.test.js` | 3 tests missions de recherche C-021 sur projections Core réelles (dont 1 Chromium) |
 | `tests/a11y.test.js` | 8 tests Chromium : clavier, focus, zoom 200 %, 320×640, contraste, mouvement réduit (G037) |
 | `tests/integration/e2e.test.js` | 6 tests de bout en bout : pagination réelle, troncature à 200, reset entre deux pages, absence de réémission, nettoyage sur échec, 150 missions dans Chromium (G038) |
 | `tests/helpers.js` | outils partagés des bancs réels (CLI, jeu bêta, serveur, nettoyage) |
