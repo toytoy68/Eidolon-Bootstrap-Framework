@@ -70,6 +70,9 @@ def render_result(result):
              f"Phase              : {safe_text(result['phase'])}",
              f"Étapes vérifiées   : {progress['completed']} / {progress['total'] if progress['total'] is not None else '?'}",
              section("Résumé"), message(level, label)]
+    if result.get("invocation_budget"):
+        budget = result["invocation_budget"]
+        lines.append(message("INFO", f"Invocations réservées : {budget['used']} / {budget['limit']}"))
     if result.get("outcome"):
         outcome = result["outcome"]
         outcome_label = {"PENDING": "En attente de preuves", "ACHIEVED": "Atteint",

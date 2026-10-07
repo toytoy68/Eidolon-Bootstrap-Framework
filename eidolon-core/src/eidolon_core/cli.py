@@ -28,6 +28,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core v0.1 — synthetic local missions")
     parser.add_argument("--state", default=".eidolon-core")
     parser.add_argument("--timeout", type=float, default=10.0, help="seconds per call, including process startup")
+    parser.add_argument("--max-invocations", type=int, default=64,
+                        help="durable per-mission invocation limit (1–4096); 0 explicitly uses the legacy unbounded configuration")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
     parser.add_argument("--profile", choices=("text", "service-sim", "action-sim"), default="text")
     parser.add_argument("--targets", help="catalog JSON for a simulation profile; destinations are never contacted")
@@ -208,7 +210,7 @@ def main(argv=None):
                 print(encode(result))
             return 2 if result["status"] == "RESET_REQUIRED" else 0
         store = Store(args.state)
-        options = {"limits": Limits(args.timeout),
+        options = {"limits": Limits(args.timeout, None if args.max_invocations == 0 else args.max_invocations),
                    "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}
         runtime = (synthetic_runtime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
                    if args.profile == "service-sim" else Runtime(store, **options))

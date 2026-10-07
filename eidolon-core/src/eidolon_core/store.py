@@ -107,6 +107,11 @@ class Store:
                    "error": None, "revision": 0, "cancel_requested": False}
         if intent is not None:
             mission["intent"] = json.loads(encode(intent))
+        if "max_invocations" in configuration:
+            limit = configuration["max_invocations"]
+            if type(limit) is not int or not 1 <= limit <= 4096:
+                raise ValueError("invalid mission invocation budget")
+            mission["invocation_budget"] = {"limit": limit, "used": 0}
         mission["outcome"] = assess(mission)
         with self.connection() as db:
             db.execute("INSERT INTO missions (id,revision,body) VALUES (?,0,?)",

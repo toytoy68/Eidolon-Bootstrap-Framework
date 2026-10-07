@@ -464,3 +464,13 @@ consolidées, variante de libération anticipée non adoptée.
 - [ ] Rétention, restauration/rollback et raccordement mission/réseau réel.
 
 Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
+
+## C-015 — budget global d'invocations — 07/10/2026
+
+- [x] Limite persistante par mission (64 par défaut), réservation avant worker,
+  audit transactionnel, reprise/réconciliation sans remboursement.
+- [x] Place pour une première vérification avant de démarrer un outil ; preuves
+  conservées si vérification indisponible et budget épuisé.
+- [x] CLI, configuration figée, compatibilité historique explicitement sans budget,
+  79 tests ciblés réussis. Contrat : docs/INVOCATION-BUDGET.md.
+- [ ] Quotas globaux de serveur, rétention et nettoyage coordonnés restent ouverts.

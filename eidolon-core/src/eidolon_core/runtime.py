@@ -22,11 +22,21 @@ from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
 @dataclass(frozen=True)
 class Limits:
     call_seconds: float = 10.0
+    max_invocations: int | None = 64
 
     def __post_init__(self):
         if (type(self.call_seconds) not in (int, float) or not math.isfinite(self.call_seconds)
                 or not 0 < self.call_seconds <= 300):
             raise ValueError("call timeout must be finite and within (0, 300] seconds")
+        if self.max_invocations is not None and (type(self.max_invocations) is not int or not 1 <= self.max_invocations <= 4096):
+            raise ValueError("max invocations must be an integer within [1, 4096] or None for legacy missions")
+
+
+class InvocationBudgetError(RuntimeError):
+    """Separate from tool/observation failures; never consumed by their handlers."""
+    def __init__(self, code):
+        self.code = code
+        super().__init__(code)
 
 
 class Runtime:
@@ -48,6 +58,8 @@ class Runtime:
                 "call_seconds": self.limits.call_seconds}
         if self.catalog is not None:
             config["targets"] = self.catalog.manifest()
+        if self.limits.max_invocations is not None:
+            config["max_invocations"] = self.limits.max_invocations
         return config
 
     def create(self, request):
@@ -72,6 +84,12 @@ class Runtime:
         return self.store.cancel_requested(m["id"])
 
     def _invoke(self, m, function, *args, call=None, verification=False):
+        self._ensure_invocation_budget(m)
+        if self.limits.max_invocations is not None:
+            budget = m["invocation_budget"]
+            budget["used"] += 1
+            self._save(m, "INVOCATION_RESERVED", {"ordinal": budget["used"], "limit": budget["limit"],
+                "phase": m["phase"], "verification": verification, "call_id": call["id"] if call else None})
         def spawned(worker):
             call["worker"] = worker
             self._save(m, "WORKER_SPAWNED", {"call_id": call["id"],
@@ -83,6 +101,24 @@ class Runtime:
                       # cancellation. It remains bounded by the call deadline.
                       cancelled=lambda: False if verification else self._cancelled(m), lease_path=lease,
                       on_started=spawned if call is not None else None)
+
+    def _ensure_invocation_budget(self, m, *, needed=1):
+        if self.limits.max_invocations is None:
+            return  # Explicit compatibility mode; no budget is claimed.
+        budget = m.get("invocation_budget")
+        if (type(budget) is not dict or set(budget) != {"limit", "used"}
+                or type(budget["limit"]) is not int or budget["limit"] != self.limits.max_invocations
+                or type(budget["used"]) is not int or not 0 <= budget["used"] <= budget["limit"]):
+            raise InvocationBudgetError("INVOCATION_BUDGET_INVALID")
+        reservations = [event["detail"] for event in self.store.events(m["id"])
+                        if event["kind"] == "INVOCATION_RESERVED"]
+        if (len(reservations) != budget["used"] or any(type(r) is not dict
+                or type(r.get("ordinal")) is not int or r["ordinal"] != i
+                or type(r.get("limit")) is not int or r["limit"] != budget["limit"]
+                for i, r in enumerate(reservations, 1))):
+            raise InvocationBudgetError("INVOCATION_BUDGET_INVALID")
+        if budget["used"] + needed > budget["limit"]:
+            raise InvocationBudgetError("INVOCATION_BUDGET_EXHAUSTED")
 
     def _retain_receipt(self, m, call, receipt, *, late=False, recovered=False):
         key = "late_receipt" if late else ("recovered_receipt" if receipt["ok"] else "error_receipt")
@@ -140,6 +176,10 @@ class Runtime:
                 return self._run(m)
             except Busy:
                 raise
+            except InvocationBudgetError as exc:
+                m = self.store.get(identity)
+                return self._stop(m, "BLOCKED", exc.code,
+                                  "durable invocation budget unavailable; no new worker started")
             except Exception as exc:
                 # Discard any partly mutated, possibly unserializable object.
                 # Only the durable phase decides if another attempt is safe.
@@ -247,9 +287,13 @@ class Runtime:
                                               for key in ("target_id", "capability", "catalog_sha256")}
                 m["calls"].append(call)
             if call["status"] == "PREPARED":
+                self._ensure_invocation_budget(m, needed=2)
                 gated = self._authorize_call(m, call)
                 if gated is not None:
                     return gated
+                # Authorization may itself invoke read-only condition checks.
+                # Refuse before CALL_STARTED/approval consumption is committed.
+                self._ensure_invocation_budget(m, needed=2)
                 m["phase"] = "EXECUTING"
                 call.update(status="STARTED", worker_protocol="lease-v2", worker=None)
                 self._save(m, "CALL_STARTED", {"call_id": call["id"], "attempt": call["attempt"]})

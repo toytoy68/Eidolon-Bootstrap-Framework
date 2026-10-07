@@ -876,3 +876,12 @@ C063/G046 reçu depuis 0f0cfdc : Codex réserve la correction de citations
 PowerShell/SSH. La tolérance de 2 s sur PID/start-time proposée sera examinée
 séparément pour éviter de tuer un PID réutilisé rapidement. Claude conserve
 G047–G049, file encore non vide.
+
+### C-015 — prise en charge Codex, budget global des invocations
+
+Base fa7e9bc. Codex réserve runtime.py, initialisation Store, option CLI,
+tests et contrat associés. Compteur persistant par mission avant les appels
+mémoire/modèle/outils/vérification, limite figée hors modèle, pas de remise
+à zéro par reprise/réconciliation. Compatibilité explicite pour anciennes
+missions sans budget ; aucun effet externe ni nouveau droit.
+Claude garde G047–G049 ; aucun fichier de son client modifié par ce lot.
