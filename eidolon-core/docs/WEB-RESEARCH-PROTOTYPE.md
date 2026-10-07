@@ -18,6 +18,17 @@ Suite G024/G025 : corps exactement identiques comptés une fois, et diagnostic
 lecture ; voir le contrat v2. Deux textes différents ne prouvent pas deux sources
 indépendantes.
 
+## Actualisation du 07/10 — lire avec le prototype historique ci-dessous
+
+C-011 ajoute l’extraction HTML optionnelle ; C-020 déduplique le texte décodé
+(y compris les variantes avec BOM) et durcit les titres de challenge.
+[Contrat courant du lecteur](WEB-READER.md). C-013 nettoie automatiquement les
+requêtes avant les fournisseurs. C-014a/C-019 ajoutent garde durable et historique
+local nettoyé ; C-021 raccorde des fixtures fixes au cycle de mission avec un
+critère indépendant du modèle. [Missions synthétiques](RESEARCH-MISSIONS.md).
+Les limitations décrites ci-dessous comme « prochain lot » sont celles du
+prototype initial ; aucun fournisseur Internet n’est pour autant activé.
+
 ## Fonctionnement livré
 
 Le coordinateur reçoit une requête explicite et un nombre de pages à lire.

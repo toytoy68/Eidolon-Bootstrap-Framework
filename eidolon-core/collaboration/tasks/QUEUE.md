@@ -1,6 +1,8 @@
-# File active — C-MSG-G074, 07/10/2026
+# File active — C-MSG-G076, 07/10/2026
 
-G050–G054 reçus et intégrés, dernière publication 971f95d. C073 indique la file vide : renouvellement demandé par toytoy.
+G050–G054 reçus et intégrés. C-019–C-021 publiés en 9ee40c9.
+C074 annonce G055 ensuite ; G055–G057 restent à traiter. Dernier contrôle
+distant : f5e002a, aucun nouveau lot reçu depuis G054.
 
 | Ordre | Tâche | État |
 | --- | --- | --- |
@@ -9,7 +11,9 @@ G050–G054 reçus et intégrés, dernière publication 971f95d. C073 indique la
 | 3 | [G056](C-TASK-G056.md) — Mesurer le coût du budget et proposer une optimisation | PRÊT |
 | 4 | [G057](C-TASK-G057.md) — Concevoir la rotation explicite de la garde | PRÊT |
 
-Codex réserve corrections G050/G052 et C-019 : query_cleanup/research/research_guard/query_history/store/receipt_lookup et tests/docs associés. La publication ne démarre pas Claude.
+Codex a terminé G050/G052 et C-019–C-021 ; voir le message G076 pour les
+liaisons schéma 2 et operation_id à préserver par G057. La publication ne
+démarre pas Claude ; elle ne prouve pas que sa session est en cours.
 
 ---
 

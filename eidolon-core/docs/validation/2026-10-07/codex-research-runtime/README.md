@@ -46,3 +46,23 @@ Pas de recette Windows, VM, SSH réel, coupure électrique ou navigateur ici.
 La garde est limitée à 256 recherches et G057 prépare encore sa rotation.
 Contre-revue indépendante de C-019/C-021 encore à réaliser. Les sources
 synthétiques ne qualifient ni un fournisseur Web ni un modèle réel.
+
+
+## Recette de l’archive publiée et frontière HTTP
+
+`source-archive.json` et `archive-http-smoke.json` portent sur le commit distant
+9ee40c9da7fddd930acbc3b74701ee16d93120fb, au même arbre que le commit local C-021.
+64 fichiers vérifiés. Commandes reproductibles depuis ce commit :
+
+```sh
+python tools/build_beta_bundle.py --commit 9ee40c9da7fddd930acbc3b74701ee16d93120fb --output /tmp/eidolon-c021-published.tar.gz
+python docs/validation/2026-10-07/codex-research-runtime/archive-http-smoke.py /tmp/eidolon-c021-published.tar.gz
+```
+
+Le second script est fourni dans le commit de preuves suivant. Depuis l’archive
+extraite dans un dossier jetable, les trois scénarios complet/partiel/vide
+s’exécutent. Le vrai serveur HTTP renvoie leurs projections sans requête privée,
+texte de source ou reçu de nettoyage. Les routes privées restent absentes,
+la consultation ne change aucun fichier SQLite. Le validateur JavaScript du
+client fourni dans l’archive accepte les trois captures. Il est exécuté sous
+Node avec démarrage DOM suspendu : ce n’est pas un test navigateur.

@@ -19,3 +19,12 @@ C-019 publié en 2a98a9a : consulter docs/QUERY-HISTORY.md. Le schéma 2 compren
 cleaned_queries et une empreinte de liaison dans le descripteur. Conserver ces
 liens et le texte lors d’un export ; ne pas transformer des lignes historiques
 sans texte en requêtes connues. La lecture locale reste la seule exposition.
+
+
+## Actualisation G076
+
+C-021 publié en 9ee40c9 : `operation_id` optionnel lie le descripteur à une
+mission. Conserver cette liaison. Un rapport COMPLETED peut encore servir
+à vérifier un résultat RETURNED après reprise ; un export/retrait ne doit pas
+rendre cette preuve indisponible sans contrat explicite. L’âge seul ne suffit
+pas à conclure que la mission est terminée. Toujours prototype isolé.

@@ -20,6 +20,8 @@ la démo actuelle n'est pas une exigence de fonctionnement hors ligne du produit
 | `worker` | Appels en processus spawn, délais, interruption, reçu JSON borné |
 | `runtime` | Mission, plan, précontrôle intégral, exécution séquentielle, reprise |
 | `cli` | Création, exécution/reprise, inspection, annulation et réconciliation |
+| `research_runtime` | Mission de récupération sur fixtures, objectif lié à la mission et vérification du rapport durable |
+| `research_guard` / `query_history` | Intentions/reçus et historique nettoyé atomique, consultation locale seule |
 | `action_view` | Projection de décision/applicabilité/preuve pour affichage, sans effet ni permission |
 
 ## Mission et progression
@@ -41,8 +43,8 @@ mémoire ne constitue une autorisation. La sortie brute est conservée avant
 validation pour diagnostic, dans les limites de taille.
 
 Le précontrôle autorise **toutes** les étapes et valide leurs paramètres avant
-le premier outil, puis recommence lors d'une reprise. La politique autorise
-uniquement les noms configurés **et** les outils déclarés sans effet. Le modèle
+le premier outil, puis recommence lors d'une reprise. La politique du profil
+`text` autorise uniquement les noms configurés **et** les outils déclarés sans effet. Le modèle
 ne peut pas modifier le registre ni cette politique. Les paramètres de
 `text.stats` contiennent uniquement une référence à l'extrait persisté.
 
@@ -71,6 +73,14 @@ au succès. [Contrat C-005a](SIMULATED-ACTIONS-C005A.md).
 Une [vue pure](ACTION-VIEW-G005.md) expose séparément accord et effet dans la
 CLI ; elle recherche la tentative exacte, y compris dans l’historique, sans
 persistance ni contrôle en direct. Le runtime ne lit jamais cette projection.
+
+C-021 ajoute `ResearchRuntime` : la requête, la cible de pages et l’identité de
+mission sont fixées hors modèle. Le seul outil `research.retrieve.synthetic`
+écrit un journal local de fixtures, autorisé par une politique spécifique.
+Le vérificateur relit le rapport achevé lié à cette mission. Une récupération
+partielle est conservée comme observation, mais ne satisfait pas l’objectif.
+Une mémoire vide est admise ; aucun accès réseau réel n’est ajouté.
+[Contrat, données privées et reprises](RESEARCH-MISSIONS.md).
 
 ## Persistance et reprise
 
@@ -201,14 +211,16 @@ n'est encore raccordé aux outils du runtime. [Contrat et limites](EGRESS-POLICY
 
 ## Coordinateur de recherche candidat
 
-`research` compose des fournisseurs et un lecteur injectés, hors runtime. Le
+`research` compose des fournisseurs et un lecteur injectés. Le profil C-021
+le raccorde au runtime uniquement sur fixtures fixes, sans réseau. Le
 lecteur optionnel `WebReader` utilise maintenant le transport contrôlé G006,
 avec provenance et garde supplémentaire par saut pour les suspensions et
 l'annulation ; [contrat et démo locale](WEB-READER.md). Il
 sépare découvertes et pages lues, conserve provenance/hash, déduplique les URL,
 borne les replis et gère un cache RAM. Un résultat quantitatif READ_TARGET_MET
-n'est ni une vérité confirmée ni un succès de mission Core. Tous les connecteurs
-de la démo sont simulés. [Contrat](WEB-RESEARCH-PROTOTYPE.md).
+n'est pas une vérité confirmée ; C-021 exige en plus la vérification du rapport
+lié à la mission et de sa cible avant succès. Tous les connecteurs de la démo
+sont simulés. [Contrat](WEB-RESEARCH-PROTOTYPE.md).
 
 ## Limites assumées
 
@@ -225,8 +237,10 @@ de la démo sont simulés. [Contrat](WEB-RESEARCH-PROTOTYPE.md).
   Un échec de démarrage après l'intention persistée reste conservativement en revue.
 - IDs/versions déclarés par les implémentations ; pas encore d'attestation des
   binaires, d'authentification humaine ou de preuve externe signée.
-- Budget par appel, pas de budget total ; pas de file distribuée, ordonnanceur,
-  moteur de notifications, multi-agents, interface graphique ou modèle réel.
+- Délais par appel et budget durable d’invocations par mission depuis C-015
+  (64 par défaut), pas de quota global serveur. Pas de file distribuée,
+  ordonnanceur, notifications ou modèle réel. Le client graphique reste un
+  observateur en lecture seule ; il n’accorde aucune autorité d’exécution.
 - Snapshots locaux en clair ; pas de chiffrement ni rétention automatique.
   Démonstration exclusivement synthétique. Aucun historique utilisateur ingéré.
 - Mémoire figée pendant la mission. Un futur outil réel devra revalider la

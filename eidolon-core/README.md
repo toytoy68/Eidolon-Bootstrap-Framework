@@ -85,10 +85,12 @@ un dossier neuf, avec un jeton privé. Le diagnostic `http_api --check` vérifie
 les prérequis locaux avant un lancement explicite. Depuis le PC Windows, la
 page est destinée à être consultée par un tunnel SSH vers le serveur Linux.
 
-État du 07/10 : C-019 validé avec **713 tests Python et six intégrations
-mémoire réussis** sur corpus synthétiques ; C-020 ensuite contrôlé par
-102 tests recherche/HTML/garde. [Preuves C-019](docs/validation/2026-10-07/codex-query-history/README.md)
-et [C-020](docs/validation/2026-10-07/codex-text-evidence/README.md).
+État du 07/10 après C-021 : **733 tests Python et six intégrations mémoire
+réussis** sur corpus synthétiques ; 49 tests client réussis, 12 Chromium non
+exécutés ici. Le paquet installé passe 24 contrôles bêta et la mission de
+recherche. [Preuves actuelles](docs/validation/2026-10-07/codex-research-runtime/README.md),
+[historique C-019](docs/validation/2026-10-07/codex-query-history/README.md) et
+[C-020](docs/validation/2026-10-07/codex-text-evidence/README.md).
 
 Une [coquille Tauri de consultation](desktop/tauri/README.md) est intégrée :
 compilation et lancement Linux rapportés par Claude, pas d’installeur Windows.
@@ -399,8 +401,9 @@ configurables pour les adresses du foyer, même publiques. Démonstration pure :
 PYTHONPATH=src:. python -m examples.web_policy_demo --format human
 ```
 
-Aucun téléchargement ni accès au réseau dans cette démo. Le connecteur HTTP,
-le raccordement aux missions et la recette pare-feu/VPN restent à réaliser.
+Aucun téléchargement ni accès au réseau dans cette démo. Le connecteur HTTP
+candidat est désormais testé sur loopback ; C-021 raccorde des fixtures aux
+missions. Le raccordement réseau réel et la recette pare-feu/VPN restent ouverts.
 [Validation intégrée C-002a.1](docs/validation/2026-10-05/codex-c002a/README.md) :
 221 tests Core et 6 intégrations mémoire réussis sur données synthétiques.
 
@@ -412,9 +415,9 @@ PYTHONPATH=src:. python -m examples.research_demo --format human
 
 Fournisseurs simulés interchangeables, repli après quota, cache RAM et provenance
 séparent les extraits trouvés des textes réellement lus. Un défi HTTP 200 reste
-non exploitable. Le prototype lit le texte UTF-8 simple/Markdown ; extraction
-HTML générale et fournisseurs Internet restent à raccorder. Ce n'est pas encore
-un outil disponible dans une mission Core. [Contrat et limites](docs/WEB-RESEARCH-PROTOTYPE.md).
+non exploitable. Le coordinateur lit le texte UTF-8 simple/Markdown et propose
+un extracteur HTML optionnel C-011. C-021 fournit un outil de mission sur fixtures
+fixes ; les fournisseurs Internet ne sont pas raccordés. [Contrat et limites](docs/WEB-RESEARCH-PROTOTYPE.md).
 
 ## Diagnostic synthétique C-004a
 

@@ -84,7 +84,10 @@ adaptateurs doivent rester synchrones et ne pas laisser d'ouvriers autonomes.
 La suppression/restauration d'un journal, la copie de sa base sous une autre
 racine, un ancien binaire sans garde et le SQL direct peuvent contourner la
 protection. Le code ne prétend pas détecter un rollback cohérent. La garde
-n'est pas liée à une mission ni à un appairage. Le passage à G030 complet
+accepte depuis C-021 un `operation_id` de mission optionnel, validé et conservé
+dans le descripteur. Le profil synthétique l’exige et relit cette liaison lors
+de la vérification ; la garde seule n’en fait pas une clé d’idempotence ni un
+appairage. Le passage à G030 complet
 (périmètres, sauts, réservations et pause/fin dans la même base) reste ouvert.
 
 [Preuves](validation/2026-10-07/codex-research-guard/README.md) : crashs de vrais
