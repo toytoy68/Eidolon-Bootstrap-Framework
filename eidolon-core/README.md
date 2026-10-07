@@ -489,3 +489,12 @@ PYTHONPATH=src:. python -m examples.research_pauses_demo --format human
 `research-pauses` consulte une base existante, `research-release` lève une pause
 après revue explicite. Une réponse reçue mais non commise avant un crash reste
 une interruption à examiner ; aucun redémarrage aveugle garanti sûr.
+
+### Recette locale de la bêta observateur
+
+```sh
+PYTHONPATH=src python -m eidolon_core.beta_check --web-root desktop/connected
+```
+
+24 contrôles sur des données et processus temporaires ; [contrat et limites](docs/BETA-LOCAL-CHECK.md).
+Le [plan actif](docs/PLAN-2026-10-07.md) sépare les tâches Claude et Codex.

@@ -1,0 +1,8 @@
+test_missing_assets_fail_before_preparing_state_without_path_leak (tests.test_beta_check.BetaCheckTests.test_missing_assets_fail_before_preparing_state_without_path_leak) ... ok
+test_real_recipe_from_unrelated_directory_has_machine_report (tests.test_beta_check.BetaCheckTests.test_real_recipe_from_unrelated_directory_has_machine_report) ... ok
+test_server_spawn_failure_cleans_owned_files_and_hides_raw_error (tests.test_beta_check.BetaCheckTests.test_server_spawn_failure_cleans_owned_files_and_hides_raw_error) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.691s
+
+OK

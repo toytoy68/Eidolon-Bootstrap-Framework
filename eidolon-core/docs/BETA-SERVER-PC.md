@@ -15,20 +15,14 @@ travail, pas une qualification ni une livraison promise à date certaine.
 
 Ce premier jalon est un **observateur connecté**, pas encore le chatbot
 généraliste, l'application Windows installable ou une autorisation d'actions.
-La consultation HTTP des reçus locaux est livrée (C-009b), son affichage attend
-G036. Une deuxième tranche ajoutera l’envoi de commandes authentifiées,
+La consultation HTTP des reçus locaux et son affichage G036 sont intégrés. Une deuxième tranche ajoutera l’envoi de commandes authentifiées,
 puis le modèle réel et le rappel mémoire revalidé. L'accès externe Web,
 NAS/fichiers Windows, voix/caméra et robot restent des recettes séparées.
 
-## Répartition active
+## Répartition active au 07/10
 
-- Codex : API HTTP de consultation, token local, lecture SQLite sans création
-  ni migration, tests réels sur boucle locale, documentation de lancement.
-- Claude G031 : client connecté indépendant du prototype simulé, selon
-  [HTTP-READ-API.md](HTTP-READ-API.md).
-- Claude G032/G033 : robustesse HTML et corrections du parseur APT.
-- Claude G034 : contre-revue de l'API sur le commit livré par Codex.
-- Claude G035 : recette serveur/PC et préparation Windows, sans installation.
+[Tranche de 12 tâches](PLAN-2026-10-07.md) : G042–G044 pour Claude,
+C-010a–i pour Codex. G036–G041 intégrés depuis 310d94b ; étude G041 sans activation.
 
 ## Conditions avant de parler de bêta utilisable
 
@@ -64,3 +58,15 @@ La prochaine file Claude est G036–G041 : reçus, accessibilité, navigateur/AP
 mesures, lanceur candidat et contrat des commandes. Les trois premières
 conditions de qualification ci-dessus restent ouvertes : elles exigent encore
 un navigateur et le parcours sur les machines de toytoy.
+
+## Recette autonome et paquet — 07/10
+
+La [commande beta_check](BETA-LOCAL-CHECK.md) exécute 24 contrôles avec de
+vrais processus sur données temporaires. Le même parcours est vérifié depuis
+un wheel installé dans un venv isolé, sans téléchargement. Les assets du client
+sont fournis séparément par `--web-root`, ils ne sont pas contenus dans le wheel.
+[Preuves](validation/2026-10-07/codex-beta/README.md).
+
+La validation locale ne remplace pas les essais sur Debian 13, Windows ou SSH.
+Le lanceur PowerShell reste candidat ; ses chemins relatifs de diagnostic
+sont corrigés, mais ce n'est pas une exécution Windows.

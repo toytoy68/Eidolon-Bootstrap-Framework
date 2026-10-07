@@ -70,28 +70,58 @@ function bulkCreate(state, n) {
   if (r.status !== 0) throw new Error("bulkCreate failed: " + r.stderr);
 }
 
-function startServer(env, webRoot) {
-  return new Promise((resolve, reject) => {
-    const args = ["-m", "eidolon_core.http_api", "--state", env.state, "--token-file", env.tokenFile, "--port", "0"];
-    if (webRoot) args.push("--web-root", webRoot);
-    const child = spawn(PYTHON, args, { cwd: CORE, env: ENV, stdio: ["ignore", "pipe", "pipe"] });
-    let out = "";
-    const timer = setTimeout(() => { child.kill(); reject(new Error("server did not start: " + out)); }, 10000);
-    child.stdout.on("data", (d) => {
-      out += d;
-      const m = out.match(/http:\/\/127\.0\.0\.1:(\d+)/);
-      if (m) { clearTimeout(timer); resolve({ child, port: Number(m[1]), base: "http://127.0.0.1:" + m[1] }); }
+// Options inject only a synthetic child/short deadline for the lifecycle tests.
+async function startServer(env, webRoot, { spawnServer = spawn, timeoutMs = 10000 } = {}) {
+  const args = ["-m", "eidolon_core.http_api", "--state", env.state, "--token-file", env.tokenFile, "--port", "0"];
+  if (webRoot) args.push("--web-root", webRoot);
+  const child = spawnServer(PYTHON, args, { cwd: CORE, env: ENV, stdio: ["ignore", "pipe", "pipe"] });
+  const server = { child };
+  try {
+    return await new Promise((resolve, reject) => {
+      let out = "";
+      const cleanupStartup = () => {
+        clearTimeout(timer);
+        child.removeListener("error", failed);
+        child.removeListener("exit", exited);
+        child.stdout.removeListener("data", data);
+      };
+      const failed = () => { cleanupStartup(); reject(new Error("server could not spawn")); };
+      const exited = (code) => { cleanupStartup(); reject(new Error("server exited " + code)); };
+      const data = (d) => {
+        out = (out + d).slice(-4096);
+        const m = out.match(/http:\/\/127\.0\.0\.1:(\d+)/);
+        if (m) {
+          cleanupStartup();
+          resolve({ child, port: Number(m[1]), base: "http://127.0.0.1:" + m[1] });
+        }
+      };
+      const timer = setTimeout(() => { cleanupStartup(); reject(new Error("server startup deadline")); }, timeoutMs);
+      child.on("error", failed);
+      child.once("exit", exited);
+      child.stdout.on("data", data);
+      // Drain both pipes, including after startup: diagnostics never become a blocked child.
+      child.stdout.resume();
+      child.stderr.resume();
     });
-    child.on("exit", (code) => { clearTimeout(timer); reject(new Error("server exited " + code + ": " + out)); });
-  });
+  } catch (err) {
+    await stop(server);
+    throw err;
+  }
 }
 
-function stop(server) {
-  return new Promise((resolve) => {
-    if (!server || server.child.exitCode !== null || server.child.signalCode !== null) return resolve();
-    server.child.removeAllListeners("exit");
-    server.child.once("exit", () => resolve());
-    server.child.kill("SIGINT");
+function stop(server, { graceMs = 1000, killMs = 3000 } = {}) {
+  return new Promise((resolve, reject) => {
+    if (!server || !server.child.pid || server.child.exitCode !== null || server.child.signalCode !== null) return resolve();
+    const child = server.child;
+    const cleanupStop = () => {
+      clearTimeout(force); clearTimeout(deadline);
+      child.removeListener("exit", exited);
+    };
+    const exited = () => { cleanupStop(); resolve(); };
+    child.once("exit", exited);
+    const force = setTimeout(() => child.kill("SIGKILL"), graceMs);
+    const deadline = setTimeout(() => { cleanupStop(); reject(new Error("owned server did not exit")); }, graceMs + killMs);
+    child.kill("SIGTERM");  // SIGINT can be inherited as ignored in noninteractive shells.
   });
 }
 

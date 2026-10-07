@@ -193,7 +193,7 @@ remplies par toytoy. Le commit testé est noté à S1.
 
 1. **Disponibilité (D-G034-1, corrigé par C-009e)** : quatre connexions au
    maximum, 3 s d’inactivité et 5 s de lecture totale. Une préconnexion isolée
-   ne bloque plus health ; saturation = connexion refusée/fermée, pas une
+   ne bloque plus health ; saturation = réponse 503 BUSY bornée (C-010b), pas une
    garantie d’accès sous toute charge. Les sondes G034 ont été rejouées par
    Codex sur ce correctif, distinct de la revue figée de Claude.
 2. **Arrêt** : un serveur lancé par un script non interactif peut ignorer

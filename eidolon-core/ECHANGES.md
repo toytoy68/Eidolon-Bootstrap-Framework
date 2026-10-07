@@ -815,3 +815,14 @@ autonome, vérification du paquet, documentation et validation finale.
 Claude garde G042–G044 : revue des reçus, session/view et bundle client,
 archive de sources. Aucun changement concurrent prévu sur ses sources JS.
 [Liste active des 12 tâches](docs/PLAN-2026-10-07.md).
+
+### C-010a–i — résultat de la reprise du 07/10
+
+G036–G041 intégrés et répartition G056 publiée à bfd78a8. Serveur BUSY/budget SQL,
+banc processus, chemins SSH et recette autonome livrés localement et validés.
+615 tests Python réussis/6 mémoire non exécutés ; 41 tests Node/12 Chromium
+non exécutés ; 24 contrôles depuis sources et paquet isolé.
+[Preuves](docs/validation/2026-10-07/codex-beta/README.md).
+Demande toytoy supplémentaire à 08 h 03 : redonner des tâches à Claude puis
+continuer ; prochaine tranche réservée Codex C-011, raccordement HTML candidat
+(web_reader/research/tests/docs), sans fournisseur externe ni outil runtime.

@@ -5,6 +5,17 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
+## État courant — reprise du 07/10/2026
+
+La [liste active des 12 tâches](docs/PLAN-2026-10-07.md) affecte 3 lots à Claude
+et 9 à Codex. G036–G041 intégrés depuis 310d94b : reçus client, accessibilité,
+banc réel, mesures, lanceur candidat et étude commandes (non activée).
+C-010 : saturation explicite, budget SQL coopératif, arrêt du banc borné,
+chemins du diagnostic corrigés et recette autonome/paquet isolé.
+Les sections datées ci-dessous conservent l'historique ; les anciennes mentions
+« attend G036 » ne représentent plus la file active.
+[Preuves de reprise](docs/validation/2026-10-07/codex-beta/README.md).
+
 ## Livré dans cette tranche
 
 - [x] Paquet autonome, CLI, démonstration sans service/GPU, modèle déterministe.

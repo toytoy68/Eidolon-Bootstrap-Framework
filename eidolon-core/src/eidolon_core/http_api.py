@@ -40,6 +40,8 @@ MAX_ASSET = 524288
 MAX_CONNECTIONS = 4
 IDLE_TIMEOUT_SECONDS = 3.0
 READ_DEADLINE_SECONDS = 5.0
+SQL_BUDGET_SECONDS = 2.0
+BUSY_WRITE_TIMEOUT_SECONDS = 0.05
 TOKEN_PATTERN = r"[A-Za-z0-9_-]{32,128}"
 MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
@@ -75,6 +77,7 @@ class ReadOnlyStore:
     check_id = staticmethod(Store.check_id)
 
     def __init__(self, directory):
+        self.query_budget_seconds = SQL_BUDGET_SECONDS
         self.directory = Path(directory).resolve(strict=True)
         self.path = self.directory / "missions.sqlite3"
         if not self.path.is_file():
@@ -91,6 +94,10 @@ class ReadOnlyStore:
             raise ContractError("RECOVERY_REVIEW_ONLY")
         db = sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True, timeout=2)
         try:
+            # Cooperative SQLite VM deadline, shared across this read connection.
+            # This does not interrupt filesystem I/O or Python projection work.
+            deadline = time.monotonic() + self.query_budget_seconds
+            db.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
             db.execute("PRAGMA query_only=ON")
             if db.execute("PRAGMA user_version").fetchone()[0] != 1:
                 raise ContractError("UNSUPPORTED_READ_SCHEMA")
@@ -363,9 +370,22 @@ class ReadServer(HTTPServer):
                     self.shutdown_request(request)
                     raise
                 return
-        # Capacity refusal happens before parsing/authentication, without a
-        # retry queue or another thread. A dropped socket is not a command result.
-        self.shutdown_request(request)
+        # Fixed pre-authentication response: no request, token or Store data.
+        # One tiny bounded write, no parser, worker or waiting queue. It reports
+        # unavailable capacity, never a result or permission to resend a command.
+        body = b'{"protocol":"eidolon-http-read/1","error":"BUSY","authorizes_execution":false}'
+        response = (b"HTTP/1.0 503 Service Unavailable\r\n"
+                    b"Content-Type: application/json; charset=utf-8\r\n"
+                    b"Cache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n"
+                    b"Connection: close\r\nContent-Length: " + str(len(body)).encode("ascii")
+                    + b"\r\n\r\n" + body)
+        try:
+            request.settimeout(BUSY_WRITE_TIMEOUT_SECONDS)
+            request.sendall(response)
+        except OSError:
+            pass  # Peer gone/unwritable: no delivery guarantee under overload.
+        finally:
+            self.shutdown_request(request)
 
     def _serve_connection(self, request, client_address):
         try:

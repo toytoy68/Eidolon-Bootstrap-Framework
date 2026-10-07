@@ -1,0 +1,61 @@
+﹣ keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body (0.730352ms) # Chromium executable unavailable
+﹣ focus after a refused token goes back to the token field, with the status announced (0.105286ms) # Chromium executable unavailable
+﹣ visible focus indicator on every control reached by Tab (0.069703ms) # Chromium executable unavailable
+﹣ layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.065187ms) # Chromium executable unavailable
+﹣ layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.127298ms) # Chromium executable unavailable
+﹣ layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.070685ms) # Chromium executable unavailable
+﹣ reduced motion: no animation or transition anywhere (0.10094ms) # Chromium executable unavailable
+﹣ dark color scheme keeps contrast (0.062142ms) # Chromium executable unavailable
+✔ pagination over the real API: 150 extra missions read in two pages, exact cursor echoed, complete (1175.660446ms)
+✔ more than 200 missions: the client stops at 200, says truncated, and never loops (1218.604157ms)
+✔ a mission created by another process between two pages: RESET_REQUIRED, old inventory stale, explicit relist complete (1182.232168ms)
+✔ a cancellation by the Core CLI is observed once, over repeated polls, and the client only ever reads (1172.832445ms)
+✔ cleanup on failure paths: refused start, a throwing scenario, a browser that cannot start (2019.858795ms)
+﹣ Chromium on the real server: 150 missions listed and keyboard-selectable, then server stopped (0.1826ms) # Chromium executable unavailable
+✔ UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly (1.635752ms)
+✔ the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination (0.360684ms)
+✔ host key verification and system settings are never weakened (0.469916ms)
+✔ preview by default; connection only with -Connect; stop limited to its own recorded ssh process (0.367364ms)
+✔ no secret is read or printed; inputs are validated before reaching ssh or the remote shell (0.303069ms)
+✔ the optional remote diagnostic is C-009c --check, which starts nothing (0.460162ms)
+✔ remote relative paths keep their home anchor after cd; absolute paths remain literal (0.158755ms)
+✔ missing executable rejects without an unhandled spawn error (6.19187ms)
+✔ startup deadline waits for its silent owned child to exit (108.533333ms)
+✔ stderr is drained and a child ignoring TERM is killed, then stop is idempotent (110.361115ms)
+✔ real server + beta fixture: the three receipt queries, an absent key and a wrong mission (1334.547662ms)
+✔ real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection (2502.173754ms)
+﹣ Chromium on the real server: receipt lookup shown next to the current capture, no command button (0.176502ms) # Chromium executable unavailable
+✔ served assets are the committed ones and app.js is the current bundle (1109.020379ms)
+✔ real server: list, snapshot, a cancellation written by another process seen by poll and relist (1156.487528ms)
+✔ real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes (1089.869263ms)
+✔ real server: another state behind the same address wipes the display (1901.028395ms)
+﹣ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (0.228688ms) # Chromium executable unavailable
+﹣ Chromium: a page opened through another Host is refused by the server, and the client says so (0.065317ms) # Chromium executable unavailable
+✔ token format is checked locally; nothing is sent for a malformed token (2.397861ms)
+✔ connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument (2.940786ms)
+✔ pagination sends next_cursor unchanged and stops at the end; never more than three pages (0.863349ms)
+✔ list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor (0.717643ms)
+✔ 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight (0.762479ms)
+✔ 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture (2.325735ms)
+✔ network failure: offline, data kept and dated; reconnect to the same store resumes (0.600059ms)
+✔ reconnection to another store wipes the previous display: no mixed identities (1.525209ms)
+✔ a list answering for another store than health is refused and nothing is shown (3.006533ms)
+✔ an answer for a previous selection never replaces the current one (0.869227ms)
+✔ disconnect forgets token and display; a late answer is dropped (0.474633ms)
+✔ poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload (1.812043ms)
+✔ an invalid or authority-claiming answer is rejected, never displayed (0.514021ms)
+✔ a malformed mission id is never turned into a request path (0.288447ms)
+✔ G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged (1.75584ms)
+✔ G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop (0.641791ms)
+✔ G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent (0.647549ms)
+✔ G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local (4.566352ms)
+✔ G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused (0.866984ms)
+✔ G036 a receipt answer arriving after another selection, or after disconnect, is dropped (0.690612ms)
+ℹ tests 53
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 12
+ℹ todo 0
+ℹ duration_ms 7222.638953
