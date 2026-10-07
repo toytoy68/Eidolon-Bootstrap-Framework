@@ -157,6 +157,37 @@ cette décision.
 Retenu : le client Windows sera construit avec **Tauri 2**, et non Electron.
 Rien n'est encore développé ni installé.
 
+**C-D15 — Recherche Web : D2 à D5 ; commandes distantes : T3 et T4.**
+Décision de toytoy, 07/10/2026 vers 09 h 20 (Europe/Paris), en réponse aux
+questions reposées par Claude : « D2-c D3-A D4- ip , iban , tel D5-A  T3 moi
+seul T4-A ».
+
+- **D2 = C** : aucune confirmation avant une recherche ; tout part
+  automatiquement (cohérent avec C-D13).
+- **D3 = A** : une requête écrite par le modèle part seule, comme une requête
+  tapée par toytoy.
+- **D4** : catégories retirées avant l'envoi : **adresse IP, IBAN,
+  téléphone**. Courriel, chemin local, paramètres d'URL et citation longue ne
+  sont pas dans la réponse. Le code actuel (`query_cleanup.py`) retire aussi
+  courriels, chemins et URL : l'écart est signalé à Codex et à toytoy, sans
+  modification à ce stade.
+- **D5 = A** : le texte envoyé (déjà nettoyé) est conservé localement, pour
+  relecture.
+- **D6** : sans objet, puisqu'aucune confirmation n'est demandée (D2 = C).
+- **T3** : toytoy **seul** peut envoyer des commandes distantes.
+- **T4 = A** : l'appairage n'expire pas ; il dure jusqu'à sa révocation.
+
+Rien n'est implémenté ni activé par cette décision.
+
+**C-D16 — D4 précisé : garder tous les retraits actuels.** Décision de
+toytoy, 07/10/2026 vers 09 h 22, en réponse à l'écart signalé par Claude
+(option A « garder aussi courriels, chemins locaux et liens web » ou B
+« seulement IP, IBAN, téléphone ») : « A ».
+Retenu : avant l'envoi, sont retirés **adresse IP, IBAN, téléphone,
+courriel, chemin local et URL** (avec ses paramètres). C'est le comportement
+actuel de `query_cleanup.py` : aucun changement de code requis. La citation
+longue d'un document privé n'est pas repérée automatiquement.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

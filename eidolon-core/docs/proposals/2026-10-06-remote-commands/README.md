@@ -140,5 +140,7 @@ Retenu :
 - T2 : appairage durable (option B, et non la recommandation A) ;
 - T5 : confirmation unique sur le PC.
 
-T3 et T4 restent ouverts. Rien n'est implémenté ni activé. Voir
+Complément du 07/10/2026 vers 09 h 20 : T3 = toytoy seul ; T4 = appairage
+sans expiration, jusqu'à révocation ([C-D15](../../CADRAGE-DECISIONS-2026-10-05.md)).
+Rien n'est implémenté ni activé. Voir
 [C-D12](../../CADRAGE-DECISIONS-2026-10-05.md).
