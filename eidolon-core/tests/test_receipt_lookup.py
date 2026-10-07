@@ -116,11 +116,53 @@ class ReceiptLookupTests(unittest.TestCase):
             detail = json.loads(raw)
             detail.pop("receipt_sha256")
             db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), receipt["event_sequence"]))
+            # Reproduce a pre-boundary database, not a downgraded new receipt.
+            db.execute("DELETE FROM sync_metadata WHERE key='receipt_hash_required_from'")
         before = self.store.path.read_bytes()
         result = lookup(self.reader, self.query)
         self.assertEqual(result["receipt_binding"], "LEGACY_FIELDS")
         self.assertEqual(result["receipt"], receipt)
         self.assertEqual(self.store.path.read_bytes(), before)
+
+    def test_new_event_cannot_be_downgraded_by_removing_only_its_hash(self):
+        receipt = self.record()
+        with self.store.connection() as db:
+            detail = json.loads(db.execute("SELECT detail FROM events WHERE sequence=?", (receipt["event_sequence"],)).fetchone()[0])
+            del detail["receipt_sha256"]
+            db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), receipt["event_sequence"]))
+        self.assert_error("RECEIPT_UNAVAILABLE")
+        self.replace({**receipt, "mission_status_at_recording": "RUNNING"})
+        self.assert_error("RECEIPT_UNAVAILABLE")
+
+    def test_boundary_does_not_retroactively_require_hash_on_legacy_receipt(self):
+        first = self.record()
+        with self.store.connection() as db:
+            detail = json.loads(db.execute("SELECT detail FROM events WHERE sequence=?", (first["event_sequence"],)).fetchone()[0])
+            del detail["receipt_sha256"]
+            db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), first["event_sequence"]))
+            db.execute("DELETE FROM sync_metadata WHERE key='receipt_hash_required_from'")
+        second_command = {**self.command, "command_key": "second"}
+        second = CancelCommands(self.store).submit(second_command)
+        self.assertGreater(second["event_sequence"], first["event_sequence"])
+        before = self.store.path.read_bytes()
+        self.assertEqual(lookup(self.reader, self.query)["receipt_binding"], "LEGACY_FIELDS")
+        self.assertEqual(lookup(self.reader, query_for(second_command))["receipt_binding"], "EVENT_HASH")
+        self.assertEqual(self.store.path.read_bytes(), before)
+
+    def test_invalid_boundary_is_refused_and_failed_receipt_does_not_leave_boundary(self):
+        with self.store.connection() as db:
+            db.execute("CREATE TRIGGER fail BEFORE INSERT ON command_receipts BEGIN SELECT RAISE(ABORT,'synthetic'); END")
+        import sqlite3
+        with self.assertRaises(sqlite3.Error):
+            self.record()
+        with self.store.connection() as db:
+            self.assertIsNone(db.execute("SELECT value FROM sync_metadata WHERE key='receipt_hash_required_from'").fetchone())
+            db.execute("DROP TRIGGER fail")
+        self.record()
+        for invalid in ("0", "01", "-1", "1.0", "x", "9" * 50, "9007199254740992", "9007199254740991"):
+            with self.store.connection() as db:
+                db.execute("UPDATE sync_metadata SET value=? WHERE key='receipt_hash_required_from'", (invalid,))
+            self.assert_error("RECEIPT_UNAVAILABLE")
 
     def test_malformed_or_wrong_event_hash_is_not_a_legacy_receipt(self):
         receipt = self.record()

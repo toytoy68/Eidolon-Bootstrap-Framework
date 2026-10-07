@@ -885,3 +885,12 @@ mémoire/modèle/outils/vérification, limite figée hors modèle, pas de remise
 à zéro par reprise/réconciliation. Compatibilité explicite pour anciennes
 missions sans budget ; aucun effet externe ni nouveau droit.
 Claude garde G047–G049 ; aucun fichier de son client modifié par ce lot.
+
+### C-016/C-017 — suivis G047/G048 pris par Codex
+
+G047 et G048 intégrés avec parents Claude conservés. SIGINT/SIGTERM de la
+recette : rapport INTERRUPTED, groupes de processus possédés nettoyés,
+fichiers temporaires retirés ; six tests de recette passent. G048 client :
+49 tests Node reproduits, 12 Chromium non exécutés. C-017 ajoute un seuil
+transactionnel de hash obligatoire pour les nouveaux reçus ; retrait isolé
+du hash refusé, anciens reçus non migrés, 69 tests ciblés réussis.

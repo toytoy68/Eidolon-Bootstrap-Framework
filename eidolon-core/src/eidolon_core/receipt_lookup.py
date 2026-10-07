@@ -124,10 +124,12 @@ def _decode(raw):
     return value
 
 
-def _bind_event(receipt, raw):
+def _bind_event(receipt, raw, *, require_hash=False):
     """Rebuild only the recorded command, never export the event's private detail."""
     detail = _object(raw)
     binding = "LEGACY_FIELDS"
+    if require_hash and "receipt_sha256" not in detail:
+        _fail()
     if "receipt_sha256" in detail:
         if not _match(r"[0-9a-f]{64}", detail["receipt_sha256"]) or detail["receipt_sha256"] != digest(receipt):
             _fail()
@@ -192,6 +194,19 @@ def lookup(store, query):
                 "CANCEL_REQUESTED" if receipt["cancel_outcome"] == "REQUESTED" else "CANCEL_COMMAND_RECORDED")
         if event is None or event[:3] != (query["mission_id"], receipt["recorded_at"], kind):
             _fail()
-        binding = _bind_event(receipt, event[3])
+        boundary = db.execute("SELECT substr(CAST(value AS BLOB),1,32) FROM sync_metadata "
+                              "WHERE key='receipt_hash_required_from'").fetchone()
+        required = False
+        if boundary is not None:
+            try:
+                start = boundary[0].decode('ascii')
+                if not _match(r'[1-9][0-9]{0,15}', start) or int(start) > MAX_SAFE_INTEGER:
+                    _fail()
+                if int(start) > db.execute('SELECT max(sequence) FROM events').fetchone()[0]:
+                    _fail()
+                required = receipt['event_sequence'] >= int(start)
+            except (ValueError, TypeError, UnicodeError, AttributeError):
+                _fail()
+        binding = _bind_event(receipt, event[3], require_hash=required)
         result.update(status="FOUND", receipt=receipt, receipt_binding=binding)
     return result

@@ -233,11 +233,22 @@ class Store:
                            "event_sequence": inserted.lastrowid, "recorded_at": recorded_at,
                            "execution_evidence": False}
                 event["receipt_sha256"] = digest(receipt)
+                self._require_receipt_hash(db, inserted.lastrowid)
                 db.execute("UPDATE events SET detail=? WHERE sequence=?",
                            (encode(event), inserted.lastrowid))
                 db.execute("INSERT INTO command_receipts (client_id,command_key,body) VALUES (?,?,?)",
                            (command["client_id"], command["command_key"], encode(receipt)))
         return receipt
+
+    @staticmethod
+    def _require_receipt_hash(db, sequence):
+        """Pin the first receipt requiring an event hash, in its transaction."""
+        row = db.execute("SELECT value FROM sync_metadata WHERE key='receipt_hash_required_from'").fetchone()
+        if row is None:
+            db.execute("INSERT INTO sync_metadata VALUES ('receipt_hash_required_from',?)", (str(sequence),))
+        elif (type(row[0]) is not str or not re.fullmatch(r'[1-9][0-9]{0,15}', row[0])
+              or not 1 <= int(row[0]) <= sequence <= 2**53 - 1):
+            raise ContractError("INVALID_RECEIPT_HASH_BOUNDARY")
 
     @staticmethod
     def _check_command_store(db, expected):
@@ -313,6 +324,7 @@ class Store:
                        "recorded_at": recorded_at, "execution_evidence": False,
                        "effect_absence_evidence": False}
             detail["receipt_sha256"] = digest(receipt)
+            self._require_receipt_hash(db, event.lastrowid)
             db.execute("UPDATE events SET detail=? WHERE sequence=?",
                        (encode(detail), event.lastrowid))
             db.execute("INSERT INTO command_receipts (client_id,command_key,body) VALUES (?,?,?)",

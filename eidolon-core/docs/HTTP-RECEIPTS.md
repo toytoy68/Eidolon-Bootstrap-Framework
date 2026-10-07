@@ -88,3 +88,22 @@ plus haut. Le lecteur CLI local de confiance ne réalise pas ce contrôle HTTP.
 Un hash n'est pas une signature : une réécriture cohérente du reçu, de
 l'événement **et de l'empreinte** reste hors détection. Rien dans cette liaison
 ne prouve l'exécution d'une action, un arrêt effectif ou une identité humaine.
+
+### Seuil obligatoire C-017 — suivi G048-1
+
+À partir de cette version, la première **nouvelle écriture** de reçu enregistre
+`sync_metadata.receipt_hash_required_from` dans la même transaction. L'empreinte
+est obligatoire pour tout reçu dont l'événement est à cette séquence ou après.
+Supprimer seulement la clé d'empreinte d'un tel événement donne désormais
+`RECEIPT_UNAVAILABLE`, jamais `LEGACY_FIELDS`. Le seuil reste fixé lors des
+écritures suivantes ; un seuil mal formé ou futur est refusé.
+
+Les événements antérieurs au seuil restent historiques : aucune migration ni
+inférence d'une date de déploiement n'est faite. Un reçu C-012 écrit **avant**
+l'introduction du seuil conserve donc cette limite en cas de retrait de son
+hash. Une suppression/modification coordonnée du seuil et des événements ou
+une restauration cohérente peut contourner le contrôle ; ce n'est toujours
+pas une signature. L'API de consultation ne crée ni ne répare le seuil.
+
+G048 est intégré : le client affiche désormais EVENT_HASH / contrôle limité /
+non précisé, sans confondre liaison au journal et preuve d'exécution.
