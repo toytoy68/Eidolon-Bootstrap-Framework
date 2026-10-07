@@ -12,9 +12,12 @@ autorisée sur `feat/eidolon-core-v0.1` ; aucun merge main ni déploiement.
 | C-022/C-023 et G055/G056 | Diagnostic local sans reprise ; CSP/Referrer-Policy sur saturation ; rapports Claude intégrés | 0e0b5d9f233928f21b99ca90cd7c8561d50b2117 |
 | C-024 et G078 | Lecture SQL des réservations de budget, proposition G056 adoptée | 7c8d97b7f2dfcd7c18e4be518e3a0ffa928257c7 |
 | C-025 | Inspection historique stricte et bornée, rapports contradictoires refusés | 9709dece29fa6815ad93301d3edc7a2887c5d736 |
+| Recette et G079 | Preuves globales/paquet et nouvelle contre-revue G061 | 5b465532b1ee2c78abadf3396323a7a2bfcd9eb8 |
+| C-026/C-027 | Parcours opérateur et trois consultations CLI sans initialisation/migration | 53ece44ae9b44e31d0bbaef8a57be762926f8f60 |
 
 Les arbres locaux et distants sont comparés à chaque publication. Les commits
-locaux équivalents sont respectivement 5545c56, 3e97f1f, a022297 et 6a182c4.
+locaux équivalents sont respectivement 5545c56, 3e97f1f, a022297, 6a182c4,
+ae24135 et ff4973f.
 Le connecteur GitHub crée les commits distants sans push forcé ; les parents
 Claude ont été conservés lors des intégrations.
 
@@ -38,6 +41,10 @@ Claude ont été conservés lors des intégrations.
 - [Archive C-025 publiée](source-archive-verify.json) : 67 fichiers vérifiés ;
   trois scénarios de recherche reçus via HTTP et acceptés par le client JS,
   [sans données privées exposées](archive-http-smoke.json).
+- [Archive C-027 publiée](archive-operator-smoke.json) : **68 fichiers**,
+  **43 modules identiques** au checkout, trois guides de diagnostic inclus.
+  Les six scénarios du parcours opérateur passent depuis les sources extraites
+  du commit 53ece44 ; fichiers et dossiers temporaires retirés.
 - Les preuves propres aux lots sont dans [C-022](../codex-runtime-inspect/README.md),
   [C-023](../codex-g055-followup/README.md), [C-024](../codex-g056-followup/README.md)
   [C-025](../codex-recovery-inspection/README.md) et
@@ -50,6 +57,7 @@ PYTHONPATH=src:. python -m unittest discover -s tests -t . -q
 PYTHONPATH=src:/chemin/copie-memory EIDOLON_MEMORY_INTEGRATION=1 python -m unittest tests.test_memory_engine -v
 node --test desktop/connected/tests/*.test.js desktop/connected/tests/integration/*.test.js
 python docs/validation/2026-10-07/codex-hour-1200/core-package-smoke.py
+python docs/validation/2026-10-07/codex-hour-1200/archive-operator-smoke.py 53ece44ae9b44e31d0bbaef8a57be762926f8f60
 ```
 
 ## Mesures et limites
@@ -69,7 +77,7 @@ cohérent et des délais physiques du stockage restent explicites.
 
 G055 et G056 reçus pendant cette heure et intégrés, tête observée 8c5f649.
 G057 puis les nouvelles G058/G059/G060/G061 sont prêts dans la file publiée.
-G061 porte sur la contre-revue des nouveaux diagnostics ; file renouvelée par G079.
+G061 porte sur la contre-revue des nouveaux diagnostics ; file renouvelée par G079 puis précisée par G080 (complément C-027).
 Un fichier de tâche ne démarre pas Claude et ne prouve pas sa présence continue.
 
 

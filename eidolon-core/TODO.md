@@ -15,7 +15,8 @@ six intégrations mémoire et 49 tests client réussis dans cette séance.
 Claude : G055/G056 intégrés ; G057–G061 disponibles,
 voir la [file active](collaboration/tasks/QUEUE.md). C-022 :
 diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
-C-025 inspection historique durcie. Fournisseurs externes, commandes
+C-025 inspection historique durcie ; C-026/C-027 parcours opérateur et lectures
+CLI sans migration. Fournisseurs externes, commandes
 distantes, rotation G057 et recette Windows/VM restent des lots distincts.
 Les sections datées ci-dessous conservent l’historique.
 

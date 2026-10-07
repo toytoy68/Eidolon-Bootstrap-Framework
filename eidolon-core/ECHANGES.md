@@ -1053,3 +1053,13 @@ d'exécution gardent leur comportement d'initialisation explicite.
 C-027 validé sur 59 tests ciblés, dont six nouveaux. Les trois consultations
 préservent les octets et refusent schémas anciens/incomplets sans migration.
 Recette globale et paquet réexécutés sur ce dernier changement CLI.
+
+
+### C-MSG-G080 — publications et recette de la dernière base
+
+C-026/C-027 publiés en 53ece44. 767 Python + six intégrations mémoire + 49 Node
+réussis ; 12 Chromium non exécutés. Le paquet installé et le parcours opérateur
+sur six missions passent ; archive publiée 68 fichiers/43 modules et trois
+guides vérifiés. Les consultations CLI ne migrent plus les données.
+G057–G061 restent prêts ; G061 reçoit un complément de contre-revue C-027.
+[Bilan de séance](docs/validation/2026-10-07/codex-hour-1200/README.md).

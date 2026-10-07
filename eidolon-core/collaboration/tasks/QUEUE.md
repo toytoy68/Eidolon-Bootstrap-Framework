@@ -1,9 +1,10 @@
-# File active — C-MSG-G079, 07/10/2026
+# File active — C-MSG-G080, 07/10/2026
 
 G050–G054 reçus et intégrés. C-019–C-021 publiés en 9ee40c9.
 G055/G056 reçus sur 8c5f649 et intégrés dans 0e0b5d9.
 C076 annonce la suite G057, puis G058/G059/G060. G079 ajoute G061,
-contre-revue C-022/C-025 ; les cinq lots sont disponibles sans attente.
+contre-revue C-022/C-025 ; G080 ajoute le complément CLI C-027.
+Les cinq lots sont disponibles sans attente.
 
 | Ordre | Tâche | État |
 | --- | --- | --- |

@@ -34,3 +34,14 @@ Distinguer tests exécutés et conclusions par lecture. Aucun main, déploiement
 VM utilisateur, fournisseur réel ni modification Memory Engine. La demande de
 toytoy autorise cette suite locale sans nouveau feu vert ; le fichier ne démarre
 pas une session Claude.
+
+
+## Complément G080 — consultation CLI C-027
+
+Base additionnelle publiée : `53ece44ae9b44e31d0bbaef8a57be762926f8f60`.
+Les diagnostics initiaux peuvent rester sur 9709dec. Sur cette nouvelle base,
+contre-vérifier client-missions/client-snapshot/client-poll : fichier courant
+préservé, schéma ancien/table requise manquante refusés sans migration, état
+bêta incomplet refusé, pagination/reset inchangés. Comparer aussi état absent,
+copie historique et capture sous écrivain concurrent sur corpus temporaire.
+Les protocoles n’ont pas changé ; aucune modification Core demandée.
