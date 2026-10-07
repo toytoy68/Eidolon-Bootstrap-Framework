@@ -1,0 +1,24 @@
+{
+  "refusals": [
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError",
+    "TypeError"
+  ],
+  "fd_before": 4,
+  "fd_before_gc": 4,
+  "fd_after_gc": 4,
+  "active_database_unchanged": true,
+  "archives_created": 0,
+  "proposal_unchanged": true,
+  "tested_on_temporary_copy": true,
+  "integrated_into_core": false,
+  "grouped_assertions_passed": 21,
+  "temporary_copy_removed": true
+}

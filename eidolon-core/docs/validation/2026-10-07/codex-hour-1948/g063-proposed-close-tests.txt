@@ -1,0 +1,26 @@
+test_keeps_target_and_mission_runs (tests_g062.Automatic.test_keeps_target_and_mission_runs) ... ok
+test_overshoot_reported_when_missions_protected (tests_g062.Automatic.test_overshoot_reported_when_missions_protected) ... ok
+test_recovers_partial_and_uncommitted (tests_g062.Automatic.test_recovers_partial_and_uncommitted) ... ok
+test_refuses_during_intent_and_in_flight (tests_g062.Automatic.test_refuses_during_intent_and_in_flight) ... ok
+test_foreign_guard_id_in_export (tests_g062.CodexCounterExamples.test_foreign_guard_id_in_export) ... ok
+test_genuine_resume_still_works (tests_g062.CodexCounterExamples.test_genuine_resume_still_works) ... ok
+test_modified_cleaned_query_in_export (tests_g062.CodexCounterExamples.test_modified_cleaned_query_in_export) ... ok
+test_null_cleaned_query_in_export (tests_g062.CodexCounterExamples.test_null_cleaned_query_in_export) ... ok
+test_prior_archive_altered_during_resume (tests_g062.CodexCounterExamples.test_prior_archive_altered_during_resume) ... ok
+test_prior_archive_missing_during_resume (tests_g062.CodexCounterExamples.test_prior_archive_missing_during_resume) ... ok
+test_chain_entry_with_path_in_file_name (tests_g062.ExportBounds.test_chain_entry_with_path_in_file_name) ... ok
+test_duplicate_key_and_oversize_and_symlink (tests_g062.ExportBounds.test_duplicate_key_and_oversize_and_symlink) ... ok
+test_rows_only_in_wal_are_seen (tests_g062.WalSnapshot.test_rows_only_in_wal_are_seen) ... ok
+test_codex_partial_kept_when_intent_is_uncertain (tests_g063.Conservation.test_codex_partial_kept_when_intent_is_uncertain) ... ok
+test_complete_own_partial_is_removed_only_when_redundant (tests_g063.Conservation.test_complete_own_partial_is_removed_only_when_redundant) ... ok
+test_every_crash_point_conserves_and_resumes_idempotently (tests_g063.Conservation.test_every_crash_point_conserves_and_resumes_idempotently) ... ok
+test_fifo_and_special_files_never_block (tests_g063.Conservation.test_fifo_and_special_files_never_block) ... ok
+test_published_file_differs_from_written_bytes (tests_g063.Conservation.test_published_file_differs_from_written_bytes) ... ok
+test_short_writes_are_completed (tests_g063.Conservation.test_short_writes_are_completed) ... ok
+test_unknown_or_truncated_partials_are_kept (tests_g063.Conservation.test_unknown_or_truncated_partials_are_kept) ... ok
+test_zero_write_and_no_space_remove_nothing (tests_g063.Conservation.test_zero_write_and_no_space_remove_nothing) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 3.139s
+
+OK

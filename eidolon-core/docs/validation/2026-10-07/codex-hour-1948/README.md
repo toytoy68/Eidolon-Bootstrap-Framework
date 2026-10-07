@@ -88,3 +88,20 @@ PYTHONPATH=src:. python docs/validation/2026-10-07/codex-hour-1948/archive-scali
 La lecture du rapport ne donne aucun droit de reprise, d'exécution ou de retrait
 actif. Les pourcentages du bilan sont des estimations de périmètre documentées,
 pas une transformation du taux de réussite des tests en avancement produit.
+
+
+## Archive publiée et proposition de correctif
+
+Sur d44bad837f9f492a775583a53a5fe9fef650c475 : archive de 79 fichiers (220 111 octets),
+empreinte 1b923b1318984426ba8563de924e9916549ee06596c197e761ff10c6b5d34ea0.
+Structure et manifeste vérifiés, quatre nouveaux guides présents, 25 contrôles
+rejoués depuis l'extraction. Archive temporaire supprimée après vérification ;
+pas de publication de release ou d'installation utilisateur. Reproductible avec
+source-bundle-smoke.py et le commit complet ; published-source-bundle.json.
+
+La proposition g063-snapshot-close.patch a ensuite été testée sur une copie
+jetable, sans toucher aux sources de Claude : 21 tests réussis avec GC désactivé ;
+dix refus sur métadonnées invalides gardent 4→4 descripteurs avant toute collecte.
+TypeError reste brut dans cette proposition minimale. G068 doit revoir/intégrer
+le correctif et compléter les autres limites. Voir check-snapshot-close.py,
+g063-proposed-close-tests.txt et g063-proposed-close.json. Rotation non activée.

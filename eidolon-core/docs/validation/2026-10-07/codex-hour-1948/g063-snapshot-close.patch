@@ -1,0 +1,27 @@
+--- a/eidolon-core/docs/proposals/2026-10-07-research-retention/rotation.py
++++ b/eidolon-core/docs/proposals/2026-10-07-research-retention/rotation.py
+@@ -162,6 +162,7 @@
+             sys.path.insert(0, guard_src)
+         from eidolon_core.research_guard import ResearchGuard
+         self.tmp = tempfile.mkdtemp(prefix="g062-shadow-")
++        src = dst = None
+         try:
+             shadow = Path(self.tmp) / "guard"
+             shadow.mkdir(mode=0o700)
+@@ -193,10 +194,13 @@
+             fd = os.open(shadow / "research-runs.lock", os.O_CREAT | os.O_WRONLY, 0o600)
+             os.close(fd)
+             self.runs = ResearchGuard(shadow, create=False).inspect()["runs"]
+-        except BaseException:
++        finally:
++            # Also close when backup, metadata or chain validation fails.
++            if src is not None:
++                src.close()
++            if dst is not None:
++                dst.close()
+             shutil.rmtree(self.tmp, ignore_errors=True)
+-            raise
+-        shutil.rmtree(self.tmp, ignore_errors=True)
+ 
+ 
+ def _check_archives(directory, archive_dir, snap, *, allow_uncommitted):

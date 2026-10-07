@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "commit": "d44bad837f9f492a775583a53a5fe9fef650c475",
+  "source_files": 79,
+  "archive_bytes": 220111,
+  "archive_sha256": "1b923b1318984426ba8563de924e9916549ee06596c197e761ff10c6b5d34ea0",
+  "verification": {
+    "verified": true,
+    "commit": "d44bad837f9f492a775583a53a5fe9fef650c475",
+    "files": 79,
+    "authenticity_verified": false
+  },
+  "new_guides_present": true,
+  "extracted_recipe_checks": 25,
+  "browser_or_user_server_tested": false,
+  "temporary_files_removed": true
+}

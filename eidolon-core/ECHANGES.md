@@ -1170,3 +1170,10 @@ ignorés ; paquet installé 47 modules, recettes 24+25. Catalogue 1 000 petites
 archives synthétiques servi en 147 ms environ, mesure locale unique. Bilan
 PROJECT-STATUS : bêta observateur ~80 %, vision complète ~40 %, pondérations
 explicites ; qualification VM/Windows et vrai modèle toujours absente.
+
+### G087 — consolidation à 2026-10-07T20:43:01+02:00
+
+Archive d44bad8 vérifiée (79 fichiers, recette extraite 25 contrôles). Proposition
+g063-snapshot-close testée sur copie, 21 assertions avec GC désactivé ; 4→4
+descripteurs avant GC. Sources Claude intactes, correction transmise à G068.
+C-030 prêt pour G066/G071 ; six nouvelles tâches restent disponibles.

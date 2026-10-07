@@ -27,3 +27,9 @@ Ton périmètre est étendu à ce correctif local dans rotation.py et ses tests.
 Tester avec GC désactivé ; un gc.collect avant/après ne remplace pas finally/close.
 Les preuves G063 historiques restent inchangées. Vérifier également le budget
 de l'online backup sous writer concurrent (par lecture, pas de délai explicite).
+
+
+G087 : proposition concrète g063-snapshot-close.patch et check-snapshot-close.py
+au même chemin de preuves. Sur copie : 21 tests réussis avec GC désactivé et
+4→4 descripteurs avant GC. Aucun source de la proposition modifié. Examiner et
+intégrer si pertinent ; compléter le diagnostic constant et le budget de copie.

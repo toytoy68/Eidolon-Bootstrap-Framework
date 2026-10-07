@@ -141,3 +141,10 @@ PYTHONPATH=src python -m eidolon_core.beta_check \
 
 Cette commande ne choisit pas de modèle, n'accède pas au NAS et ne contacte pas
 Internet. Un PASS local prépare l'essai PC ; il ne remplace pas cet essai.
+
+
+Mise à jour de fin de recette : l'archive du commit d44bad8 (79 fichiers) est
+vérifiée et ses 25 contrôles recherches/archives passent depuis l'extraction.
+Une proposition de fermeture SQLite est fournie à G068 : sur copie isolée,
+21 tests réussis avec GC désactivé, aucune fuite mesurée sur les dix refus reproduits.
+Cela ne constitue pas l'intégration de la rotation dans Core.

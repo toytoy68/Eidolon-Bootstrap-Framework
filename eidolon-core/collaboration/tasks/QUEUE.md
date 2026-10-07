@@ -1,4 +1,4 @@
-# File active — C-MSG-G085, 07/10/2026, 19 h 48 Paris
+# File active — C-MSG-G087, 07/10/2026 au soir
 
 G063 reçu sur 56aa33f. Finir G064/G065 puis six nouveaux lots demandés aujourd'hui.
 
@@ -6,13 +6,15 @@ G063 reçu sur 56aa33f. Finir G064/G065 puis six nouveaux lots demandés aujourd
 | --- | --- | --- |
 | 1 | [G064](C-TASK-G064.md) — Contre-revue archives/initialisation | PRÊT, base 896bb0e |
 | 2 | [G065](C-TASK-G065.md) — Diagnostics G061 | PRÊT |
-| 3 | [G066](C-TASK-G066.md) — Afficher les archives dans le client connecté | PRÊT après C-030 |
+| 3 | [G066](C-TASK-G066.md) — Afficher les archives dans le client connecté | PRÊT, C-030 publié |
 | 4 | [G067](C-TASK-G067.md) — Contre-revue des lectures SQLite bornées | PRÊT |
 | 5 | [G068](C-TASK-G068.md) — Préparer la qualification du producteur de rotation | PRÊT |
 | 6 | [G069](C-TASK-G069.md) — Recette indépendante du paquet installé | PRÊT |
 | 7 | [G070](C-TASK-G070.md) — Éprouver annulation et reprise concurrentes | PRÊT |
-| 8 | [G071](C-TASK-G071.md) — Contre-revue de la consultation HTTP des archives | PRÊT après C-030 |
+| 8 | [G071](C-TASK-G071.md) — Contre-revue de la consultation HTTP des archives | PRÊT, C-030 publié |
 
+Base complète C-030–C-033 : d44bad8. G068 reçoit un correctif testé sur copie
+pour la fermeture SQLite ; voir G087. Dernière livraison Claude observée : G063.
 La file ne démarre aucune session. Sections suivantes historiques.
 
 ---
