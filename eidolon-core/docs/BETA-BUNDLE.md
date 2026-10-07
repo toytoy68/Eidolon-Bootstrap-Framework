@@ -98,3 +98,11 @@ Les documents BETA-LOCAL-CHECK et READ-TOKEN rejoignent la liste incluse.
 L'outil de vérification reste celui du checkout de confiance, pas un programme
 à exécuter depuis une archive inconnue. Preuves avant/après dans
 [le bilan Codex](validation/2026-10-07/codex-g042-g044/README.md).
+
+## Documents optionnels ajoutés le 07/10
+
+QUERY-CLEANUP, RESEARCH-GUARD, INVOCATION-BUDGET, QUERY-HISTORY et
+RESEARCH-MISSIONS sont inclus quand ils existent au commit sélectionné.
+La coquille Tauri et ses sources restent hors de cette archive serveur/client
+Web ; consulter le dépôt complet pour ce prototype. Les liens du README vers
+des composants exclus ne rendent pas ces composants présents dans l’archive.

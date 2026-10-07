@@ -269,11 +269,14 @@ class ResearchCoordinator:
         else:
             self._cooldowns[domain] = (until, state, review)
 
-    def run(self, query, *, required_pages=1, cancelled=lambda: False):
+    def run(self, query, *, required_pages=1, cancelled=lambda: False, operation_id=None):
         # Clean exactly once; use the same immutable value for history and providers.
         cleaned = clean_query(query)
         if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
             raise ContractError("required_pages must fit the read budget")
+        if operation_id is not None and (self.guard is None or type(operation_id) is not str
+                or re.fullmatch(r"m-[0-9a-f]{32}", operation_id) is None):
+            raise ContractError("INVALID_RESEARCH_OPERATION")
         if self.guard is None:
             return self._run(cleaned, required_pages=required_pages, cancelled=cancelled)
         return self.guard.execute(
@@ -281,7 +284,8 @@ class ResearchCoordinator:
             cleaned_query=cleaned if self.guard.retain_queries else None,
             descriptor={"query_sha256": cleaned.cleaned_sha256,
                         "policy_id": self.policy.policy_id,
-                        "providers": [p.provider_id for p in self.providers[:self.limits.providers]]})
+                        "providers": [p.provider_id for p in self.providers[:self.limits.providers]],
+                        **({"operation_id": operation_id} if operation_id is not None else {})})
 
     def _run(self, cleaned, *, required_pages=1, cancelled=lambda: False):
         if self._pause_fault:

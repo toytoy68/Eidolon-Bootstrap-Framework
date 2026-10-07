@@ -87,3 +87,11 @@ nouvelle recherche. La suppression/restauration de toute la base ou sa réécrit
 cohérente ne sont pas détectables sans référence externe ; aucun mécanisme
 cryptographique d’authenticité n’est prétendu. Pas de Windows/NFS ni de coupure
 électrique réelle validés.
+
+## Liaison mission synthétique — C-021
+
+Un descripteur peut maintenant porter `operation_id=m-ID`, une identité de
+mission générée par Core. Elle est auditée avec l’intention et relue lors de la
+vérification du résultat. Elle ne contient pas la requête. Le texte de demande
+brut peut exister dans le magasin local des missions, distinct de cet historique
+nettoyé ; voir [RESEARCH-MISSIONS.md](RESEARCH-MISSIONS.md).

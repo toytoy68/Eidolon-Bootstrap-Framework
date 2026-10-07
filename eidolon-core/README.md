@@ -96,9 +96,19 @@ La fenêtre charge le client servi par Core, ne crée ni tunnel ni appairage.
 Le parcours Windows, le tunnel SSH et le serveur de toytoy restent à valider.
 
 Le [nettoyage des requêtes](docs/QUERY-CLEANUP.md), les pauses et la garde de
-recherche sont candidats hors runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
+recherche sont candidats pour le réseau réel ; seul le profil synthétique
+est raccordé au runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
 est disponible sur activation explicite, sans route HTTP ni fournisseur réel.
 Le plafond de 256 recherches reste bloquant tant que la rotation n’est pas livrée.
+
+## Mission de recherche synthétique
+
+Le profil `research-sim` relie désormais la recherche au cycle de mission,
+avec objectif hors modèle, budget, garde/historique et vérification sans réseau.
+[Contrat et commandes](docs/RESEARCH-MISSIONS.md) : deux pages fictives distinctes,
+scénarios partiel/vide/refus, reprise sans rejouer une recherche déjà enregistrée.
+Ce raccordement ne configure aucun fournisseur Internet et ne constitue pas
+une réponse vérifiée à une question générale.
 
 ## Prototype graphique autonome
 

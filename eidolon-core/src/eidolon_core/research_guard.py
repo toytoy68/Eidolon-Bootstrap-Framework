@@ -44,8 +44,9 @@ def _match(pattern, value):
 
 
 def _descriptor(value):
-    if (type(value) is not dict or set(value) not in ({"query_sha256", "policy_id", "providers"},
-                                               {"query_sha256", "policy_id", "providers", "query_history_sha256"})
+    base = {"query_sha256", "policy_id", "providers"}
+    if (type(value) is not dict or not base <= set(value)
+            or not set(value) <= base | {"query_history_sha256", "operation_id"}
             or not _match(r"[0-9a-f]{64}", value["query_sha256"])
             or not _match(r"[A-Za-z0-9._/-]{1,100}", value["policy_id"])
             or type(value["providers"]) is not list or not 1 <= len(value["providers"]) <= 8
@@ -53,6 +54,8 @@ def _descriptor(value):
             or len(set(value["providers"])) != len(value["providers"])):
         raise GuardError("INVALID_RESEARCH_DESCRIPTOR")
     if "query_history_sha256" in value and not _match(r"[0-9a-f]{64}", value["query_history_sha256"]):
+        raise GuardError("INVALID_RESEARCH_DESCRIPTOR")
+    if "operation_id" in value and not _match(r"m-[0-9a-f]{32}", value["operation_id"]):
         raise GuardError("INVALID_RESEARCH_DESCRIPTOR")
     return snapshot(value)
 

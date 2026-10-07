@@ -1,0 +1,23 @@
+test_budget_preserves_room_for_verification (tests.test_research_runtime.ResearchRuntimeTests.test_budget_preserves_room_for_verification) ... ok
+test_busy_guard_delays_verification_without_failure_or_research_replay (tests.test_research_runtime.ResearchRuntimeTests.test_busy_guard_delays_verification_without_failure_or_research_replay) ... ok
+test_cancel_before_run_creates_no_research (tests.test_research_runtime.ResearchRuntimeTests.test_cancel_before_run_creates_no_research) ... ok
+test_cleaned_empty_is_not_a_success_or_provider_call (tests.test_research_runtime.ResearchRuntimeTests.test_cleaned_empty_is_not_a_success_or_provider_call) ... ok
+test_cli_research_profile_and_resume (tests.test_research_runtime.ResearchRuntimeTests.test_cli_research_profile_and_resume) ... ok
+test_crash_after_durable_result_only_retries_verification (tests.test_research_runtime.ResearchRuntimeTests.test_crash_after_durable_result_only_retries_verification) ... ok
+test_crash_before_mission_receipt_never_blindly_replays_research (tests.test_research_runtime.ResearchRuntimeTests.test_crash_before_mission_receipt_never_blindly_replays_research) ... ok
+test_default_pure_policy_and_explicit_denial_prevent_retrieval (tests.test_research_runtime.ResearchRuntimeTests.test_default_pure_policy_and_explicit_denial_prevent_retrieval) ... ok
+test_empty_memory_does_not_block_an_explicit_retrieval_objective (tests.test_research_runtime.ResearchRuntimeTests.test_empty_memory_does_not_block_an_explicit_retrieval_objective) ... ok
+test_end_to_end_success_is_retrieval_not_truth (tests.test_research_runtime.ResearchRuntimeTests.test_end_to_end_success_is_retrieval_not_truth) ... ok
+test_fixture_backend_never_uses_socket_or_external_dns (tests.test_research_runtime.ResearchRuntimeTests.test_fixture_backend_never_uses_socket_or_external_dns) ... ok
+test_invalid_query_or_page_count_creates_no_mission (tests.test_research_runtime.ResearchRuntimeTests.test_invalid_query_or_page_count_creates_no_mission) ... ok
+test_memory_cannot_replace_runtime_objective_and_human_scope_is_exact (tests.test_research_runtime.ResearchRuntimeTests.test_memory_cannot_replace_runtime_objective_and_human_scope_is_exact) ... ok
+test_missing_guard_does_not_get_recreated_by_verifier_or_executor (tests.test_research_runtime.ResearchRuntimeTests.test_missing_guard_does_not_get_recreated_by_verifier_or_executor) ... ok
+test_model_cannot_change_query_count_or_operation_identity (tests.test_research_runtime.ResearchRuntimeTests.test_model_cannot_change_query_count_or_operation_identity) ... ok
+test_partial_empty_and_blocked_have_verified_evidence_without_success (tests.test_research_runtime.ResearchRuntimeTests.test_partial_empty_and_blocked_have_verified_evidence_without_success) ... ok
+test_verifier_refuses_tampered_report_and_other_mission_replay (tests.test_research_runtime.ResearchRuntimeTests.test_verifier_refuses_tampered_report_and_other_mission_replay) ... ok
+test_wrong_scenario_or_guard_identity_blocks_resume (tests.test_research_runtime.ResearchRuntimeTests.test_wrong_scenario_or_guard_identity_blocks_resume) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 6.645s
+
+OK

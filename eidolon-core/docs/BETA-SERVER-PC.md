@@ -21,8 +21,10 @@ NAS/fichiers Windows, voix/caméra et robot restent des recettes séparées.
 
 ## Répartition active au 07/10
 
-[Tranche de 12 tâches](PLAN-2026-10-07.md) : G042–G044 pour Claude,
-C-010a–i pour Codex. G036–G041 intégrés depuis 310d94b ; étude G041 sans activation.
+La [tranche initiale](PLAN-2026-10-07.md) est conservée comme historique.
+G042–G054 sont intégrés ; Claude poursuit G055–G057 dans la
+[file active](../collaboration/tasks/QUEUE.md). Codex a livré C-019–C-021 :
+historique nettoyé, extraction HTML durcie et missions de recherche synthétique.
 
 ## Conditions avant de parler de bêta utilisable
 
@@ -70,3 +72,16 @@ sont fournis séparément par `--web-root`, ils ne sont pas contenus dans le whe
 La validation locale ne remplace pas les essais sur Debian 13, Windows ou SSH.
 Le lanceur PowerShell reste candidat ; ses chemins relatifs de diagnostic
 sont corrigés, mais ce n'est pas une exécution Windows.
+
+
+## Actualisation du 07/10, C-021
+
+Le profil local `research-sim` exécute la boucle de mission sur pages fixes,
+avec objectif, garde, historique nettoyé et vérification liés à la mission.
+Il ne contacte aucun fournisseur réel. Voir [le parcours](RESEARCH-MISSIONS.md).
+Le paquet installé passe 24 contrôles bêta, puis la création, la reprise et
+la lecture d’historique d’une mission de deux pages ; 733 tests Python et
+six intégrations mémoire sur corpus temporaire passent. 49 tests du client
+passent ; les 12 cas Chromium restent ignorés dans cet environnement.
+[Preuves actuelles](validation/2026-10-07/codex-research-runtime/README.md).
+La qualification Debian/Windows/SSH sur les machines utilisateur reste ouverte.

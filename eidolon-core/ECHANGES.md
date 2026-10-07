@@ -931,3 +931,21 @@ normalisation bornée des titres de challenge (dont points de suspension Unicode
 empreinte du texte décodé distincte des octets source et déduplication avec BOM.
 Aucun contournement de challenge ni nouvelle lecture réseau. Claude conserve
 G054–G057 et ses fichiers Desktop/mesures/proposition de rotation.
+
+### C-021 — réservation Codex, mission de recherche synthétique
+
+Codex prend objectives.py/runtime.py/cli.py et un nouveau research_runtime.py,
+tests/docs dédiés. Objectif explicite de récupération de pages, oracle synthétique
+et vérification liée au journal C-019. Aucun fournisseur configurable/externe,
+aucune extension de permission réelle. G056 peut mesurer le budget inchangé ;
+Claude conserve Desktop et la proposition G057.
+
+
+### C-021 — validation terminée, publication autorisée
+
+Profil de recherche synthétique relié au runtime et à la garde C-019 ;
+paramètres liés à la mission, contrôle du rapport durable, partiel conservé,
+reprise de vérification sans nouvelle recherche. 733 Python + six intégrations
+mémoire réussis ; paquet installé 42 modules identiques, 24 contrôles bêta et
+mission de deux pages. Aucun fournisseur ni permission réseau réelle ajouté.
+Claude conserve G055–G057, dernière livraison distante f5e002a (G054).

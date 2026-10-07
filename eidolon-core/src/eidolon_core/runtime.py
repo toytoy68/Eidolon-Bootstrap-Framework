@@ -13,7 +13,7 @@ import math
 from .contracts import ContractError, digest, parse_plan, snapshot, validate_context
 from .memory import SyntheticMemory
 from .model import DeterministicModel
-from .objectives import DIAGNOSTIC, RESTART, TARGETED, bind, check_contract, check_plan, diagnostic_request, restart_parameters
+from .objectives import DIAGNOSTIC, RESTART, RESEARCH, TARGETED, assess, bind, check_contract, check_plan, diagnostic_request, restart_parameters
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
 from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
@@ -209,6 +209,7 @@ class Runtime:
         except ContractError as exc:
             return self._stop(m, "BLOCKED", "MISSION_CONTRACT_INVALID", str(exc))
         diagnostic = m["objective"]["kind"] in TARGETED
+        research = m["objective"]["kind"] == RESEARCH
         if diagnostic and m["objective"]["selection_status"] != "FOUND":
             return self._stop(m, "BLOCKED", m["objective"]["selection_status"],
                               "select one configured target with the required capability")
@@ -219,7 +220,7 @@ class Runtime:
             return self._stop(m, "BLOCKED", "CONFIGURATION_CHANGED",
                               "restore the mission configuration or create a new mission")
         # Explicit resume may retry an empty recall; no plan/tool existed.
-        if (not diagnostic and m["context"] is not None and not m["context"]["items"]
+        if (not diagnostic and not research and m["context"] is not None and not m["context"]["items"]
                 and m["plan"] is None and not m["calls"]):
             m["context"] = None
             m["objective"].update(required_references=None, context_sha256=None)
@@ -236,7 +237,7 @@ class Runtime:
             m["objective"] = bind(m["objective"], m["context"])
             m["phase"] = "PLAN"
             self._save(m, "CONTEXT_SAVED", {"context_sha256": digest(m["context"])})
-        if not diagnostic and not m["context"]["items"]:
+        if not diagnostic and not research and not m["context"]["items"]:
             return self._stop(m, "BLOCKED", "MEMORY_EMPTY",
                               "no recalled evidence; explicit resume can retry recall")
         prepared = self._prepare(m)
@@ -246,6 +247,8 @@ class Runtime:
             try:
                 if m["model_output"] is None:
                     model_context = snapshot(m["context"])
+                    if research:
+                        model_context["_core_research"] = {**snapshot(m["objective"]), "operation_id": m["id"]}
                     if diagnostic:
                         # Overwrite any similarly named untrusted memory field.
                         model_context["_core_mission"] = snapshot(m["objective"])
@@ -332,6 +335,9 @@ class Runtime:
             self._save(m, "RESULT_VERIFIED", {"call_id": call["id"], "verifier": tool.verifier_id})
         if self._cancelled(m):
             return self._stop(m, "CANCELLED", "CANCELLED", "cancellation requested; received results verified")
+        if research and assess(m)["status"] != "ACHIEVED":
+            return self._stop(m, "BLOCKED", "RETRIEVAL_TARGET_NOT_MET",
+                              "verified partial/empty retrieval retained; create a new mission for another search")
         m.update(status="SUCCEEDED", phase="DONE", error=None,
                  result={"summary": "Statistiques vérifiées sur les extraits conservés.",
                          "evidence": [{"call_id": c["id"], "attempt": c["attempt"],
@@ -350,6 +356,12 @@ class Runtime:
                                        "Actor is an audit label, not an authenticated identity.",
                                        "Receipt proves a past transition; current health can change.",
                                        "Memory epistemic labels remain unchanged."])
+        elif research:
+            m["result"].update(summary="Récupération synthétique vérifiée ; contenu non confirmé.",
+                               research=snapshot(m["calls"][0]["output"]),
+                               limits=["Synthetic fixtures only; no network or real provider.",
+                                       "Retrieved pages are not an answer or a verification of source truth.",
+                                       "Partial/empty retrieval does not satisfy the required page count."])
         elif diagnostic:
             observation = m["calls"][0]["output"]
             m["result"]["summary"] = ("Diagnostic synthétique vérifié : "

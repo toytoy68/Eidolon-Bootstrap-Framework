@@ -31,7 +31,9 @@ def main(argv=None):
     parser.add_argument("--max-invocations", type=int, default=64,
                         help="durable per-mission invocation limit (1–4096); 0 explicitly uses the legacy unbounded configuration")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
-    parser.add_argument("--profile", choices=("text", "service-sim", "action-sim"), default="text")
+    parser.add_argument("--profile", choices=("text", "service-sim", "action-sim", "research-sim"), default="text")
+    parser.add_argument("--research-scenario", choices=("readable","partial","empty","blocked"), default="readable",
+                        help="fixed research fixtures only; no network")
     parser.add_argument("--targets", help="catalog JSON for a simulation profile; destinations are never contacted")
     parser.add_argument("--allow-target", action="append", help="allowed synthetic target id; replaces default fixture grants")
     parser.add_argument("--format", choices=("json", "human"), default="json",
@@ -52,6 +54,10 @@ def main(argv=None):
     release.add_argument("--reason", required=True)
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="create and run the deterministic synthetic mission")
+    research = commands.add_parser("research", help="retrieve fixed synthetic pages, requires --profile research-sim")
+    research.add_argument("query")
+    research.add_argument("--required-pages",type=int,default=1)
+    research.add_argument("--create-only",action="store_true")
     diagnose = commands.add_parser("diagnose", help="observe one synthetic service, requires --profile service-sim")
     diagnose.add_argument("target")
     diagnose.add_argument("--create-only", action="store_true")
@@ -129,14 +135,18 @@ def main(argv=None):
             text = preview()
             print(text if args.format == "human" else encode({"standard": PRESENTATION_STANDARD, "preview": text}))
             return 0
-        if args.profile == "text" and (args.targets or args.allow_target):
+        if args.profile in {"text","research-sim"} and (args.targets or args.allow_target):
             raise ValueError("target options require a simulation profile")
+        if args.command == "research" and args.profile != "research-sim":
+            raise ValueError("research requires --profile research-sim; no real provider is configured")
+        if args.research_scenario != "readable" and args.profile != "research-sim":
+            raise ValueError("research scenario requires --profile research-sim")
         if args.command == "diagnose" and args.profile != "service-sim":
             raise ValueError("diagnose requires --profile service-sim")
         if args.command in {"restart", "decide", "fixture", "command-submit"} and args.profile != "action-sim":
             raise ValueError("action commands require --profile action-sim")
         if args.profile != "text" and args.command in {"demo", "create"}:
-            raise ValueError("simulation missions are created with diagnose or restart")
+            raise ValueError("simulation missions are created with diagnose, restart or research")
         if args.command == "command-cancel":
             from .commands import CancelCommands, parse_cancel_command
             with Path(args.request).open("rb") as handle:
@@ -214,6 +224,9 @@ def main(argv=None):
                    "memory": EngineMemory(str(Path(args.memory_root).resolve())) if args.memory_root else None}
         runtime = (synthetic_runtime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
                    if args.profile == "service-sim" else Runtime(store, **options))
+        if args.profile == "research-sim":
+            from .research_runtime import ResearchRuntime
+            runtime = ResearchRuntime(store,scenario=args.research_scenario,**options)
         if args.profile == "action-sim":
             runtime = ActionRuntime(store, catalog=catalog, allowed_targets=args.allow_target, **options)
         if args.command == "command-submit":
@@ -234,7 +247,11 @@ def main(argv=None):
             else:
                 print(encode(result))
             return 0
-        if args.command == "restart":
+        if args.command == "research":
+            result = runtime.create_research(args.query,required_pages=args.required_pages)
+            if not args.create_only:
+                result = runtime.run(result["id"])
+        elif args.command == "restart":
             result = runtime.run(runtime.create_restart(args.target)["id"])
         elif args.command == "decide":
             result = runtime.decide(args.mission_id, expected_sha256=args.proposal_sha,

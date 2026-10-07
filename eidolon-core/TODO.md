@@ -497,4 +497,19 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 - [x] Schéma 2 explicite, ancien texte non inventé, garde obligatoire après activation.
 - [x] Pagination bornée avec reset sur modification, CLI locale seule.
 - [x] 71 tests ciblés ; suite 713 réussis/6 ignorés puis six intégrations mémoire réussies.
-- [ ] Rotation explicite (G057), journal par saut, intégration runtime et recette VM.
+- [x] Raccordement au runtime sur fixtures uniquement : C-021.
+- [ ] Rotation explicite (G057), journal par saut, fournisseurs réels et recette VM.
+
+
+## C-021 — missions de recherche synthétique — 07/10/2026
+
+- [x] Profil CLI `research-sim`, objectif fixé hors modèle et lié à la mission.
+- [x] Nettoyage/historique/pauses, exécution et vérification intégrés au runtime.
+- [x] Partiel/vide conservés sans succès ; reprise sans répétition de la recherche.
+- [x] Journal occupé : vérification différée, preuves reçues conservées.
+- [x] 18 tests dédiés ; 733 Python réussis/6 ignorés puis six intégrations mémoire réussies.
+- [x] Wheel isolé : 42 modules identiques, 24 contrôles bêta et mission de deux pages.
+- [ ] Contre-revue indépendante, rotation G057, permissions et fournisseurs réels.
+
+Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
+[preuves](docs/validation/2026-10-07/codex-research-runtime/README.md).

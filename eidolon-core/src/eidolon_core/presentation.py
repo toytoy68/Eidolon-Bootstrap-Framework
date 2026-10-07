@@ -82,9 +82,10 @@ def render_result(result):
         scope = ("Périmètre : service synthétique, sans connexion réseau."
                  if outcome["scope"] == "synthetic_service" else
                  "Périmètre : modification d'un service fictif dans la base locale." if outcome["scope"] == "synthetic_action" else
+                 "Périmètre : pages synthétiques récupérées, sans connexion réseau." if outcome["scope"] == "synthetic_retrieved_text" else
                  "Périmètre : extraits du rappel conservé, pas tout le corpus.")
         lines.append(message("INFO", scope))
-        if result.get("result") and outcome["scope"] in {"synthetic_service", "synthetic_action"}:
+        if result.get("result") and outcome["scope"] in {"synthetic_service", "synthetic_action", "synthetic_retrieved_text"}:
             lines.append(message("INFO", result["result"]["summary"]))
         if outcome["missing_references"]:
             lines.append(message("ATTENTION", "Références sans résultat vérifié : "

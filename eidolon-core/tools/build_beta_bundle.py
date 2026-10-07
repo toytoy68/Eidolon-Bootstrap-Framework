@@ -40,7 +40,8 @@ ALLOW_FILES = ("LICENSE", "eidolon-core/README.md", "eidolon-core/pyproject.toml
                "eidolon-core/docs/BETA-LOCAL-CHECK.md", "eidolon-core/docs/READ-TOKEN.md")
 # Include newer contracts when present without rejecting older valid bundles.
 OPTIONAL_FILES = ("eidolon-core/docs/QUERY-CLEANUP.md", "eidolon-core/docs/RESEARCH-GUARD.md",
-                  "eidolon-core/docs/INVOCATION-BUDGET.md")
+                  "eidolon-core/docs/INVOCATION-BUDGET.md", "eidolon-core/docs/QUERY-HISTORY.md",
+                  "eidolon-core/docs/RESEARCH-MISSIONS.md")
 # Names refused even when tracked inside the allow-list: state, secrets, caches, bytecode.
 FORBIDDEN = re.compile(r"(^|/)(__pycache__|\.git|\.env|read-token|[^/]*\.(pyc|pyo|sqlite3?|db|key|pem|p12|log))(/|$)", re.I)
 SHA = re.compile(r"[0-9a-f]{40}")
