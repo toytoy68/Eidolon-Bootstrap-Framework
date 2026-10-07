@@ -50,7 +50,7 @@
     status.className = "status phase-" + s.phase;
     var parts = [];
     if (s.storeId) parts.push("Base " + s.storeId);
-    parts.push("Dernière réponse reçue : " + (s.lastSuccessAt ? fmt(s.lastSuccessAt) : "aucune"));
+    parts.push("Dernière lecture acceptée : " + (s.lastSuccessAt ? fmt(s.lastSuccessAt) : "aucune"));
     if (s.problem) parts.push("Dernier problème : " + s.problem.code + " (" + fmt(s.problem.at) + ")");
     byId(doc, "connection-detail").textContent = parts.join(" · ");
     var notice = byId(doc, "connection-notice");
@@ -125,6 +125,12 @@
     var stale = s.phase !== "connected";
     body.appendChild(el(doc, "p", "mission-title", C.missionLabel(m)));
     if (stale) body.appendChild(el(doc, "p", "stale-note", "Capture périmée : connexion interrompue."));
+    else if (!C.viewIsCurrent(s)) {
+      // G043: a pending reset or a refused answer means the shown capture is not the current state.
+      body.appendChild(el(doc, "p", "stale-note", sync.reset
+        ? "Capture figée : rattrapage impossible, elle ne représente plus l'état actuel."
+        : "Capture non actualisée : la dernière réponse a été refusée (" + sync.lastError + ")."));
+    }
     var note = C.cancelNote(m);
     if (note) body.appendChild(el(doc, "p", "mission-note", note));
     var dl = el(doc, "dl", "fields");

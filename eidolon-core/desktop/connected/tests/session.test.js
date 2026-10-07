@@ -28,7 +28,10 @@ function health(store) {
 function page(ids, opts) {
   opts = opts || {};
   const store = opts.store || STORE;
-  const generation = { sequence: 50, event_count: 40, mission_count: opts.total || ids.length, anchor_sha256: HEX };
+  // G043: a valid generation needs event_count >= mission_count (the old endless test broke this
+  // rule: its pages were refused, and it passed only because the loop kept asking).
+  const count = opts.total || ids.length;
+  const generation = { sequence: Math.max(50, count), event_count: Math.max(40, count), mission_count: count, anchor_sha256: HEX };
   const items = ids.map((n) => ({ as_of_sequence: 10, mission: mission(n) }));
   const more = Boolean(opts.more);
   return { protocol: "eidolon-mission-list/1", snapshot_only: true, authorizes_execution: false, store_id: store,
@@ -112,6 +115,8 @@ test("pagination sends next_cursor unchanged and stops at the end; never more th
   await e.connect(TOKEN);
   assert.equal(endless.calls.filter((c) => c.path === "/v1/missions").length, 3);
   assert.equal(e.state().list.complete, false);
+  assert.equal(e.state().list.items.length, 6, "the three pages were accepted, then the bound stopped");
+  assert.equal(e.state().list.stats.rejected.length, 0);
 });
 
 test("list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor", async () => {
@@ -429,4 +434,88 @@ test("G036 a receipt answer arriving after another selection, or after disconnec
   release2(ok(receiptAnswer(Q(1, "x"), "NOT_FOUND")));
   await p2;
   assert.equal(second.s.state().receipt, null);
+});
+
+// ---- G043: freshness — only an ACCEPTED answer moves "last accepted read" ---------------------
+function clockSession(t) {
+  let tick = 0;
+  const now = () => "2026-10-07T08:00:" + String(tick++).padStart(2, "0") + "Z";
+  return C.createSession({ transport: t.transport, now });
+}
+
+test("G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported", async () => {
+  const bad = page([1]);
+  bad.authorizes_execution = true;
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1])), ok(bad)] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  const before = s.state().lastSuccessAt;
+  await s.relist();
+  const st = s.state();
+  assert.equal(st.lastSuccessAt, before, "a refused page is not a fresh read");
+  assert.equal(st.problem && st.problem.code, "AUTHORITY_CLAIMED");
+  assert.equal(st.problem.scope, "list");
+});
+
+test("G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT", { seq: 20, asOf: 20 }))],
+    ["POST /v1/missions/" + id(1) + "/poll"]: [ok(sync(1, "DELTA", { seq: 20, asOf: 20, store: OTHER_STORE })),
+      ok(sync(1, "DELTA", { seq: 20, asOf: 12 }))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.selectMission(id(1));
+  const fresh = s.state().lastSuccessAt;
+  await s.refreshSelection();                 // answer for another store: refused
+  assert.equal(s.state().lastSuccessAt, fresh);
+  assert.ok(s.state().problem, "the refusal is visible");
+  await s.refreshSelection();                 // valid but older capture than the shown one
+  assert.equal(s.state().lastSuccessAt, fresh, "an older capture is not a fresh read");
+  assert.equal(s.state().list.selection.sync.view.asOf, 20);
+});
+
+test("G043 an answer for a previous list epoch does not advance freshness", async () => {
+  let release;
+  const slow = new Promise((r) => { release = r; });
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1])), slow, ok(page([1, 2]))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  const first = s.relist();                   // waits on the slow page
+  const second = s.relist();                  // new epoch: the slow answer becomes foreign
+  release(ok(page([1])));
+  await Promise.all([first, second]);
+  const st = s.state();
+  assert.equal(st.list.items.length, 2);
+  assert.ok(st.list.stats.staleAnswers + st.list.stats.repeatedPages >= 1);
+});
+
+test("G043 two concurrent connections: only the last one is applied, the first answer never counts", async () => {
+  let release;
+  const slow = new Promise((r) => { release = r; });
+  const t = scripted({ "GET /v1/health": [slow, ok(health(OTHER_STORE))], "POST /v1/missions": [ok(page([7], { store: OTHER_STORE }))] });
+  const s = clockSession(t);
+  const a = s.connect(TOKEN);
+  const b = s.connect("c".repeat(43));
+  await b;
+  const afterB = s.state().lastSuccessAt;
+  release(ok(health()));
+  assert.equal(await a, false, "the older connection reports nothing applied");
+  const st = s.state();
+  assert.equal(st.storeId, OTHER_STORE);
+  assert.equal(st.lastSuccessAt, afterB);
+  assert.equal(st.stats.staleConnection, 1);
+});
+
+test("G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT"))],
+    ["POST /v1/missions/" + id(1) + "/poll"]: [ok(sync(1, "RESET_REQUIRED", { seq: 30, count: 9 })), ok(sync(1, "DELTA", { seq: 31, count: 10, asOf: 31 }))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.selectMission(id(1));
+  await s.refreshSelection();
+  const st = s.state();
+  assert.ok(st.list.selection.sync.reset);
+  assert.equal(st.list.selection.sync.view.asOf, 10, "old view kept");
+  assert.equal(C.viewIsCurrent(st), false, "a pending reset makes the shown capture not current");
 });

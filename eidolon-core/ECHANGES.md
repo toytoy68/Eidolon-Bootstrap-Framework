@@ -802,3 +802,11 @@ Demande de toytoy : « Enchaîne G036 à G041 ». Claude réserve
 `docs/proposals/2026-10-06-remote-commands/` (G041). Un commit et un message
 par lot. G036 a été commencé avant cette inscription, dans le seul périmètre
 `desktop/connected/`.
+
+### Réservation Claude G043, G042, G044 et relecture D-G034-1 — 07/10, 08 h 00
+
+Accord de toytoy le 07/10 au matin. Ordre : G043 (`desktop/connected/`),
+G042 (rapport sous `docs/validation/2026-10-07/claude-g042/`, sources Codex
+non modifiées), G044 (`tools/build_beta_bundle.py`, ses tests et sa
+documentation), puis relecture de D-G034-1 sur le code intégré (rapport
+seulement). Un commit et un message par lot.

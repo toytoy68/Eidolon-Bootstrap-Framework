@@ -74,6 +74,32 @@
     return null;
   }
 
+  // G043: what an answer did to a consumer state. Only an accepted answer is a fresh read.
+  function counters(list) {
+    var sel = list.selection, sync = sel && sel.sync;
+    return { rejected: list.stats.rejected.length, stale: list.stats.staleAnswers + list.stats.repeatedPages
+        + list.stats.frozenAnswers + list.stats.staleSelections,
+      syncRejected: sync ? sync.stats.rejected.length : 0,
+      syncStale: sync ? sync.stats.staleAnswers + sync.stats.frozenAnswers + sync.stats.staleViews : 0 };
+  }
+  function lastRejection(list) {
+    var sync = list.selection && list.selection.sync;
+    var all = list.stats.rejected.concat(sync ? sync.stats.rejected : []);
+    return all.length ? all[all.length - 1].code : "REJECTED";
+  }
+  function outcome(before, list) {
+    var after = counters(list);
+    if (after.rejected > before.rejected || after.syncRejected > before.syncRejected) return "rejected";
+    if (after.stale > before.stale || after.syncStale > before.syncStale) return "stale";
+    return "accepted";
+  }
+
+  // The shown capture is current only when connected, without a pending reset or a refusal since.
+  function viewIsCurrent(st) {
+    var sel = st.list.selection;
+    return Boolean(st.phase === "connected" && sel && sel.sync.view && !sel.sync.reset && !sel.sync.lastError);
+  }
+
   function createSession(options) {
     var transport = options.transport;
     var now = options.now || function () { return new Date().toISOString(); };
@@ -217,7 +243,14 @@
         if (r.stale) return;
         var meta = { kind: "list", epoch: req.epoch, cursor: req.cursor, receivedAt: now(), source: "serveur" };
         if (r.ok) {
+          var beforeList = counters(state.list);
           state.list = L.receivePage(state.list, r.json, meta);
+          var result = outcome(beforeList, state.list);
+          if (result !== "accepted") {
+            if (result === "rejected") state.problem = { code: lastRejection(state.list), at: meta.receivedAt, scope: "list" };
+            emit();
+            return;
+          }
           if (state.list.storeId && state.list.storeId !== state.storeId) {
             // The list answered for another store than /v1/health: never shown together.
             wipe(); fail("refused", "STORE_IDENTITY_CHANGED", "list");
@@ -262,8 +295,11 @@
         if (!sel || sel.token !== req.token) { state.stats.staleSelection += 1; emit(); return false; }
         var meta = { token: req.token, epoch: req.epoch, syncKind: req.syncKind, receivedAt: now(), source: "serveur" };
         if (r.ok) {
+          var beforeSel = counters(state.list);
           state.list = L.receiveSelection(state.list, r.json, meta);
-          state.lastSuccessAt = meta.receivedAt;
+          var res = outcome(beforeSel, state.list);
+          if (res === "accepted") state.lastSuccessAt = meta.receivedAt;
+          else if (res === "rejected") state.problem = { code: lastRejection(state.list), at: meta.receivedAt, scope: "selection" };
         } else if (r.code) {
           state.list = clone(state.list);
           state.list.selection.sync = S.receiveError(state.list.selection.sync, r.code, meta);
@@ -331,7 +367,7 @@
   }
 
   var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
-    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer,
+    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, viewIsCurrent: viewIsCurrent,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;

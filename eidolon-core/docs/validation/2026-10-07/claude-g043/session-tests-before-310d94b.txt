@@ -1,0 +1,207 @@
+TAP version 13
+# Subtest: token format is checked locally; nothing is sent for a malformed token
+ok 1 - token format is checked locally; nothing is sent for a malformed token
+  ---
+  duration_ms: 1.461029
+  type: 'test'
+  ...
+# Subtest: connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+ok 2 - connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+  ---
+  duration_ms: 3.900885
+  type: 'test'
+  ...
+# Subtest: pagination sends next_cursor unchanged and stops at the end; never more than three pages
+ok 3 - pagination sends next_cursor unchanged and stops at the end; never more than three pages
+  ---
+  duration_ms: 2.726765
+  type: 'test'
+  ...
+# Subtest: list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+ok 4 - list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+  ---
+  duration_ms: 0.861776
+  type: 'test'
+  ...
+# Subtest: 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+ok 5 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+  ---
+  duration_ms: 0.765669
+  type: 'test'
+  ...
+# Subtest: 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+ok 6 - 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+  ---
+  duration_ms: 1.042578
+  type: 'test'
+  ...
+# Subtest: network failure: offline, data kept and dated; reconnect to the same store resumes
+ok 7 - network failure: offline, data kept and dated; reconnect to the same store resumes
+  ---
+  duration_ms: 0.827082
+  type: 'test'
+  ...
+# Subtest: reconnection to another store wipes the previous display: no mixed identities
+ok 8 - reconnection to another store wipes the previous display: no mixed identities
+  ---
+  duration_ms: 0.93166
+  type: 'test'
+  ...
+# Subtest: a list answering for another store than health is refused and nothing is shown
+ok 9 - a list answering for another store than health is refused and nothing is shown
+  ---
+  duration_ms: 0.405263
+  type: 'test'
+  ...
+# Subtest: an answer for a previous selection never replaces the current one
+ok 10 - an answer for a previous selection never replaces the current one
+  ---
+  duration_ms: 0.73841
+  type: 'test'
+  ...
+# Subtest: disconnect forgets token and display; a late answer is dropped
+ok 11 - disconnect forgets token and display; a late answer is dropped
+  ---
+  duration_ms: 0.447221
+  type: 'test'
+  ...
+# Subtest: poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+ok 12 - poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+  ---
+  duration_ms: 2.295518
+  type: 'test'
+  ...
+# Subtest: an invalid or authority-claiming answer is rejected, never displayed
+ok 13 - an invalid or authority-claiming answer is rejected, never displayed
+  ---
+  duration_ms: 0.374733
+  type: 'test'
+  ...
+# Subtest: a malformed mission id is never turned into a request path
+ok 14 - a malformed mission id is never turned into a request path
+  ---
+  duration_ms: 0.253892
+  type: 'test'
+  ...
+# Subtest: G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+ok 15 - G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+  ---
+  duration_ms: 1.198924
+  type: 'test'
+  ...
+# Subtest: G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+ok 16 - G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+  ---
+  duration_ms: 0.493574
+  type: 'test'
+  ...
+# Subtest: G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+ok 17 - G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+  ---
+  duration_ms: 0.429849
+  type: 'test'
+  ...
+# Subtest: G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+ok 18 - G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+  ---
+  duration_ms: 0.533833
+  type: 'test'
+  ...
+# Subtest: G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+ok 19 - G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+  ---
+  duration_ms: 0.944196
+  type: 'test'
+  ...
+# Subtest: G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+ok 20 - G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+  ---
+  duration_ms: 1.031102
+  type: 'test'
+  ...
+# Subtest: G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+not ok 21 - G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+  ---
+  duration_ms: 1.377326
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:446:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    a refused page is not a fresh read
+    + actual - expected
+    
+    + '2026-10-07T08:00:02Z'
+    - '2026-10-07T08:00:01Z'
+                         ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '2026-10-07T08:00:01Z'
+  actual: '2026-10-07T08:00:02Z'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:455:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+not ok 22 - G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+  ---
+  duration_ms: 0.9209
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:460:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '2026-10-07T08:00:03Z'
+    - '2026-10-07T08:00:02Z'
+                         ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '2026-10-07T08:00:02Z'
+  actual: '2026-10-07T08:00:03Z'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:470:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: G043 an answer for a previous list epoch does not advance freshness
+ok 23 - G043 an answer for a previous list epoch does not advance freshness
+  ---
+  duration_ms: 0.441009
+  type: 'test'
+  ...
+# Subtest: G043 two concurrent connections: only the last one is applied, the first answer never counts
+ok 24 - G043 two concurrent connections: only the last one is applied, the first answer never counts
+  ---
+  duration_ms: 0.323695
+  type: 'test'
+  ...
+# Subtest: G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+not ok 25 - G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+  ---
+  duration_ms: 0.580852
+  type: 'test'
+  location: '/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:509:1'
+  failureType: 'testCodeFailure'
+  error: 'C.viewIsCurrent is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (/home/user/Eidolon-Bootstrap-Framework/eidolon-core/desktop/connected/tests/session.test.js:520:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 22
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 124.511798
