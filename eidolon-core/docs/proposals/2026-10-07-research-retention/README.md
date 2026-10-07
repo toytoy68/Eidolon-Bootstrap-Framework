@@ -120,3 +120,17 @@ journal. Il ne réexporte jamais.
   - si la rotation reste manuelle ;
   - comment une mission déclare qu'elle n'a plus besoin de sa preuve.
 - Linux et POSIX seulement, comme la garde.
+
+## Décision reçue le 07/10/2026
+
+toytoy : « Archivage automatique. Garder une centaine de recherche en mémoire .
+Archives dans un dossier avec liste.md accessible depuis l'appli bureau ? »
+Voir [C-D17](../../CADRAGE-DECISIONS-2026-10-05.md). Conséquences pour ce
+prototype :
+
+- le déclenchement devient automatique, par exemple à la fin d'une recherche
+  qui dépasse le seuil d'environ 100 ;
+- un `liste.md` dans le dossier d'archives, régénéré à chaque rotation ;
+- une lecture en consultation seule par Core, pour l'application bureau.
+
+Tous les refus et toutes les garanties ci-dessus restent valables.

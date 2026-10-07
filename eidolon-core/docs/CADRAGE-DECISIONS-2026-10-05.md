@@ -188,6 +188,26 @@ courriel, chemin local et URL** (avec ses paramètres). C'est le comportement
 actuel de `query_cleanup.py` : aucun changement de code requis. La citation
 longue d'un document privé n'est pas repérée automatiquement.
 
+**C-D17 — Archivage des recherches.** Décision de toytoy, 07/10/2026 vers
+14 h 35 (Europe/Paris), en réponse aux décisions ouvertes de la proposition G057
+([research-retention](proposals/2026-10-07-research-retention/README.md)) :
+« Archivage automatique. Garder une centaine de recherche en mémoire . Archives
+dans un dossier avec liste.md accessible depuis l'appli bureau ? »
+
+- **Automatique** : l'archivage n'attend pas un geste de l'opérateur.
+- **Environ 100 recherches** restent dans l'historique actif ; les plus
+  anciennes recherches terminées partent en archive au-delà.
+- Les archives vont dans **un dossier**, avec un fichier **`liste.md`** qui les
+  recense.
+- Souhait (formulé en question) : **consulter cette liste depuis
+  l'application bureau**. L'application n'a volontairement aucun accès aux
+  fichiers ; cela passerait par une lecture en consultation seule servie par
+  Core, comme le reste du client. À confirmer dans sa forme.
+
+Restent non décidés : le nombre exact (« une centaine ») et le sort d'une
+recherche liée à une mission non terminée (aujourd'hui exclue de l'archivage).
+Rien n'est implémenté ni activé par cette décision.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |
