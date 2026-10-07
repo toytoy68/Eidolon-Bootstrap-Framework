@@ -55,3 +55,24 @@ non exécutées**, 116,567 s. Les suites ciblées se recoupent, ne pas les somme
 Le client n'a pas été modifié par C-012 ; ses 48/12 ci-dessus restent le dernier
 passage Node. Les contrôles navigateur, Windows, SSH, serveur utilisateur et
 modèle réel restent non effectués ici. Rien n'est déployé ni fusionné dans main.
+
+## Vérification du code committé et transfert
+
+Après commit eccac82, [nouveau paquet isolé](package-final.json) : 38 modules
+identiques aux sources, point d'entrée CLI, **24 contrôles réussis** ; temporaires
+retirés. [Archive de ce commit](committed-bundle-test.txt) : création et diagnostic
+issus des sources extraites réussis. Aucune archive/Release distribuée ici.
+
+Objets GitHub avec arbres identiques aux commits locaux :
+
+| Local | GitHub | Lot |
+| --- | --- | --- |
+| 1325d09 | bfd78a8 | G036–G041 et répartition 3/12 |
+| 1de3f65 | d9265fa | C-010 |
+| 9709cce | 92e102d | Trois contre-revues |
+| 9ce2cd2 | ce14588 | C-011 HTML |
+| 3de7881 | b5f0093 | G042–G044, parent Claude conservé |
+| eccac82 | 0fdf18e | C-012 et validation globale |
+
+Le commit de passation suivant ne change pas ce code. La référence distante
+est mise à jour avec comparaison de l'ancien SHA, puis relue pour confirmation.
