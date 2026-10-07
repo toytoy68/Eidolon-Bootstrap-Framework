@@ -1,0 +1,16 @@
+PASS M1 sans liste : miroir non officiel intact, diagnostic qui indique la variable
+PASS M2 miroir listé : composants ajoutés
+PASS M3 hôte:port listé (cache local)
+PASS M4 port différent : non listé, intact
+PASS M5 sous-domaine piège d'un miroir listé : intact
+PASS M6 miroir listé mais autre chemin : intact
+PASS M7 plusieurs miroirs, deb822
+PASS M8 tiers non listé toujours intact à côté d'un miroir listé
+PASS M9 entrée invalide refusée sans rien modifier : 'Miroir.Exemple.org'
+PASS M9 entrée invalide refusée sans rien modifier : '*'
+PASS M9 entrée invalide refusée sans rien modifier : 'miroir.exemple.org/debian'
+PASS M9 entrée invalide refusée sans rien modifier : '-x'
+PASS M9 entrée invalide refusée sans rien modifier : 'a;rm'
+PASS M9 entrée invalide refusée sans rien modifier : 'a:99999999'
+PASS M10 liste vide explicite = comportement officiel seul
+ÉCHECS : 0

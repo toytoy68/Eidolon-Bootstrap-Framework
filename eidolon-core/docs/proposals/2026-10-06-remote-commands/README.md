@@ -130,3 +130,15 @@ Pour un futur banc :
 - L'étude ne choisit ni le stockage d'une clé d'appareil sous Windows, ni la
   cryptographie de B.
 - Rien n'est testé : il n'existe aucun endpoint d'écriture.
+
+## Décision reçue le 07/10/2026
+
+toytoy : « Autoriser tout . Appairage durable et confirmation unique ».
+Retenu :
+
+- T1 : annulation **et** décisions ;
+- T2 : appairage durable (option B, et non la recommandation A) ;
+- T5 : confirmation unique sur le PC.
+
+T3 et T4 restent ouverts. Rien n'est implémenté ni activé. Voir
+[C-D12](../../CADRAGE-DECISIONS-2026-10-05.md).

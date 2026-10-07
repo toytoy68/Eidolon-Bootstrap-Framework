@@ -175,24 +175,48 @@ title "Configuration des dépôts Debian"
 # intactes ; les deux dernières sont signalées sur la sortie d'erreur.
 # Le fichier n'est remplacé que s'il change, après une écriture complète,
 # en gardant ses droits et son propriétaire.
+#
+# Miroirs supplémentaires (décision C-D11) : liste EXPLICITE d'hôtes exacts
+# « nom » ou « nom:port », séparés par des espaces, vide par défaut. Le chemin
+# doit rester /debian ou /debian-security. Exemple :
+#   sudo EIDOLON_APT_EXTRA_MIRRORS="miroir.exemple.org cache.local:3142" ./02-nvidia.sh
 add_debian_components() {
 
     local file="$1"
     local deb822=0
     local tmp
+    local extra="${EIDOLON_APT_EXTRA_MIRRORS:-}"
+    local mirror
+    local -a mirrors=()
 
     [[ "$file" == *.sources ]] && deb822=1
 
+    read -r -a mirrors <<< "$extra"     # no glob expansion of the entries
+    for mirror in "${mirrors[@]}"; do
+        if [[ ! "$mirror" =~ ^[a-z0-9]([a-z0-9.-]*[a-z0-9])?(:[0-9]{1,5})?$ ]]; then
+            echo "EIDOLON_APT_EXTRA_MIRRORS : hôte invalide « $mirror » (nom ou nom:port, minuscules) ; aucun fichier modifié" >&2
+            return 1
+        fi
+    done
+
     tmp=$(mktemp "${file}.eidolon-XXXXXX") || return 1
 
-    if ! awk -v deb822="$deb822" '
-        BEGIN { split("contrib non-free non-free-firmware", wanted, " ") }
+    if ! awk -v deb822="$deb822" -v extra="$extra" '
+        BEGIN {
+            split("contrib non-free non-free-firmware", wanted, " ")
+            n_extra = split(extra, extras, /[ \t]+/)
+        }
+
+        function extra_mirror(host,    i) {
+            for (i = 1; i <= n_extra; i++) if (extras[i] != "" && host == extras[i]) return 1
+            return 0
+        }
 
         function note(message) {
             print FILENAME ":" (at ? at : FNR) ": " message " ; laissé intact" > "/dev/stderr"
         }
 
-        # Miroir officiel : hôte exact et chemin exact, jamais une sous-chaîne.
+        # Miroir officiel ou listé : hôte exact et chemin exact, jamais une sous-chaîne.
         function official(uri,    rest, slash, host, path) {
             if (substr(uri, 1, 7) == "http://") rest = substr(uri, 8)
             else if (substr(uri, 1, 8) == "https://") rest = substr(uri, 9)
@@ -203,7 +227,8 @@ add_debian_components() {
             path = substr(rest, slash)
             sub(/\/+$/, "", path)
             if (host != "deb.debian.org" && host != "security.debian.org" \
-                && host != "ftp.debian.org" && host !~ /^ftp\.[a-z][a-z]\.debian\.org$/) return 0
+                && host != "ftp.debian.org" && host !~ /^ftp\.[a-z][a-z]\.debian\.org$/ \
+                && !extra_mirror(host)) return 0
             return path == "/debian" || path == "/debian-security"
         }
 
@@ -240,7 +265,7 @@ add_debian_components() {
             uri = t[1]; components = ""
             for (i = 3; i <= n; i++) components = components " " t[i]
             if (!has(components, "main")) { print line; return }
-            if (!official(uri)) { note("source non Debian officielle (" uri ")"); print line; return }
+            if (!official(uri)) { note("source non Debian officielle ni listée (" uri ") ; si c'"'"'est un miroir Debian, ajouter son hôte à EIDOLON_APT_EXTRA_MIRRORS"); print line; return }
             print body missing(components) (comment == "" ? gap : (gap == "" ? " " : gap) comment)
         }
 

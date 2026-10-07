@@ -95,6 +95,54 @@ propre solution. Ce cadrage ne choisit aucun fournisseur ni abonnement, et
 n'autorise aucun déploiement supplémentaire. Les alternatives restent discutées
 dans C-BRAIN-G010 ; aucune garantie d'accès universel aux sites.
 
+**C-D10 — Recherche Web : nettoyer les données personnelles.** Décision de
+toytoy, 07/10/2026 vers 08 h 15 (Europe/Paris), reçue par Claude en réponse
+aux questions D1–D6 de la proposition G029
+([query-disclosure](proposals/2026-10-06-query-disclosure/README.md)) :
+« Recherche web . Nettoyer les données personnelles. »
+Retenu pour D1 : quand une requête contient une donnée personnelle repérée
+(courriel, téléphone, IBAN, chemin local…), Eidolon en **retire** les éléments
+repérés localement, avant tout envoi à un fournisseur, plutôt que refuser.
+Restent à préciser avec toytoy :
+
+- la version nettoyée part-elle automatiquement, ou est-elle montrée avant
+  l'envoi ?
+- D2 à D6 : confirmer toutes les requêtes, requêtes composées par un modèle,
+  catégories, conservation du texte, durée d'une décision.
+
+Rappel de G029 : un secret sans forme reconnaissable (mot de passe, clé) n'est
+pas repéré, donc pas nettoyé. Aucun fournisseur réel n'est activé par cette
+décision.
+
+**C-D11 — Miroirs APT supplémentaires.** Décision de toytoy, 07/10/2026 vers
+08 h 15, en réponse au point G033 (miroir non officiel laissé intact) :
+« Liste miroir a ajouter si il y en a. »
+Retenu : `02-nvidia.sh` accepte une **liste explicite** de miroirs
+supplémentaires, en plus des miroirs Debian officiels. Elle est vide par
+défaut ; toytoy ne l'a remplie avec aucun miroir. Toujours pas de devinette
+par sous-chaîne de domaine.
+
+**C-D12 — Futures commandes distantes.** Décision de toytoy, 07/10/2026 vers
+08 h 15, en réponse aux questions T1–T5 de la proposition G041
+([remote-commands](proposals/2026-10-06-remote-commands/README.md)) :
+« Autoriser tout . Appairage durable et confirmation unique ».
+
+- **T1** : l'annulation **et** les décisions (approuver, refuser, révoquer)
+  pourront être faites à distance. « Tout » couvre ces deux portées de G041 ;
+  `run` reste hors de G041.
+- **T2** : **appairage durable** de l'appareil (option B), pas de session
+  courte.
+- **T5** : **confirmation unique** sur le PC, sans second geste sur le
+  serveur.
+- Non reçus : T3 (qui peut opérer) et T4 (durée d'un droit).
+
+Cette décision fixe la direction : rien n'est encore implémenté ni activé.
+Les principes de G041 restent :
+
+- le jeton de consultation ne donne jamais d'écriture ;
+- chaque commande est liée au serveur, à la mission et aux paramètres ;
+- les révocations sont possibles et les reçus restent historiques.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |
