@@ -5,18 +5,19 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — séance du 07/10/2026 à 10 h 56 Paris
+## État courant — reprise du 07/10/2026 à 12 h Paris
 
-C-010–C-020 livrés ; G036–G053 intégrés, coquille Tauri incluse (qualification
-Linux rapportée par Claude, Windows non validé). Corrections G050/G052 : motifs
-nettoyés étendus, hash brut retiré des rapports, fenêtre des reçus C-012 fermée.
-C-019 conserve le texte nettoyé avant appel, dans la transaction de garde.
-[Contrat](docs/QUERY-HISTORY.md) · [preuves](docs/validation/2026-10-07/codex-query-history/README.md).
+C-010–C-027 livrés ; G036–G056 intégrés. C-019 conserve le texte nettoyé avant
+appel ; C-021 le raccorde aux missions sur fixtures fixes. 767 tests Python,
+six intégrations mémoire et 49 tests client réussis dans cette séance.
+[Preuves](docs/validation/2026-10-07/codex-hour-1200/README.md).
 
-Claude : **G054–G057 PRÊTS**, publiés dans 621d71b, voir la
-[file active](collaboration/tasks/QUEUE.md). Suite Codex : raccordement contrôlé
-recherche/runtime après contrat d’effet et de vérification ; aucune émission
-externe ni commande distante activée. Rétention garde/C-019 confiée à G057.
+Claude : G055/G056 intégrés ; G057–G061 disponibles,
+voir la [file active](collaboration/tasks/QUEUE.md). C-022 :
+diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
+C-025 inspection historique durcie ; C-026/C-027 parcours opérateur et lectures
+CLI sans migration. Fournisseurs externes, commandes
+distantes, rotation G057 et recette Windows/VM restent des lots distincts.
 Les sections datées ci-dessous conservent l’historique.
 
 ## Livré dans cette tranche
@@ -513,3 +514,42 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 
 Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 [preuves](docs/validation/2026-10-07/codex-research-runtime/README.md).
+
+
+## C-022 — diagnostic local de reprise — 07/10/2026
+
+- [x] Capture mission/budget bornée, lecture seule sans Store/Runtime.
+- [x] Sondage des verrous/reçus existants, aucune création ni permission de reprise.
+- [x] Changement pendant sondage signalé, requête/contexte/résultats non exportés.
+- [x] 62 tests ciblés réussis, dont 15 nouveaux et un détenteur de verrou séparé.
+- [ ] Revue indépendante, qualification VM ; pas de détection universelle d’orphelin.
+
+[Contrat](docs/RUNTIME-INSPECTION.md), [preuves](docs/validation/2026-10-07/codex-runtime-inspect/README.md).
+
+
+## C-023/C-024 — suivis G055/G056 — 07/10/2026
+
+- [x] G055 et G056 intégrés avec preuves originales ; G057–G060 restent à traiter.
+- [x] CSP/Referrer-Policy aussi sur saturation BUSY : écart reproduit, 68 tests HTTP/reçus réussis.
+- [x] Budget : seules réservations décodées, tous les ordinaux contrôlés ; six sondes d’altération conservées.
+- [x] Mesures synthétiques avant/après et 47 tests budget/diagnostic/recherche réussis.
+- [ ] Qualification VM/Windows ; la réécriture cohérente reste hors détection.
+
+
+## C-025 — inspection historique stricte — 07/10/2026
+
+- [x] Métadonnées contradictoires et mauvais type reproduits, puis refusés sans affichage trompeur.
+- [x] Clés/types/identités et indicateurs de revue validés, anciens rapports conservés.
+- [x] Lecture bornée en taille/nombre/durée coopérative, aucune réparation ni réactivation.
+- [x] 47 tests ciblés réussis, dont dix nouveaux et une interruption réelle de requête SQL.
+- [ ] Inventaire paginé pour grandes copies, contre-revue et qualification du stockage réel.
+
+[Contrat](docs/RECOVERY-REVIEW.md), [preuves](docs/validation/2026-10-07/codex-recovery-inspection/README.md).
+
+
+## C-026/C-027 — parcours opérateur et consultation CLI — 07/10/2026
+
+- [x] Guide DIAGNOSTIC-WORKFLOW : interpréter les états sans déduire un droit de reprise.
+- [x] Mutations de consultation reproduites, trois commandes CLI passées à ReadOnlyStore.
+- [x] 59 tests ciblés réussis dont six nouveaux ; protocoles/pagination inchangés.
+- [x] Refus sans réparation des anciens schémas, tables manquantes et états bêta incomplets.

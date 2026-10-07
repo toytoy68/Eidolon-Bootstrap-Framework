@@ -67,3 +67,17 @@ il ne constitue ni une signature ni un quota global de serveur.
 [Preuves](validation/2026-10-07/codex-invocation-budget/README.md) : reprises,
 crash avant worker, défaut d'audit, résultat non vérifié, conditions d'action,
 configuration figée et compatibilité explicite, sur données synthétiques.
+
+
+## Lecture ciblée C-024, suivi G056
+
+Le contrôle relit désormais les seuls événements `INVOCATION_RESERVED` par
+une requête SQL filtrée ; tous les ordinaux et limites sont encore contrôlés.
+Les événements d’autres catégories ne sont pas décodés par ce contrôle : il
+ne constitue pas un audit complet du journal. Aucun schéma/index/cache ajouté.
+Le coût reste linéaire en réservations (et dépend du parcours SQL), mais les
+mesures sur historiques synthétiques passent de 38,23 à 9,48 ms à 4095
+réservations dans le conteneur Codex. À la limite habituelle de 64, de 0,73 à
+0,31 ms. Aucune extrapolation ne qualifie la VM ; la réécriture cohérente du
+compteur et de l’audit reste hors détection.
+[Mesures et altérations reproduites](validation/2026-10-07/codex-g056-followup/README.md).

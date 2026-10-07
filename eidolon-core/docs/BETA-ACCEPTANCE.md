@@ -222,3 +222,12 @@ Pour une recette de consultation plus riche, [BETA-FIXTURE.md](BETA-FIXTURE.md)
 prépare en une commande six missions synthétiques et trois reçus dans un dossier
 neuf. Ce jeu est indépendant de la démonstration minimale S1–S8 ; ne pas mélanger
 leurs chemins d’état ou leurs jetons. Aucun serveur n’est lancé par sa préparation.
+
+
+## Complément Codex C-026 — lecture d’une mission bloquée
+
+Le [parcours de diagnostic local](DIAGNOSTIC-WORKFLOW.md) relie l’inventaire,
+`runtime-inspect` et la consultation historique `recovery-inspect`. Il précise
+les codes de sortie, l’interprétation des verrous et budgets et les preuves à
+conserver. Ces diagnostics restent locaux au serveur ; aucune nouvelle route
+HTTP ni commande distante n’est ajoutée à cette recette.

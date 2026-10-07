@@ -110,8 +110,7 @@ class Runtime:
                 or type(budget["limit"]) is not int or budget["limit"] != self.limits.max_invocations
                 or type(budget["used"]) is not int or not 0 <= budget["used"] <= budget["limit"]):
             raise InvocationBudgetError("INVOCATION_BUDGET_INVALID")
-        reservations = [event["detail"] for event in self.store.events(m["id"])
-                        if event["kind"] == "INVOCATION_RESERVED"]
+        reservations = self.store.invocation_reservations(m["id"])
         if (len(reservations) != budget["used"] or any(type(r) is not dict
                 or type(r.get("ordinal")) is not int or r["ordinal"] != i
                 or type(r.get("limit")) is not int or r["limit"] != budget["limit"]

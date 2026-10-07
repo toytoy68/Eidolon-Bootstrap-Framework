@@ -1,0 +1,6 @@
+Base locale ae24135, base distante équivalente 5b465532b1ee2c78abadf3396323a7a2bfcd9eb8.
+Sondes exécutées par Codex sur SQLite temporaire, 07/10/2026.
+{"case":"current_schema_list","code":0,"source_bytes_changed":true}
+{"case":"missing_table_snapshot","code":0,"source_bytes_changed":true,"missing_table_created":true}
+Cause lue : Store.__init__ écrit PRAGMA user_version=1 et initialise les tables
+avant la projection. Les commandes n'ont pas exécuté de modèle ni d'outil.

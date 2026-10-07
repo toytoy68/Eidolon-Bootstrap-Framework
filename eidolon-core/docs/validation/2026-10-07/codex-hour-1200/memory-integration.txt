@@ -1,0 +1,11 @@
+test_archive_message_references_and_caveats_preserved (tests.test_memory_engine.MemoryIntegrationTests.test_archive_message_references_and_caveats_preserved) ... ok
+test_complete_mission_with_actual_api_in_spawned_reader (tests.test_memory_engine.MemoryIntegrationTests.test_complete_mission_with_actual_api_in_spawned_reader) ... ok
+test_exact_bundle_parity_and_all_canonical_bytes_unchanged (tests.test_memory_engine.MemoryIntegrationTests.test_exact_bundle_parity_and_all_canonical_bytes_unchanged) ... ok
+test_missing_root_not_created_by_reader (tests.test_memory_engine.MemoryIntegrationTests.test_missing_root_not_created_by_reader) ... ok
+test_refuted_source_filtered_by_real_engine_not_promoted (tests.test_memory_engine.MemoryIntegrationTests.test_refuted_source_filtered_by_real_engine_not_promoted) ... ok
+test_unfinished_coordinated_write_blocks_recall_and_core (tests.test_memory_engine.MemoryIntegrationTests.test_unfinished_coordinated_write_blocks_recall_and_core) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.701s
+
+OK

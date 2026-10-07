@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "commit": "53ece44ae9b44e31d0bbaef8a57be762926f8f60",
+  "archive_sha256": "3d20e6d4a61a365215fdbcf02da78e765879a4277af82706f15da922099b9e61",
+  "files_verified": 68,
+  "modules_match_checkout": 43,
+  "all_three_diagnostic_guides_included": true,
+  "operator": {
+    "status": "PASS",
+    "scenarios": [
+      {
+        "role": "text_completed",
+        "status": "SUCCEEDED",
+        "hints": [
+          "TERMINAL_STATE_RETAIN_EVIDENCE"
+        ]
+      },
+      {
+        "role": "not_started",
+        "status": "NEW",
+        "hints": [
+          "NO_AUTOMATIC_RESUME"
+        ]
+      },
+      {
+        "role": "approval_pending",
+        "status": "BLOCKED",
+        "hints": [
+          "BLOCKED_REVIEW_MISSION"
+        ]
+      },
+      {
+        "role": "cancel_requested",
+        "status": "NEW",
+        "hints": [
+          "NO_AUTOMATIC_RESUME",
+          "CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP"
+        ]
+      },
+      {
+        "role": "cancelled",
+        "status": "CANCELLED",
+        "hints": [
+          "TERMINAL_STATE_RETAIN_EVIDENCE",
+          "CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP"
+        ]
+      },
+      {
+        "role": "approval_revoked",
+        "status": "BLOCKED",
+        "hints": [
+          "BLOCKED_REVIEW_MISSION"
+        ]
+      }
+    ],
+    "consultations_preserve_all_source_files": true,
+    "review_missions": 6,
+    "historical_only": true,
+    "source_preserved_by_copy": true,
+    "temporary_files_removed": true
+  },
+  "authenticity_verified": false,
+  "temporary_files_removed": true
+}

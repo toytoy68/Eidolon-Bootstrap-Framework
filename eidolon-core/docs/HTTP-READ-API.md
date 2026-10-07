@@ -140,3 +140,13 @@ occupée jusqu'à la fermeture du socket. La variante libérant la place avant
 fermeture hors de la table de comptage. Elle n'est pas adoptée dans ce lot :
 la borne des connexions suivies et la fermeture au `server_close` sont conservées.
 Le chiffre de refus G045 est une mesure du banc, pas une prévision de production.
+
+
+## Politique du client et saturation — C-023
+
+La CSP complète est identique sur les assets, réponses API, erreurs et réponse
+préauthentification BUSY. Les en-têtes proviennent d’une constante commune ;
+la saturation n’ajoute toujours aucun worker ni lecture de requête/jeton/état.
+Le test G055 de Claude distingue cette politique Web de la navigation Tauri et
+de son ACL IPC : la coquille seule n’est pas un filtre réseau des sous-ressources.
+[Suivi reproduit](validation/2026-10-07/codex-g055-followup/README.md).

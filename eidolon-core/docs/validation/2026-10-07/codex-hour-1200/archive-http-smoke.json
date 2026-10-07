@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "commit": "5b465532b1ee2c78abadf3396323a7a2bfcd9eb8",
+  "archive_sha256": "a4239f193fd01cceb0ab44dc36612dd9856f190c6ecac371efbeebb3182c1bc7",
+  "files_verified": 67,
+  "research_scenarios": [
+    "readable",
+    "partial",
+    "empty"
+  ],
+  "private_query_absent_from_http": true,
+  "history_routes_absent": true,
+  "consultation_did_not_mutate_state": true,
+  "client": {
+    "envelopes_accepted": 3,
+    "browser_tested": false
+  },
+  "temporary_files_removed": true
+}

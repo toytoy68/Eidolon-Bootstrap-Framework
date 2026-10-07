@@ -80,15 +80,18 @@ par l’API et dans l’interface dédiée intégrée (G036/G048). Aucune comman
 d’exécution, d’approbation ou d’annulation n’est exposée.
 
 Pour préparer la recette, suivre [BETA-ACCEPTANCE.md](docs/BETA-ACCEPTANCE.md).
+Pour examiner une mission bloquée ou interrompue, suivre le
+[parcours de diagnostic local](docs/DIAGNOSTIC-WORKFLOW.md).
 Le [jeu synthétique](docs/BETA-FIXTURE.md) crée six missions et trois reçus dans
 un dossier neuf, avec un jeton privé. Le diagnostic `http_api --check` vérifie
 les prérequis locaux avant un lancement explicite. Depuis le PC Windows, la
 page est destinée à être consultée par un tunnel SSH vers le serveur Linux.
 
-État du 07/10 après C-021 : **733 tests Python et six intégrations mémoire
+État du 07/10 après C-027 : **767 tests Python et six intégrations mémoire
 réussis** sur corpus synthétiques ; 49 tests client réussis, 12 Chromium non
 exécutés ici. Le paquet installé passe 24 contrôles bêta et la mission de
-recherche. [Preuves actuelles](docs/validation/2026-10-07/codex-research-runtime/README.md),
+recherche, puis les diagnostics de reprise et de copie historique.
+[Preuves actuelles](docs/validation/2026-10-07/codex-hour-1200/README.md),
 [historique C-019](docs/validation/2026-10-07/codex-query-history/README.md) et
 [C-020](docs/validation/2026-10-07/codex-text-evidence/README.md).
 
@@ -102,6 +105,13 @@ recherche sont candidats pour le réseau réel ; seul le profil synthétique
 est raccordé au runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
 est disponible sur activation explicite, sans route HTTP ni fournisseur réel.
 Le plafond de 256 recherches reste bloquant tant que la rotation n’est pas livrée.
+
+## Diagnostic local avant reprise
+
+`runtime-inspect m-ID` observe une mission existante, ses verrous et ses reçus,
+sans relance ni modification. Il distingue résultat à vérifier, effet inconnu,
+budget épuisé et changement pendant le sondage. Un verrou libre n’autorise pas
+une reprise. [Contrat et commande](docs/RUNTIME-INSPECTION.md).
 
 ## Mission de recherche synthétique
 

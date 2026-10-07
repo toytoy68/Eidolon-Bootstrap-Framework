@@ -101,6 +101,25 @@ class HTTPAvailabilityTests(unittest.TestCase):
             for s in sockets:
                 s.close()
 
+    def test_busy_response_preserves_the_complete_client_csp(self):
+        sockets = [self.idle() for _ in range(4)]
+        connection = HTTPConnection("127.0.0.1", self.server.server_port, timeout=2)
+        try:
+            self.wait_accepted(4)
+            connection.request("GET", "/")
+            response = connection.getresponse()
+            self.assertEqual(response.status, 503)
+            response.read()
+            self.assertEqual(response.getheader("Content-Security-Policy"),
+                             "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+                             "img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'")
+            self.assertEqual(response.getheader("Referrer-Policy"), "no-referrer")
+            self.assertEqual(response.getheader("X-Content-Type-Options"), "nosniff")
+        finally:
+            connection.close()
+            for sock in sockets:
+                sock.close()
+
     def test_busy_response_is_fixed_pre_auth_and_service_recovers(self):
         before = self.store.path.read_bytes()
         sockets = [self.idle() for _ in range(4)]

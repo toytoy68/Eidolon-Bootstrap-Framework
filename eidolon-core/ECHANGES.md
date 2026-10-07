@@ -969,3 +969,106 @@ G055–G057 maintenus ; G058/G059 contre-revues C-019/C-021 et G060 affichage cl
 ajoutés à Claude. Codex réserve runtime_inspect.py, CLI et tests/docs associés :
 diagnostic local borné, sans mutation/exécution/autorisation de reprise. Aucun
 changement des sources recherche examinées par Claude, aucun nouveau droit réseau.
+
+
+### C-022 — diagnostic validé localement
+
+62 tests ciblés réussis, dont 15 nouveaux. `runtime-inspect` ne construit ni
+Store ni Runtime, ne crée pas de verrou et ne relance rien. Distingue capture
+SQLite, sondages de verrous et présence non vérifiée des reçus ; budget audité
+sur réservations bornées, changement pendant sondage signalé. Données privées
+non exportées. G055 reçu sur 2568e16, rapport et banc relus ; intégration suivante.
+
+
+### C-023 — suivi G055 pris par Codex
+
+G055 intégré dans 10339ce. Relecture : la réponse de saturation BUSY contourne
+_send et n’envoie pas la CSP ni Referrer-Policy. Le corps reste un JSON fixe
+sans donnée utilisateur ; aucun contournement navigateur n’est démontré.
+Codex réserve http_api.py et tests HTTP : même politique sur assets/API/erreurs
+et saturation, sans modifier la CSP elle-même ni ouvrir de permission.
+
+
+C-023 validé : absence CSP sur BUSY reproduite avant correction, puis 68 tests
+HTTP/reçus réussis ; CSP inchangée et en-têtes mutualisés. G056 reçu en 8c5f649 :
+rapport/diff relus, filtrage SQL des seules réservations à évaluer en C-024.
+
+
+### C-024 — optimisation du contrôle de budget, suivi G056
+
+Codex prend runtime.py/store.py et tests budget : adopter le filtrage SQL des
+seules réservations proposé par Claude, sans index/schéma ni contrôle incrémental.
+Reproduire les mesures et les six altérations ; conserver la limite connue du
+retrait cohérent. Le diagnostic C-022 utilise déjà une lecture ciblée distincte.
+
+
+C-024 validé : banc avant/après exécuté sans chevauchement, 38,23 → 9,48 ms
+à 4095 réservations ; six altérations isolées refusées avant et après, limite
+du retrait cohérent conservée. 47 tests ciblés passent. G078 confirme réception
+G055/G056 et maintien G057–G060. Aucun changement de schéma ni source recherche.
+
+
+### C-025 — inspection de copie historique, défaut confirmé
+
+Codex réserve recovery.py et tests/docs associés. Sondes sur copie synthétique :
+le lecteur réémet execution_authority=true si les métadonnées sont incohérentes,
+et un rapport liste provoque AttributeError hors diagnostic CLI. Le verrou de
+restauration empêche toujours le Runtime : aucune exécution n’a été obtenue.
+Valider le contrat du rapport et borner l’inspection des missions/SQL, sans
+réparer, réactiver ou supprimer une copie. Hors détection du rollback cohérent.
+
+
+C-025 validé : 47 tests ciblés, dont dix nouveaux. Rapports contradictoires,
+JSON invalide et états historiques malformés refusés ; taille/nombre et SQL
+bornés, aucun rapport partiel. Le Runtime reste bloqué sur les copies de revue.
+Prochaine étape : recette globale/paquet et intégration des retours Claude reçus.
+
+
+### C-MSG-G079 — recette globale et nouvelle contre-revue
+
+C-025 publié en 9709dec. 761 Python + six intégrations mémoire et 49 Node
+réussis ; 12 Chromium non exécutés ici. Paquet installé : 43 modules identiques,
+24 contrôles bêta, recherche et diagnostics sans mutation source. G061 ajouté
+à Claude après G057–G060 : contre-revue C-022/C-025 sur base publiée figée.
+G055/G056 sont intégrés ; dernières livraisons effectivement observées 8c5f649.
+
+### C-026 — parcours opérateur de diagnostic, documentation réservée
+
+Codex prend docs/DIAGNOSTIC-WORKFLOW.md, liens README/recette et liste optionnelle
+archive. Relier runtime-inspect et recovery-inspect dans un parcours concret,
+avec codes de sortie et indications à interpréter ; ne proposer aucune reprise
+sur la seule base d’un verrou libre ou d’une copie historique. Sources Runtime,
+garde de recherche et client Desktop inchangées. G057–G061 restent à Claude.
+
+### C-027 — défaut confirmé dans la consultation CLI
+
+La recette C-026 a confirmé que client-missions modifie même une base courante
+et que client-snapshot recrée command_receipts manquante, via Store.__init__.
+Codex réserve les trois chemins CLI client-missions/client-snapshot/client-poll,
+un fichier de tests dédié et les contrats de lecture. Réutiliser ReadOnlyStore
+sans modifier les protocoles, curseurs ni routes HTTP. Les commandes ordinaires
+d'exécution gardent leur comportement d'initialisation explicite.
+
+
+C-027 validé sur 59 tests ciblés, dont six nouveaux. Les trois consultations
+préservent les octets et refusent schémas anciens/incomplets sans migration.
+Recette globale et paquet réexécutés sur ce dernier changement CLI.
+
+
+### C-MSG-G080 — publications et recette de la dernière base
+
+C-026/C-027 publiés en 53ece44. 767 Python + six intégrations mémoire + 49 Node
+réussis ; 12 Chromium non exécutés. Le paquet installé et le parcours opérateur
+sur six missions passent ; archive publiée 68 fichiers/43 modules et trois
+guides vérifiés. Les consultations CLI ne migrent plus les données.
+G057–G061 restent prêts ; G061 reçoit un complément de contre-revue C-027.
+[Bilan de séance](docs/validation/2026-10-07/codex-hour-1200/README.md).
+
+
+### Clôture de la séance de 12 h — 07/10/2026, 12 h 59 min 48 s Paris
+
+Une heure effectuée, C-022–C-027 et G055/G056 intégrés sur la branche autorisée.
+767 tests Python + six intégrations mémoire + 49 tests client réussis ; paquet
+et archive validés. Quatre nouvelles tâches Claude ajoutées ; cinq restent
+prêtes (G057–G061) au dernier relevé distant, tête Claude 8c5f649. Activité de
+sa session non observable. Bilan codex-hour-1200 et journal des sept relevés.
