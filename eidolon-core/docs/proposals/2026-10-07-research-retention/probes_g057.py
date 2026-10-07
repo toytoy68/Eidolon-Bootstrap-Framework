@@ -120,14 +120,14 @@ def main():
         texts_before = {e["run_id"]: e["text"] for e in read_history(ResearchGuard(g, create=False), limit=50)["entries"]}
         print(f"R avant : {before}")
         print(f"R rotation : {attempt(rotation.rotate, g, a, count=3, guard_src=SRC, clock_ms=1)}")
-        print(f"R après : {state(g)} ; vérification : {attempt(rotation.verify, g, a)}")
+        print(f"R après : {state(g)} ; vérification : {attempt(rotation.verify, g, a, guard_src=SRC)}")
         export = json.loads(next(a.glob('*.json')).read_bytes())
         exported_texts = {r['id']: json.loads(r['cleaned_query'])['text'] for r in export['runs'] if r['cleaned_query']}
         print(f"R export : {len(export['runs'])} recherches, textes nettoyés identiques : "
               f"{all(texts_before[k] == v for k, v in exported_texts.items())} ; mode {oct(next(a.glob('*.json')).stat().st_mode & 0o777)}")
         print(f"R garde actuelle sur le journal de schéma 3 : {attempt(lambda: ResearchGuard(g, create=False))}")
         print(f"R deuxième rotation (tout le reste) : {attempt(rotation.rotate, g, a, count=256, guard_src=SRC, clock_ms=2)}")
-        print(f"R après : {state(g)} ; vérification : {attempt(rotation.verify, g, a)}")
+        print(f"R après : {state(g)} ; vérification : {attempt(rotation.verify, g, a, guard_src=SRC)}")
         print(f"R la recherche liée à la mission reste : "
               f"{OPERATION in (tmp / 'r' / 'guard' / 'research-runs.sqlite3').read_bytes().decode('utf-8', 'replace')}")
         print(f"R mission libérée explicitement : "
@@ -162,12 +162,12 @@ def main():
             g, a = build(tmp / f"k-{point}")
             code, out = rotate_sub(g, a, 3, point)
             files = sorted(p.name.split(".")[-1] if p.name.endswith(".partial") else "export" for p in a.iterdir())
-            print(f"K {point} : code {code} ; journal {state(g)} ; fichiers {files} ; vérification : {attempt(rotation.verify, g, a)}")
+            print(f"K {point} : code {code} ; journal {state(g)} ; fichiers {files} ; vérification : {attempt(rotation.verify, g, a, guard_src=SRC)}")
             if point == "after_partial_write":
                 print(f"K   nouvelle rotation : {attempt(rotation.rotate, g, a, count=3, guard_src=SRC, clock_ms=2)}")
             if point in ("after_publish", "inside_transaction"):
                 print(f"K   reprise : {attempt(rotation.resume_uncommitted, g, a, guard_src=SRC)} ; {state(g)} ; "
-                      f"vérification : {attempt(rotation.verify, g, a)}")
+                      f"vérification : {attempt(rotation.verify, g, a, guard_src=SRC)}")
 
         print("== D. copie, restauration, altérations")
         g, a = build(tmp / "d")
@@ -175,26 +175,26 @@ def main():
         shutil.copytree(g, backup)
         rotation.rotate(g, a, count=2, guard_src=SRC, clock_ms=1)
         rotation.rotate(g, a, count=2, guard_src=SRC, clock_ms=2)
-        print(f"D deux rotations : {state(g)} ; {attempt(rotation.verify, g, a)}")
+        print(f"D deux rotations : {state(g)} ; {attempt(rotation.verify, g, a, guard_src=SRC)}")
         shutil.rmtree(g)
         shutil.copytree(backup, g)
-        print(f"D journal restauré d'avant les rotations : {attempt(rotation.verify, g, a)} ; "
+        print(f"D journal restauré d'avant les rotations : {attempt(rotation.verify, g, a, guard_src=SRC)} ; "
               f"nouvelle rotation : {attempt(rotation.rotate, g, a, count=1, guard_src=SRC, clock_ms=3)}")
         g, a = build(tmp / "d2")
         rotation.rotate(g, a, count=2, guard_src=SRC, clock_ms=1)
         f = next(a.glob("*.json"))
         data = f.read_bytes()
         f.write_bytes(data.replace(b"synthetique", b"synthetiqUE", 1))
-        print(f"D export modifié : {attempt(rotation.verify, g, a)}")
+        print(f"D export modifié : {attempt(rotation.verify, g, a, guard_src=SRC)}")
         f.unlink()
-        print(f"D export supprimé : {attempt(rotation.verify, g, a)}")
+        print(f"D export supprimé : {attempt(rotation.verify, g, a, guard_src=SRC)}")
         g, a = build(tmp / "d3")
         rotation.rotate(g, a, count=2, guard_src=SRC, clock_ms=1)
         db = sqlite3.connect(g / "research-runs.sqlite3")
         db.execute("DELETE FROM archives")
         db.commit()
         db.close()
-        print(f"D entrée de chaîne supprimée du journal : {attempt(rotation.verify, g, a)} ; "
+        print(f"D entrée de chaîne supprimée du journal : {attempt(rotation.verify, g, a, guard_src=SRC)} ; "
               f"reprise : {attempt(rotation.resume_uncommitted, g, a, guard_src=SRC)}")
 
 

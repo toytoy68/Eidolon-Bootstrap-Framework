@@ -134,3 +134,70 @@ prototype :
 - une lecture en consultation seule par Core, pour l'application bureau.
 
 Tous les refus et toutes les garanties ci-dessus restent valables.
+
+## Version 2 du prototype — G062, 07/10/2026
+
+Fiche [C-TASK-G062](../../../collaboration/tasks/C-TASK-G062.md), après la
+[contre-revue Codex](../../validation/2026-10-07/codex-g057-review/README.md).
+La version 1 reste dans Git (`21d121a`). Toujours isolé : aucun fichier
+Core n'est modifié.
+
+```sh
+cd docs/proposals/2026-10-07-research-retention
+G062_SRC=<copie>/eidolon-core/src python3 -m unittest tests_g062 -v
+```
+
+### Corrections
+
+| Défaut (Codex) | Correction | Assertion |
+| --- | --- | --- |
+| reprise acceptée avec `cleaned_query` nul ou modifié dans l'export | l'export doit être **exactement** les lignes du journal : fiche, événements **et** `cleaned_queries`. Une recherche liée à un historique sans texte exporté est refusée | `EXPORT_DOES_NOT_MATCH_JOURNAL`, rien retiré |
+| reprise acceptée avec un `guard_id` étranger | identité de garde comparée à `metadata` | idem |
+| reprise acceptée alors qu'une archive précédente manque | **toute la chaîne** est revalidée avant chaque retrait (présence, privé, borne, SHA-256, identité) | `ARCHIVE_MISSING`, ou `ARCHIVE_ALTERED` si modifiée |
+| copie brute du fichier SQLite (sans le WAL) | **sauvegarde en ligne** SQLite sous le verrou. Les lignes sont relues dans la transaction de retrait et comparées de nouveau | test WAL : la copie brute voit 7 recherches, la sauvegarde 8 |
+| lecture non bornée | export ≤ 32 Mio, ≤ 4096 exports, ≤ 256 recherches par export. JSON strict (clé dupliquée, `NaN`). Pas de lien symbolique, noms de fichiers de la chaîne contrôlés. Descripteurs fermés sur **chaque** refus (vérifié) | 4 assertions |
+
+Les contre-sondes de Codex, rejouées sur la v2, refusent les 3 cas sans
+rien retirer : [sortie](codex-counterprobes-v2.jsonl). Les sondes G057
+v1 donnent les mêmes états : [sortie](probes-v2.txt). Assertions :
+**13/13** ([sortie](tests_g062.txt)).
+
+### Archivage automatique (C-D17)
+
+`auto_rotate(journal, archives, target=100, terminal_operations=…)` :
+
+- **Quand** : juste **après** qu'une recherche est `COMPLETED`, hors de
+  `guard.execute`, sous le verrou de la garde. Jamais pendant une
+  intention.
+- **Seuil** : 100 recherches actives (lecture de « une centaine »). Les plus
+  anciennes recherches terminées partent au-delà.
+- **Missions** : une recherche liée à une mission n'est archivée que si
+  l'appelant déclare cette mission **terminée** (`terminal_operations`,
+  fourni par le Store). Si ces recherches protégées gardent le journal
+  au-dessus de 100, le dépassement est **rapporté** (`above_target`).
+- **Pannes** :
+  - un `.partial` restant est supprimé : il n'est jamais référencé et ses
+    données sont encore dans le journal ;
+  - un export non validé qui prolonge la chaîne est **terminé** selon les
+    règles de reprise ;
+  - tout autre écart (archive manquante ou modifiée, journal restauré) est
+    refusé et rapporté.
+- **Refus** : un refus d'archivage **ne dit rien** de la recherche qui
+  vient d'avoir lieu. Son résultat et ses effets restent ceux de son
+  rapport.
+
+`liste.md` et le lecteur des exports relèvent de **Codex (C-028)**. Le
+prototype n'en crée pas de seconde version.
+
+Exigence proposée : `liste.md` porte l'empreinte de tête de chaîne qu'il
+décrit. Si elle diffère de celle du journal (panne entre le commit et la
+régénération), la liste est **périmée** : elle est régénérée, ou affichée
+comme telle, jamais présentée comme à jour.
+
+### Changements de format avant intégration
+
+- l'export gagne `released_operations` (missions libérées par l'appelant) ;
+- `verify` exige `guard_src` et renvoie aussi `active` ;
+- `resume_uncommitted` prend `operations` ;
+- `auto_rotate` est nouveau ;
+- le schéma 3 (table `archives`) reste à intégrer par Codex.

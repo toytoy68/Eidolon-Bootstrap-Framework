@@ -1,0 +1,3 @@
+{"case": "cleaned_query_removed", "resume_result": "REFUS EXPORT_DOES_NOT_MATCH_JOURNAL", "removed_active_runs": 0, "removed_cleaned_queries": 0}
+{"case": "wrong_guard_id", "resume_result": "REFUS EXPORT_DOES_NOT_MATCH_JOURNAL", "removed_active_runs": 0, "removed_cleaned_queries": 0}
+{"case": "prior_archive_missing", "resume_result": "REFUS ARCHIVE_MISSING", "removed_active_runs": 0, "removed_cleaned_queries": 0}
