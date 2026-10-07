@@ -124,3 +124,19 @@ disponibilité du port, ni le navigateur ou le tunnel.
 La création locale du jeton est documentée dans [READ-TOKEN.md](READ-TOKEN.md).
 Un refus avec `CREATED_REVIEW_REQUIRED` exige un examen local ; ne pas
 supposer que le nouveau fichier est absent parce que le code de retour vaut 2.
+
+### Précision G045 — budgets et capacité (07/10)
+
+Le budget SQL est par connexion, pas par requête HTTP. `health`, inventaire
+et reçu utilisent une connexion ; snapshot/poll en ouvrent deux successivement
+(existence puis projection), donc peuvent consommer environ deux budgets SQL,
+en plus du travail Python et des entrées/sorties non couverts. Les petites
+requêtes sous le pas du progress handler ne sont pas interrompues par ce mécanisme.
+Ce n'est pas une échéance globale dure de 2 s ou 4 s.
+
+G045 mesure encore des refus à quatre clients séquentiels : la place reste
+occupée jusqu'à la fermeture du socket. La variante libérant la place avant
+`shutdown_request` réduit les refus dans son banc mais permet des threads de
+fermeture hors de la table de comptage. Elle n'est pas adoptée dans ce lot :
+la borne des connexions suivies et la fermeture au `server_close` sont conservées.
+Le chiffre de refus G045 est une mesure du banc, pas une prévision de production.

@@ -1,0 +1,437 @@
+[
+  {
+    "id": "Q01",
+    "label": "PERSONAL",
+    "cleaned": "joindre au",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "655f9ad7233271ed44405ace8c6996e3e43118d0d8014f1c513549af0d4c0062",
+      "cleaned_sha256": "c0fc1e38ff5a862bd3ba18a132230aa6de958f7e83e582045f35c64e0e832bfc",
+      "removed": {
+        "EMAIL": 1,
+        "PHONE_SHAPE": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q02",
+    "label": "PERSONAL",
+    "cleaned": "écrire à jean point dupont arobase example point invalid",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "bbc024e40613e24ad28eeaa91f693d6eb6444a489a157269f6e40972f189495d",
+      "cleaned_sha256": "bbc024e40613e24ad28eeaa91f693d6eb6444a489a157269f6e40972f189495d",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q03",
+    "label": "PERSONAL",
+    "cleaned": "horaires d'ouverture",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "14576ab62a36f2bac9db7d739f73617ff40f9502d41a7b371e4f5f6514605637",
+      "cleaned_sha256": "3d06b3fde5d1d210e768c87c022c4019452e2a0f73db3e0ab1b3de4c62be3c38",
+      "removed": {
+        "PHONE_SHAPE": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q04",
+    "label": "PERSONAL",
+    "cleaned": "opérateur inconnu",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "a886860f2c639cdbd72737cce0c5647f713fc8b88b30ba85ee7285618aa7f62d",
+      "cleaned_sha256": "ea9751a8c545ed153a642db46d23dd045df0c31b09f96bf9fde59b9fe4d5944c",
+      "removed": {
+        "PHONE_SHAPE": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q05",
+    "label": "PERSONAL",
+    "cleaned": "banque correspondante",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "712905413eaf8abbf5212d020872aa7cd0fd89e527bc59bd0f7d59761786fa1a",
+      "cleaned_sha256": "189cbe8a8fa4c99f6472d0cd605d10dd563400de73cfff065d4eba671f7fc737",
+      "removed": {
+        "IBAN_SHAPE": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q06",
+    "label": "SECRET",
+    "cleaned": "explication",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "58e3a05397cca25c135affb9f191e92e0b509959c54156deb4513192a4456c33",
+      "cleaned_sha256": "f78d69f3dd307e048ecb768baa104b3dce45c8fabacc733f99871cc79f42faea",
+      "removed": {
+        "URL": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q07",
+    "label": "PUBLIC",
+    "cleaned": "erreur 404",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "35cde20b281d9b514af13d0ed7d84b50a4be5a27424e78d397bd3e82d0a20248",
+      "cleaned_sha256": "a74d1f6fb47cd68de34a1b4e049d1bd0ef14cc1747f7d7d40a7e8fe3fd8b9b22",
+      "removed": {
+        "URL": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q08",
+    "label": "PERSONAL",
+    "cleaned": "formule",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "a156fffbea595eb73b2fde0b7420f85b592c9c8d888cb51815b41e3fa8a8983b",
+      "cleaned_sha256": "a28446cb08a87f661a57e09ba2a7e30ca810a8a154b7604cb6a53640e46a1930",
+      "removed": {
+        "LOCAL_PATH": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q09",
+    "label": "PERSONAL",
+    "cleaned": "variable manquante",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "915efb35cb3d32f4e6e71381ce21054231fb473141f7d50d47ba48f758ad1a6c",
+      "cleaned_sha256": "835ce441c9e6763ef2433109beb1570f2cd66d6d8a8fa5895142dd6a6756059f",
+      "removed": {
+        "LOCAL_PATH": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q10",
+    "label": "PERSONAL",
+    "cleaned": "introuvable",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "0cc083c465c620e0441e5d3302bca77374eecfc601be983873eaa5ce9ac514e7",
+      "cleaned_sha256": "01e1207c1653c0fd0206854c16201e3402d6e94a62071820c051be63c030836b",
+      "removed": {
+        "LOCAL_PATH": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q11",
+    "label": "PERSONAL",
+    "cleaned": "\"Le client Martin a refusé la clause 4.2 du contrat du 12 mars\" signification",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "cff09287ed327df56a301da8ce8d87a9a507fd2f71cade2d6ff7004db6bb0b11",
+      "cleaned_sha256": "cff09287ed327df56a301da8ce8d87a9a507fd2f71cade2d6ff7004db6bb0b11",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q12",
+    "label": "PUBLIC",
+    "cleaned": "\"to be or not to be\" auteur",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "68dfb6e8bf1a746f436272d1c091f4e038a6e889026e441f42311f42e2e26ddc",
+      "cleaned_sha256": "68dfb6e8bf1a746f436272d1c091f4e038a6e889026e441f42311f42e2e26ddc",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q13",
+    "label": "PERSONAL",
+    "cleaned": "Camille Fictif-Exemple adresse domicile",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "b904301230da8e8afc4961f3fa1907ea0bdd9d21e84748f68f3b23cf5170d271",
+      "cleaned_sha256": "b904301230da8e8afc4961f3fa1907ea0bdd9d21e84748f68f3b23cf5170d271",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q14",
+    "label": "PUBLIC",
+    "cleaned": "Victor Hugo biographie",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "80bddded8929e2d9ba92845cf4c706055ac62d6e8e654fa90aac20951b8bcbf1",
+      "cleaned_sha256": "80bddded8929e2d9ba92845cf4c706055ac62d6e8e654fa90aac20951b8bcbf1",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q15",
+    "label": "PUBLIC",
+    "cleaned": "python 3.11.15 release notes",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "c3650415030c433e274deb281580ca11cafcf6f27a037e5edcf2e1592b679bda",
+      "cleaned_sha256": "c3650415030c433e274deb281580ca11cafcf6f27a037e5edcf2e1592b679bda",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q16",
+    "label": "PUBLIC",
+    "cleaned": "norme ISO 8601 2026-10-06",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "da4d43ec3d8eb59140da2c01a6597699e2060a0245bebefe6509d8e25b0cf8e4",
+      "cleaned_sha256": "da4d43ec3d8eb59140da2c01a6597699e2060a0245bebefe6509d8e25b0cf8e4",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q17",
+    "label": "PUBLIC",
+    "cleaned": "syntaxe @decorator python",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "2321396c5b23ffd316f069ebb00dfbc6bcf4319210a8ba9de9a6f6e770578027",
+      "cleaned_sha256": "2321396c5b23ffd316f069ebb00dfbc6bcf4319210a8ba9de9a6f6e770578027",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q18",
+    "label": "AMBIGUOUS",
+    "cleaned": "référence produit notice",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "a6e6eefae0d15cc57e0da808f72620f2448f6f35cdc1e94b9f1c200874c1bc74",
+      "cleaned_sha256": "84b39834ed1fbf325c2c3774cf1ba9057db2740559de6882770356e76d01b09f",
+      "removed": {
+        "PHONE_SHAPE": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q19",
+    "label": "SECRET",
+    "cleaned": "mot de passe wifi Synth3tique-Corail-42 ne marche pas",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "5845b462235361d0e69af949fb3292c53c2b4eb574b23c6361f2e4a351b0aac5",
+      "cleaned_sha256": "5845b462235361d0e69af949fb3292c53c2b4eb574b23c6361f2e4a351b0aac5",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q20",
+    "label": "SECRET",
+    "cleaned": "clé licence AAAA-BBBB-CCCC-DDDD activation",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "cb8d797e3be8867a8f80e7ac8f72b000074a3701e00b6cc2109bb6b24f524a34",
+      "cleaned_sha256": "cb8d797e3be8867a8f80e7ac8f72b000074a3701e00b6cc2109bb6b24f524a34",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q21",
+    "label": "PERSONAL",
+    "cleaned": "port ouvert service",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "2fbfa545de5f1971718f846b1d9018fd3903fadc2fad0cb139b963d90e72a020",
+      "cleaned_sha256": "724e1b068cc3f3de9d6da6ec518e67612e4b85bf2bd0f598175e3136e16d5840",
+      "removed": {
+        "NETWORK_ADDRESS": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q22",
+    "label": "SENSITIVE_TOPIC",
+    "cleaned": "résultats analyse sanguine taux élevé que faire",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "5572125933479d72985c589113ec8784c4f259caf37965ba4b8fa7c7edcccfe0",
+      "cleaned_sha256": "5572125933479d72985c589113ec8784c4f259caf37965ba4b8fa7c7edcccfe0",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q23",
+    "label": "PERSONAL",
+    "cleaned": "mail de sur",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "a73610e6626d897fc1e76d14ec74113a5073ec8a5950c93b9479735c6ebc2fb0",
+      "cleaned_sha256": "f84677649320f4edaac9671a323ccfcc92e650901b3382828361bc74a753186e",
+      "removed": {
+        "EMAIL": 1,
+        "LOCAL_PATH": 1
+      },
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q24",
+    "label": "PUBLIC",
+    "cleaned": "météo Lyon demain",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "54939c14dfd4f313c3b795b803de0f84de56744a7e6ef1b57e9c2515582573e7",
+      "cleaned_sha256": "54939c14dfd4f313c3b795b803de0f84de56744a7e6ef1b57e9c2515582573e7",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q25",
+    "label": "PUBLIC",
+    "cleaned": "erreur sqlite database is locked",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "785d9a8fe5db27ed92a4da25c07e0de29d40a483b3d0b30a075497a2299eda20",
+      "cleaned_sha256": "785d9a8fe5db27ed92a4da25c07e0de29d40a483b3d0b30a075497a2299eda20",
+      "removed": {},
+      "normalized": false,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q26",
+    "label": "PERSONAL",
+    "cleaned": "contact",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "55a591ed7271044969b8bb4771f140993954ca5ca4c16fba8c5b241b9cd67de0",
+      "cleaned_sha256": "093e7d5fdbaacfa92448861b11075b3fba532a07d945b49a44919252f5e830ad",
+      "removed": {
+        "EMAIL": 1
+      },
+      "normalized": true,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  },
+  {
+    "id": "Q27",
+    "label": "PERSONAL",
+    "cleaned": "contact",
+    "receipt": {
+      "protocol": "eidolon-query-cleanup/1",
+      "original_sha256": "9f16a25f5dda856e8d7f9bc85858bf2eefae3ade6b75c4c24ce0529e742671b3",
+      "cleaned_sha256": "093e7d5fdbaacfa92448861b11075b3fba532a07d945b49a44919252f5e830ad",
+      "removed": {
+        "EMAIL": 1
+      },
+      "normalized": true,
+      "empty": false,
+      "anonymity_guaranteed": false,
+      "authorizes_transmission": false
+    }
+  }
+]
