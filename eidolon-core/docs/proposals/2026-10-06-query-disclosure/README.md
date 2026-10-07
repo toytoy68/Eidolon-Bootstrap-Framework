@@ -235,3 +235,8 @@ de montrer ou non la version nettoyée avant l'envoi, restent ouverts. Voir
 Complément du 07/10/2026 vers 09 h 15 : « Requête auto. » La version
 nettoyée part automatiquement, sans affichage préalable. D2 à D6 restent
 ouverts. Voir [C-D13](../../CADRAGE-DECISIONS-2026-10-05.md).
+
+Complément du 07/10/2026 vers 09 h 20 : D2 = C (pas de confirmation),
+D3 = A (requête du modèle envoyée seule), D4 = IP, IBAN, téléphone,
+D5 = A (texte envoyé conservé), D6 sans objet. Voir
+[C-D15](../../CADRAGE-DECISIONS-2026-10-05.md).
