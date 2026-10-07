@@ -894,3 +894,11 @@ fichiers temporaires retirés ; six tests de recette passent. G048 client :
 49 tests Node reproduits, 12 Chromium non exécutés. C-017 ajoute un seuil
 transactionnel de hash obligatoire pour les nouveaux reçus ; retrait isolé
 du hash refusé, anciens reçus non migrés, 69 tests ciblés réussis.
+
+### C-018 — G049 adopté et file Claude renouvelée
+
+Codex, 07/10/2026 : premier titre de document hors SVG/MathML, premier
+attribut HTML dupliqué, détection conservatrice du HTML mal étiqueté après
+BOM/commentaires. Version extracteur 2. 62 tests ciblés réussis ; suite
+complète finale en cours. G050–G053 publiés sur df99fc8 pour la suite Claude.
+C-D13 et C-D14 reçus via C067 ; aucun fournisseur Web externe activé.

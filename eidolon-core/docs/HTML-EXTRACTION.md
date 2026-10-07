@@ -109,3 +109,7 @@ Coût mesuré sur une entrée maximale de 128 000 octets : 10 à 60 ms
 
 [Preuves G026](validation/2026-10-06/claude-g026/README.md) ;
 [robustesse G032](validation/2026-10-06/claude-g032/README.md).
+
+## C-018 — retour G049, 07/10/2026
+
+Extracteur version 2 : le premier attribut dupliqué est conservé, notamment pour password et style masquant. Le classificateur retient le premier titre hors SVG/MathML ; les titres suivants ne diluent plus un challenge. Le préfixe BOM/commentaires/espaces est parcouru sans retour arrière ; body/div/p/input/meta en tête signalent aussi du HTML mal étiqueté, refusé plutôt que lu comme texte brut. Ceci peut refuser du texte contenant une balise illustrative en tête ; ce n’est ni un parseur navigateur complet ni une détection exhaustive des murs d’accès.

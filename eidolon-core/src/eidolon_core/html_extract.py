@@ -21,7 +21,7 @@ import re
 
 from .contracts import ContractError
 
-VERSION = "eidolon-html-extract/1"
+VERSION = "eidolon-html-extract/2"
 
 # Content of these elements is never text: code, templates, embedded documents.
 SKIPPED = {"script", "style", "template", "noscript", "svg", "math", "iframe", "object", "embed",
@@ -103,7 +103,9 @@ class _Parser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if self.halted:
             return
-        values = dict(attrs)
+        values = {}
+        for name, value in attrs:
+            values.setdefault(name, value)  # HTML keeps the first duplicate attribute.
         if tag == "input" and (values.get("type") or "").lower() == "password":
             self.password_field = True
         if tag == "form":

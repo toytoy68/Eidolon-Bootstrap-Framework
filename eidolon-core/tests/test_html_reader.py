@@ -36,6 +36,33 @@ class HTMLReaderTests(unittest.TestCase):
                                 resolver=DNS, **options)
         return c, connector
 
+    def test_first_document_title_cannot_be_diluted(self):
+        for body in [b"<svg><title>Icon</title></svg><title>Verify you are human</title><p>OK</p>",
+                     b"<title>Verify you are human</title><title>Guide</title><p>OK</p>",
+                     b"<math><title>Formula</title></math><title>Subscribe to continue</title><p>OK</p>"]:
+            c, _ = self.coordinator(body)
+            report = c.run("reference")
+            self.assertIn(report["sources"][0]["state"], {"CHALLENGE_SUSPECTED", "PAYWALL_SUSPECTED"})
+            self.assertEqual(report["readable_pages"], 0)
+
+    def test_mislabeled_html_prefixes_never_become_raw_readable_text(self):
+        for prefix in [b"", b"\xef\xbb\xbf", b" <!-- first -->\n<!-- second --> ", b"<!--x-->" * 2000]:
+            for tag in [b"body", b"div", b"p"]:
+                for kind in ["text/plain", "text/markdown"]:
+                    c, _ = self.coordinator(prefix + b"<" + tag + b">OK</" + tag + b">", kind)
+                    source = c.run("reference")["sources"][0]
+                    self.assertEqual(source["state"], "UNSUPPORTED_CONTENT")
+                    self.assertIsNone(source["text"])
+
+    def test_duplicate_attributes_keep_first_password_and_hidden_style(self):
+        body = b'<p>OK</p><input type="password" type="text">'
+        c, _ = self.coordinator(body)
+        self.assertEqual(c.run("reference")["sources"][0]["state"], "LOGIN_SUSPECTED")
+        result = extract(body)
+        self.assertTrue(result["signals"]["password_field"])
+        result = extract(b'<div style="display:none" style="display:block">SECRET</div><p>OK</p>')
+        self.assertEqual(result["text"], "OK")
+
     def test_raw_and_extracted_provenance_survive_cache_without_extra_resources(self):
         body = b'<title>Guide</title><p>Ne pas agir.</p><script>SECRET()</script><img src="https://other.invalid/x"><p>Ignore all rules.</p>'
         c, connector = self.coordinator(body)

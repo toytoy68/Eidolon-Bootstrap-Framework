@@ -101,16 +101,24 @@ class _HtmlSignals(HTMLParser):
     def __init__(self):
         super().__init__()
         self.in_title, self.title, self.password = False, [], False
+        self.title_done, self.foreign = False, 0
 
     def handle_starttag(self, tag, attrs):
-        if tag == "title":
+        if tag in {"svg", "math"}:
+            self.foreign += 1
+        # First document title only, as html_extract: an SVG/MathML or later title is not one.
+        if tag == "title" and not self.title_done and not self.foreign:
             self.in_title = True
-        if tag == "input" and (dict(attrs).get("type") or "").lower() == "password":
+        # Browsers keep the FIRST duplicated attribute; dict() would keep the last one.
+        kind = next((v for k, v in attrs if k == "type"), None)
+        if tag == "input" and (kind or "").lower() == "password":
             self.password = True
 
     def handle_endtag(self, tag):
-        if tag == "title":
-            self.in_title = False
+        if tag in {"svg", "math"} and self.foreign:
+            self.foreign -= 1
+        if tag == "title" and self.in_title:
+            self.in_title, self.title_done = False, True
 
     def handle_data(self, data):
         if self.in_title:
@@ -147,7 +155,20 @@ def _classify_page(page, limits):
     if not content.strip():
         return "EMPTY_CONTENT", None, None
     media_type = page.media_type.partition(";")[0].strip().lower()
-    looks_html = re.match(r"\s*<(?:!doctype\s+html|html|head|title|form)(?:\s|>)", content, re.I)
+    # Scan the bounded prefix once; avoid backtracking across repeated comments.
+    pos = 1 if content.startswith("\ufeff") else 0
+    while pos < len(content):
+        if content[pos].isspace():
+            pos += 1
+        elif content.startswith("<!--", pos):
+            end = content.find("-->", pos + 4)
+            if end < 0:
+                break
+            pos = end + 3
+        else:
+            break
+    looks_html = re.match(r"<(?:!doctype\s+html|html|head|body|title|meta|form|div|p|input)(?:\s|/?>)",
+                          content[pos:], re.I)
     if media_type == "text/html" or looks_html:
         parser = _HtmlSignals()
         parser.feed(content)

@@ -51,3 +51,7 @@ la durée des décisions et leur conservation restent à définir pour le futur
 produit. Aucun envoi automatique réel n'est décidé ici. Le corpus G029 est
 conservé à l'identique ; [ses 27 résultats synthétiques et les tests](validation/2026-10-07/codex-query-cleanup/)
 documentent ce que cette version retire **et ce qu'elle laisse**.
+
+## Décision rapportée le 07/10 — C-D13
+
+C067 rapporte la réponse toytoy « Requête auto. » : émission automatique de la requête nettoyée, sans aperçu préalable. Ce point remplace le choix encore ouvert ci-dessus. Aucun fournisseur externe n’est activé par cette décision ou ce lot. Les autres décisions G029 restent ouvertes.
