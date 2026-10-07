@@ -5,16 +5,18 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — reprise du 07/10/2026
+## État courant — fin de l'heure du 07/10/2026
 
-La [liste active des 12 tâches](docs/PLAN-2026-10-07.md) affecte 3 lots à Claude
-et 9 à Codex. G036–G041 intégrés depuis 310d94b : reçus client, accessibilité,
-banc réel, mesures, lanceur candidat et étude commandes (non activée).
-C-010 : saturation explicite, budget SQL coopératif, arrêt du banc borné,
-chemins du diagnostic corrigés et recette autonome/paquet isolé.
-Les sections datées ci-dessous conservent l'historique ; les anciennes mentions
-« attend G036 » ne représentent plus la file active.
-[Preuves de reprise](docs/validation/2026-10-07/codex-beta/README.md).
+C-010–C-018 livrés ; G036–G049 intégrés. Cette heure ajoute nettoyage local
+avant recherche, garde durable optionnelle, budget persistant des invocations,
+arrêt propre de la recette, seuil de hash obligatoire des reçus et corrections
+HTML. [Bilan et limites](docs/validation/2026-10-07/codex-hour/README.md).
+
+Claude : **G050–G053 PRÊTS**, voir la [file active](collaboration/tasks/QUEUE.md).
+Suite Codex : conservation locale bornée de la requête nettoyée décidée en
+C-D15, puis raccordement contrôlé de la recherche au runtime ; aucune émission
+externe ni commande distante activée. Tauri est attribué à Claude en consultation.
+Les sections datées ci-dessous conservent l'historique.
 
 ## Livré dans cette tranche
 
@@ -55,8 +57,9 @@ Les sections datées ci-dessous conservent l'historique ; les anciennes mentions
 - [x] Suites C-REV-003 : N-09 confirmation après erreur ; N-10 verrou absent
   après spawn bloquant ; N-11 import de reçu avant refus documenté.
   [Bilan de l'intégration](docs/CLAUDE-INTEGRATION-2026-10-05.md).
-- [ ] Budget global des tentatives et rétention/nettoyage coordonnés des reçus,
-  historiques et verrous ; aucun effacement automatique d'un état actif.
+- [x] Budget persistant des invocations par mission : C-015 ci-dessous.
+- [ ] Rétention/nettoyage coordonnés des reçus, historiques et verrous ; aucun
+  effacement automatique d'un état actif.
 - [ ] Externaliser les gros documents/médias avec budgets et rétention avant
   leur prise en charge ; sorties actuelles bornées et toujours inline dans SQLite.
 - [x] C-001a : mémoire vide distincte de MODEL_INVALID et rappel reprenable,
@@ -435,9 +438,9 @@ Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/valid
   reproduction ; vérificateur durci par Codex (doublons, taille/mode, manifeste incomplet).
 - [x] G042-1 reproduit puis corrigé pour les nouveaux reçus avec empreinte
   dans l'événement, transaction commune ; anciens reçus signalés LEGACY_FIELDS.
-- [ ] Affichage client explicite de receipt_binding et contre-revue du
-  correctif ; les champs historiques anciens restent limités.
-- [ ] G045–G047 : contre-revues suivantes prêtes, aucune exécution présumée.
+- [x] Affichage client receipt_binding : G048 intégré ; C-017 refuse le retrait
+  isolé du hash après le seuil durable. Les anciens restent limités.
+- [x] G045–G049 intégrés et corrections documentées ; file remplacée par G050–G053.
 
 [Preuves et limites](docs/validation/2026-10-07/codex-g042-g044/README.md).
 
@@ -447,8 +450,10 @@ Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/valid
   avant tous les fournisseurs/replis du coordinateur candidat.
 - [x] Requête devenue vide sans émission ; reçus sans texte et limites documentées.
 - [x] 77 tests ciblés et 27 cas du corpus synthétique G029 inspectables.
-- [ ] Confirmation/permissions de l'émission externe et couverture des données
-  non reconnaissables restent ouvertes ; aucun fournisseur réel activé.
+- [x] C-D13/15/16 : requêtes humaines/modèle nettoyées automatiques, catégories
+  actuelles conservées. Décisions rapportées par Claude C067–C069.
+- [ ] Conservation locale du texte nettoyé avant émission (C-D15), raccordement
+  fournisseur et couverture des données non reconnaissables ; aucun fournisseur réel activé.
 
 Contrat : [QUERY-CLEANUP.md](docs/QUERY-CLEANUP.md). G045 reçu ; limites SQL
 consolidées, variante de libération anticipée non adoptée.
@@ -474,3 +479,13 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 - [x] CLI, configuration figée, compatibilité historique explicitement sans budget,
   79 tests ciblés réussis. Contrat : docs/INVOCATION-BUDGET.md.
 - [ ] Quotas globaux de serveur, rétention et nettoyage coordonnés restent ouverts.
+
+## C-016–C-018 — retours des revues
+
+- [x] SIGINT/SIGTERM : recette interrompue proprement, descendants possédés arrêtés.
+- [x] Seuil transactionnel de hash requis pour les nouveaux reçus.
+- [x] Titres HTML non diluables par SVG/second titre, premiers attributs dupliqués,
+  détection des préfixes HTML mal étiquetés. Extracteur version 2.
+- [ ] Limites connues : heuristique HTML non exhaustive (notamment variante
+  « Just a moment… »), dédoublonnage texte brut avec BOM, identité Stop PowerShell
+  Linux ; aucune tolérance temporelle dangereuse adoptée pour les PID.

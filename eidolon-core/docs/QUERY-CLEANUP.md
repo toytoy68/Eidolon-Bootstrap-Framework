@@ -54,4 +54,4 @@ documentent ce que cette version retire **et ce qu'elle laisse**.
 
 ## Décision rapportée le 07/10 — C-D13
 
-C067 rapporte la réponse toytoy « Requête auto. » : émission automatique de la requête nettoyée, sans aperçu préalable. Ce point remplace le choix encore ouvert ci-dessus. Aucun fournisseur externe n’est activé par cette décision ou ce lot. Les autres décisions G029 restent ouvertes.
+C067 rapporte la réponse toytoy « Requête auto. » : émission automatique de la requête nettoyée, sans aperçu préalable. Ce point remplace le choix encore ouvert ci-dessus. Aucun fournisseur externe n’est activé par cette décision ou ce lot. C-D15/16 (C068/C069) complètent ce choix : requêtes du modèle également automatiques, toutes les catégories actuelles gardées, texte nettoyé à conserver localement. Cette conservation n’est pas encore implémentée ; les reçus actuels ne contiennent que les empreintes.

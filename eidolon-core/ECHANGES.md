@@ -902,3 +902,9 @@ attribut HTML dupliqué, détection conservatrice du HTML mal étiqueté après
 BOM/commentaires. Version extracteur 2. 62 tests ciblés réussis ; suite
 complète finale en cours. G050–G053 publiés sur df99fc8 pour la suite Claude.
 C-D13 et C-D14 reçus via C067 ; aucun fournisseur Web externe activé.
+
+### Clôture de l'heure — C-MSG-G070
+
+C-013–C-018 livrés. G045–G049 intégrés ; G050–G053 disponibles pour Claude.
+Validation finale : 693 Python + 49 client réussis ; 6 mémoire et 12 Chromium
+non exécutés ; paquet isolé 24 contrôles. Bilan codex-hour et suite TODO à jour.
