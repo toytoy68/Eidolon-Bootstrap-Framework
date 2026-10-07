@@ -1,0 +1,43 @@
+== R. runtime-inspect
+R1 état absent : code 2 '{"error":"InspectionError","message":"INSPECTION_STATE_UNAVAILABLE"}' ; dossier créé : False
+R2 mission terminée : code 0 {"status": "SUCCEEDED", "phase": "DONE", "hints": ["TERMINAL_STATE_RETAIN_EVIDENCE"], "invocation_budget": {"audit_checked": true, "limit": 64, "remaining": 60, "state": "AVAILABLE", "used": 4}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; humain code 0 ; fichiers identiques : True ; secret dans JSON/humain : [False, False]
+R2 inconnue : code 2 '{"error":"InspectionError","message":"INSPECTION_MISSION_NOT_FOUND"}' ; mal formée : code 2 '{"error":"InspectionError","message":"INVALID_INSPECTION_RECORD"}'
+R3 arrêt après WORKER_SPAWNED : code 0 {"status": "RUNNING", "phase": "EXECUTING", "hints": ["EFFECT_UNKNOWN_REVIEW_REQUIRED"], "invocation_budget": {"audit_checked": true, "limit": 64, "remaining": 61, "state": "AVAILABLE", "used": 3}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; appels [{'attempt': 1, 'index': 0, 'lease': {'authorization': 'NOT_MARKED', 'state': 'FREE_AT_SAMPLE'}, 'receipt': {'state': 'MISSING'}, 'status': 'STARTED'}] ; fichiers identiques : True
+R3 arrêt après RESULT_SAVED : code 0 {"status": "RUNNING", "phase": "VERIFY", "hints": ["RETURNED_RESULT_AWAITS_VERIFICATION"], "invocation_budget": {"audit_checked": true, "limit": 64, "remaining": 61, "state": "AVAILABLE", "used": 3}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; appels [{'attempt': 1, 'index': 0, 'lease': {'authorization': 'MARKED', 'state': 'FREE_AT_SAMPLE'}, 'receipt': {'state': 'PRESENT_UNVERIFIED'}, 'status': 'RETURNED'}] ; fichiers identiques : True
+R4 verrou de mission tenu par un autre processus : {'authorization': 'UNKNOWN', 'state': 'HELD_AT_SAMPLE'} ; relâché : {'authorization': 'UNKNOWN', 'state': 'FREE_AT_SAMPLE'}
+R5 15 inspections sous écrivain concurrent : codes [0, 2] ; erreurs ['{"error":"InspectionError","message":"INSPECTION_STORAGE_UNAVAILABLE"}'] ; changed_during_sampling vrai 1 fois ; indices ['SNAPSHOT_CHANGED_RESAMPLE', 'TERMINAL_STATE_RETAIN_EVIDENCE']
+== B. budget dans runtime-inspect
+B ancienne sans limite : code 0 {"status": "SUCCEEDED", "phase": "DONE", "hints": ["TERMINAL_STATE_RETAIN_EVIDENCE"], "invocation_budget": {"audit_checked": false, "state": "LEGACY_UNBOUNDED"}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; fichiers identiques : True ; secret : [False]
+B épuisé (limite 3) : code 0 {"status": "BLOCKED", "phase": "READY", "hints": ["BLOCKED_REVIEW_MISSION"], "invocation_budget": {"audit_checked": true, "limit": 3, "remaining": 1, "state": "AVAILABLE", "used": 2}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; fichiers identiques : True ; secret : [False]
+B compteur altéré : code 0 {"status": "SUCCEEDED", "phase": "DONE", "hints": ["TERMINAL_STATE_RETAIN_EVIDENCE", "INVOCATION_BUDGET_INVALID"], "invocation_budget": {"audit_checked": true, "limit": 64, "remaining": null, "state": "INVALID", "used": 1}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; fichiers identiques : True ; secret : [False]
+B événement de 20 Kio : code 0 {"status": "SUCCEEDED", "phase": "DONE", "hints": ["TERMINAL_STATE_RETAIN_EVIDENCE", "INVOCATION_BUDGET_UNAVAILABLE"], "invocation_budget": {"audit_checked": false, "reason": "RESERVATION_SIZE_LIMIT", "state": "UNAVAILABLE"}, "changed_during_sampling": false, "execution_lock": {"authorization": "UNKNOWN", "state": "FREE_AT_SAMPLE"}} ; fichiers identiques : True ; secret : [False]
+B reprise de la mission épuisée par run : BLOCKED / INVOCATION_BUDGET_EXHAUSTED
+== V. recovery-prepare et recovery-inspect
+V préparation : code 0
+V inspection : code 0 historical_only=True ; mission : code 0 {'calls_at_snapshot': [{'id': 'm-b73458176a5e42e6938b4239048f67fb/stats-1', 'status': 'VERIFIED'}], 'cancel_requested_at_snapshot': False, 'id': 'm-b73458176a5e42e6938b4239048f67fb', 'phase_at_snapshot': 'DONE'} ; fichiers identiques : True
+V annotation reason exportée telle quelle (courriel présent) : True ; secret dans la projection de mission : False
+V mission absente : code 2 '{"error":"KeyError","message":"\'mission not found in historical copy\'"}'
+V runtime-inspect sur la copie : code 2 '{"error":"InspectionError","message":"RECOVERY_REVIEW_ONLY"}'
+V client-missions sur la copie : code 2 '{"error":"ContractError","message":"RECOVERY_REVIEW_ONLY"}'
+V client-snapshot sur la copie : code 2 '{"error":"ContractError","message":"RECOVERY_REVIEW_ONLY"}'
+V run sur la copie : code 2 '{"error":"ContractError","message":"RECOVERY_REVIEW_ONLY: use recovery-inspect; runtime access is blocked"}'
+V copie toujours REVIEW_ONLY : True ; fichiers identiques : True
+V ancien rapport sans capture_semantics : code 0 {"historical_only": true} ; fichiers identiques : True
+V source_store_id = store_id : code 2 '{"error":"ContractError","message":"RECOVERY_REPORT_MISMATCH"}' ; fichiers identiques : True
+V execution_authority vrai : code 2 '{"error":"ContractError","message":"RECOVERY_REPORT_MISMATCH"}' ; fichiers identiques : True
+V capture_semantics inconnue : code 2 '{"error":"ContractError","message":"RECOVERY_REPORT_MISMATCH"}' ; fichiers identiques : True
+V JSON malformé : code 2 '{"error":"ContractError","message":"INVALID_RECOVERY_RECORD"}' ; fichiers identiques : True
+V clé dupliquée : code 2 '{"error":"ContractError","message":"INVALID_RECOVERY_RECORD"}' ; fichiers identiques : True
+V NaN : code 2 '{"error":"ContractError","message":"INVALID_RECOVERY_RECORD"}' ; fichiers identiques : True
+V rapport de 40 000 octets : code 2 '{"error":"ContractError","message":"RECOVERY_INSPECTION_LIMIT"}' ; fichiers identiques : True
+V store_id de base différent : code 2 '{"error":"ContractError","message":"RECOVERY_REPORT_MISMATCH"}' ; fichiers identiques : True
+V 10 001 missions : code 2 '{"error":"ContractError","message":"RECOVERY_INSPECTION_LIMIT"}' ; fichiers identiques : True
+V rapport absent : code 2 '{"error":"ContractError","message":"RECOVERY_REPORT_MISSING"}' ; fichiers identiques : True
+V format humain : code 0 ; commence par l'en-tête ECT : '########################################'
+== C. consultations CLI client (C-027)
+C missions/snapshot/poll : codes 0/0/0 ; fichiers identiques : True ; secret : [False, False, False]
+C état absent : code 2 '{"error":"FileNotFoundError","message":"mission listing requires an existing mission store"}' ; créé : False
+C table command_receipts absente : ['code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\'', 'code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\''] ; fichiers identiques : True
+C schéma ancien (user_version 0) : ['code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\'', 'code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\''] ; fichiers identiques : True
+C sync_metadata absente : ['code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\'', 'code 2 \'{"error":"ContractError","message":"UNSUPPORTED_READ_SCHEMA"}\''] ; fichiers identiques : True
+C 10 captures sous écrivain concurrent : codes [0, 2] ; erreurs ['{"cause_type":"OperationalError","error":"STORAGE_UNAVAILABLE","message":"storage unavailable; preserve uncert'] ; as_of croissants : [2426, 5710, 9313]
