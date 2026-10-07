@@ -1,0 +1,32 @@
+diff --git a/eidolon-core/src/eidolon_core/runtime.py b/eidolon-core/src/eidolon_core/runtime.py
+index 52ba249..94d20de 100644
+--- a/eidolon-core/src/eidolon_core/runtime.py
++++ b/eidolon-core/src/eidolon_core/runtime.py
+@@ -110,8 +110,7 @@ class Runtime:
+                 or type(budget["limit"]) is not int or budget["limit"] != self.limits.max_invocations
+                 or type(budget["used"]) is not int or not 0 <= budget["used"] <= budget["limit"]):
+             raise InvocationBudgetError("INVOCATION_BUDGET_INVALID")
+-        reservations = [event["detail"] for event in self.store.events(m["id"])
+-                        if event["kind"] == "INVOCATION_RESERVED"]
++        reservations = self.store.invocation_reservations(m["id"])
+         if (len(reservations) != budget["used"] or any(type(r) is not dict
+                 or type(r.get("ordinal")) is not int or r["ordinal"] != i
+                 or type(r.get("limit")) is not int or r["limit"] != budget["limit"]
+diff --git a/eidolon-core/src/eidolon_core/store.py b/eidolon-core/src/eidolon_core/store.py
+index 1906800..900920f 100644
+--- a/eidolon-core/src/eidolon_core/store.py
++++ b/eidolon-core/src/eidolon_core/store.py
+@@ -337,6 +337,13 @@ class Store:
+                        (command["client_id"], command["command_key"], encode(receipt)))
+         return receipt
+ 
++    def invocation_reservations(self, identity):
++        """Details of INVOCATION_RESERVED events only, in journal order (G056: no other event decoded)."""
++        with self.connection() as db:
++            rows = db.execute("SELECT detail FROM events WHERE mission_id=? AND kind='INVOCATION_RESERVED' "
++                              "ORDER BY sequence", (identity,)).fetchall()
++        return [json.loads(r[0]) for r in rows]
++
+     def events(self, identity):
+         self.get(identity)
+         with self.connection() as db:
