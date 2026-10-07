@@ -1,0 +1,47 @@
+== C. en-têtes réels de Core (serveur de lecture, jeu synthétique)
+C / : HTTP 200 ; CSP="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+C /app.js : HTTP 200 ; CSP="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+C /v1/health : HTTP 200 ; CSP="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+C /v1/nope : HTTP 404 ; CSP="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+== SANS CSP (coquille seule)
+  fetch           page: envoyé       autre origine atteinte : OUI
+  xhr             page: erreur       autre origine atteinte : OUI
+  websocket       page: erreur       autre origine atteinte : OUI
+  eventsource     page: erreur       autre origine atteinte : OUI
+  beacon          page: accepté      autre origine atteinte : OUI
+  img             page: erreur       autre origine atteinte : OUI
+  script          page: chargé       autre origine atteinte : OUI
+  stylesheet      page: erreur       autre origine atteinte : OUI
+  css-background  page: posée        autre origine atteinte : OUI
+  iframe          page: posée        autre origine atteinte : non
+  worker          page: créé         autre origine atteinte : non
+  prefetch        page: posée        autre origine atteinte : non
+  form-post       page: soumis       autre origine atteinte : non
+  navigation      page: —            autre origine atteinte : non
+  window-open     page: null         autre origine atteinte : non
+  anchor-blank    page: cliqué       autre origine atteinte : non
+  IPC (__TAURI_INTERNALS__) : object ; après navigation : même origine
+  directives CSP violées : []
+  requêtes reçues par l'autre origine : ['beacon', 'css-background', 'eventsource', 'fetch', 'img', 'script', 'stylesheet', 'websocket', 'xhr']
+  diagnostics de la coquille : ['eidolon-consultation : navigation refusée : autre origine que le client Core'] ×4
+== AVEC la CSP exacte de Core
+  fetch           page: erreur       autre origine atteinte : non
+  xhr             page: erreur       autre origine atteinte : non
+  websocket       page: exception    autre origine atteinte : non
+  eventsource     page: exception    autre origine atteinte : non
+  beacon          page: accepté      autre origine atteinte : non
+  img             page: erreur       autre origine atteinte : non
+  script          page: erreur       autre origine atteinte : non
+  stylesheet      page: erreur       autre origine atteinte : non
+  css-background  page: posée        autre origine atteinte : non
+  iframe          page: posée        autre origine atteinte : non
+  worker          page: créé         autre origine atteinte : non
+  prefetch        page: posée        autre origine atteinte : non
+  form-post       page: soumis       autre origine atteinte : non
+  navigation      page: —            autre origine atteinte : non
+  window-open     page: null         autre origine atteinte : non
+  anchor-blank    page: cliqué       autre origine atteinte : non
+  IPC (__TAURI_INTERNALS__) : object ; après navigation : même origine
+  directives CSP violées : ['connect-src', 'form-action', 'frame-src', 'img-src', 'script-src-elem', 'style-src-elem']
+  requêtes reçues par l'autre origine : []
+  diagnostics de la coquille : ['eidolon-consultation : navigation refusée : autre origine que le client Core'] ×2
