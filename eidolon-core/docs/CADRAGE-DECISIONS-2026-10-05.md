@@ -204,8 +204,17 @@ dans un dossier avec liste.md accessible depuis l'appli bureau ? »
   fichiers ; cela passerait par une lecture en consultation seule servie par
   Core, comme le reste du client. À confirmer dans sa forme.
 
-Restent non décidés : le nombre exact (« une centaine ») et le sort d'une
-recherche liée à une mission non terminée (aujourd'hui exclue de l'archivage).
+Complément du même jour, vers 14 h 36. Claude a posé deux questions :
+« « Une centaine » : je prends exactement 100 ? » et « Une recherche liée à une
+mission qui n'est pas finie doit-elle rester dans l'historique jusqu'à la fin
+de la mission ? » (recommandé par Claude). Réponse de toytoy : « Oui continue
+la suite après. » Lu par Claude comme un accord sur les deux points :
+
+- seuil : **100** recherches gardées ;
+- une recherche liée à une mission **non terminée reste** dans l'historique
+  jusqu'à la fin de la mission ; le total peut donc dépasser 100.
+
+Cette lecture d'un « Oui » commun aux deux questions est signalée comme telle.
 Rien n'est implémenté ni activé par cette décision.
 
 ## Capacités réseau à livrer

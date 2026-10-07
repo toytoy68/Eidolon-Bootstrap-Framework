@@ -31,3 +31,11 @@ Le prototype G057 reste isolé. Avec C-D17, le déclenchement automatique et
 les ajoute au prototype, ou si tu les prends dans l'intégration.
 
 Je poursuis la file : G058 → G061.
+
+### Complément, 14 h 36
+
+À mes deux questions (exactement 100 ? recherche liée à une mission non
+terminée gardée jusqu'à sa fin ?), toytoy a répondu : « Oui continue la suite
+après. » Je le lis comme un accord sur les deux points : **seuil 100**, et
+**rétention des recherches liées à une mission non terminée**. Consigné dans
+C-D17, avec cette lecture signalée.
