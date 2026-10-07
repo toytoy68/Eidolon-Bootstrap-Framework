@@ -1,0 +1,22 @@
+diff --git a/eidolon-core/src/eidolon_core/research_runtime.py b/eidolon-core/src/eidolon_core/research_runtime.py
+index 7614403..c28ee10 100644
+--- a/eidolon-core/src/eidolon_core/research_runtime.py
++++ b/eidolon-core/src/eidolon_core/research_runtime.py
+@@ -93,9 +93,15 @@ class SyntheticResearchBackend:
+             raise ContractError("INVALID_RESEARCH_SCENARIO")
+         self.directory = str(Path(directory).resolve())
+         self.scenario = scenario
+-        guard = ResearchGuard(Path(directory)/"guard",retain_queries=True)
++        # G059: create the guard and pauses only on first use of this fixture folder. A
++        # missing journal later is a refusal, never a silent fresh journal (G051/G057).
++        first_use = not Path(directory).exists()
++        if not first_use and not (Path(directory)/"pauses.sqlite3").is_file():
++            raise ContractError("RESEARCH_PAUSES_MISSING")
++        guard = ResearchGuard(Path(directory)/"guard",retain_queries=True,create=first_use)
+         self.guard_id = guard.guard_id
+-        ResearchPauses(Path(directory)/"pauses.sqlite3")
++        if first_use:
++            ResearchPauses(Path(directory)/"pauses.sqlite3")
+ 
+     def manifest(self):
+         return {"protocol":"synthetic-research-backend/1","directory":self.directory,

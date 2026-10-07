@@ -1,0 +1,45 @@
+== N. parcours nominal et scénarios
+N readable : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches=1 ; reprise : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches ensuite=1
+N partial : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif PARTIAL / budget {'limit': 64, 'used': 4} ; recherches=1 ; reprise : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif PARTIAL / budget {'limit': 64, 'used': 4} ; recherches ensuite=1
+N empty : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches=1 ; reprise : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches ensuite=1
+N blocked : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches=1 ; reprise : BLOCKED / RETRIEVAL_TARGET_NOT_MET / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches ensuite=1
+N texte gardé par la garde : 'notice pont' ; données personnelles : []
+== A. contrat hors modèle
+A plan modifiant {'query': 'autre requete'} : BLOCKED / PREFLIGHT_REFUSED / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 2} ; recherches=0
+A plan modifiant {'required_pages': 1} : BLOCKED / PREFLIGHT_REFUSED / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 2} ; recherches=0
+A plan modifiant {'operation_id': 'm-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'} : BLOCKED / PREFLIGHT_REFUSED / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 2} ; recherches=0
+A plan modifiant {'extra': 1} : BLOCKED / PREFLIGHT_REFUSED / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 2} ; recherches=0
+A mémoire portant un faux _core_research : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; opérations des recherches : [True]
+A création 'notice pon', 0 : refus ContractError INVALID_RESEARCH_PARAMETERS
+A création 'notice pon', 3 : refus ContractError INVALID_RESEARCH_PARAMETERS
+A création '', 1 : refus ContractError INVALID_CLEANUP_QUERY
+A création 'xxxxxxxxxx', 1 : refus ContractError INVALID_CLEANUP_QUERY
+A création 'notice pon', True : refus ContractError INVALID_RESEARCH_PARAMETERS
+== X. rapports croisés et falsifiés
+X rapport authentique : vérifié=True
+X rapport de m1 présenté pour m2 : vérifié=False
+X texte de page modifié : vérifié=False
+X cible abaissée dans le rapport : vérifié=False
+X tampon pointant la recherche de m2 : vérifié=False
+== K. coupures (checkpoint du runtime, sous-processus)
+K arrêt après CALL_STARTED : code 9 ; recherches avant reprise=0 [] ; reprise : REVIEW_REQUIRED / UNKNOWN_EFFECT / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 2} ; recherches ensuite=0
+K arrêt après WORKER_SPAWNED : code 9 ; recherches avant reprise=0 [] ; reprise : REVIEW_REQUIRED / UNKNOWN_EFFECT / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 3} ; recherches ensuite=0
+K arrêt après RESULT_SAVED : code 9 ; recherches avant reprise=1 ['COMPLETED'] ; reprise : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches ensuite=1
+== G. garde occupée ou absente pendant la vérification
+G garde absente : runtime non construit : GuardError RESEARCH_GUARD_NOT_FOUND
+G   la construction du runtime a recréé un journal de garde vide : False
+G   garde rétablie, reprise : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches=1
+G garde occupée : runtime non construit : GuardError WEB_RESEARCH_IN_FLIGHT
+G   garde rétablie, reprise : SUCCEEDED / None / objectif ACHIEVED / budget {'limit': 64, 'used': 4} ; recherches=1
+== R. journal de garde supprimé alors qu'une intention est incertaine
+R intention incertaine : ['COMPLETED', 'INTENT']
+R nouvelle mission, journal intact : REVIEW_REQUIRED / CALL_ERROR / objectif NOT_ACHIEVED / budget {'limit': 64, 'used': 3} ; recherches=2
+R journal supprimé puis nouvelle mission : runtime refusé GuardError RESEARCH_GUARD_NOT_FOUND ; journal recréé : False
+== B. budget
+B limite 3 : BLOCKED / INVOCATION_BUDGET_EXHAUSTED / objectif NOT_ACHIEVED / budget {'limit': 3, 'used': 2} ; recherches=0
+== H. CLI et projection HTTP
+H CLI research : code 0 ; SUCCEEDED ; données personnelles dans la sortie CLI : ['jean@example.invalid', '06 12 34 56 78']
+H CLI humain : code 0 ; données personnelles affichées : ['jean@example.invalid', '06 12 34 56 78']
+H HTTP GET health : 200 ; données personnelles : [] ; texte de page : False
+H HTTP POST missions : 200 ; données personnelles : [] ; texte de page : False
+H HTTP GET missions : 200 ; données personnelles : [] ; texte de page : False
