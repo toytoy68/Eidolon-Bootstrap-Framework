@@ -69,3 +69,18 @@ personnel distant, y compris après le `cd` vers RemoteCore. Les chemins
 absolus sont conservés ; `~autre-utilisateur` est refusé. Auparavant retirer
 `~/` faisait chercher état/jeton dans le dossier Core. Contrôles statiques ici ;
 PowerShell/Windows et SSH réels restent à exécuter.
+
+## Suivi G046 — 07/10/2026
+
+Les chemins relatifs du diagnostic emploient désormais `~/'chemin'` : les
+apostrophes traversent le passage d'arguments Legacy, et le shell distant
+conserve le dossier personnel comme un seul mot. Correctif G046-1 proposé
+par Claude, intégré par Codex ; ses essais PowerShell 7 Linux Standard/Legacy
+sont dans `docs/validation/2026-10-07/claude-g046/`. Les sept contrôles
+statiques ont été rejoués par Codex ; Windows/ssh.exe réels restent à valider.
+
+G046-2 reste une limite du banc Linux : la date de démarrage .NET fluctue et
+`-Stop` peut refuser son propre tunnel. La tolérance de deux secondes proposée
+n'est pas adoptée, car un autre `ssh` réutilisant vite le PID pourrait entrer
+dans cette fenêtre. La comparaison exacte reste conservée pour le lanceur
+Windows ; cela ne vaut pas validation de son comportement sur le PC réel.
