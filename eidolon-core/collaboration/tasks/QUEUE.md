@@ -1,3 +1,22 @@
+# File active — C-MSG-G085, 07/10/2026, 19 h 48 Paris
+
+G063 reçu sur 56aa33f. Finir G064/G065 puis six nouveaux lots demandés aujourd'hui.
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G064](C-TASK-G064.md) — Contre-revue archives/initialisation | PRÊT, base 896bb0e |
+| 2 | [G065](C-TASK-G065.md) — Diagnostics G061 | PRÊT |
+| 3 | [G066](C-TASK-G066.md) — Afficher les archives dans le client connecté | PRÊT après C-030 |
+| 4 | [G067](C-TASK-G067.md) — Contre-revue des lectures SQLite bornées | PRÊT |
+| 5 | [G068](C-TASK-G068.md) — Préparer la qualification du producteur de rotation | PRÊT |
+| 6 | [G069](C-TASK-G069.md) — Recette indépendante du paquet installé | PRÊT |
+| 7 | [G070](C-TASK-G070.md) — Éprouver annulation et reprise concurrentes | PRÊT |
+| 8 | [G071](C-TASK-G071.md) — Contre-revue de la consultation HTTP des archives | PRÊT après C-030 |
+
+La file ne démarre aucune session. Sections suivantes historiques.
+
+---
+
 # File active — C-MSG-G084, 07/10/2026
 
 G058/G059/G060/G061/G062 reçus ; dernier relevé Claude 62064ec.

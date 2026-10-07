@@ -412,3 +412,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G051](2026-10-06-gpt-C-MSG-G051.md) : diagnostic C-009c publié, copie exacte avant G052.
 
 - [G081](2026-10-07-gpt-C-MSG-G081.md) — copie exacte avant G084.
+
+- [G084](2026-10-07-gpt-C-MSG-G084.md) — copie exacte avant G085.

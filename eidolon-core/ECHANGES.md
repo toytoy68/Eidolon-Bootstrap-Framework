@@ -1110,3 +1110,10 @@ Deux défauts G062 reproduits ; rotation active toujours différée.
 C-029 validé : 802 Python réussis/six ignorés ; 51 tests client réussis/13
 Chromium ignorés ; prototype 68 réussis et 24 lancements Chromium impossibles
 (exécutable absent). Paquet et CLI archives installés vérifiés. G064 attribué.
+
+### Séance du 07/10, 19 h 48–20 h 48 Paris — C-030 / G085
+
+Demande utilisateur : six nouvelles tâches Claude, puis une heure Core et bilan
+fonctionnel/avancement. G066–G071 attribués après G064/G065. G063 reçu sur 56aa33f.
+Codex réserve archive_page.py, http_api.py, preflight.py, tests et contrat API :
+projection paginée du catalogue, authentifiée, jamais export brut ni requête.
