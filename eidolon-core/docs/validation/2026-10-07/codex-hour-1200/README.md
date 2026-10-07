@@ -89,3 +89,20 @@ les trois commandes client-missions/client-snapshot/client-poll utilisent mainte
 ReadOnlyStore sans initialisation/migration. Une table manquante est refusée, pas
 recréée. 59 tests ciblés puis la suite globale et le paquet installé ont été rejoués.
 Les protocoles et curseurs restent identiques.
+
+
+## Clôture de l’heure et relevé distant
+
+Travail du 07/10/2026 de **11 h 59 min 42 s à 12 h 59 min 48 s Europe/Paris**
+(+0200), puis publication de ce relevé de clôture. Dernière base publiée
+vérifiée : 9225b98923ee8748afdfefaf06cb9c41affde323 ; arbre local identique,
+parents Claude conservés. Les commits locaux intermédiaires sont gardés sur
+la branche codex/session-20261007-1200, sans écrasement de l’historique.
+
+[Sept relevés distants de fin d’heure](claude-final-watch.jsonl) : récupérations
+Git réussies, G057–G061 prêts à chaque relevé, dernière tête Claude observée
+8c5f6499589dfeafb2d019a3a8319748e71dd5ed. Quatre tâches nouvelles ont été
+ajoutées pendant la séance (G058–G061), et deux livraisons intégrées (G055/G056).
+Aucune nouvelle livraison après G056 pendant cette surveillance finale.
+La disponibilité des tâches est vérifiée ; l’activité interne de sa session
+n’est pas observable depuis ce canal. Aucun démarrage de Claude n’est prétendu.
