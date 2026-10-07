@@ -452,3 +452,15 @@ Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/valid
 
 Contrat : [QUERY-CLEANUP.md](docs/QUERY-CLEANUP.md). G045 reçu ; limites SQL
 consolidées, variante de libération anticipée non adoptée.
+
+## C-014a — garde de recherche interrompue — 07/10/2026
+
+- [x] Intention durable autour de la recherche complète, verrou POSIX, refus
+  de reprise tant que l'incertitude n'a pas été revue explicitement.
+- [x] Revue versionnée, CLI sans relance/création implicite, tests de crash
+  réels et HTTP loopback ; journal borné sans contenu privé des requêtes.
+- [ ] G030 complet : journal par appel/saut, scopes et fin/pause atomiques
+  dans une base commune. C-014a utilise un blocage global plus prudent.
+- [ ] Rétention, restauration/rollback et raccordement mission/réseau réel.
+
+Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).

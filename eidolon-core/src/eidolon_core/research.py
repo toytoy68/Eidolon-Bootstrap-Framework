@@ -27,6 +27,7 @@ from .html_extract import ExtractLimits, extract
 from .research_pauses import ResearchPauses, PauseStorageError, PauseCapacityError, provider_scope, origin_scope
 from .research_report import project_report
 from .query_cleanup import clean_query
+from .research_guard import ResearchGuard
 
 FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
             "POLICY_REFUSED", "TOO_LARGE", "TRUNCATED", "UNSUPPORTED_CONTENT", "INVALID_RESPONSE", "TLS_ERROR",
@@ -193,7 +194,7 @@ class ResearchCoordinator:
     Optional ResearchPauses persists refusals until explicit local review/release.
     Without it, legacy cooldowns remain RAM-only; no durability is claimed.
     """
-    def __init__(self, providers, reader, *, resolver, policy=None, limits=None, clock=time.monotonic, pauses=None):
+    def __init__(self, providers, reader, *, resolver, policy=None, limits=None, clock=time.monotonic, pauses=None, guard=None):
         if not isinstance(providers, (list, tuple)) or not 1 <= len(providers) <= 8:
             raise ContractError("one to eight providers required")
         identities = [p.provider_id for p in providers]
@@ -210,6 +211,9 @@ class ResearchCoordinator:
         if pauses is not None and not isinstance(pauses, ResearchPauses):
             raise ContractError("invalid persistent pause store")
         self.pauses, self._pause_fault = pauses, False
+        if guard is not None and not isinstance(guard, ResearchGuard):
+            raise ContractError("invalid research guard")
+        self.guard = guard
 
     def _persistent(self, operation, *args, **kwargs):
         if self._pause_fault:
@@ -242,6 +246,19 @@ class ResearchCoordinator:
             self._cooldowns[domain] = (until, state, review)
 
     def run(self, query, *, required_pages=1, cancelled=lambda: False):
+        if self.guard is None:
+            return self._run(query, required_pages=required_pages, cancelled=cancelled)
+        # Invalid local requests do not create an uncertain research intent.
+        cleaned = clean_query(query)
+        if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
+            raise ContractError("required_pages must fit the read budget")
+        return self.guard.execute(
+            lambda: self._run(query, required_pages=required_pages, cancelled=cancelled),
+            descriptor={"query_sha256": cleaned.cleaned_sha256,
+                        "policy_id": self.policy.policy_id,
+                        "providers": [p.provider_id for p in self.providers[:self.limits.providers]]})
+
+    def _run(self, query, *, required_pages=1, cancelled=lambda: False):
         if self._pause_fault:
             raise PauseStorageError("PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse")
         _text(query, 1000)

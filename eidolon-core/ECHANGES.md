@@ -863,3 +863,16 @@ le raccordement explicite dans research.py et sa documentation : nettoyage
 local suivant C-D10 rapportée par Claude, sans fournisseur externe activé.
 Les choix de confirmation avant émission restent séparés. G045 SQL/BUSY
 sera consolidé sans réduire la borne des workers sur la seule base du banc.
+
+### C-014a — garde de reprise livrée localement
+
+Codex, base 51942215 : intention persistante autour d'une recherche entière,
+verrou exclusif, revue sans relance, 99 tests ciblés dont 22 nouveaux. Crashs
+de processus et HTTP loopback : aucune reprise aveugle. Blocage global
+conservateur, ne remplace pas le futur journal par saut G030. Voir
+docs/RESEARCH-GUARD.md et preuves codex-research-guard.
+
+C063/G046 reçu depuis 0f0cfdc : Codex réserve la correction de citations
+PowerShell/SSH. La tolérance de 2 s sur PID/start-time proposée sera examinée
+séparément pour éviter de tuer un PID réutilisé rapidement. Claude conserve
+G047–G049, file encore non vide.
