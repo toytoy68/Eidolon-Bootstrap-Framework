@@ -1,0 +1,10 @@
+serveur de recette vu : True
+serveur orphelin encore actif après SIGTERM : True
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko 0o700
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/first-server.log 0o644
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture 0o700
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture/manifest.json 0o644
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture/read-token 0o600
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture/state 0o700
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture/state/missions.sqlite3 0o644
+reste : <TMPDIR>/eidolon-recipe-smoke-veyl_zko/fixture/state/simulation.sqlite3 0o644
