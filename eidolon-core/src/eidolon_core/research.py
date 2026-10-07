@@ -267,25 +267,22 @@ class ResearchCoordinator:
             self._cooldowns[domain] = (until, state, review)
 
     def run(self, query, *, required_pages=1, cancelled=lambda: False):
-        if self.guard is None:
-            return self._run(query, required_pages=required_pages, cancelled=cancelled)
-        # Invalid local requests do not create an uncertain research intent.
+        # Clean exactly once; use the same immutable value for history and providers.
         cleaned = clean_query(query)
         if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
             raise ContractError("required_pages must fit the read budget")
+        if self.guard is None:
+            return self._run(cleaned, required_pages=required_pages, cancelled=cancelled)
         return self.guard.execute(
-            lambda: self._run(query, required_pages=required_pages, cancelled=cancelled),
+            lambda: self._run(cleaned, required_pages=required_pages, cancelled=cancelled),
+            cleaned_query=cleaned if self.guard.retain_queries else None,
             descriptor={"query_sha256": cleaned.cleaned_sha256,
                         "policy_id": self.policy.policy_id,
                         "providers": [p.provider_id for p in self.providers[:self.limits.providers]]})
 
-    def _run(self, query, *, required_pages=1, cancelled=lambda: False):
+    def _run(self, cleaned, *, required_pages=1, cancelled=lambda: False):
         if self._pause_fault:
             raise PauseStorageError("PAUSE_STORAGE_UNAVAILABLE: prior write uncertain; review before reuse")
-        _text(query, 1000)
-        if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
-            raise ContractError("required_pages must fit the read budget")
-        cleaned = clean_query(query)
         start = self.clock()
         self._cooldowns = {k: v for k, v in self._cooldowns.items() if v[0] > start}
         late_receipt = False

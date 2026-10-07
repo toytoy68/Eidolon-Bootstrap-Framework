@@ -44,12 +44,15 @@ def _match(pattern, value):
 
 
 def _descriptor(value):
-    if (type(value) is not dict or set(value) != {"query_sha256", "policy_id", "providers"}
+    if (type(value) is not dict or set(value) not in ({"query_sha256", "policy_id", "providers"},
+                                               {"query_sha256", "policy_id", "providers", "query_history_sha256"})
             or not _match(r"[0-9a-f]{64}", value["query_sha256"])
             or not _match(r"[A-Za-z0-9._/-]{1,100}", value["policy_id"])
             or type(value["providers"]) is not list or not 1 <= len(value["providers"]) <= 8
             or any(not _match(r"[A-Za-z0-9._/-]{1,100}", p) for p in value["providers"])
             or len(set(value["providers"])) != len(value["providers"])):
+        raise GuardError("INVALID_RESEARCH_DESCRIPTOR")
+    if "query_history_sha256" in value and not _match(r"[0-9a-f]{64}", value["query_history_sha256"]):
         raise GuardError("INVALID_RESEARCH_DESCRIPTOR")
     return snapshot(value)
 
@@ -81,11 +84,11 @@ def _json(raw):
 
 
 class ResearchGuard:
-    def __init__(self, directory, *, clock=time.time, create=True):
+    def __init__(self, directory, *, clock=time.time, create=True, retain_queries=False):
         if not callable(clock):
             raise GuardError("INVALID_RESEARCH_CLOCK")
         self.directory = Path(directory).resolve()
-        if type(create) is not bool:
+        if type(create) is not bool or type(retain_queries) is not bool:
             raise GuardError("INVALID_RESEARCH_GUARD_MODE")
         if create:
             self.directory.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -112,8 +115,17 @@ class ResearchGuard:
                     db.execute("CREATE TABLE run_events (sequence INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL, kind TEXT NOT NULL, body TEXT NOT NULL)")
                     db.execute("INSERT INTO metadata VALUES ('guard_id', ?)", ("g-" + uuid.uuid4().hex,))
                     db.execute("PRAGMA user_version=1")
-                elif version != 1 or tables != {"metadata", "runs", "run_events"}:
+                elif ((version == 1 and tables != {"metadata", "runs", "run_events"})
+                      or (version == 2 and tables != {"metadata", "runs", "run_events", "cleaned_queries"})
+                      or version not in (1, 2)):
                     raise GuardError("UNSUPPORTED_RESEARCH_GUARD")
+                if retain_queries and version != 2:
+                    if not create:
+                        raise GuardError("QUERY_HISTORY_NOT_ENABLED")
+                    db.execute("CREATE TABLE cleaned_queries (run_id TEXT PRIMARY KEY, body TEXT NOT NULL)")
+                    db.execute("PRAGMA user_version=2")
+                    version = 2
+                self.retain_queries = version == 2
                 self.guard_id = self._identity(db)
                 self._records(db)
 
@@ -153,7 +165,7 @@ class ResearchGuard:
             db = sqlite3.connect(self.path.as_uri() + "?mode=rw", uri=True, timeout=2)
             db.execute("PRAGMA synchronous=FULL")
             if not initializing:
-                if db.execute("PRAGMA user_version").fetchone()[0] != 1:
+                if db.execute("PRAGMA user_version").fetchone()[0] != (2 if self.retain_queries else 1):
                     raise GuardError("UNSUPPORTED_RESEARCH_GUARD")
                 if self._identity(db) != self.guard_id:
                     raise GuardError("RESEARCH_GUARD_CHANGED")
@@ -203,11 +215,11 @@ class ResearchGuard:
 
     def _records(self, db):
         records = []
-        for identity, raw in db.execute("SELECT id,body FROM runs ORDER BY id LIMIT ?", (MAX_RUNS + 1,)):
+        for identity, raw in db.execute("SELECT id,substr(body,1,16001) FROM runs ORDER BY id LIMIT ?", (MAX_RUNS + 1,)):
             if len(records) >= MAX_RUNS:
                 raise GuardError("RESEARCH_HISTORY_OVER_CAPACITY")
             record = self._decode(identity, raw)
-            events = db.execute("SELECT kind,body FROM run_events WHERE run_id=? ORDER BY sequence LIMIT 3", (identity,)).fetchall()
+            events = db.execute("SELECT kind,substr(body,1,16001) FROM run_events WHERE run_id=? ORDER BY sequence LIMIT 3", (identity,)).fetchall()
             if (len(events) != record["revision"] or events[0][0] != "INTENT"
                     or events[-1] != (record["state"], raw)):
                 raise GuardError("INVALID_RESEARCH_AUDIT")
@@ -219,6 +231,8 @@ class ResearchGuard:
             raise GuardError("INVALID_RESEARCH_AUDIT")
         if sum(r["state"] == "INTENT" for r in records) > 1:
             raise GuardError("INVALID_RESEARCH_AUDIT")
+        from .query_history import verify_rows
+        verify_rows(db, records, enabled=self.retain_queries)
         return records
 
     def _write(self, db, record, *, insert=False):
@@ -229,9 +243,18 @@ class ResearchGuard:
             db.execute("UPDATE runs SET body=? WHERE id=?", (raw, record["id"]))
         db.execute("INSERT INTO run_events (run_id,kind,body) VALUES (?,?,?)", (record["id"], record["state"], raw))
 
-    def execute(self, callback, *, descriptor):
+    def execute(self, callback, *, descriptor, cleaned_query=None):
         """Commit intent, run trusted callback once, then record its completed report."""
         descriptor = _descriptor(descriptor)
+        from .query_history import payload_for
+        payload = None
+        if self.retain_queries:
+            payload = payload_for(cleaned_query)
+            if descriptor["query_sha256"] != payload["cleanup"]["cleaned_sha256"]:
+                raise GuardError("QUERY_HISTORY_BINDING_MISMATCH")
+            descriptor["query_history_sha256"] = digest(payload)
+        elif cleaned_query is not None or "query_history_sha256" in descriptor:
+            raise GuardError("QUERY_HISTORY_NOT_ENABLED")
         if not callable(callback):
             raise GuardError("INVALID_RESEARCH_CALLBACK")
         with self._exclusive():
@@ -247,6 +270,8 @@ class ResearchGuard:
                           "started_at_ms": self._now(), "ended_at_ms": None,
                           "outcome": None, "report_sha256": None, "review": None}
                 self._write(db, record, insert=True)
+                if payload is not None:
+                    db.execute("INSERT INTO cleaned_queries VALUES (?,?)", (record["id"], encode(payload)))
             # Any exception, process exit or finish failure leaves INTENT durable.
             # No finally block closes it or treats missing evidence as no contact.
             result = snapshot(callback())
@@ -312,6 +337,7 @@ class ResearchGuard:
 
 
 def main(argv=None):
+    from .query_history import QueryHistoryError
     parser = argparse.ArgumentParser(description="Inspecter/revoir une recherche interrompue, sans relance.")
     parser.add_argument("--directory", required=True)
     parser.add_argument("--format", choices=("json", "human"), default="json")
@@ -327,9 +353,9 @@ def main(argv=None):
         guard = ResearchGuard(args.directory, create=False)
         result = (guard.inspect() if args.command == "inspect" else
                   guard.resolve(args.run_id, expected_revision=args.revision, actor=args.actor, reason=args.reason))
-    except (GuardError, OSError) as error:
+    except (GuardError, QueryHistoryError, OSError) as error:
         # Do not echo paths, arguments or a SQLite exception in diagnostics.
-        code = str(error) if isinstance(error, GuardError) else "RESEARCH_GUARD_UNAVAILABLE"
+        code = str(error) if isinstance(error, (GuardError, QueryHistoryError)) else "RESEARCH_GUARD_UNAVAILABLE"
         print(json.dumps({"protocol": PROTOCOL, "error": code, "request_sent": False}), file=sys.stderr)
         return 2
     if args.format == "json":

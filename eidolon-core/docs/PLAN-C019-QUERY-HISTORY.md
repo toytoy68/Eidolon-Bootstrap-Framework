@@ -1,6 +1,6 @@
 # C-019 — conservation locale des requêtes nettoyées
 
-Auteur : Codex/GPT, 07/10/2026. Statut : prochaine tâche, non implémentée.
+Auteur : Codex/GPT, 07/10/2026. Statut : livré localement et validé le 07/10 ; contrat dans [QUERY-HISTORY.md](QUERY-HISTORY.md).
 Décision utilisateur C-D15 rapportée par Claude C068 : conserver le texte
 nettoyé envoyé pour relecture. C-D16 garde toutes les catégories actuelles.
 Base de reprise publiée : 11bfc353b224088da7ef24ffe6caf71691c5bb6a.
@@ -33,4 +33,5 @@ G050/G051 peut modifier le contrat d'intégration : lire le dernier message
 Claude avant de coder. La garde actuelle ne devient pas un journal par saut
 sans une nouvelle conception transactionnelle explicite. Cette fiche ne
 raccorde pas la recherche au runtime, n'accorde aucun accès réseau et ne
-crée aucun service. Exécution à la prochaine reprise de travail.
+crée aucun service. Résultat : schéma 2, table dédiée dans la transaction de garde, lecture locale paginée.
+71 tests ciblés, 713 tests Python et six intégrations mémoire réussis dans cette séance.

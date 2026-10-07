@@ -5,19 +5,19 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — fin de l'heure du 07/10/2026
+## État courant — séance du 07/10/2026 à 10 h 56 Paris
 
-C-010–C-018 livrés ; G036–G049 intégrés. Cette heure ajoute nettoyage local
-avant recherche, garde durable optionnelle, budget persistant des invocations,
-arrêt propre de la recette, seuil de hash obligatoire des reçus et corrections
-HTML. [Bilan et limites](docs/validation/2026-10-07/codex-hour/README.md).
+C-010–C-019 livrés ; G036–G053 intégrés, coquille Tauri incluse (qualification
+Linux rapportée par Claude, Windows non validé). Corrections G050/G052 : motifs
+nettoyés étendus, hash brut retiré des rapports, fenêtre des reçus C-012 fermée.
+C-019 conserve le texte nettoyé avant appel, dans la transaction de garde.
+[Contrat](docs/QUERY-HISTORY.md) · [preuves](docs/validation/2026-10-07/codex-query-history/README.md).
 
-Claude : **G050–G053 PRÊTS**, voir la [file active](collaboration/tasks/QUEUE.md).
-Suite Codex : [C-019, conservation locale bornée](docs/PLAN-C019-QUERY-HISTORY.md)
-de la requête nettoyée décidée en
-C-D15, puis raccordement contrôlé de la recherche au runtime ; aucune émission
-externe ni commande distante activée. Tauri est attribué à Claude en consultation.
-Les sections datées ci-dessous conservent l'historique.
+Claude : **G054–G057 PRÊTS**, publiés dans 621d71b, voir la
+[file active](collaboration/tasks/QUEUE.md). Suite Codex : raccordement contrôlé
+recherche/runtime après contrat d’effet et de vérification ; aucune émission
+externe ni commande distante activée. Rétention garde/C-019 confiée à G057.
+Les sections datées ci-dessous conservent l’historique.
 
 ## Livré dans cette tranche
 
@@ -453,8 +453,8 @@ Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/valid
 - [x] 77 tests ciblés et 27 cas du corpus synthétique G029 inspectables.
 - [x] C-D13/15/16 : requêtes humaines/modèle nettoyées automatiques, catégories
   actuelles conservées. Décisions rapportées par Claude C067–C069.
-- [ ] Conservation locale du texte nettoyé avant émission (C-D15), raccordement
-  fournisseur et couverture des données non reconnaissables ; aucun fournisseur réel activé.
+- [x] Conservation locale du texte nettoyé avant émission (C-D15) : C-019.
+- [ ] Raccordement fournisseur et couverture des données non reconnaissables ; aucun fournisseur réel activé.
 
 Contrat : [QUERY-CLEANUP.md](docs/QUERY-CLEANUP.md). G045 reçu ; limites SQL
 consolidées, variante de libération anticipée non adoptée.
@@ -490,3 +490,11 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 - [ ] Limites connues : heuristique HTML non exhaustive (notamment variante
   « Just a moment… »), dédoublonnage texte brut avec BOM, identité Stop PowerShell
   Linux ; aucune tolérance temporelle dangereuse adoptée pour les PID.
+
+## C-019 — historique local nettoyé — 07/10/2026
+
+- [x] Texte/reçu/intention dans une transaction, aucun hash brut exporté.
+- [x] Schéma 2 explicite, ancien texte non inventé, garde obligatoire après activation.
+- [x] Pagination bornée avec reset sur modification, CLI locale seule.
+- [x] 71 tests ciblés ; suite 713 réussis/6 ignorés puis six intégrations mémoire réussies.
+- [ ] Rotation explicite (G057), journal par saut, intégration runtime et recette VM.

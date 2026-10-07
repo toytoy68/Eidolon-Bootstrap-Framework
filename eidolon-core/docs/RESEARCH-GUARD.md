@@ -66,7 +66,7 @@ humain emploie la présentation ECT.
 
 ## Données et limites
 
-Le journal conserve uniquement les identifiants techniques déclarés des
+Sans option de conservation C-019, le journal conserve uniquement les identifiants techniques déclarés des
 fournisseurs, la politique, l'empreinte de la requête **nettoyée**, celle du
 rapport, les dates/états et les annotations de revue. Pas de requête en clair,
 URL, chemin de résultat, en-têtes, extrait, corps ou exception de fournisseur.
@@ -89,3 +89,11 @@ n'est pas liée à une mission ni à un appairage. Le passage à G030 complet
 
 [Preuves](validation/2026-10-07/codex-research-guard/README.md) : crashs de vrais
 processus, réponse HTTP loopback, exclusion, pannes d'audit et revue sans relance.
+
+## Historique nettoyé optionnel — C-019
+
+`retain_queries=True` active le schéma 2 et une table privée dédiée partageant
+la transaction d’intention. Le texte reste absent des événements/inspect et de
+l’API HTTP. Voir [QUERY-HISTORY.md](QUERY-HISTORY.md) pour migration, lecture
+paginée et limites ; une fois activé, les recherches suivantes conservent ce
+mode à la réouverture. Le plafond global de 256 inclut aussi ces recherches.

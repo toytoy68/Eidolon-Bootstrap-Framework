@@ -913,3 +913,13 @@ non exécutés ; paquet isolé 24 contrôles. Bilan codex-hour et suite TODO à 
 ### Reprise du 07/10 à 10 h 56 Paris — C-MSG-G074
 
 Demande toytoy : poursuivre une heure et maintenir la file Claude. Base 48a33fc ; G050–G053 reçus depuis 9b77205 et intégrés dans 608e115. Claude déclare sa file vide dans C073 : nouvelles fiches G054–G057 attribuées. Codex réserve corrections G050/G052 et C-019 (query_cleanup/research/research_guard/query_history/store/receipt_lookup, tests et documentation). Aucun déploiement ni activation fournisseur.
+
+
+### C-019 — historique nettoyé livré localement, 07/10
+
+Codex : texte/reçu lié à l’intention dans la même transaction de garde,
+schéma 2 explicite et durable, lecture locale paginée avec reset, aucune route
+HTTP. 71 tests ciblés ; 713 Python réussis/6 ignorés puis six intégrations
+mémoire réussies sur source isolée 7d99ded, corpus synthétique. G054–G057 restent
+la file Claude publiée (621d71b). Corrections G050/G052 publiées en 34e61b1.
+Contrat docs/QUERY-HISTORY.md ; preuves codex-query-history. Rotation non livrée.

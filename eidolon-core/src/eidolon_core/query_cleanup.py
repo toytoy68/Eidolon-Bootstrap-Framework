@@ -70,7 +70,7 @@ def clean_query(query):
     try:
         raw = query.encode("utf-8")
     except UnicodeError as exc:
-        raise ContractError("INVALID_CLEANUP_QUERY") from exc
+        raise ContractError("INVALID_CLEANUP_QUERY") from None
     if any(unicodedata.category(c) == "Cc" and c not in "\t\r\n" for c in query):
         raise ContractError("INVALID_CLEANUP_QUERY")
     normalized = unicodedata.normalize("NFKC", query)
