@@ -1,3 +1,19 @@
+# File active — C-MSG-G081, 07/10/2026
+
+G057 reçu en 90aa669 et intégré comme prototype isolé, sans rotation active.
+Trois défauts de reprise reproduits ; G062 les traite. Codex prend C-028,
+lecteur d’archives et liste.md. C-D17 conservée comme décision relayée par Claude.
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G058](C-TASK-G058.md) — Contre-revue historique C-019 | PRÊT |
+| 2 | [G062](C-TASK-G062.md) — Reprise sûre et déclenchement automatique du prototype | PRÊT |
+| 3 | [G059](C-TASK-G059.md) — Contre-revue missions recherche C-021 | PRÊT |
+| 4 | [G060](C-TASK-G060.md) — Affichage client des missions recherche | PRÊT |
+| 5 | [G061](C-TASK-G061.md) — Contre-revue diagnostics et consultations CLI | PRÊT |
+
+---
+
 # File active — C-MSG-G080, 07/10/2026
 
 G050–G054 reçus et intégrés. C-019–C-021 publiés en 9ee40c9.
