@@ -852,3 +852,14 @@ signalés LEGACY_FIELDS. Outil d'archive G044 : vérificateur relu, doublons et
 incohérences reproduits puis corrigés. Les contributions Claude restent conservées.
 G045–G047 sont prêts pour Claude sur demande toytoy du 07/10, pas de nouvelle
 autorisation requise pour leur périmètre déjà défini.
+
+
+### C-013 — prise en charge Codex, 07/10 à 08 h 32 Paris
+
+Demande toytoy : continuer une heure et renouveler la file Claude quand vide.
+Base 49cafe05 ; C061/C062 reçus depuis 7c9ef92 et intégrés. Claude conserve
+G046–G049 ; sa file reste non vide. Codex réserve query_cleanup.py, ses tests,
+le raccordement explicite dans research.py et sa documentation : nettoyage
+local suivant C-D10 rapportée par Claude, sans fournisseur externe activé.
+Les choix de confirmation avant émission restent séparés. G045 SQL/BUSY
+sera consolidé sans réduire la borne des workers sur la seule base du banc.

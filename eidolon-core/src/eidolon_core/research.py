@@ -26,6 +26,7 @@ from .egress import WebPolicy, decide
 from .html_extract import ExtractLimits, extract
 from .research_pauses import ResearchPauses, PauseStorageError, PauseCapacityError, provider_scope, origin_scope
 from .research_report import project_report
+from .query_cleanup import clean_query
 
 FAILURES = {"UNAVAILABLE", "RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE", "TIMEOUT",
             "POLICY_REFUSED", "TOO_LARGE", "TRUNCATED", "UNSUPPORTED_CONTENT", "INVALID_RESPONSE", "TLS_ERROR",
@@ -246,6 +247,7 @@ class ResearchCoordinator:
         _text(query, 1000)
         if type(required_pages) is not int or not 1 <= required_pages <= self.limits.reads:
             raise ContractError("required_pages must fit the read budget")
+        cleaned = clean_query(query)
         start = self.clock()
         self._cooldowns = {k: v for k, v in self._cooldowns.items() if v[0] > start}
         late_receipt = False
@@ -253,6 +255,13 @@ class ResearchCoordinator:
                   "required_pages": required_pages, "readable_pages": 0, "read_calls": 0,
                   "providers": [], "sources": [], "status": None,
                   "scope": "retrieved text only; no claim verification or mission success"}
+        report["query_cleanup"] = cleaned.receipt()
+        # Cleanup does not grant permission to send. This candidate still relies
+        # on its trusted caller/providers; no real provider is enabled here.
+        query = cleaned.text
+        if not query:
+            report.update(status="QUERY_EMPTY_AFTER_CLEANUP", discovery_status="NOT_REQUESTED", limitation=None)
+            return project_report(report)
         seen, final_seen, body_seen, new_cache_keys = {}, set(), {}, set()
 
         def stop():

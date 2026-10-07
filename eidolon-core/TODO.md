@@ -440,3 +440,15 @@ Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/valid
 - [ ] G045–G047 : contre-revues suivantes prêtes, aucune exécution présumée.
 
 [Preuves et limites](docs/validation/2026-10-07/codex-g042-g044/README.md).
+
+## C-013 — nettoyage local des requêtes — 07/10/2026
+
+- [x] C-D10 rapportée dans C061 : motifs personnels reconnus retirés localement
+  avant tous les fournisseurs/replis du coordinateur candidat.
+- [x] Requête devenue vide sans émission ; reçus sans texte et limites documentées.
+- [x] 77 tests ciblés et 27 cas du corpus synthétique G029 inspectables.
+- [ ] Confirmation/permissions de l'émission externe et couverture des données
+  non reconnaissables restent ouvertes ; aucun fournisseur réel activé.
+
+Contrat : [QUERY-CLEANUP.md](docs/QUERY-CLEANUP.md). G045 reçu ; limites SQL
+consolidées, variante de libération anticipée non adoptée.
