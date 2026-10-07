@@ -35,6 +35,7 @@ Versions des registres le même jour : `tauri` 2.12.1, `tauri-build` 2.7.1,
 | Niveau | Résultat |
 | --- | --- |
 | **Compilation Linux** | OK : Ubuntu 24.04, rustc et cargo 1.97.0, WebKitGTK 2.52.6 installé dans le conteneur. Debug, puis release en 2 min 18 ; binaire release 6,2 Mo |
+| **Copie propre** | `git archive` du commit, puis `cargo build --locked` et `cargo test --locked` : OK. La page de repli est dans `fallback/` : `dist/` est ignoré par `eidolon-core/.gitignore`, corrigé dans un second commit |
 | **Tests unitaires** | 2/2 : bornes du port ; origine exacte (15 URL refusées, dont `localhost`, `[::1]`, `127.0.0.2`, `https`, identifiants, `file:`, `data:`, `javascript:`, `tauri:`) ([sortie](cargo-test.txt)) |
 | **Lancement Linux** (Xvfb) | OK en debug et en release ([sortie release](live-release.txt)) |
 | **Windows réel** | **non fait** : ni compilation MSVC, ni WebView2, ni poste |
