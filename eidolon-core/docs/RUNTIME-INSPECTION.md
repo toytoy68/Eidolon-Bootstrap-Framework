@@ -42,7 +42,8 @@ cohérent de la base. Les fichiers peuvent toujours changer après leur sondage.
 
 Le compteur est comparé aux événements `INVOCATION_RESERVED` de la mission,
 dans la même transaction. La lecture est limitée à 4 097 événements de
-16 Kio maximum. Une incohérence donne `INVALID`, sans budget restant fiable ;
+16 Kio maximum. Un détail trop grand donne `UNAVAILABLE`, pas une corruption
+présumée. Une incohérence vérifiée donne `INVALID`, sans budget restant fiable ;
 une ancienne mission sans budget reste `LEGACY_UNBOUNDED`. Aucun compteur n’est
 réparé ou remis à zéro, aucune invocation de diagnostic n’est facturée à la mission.
 

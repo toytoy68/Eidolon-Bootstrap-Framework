@@ -68,7 +68,8 @@ def _budget(db, identity, mission):
     for ordinal, (raw,) in enumerate(rows, 1):
         try:
             if len(raw) > 16384:
-                raise ValueError()
+                return {"state": "UNAVAILABLE", "audit_checked": False,
+                        "reason": "RESERVATION_SIZE_LIMIT"}
             event = _json(raw)
             if (type(event) is not dict or type(event.get("ordinal")) is not int
                     or event["ordinal"] != ordinal or type(event.get("limit")) is not int
@@ -174,7 +175,7 @@ def _inspect(directory, identity):
         hints.append("BLOCKED_REVIEW_MISSION")
     else:
         hints.append("NO_AUTOMATIC_RESUME")
-    if budget["state"] in {"INVALID", "EXHAUSTED"}:
+    if budget["state"] in {"INVALID", "EXHAUSTED", "UNAVAILABLE"}:
         hints.append("INVOCATION_BUDGET_" + budget["state"])
     if mission["cancel_requested"]:
         hints.append("CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP")
@@ -214,6 +215,7 @@ def render_inspection(report):
         "BLOCKED_REVIEW_MISSION": "Mission bloquée ; examiner sa demande et son erreur locales avant une reprise explicite.",
         "NO_AUTOMATIC_RESUME": "Aucune reprise automatique n’est proposée.",
         "INVOCATION_BUDGET_INVALID": "Le compteur et son audit ne concordent pas ; le budget restant n’est pas fiable.",
+        "INVOCATION_BUDGET_UNAVAILABLE": "L’audit dépasse les bornes de ce diagnostic ; aucun budget restant fiable n’est affiché.",
         "INVOCATION_BUDGET_EXHAUSTED": "Le budget de la mission est épuisé ; le diagnostic ne le remet pas à zéro.",
         "CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP": "Annulation demandée ; cela ne prouve ni l’arrêt ni l’absence d’effet.",
     }

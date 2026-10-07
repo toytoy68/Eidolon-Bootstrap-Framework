@@ -523,3 +523,12 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [ ] Revue indépendante, qualification VM ; pas de détection universelle d’orphelin.
 
 [Contrat](docs/RUNTIME-INSPECTION.md), [preuves](docs/validation/2026-10-07/codex-runtime-inspect/README.md).
+
+
+## C-023/C-024 — suivis G055/G056 — 07/10/2026
+
+- [x] G055 et G056 intégrés avec preuves originales ; G057–G060 restent à traiter.
+- [x] CSP/Referrer-Policy aussi sur saturation BUSY : écart reproduit, 68 tests HTTP/reçus réussis.
+- [x] Budget : seules réservations décodées, tous les ordinaux contrôlés ; six sondes d’altération conservées.
+- [x] Mesures synthétiques avant/après et 47 tests budget/diagnostic/recherche réussis.
+- [ ] Qualification VM/Windows ; la réécriture cohérente reste hors détection.

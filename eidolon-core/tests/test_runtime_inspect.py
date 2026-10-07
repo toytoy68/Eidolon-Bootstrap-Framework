@@ -195,6 +195,17 @@ class RuntimeInspectionTests(unittest.TestCase):
         legacy = Runtime(self.store, limits=Limits(max_invocations=None)).create(DEMO_REQUEST)
         self.assertEqual(self.inspect(legacy)["invocation_budget"], {"state": "LEGACY_UNBOUNDED", "audit_checked": False})
 
+    def test_large_valid_reservation_is_unavailable_not_declared_corrupt(self):
+        runtime = Runtime(self.store, limits=Limits(max_invocations=1))
+        mission = runtime.run(runtime.create(DEMO_REQUEST)["id"])
+        with self.store.connection() as db:
+            db.execute("UPDATE events SET detail=json_set(detail,'$.extra',?) "
+                       "WHERE mission_id=? AND kind='INVOCATION_RESERVED'", ("x" * 20000, mission["id"]))
+        result = self.inspect(mission)
+        self.assertEqual(result["invocation_budget"], {"state": "UNAVAILABLE", "audit_checked": False,
+                                                     "reason": "RESERVATION_SIZE_LIMIT"})
+        self.assertIn("INVOCATION_BUDGET_UNAVAILABLE", result["hints"])
+
     def test_intervening_cancellation_detected_even_without_revision_change(self):
         artifact = runtime_inspect._artifact
         done = False

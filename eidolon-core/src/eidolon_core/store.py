@@ -337,6 +337,14 @@ class Store:
                        (command["client_id"], command["command_key"], encode(receipt)))
         return receipt
 
+    def invocation_reservations(self, identity):
+        """Audit all reservations in order, without decoding unrelated history (G056)."""
+        self.check_id(identity)
+        with self.connection() as db:
+            rows = db.execute("SELECT detail FROM events WHERE mission_id=? AND kind='INVOCATION_RESERVED' "
+                              "ORDER BY sequence", (identity,)).fetchall()
+        return [json.loads(row[0]) for row in rows]
+
     def events(self, identity):
         self.get(identity)
         with self.connection() as db:

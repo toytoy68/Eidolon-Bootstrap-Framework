@@ -992,3 +992,17 @@ et saturation, sans modifier la CSP elle-même ni ouvrir de permission.
 C-023 validé : absence CSP sur BUSY reproduite avant correction, puis 68 tests
 HTTP/reçus réussis ; CSP inchangée et en-têtes mutualisés. G056 reçu en 8c5f649 :
 rapport/diff relus, filtrage SQL des seules réservations à évaluer en C-024.
+
+
+### C-024 — optimisation du contrôle de budget, suivi G056
+
+Codex prend runtime.py/store.py et tests budget : adopter le filtrage SQL des
+seules réservations proposé par Claude, sans index/schéma ni contrôle incrémental.
+Reproduire les mesures et les six altérations ; conserver la limite connue du
+retrait cohérent. Le diagnostic C-022 utilise déjà une lecture ciblée distincte.
+
+
+C-024 validé : banc avant/après exécuté sans chevauchement, 38,23 → 9,48 ms
+à 4095 réservations ; six altérations isolées refusées avant et après, limite
+du retrait cohérent conservée. 47 tests ciblés passent. G078 confirme réception
+G055/G056 et maintien G057–G060. Aucun changement de schéma ni source recherche.

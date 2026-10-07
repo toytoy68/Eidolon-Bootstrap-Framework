@@ -1,14 +1,14 @@
-# File active — C-MSG-G077, 07/10/2026
+# File active — C-MSG-G078, 07/10/2026
 
 G050–G054 reçus et intégrés. C-019–C-021 publiés en 9ee40c9.
-C074 annonce G055 ensuite ; G055–G057 restent à traiter. Dernier contrôle
-distant : f5e002a, aucun nouveau lot reçu depuis G054.
+G055/G056 reçus sur 8c5f649 et intégrés dans 0e0b5d9.
+C076 annonce la suite G057, puis G058/G059/G060, disponibles sans attente.
 
 | Ordre | Tâche | État |
 | --- | --- | --- |
 | 1 | [G054](C-TASK-G054.md) — Durcir les diagnostics et arguments Tauri | INTÉGRÉ 971f95d |
-| 2 | [G055](C-TASK-G055.md) — Banc des frontières réseau Tauri et CSP Core | PRÊT |
-| 3 | [G056](C-TASK-G056.md) — Mesurer le coût du budget et proposer une optimisation | PRÊT |
+| 2 | [G055](C-TASK-G055.md) — Banc des frontières réseau Tauri et CSP Core | INTÉGRÉ 0e0b5d9 |
+| 3 | [G056](C-TASK-G056.md) — Mesurer le coût du budget et proposer une optimisation | INTÉGRÉ 0e0b5d9 |
 | 4 | [G057](C-TASK-G057.md) — Concevoir la rotation explicite de la garde | PRÊT |
 | 5 | [G058](C-TASK-G058.md) — Contre-revue historique C-019 | PRÊT |
 | 6 | [G059](C-TASK-G059.md) — Contre-revue missions recherche C-021 | PRÊT |
