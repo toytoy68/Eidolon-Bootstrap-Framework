@@ -1,0 +1,14 @@
+test_busy_response_preserves_the_complete_client_csp (tests.test_http_availability.HTTPAvailabilityTests.test_busy_response_preserves_the_complete_client_csp) ... FAIL
+
+======================================================================
+FAIL: test_busy_response_preserves_the_complete_client_csp (tests.test_http_availability.HTTPAvailabilityTests.test_busy_response_preserves_the_complete_client_csp)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b00a9a3b3946/eidolon/eidolon-core/tests/test_http_availability.py", line 113, in test_busy_response_preserves_the_complete_client_csp
+    self.assertEqual(response.getheader("Content-Security-Policy"),
+AssertionError: None != "default-src 'none'; script-src 'self'; s[108 chars]one'"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.015s
+
+FAILED (failures=1)

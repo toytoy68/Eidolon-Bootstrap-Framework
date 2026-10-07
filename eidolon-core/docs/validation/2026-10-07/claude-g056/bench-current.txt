@@ -1,0 +1,15 @@
+== actuel (<copie>/eidolon-core/src)
+N=   64 : événements=   193 ; base=     120 Kio ; _ensure_invocation_budget médiane=    0.95 ms ; store.events seul=    0.69 ms
+N=  256 : événements=   769 ; base=     340 Kio ; _ensure_invocation_budget médiane=    2.55 ms ; store.events seul=    2.49 ms
+N= 1024 : événements=  3073 ; base=    1220 Kio ; _ensure_invocation_budget médiane=    9.13 ms ; store.events seul=   11.30 ms
+N= 4095 : événements= 12286 ; base=    4772 Kio ; _ensure_invocation_budget médiane=   38.64 ms ; store.events seul=   38.68 ms
+N=4095, 4 processus × 10 vérifications simultanées : 51.3, 49.4, 49.8, 47.5 ms par appel
+altérations (détection à conserver) :
+  compteur seul diminué : INVOCATION_BUDGET_INVALID
+  dernière réservation supprimée : INVOCATION_BUDGET_INVALID
+  réservation au milieu renommée : INVOCATION_BUDGET_INVALID
+  ordinal du milieu modifié : INVOCATION_BUDGET_INVALID
+  limite d'une réservation modifiée : INVOCATION_BUDGET_INVALID
+  détail non objet : INVOCATION_BUDGET_INVALID
+  réécriture cohérente (compteur et événement) : ACCEPTÉ
+coût cumulé estimé jusqu'à N (somme des vérifications avant chaque réservation) : voir README

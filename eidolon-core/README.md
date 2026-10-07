@@ -103,6 +103,13 @@ est raccordé au runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
 est disponible sur activation explicite, sans route HTTP ni fournisseur réel.
 Le plafond de 256 recherches reste bloquant tant que la rotation n’est pas livrée.
 
+## Diagnostic local avant reprise
+
+`runtime-inspect m-ID` observe une mission existante, ses verrous et ses reçus,
+sans relance ni modification. Il distingue résultat à vérifier, effet inconnu,
+budget épuisé et changement pendant le sondage. Un verrou libre n’autorise pas
+une reprise. [Contrat et commande](docs/RUNTIME-INSPECTION.md).
+
 ## Mission de recherche synthétique
 
 Le profil `research-sim` relie désormais la recherche au cycle de mission,

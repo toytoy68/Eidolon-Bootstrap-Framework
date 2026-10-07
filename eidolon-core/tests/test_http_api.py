@@ -274,6 +274,27 @@ class HTTPReadTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "INVALID_WEB_ROOT"):
             http_api.ReadServer(self.store.directory, TOKEN, port=0, web_root=web)
 
+    def test_complete_csp_is_present_on_assets_api_and_error_paths(self):
+        expected = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+                    "img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'")
+        self.server.assets = {"/": b"<h1>fixture</h1>", "/app.js": b"// fixture", "/style.css": b"body{}"}
+        cases = [("/", {}, 200), ("/app.js", {}, 200), ("/style.css", {}, 200),
+                 ("/v1/health", {}, 200), ("/v1/health", {"auth": False}, 401),
+                 ("/missing", {}, 404), ("/v1/health", {"method": "PUT"}, 405),
+                 ("/v1/health", {"headers": {"Origin": "https://foreign.invalid"}}, 403),
+                 ("/v1/missions", {"method": "POST", "body": b"{"}, 400)]
+        for path, options, expected_status in cases:
+            with self.subTest(path=path, options=options):
+                status, headers, _ = self.request(path, **options)
+                self.assertEqual(status, expected_status)
+                self.assertEqual(headers.get("Content-Security-Policy"), expected)
+                self.assertEqual(headers.get("Referrer-Policy"), "no-referrer")
+                self.assertEqual(headers.get("X-Content-Type-Options"), "nosniff")
+        with patch.object(self.server.store, "health", side_effect=sqlite3.OperationalError("private")):
+            status, headers, _ = self.request("/v1/health")
+        self.assertEqual(status, 503)
+        self.assertEqual(headers.get("Content-Security-Policy"), expected)
+
     def test_unconfigured_static_route_never_exposes_cwd(self):
         self.assertEqual(self.request("/", auth=False)[0], 404)
 

@@ -39,6 +39,8 @@ def main(argv=None):
     parser.add_argument("--format", choices=("json", "human"), default="json",
                         help="JSON for automation (default), human for the Eidolon console presentation")
     commands = parser.add_subparsers(dest="command", required=True)
+    runtime_inspect = commands.add_parser("runtime-inspect", help="inspect existing mission and worker evidence; never resume")
+    runtime_inspect.add_argument("mission_id")
     recovery = commands.add_parser("recovery-prepare", help="copy one mission database to a NEW review-only directory")
     recovery.add_argument("--source", required=True, help="source mission SQLite database; opened read-only")
     recovery.add_argument("--destination", required=True, help="new directory outside the source state")
@@ -106,6 +108,11 @@ def main(argv=None):
     reconcile.add_argument("--result", help="JSON file containing the observed tool output")
     args = parser.parse_args(argv)
     try:
+        if args.command == "runtime-inspect":
+            from .runtime_inspect import inspect_runtime, render_inspection
+            result = inspect_runtime(args.state, args.mission_id)
+            print(render_inspection(result) if args.format == "human" else encode(result))
+            return 0  # Inspection completed, never a mission success or permission.
         if args.command in {"recovery-prepare", "recovery-inspect"}:
             from .recovery import inspect_review, prepare_review
             result = (prepare_review(args.source, args.destination, actor=args.actor, reason=args.reason)

@@ -969,3 +969,26 @@ G055–G057 maintenus ; G058/G059 contre-revues C-019/C-021 et G060 affichage cl
 ajoutés à Claude. Codex réserve runtime_inspect.py, CLI et tests/docs associés :
 diagnostic local borné, sans mutation/exécution/autorisation de reprise. Aucun
 changement des sources recherche examinées par Claude, aucun nouveau droit réseau.
+
+
+### C-022 — diagnostic validé localement
+
+62 tests ciblés réussis, dont 15 nouveaux. `runtime-inspect` ne construit ni
+Store ni Runtime, ne crée pas de verrou et ne relance rien. Distingue capture
+SQLite, sondages de verrous et présence non vérifiée des reçus ; budget audité
+sur réservations bornées, changement pendant sondage signalé. Données privées
+non exportées. G055 reçu sur 2568e16, rapport et banc relus ; intégration suivante.
+
+
+### C-023 — suivi G055 pris par Codex
+
+G055 intégré dans 10339ce. Relecture : la réponse de saturation BUSY contourne
+_send et n’envoie pas la CSP ni Referrer-Policy. Le corps reste un JSON fixe
+sans donnée utilisateur ; aucun contournement navigateur n’est démontré.
+Codex réserve http_api.py et tests HTTP : même politique sur assets/API/erreurs
+et saturation, sans modifier la CSP elle-même ni ouvrir de permission.
+
+
+C-023 validé : absence CSP sur BUSY reproduite avant correction, puis 68 tests
+HTTP/reçus réussis ; CSP inchangée et en-têtes mutualisés. G056 reçu en 8c5f649 :
+rapport/diff relus, filtrage SQL des seules réservations à évaluer en C-024.

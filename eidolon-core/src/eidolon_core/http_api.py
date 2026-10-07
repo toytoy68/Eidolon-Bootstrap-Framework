@@ -47,6 +47,12 @@ MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
           "/app.js": ("app.js", "text/javascript; charset=utf-8"),
           "/style.css": ("style.css", "text/css; charset=utf-8")}
+SECURITY_HEADERS = (("Cache-Control", "no-store"),
+                    ("X-Content-Type-Options", "nosniff"),
+                    ("Referrer-Policy", "no-referrer"),
+                    ("Content-Security-Policy", "default-src 'none'; script-src 'self'; "
+                     "style-src 'self'; connect-src 'self'; img-src 'self'; "
+                     "base-uri 'none'; frame-ancestors 'none'; form-action 'none'"))
 
 
 class APIError(ValueError):
@@ -198,12 +204,8 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Referrer-Policy", "no-referrer")
-        self.send_header("Content-Security-Policy", "default-src 'none'; script-src 'self'; "
-                         "style-src 'self'; connect-src 'self'; img-src 'self'; "
-                         "base-uri 'none'; frame-ancestors 'none'; form-action 'none'")
+        for name, value in SECURITY_HEADERS:
+            self.send_header(name, value)
         self.send_header("Connection", "close")
         self.end_headers()
         if self.command != "HEAD":
@@ -376,8 +378,8 @@ class ReadServer(HTTPServer):
         body = b'{"protocol":"eidolon-http-read/1","error":"BUSY","authorizes_execution":false}'
         response = (b"HTTP/1.0 503 Service Unavailable\r\n"
                     b"Content-Type: application/json; charset=utf-8\r\n"
-                    b"Cache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n"
-                    b"Connection: close\r\nContent-Length: " + str(len(body)).encode("ascii")
+                    + b"".join((name + ": " + value + "\r\n").encode("ascii") for name, value in SECURITY_HEADERS)
+                    + b"Connection: close\r\nContent-Length: " + str(len(body)).encode("ascii")
                     + b"\r\n\r\n" + body)
         try:
             request.settimeout(BUSY_WRITE_TIMEOUT_SECONDS)

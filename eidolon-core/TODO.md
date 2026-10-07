@@ -5,18 +5,17 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — séance du 07/10/2026 à 10 h 56 Paris
+## État courant — reprise du 07/10/2026 à 12 h Paris
 
-C-010–C-020 livrés ; G036–G053 intégrés, coquille Tauri incluse (qualification
-Linux rapportée par Claude, Windows non validé). Corrections G050/G052 : motifs
-nettoyés étendus, hash brut retiré des rapports, fenêtre des reçus C-012 fermée.
-C-019 conserve le texte nettoyé avant appel, dans la transaction de garde.
-[Contrat](docs/QUERY-HISTORY.md) · [preuves](docs/validation/2026-10-07/codex-query-history/README.md).
+C-010–C-021 livrés ; G036–G054 intégrés. C-019 conserve le texte nettoyé avant
+appel ; C-021 le raccorde aux missions sur fixtures fixes. 733 tests Python,
+six intégrations mémoire et 49 tests client réussis à la clôture précédente.
+[Preuves](docs/validation/2026-10-07/codex-hour-1056/README.md).
 
-Claude : **G054–G057 PRÊTS**, publiés dans 621d71b, voir la
-[file active](collaboration/tasks/QUEUE.md). Suite Codex : raccordement contrôlé
-recherche/runtime après contrat d’effet et de vérification ; aucune émission
-externe ni commande distante activée. Rétention garde/C-019 confiée à G057.
+Claude : G055 reçu en cours d’intégration ; G056–G060 disponibles,
+voir la [file active](collaboration/tasks/QUEUE.md). Codex prend C-022 :
+diagnostic local de reprise sans mutation. Fournisseurs externes, commandes
+distantes, rotation G057 et recette Windows/VM restent des lots distincts.
 Les sections datées ci-dessous conservent l’historique.
 
 ## Livré dans cette tranche
@@ -513,3 +512,14 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 
 Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 [preuves](docs/validation/2026-10-07/codex-research-runtime/README.md).
+
+
+## C-022 — diagnostic local de reprise — 07/10/2026
+
+- [x] Capture mission/budget bornée, lecture seule sans Store/Runtime.
+- [x] Sondage des verrous/reçus existants, aucune création ni permission de reprise.
+- [x] Changement pendant sondage signalé, requête/contexte/résultats non exportés.
+- [x] 62 tests ciblés réussis, dont 15 nouveaux et un détenteur de verrou séparé.
+- [ ] Revue indépendante, qualification VM ; pas de détection universelle d’orphelin.
+
+[Contrat](docs/RUNTIME-INSPECTION.md), [preuves](docs/validation/2026-10-07/codex-runtime-inspect/README.md).
