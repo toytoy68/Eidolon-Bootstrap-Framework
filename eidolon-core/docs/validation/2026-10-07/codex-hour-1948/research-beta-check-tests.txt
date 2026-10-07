@@ -1,0 +1,13 @@
+test_missing_assets_fail_before_preparing_state_without_path_leak (tests.test_beta_check.BetaCheckTests.test_missing_assets_fail_before_preparing_state_without_path_leak) ... ok
+test_owned_process_group_cleanup_includes_descendant_ignoring_term (tests.test_beta_check.BetaCheckTests.test_owned_process_group_cleanup_includes_descendant_ignoring_term) ... ok
+test_real_recipe_from_unrelated_directory_has_machine_report (tests.test_beta_check.BetaCheckTests.test_real_recipe_from_unrelated_directory_has_machine_report) ... ok
+test_research_archive_recipe_reports_scope_and_preserves_unowned_files (tests.test_beta_check.BetaCheckTests.test_research_archive_recipe_reports_scope_and_preserves_unowned_files) ... ok
+test_research_archive_request_failure_closes_owned_server (tests.test_beta_check.BetaCheckTests.test_research_archive_request_failure_closes_owned_server) ... ok
+test_server_spawn_failure_cleans_owned_files_and_hides_raw_error (tests.test_beta_check.BetaCheckTests.test_server_spawn_failure_cleans_owned_files_and_hides_raw_error) ... ok
+test_signal_handlers_are_restored_after_failed_recipe (tests.test_beta_check.BetaCheckTests.test_signal_handlers_are_restored_after_failed_recipe) ... ok
+test_sigterm_and_sigint_report_interruption_and_close_owned_server (tests.test_beta_check.BetaCheckTests.test_sigterm_and_sigint_report_interruption_and_close_owned_server) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 9.386s
+
+OK

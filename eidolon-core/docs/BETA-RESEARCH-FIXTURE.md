@@ -58,3 +58,8 @@ Pas de reprise automatique, installation, service système ou effacement. Les
 scénarios sont reproductibles, leurs octets/identités/horodatages ne le sont pas.
 Le jeu valide le parcours synthétique ; VM, Windows, SSH, GPU et Web réels restent
 à qualifier séparément. Le dossier de recette peut être conservé pour inspection.
+
+
+Pour une vérification automatique jetable avec arrêt des processus créés,
+utiliser beta_check --web-root desktop/connected --profile research-archives.
+[Contrôles et limites](BETA-LOCAL-CHECK.md#profil-recherches-et-archives-c-033).

@@ -65,3 +65,24 @@ dans cet environnement. Ce n'est pas une correction universelle : certaines
 versions Python ne fournissent plus distutils dans la bibliothèque standard.
 La preuve de paquet distingue donc le backend effectivement testé ; ne pas
 modifier globalement l'environnement Debian sur la base de ce seul résultat.
+
+
+## Profil recherches et archives (C-033)
+
+```sh
+PYTHONPATH=src python -m eidolon_core.beta_check \
+  --web-root desktop/connected --profile research-archives
+```
+
+25 contrôles sur un jeu temporaire neuf : trois recherches synthétiques,
+catalogue privé en trois pages, refus sans jeton, absence d'export brut, reset
+après changement, preuves SQLite actives inchangées, création/annulation visible,
+jeton remplacé au redémarrage et curseur conservé. La recette retire une copie
+d'archive dans son propre dossier jetable pour tester le reset ; aucune recherche
+active ni donnée utilisateur n'est supprimée. Les descendants créés sont arrêtés
+et les fichiers temporaires propres à cette recette sont retirés, même sur refus.
+
+Le profil par défaut missions conserve ses 24 contrôles. Le rapport indique
+explicitement le profil testé. Un PASS reste local : navigateur, Windows, SSH,
+serveur utilisateur, GPU et modèle réel ne sont pas testés. Cette commande peut
+être rejouée depuis le paquet installé avec un chemin explicite vers les assets.

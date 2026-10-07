@@ -5,20 +5,18 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — reprise du 07/10/2026 à 12 h Paris
+## État courant — séance du 07/10/2026 au soir
 
-C-010–C-027 livrés ; G036–G056 intégrés. C-019 conserve le texte nettoyé avant
-appel ; C-021 le raccorde aux missions sur fixtures fixes. 767 tests Python,
-six intégrations mémoire et 49 tests client réussis dans cette séance.
-[Preuves](docs/validation/2026-10-07/codex-hour-1200/README.md).
+C-030–C-033 : catalogue archives HTTP, recette recherches et planificateur Ollama
+explicite en CLI. Le défaut reste déterministe, fournisseurs réels désactivés.
+La rotation G063 reste isolée et en qualification G068. G066–G071 sont les six
+nouvelles tâches Claude, après G064/G065 ; [file active](collaboration/tasks/QUEUE.md).
 
-Claude : G057 reçu comme prototype, G058/G062/G059–G061 disponibles,
-voir la [file active](collaboration/tasks/QUEUE.md). C-022 :
-diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
-C-025 inspection historique durcie ; C-026/C-027 parcours opérateur et lectures
-CLI sans migration. Fournisseurs externes, commandes
-distantes, rotation automatique (G062) et recette Windows/VM restent des lots distincts.
-Les sections datées ci-dessous conservent l’historique.
+[Bilan fonctionnel et avancement](docs/PROJECT-STATUS-2026-10-07.md) : bêta
+observateur estimée à 80 %, vision complète à 40 % ; estimations pondérées,
+aucune qualification VM/Windows ni modèle réel revendiquée.
+[Preuves de la séance](docs/validation/2026-10-07/codex-hour-1948/README.md).
+Les sections datées suivantes conservent l'historique et ses limites d'origine.
 
 ## Livré dans cette tranche
 
@@ -603,3 +601,11 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Création sans appel, reprise liée à la configuration et refus des outils hors profil.
 - [x] Neuf nouveaux tests, 23 tests du raccordement/adaptateur réussis sur faux HTTP local.
 - [ ] Qualification d'un vrai modèle et GPU, chat généraliste et autres adaptateurs CLI.
+
+
+## C-033 — recette automatique recherches/archives — 07/10/2026
+
+- [x] Profil research-archives : 25 contrôles, trois recherches et consultation authentifiée.
+- [x] Pagination/reset, preuves actives inchangées, jeton et reprise serveur vérifiés.
+- [x] Échec de requête nettoyé, fichiers étrangers préservés ; huit tests de recette passent.
+- [x] Les 24 contrôles du profil initial restent inchangés.

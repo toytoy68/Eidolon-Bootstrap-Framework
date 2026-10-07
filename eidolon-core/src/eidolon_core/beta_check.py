@@ -70,7 +70,9 @@ def _stop_owned(child):
         child.wait(timeout=3)
 
 
-def run(web_root, checks):
+def run(web_root, checks, *, profile="missions"):
+    if profile not in {"missions", "research-archives"}:
+        raise ValueError("invalid recipe profile")
     web_root = Path(web_root).resolve(strict=True)
     from .http_api import read_assets
     assets = read_assets(web_root)
@@ -101,12 +103,14 @@ def run(web_root, checks):
     with tempfile.TemporaryDirectory(prefix="eidolon-recipe-smoke-") as directory:
         root = Path(directory)
         fixture = root / "fixture"
-        check("fixture_ready", cli("eidolon_core.beta_fixture", "--output", fixture)["status"] == "READY")
+        check("fixture_ready", cli("eidolon_core.beta_fixture", "--output", fixture,
+                                   "--profile", profile)["status"] == "READY")
         manifest = json.loads((fixture / "manifest.json").read_text())
         state, token_file = fixture / "state", fixture / "read-token"
         old_token = token_file.read_text().strip()
+        archive_args = ["--research-archives", str(fixture / "archives")] if profile == "research-archives" else []
         check("preflight_pass", cli("eidolon_core.http_api", "--state", state, "--token-file", token_file,
-                                    "--web-root", web_root, "--port", 0, "--check")["status"] == "PASS")
+                                    "--web-root", web_root, "--port", 0, *archive_args, "--check")["status"] == "PASS")
         child = None
         stream = None
 
@@ -126,7 +130,7 @@ def run(web_root, checks):
             log = root / log_name
             stream = log.open("w")
             child = subprocess.Popen([sys.executable, "-m", "eidolon_core.http_api", "--state", str(state),
-                                      "--token-file", str(file), "--port", "0", "--web-root", str(web_root)],
+                                      "--token-file", str(file), "--port", "0", "--web-root", str(web_root), *archive_args],
                                      env=environment, stdout=stream, stderr=stream, start_new_session=True)
             deadline = time.monotonic() + 8
             while time.monotonic() < deadline:
@@ -156,24 +160,53 @@ def run(web_root, checks):
 
         try:
             port = start(token_file, "first-server.log")
-            before = {p.name: p.read_bytes() for p in state.glob("*.sqlite3")}
+            before = {str(p.relative_to(state)): p.read_bytes() for p in state.rglob("*.sqlite3")}
             for path in ("/", "/app.js", "/style.css"):
                 check("asset_" + path, request(port, path)[0] == 200)
             status, health = request(port, "/v1/health", old_token)
             check("authenticated_health", status == 200 and health["mode"] == "read_only")
             check("anonymous_refused", request(port, "/v1/health")[0] == 401)
             status, listing = request(port, "/v1/missions", old_token, {})
-            check("six_missions", status == 200 and len(listing["items"]) == 6)
+            expected_count = len(manifest["scenarios"])
+            check("six_missions" if profile == "missions" else "three_research_missions",
+                  status == 200 and len(listing["items"]) == expected_count)
             for scenario in manifest["scenarios"]:
                 status, snapshot = request(port, "/v1/missions/" + scenario["mission_id"], old_token)
                 check("snapshot_" + scenario["role"], status == 200 and snapshot["snapshot"]["mission"]["status"] == scenario["expected_status"])
             for query in manifest["receipt_queries"]:
                 status, receipt = request(port, "/v1/command-receipt", old_token, query)
                 check("receipt_" + query["command_key"], status == 200 and receipt["status"] == "FOUND" and receipt["authorizes_execution"] is False)
-            check("read_state_unchanged", before == {p.name: p.read_bytes() for p in state.glob("*.sqlite3")})
+            if profile == "research-archives":
+                route = "/v1/research-archives"
+                check("anonymous_archives_refused", request(port, route, data={})[0] == 401)
+                cursor, first_cursor, items = None, None, []
+                forbidden = [str(root), "notice pont", *[r["mission_id"] for r in manifest["scenarios"]]]
+                for index in range(3):
+                    status, page = request(port, route, old_token, {"limit": 1, "cursor": cursor})
+                    check("archive_page_" + str(index + 1), status == 200 and page["status"] == "PAGE"
+                          and len(page["items"]) == 1 and page["items"][0]["index"] == index + 1
+                          and page["has_more"] is (index < 2))
+                    if any(value in json.dumps(page) for value in forbidden):
+                        raise AssertionError("archive privacy")
+                    if not all(page[name] is False for name in ("authorizes_execution", "authenticity_verified",
+                               "live_journal_checked", "committed_status_known", "request_sent")):
+                        raise AssertionError("archive authority")
+                    cursor = page["next_cursor"]
+                    if index == 0:
+                        first_cursor = cursor
+                    items.extend(page["items"])
+                check("archive_catalog_complete_private_no_authority", len(items) == 3 and cursor is None
+                      and page["archive_count"] == 3 and page["run_count"] == 3)
+                check("raw_archive_route_absent", request(port, "/research-archive-000001.json", old_token)[0] == 404)
+                # Only this recipe's disposable copies, never active research evidence.
+                (fixture / "archives/research-archive-000003.json").unlink()
+                status, reset = request(port, route, old_token, {"cursor": first_cursor})
+                check("archive_change_requires_reset", status == 200 and reset["status"] == "RESET_REQUIRED"
+                      and reset["reason"] == "CATALOG_CHANGED" and reset["items"] == [])
+            check("read_state_unchanged", before == {str(p.relative_to(state)): p.read_bytes() for p in state.rglob("*.sqlite3")})
             mission = cli("eidolon_core", "--state", state, "create", "mission supplémentaire synthétique")
             status, listing = request(port, "/v1/missions", old_token, {})
-            check("live_creation_visible", status == 200 and len(listing["items"]) == 7)
+            check("live_creation_visible", status == 200 and len(listing["items"]) == expected_count + 1)
             cli("eidolon_core", "--state", state, "cancel", mission["id"], expected_code=4)
             status, snapshot = request(port, "/v1/missions/" + mission["id"], old_token)
             check("live_cancellation_visible", status == 200 and snapshot["snapshot"]["mission"]["status"] == "CANCELLED")
@@ -195,9 +228,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — recette locale isolée")
     parser.add_argument("--web-root", required=True, help="Dossier desktop/connected de la version testée")
     parser.add_argument("--format", choices=("json", "human"), default="json")
+    parser.add_argument("--profile", choices=("missions", "research-archives"), default="missions")
     args = parser.parse_args(argv)
     checks = []
     report = {"protocol": "eidolon-beta-check/1", "status": "FAIL", "checks": checks,
+              "profile": args.profile,
               "browser_tested": False, "ssh_tested": False, "windows_tested": False,
               "user_server_tested": False, "model_tested": False,
               "python": sys.version.split()[0]}
@@ -207,7 +242,7 @@ def main(argv=None):
         report["package_version"] = "source-checkout"
     try:
         with _termination_signals():
-            report["asset_sha256"] = run(args.web_root, checks)
+            report["asset_sha256"] = run(args.web_root, checks, profile=args.profile)
         report["status"] = "PASS"
     except _Interrupted as exc:
         report["error"] = "INTERRUPTED"

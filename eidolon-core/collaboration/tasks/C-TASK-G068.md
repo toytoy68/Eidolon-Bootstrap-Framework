@@ -16,3 +16,14 @@ modifier research_guard/query_history/research_archive : intégration réservée
 
 Publier résultat, tests exécutés, limites et commit séparé. Pas de main, déploiement
 ni modification Memory Engine. Si bloqué, avancer la prochaine tâche prête.
+
+
+Complément Codex, séance G086 : avant toute qualification, traiter la fermeture
+inconditionnelle de src/dst dans _Snapshot. Sonde jointe :
+docs/validation/2026-10-07/codex-hour-1948/g063-invalid-snapshot.py.
+Dix verify sur métadonnées manquantes : 4→14 descripteurs avec GC désactivé,
+retour à 4 après GC, aucune mutation. Le prototype renvoie aussi TypeError brut.
+Ton périmètre est étendu à ce correctif local dans rotation.py et ses tests.
+Tester avec GC désactivé ; un gc.collect avant/après ne remplace pas finally/close.
+Les preuves G063 historiques restent inchangées. Vérifier également le budget
+de l'online backup sous writer concurrent (par lecture, pas de délai explicite).

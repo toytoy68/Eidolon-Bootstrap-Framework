@@ -1,5 +1,7 @@
 # Eidolon Core v0.1
 
+[État fonctionnel, limites et avancement au 07/10 au soir](docs/PROJECT-STATUS-2026-10-07.md).
+
 Première tranche exécutable : demande → mission persistée → rappel mémoire →
 plan proposé → autorisation déterministe → outil local → vérification → résultat.
 Un agent, exécution séquentielle, aucun modèle contrôleur choisi définitivement.

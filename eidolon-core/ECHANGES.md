@@ -1152,3 +1152,21 @@ bloqués et plans non autorisés refusés. Aucun modèle ni GPU réel qualifié.
 C-031/C-032 recette globale : 838 découverts, 832 réussis, six ignorés. Paquet
 hors réseau installé : 47 modules identiques, 24 contrôles bêta, nouvelle recette
 recherche, catalogue HTTP et planificateur CLI vérifiés. Faux modèle uniquement.
+
+### C-033 — recette automatique du profil recherches/archives
+
+Codex réserve beta_check.py, tests et BETA-LOCAL-CHECK/BETA-RESEARCH-FIXTURE.
+Ajouter --profile research-archives, préserver les 24 contrôles du profil par
+défaut ; vérifier pagination, confidentialité, reset et absence de mutation des
+preuves actives dans une destination temporaire exclusivement créée par la recette.
+
+C-033 validé sur huit tests de recette et 25 contrôles réels en sous-processus.
+G063 : sonde additionnelle sur métadonnées manquantes : dix refus TypeError,
+descripteurs 4→14 avant GC puis 4 après GC, base active inchangée. La collecte
+avant comptage ne prouve donc pas une fermeture déterministe. Ajout à G068.
+
+C-033 et bilan final vérifiés : 834 Python/six ignorés ; 51 client/13 Chromium
+ignorés ; paquet installé 47 modules, recettes 24+25. Catalogue 1 000 petites
+archives synthétiques servi en 147 ms environ, mesure locale unique. Bilan
+PROJECT-STATUS : bêta observateur ~80 %, vision complète ~40 %, pondérations
+explicites ; qualification VM/Windows et vrai modèle toujours absente.

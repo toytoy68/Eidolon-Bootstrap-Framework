@@ -27,6 +27,49 @@ WEB = CORE / "desktop" / "connected"
 
 
 class BetaCheckTests(unittest.TestCase):
+    def test_research_archive_recipe_reports_scope_and_preserves_unowned_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            sentinel = Path(directory) / "keep.txt"
+            sentinel.write_bytes(b"unowned sentinel")
+            result = subprocess.run(
+                [sys.executable, "-m", "eidolon_core.beta_check", "--web-root", str(WEB),
+                 "--profile", "research-archives"], cwd=directory,
+                env={**os.environ, "PYTHONPATH": str(CORE / "src"), "TMPDIR": directory},
+                capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["profile"], "research-archives")
+            self.assertEqual(report["checks_passed"], 25)
+            for check in ("three_research_missions", "archive_catalog_complete_private_no_authority",
+                          "archive_change_requires_reset", "read_state_unchanged", "restart_preserves_store_and_cursor"):
+                self.assertIn(check, report["checks"])
+            for flag in ("model_tested", "browser_tested", "windows_tested", "user_server_tested", "ssh_tested"):
+                self.assertIs(report[flag], False)
+            self.assertEqual(list(Path(directory).iterdir()), [sentinel])
+            self.assertEqual(sentinel.read_bytes(), b"unowned sentinel")
+
+    def test_research_archive_request_failure_closes_owned_server(self):
+        original = beta_check.HTTPConnection.request
+        ports = []
+        def fail_archive(connection, method, path, *args, **kwargs):
+            if path == "/v1/research-archives":
+                ports.append(connection.port)
+                raise OSError("private archive failure")
+            return original(connection, method, path, *args, **kwargs)
+        with tempfile.TemporaryDirectory() as directory:
+            output = io.StringIO()
+            with patch.object(tempfile, "tempdir", directory), \
+                    patch.object(beta_check.HTTPConnection, "request", fail_archive), redirect_stdout(output):
+                code = beta_check.main(["--web-root", str(WEB), "--profile", "research-archives"])
+            self.assertEqual(code, 2)
+            self.assertNotIn("private archive failure", output.getvalue())
+            self.assertEqual(json.loads(output.getvalue())["error"], "LOCAL_RECIPE_FAILED")
+            self.assertEqual(list(Path(directory).iterdir()), [])
+            self.assertTrue(ports)
+            with socket.socket() as client:
+                client.settimeout(1)
+                self.assertNotEqual(client.connect_ex(("127.0.0.1", ports[0])), 0)
+
     def test_sigterm_and_sigint_report_interruption_and_close_owned_server(self):
         code = '''import signal,sys
 from eidolon_core import beta_check

@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "synthetic_format_copies_only": true,
+  "rotation_tested": false,
+  "samples_per_size": 1,
+  "not_a_latency_guarantee": true,
+  "results": [
+    {
+      "archives": 10,
+      "synthetic_runs": 10,
+      "export_bytes": 24602,
+      "catalog_ms": 2.14,
+      "http_page_ms": 3.459,
+      "response_bytes": 2843,
+      "page_items": 10,
+      "process_peak_rss_kib": 21944
+    },
+    {
+      "archives": 100,
+      "synthetic_runs": 100,
+      "export_bytes": 246284,
+      "catalog_ms": 14.018,
+      "http_page_ms": 14.642,
+      "response_bytes": 23186,
+      "page_items": 100,
+      "process_peak_rss_kib": 22072
+    },
+    {
+      "archives": 1000,
+      "synthetic_runs": 1000,
+      "export_bytes": 2465786,
+      "catalog_ms": 139.306,
+      "http_page_ms": 146.583,
+      "response_bytes": 23346,
+      "page_items": 100,
+      "process_peak_rss_kib": 24140
+    }
+  ],
+  "temporary_files_removed": true
+}
