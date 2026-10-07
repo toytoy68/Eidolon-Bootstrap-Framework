@@ -102,7 +102,7 @@ L'outil de vérification reste celui du checkout de confiance, pas un programme
 ## Documents optionnels ajoutés le 07/10
 
 QUERY-CLEANUP, RESEARCH-GUARD, INVOCATION-BUDGET, QUERY-HISTORY et
-RESEARCH-MISSIONS, RUNTIME-INSPECTION, RECOVERY-REVIEW et DIAGNOSTIC-WORKFLOW
+RESEARCH-MISSIONS, RUNTIME-INSPECTION, RECOVERY-REVIEW, DIAGNOSTIC-WORKFLOW et RESEARCH-ARCHIVES
 sont inclus quand ils existent au commit sélectionné.
 La coquille Tauri et ses sources restent hors de cette archive serveur/client
 Web ; consulter le dépôt complet pour ce prototype. Les liens du README vers

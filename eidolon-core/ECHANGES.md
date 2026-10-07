@@ -1081,3 +1081,8 @@ rejouées ; trois défauts de reprise reproduits et attribués à G062. Codex r�
 research_archive.py, tests/docs associés : validation stricte et bornée des
 exports, catalogue local et liste.md. Aucun retrait de recherche ou migration
 active dans C-028. Claude garde G058/G062/G059–G061 et le prototype de rotation.
+
+C-028 validé : 18 tests dédiés, 74 associés, suite globale 785 réussis/six
+ignorés. Trois exports G057 effectivement lus, sept textes liés et liste.md
+privé produit sans changer les sources. G058/G059 reçus sur 2ac483b et intégrés ;
+G059-1 (garde recréée par construction du runtime) passe en correction C-029.

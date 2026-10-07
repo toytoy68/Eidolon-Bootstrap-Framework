@@ -12,12 +12,12 @@ appel ; C-021 le raccorde aux missions sur fixtures fixes. 767 tests Python,
 six intégrations mémoire et 49 tests client réussis dans cette séance.
 [Preuves](docs/validation/2026-10-07/codex-hour-1200/README.md).
 
-Claude : G055/G056 intégrés ; G057–G061 disponibles,
+Claude : G057 reçu comme prototype, G058/G062/G059–G061 disponibles,
 voir la [file active](collaboration/tasks/QUEUE.md). C-022 :
 diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
 C-025 inspection historique durcie ; C-026/C-027 parcours opérateur et lectures
 CLI sans migration. Fournisseurs externes, commandes
-distantes, rotation G057 et recette Windows/VM restent des lots distincts.
+distantes, rotation automatique (G062) et recette Windows/VM restent des lots distincts.
 Les sections datées ci-dessous conservent l’historique.
 
 ## Livré dans cette tranche
@@ -553,3 +553,14 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Mutations de consultation reproduites, trois commandes CLI passées à ReadOnlyStore.
 - [x] 59 tests ciblés réussis dont six nouveaux ; protocoles/pagination inchangés.
 - [x] Refus sans réparation des anciens schémas, tables manquantes et états bêta incomplets.
+
+
+## C-028 — lecteur d’archives et liste.md — 07/10/2026
+
+- [x] G057 intégré comme prototype isolé ; trois défauts de reprise reproduits.
+- [x] G062 confié à Claude : corriger conservation/reprise et préparer l’automatisme C-D17.
+- [x] Lecteur strict des exports, chaîne, événements et textes nettoyés liés.
+- [x] Catalogue local privé, sans requêtes exportées ni statut de commit présumé.
+- [x] Génération atomique et idempotente de liste.md ; fichiers manuscrits refusés.
+- [ ] Rotation automatique à cible 100 avec preuves des missions protégées.
+- [ ] Consultation Desktop via projection Core authentifiée, sans accès fichiers Tauri.
