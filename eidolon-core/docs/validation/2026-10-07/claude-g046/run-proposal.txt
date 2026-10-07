@@ -1,0 +1,143 @@
+===== Mode Standard
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18902 -Connect -RemoteCore eidolon-recette/eidolon-core -RemoteState eidolon-beta/state -RemoteTokenFile eidolon-beta/read-token
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[OK] Port local 18902 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+Version            : 0.1.0
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.
+[OK] Diagnostic distant réussi. Ce n'est pas une qualification de la bêta.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 6540) : http://127.0.0.1:18902/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18902
+code: 0
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18902 --check --format human"]
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18903 -Connect -RemoteCore ~/eidolon-recette/eidolon-core -RemoteState ~/eidolon-beta/state -RemoteTokenFile ~/eidolon-beta/read-token
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[OK] Port local 18903 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+Version            : 0.1.0
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.
+[OK] Diagnostic distant réussi. Ce n'est pas une qualification de la bêta.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 6594) : http://127.0.0.1:18903/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18903
+code: 0
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18903 --check --format human"]
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18904 -Connect -RemoteCore <tmp>/home with space/eidolon-recette/eidolon-core -RemoteState <tmp>/home with space/eidolon-beta/state -RemoteTokenFile <tmp>/home with space/eidolon-beta/read-token
+[ERREUR] Chemin distant refusé : <tmp>/home with space/eidolon-recette/eidolon-core
+code: 2
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18903 --check --format human"]
+
+===== Mode Legacy
+$ [Legacy] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18905 -Connect -RemoteCore eidolon-recette/eidolon-core -RemoteState eidolon-beta/state -RemoteTokenFile eidolon-beta/read-token
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[OK] Port local 18905 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+Version            : 0.1.0
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.
+[OK] Diagnostic distant réussi. Ce n'est pas une qualification de la bêta.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 6700) : http://127.0.0.1:18905/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18905
+code: 0
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18905 --check --format human"]
+
+$ [Legacy] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18906 -Connect -RemoteCore ~/eidolon-recette/eidolon-core -RemoteState ~/eidolon-beta/state -RemoteTokenFile ~/eidolon-beta/read-token
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[OK] Port local 18906 libre sur 127.0.0.1.
+[INFO] Diagnostic C-009c sur le serveur (ne démarre rien, ne teste ni le port ni le tunnel)…
+Version            : 0.1.0
+[OK] TOKEN_VALID : Jeton lisible, privé et au format attendu.
+[OK] STATE_READABLE : Base existante lisible, schéma et identité reconnus, garde de récupération absente.
+[OK] ASSETS_READABLE : Les trois fichiers du client sont lisibles et respectent la limite de taille.
+[OK] PORT_VALID : Numéro de port valide ; disponibilité non testée.
+[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.
+[OK] Diagnostic distant réussi. Ce n'est pas une qualification de la bêta.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 6754) : http://127.0.0.1:18906/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18906
+code: 0
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18906 --check --format human"]
+
+$ [Legacy] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18907 -Connect -RemoteCore <tmp>/home with space/eidolon-recette/eidolon-core -RemoteState <tmp>/home with space/eidolon-beta/state -RemoteTokenFile <tmp>/home with space/eidolon-beta/read-token
+[ERREUR] Chemin distant refusé : <tmp>/home with space/eidolon-recette/eidolon-core
+code: 2
+
+argv du diagnostic reçu par ssh : ["--", "toytoy@serveur.local", "cd ~/'eidolon-recette/eidolon-core' && PYTHONPATH=src python3 -m eidolon_core.http_api --state ~/'eidolon-beta/state' --token-file ~/'eidolon-beta/read-token' --web-root desktop/connected --port 18906 --check --format human"]
+
+===== Chemins refusés
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore ~autre/x -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : ~autre/x
+code: 2
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore ~root -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : ~root
+code: 2
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore a b -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : a b
+code: 2
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore $HOME/x -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : $HOME/x
+code: 2
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore a'b -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : a'b
+code: 2
+
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18950 -RemoteCore -x -RemoteState s -RemoteTokenFile t
+[ERREUR] Chemin distant refusé : -x
+code: 2
+
+===== Arrêt : processus nommé ssh, comme sous Windows
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18960 -Connect
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[OK] Port local 18960 libre sur 127.0.0.1.
+[INFO] Ouverture du tunnel dans une nouvelle fenêtre : y répondre à SSH si nécessaire (empreinte, mot de passe).
+[OK] Tunnel ouvert (PID 7008) : http://127.0.0.1:18960/
+[INFO] Jeton : le lire sur le serveur (cat du fichier jeton) et le coller dans la page. Ce script ne le lit jamais.
+[INFO] Arrêt du tunnel seul : .\eidolon-tunnel.ps1 -Stop -Port 18960
+code: 0
+
+nom du processus : ssh
+$ [Standard] eidolon-tunnel.ps1 -Server serveur.local -User toytoy -Port 18960 -Connect
+[OK] Client SSH : <tmp>/bin/ssh.exe
+[INFO] Un tunnel lancé par ce script est déjà actif sur le port 18960 (PID 7008).
+[INFO] Adresse : http://127.0.0.1:18960/  —  arrêt : .\eidolon-tunnel.ps1 -Stop -Port 18960
+code: 0
+
+$ [Standard] eidolon-tunnel.ps1 -Stop -Port 18960
+[OK] Tunnel du port 18960 arrêté (PID 7008). Le serveur Core n'est pas arrêté.
+code: 0
+
+tunnel arrêté (état : Z)
+===== PID réutilisé : enregistrement qui pointe vers un autre processus ssh
+$ [Standard] eidolon-tunnel.ps1 -Stop -Port 18960
+[INFO] Le PID 7070 n'est plus le tunnel enregistré (arrêté ou réutilisé) ; enregistrement retiré, aucun processus arrêté.
+code: 0
+
+processus étranger intact
