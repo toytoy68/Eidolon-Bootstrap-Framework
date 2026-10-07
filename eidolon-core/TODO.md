@@ -576,3 +576,13 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [ ] G063 : corriger écritures courtes et nettoyage prématuré du prototype.
 - [ ] G064 : contre-revue du lecteur et de l'initialisation.
 - [ ] G065 : diagnostics budget et mission historique inconnue.
+
+
+## C-030 — catalogue archives pour le client — 07/10/2026
+
+- [x] POST authentifié, métadonnées uniquement, pagination liée à la capture.
+- [x] Reset sans mélange après changement de catalogue ou de Store.
+- [x] Option locale explicite, diagnostic --check et erreurs privées constantes.
+- [x] Un lecteur à la fois, budget coopératif et limites C-028 conservées.
+- [x] 73 tests associés réussis, dont 15 nouveaux tests d'API et de non-mutation.
+- [ ] G066 raccordement client, G071 contre-revue de l'API.

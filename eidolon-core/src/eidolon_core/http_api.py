@@ -27,10 +27,12 @@ import threading
 import time
 
 from .client_sync import ClientSync, SyncError
+from .archive_page import ArchivePages, ArchivePageError
 from .contracts import ContractError
 from .mission_list import MissionList
 from .presentation import header, message
 from .receipt_lookup import ReceiptLookupError, lookup as lookup_receipt
+from .research_archive import ArchiveError, read_catalog
 from .store import Store
 
 PROTOCOL = "eidolon-http-read/1"
@@ -271,7 +273,7 @@ class _Handler(BaseHTTPRequestHandler):
             self._exists(match[1])
             self._json(200, ClientSync(self.server.store).snapshot(match[1]))
             return
-        if self.command != "POST" or not (self.path in {"/v1/missions", "/v1/command-receipt"}
+        if self.command != "POST" or not (self.path in {"/v1/missions", "/v1/command-receipt", "/v1/research-archives"}
                                           or match and match[2]):
             raise APIError(404, "NOT_FOUND")
         content_type = self._one("Content-Type")
@@ -287,6 +289,11 @@ class _Handler(BaseHTTPRequestHandler):
             return
         if set(data) - {"cursor", "limit"}:
             raise APIError(400, "UNKNOWN_FIELD")
+        if self.path == "/v1/research-archives":
+            if self.server.archive_pages is None:
+                raise APIError(404, "ARCHIVES_NOT_CONFIGURED")
+            self._json(200, self.server.archive_pages.page(**data))
+            return
         if self.path == "/v1/missions":
             response = MissionList(self.server.store).page(**data)
         else:
@@ -308,6 +315,10 @@ class _Handler(BaseHTTPRequestHandler):
             self._error(exc.status, exc.code)
         except ReceiptLookupError as exc:
             self._error(exc.status, exc.code)
+        except ArchivePageError as exc:
+            self._error(exc.status, exc.code)
+        except ArchiveError:
+            self._error(503, "ARCHIVES_UNAVAILABLE")
         except SyncError as exc:
             bad_request = {"INVALID_CURSOR", "CURSOR_MISSION_MISMATCH",
                            "INVALID_PAGE_LIMIT", "INVALID_LIST_CURSOR"}
@@ -343,7 +354,7 @@ def read_assets(web_root):
 
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
-    def __init__(self, state, token, *, port=8765, web_root=None):
+    def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None):
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
         if type(port) is not int or not 0 <= port <= 65535:
@@ -351,6 +362,10 @@ class ReadServer(HTTPServer):
         self.authorization = ("Bearer " + token).encode("ascii")
         self.store = ReadOnlyStore(state)
         self.assets = read_assets(web_root)
+        self.archive_pages = None
+        if research_archives is not None:
+            read_catalog(research_archives, time_budget_seconds=2.0)
+            self.archive_pages = ArchivePages(self.store, research_archives)
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -425,6 +440,7 @@ def main(argv=None):
     parser.add_argument("--token-file", required=True)
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--web-root")
+    parser.add_argument("--research-archives", help="Catalogue privé existant à consulter, sans export des contenus")
     parser.add_argument("--check", action="store_true", help="Diagnostic local, sans ouvrir de port")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
@@ -432,12 +448,14 @@ def main(argv=None):
         parser.error("--format exige --check")
     if args.check:
         from .preflight import inspect, render
-        report = inspect(args.state, args.token_file, port=args.port, web_root=args.web_root)
+        report = inspect(args.state, args.token_file, port=args.port, web_root=args.web_root,
+                         research_archives=args.research_archives)
         print(render(report, args.format or "json"))
         return 0 if report["status"] == "PASS" else 2
     try:
         token = read_token(args.token_file)
-        with ReadServer(args.state, token, port=args.port, web_root=args.web_root) as server:
+        with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
+                        research_archives=args.research_archives) as server:
             print(header(title="API de consultation locale"), flush=True)
             print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — lecture seule."), flush=True)
             server.serve_forever()

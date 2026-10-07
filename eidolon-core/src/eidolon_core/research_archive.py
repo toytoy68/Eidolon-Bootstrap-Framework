@@ -15,11 +15,13 @@ import argparse
 import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
 import stat
 import sys
+import time
 from types import SimpleNamespace
 import uuid
 
@@ -172,7 +174,7 @@ def _directory(path):
             os.close(fd)
 
 
-def _read(fd, name, maximum):
+def _read(fd, name, maximum, checkpoint=lambda: None):
     handle = None
     try:
         handle = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
@@ -183,6 +185,7 @@ def _read(fd, name, maximum):
             raise ArchiveError('ARCHIVE_SIZE_LIMIT')
         chunks, size = [], 0
         while True:
+            checkpoint()
             block = os.read(handle, min(65536, maximum + 1 - size))
             if not block:
                 break
@@ -220,14 +223,17 @@ def _names(fd):
     return sorted(names)
 
 
-def _catalog(fd):
+def _catalog(fd, checkpoint=lambda: None):
+    checkpoint()
     names = _names(fd)
     previous, guard_id, total = '0' * 64, None, 0
     seen, event_sequences, signatures, files = set(), set(), {}, []
     for index, name in enumerate(names, 1):
-        data, signature = _read(fd, name, min(MAX_ARCHIVE_BYTES, MAX_TOTAL_BYTES - total))
+        checkpoint()
+        data, signature = _read(fd, name, min(MAX_ARCHIVE_BYTES, MAX_TOTAL_BYTES - total), checkpoint)
         total += len(data)
         archive = validate_export(data, name)
+        checkpoint()
         meta = archive['meta']
         if (meta['chain_index'] != index or meta['previous_chain_sha256'] != previous
                 or guard_id is not None and meta['guard_id'] != guard_id):
@@ -248,6 +254,7 @@ def _catalog(fd):
     if names != _names(fd) or any(_signature(os.stat(name, dir_fd=fd, follow_symlinks=False)) != sig
                                   for name, sig in signatures.items()):
         raise ArchiveError('ARCHIVE_CHANGED_DURING_READ')
+    checkpoint()
     return {'protocol': PROTOCOL, 'guard_id': guard_id, 'files': files,
             'archive_count': len(files), 'run_count': len(seen), 'chain_head': previous,
             'catalog_sha256': digest(files), 'consistency_verified': True,
@@ -256,10 +263,22 @@ def _catalog(fd):
             'authorizes_execution': False, 'request_sent': False}
 
 
-def read_catalog(directory):
+def read_catalog(directory, *, time_budget_seconds=None):
+    """Optional cooperative deadline; cannot interrupt a syscall or one JSON decode."""
+    deadline = None
+    if time_budget_seconds is not None:
+        if (type(time_budget_seconds) not in (int, float) or not math.isfinite(time_budget_seconds)
+                or not 0 < time_budget_seconds <= 60):
+            raise ArchiveError('INVALID_ARCHIVE_READ_BUDGET')
+        deadline = time.monotonic() + time_budget_seconds
+
+    def checkpoint():
+        if deadline is not None and time.monotonic() >= deadline:
+            raise ArchiveError('ARCHIVE_READ_BUDGET_EXHAUSTED')
+
     try:
         with _directory(directory) as fd:
-            return _catalog(fd)
+            return _catalog(fd, checkpoint)
     except OSError:
         raise ArchiveError('ARCHIVE_STORAGE_UNAVAILABLE') from None
 

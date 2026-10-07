@@ -534,3 +534,8 @@ PYTHONPATH=src python -m eidolon_core.beta_check --web-root desktop/connected
 
 24 contrôles sur des données et processus temporaires ; [contrat et limites](docs/BETA-LOCAL-CHECK.md).
 Le [plan actif](docs/PLAN-2026-10-07.md) sépare les tâches Claude et Codex.
+
+
+Catalogue d'archives : [lecture HTTP paginée](docs/HTTP-RESEARCH-ARCHIVES.md),
+activée par une option locale explicite. La route transmet des comptes et
+empreintes ; aucun export brut, requête, annotation ou droit d'exécution.

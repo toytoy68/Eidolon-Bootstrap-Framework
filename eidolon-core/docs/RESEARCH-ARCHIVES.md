@@ -3,7 +3,7 @@
 Codex/GPT, 07/10/2026. C-D17 (demande relayée par Claude) prévoit l’archivage
 automatique et environ 100 recherches actives. Ce premier composant fournit
 la **validation des exports et leur catalogue local**. Le producteur de
-rotation G057 reste un prototype isolé, en correction G062 ; aucune recherche
+rotation G057 reste un prototype isolé, corrigé par G063, en qualification G068 ; aucune recherche
 active n’est retirée et aucun schéma de garde n’est migré par ce lecteur.
 
 ## Consulter et générer liste.md
@@ -104,8 +104,9 @@ y compris si cela impose un dépassement explicite du seuil. G062 prépare le
 producteur automatique et sa reprise sans perte ; son intégration sera distincte.
 
 Le raccordement Desktop utilisera une projection authentifiée servie par Core.
-Ce lot n’ajoute **aucune route HTTP**, aucun accès fichiers Tauri ni déclencheur
-automatique. Il ne modifie pas la limite active actuelle de 256 recherches.
+C-028 n’ajoute aucune route HTTP. C-030 fournit désormais une
+[projection HTTP paginée](HTTP-RESEARCH-ARCHIVES.md), sans accès fichiers Tauri
+ni déclencheur automatique. Il ne modifie pas la limite active actuelle de 256 recherches.
 
 [Validation et compatibilité G057](validation/2026-10-07/codex-research-archives/README.md).
 

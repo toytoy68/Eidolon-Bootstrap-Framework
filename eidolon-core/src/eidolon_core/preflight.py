@@ -16,6 +16,7 @@ import sqlite3
 from .contracts import ContractError
 from .http_api import ReadOnlyStore, read_assets, read_token
 from .presentation import header, message
+from .research_archive import read_catalog
 
 PROTOCOL = "eidolon-http-preflight/1"
 KNOWN_ERRORS = {
@@ -42,10 +43,12 @@ TEXT = {
     "ASSET_TOO_LARGE": "Un fichier du client dépasse la limite du serveur.",
     "PORT_VALID": "Numéro de port valide ; disponibilité non testée.",
     "INVALID_PORT": "Le port doit être un entier compris entre 0 et 65535.",
+    "ARCHIVES_READABLE": "Catalogue privé cohérent ; contenu et commit non authentifiés, capture ponctuelle.",
+    "ARCHIVES_UNAVAILABLE": "Catalogue absent, invalide, non privé ou budget de lecture dépassé.",
 }
 
 
-def inspect(state, token_file, *, port=8765, web_root=None):
+def inspect(state, token_file, *, port=8765, web_root=None, research_archives=None):
     """Perform independent local checks; failures do not hide other failures."""
     checks = []
 
@@ -70,6 +73,9 @@ def inspect(state, token_file, *, port=8765, web_root=None):
     else:
         check("client", lambda: read_assets(web_root), "ASSETS_READABLE", "INVALID_WEB_ROOT")
     valid_port = type(port) is int and 0 <= port <= 65535
+    if research_archives is not None:
+        check("archives", lambda: read_catalog(research_archives, time_budget_seconds=2.0),
+              "ARCHIVES_READABLE", "ARCHIVES_UNAVAILABLE")
     checks.append({"name": "port", "status": "PASS" if valid_port else "FAIL",
                    "code": "PORT_VALID" if valid_port else "INVALID_PORT"})
     return {"protocol": PROTOCOL, "status": "FAIL" if any(c["status"] == "FAIL" for c in checks) else "PASS",

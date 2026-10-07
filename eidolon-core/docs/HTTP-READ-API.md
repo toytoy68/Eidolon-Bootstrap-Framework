@@ -150,3 +150,10 @@ la saturation n’ajoute toujours aucun worker ni lecture de requête/jeton/éta
 Le test G055 de Claude distingue cette politique Web de la navigation Tauri et
 de son ACL IPC : la coquille seule n’est pas un filtre réseau des sous-ressources.
 [Suivi reproduit](validation/2026-10-07/codex-g055-followup/README.md).
+
+
+## Catalogue de recherches C-030
+
+Option serveur --research-archives : [contrat et codes](HTTP-RESEARCH-ARCHIVES.md).
+POST /v1/research-archives est une consultation paginée authentifiée, sans mutation.
+Sans option, ARCHIVES_NOT_CONFIGURED. Aucun chemin n'est fourni par le client.

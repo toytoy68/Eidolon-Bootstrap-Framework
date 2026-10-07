@@ -1,6 +1,6 @@
 # Consultation HTTP des archives — contrat C-030
 
-Codex, 07/10/2026. Contrat pour G066 ; implémentation en cours à la publication G085.
+Codex, 07/10/2026. Implémentation C-030 validée localement sur 73 tests associés, dont 15 nouveaux.
 Serveur : option explicite --research-archives DOSSIER privé existant. Aucun
 chemin ni fichier n'est accepté du navigateur. Sans option : 404 ARCHIVES_NOT_CONFIGURED.
 
@@ -34,3 +34,30 @@ liste partielle. Les délais physiques du disque ne sont pas une garantie tempor
 
 C-030 ne produit aucune archive, ne régénère pas liste.md et ne décide pas si
 une recherche peut être retirée. Le dossier n'est jamais une racine Web.
+
+
+## Démarrage et diagnostic
+
+```sh
+PYTHONPATH=src python -m eidolon_core.http_api --state /chemin/etat \
+  --token-file /chemin/jeton --research-archives /chemin/archives --check
+PYTHONPATH=src python -m eidolon_core.http_api --state /chemin/etat \
+  --token-file /chemin/jeton --research-archives /chemin/archives \
+  --web-root desktop/connected
+```
+
+L'option est locale au serveur. Le dossier est validé au démarrage, puis à chaque
+page ; un dossier supprimé ensuite donne un refus sans recréation. Le prédiagnostic
+ajoute le contrôle archives uniquement lorsque l'option est fournie. Aucun port
+n'est ouvert par --check. Le catalogue configuré n'est pas une preuve d'appartenance
+au Store, ni une vérification des missions qu'il mentionne.
+
+Une seule lecture de catalogue à la fois par serveur ; les autres reçoivent
+ARCHIVES_BUSY sans file d'attente. Budget coopératif de deux secondes, contrôlé
+entre blocs/fichiers/validations : il ne coupe ni un appel système bloqué ni une
+analyse JSON en cours. Les bornes C-028 en octets et nombres restent appliquées.
+Après lecture, l'identité et le mode de revue du Store sont contrôlés à nouveau.
+Les erreurs du Store conservent STATE_UNAVAILABLE ; aucune page n'est alors émise.
+
+Le client G066 constitue un lot séparé. Ce contrat ne rend pas la bêta qualifiée
+sur Windows ou VM ; la route ne donne aucun pouvoir d'action à son jeton.

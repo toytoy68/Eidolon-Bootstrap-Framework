@@ -1,0 +1,6 @@
+test_zero_write_and_no_space_remove_nothing (tests_g063.Conservation.test_zero_write_and_no_space_remove_nothing) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.141s
+
+OK

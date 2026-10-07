@@ -1117,3 +1117,9 @@ Demande utilisateur : six nouvelles tâches Claude, puis une heure Core et bilan
 fonctionnel/avancement. G066–G071 attribués après G064/G065. G063 reçu sur 56aa33f.
 Codex réserve archive_page.py, http_api.py, preflight.py, tests et contrat API :
 projection paginée du catalogue, authentifiée, jamais export brut ni requête.
+
+C-030 inclut research_archive.py (budget coopératif facultatif de lecture),
+README/contrats et liste optionnelle de l'archive bêta. 73 tests associés passent.
+G063 : deux contre-exemples désormais corrigés, test de conservation isolé réussi ;
+rejeu groupé : un comptage de descripteurs diminue de 7 à 4 et fait échouer une
+assertion d'égalité, à distinguer d'une fuite croissante ou d'une perte de données.
