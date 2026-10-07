@@ -83,6 +83,45 @@ class ResearchTests(unittest.TestCase):
         r=self.coordinator(reader=Reader({hit().url:dict(body=b"Article about CAPTCHA detection.")})).run("reference")
         self.assertEqual(r["status"],"READ_TARGET_MET")
 
+    def test_unicode_challenge_title_variants_are_not_readable_evidence(self):
+        from eidolon_core.html_extract import ExtractLimits
+        titles = ["Just a moment…", "Just a moment&#8230;", "Ｊｕｓｔ ａ ｍｏｍｅｎｔ...",
+                  "Just a mo\u200bment...", "Verify\u00a0you are human"]
+        for title in titles:
+            for media in ("text/html", "text/plain"):
+                with self.subTest(title=title, media=media):
+                    body = f"<title>{title}</title><p>Wait for access</p>".encode()
+                    report = self.coordinator(reader=Reader({hit().url:dict(
+                        media_type=media,body=body,html_limits=ExtractLimits())})).run("reference")
+                    self.assertEqual(report["sources"][0]["state"], "CHALLENGE_SUSPECTED")
+                    self.assertEqual(report["readable_pages"], 0)
+        for title in ("Research about CAPTCHA", "Why sites say Just a moment…"):
+            body = f"<title>{title}</title><p>Technical article</p>".encode()
+            report = self.coordinator(reader=Reader({hit().url:dict(
+                media_type="text/html",body=body,html_limits=ExtractLimits())})).run("reference")
+            self.assertEqual(report["sources"][0]["state"], "READ")
+
+    def test_bom_text_deduplicates_without_changing_source_fingerprint(self):
+        from eidolon_core.html_extract import ExtractLimits
+        plain = "Ne pas confirmer sans preuve."
+        replies = {hit().url:dict(body=("\ufeff" + plain).encode()),
+                   hit("b").url:dict(body=plain.encode()),
+                   hit("c").url:dict(body=("<p>" + plain + "</p>").encode(),
+                                       media_type="text/html",html_limits=ExtractLimits())}
+        c = self.coordinator([Provider("p",[hit(),hit("b"),hit("c")])], Reader(replies))
+        for _ in range(2):  # Repeat from the bounded RAM cache too.
+            report = c.run("reference",required_pages=3)
+            self.assertEqual(report["readable_pages"], 1)
+            self.assertEqual([s["state"] for s in report["sources"]], ["READ","DUPLICATE_CONTENT","DUPLICATE_CONTENT"])
+            self.assertEqual(len({s["text_sha256"] for s in report["sources"]}), 1)
+            self.assertEqual(len({s["body_sha256"] for s in report["sources"]}), 3)
+            for source in report["sources"]:
+                self.assertEqual(source["text"], plain)
+        self.assertEqual(len(c.reader.calls), 3)
+        for body in (b"\xef\xbb\xbf", b"\xef\xbb\xbf \n"):
+            report = self.coordinator(reader=Reader({hit().url:dict(body=body)})).run("reference")
+            self.assertEqual(report["sources"][0]["state"], "EMPTY_CONTENT")
+
     def test_mislabeled_html_challenge_is_not_plain_text_evidence(self):
         for body,state in [(b"<html><title>Just a moment...</title></html>","CHALLENGE_SUSPECTED"),
                            (b"<!doctype html><html><p>Unknown HTML</p></html>","UNSUPPORTED_CONTENT")]:

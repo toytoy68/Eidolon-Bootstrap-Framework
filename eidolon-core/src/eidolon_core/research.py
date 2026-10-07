@@ -20,6 +20,7 @@ from itertools import islice
 import hashlib
 import re
 import time
+import unicodedata
 
 from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
@@ -149,7 +150,7 @@ def _classify_page(page, limits):
     if page.status != 200:
         return "HTTP_ERROR", None, None
     try:
-        content = page.body.decode("utf-8")
+        content = page.body.decode("utf-8-sig")
     except UnicodeError:
         return "INVALID_ENCODING", None, None
     if not content.strip():
@@ -172,7 +173,9 @@ def _classify_page(page, limits):
     if media_type == "text/html" or looks_html:
         parser = _HtmlSignals()
         parser.feed(content)
-        title = " ".join(" ".join(parser.title).split()).lower()
+        title = unicodedata.normalize("NFKC", "".join(parser.title))
+        title = "".join(c for c in title if unicodedata.category(c) != "Cf")
+        title = " ".join(title.split()).casefold()
         if title in {"just a moment...", "verify you are human", "verification required", "captcha"}:
             return "CHALLENGE_SUSPECTED", None, None
         if parser.password:
@@ -468,6 +471,7 @@ class ResearchCoordinator:
                             evidence = {"state": "READ", "final_url": final.url, "text": content,
                                         "observed_at": retrieval["observed_at"] if retrieval else datetime.now(timezone.utc).isoformat(),
                                         "body_sha256": hashlib.sha256(page.body).hexdigest(),
+                                        "text_sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
                                         "body_bytes": len(page.body), "media_type": page.media_type,
                                         "reader_id": self.reader.reader_id, "policy_id": page.policy_id}
                             if extraction is not None:
@@ -491,7 +495,7 @@ class ResearchCoordinator:
                     except Exception:
                         source["state"] = "READER_ERROR"
                 if source["state"] == "READ":
-                    content_hash = source.get("extraction", {}).get("text_sha256", source["body_sha256"])
+                    content_hash = source["text_sha256"]
                     if source["final_url"] in final_seen:
                         source["state"] = "DUPLICATE_FINAL"
                     elif content_hash in body_seen:

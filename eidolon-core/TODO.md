@@ -7,7 +7,7 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## État courant — séance du 07/10/2026 à 10 h 56 Paris
 
-C-010–C-019 livrés ; G036–G053 intégrés, coquille Tauri incluse (qualification
+C-010–C-020 livrés ; G036–G053 intégrés, coquille Tauri incluse (qualification
 Linux rapportée par Claude, Windows non validé). Corrections G050/G052 : motifs
 nettoyés étendus, hash brut retiré des rapports, fenêtre des reçus C-012 fermée.
 C-019 conserve le texte nettoyé avant appel, dans la transaction de garde.
@@ -487,8 +487,8 @@ Contrat et limites : [RESEARCH-GUARD.md](docs/RESEARCH-GUARD.md).
 - [x] Seuil transactionnel de hash requis pour les nouveaux reçus.
 - [x] Titres HTML non diluables par SVG/second titre, premiers attributs dupliqués,
   détection des préfixes HTML mal étiquetés. Extracteur version 2.
-- [ ] Limites connues : heuristique HTML non exhaustive (notamment variante
-  « Just a moment… »), dédoublonnage texte brut avec BOM, identité Stop PowerShell
+- [x] C-020 : titres de challenge Unicode et déduplication texte brut avec BOM corrigés.
+- [ ] Limites connues : heuristique HTML non exhaustive, identité Stop PowerShell
   Linux ; aucune tolérance temporelle dangereuse adoptée pour les PID.
 
 ## C-019 — historique local nettoyé — 07/10/2026

@@ -923,3 +923,11 @@ HTTP. 71 tests ciblés ; 713 Python réussis/6 ignorés puis six intégrations
 mémoire réussies sur source isolée 7d99ded, corpus synthétique. G054–G057 restent
 la file Claude publiée (621d71b). Corrections G050/G052 publiées en 34e61b1.
 Contrat docs/QUERY-HISTORY.md ; preuves codex-query-history. Rotation non livrée.
+
+### C-020 — prise en charge Codex, limites HTML restantes
+
+Après publication C-019 (2a98a9a), Codex réserve research.py et tests HTML/recherche :
+normalisation bornée des titres de challenge (dont points de suspension Unicode),
+empreinte du texte décodé distincte des octets source et déduplication avec BOM.
+Aucun contournement de challenge ni nouvelle lecture réseau. Claude conserve
+G054–G057 et ses fichiers Desktop/mesures/proposition de rotation.

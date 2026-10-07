@@ -201,7 +201,7 @@ et SHA-256 source/texte. L'empreinte source doit correspondre au reçu HTTP,
 y compris pour une extraction partielle. Le cache conserve l'observation
 initiale et ces métadonnées, sans nouveau fetch des ressources intégrées.
 
-La déduplication utilise le hash du texte extrait pour HTML (celui des octets
+Avant C-020, la déduplication utilisait le hash du texte extrait pour HTML (celui des octets
 pour texte brut inchangé) : deux habillages HTML du même texte ne satisfont
 pas un objectif de deux pages. Cela ne prouve pas l'indépendance des sources.
 Le texte est `untrusted_external_text`, `authorizes_execution=false` : même
@@ -210,3 +210,17 @@ une instruction visible dans la page reste une donnée, jamais un ordre.
 Pas de rendu CSS complet, JavaScript, authentification, contournement de défi
 ou abonnement. Les seuils de lecture ne constituent pas une réponse validée.
 [Preuves du raccordement](validation/2026-10-07/codex-html/README.md).
+
+## C-020 — empreinte du texte et titres Unicode
+
+Toutes les sources lues exposent maintenant `text_sha256`, empreinte UTF-8 du
+texte décodé/extrait. Un BOM UTF-8 initial est retiré au décodage texte/Markdown ;
+`body_sha256` et `body_bytes` décrivent toujours les octets réellement reçus.
+La déduplication emploie `text_sha256` pour tous les formats pris en charge,
+y compris après cache. Un BOM seul n’est pas une source lisible.
+
+Le premier titre HTML est normalisé NFKC, sans caractères de format Unicode,
+avec espaces consolidés et casse ignorée avant comparaison aux libellés connus.
+Cela reconnaît notamment « Just a moment… » et l’ellipse sous forme d’entité.
+Une comparaison exacte reste requise : un article citant ce titre n’est pas
+refusé sur la seule présence de ces mots. Aucune résolution de challenge.

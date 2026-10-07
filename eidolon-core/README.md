@@ -76,7 +76,7 @@ le `AGENTS.md` à la racine y renvoie.
 L’[API locale authentifiée](docs/HTTP-READ-API.md) et le
 [client connecté](desktop/connected/README.md) sont intégrés. Ils permettent
 de consulter les missions et leur évolution ; les reçus sont consultables
-par l’API, leur interface dédiée reste le lot G036. Aucune commande distante
+par l’API et dans l’interface dédiée intégrée (G036/G048). Aucune commande distante
 d’exécution, d’approbation ou d’annulation n’est exposée.
 
 Pour préparer la recette, suivre [BETA-ACCEPTANCE.md](docs/BETA-ACCEPTANCE.md).
@@ -85,10 +85,20 @@ un dossier neuf, avec un jeton privé. Le diagnostic `http_api --check` vérifie
 les prérequis locaux avant un lancement explicite. Depuis le PC Windows, la
 page est destinée à être consultée par un tunnel SSH vers le serveur Linux.
 
-État du 06/10 au soir : 608 tests Python réussis, 6 intégrations mémoire non
-exécutées, 24 contrôles de recette locale réussis. Le navigateur, Windows,
-le tunnel SSH et le serveur de toytoy restent à valider.
-[Preuves et limites](docs/validation/2026-10-06/codex-evening/README.md).
+État du 07/10 : C-019 validé avec **713 tests Python et six intégrations
+mémoire réussis** sur corpus synthétiques ; C-020 ensuite contrôlé par
+102 tests recherche/HTML/garde. [Preuves C-019](docs/validation/2026-10-07/codex-query-history/README.md)
+et [C-020](docs/validation/2026-10-07/codex-text-evidence/README.md).
+
+Une [coquille Tauri de consultation](desktop/tauri/README.md) est intégrée :
+compilation et lancement Linux rapportés par Claude, pas d’installeur Windows.
+La fenêtre charge le client servi par Core, ne crée ni tunnel ni appairage.
+Le parcours Windows, le tunnel SSH et le serveur de toytoy restent à valider.
+
+Le [nettoyage des requêtes](docs/QUERY-CLEANUP.md), les pauses et la garde de
+recherche sont candidats hors runtime. L’[historique local nettoyé](docs/QUERY-HISTORY.md)
+est disponible sur activation explicite, sans route HTTP ni fournisseur réel.
+Le plafond de 256 recherches reste bloquant tant que la rotation n’est pas livrée.
 
 ## Prototype graphique autonome
 
