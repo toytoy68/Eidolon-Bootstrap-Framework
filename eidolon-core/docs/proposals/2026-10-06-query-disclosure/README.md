@@ -231,3 +231,7 @@ toytoy : « Recherche web . Nettoyer les données personnelles. » Retenu pour
 D1 : nettoyage local des éléments repérés avant l'envoi. D2 à D6, et le fait
 de montrer ou non la version nettoyée avant l'envoi, restent ouverts. Voir
 [C-D10](../../CADRAGE-DECISIONS-2026-10-05.md).
+
+Complément du 07/10/2026 vers 09 h 15 : « Requête auto. » La version
+nettoyée part automatiquement, sans affichage préalable. D2 à D6 restent
+ouverts. Voir [C-D13](../../CADRAGE-DECISIONS-2026-10-05.md).

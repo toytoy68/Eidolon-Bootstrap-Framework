@@ -143,6 +143,20 @@ Les principes de G041 restent :
 - chaque commande est liée au serveur, à la mission et aux paramètres ;
 - les révocations sont possibles et les reçus restent historiques.
 
+**C-D13 — Requête nettoyée envoyée automatiquement.** Décision de toytoy,
+07/10/2026 vers 09 h 15 (Europe/Paris), en réponse à la question restée
+ouverte par C-D10 : « Requête auto. »
+Retenu : la version nettoyée d'une requête de recherche Web part
+**automatiquement**, sans être montrée avant l'envoi. D2 à D6 restent ouverts
+(questions reposées le même jour). Aucun fournisseur réel n'est activé par
+cette décision.
+
+**C-D14 — Client Windows : Tauri.** Décision de toytoy, 07/10/2026 vers
+09 h 15, en réponse au choix Tauri ou Electron
+([faisabilité](desktop/WINDOWS-CLIENT-FEASIBILITY.md)) : « Tauri. »
+Retenu : le client Windows sera construit avec **Tauri 2**, et non Electron.
+Rien n'est encore développé ni installé.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

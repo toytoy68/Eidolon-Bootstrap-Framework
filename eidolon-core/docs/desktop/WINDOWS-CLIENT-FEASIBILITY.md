@@ -160,3 +160,8 @@ Documentation lue dans les dépôts, pas sur les sites publiés : une page peut
 différer de sa version en ligne. Aucune mesure sous Windows. Le connecteur de
 documents du PC (C-003W) n'est pas étudié ici au-delà de la séparation
 rendu/natif. Aucun achat, aucun installeur produit ni déployé.
+
+## Décision reçue le 07/10/2026
+
+toytoy : « Tauri. » Le client Windows sera construit avec Tauri 2. Rien n'est
+encore développé. Voir [C-D14](../CADRAGE-DECISIONS-2026-10-05.md).
