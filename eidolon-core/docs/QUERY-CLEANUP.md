@@ -6,8 +6,11 @@ fournisseur réel, abonnement, accès Internet ou appel de modèle ajouté.
 
 `clean_query(text)` est une fonction pure, bornée à 1 000 caractères avant et
 après normalisation. Elle produit le texte nettoyé pour **prévisualisation
-locale**, deux empreintes SHA-256 et les comptes par catégorie. Son reçu ne
-contient ni les valeurs retirées ni le texte nettoyé. Les empreintes ne sont
+locale**, deux empreintes SHA-256 en mémoire et les comptes par catégorie. Depuis le
+protocole `eidolon-query-cleanup/2`, son reçu exporte seulement celle du
+texte nettoyé ; il ne contient ni les valeurs retirées ni le texte nettoyé.
+Le rapport utilise également cette empreinte UTF-8, avec
+`query_hash_scope=cleaned_utf8`, au lieu du hash de la requête brute. Les empreintes ne sont
 pas une protection contre les recherches par dictionnaire.
 
 Le coordinateur candidat appelle cette fonction **avant tous ses fournisseurs**,
@@ -23,16 +26,20 @@ lecteur, DNS ni écriture de pause.
 - Courriels de forme reconnue, y compris après normalisation NFKC et retrait
   des caractères Unicode de format (notamment invisibles).
 - Téléphones français à dix chiffres commençant par 01–09 et numéros
-  internationaux avec `+` de 10 à 15 chiffres ; séparateurs usuels. Une
+  internationaux avec `+` ou `00` ; séparateurs usuels, y compris `(0)`. Une
   référence produit de même forme est également retirée.
-- Formes d'IBAN en majuscules, sans validation bancaire de la clé.
-- URL `http`, `https`, `ftp`, `file` **entières**, même publiques : garder le
+- Formes d'IBAN avec espaces/tirets, majuscules ou minuscules avec chiffres
+  dans chaque groupe, sans validation bancaire de la clé.
+- URL à schéma reconnu (`http`, `ssh`, `smb`, `sftp`…), préfixe `www.`,
+  ou domaine avec chemin/paramètres `?`, **entières**, même publiques : garder le
   domaine seul laisserait des informations dans les chemins/paramètres.
 - Chemins Windows/UNC et préfixes locaux Unix reconnus : `/home`, `/Users`,
-  `/root`, `/etc`, `/var`, `/mnt`, `/media`, `/tmp`, `~/`. Les chemins entre
-  guillemets doubles peuvent contenir des espaces ; un chemin non cité s'arrête
+  `/root`, `/etc`, `/var`, `/mnt`, `/media`, `/tmp`, `/opt`, `/srv`, `/data`,
+  `/usr`, `/run`, `~/`, `%VARIABLE%\`, relatifs à deux niveaux. Les chemins entre
+  guillemets simples ou doubles peuvent contenir des espaces ; un chemin non cité s'arrête
   au premier espace. Les autres variantes ne sont pas garanties.
-- Adresses IPv4/IPv6 valides reconnues, même publiques.
+- Adresses IPv4/IPv6 reconnues, même publiques ; zéros IPv4 initiaux admis,
+  ports IPv4 et IPv6 entre crochets retirés avec l’adresse.
 
 Le texte est normalisé avant détection ; les espaces sont ensuite consolidés.
 Des caractères de contrôle non textuels et des chaînes non UTF-8 sont refusés
@@ -55,3 +62,11 @@ documentent ce que cette version retire **et ce qu'elle laisse**.
 ## Décision rapportée le 07/10 — C-D13
 
 C067 rapporte la réponse toytoy « Requête auto. » : émission automatique de la requête nettoyée, sans aperçu préalable. Ce point remplace le choix encore ouvert ci-dessus. Aucun fournisseur externe n’est activé par cette décision ou ce lot. C-D15/16 (C068/C069) complètent ce choix : requêtes du modèle également automatiques, toutes les catégories actuelles gardées, texte nettoyé à conserver localement. Cette conservation n’est pas encore implémentée ; les reçus actuels ne contiennent que les empreintes.
+
+## Retours G050/G052 — 07/10
+
+Corrections issues de la proposition Claude G050, complétées pour les ports
+IPv6 entre crochets. Limites restantes : marques combinantes dans les numéros,
+courriels épelés/espacés, chemins non cités avec espaces, domaines avec chemin
+sans schéma ni paramètre. Pas de garantie sur une catégorie entière.
+Les empreintes historiques des anciens rapports ne sont pas réécrites.

@@ -245,7 +245,13 @@ class Store:
         """Pin the first receipt requiring an event hash, in its transaction."""
         row = db.execute("SELECT value FROM sync_metadata WHERE key='receipt_hash_required_from'").fetchone()
         if row is None:
-            db.execute("INSERT INTO sync_metadata VALUES ('receipt_hash_required_from',?)", (str(sequence),))
+            # C-012 already wrote hashes before the durable boundary existed.
+            # Decode structured JSON; substring matching would accept a key in prose.
+            first = db.execute("SELECT min(sequence) FROM events WHERE kind IN "
+                               "('ACTION_DECISION','CANCEL_REQUESTED','CANCEL_COMMAND_RECORDED') "
+                               "AND json_type(detail,'$.receipt_sha256') IS NOT NULL").fetchone()[0]
+            start = sequence if first is None else min(first, sequence)
+            db.execute("INSERT INTO sync_metadata VALUES ('receipt_hash_required_from',?)", (str(start),))
         elif (type(row[0]) is not str or not re.fullmatch(r'[1-9][0-9]{0,15}', row[0])
               or not 1 <= int(row[0]) <= sequence <= 2**53 - 1):
             raise ContractError("INVALID_RECEIPT_HASH_BOUNDARY")

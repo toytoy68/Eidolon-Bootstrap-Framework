@@ -149,6 +149,26 @@ class ReceiptLookupTests(unittest.TestCase):
         self.assertEqual(lookup(self.reader, query_for(second_command))["receipt_binding"], "EVENT_HASH")
         self.assertEqual(self.store.path.read_bytes(), before)
 
+    def test_boundary_includes_hashed_receipts_from_pre_boundary_version(self):
+        first = self.record()
+        with self.store.connection() as db:
+            db.execute("DELETE FROM sync_metadata WHERE key='receipt_hash_required_from'")
+        second = CancelCommands(self.store).submit({**self.command, "command_key": "second"})
+        with self.store.connection() as db:
+            boundary = db.execute("SELECT value FROM sync_metadata WHERE key='receipt_hash_required_from'").fetchone()[0]
+            self.assertEqual(int(boundary), first["event_sequence"])
+            detail = json.loads(db.execute("SELECT detail FROM events WHERE sequence=?", (first["event_sequence"],)).fetchone()[0])
+            del detail["receipt_sha256"]
+            db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), first["event_sequence"]))
+        self.assert_error("RECEIPT_UNAVAILABLE")
+
+    def test_hashed_receipt_below_raised_boundary_is_refused(self):
+        first = self.record()
+        second = CancelCommands(self.store).submit({**self.command, "command_key": "second"})
+        with self.store.connection() as db:
+            db.execute("UPDATE sync_metadata SET value=? WHERE key='receipt_hash_required_from'", (str(second["event_sequence"]),))
+        self.assert_error("RECEIPT_UNAVAILABLE")
+
     def test_invalid_boundary_is_refused_and_failed_receipt_does_not_leave_boundary(self):
         with self.store.connection() as db:
             db.execute("CREATE TRIGGER fail BEFORE INSERT ON command_receipts BEGIN SELECT RAISE(ABORT,'synthetic'); END")

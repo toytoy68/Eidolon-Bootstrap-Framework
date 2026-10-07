@@ -1,0 +1,45 @@
+== I. budget : limites 1 à 5 sur la mission de démonstration
+I limite 1: BLOCKED INVOCATION_BUDGET_EXHAUSTED ; budget={'limit': 1, 'used': 1} ; ordinaux=[1] ; CALL_STARTED=0 ; relance → BLOCKED INVOCATION_BUDGET_EXHAUSTED {'limit': 1, 'used': 1}
+I limite 2: BLOCKED INVOCATION_BUDGET_EXHAUSTED ; budget={'limit': 2, 'used': 2} ; ordinaux=[1, 2] ; CALL_STARTED=0 ; relance → BLOCKED INVOCATION_BUDGET_EXHAUSTED {'limit': 2, 'used': 2}
+I limite 3: BLOCKED INVOCATION_BUDGET_EXHAUSTED ; budget={'limit': 3, 'used': 2} ; ordinaux=[1, 2] ; CALL_STARTED=0 ; relance → BLOCKED INVOCATION_BUDGET_EXHAUSTED {'limit': 3, 'used': 2}
+I limite 4: SUCCEEDED None ; budget={'limit': 4, 'used': 4} ; ordinaux=[1, 2, 3, 4] ; CALL_STARTED=1 ; relance → SUCCEEDED None {'limit': 4, 'used': 4}
+I limite 5: SUCCEEDED None ; budget={'limit': 5, 'used': 4} ; ordinaux=[1, 2, 3, 4] ; CALL_STARTED=1 ; relance → SUCCEEDED None {'limit': 5, 'used': 4}
+== K. arrêt brutal juste après une réservation (avant le worker)
+K arrêt à la réservation 1: code 9 ; réservé=[1] → reprise : BLOCKED INVOCATION_BUDGET_EXHAUSTED ; ordinaux=[1, 2, 3] ; budget={'limit': 4, 'used': 3}
+K arrêt à la réservation 2: code 9 ; réservé=[1, 2] → reprise : BLOCKED INVOCATION_BUDGET_EXHAUSTED ; ordinaux=[1, 2, 3] ; budget={'limit': 4, 'used': 3}
+K arrêt à la réservation 3: code 9 ; réservé=[1, 2, 3] → reprise : REVIEW_REQUIRED UNKNOWN_EFFECT ; ordinaux=[1, 2, 3] ; budget={'limit': 4, 'used': 3}
+== F. configuration figée
+F créée à 64 (inachevée), reprise à 65: {'id': 'm-20737bae2a71456cba66457b1535d7cc', 'status': 'BLOCKED', 'code': 'CONFIGURATION_CHANGED', 'budget': {'limit': 64, 'used': 1}}
+F créée à 64 (inachevée), reprise à 4: {'id': 'm-b1d3d12cfb4741108a176def61e8aee3', 'status': 'BLOCKED', 'code': 'CONFIGURATION_CHANGED', 'budget': {'limit': 64, 'used': 1}}
+F créée à 64 (inachevée), reprise à none: {'id': 'm-e12614098a04466a89c194a405a423ee', 'status': 'BLOCKED', 'code': 'CONFIGURATION_CHANGED', 'budget': {'limit': 64, 'used': 1}}
+F reprise à 65 puis de nouveau à 64 (bonne valeur) : CONFIGURATION_CHANGED → {'id': 'm-a93a36af6bff44ca898a456daf09ae1a', 'status': 'SUCCEEDED', 'code': None, 'budget': {'limit': 64, 'used': 4}}
+F créée sans budget (inachevée), reprise à 64 : {'id': 'm-e584855adf9e467186bbe3eb39534942', 'status': 'BLOCKED', 'code': 'CONFIGURATION_CHANGED', 'budget': None}
+== T. altérations du compteur et du journal (copies)
+T1 compteur seul diminué: BLOCKED INVOCATION_BUDGET_INVALID {'limit': 8, 'used': 0} ; ordinaux=[1]
+T2 dernier événement de réservation seul supprimé: BLOCKED INVOCATION_BUDGET_INVALID {'limit': 8, 'used': 1} ; ordinaux=[]
+T3 compteur ET événement retirés ensemble (cohérent): SUCCEEDED None {'limit': 8, 'used': 4} ; ordinaux=[1, 2, 3, 4]
+T4 limite de la mission portée à 4096: BLOCKED INVOCATION_BUDGET_INVALID {'limit': 4096, 'used': 1} ; ordinaux=[1]
+T6 témoin sans altération: SUCCEEDED None {'limit': 8, 'used': 5} ; ordinaux=[1, 2, 3, 4, 5]
+T5 champ invocation_budget supprimé: BLOCKED INVOCATION_BUDGET_INVALID None ; ordinaux=[1]
+== C. 4 processus sur la même mission en même temps (limite 4)
+C réponses : [('BLOCKED', 'INVOCATION_BUDGET_EXHAUSTED'), ('Busy', 'mission already running/reconciling')] ; ordinaux=[1, 2, 3] ; budget={'limit': 4, 'used': 3} ; CALL_STARTED=0
+== R. seuil receipt_hash_required_from
+R1 base neuve : seuil=2 ; séquences des reçus=[2, 3]
+R1 hash retiré + statut altéré, reçu au-delà du seuil : 503 RECEIPT_UNAVAILABLE
+R2 seuil supprimé, puis hash retiré + altération : FOUND LEGACY_FIELDS
+R3 seuil relevé à max(sequence), puis hash retiré + altération du 1er reçu : FOUND LEGACY_FIELDS
+R3b seuil relevé seul, hash intact, 1er reçu : 503 RECEIPT_UNAVAILABLE
+R4 seuil '0': lecture 503 RECEIPT_UNAVAILABLE ; nouvelle commande : ERROR ContractError INVALID_RECEIPT_HASH_BOUNDARY
+R4 seuil 'abc': lecture 503 RECEIPT_UNAVAILABLE ; nouvelle commande : ERROR ContractError INVALID_RECEIPT_HASH_BOUNDARY
+R4 seuil ' 5': lecture 503 RECEIPT_UNAVAILABLE ; nouvelle commande : ERROR ContractError INVALID_RECEIPT_HASH_BOUNDARY
+R4 seuil au-delà du journal: lecture 503 RECEIPT_UNAVAILABLE ; nouvelle commande : ERROR ContractError INVALID_RECEIPT_HASH_BOUNDARY
+R4 seuil entier SQLite 5: lecture 503 RECEIPT_UNAVAILABLE ; nouvelle commande : ERROR ContractError INVALID_RECEIPT_HASH_BOUNDARY
+== M. fenêtre de migration : reçus 0fdf18e (hash sans seuil), puis un reçu 7d8efb9
+M après 0fdf18e : seuil=None
+M après 7d8efb9 : seuil=2 ; lectures : old0 FOUND EVENT_HASH, new0 FOUND EVENT_HASH
+M hash retiré + altération d'un reçu 0fdf18e (avant le seuil) : 503 RECEIPT_UNAVAILABLE
+M même chose sur le reçu 7d8efb9 (au seuil) : 503 RECEIPT_UNAVAILABLE
+== A. atomicité du seuil
+A panne après insertion du seuil, avant le commit: code 9 ; seuil=None ; consultation : NOT_FOUND None
+A   renvoi de la même clé : seuil=2 ; consultation : FOUND EVENT_HASH
+A 4 premiers reçus en parallèle sur une base sans seuil : séquences=[4, 7, 5, 6] ; seuil=2 ; lectures=['FOUND EVENT_HASH', 'FOUND EVENT_HASH', 'FOUND EVENT_HASH', 'FOUND EVENT_HASH']

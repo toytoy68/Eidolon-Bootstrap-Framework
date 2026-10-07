@@ -39,6 +39,31 @@ class QueryCleanupTests(unittest.TestCase):
                 self.assertEqual(result.text, "diagnostic procédure")
                 self.assertEqual(dict(result.removed), {kind: 1})
 
+    def test_g050_common_endpoints_paths_and_numbers_are_removed(self):
+        cases = ["198.51.100.7:25565", "198.051.100.007", "[2001:db8::7]:25565",
+                 "fr76 0000 0000 0000 0000 0000 000", "FR76-0000-0000-0000-0000-0000-000",
+                 "0033 6 12 34 56 78", "+33 (0)6 12 34 56 78",
+                 "www.example.invalid/reset?token=SYNTH", "example.invalid/reset?token=SYNTH",
+                 "smb://server.example/private", "sftp://server.example/private",
+                 "/opt/private/token", "/srv/private/token", "./secrets/token.txt",
+                 r"%USERPROFILE%\private\token", "'/home/private folder/token'"]
+        for value in cases:
+            with self.subTest(value=value):
+                self.assertEqual(clean_query("notice " + value + " erreur").text, "notice erreur")
+        self.assertEqual(clean_query("ip:198.51.100.7.").text, "ip: .")
+        for public in ("node.js/express", "README.md#install", "./configure", "fr12 pour cela vous"):
+            self.assertEqual(clean_query(public).text, public)
+
+    def test_reports_do_not_export_raw_query_fingerprints(self):
+        raw = "joindre 01 23 45 67 89"
+        report = ResearchCoordinator([Provider("p", [])], Reader(), resolver=dns).run(raw)
+        from eidolon_core.contracts import digest
+        serialized = json.dumps(report)
+        for fingerprint in (digest(raw), hashlib.sha256(raw.encode()).hexdigest()):
+            self.assertNotIn(fingerprint, serialized)
+        self.assertEqual(report["query_sha256"], clean_query(raw).cleaned_sha256)
+        self.assertEqual(report["query_hash_scope"], "cleaned_utf8")
+
     def test_unicode_normalization_does_not_leave_email_fragments(self):
         for email in ("jean＠example.invalid", "jean\u200b@example.invalid", "jean@exam\u2060ple.invalid"):
             result = clean_query(email + " contact")
@@ -53,7 +78,8 @@ class QueryCleanupTests(unittest.TestCase):
         serialized = json.dumps(receipt)
         for value in ("jean", "example", "01 23", "SUJET_PRIVE"):
             self.assertNotIn(value, serialized)
-        self.assertEqual(receipt["original_sha256"], hashlib.sha256(raw.encode()).hexdigest())
+        self.assertNotIn("original_sha256", receipt)
+        self.assertNotIn(hashlib.sha256(raw.encode()).hexdigest(), serialized)
         self.assertEqual(receipt["cleaned_sha256"], hashlib.sha256(result.text.encode()).hexdigest())
         self.assertFalse(receipt["anonymity_guaranteed"])
         self.assertFalse(receipt["authorizes_transmission"])

@@ -205,6 +205,8 @@ def lookup(store, query):
                 if int(start) > db.execute('SELECT max(sequence) FROM events').fetchone()[0]:
                     _fail()
                 required = receipt['event_sequence'] >= int(start)
+                if not required and "receipt_sha256" in _object(event[3]):
+                    _fail()
             except (ValueError, TypeError, UnicodeError, AttributeError):
                 _fail()
         binding = _bind_event(receipt, event[3], require_hash=required)

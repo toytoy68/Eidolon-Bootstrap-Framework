@@ -107,3 +107,10 @@ pas une signature. L'API de consultation ne crée ni ne répare le seuil.
 
 G048 est intégré : le client affiche désormais EVENT_HASH / contrôle limité /
 non précisé, sans confondre liaison au journal et preuve d'exécution.
+
+## Frontière C-012 — correction G052
+
+À la première nouvelle commande, la frontière inclut les événements de commande
+déjà porteurs de hash. Un hash trouvé sous une frontière existante est refusé.
+Un ancien binaire réécrivant des reçus sans hash après cette frontière produit
+des reçus refusés ; aucun déclassement silencieux en LEGACY_FIELDS.

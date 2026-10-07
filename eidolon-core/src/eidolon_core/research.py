@@ -289,7 +289,7 @@ class ResearchCoordinator:
         start = self.clock()
         self._cooldowns = {k: v for k, v in self._cooldowns.items() if v[0] > start}
         late_receipt = False
-        report = {"version": 1, "query_sha256": digest(query), "policy_id": self.policy.policy_id,
+        report = {"version": 1, "query_sha256": cleaned.cleaned_sha256, "query_hash_scope": "cleaned_utf8", "policy_id": self.policy.policy_id,
                   "required_pages": required_pages, "readable_pages": 0, "read_calls": 0,
                   "providers": [], "sources": [], "status": None,
                   "scope": "retrieved text only; no claim verification or mission success"}
