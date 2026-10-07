@@ -1,0 +1,66 @@
+test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) ... 
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='empty') ... ERROR
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='duplicate-member') ... FAIL
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='duplicate-manifest-entry') ... FAIL
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='wrong-size') ... FAIL
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='wrong-mode') ... FAIL
+  test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='changed-start') ... FAIL
+
+======================================================================
+ERROR: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='empty')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 195, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    bundle.verify(target)
+  File "historical_bundle.py", line 156, in verify
+IndexError: list index out of range
+
+======================================================================
+FAIL: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='duplicate-member')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 194, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BundleError not raised
+
+======================================================================
+FAIL: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='duplicate-manifest-entry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 194, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BundleError not raised
+
+======================================================================
+FAIL: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='wrong-size')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 194, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BundleError not raised
+
+======================================================================
+FAIL: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='wrong-mode')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 194, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BundleError not raised
+
+======================================================================
+FAIL: test_empty_duplicate_and_structurally_forged_archives_are_refused (tests.test_build_beta_bundle.BundleTests.test_empty_duplicate_and_structurally_forged_archives_are_refused) (case='changed-start')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/f771896569e9/eidolon/eidolon-core/tests/test_build_beta_bundle.py", line 194, in test_empty_duplicate_and_structurally_forged_archives_are_refused
+    with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BundleError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.056s
+
+FAILED (failures=5, errors=1)

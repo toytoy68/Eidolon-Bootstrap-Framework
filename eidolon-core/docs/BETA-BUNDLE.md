@@ -83,3 +83,18 @@ jeu synthétique **depuis l'archive**, puis lance le diagnostic
 - Le nom interdit est contrôlé par motif : un secret dans un fichier suivi
   au nom anodin ne serait pas détecté. La protection principale est de ne
   jamais committer de secret.
+
+## Durcissement Codex C-012, 07/10/2026
+
+Le vérificateur contrôle désormais aussi : archive non vide, fichiers requis,
+unicité des membres et des chemins du manifeste, schéma/identités, tailles,
+modes, propriétaire/date, contenu exact du document START-HERE. Il ne charge
+pas plus de 1024 membres, 16 Mio par membre et 64 Mio cumulés. Les noms interdits
+sont revérifiés. Il n'extrait aucun fichier pendant cette vérification.
+
+`authenticity_verified=false` explicite qu'une archive entièrement réécrite
+avec son manifeste reste possible : comparer une empreinte externe de confiance.
+Les documents BETA-LOCAL-CHECK et READ-TOKEN rejoignent la liste incluse.
+L'outil de vérification reste celui du checkout de confiance, pas un programme
+à exécuter depuis une archive inconnue. Preuves avant/après dans
+[le bilan Codex](validation/2026-10-07/codex-g042-g044/README.md).

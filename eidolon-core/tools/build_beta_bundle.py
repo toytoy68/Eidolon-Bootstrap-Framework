@@ -36,7 +36,8 @@ ALLOW_FILES = ("LICENSE", "eidolon-core/README.md", "eidolon-core/pyproject.toml
                "eidolon-core/desktop/connected/style.css", "eidolon-core/desktop/connected/README.md",
                "eidolon-core/docs/BETA-ACCEPTANCE.md", "eidolon-core/docs/BETA-FIXTURE.md",
                "eidolon-core/docs/BETA-SERVER-PC.md", "eidolon-core/docs/HTTP-READ-API.md",
-               "eidolon-core/docs/HTTP-RECEIPTS.md", "eidolon-core/docs/HTTP-PREFLIGHT.md")
+               "eidolon-core/docs/HTTP-RECEIPTS.md", "eidolon-core/docs/HTTP-PREFLIGHT.md",
+               "eidolon-core/docs/BETA-LOCAL-CHECK.md", "eidolon-core/docs/READ-TOKEN.md")
 # Names refused even when tracked inside the allow-list: state, secrets, caches, bytecode.
 FORBIDDEN = re.compile(r"(^|/)(__pycache__|\.git|\.env|read-token|[^/]*\.(pyc|pyo|sqlite3?|db|key|pem|p12|log))(/|$)", re.I)
 SHA = re.compile(r"[0-9a-f]{40}")
@@ -150,30 +151,76 @@ def build(repo, commit, output):
 
 
 def verify(path):
-    """Re-read an archive: every manifest hash must match, and nothing else may be present."""
+    """Check bounded archive structure and manifest consistency, not authenticity."""
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise BundleError("duplicate JSON key")
+            result[key] = value
+        return result
+
     with tarfile.open(path, "r:gz") as tar:
-        members = tar.getmembers()
+        members, names, total = [], set(), 0
+        for member in tar:
+            if (not member.isfile() or member.name in names or member.size > 16 * 1024 * 1024
+                    or len(members) >= 1024):
+                raise BundleError("invalid, duplicate or oversized member")
+            total += member.size
+            if total > 64 * 1024 * 1024:
+                raise BundleError("archive exceeds verification budget")
+            names.add(member.name)
+            members.append(member)
+        if not members:
+            raise BundleError("empty archive")
         root = members[0].name.split("/")[0]
-        manifest = json.loads(tar.extractfile(root + "/MANIFEST.json").read())
+        manifest_name = root + "/MANIFEST.json"
+        if manifest_name not in names:
+            raise BundleError("manifest missing")
+        manifest = json.loads(tar.extractfile(manifest_name).read(), object_pairs_hook=unique)
+        if (type(manifest) is not dict or manifest.get("protocol") != PROTOCOL
+                or type(manifest.get("commit")) is not str or not SHA.fullmatch(manifest["commit"])
+                or type(manifest.get("tree")) is not str or not SHA.fullmatch(manifest["tree"])
+                or root != "eidolon-beta-" + manifest["commit"][:12] or manifest.get("root") != root
+                or type(manifest.get("commit_time")) is not int or manifest["commit_time"] < 0
+                or type(manifest.get("files")) is not list):
+            raise BundleError("invalid manifest")
+        expected = {}
         for f in manifest["files"]:
-            parts = PurePosixPath(f["path"]).parts
-            if PurePosixPath(f["path"]).is_absolute() or ".." in parts or not allowed(f["path"]):
-                raise BundleError("unsafe or non allow-listed path in manifest: " + f["path"])
-        expected = {root + "/" + f["path"]: f["sha256"] for f in manifest["files"]}
-        seen = set()
+            if type(f) is not dict or set(f) != {"path", "sha256", "size", "mode"}:
+                raise BundleError("invalid file description")
+            name = f["path"]
+            if (type(name) is not str or not name.isprintable() or "\\" in name
+                    or str(PurePosixPath(name)) != name or PurePosixPath(name).is_absolute()
+                    or ".." in PurePosixPath(name).parts or not allowed(name) or FORBIDDEN.search(name)):
+                raise BundleError("unsafe or non allow-listed path in manifest")
+            if (name in expected or type(f["sha256"]) is not str or not re.fullmatch(r"[0-9a-f]{64}", f["sha256"])
+                    or type(f["size"]) is not int or not 0 <= f["size"] <= 16 * 1024 * 1024
+                    or type(f["mode"]) is not int or f["mode"] not in (0o644, 0o755)):
+                raise BundleError("invalid or duplicate manifest entry")
+            expected[name] = f
+        if not set(ALLOW_FILES) <= expected.keys():
+            raise BundleError("required files missing from manifest")
+        if names != {root + "/" + n for n in expected} | {manifest_name, root + "/START-HERE.md"}:
+            raise BundleError("archive and manifest member sets differ")
         for m in members:
-            if not m.isfile() or m.name in (root + "/MANIFEST.json", root + "/START-HERE.md"):
-                if not m.isfile():
-                    raise BundleError("non-file member: " + m.name)
+            name = m.name[len(root) + 1:]
+            if (m.uid != 0 or m.gid != 0 or m.uname or m.gname or m.mtime != manifest["commit_time"]):
+                raise BundleError("member metadata mismatch")
+            if name == "MANIFEST.json":
+                if m.mode != 0o644:
+                    raise BundleError("manifest mode mismatch")
                 continue
-            if m.name not in expected:
-                raise BundleError("member not in manifest: " + m.name)
-            if hashlib.sha256(tar.extractfile(m).read()).hexdigest() != expected[m.name]:
-                raise BundleError("hash mismatch: " + m.name)
-            seen.add(m.name)
-        if seen != set(expected):
-            raise BundleError("manifest lists missing members")
-    return {"verified": True, "commit": manifest["commit"], "files": len(seen)}
+            data = tar.extractfile(m).read()
+            if name == "START-HERE.md":
+                if m.mode != 0o644 or data != start_here(manifest["commit"]).encode():
+                    raise BundleError("start document mismatch")
+                continue
+            f = expected[name]
+            if len(data) != f["size"] or m.mode != f["mode"] or hashlib.sha256(data).hexdigest() != f["sha256"]:
+                raise BundleError("member size, mode or hash mismatch")
+    return {"verified": True, "commit": manifest["commit"], "files": len(expected),
+            "authenticity_verified": False}
 
 
 def main(argv=None):

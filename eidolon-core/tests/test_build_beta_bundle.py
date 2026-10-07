@@ -165,6 +165,35 @@ class BundleTests(unittest.TestCase):
         again = run("--commit", self.commit, "--output", str(self.out / "c.tar.gz"))
         self.assertEqual((again.returncode, json.loads(again.stdout)["status"]), (2, "REFUSED"))
 
+    def test_empty_duplicate_and_structurally_forged_archives_are_refused(self):
+        bundle.build(self.repo, self.commit, self.out / "original.tar.gz")
+        with tarfile.open(self.out / "original.tar.gz", "r:gz") as tar:
+            members = [(m, tar.extractfile(m).read()) for m in tar.getmembers()]
+        for case in ("empty", "duplicate-member", "empty-manifest", "duplicate-manifest-entry",
+                     "wrong-size", "wrong-mode", "changed-start"):
+            target = self.out / (case + ".tar.gz")
+            with tarfile.open(target, "w:gz") as tar:
+                if case != "empty":
+                    import copy
+                    for original, data in members:
+                        m = copy.copy(original)
+                        if m.name.endswith("MANIFEST.json"):
+                            manifest = json.loads(data)
+                            if case == "empty-manifest": manifest["files"] = []
+                            if case == "duplicate-manifest-entry": manifest["files"].append(manifest["files"][0])
+                            if case == "wrong-size": manifest["files"][0]["size"] += 1
+                            data = json.dumps(manifest).encode()
+                        elif case == "wrong-mode":
+                            m.mode = 0o777
+                        elif case == "changed-start" and m.name.endswith("START-HERE.md"):
+                            data = b"invented installation commands"
+                        m.size = len(data)
+                        tar.addfile(m, io.BytesIO(data))
+                        if case == "duplicate-member":
+                            tar.addfile(m, io.BytesIO(data))
+            with self.subTest(case=case), self.assertRaises(bundle.BundleError):
+                bundle.verify(target)
+
 
 class RealRepositoryBundleTest(unittest.TestCase):
     """The archive of the current commit extracts and runs the beta fixture and diagnostic."""

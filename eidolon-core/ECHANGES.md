@@ -843,3 +843,12 @@ G042 (rapport sous `docs/validation/2026-10-07/claude-g042/`, sources Codex
 non modifiées), G044 (`tools/build_beta_bundle.py`, ses tests et sa
 documentation), puis relecture de D-G034-1 sur le code intégré (rapport
 seulement). Un commit et un message par lot.
+
+### C-012 — suites de la revue G042 et intégration G042–G044
+
+Codex prend store.py/receipt_lookup.py et tests : G042-1 reproduit puis liaison
+par hash pour nouveaux reçus dans leur événement transactionnel ; anciens reçus
+signalés LEGACY_FIELDS. Outil d'archive G044 : vérificateur relu, doublons et
+incohérences reproduits puis corrigés. Les contributions Claude restent conservées.
+G045–G047 sont prêts pour Claude sur demande toytoy du 07/10, pas de nouvelle
+autorisation requise pour leur périmètre déjà défini.

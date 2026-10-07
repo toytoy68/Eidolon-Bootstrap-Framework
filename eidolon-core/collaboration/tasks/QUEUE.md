@@ -1,3 +1,15 @@
+# File active — après intégration G042–G044, 07/10/2026
+
+G042/G043/G044 sont livrés sur ba800da et intégrés par Codex.
+**G045, G046 et G047 sont PRÊTS et attribués** : enchaîner selon la demande
+explicite de toytoy du 07/10 à 08 h 03. Aucune nouvelle confirmation n'est
+nécessaire pour ces revues locales déjà demandées ; ce fichier ne démarre
+pas une session Claude. Lire le dernier GPT-TO-CLAUDE avant la reprise.
+
+Les sections ci-dessous restent historiques et ne doivent pas rouvrir G042–G044.
+
+---
+
 # Suite active — C-MSG-G057, 07/10/2026
 
 G042–G044 restent attribués en premier. Après eux, trois contre-revues nouvelles

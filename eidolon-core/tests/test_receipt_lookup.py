@@ -91,6 +91,47 @@ class ReceiptLookupTests(unittest.TestCase):
         self.assertEqual(self.store.get(mission["id"])["proposal"]["status"], "REVOKED")
         self.assertEqual(runtime.world.observe("sim-nas")["restarts"], 0)
 
+    def test_new_cancellation_receipt_is_hash_bound_to_its_event(self):
+        receipt = self.record()
+        self.assertEqual(lookup(self.reader, self.query)["receipt_binding"], "EVENT_HASH")
+        for update in ({"mission_status_at_recording": "RUNNING"}, {"mission_revision": 5}):
+            self.replace({**receipt, **update})
+            self.assert_error("RECEIPT_UNAVAILABLE")
+        self.replace(receipt)
+        self.assertEqual(lookup(self.reader, self.query)["receipt"], receipt)
+
+    def test_terminal_cancellation_history_cannot_be_changed_to_success(self):
+        Runtime(self.store).cancel(self.mission["id"])
+        receipt = self.record()
+        self.assertEqual(receipt["mission_status_at_recording"], "CANCELLED")
+        for update in ({"mission_status_at_recording": "SUCCEEDED"},
+                       {"cancel_requested_at_recording": not receipt["cancel_requested_at_recording"]}):
+            self.replace({**receipt, **update})
+            self.assert_error("RECEIPT_UNAVAILABLE")
+
+    def test_legacy_receipt_remains_readable_with_explicit_weaker_binding(self):
+        receipt = self.record()
+        with self.store.connection() as db:
+            raw, = db.execute("SELECT detail FROM events WHERE sequence=?", (receipt["event_sequence"],)).fetchone()
+            detail = json.loads(raw)
+            detail.pop("receipt_sha256")
+            db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), receipt["event_sequence"]))
+        before = self.store.path.read_bytes()
+        result = lookup(self.reader, self.query)
+        self.assertEqual(result["receipt_binding"], "LEGACY_FIELDS")
+        self.assertEqual(result["receipt"], receipt)
+        self.assertEqual(self.store.path.read_bytes(), before)
+
+    def test_malformed_or_wrong_event_hash_is_not_a_legacy_receipt(self):
+        receipt = self.record()
+        for value in (None, False, "bad", "0" * 64):
+            with self.store.connection() as db:
+                raw, = db.execute("SELECT detail FROM events WHERE sequence=?", (receipt["event_sequence"],)).fetchone()
+                detail = json.loads(raw)
+                detail["receipt_sha256"] = value
+                db.execute("UPDATE events SET detail=? WHERE sequence=?", (json.dumps(detail), receipt["event_sequence"]))
+            self.assert_error("RECEIPT_UNAVAILABLE")
+
     def test_rejected_decision_is_readable(self):
         runtime = ActionRuntime(self.store)
         mission = runtime.run(runtime.create_restart("nas")["id"])
