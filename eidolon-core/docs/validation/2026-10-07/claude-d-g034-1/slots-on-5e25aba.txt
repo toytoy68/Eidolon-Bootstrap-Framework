@@ -1,0 +1,5 @@
+{"clients": 1, "requests": 100, "not_200": 0, "kinds": []}
+{"clients": 2, "requests": 200, "not_200": 0, "kinds": []}
+{"clients": 3, "requests": 300, "not_200": 1, "kinds": ["503"]}
+{"clients": 4, "requests": 400, "not_200": 80, "kinds": ["503"]}
+{"clients": 5, "requests": 500, "not_200": 290, "kinds": ["503"]}
