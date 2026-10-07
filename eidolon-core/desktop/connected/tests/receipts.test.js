@@ -31,6 +31,7 @@ test("real server + beta fixture: the three receipt queries, an absent key and a
     let st = s.state();
     assert.equal(st.receipt.status, "FOUND");
     assert.equal(st.receipt.receipt.approval_status_at_recording, "APPROVED", "historical record");
+    assert.equal(st.receipt.binding, "EVENT_HASH", "G048: binding reported by the real server");
     assert.deepEqual(st.list.selection.sync.view.mission, current, "current capture unchanged: still REVOKED");
     await s.lookupReceipt("beta-fixture", "historical-revoke");
     assert.equal(s.state().receipt.receipt.approval_status_at_recording, "REVOKED");
@@ -98,6 +99,9 @@ test("Chromium on the real server: receipt lookup shown next to the current capt
     assert.match(text, /Enregistrement historique trouvé — décision « approve »/);
     assert.match(text, /APPROVED/);
     assert.match(text, /Capture actuelle\s*REVOKED/);
+    // G048: the fixture is written by the current Core, so its receipts carry the event hash.
+    assert.match(text, /Contrôle d'intégrité\s*Liaison au journal vérifiée par Core/);
+    assert.match(text, /ni une signature ni une preuve d'exécution/);
     if (CAPTURES) await page.screenshot({ path: path.join(CAPTURES, "g036-receipt-found.png"), fullPage: true });
     await page.fill("#receipt-key", "absente-g036");
     await page.click("#receipt-lookup");

@@ -436,6 +436,38 @@ test("G036 a receipt answer arriving after another selection, or after disconnec
   assert.equal(second.s.state().receipt, null);
 });
 
+// ---- G048: receipt_binding is validated and kept, never assumed ------------------------------
+test("G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused", async () => {
+  const V = require("../src/view.js");
+  const found = (binding) => {
+    const a = receiptAnswer(Q(1, "k"), "FOUND", decisionReceipt(1, "k", "approve", "APPROVED"));
+    if (binding !== undefined) a.receipt_binding = binding;
+    return ok(a);
+  };
+  const misplaced = ok(Object.assign(receiptAnswer(Q(1, "k"), "NOT_FOUND"), { receipt_binding: "EVENT_HASH" }));
+  const { s, t } = await receiptSession([found("EVENT_HASH"), found("LEGACY_FIELDS"), found(undefined),
+    found("SIGNED"), found(null), found("event_hash"), misplaced, found("EVENT_HASH")]);
+  const before = JSON.stringify(s.state().list.selection.sync);
+  const lastRead = s.state().lastSuccessAt;
+  const seen = [];
+  for (let i = 0; i < 8; i += 1) {
+    await s.lookupReceipt("beta-fixture", "k");
+    const r = s.state().receipt;
+    seen.push(r.status === "FOUND" ? "FOUND " + r.binding : r.code);
+  }
+  assert.deepEqual(seen, ["FOUND EVENT_HASH", "FOUND LEGACY_FIELDS", "FOUND null", "INVALID_BINDING", "INVALID_BINDING",
+    "INVALID_BINDING", "INVALID_RECEIPT", "FOUND EVENT_HASH"]);
+  assert.equal(JSON.stringify(s.state().list.selection.sync), before, "capture untouched by any receipt answer");
+  assert.equal(s.state().lastSuccessAt, lastRead, "freshness untouched by any receipt answer");
+  assert.equal(s.state().phase, "connected");
+  assert.equal(t.calls.filter((c) => c.path === "/v1/command-receipt").length, 8, "one request per explicit lookup, no retry");
+  // Wording: limited check, verified link, unspecified; never a signature or execution evidence.
+  assert.match(V.bindingText("EVENT_HASH"), /vérifiée par Core.*ni une signature ni une preuve d'exécution/);
+  assert.match(V.bindingText("LEGACY_FIELDS"), /Contrôle limité/);
+  for (const absent of [null, undefined, "SIGNED", "__proto__", "toString"]) assert.match(V.bindingText(absent), /^Non précisé/);
+  for (const b of C.RECEIPT_BINDINGS) assert.doesNotMatch(V.bindingText(b), /prouve|garanti|signé/i);
+});
+
 // ---- G043: freshness — only an ACCEPTED answer moves "last accepted read" ---------------------
 function clockSession(t) {
   let tick = 0;

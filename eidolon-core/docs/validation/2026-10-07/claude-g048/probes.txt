@@ -1,0 +1,68 @@
+== A. reçus authentiques (source 0fdf18e)
+A cancel-requested: FOUND binding=EVENT_HASH
+A cancel-again: FOUND binding=EVENT_HASH
+A cancel-terminal: FOUND binding=EVENT_HASH
+A decision-approve: FOUND binding=EVENT_HASH
+A decision-revoke: FOUND binding=EVENT_HASH
+A actor/reason/receipt_sha256 de l'événement dans les réponses : absents
+== B. altérations isolées du reçu (G042 C1-C8), hash présent
+B C5 annulation : mission_status_at_recording NEW→RUNNING: 503 RECEIPT_UNAVAILABLE
+B C6 annulation : mission_revision +5: 503 RECEIPT_UNAVAILABLE
+B C7 ALREADY_TERMINAL : cancel_requested_at_recording inversé: 503 RECEIPT_UNAVAILABLE
+B C8 ALREADY_TERMINAL : CANCELLED→SUCCEEDED: 503 RECEIPT_UNAVAILABLE
+B C1 décision : APPROVED→REVOKED: 503 RECEIPT_UNAVAILABLE
+B C4 décision : mission_revision +1: 503 RECEIPT_UNAVAILABLE
+== C. hash présent mais invalide (reçu intact)
+C majuscules: 503 RECEIPT_UNAVAILABLE
+C tronqué à 63: 503 RECEIPT_UNAVAILABLE
+C non hexadécimal: 503 RECEIPT_UNAVAILABLE
+C hash d'un autre reçu: 503 RECEIPT_UNAVAILABLE
+C nombre: 503 RECEIPT_UNAVAILABLE
+C null: 503 RECEIPT_UNAVAILABLE
+C chaîne vide: 503 RECEIPT_UNAVAILABLE
+C objet: 503 RECEIPT_UNAVAILABLE
+C espace final: 503 RECEIPT_UNAVAILABLE
+C clé receipt_sha256 dupliquée (valide puis fausse): 503 RECEIPT_UNAVAILABLE
+C clé receipt_sha256 dupliquée (fausse puis valide): 503 RECEIPT_UNAVAILABLE
+== D. hash absent : ancien format et rétrogradation
+D hash retiré seul, cancel-requested: FOUND binding=LEGACY_FIELDS
+D hash retiré seul, decision-approve: FOUND binding=LEGACY_FIELDS
+D hash retiré + C5 annulation : mission_status_at_recording NEW→RUNNING: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "RUNNING", "mission_revision": 0, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.854592+00:00"}
+D hash retiré + C6 annulation : mission_revision +5: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "NEW", "mission_revision": 5, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.854592+00:00"}
+D hash retiré + C7 ALREADY_TERMINAL : cancel_requested_at_recording inversé: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "CANCELLED", "mission_revision": 1, "cancel_requested_at_recording": false, "recorded_at": "2026-10-07T07:08:09.872480+00:00"}
+D hash retiré + C8 ALREADY_TERMINAL : CANCELLED→SUCCEEDED: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "SUCCEEDED", "mission_revision": 1, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.872480+00:00"}
+D hash retiré + C1 décision : APPROVED→REVOKED: 503 RECEIPT_UNAVAILABLE
+D hash retiré + C4 décision : mission_revision +1: 503 RECEIPT_UNAVAILABLE
+== E. réécriture cohérente reçu + hash (hors détection annoncée)
+E C5 annulation : mission_status_at_recording NEW→RUNNING + hash recalculé: FOUND binding=EVENT_HASH → exporté : {"mission_status_at_recording": "RUNNING", "mission_revision": 0, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.854592+00:00"}
+E C6 annulation : mission_revision +5 + hash recalculé: FOUND binding=EVENT_HASH → exporté : {"mission_status_at_recording": "NEW", "mission_revision": 5, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.854592+00:00"}
+E C7 ALREADY_TERMINAL : cancel_requested_at_recording inversé + hash recalculé: FOUND binding=EVENT_HASH → exporté : {"mission_status_at_recording": "CANCELLED", "mission_revision": 1, "cancel_requested_at_recording": false, "recorded_at": "2026-10-07T07:08:09.872480+00:00"}
+E C8 ALREADY_TERMINAL : CANCELLED→SUCCEEDED + hash recalculé: FOUND binding=EVENT_HASH → exporté : {"mission_status_at_recording": "SUCCEEDED", "mission_revision": 1, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:09.872480+00:00"}
+== F. ancien état (source b5f0093, avant C-012) lu par 0fdf18e : non-migration
+F hash dans les événements de l'ancien état : 0
+F cancel-requested: FOUND binding=LEGACY_FIELDS
+F cancel-again: FOUND binding=LEGACY_FIELDS
+F cancel-terminal: FOUND binding=LEGACY_FIELDS
+F decision-approve: FOUND binding=LEGACY_FIELDS
+F decision-revoke: FOUND binding=LEGACY_FIELDS
+F état inchangé après lectures : True
+F nouvelle commande par 0fdf18e : {"protocol": "eidolon-cancel-receipt/1", "status": "RECORDED… ; lignes {'events': 18, 'command_receipts': 5, 'missions': 3} → {'events': 19, 'command_receipts': 6, 'missions': 3}
+F événements avec hash ensuite : 1 (seulement le nouveau) ; nouveau reçu : FOUND binding=EVENT_HASH ; ancien : FOUND binding=LEGACY_FIELDS
+F ancien reçu + C5 annulation : mission_status_at_recording NEW→RUNNING: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "RUNNING", "mission_revision": 0, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:10.549813+00:00"}
+F ancien reçu + C6 annulation : mission_revision +5: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "NEW", "mission_revision": 5, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:10.549813+00:00"}
+F ancien reçu + C7 ALREADY_TERMINAL : cancel_requested_at_recording inversé: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "CANCELLED", "mission_revision": 1, "cancel_requested_at_recording": false, "recorded_at": "2026-10-07T07:08:10.561703+00:00"}
+F ancien reçu + C8 ALREADY_TERMINAL : CANCELLED→SUCCEEDED: FOUND binding=LEGACY_FIELDS → exporté : {"mission_status_at_recording": "SUCCEEDED", "mission_revision": 1, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T07:08:10.561703+00:00"}
+== G. transaction : panne pendant l'écriture (processus tué par os._exit)
+G après la mise à jour du hash, avant l'insertion du reçu: code 9 '' ; état identique : True ; consultation : NOT_FOUND
+G   même clé renvoyée ensuite : code 0 ; consultation : FOUND binding=EVENT_HASH
+G après l'insertion du reçu, avant le commit: code 9 '' ; état identique : True ; consultation : NOT_FOUND
+G   même clé renvoyée ensuite : code 0 ; consultation : FOUND binding=EVENT_HASH
+G refus SQL à l'insertion du reçu (sans tuer): code 0 'ERROR IntegrityError g048' ; état identique : True ; consultation : NOT_FOUND
+G   même clé renvoyée ensuite : code 0 ; consultation : FOUND binding=EVENT_HASH
+== H. doublons de clé
+H même clé, même contenu : {"cancel_outcome": "REQUESTED", "cancel_requeste… ; état identique : True ; FOUND binding=EVENT_HASH
+H même clé, autre contenu : ERROR ContractError COMMAND_KEY_REUSED: key already bound to ; état identique : True
+H 4 processus, même clé en parallèle : réponses distinctes : ['reçu 2026-10-07T07:08:11.674977+00:00'] ; reçus : 1 ; événements portant la clé : 1 (séquence 19) ; FOUND binding=EVENT_HASH
+== I. frontière HTTP (loopback, jeton synthétique)
+I nouveau: HTTP 200 FOUND receipt_binding=EVENT_HASH ; champs : ['authorizes_execution', 'authorizes_resend', 'client_id', 'command_key', 'effect_absence_evidence', 'execution_evidence', 'mission_id', 'protocol', 'receipt_binding', 'status', 'store_id']
+I ancien: HTTP 200 FOUND receipt_binding=LEGACY_FIELDS ; champs : ['authorizes_execution', 'authorizes_resend', 'client_id', 'command_key', 'effect_absence_evidence', 'execution_evidence', 'mission_id', 'protocol', 'receipt_binding', 'status', 'store_id']

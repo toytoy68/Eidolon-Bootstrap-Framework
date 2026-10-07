@@ -26,6 +26,13 @@ Auteur : Claude, 06/10/2026. Contrat : [HTTP-READ-API.md](../../docs/HTTP-READ-A
   à côté de la capture actuelle, jamais fusionné avec elle. `NOT_FOUND` garde
   l'incertitude : ce n'est pas une permission de renvoi. `STORE_CHANGED`
   bloque toute autre consultation jusqu'à une reconnexion explicite.
+- **Contrôle d'intégrité du reçu (G048)** : `receipt_binding` est affiché.
+  - `EVENT_HASH` : liaison au journal vérifiée par Core.
+  - `LEGACY_FIELDS` : contrôle limité (ancien format).
+  - Champ absent (serveur plus ancien) : « non précisé », jamais `EVENT_HASH`.
+  - Toute autre valeur : réponse refusée.
+
+  Aucun de ces cas n'est une signature ni une preuve d'exécution.
 
 Il n'y a **aucune commande** : ni accord, ni lancement, ni annulation.
 
@@ -54,7 +61,7 @@ avec un délai de 10 s.
 | `src/view.js` | rendu DOM |
 | `src/main.js` | démarrage navigateur, `fetch` |
 | `app.js` | **fichier généré** par `build.js` : `sync-state.js` et `mission-list-state.js` du prototype, puis les trois sources |
-| `tests/session.test.js` | 20 tests sur transport scripté (fixtures), dont 6 reçus |
+| `tests/session.test.js` | tests sur transport scripté (fixtures), dont 7 reçus (G036, G048) |
 | `tests/server.test.js` | 6 tests sur le **vrai serveur** Python et dans Chromium |
 | `tests/receipts.test.js` | 3 tests reçus sur le vrai serveur et le jeu bêta C-009g (dont 1 Chromium) |
 | `tests/a11y.test.js` | 8 tests Chromium : clavier, focus, zoom 200 %, 320×640, contraste, mouvement réduit (G037) |
