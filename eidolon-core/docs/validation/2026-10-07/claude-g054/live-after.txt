@@ -1,0 +1,17 @@
+== L0. arguments refusés avant toute fenêtre
+L0 --port 80 : code 2 ; eidolon-consultation : port invalide : 1024 à 65535
+L0 --port abc : code 2 ; eidolon-consultation : port invalide : 1024 à 65535
+L0 --url http://evil.example/ : code 2 ; eidolon-consultation : argument non reconnu (seul --port N est accepté)
+== L1. vrai serveur Core (jeu bêta synthétique) sur 127.0.0.1
+L1 fixture READY ; fenêtre vivante après 8 s : True ; requêtes reçues par Core : ['/', '/app.js', '/style.css', '/v1/health', '/v1/missions', '/v1/missions/m-14dc959147f94dd9a39d30cb0291fe19']
+L1 Host vus : ['127.0.0.1:44591'] ; Origin vus : ['None', 'http://127.0.0.1:44591']
+L1 jeton présent dans une URL demandée : False ; stderr : 'libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering'
+== L2. page sonde : IPC, navigation, nouvelle fenêtre, iframe, fetch croisé
+L2 page : globals = {"internals": "object", "tauri": "undefined", "ipc": "object", "webkit_ipc": "object", "origin": "http://127.0.0.1:35361"}
+L2 page : open = "null"
+L2 page : invoke = "REFUSÉ app.version not allowed. Permissions associated with this command: core:app:allow-version, core:app:default"
+L2 page : fetch = "envoyé"
+L2 page : still-here = "http://127.0.0.1:35361/"
+L2 requêtes reçues par l'autre origine : ['/fetched']
+L2 fenêtre vivante : True ; stderr : 'eidolon-consultation : navigation refusée : autre origine que le client Core\neidolon-consultation : navigation refusée : autre origine que le client Core'
+== D. données laissées par la webview : /root/.local/share/local.eidolon.consultation → 18 entrées ; jeton présent dans ces fichiers : False

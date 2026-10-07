@@ -2,7 +2,7 @@
 // Projet      : Eidolon Core
 // Organisation: Eidolon Core Technologies (ECT)
 // Fichier     : main.rs
-// Description : Fenêtre Tauri 2 de consultation, sans IPC ni plugin (C-TASK-G053)
+// Description : Fenêtre Tauri 2 de consultation, sans IPC ni plugin (C-TASK-G053/G054)
 // Standard    : Eidolon Presentation Standard v1
 // ==========================================================
 //! Opens ONE window on the client already served by Core through the SSH tunnel
@@ -18,11 +18,12 @@ use tauri::webview::NewWindowResponse;
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 
 fn main() {
-    let args: Vec<String> = std::env::args().skip(1).collect();
-    let port = match origin::parse_port(&args, std::env::var("EIDOLON_CORE_PORT").ok().as_deref()) {
+    // args_os/var_os: a non-UTF-8 value is refused by parse_port, never a panic or a silent default.
+    let args: Vec<std::ffi::OsString> = std::env::args_os().skip(1).collect();
+    let port = match origin::parse_port(&args, std::env::var_os("EIDOLON_CORE_PORT").as_ref()) {
         Ok(port) => port,
-        Err(message) => {
-            eprintln!("eidolon-consultation : {message}");
+        Err(error) => {
+            eprintln!("eidolon-consultation : {}", error.message());
             std::process::exit(2);
         }
     };
@@ -36,13 +37,13 @@ fn main() {
                 .on_navigation(move |url| {
                     let ok = origin::allowed(url, port);
                     if !ok {
-                        eprintln!("eidolon-consultation : navigation refusée vers {}", url.origin().ascii_serialization());
+                        eprintln!("eidolon-consultation : {}", origin::NAVIGATION_REFUSED);
                     }
                     ok
                 })
                 // window.open / target=_blank: never a second window, never the system browser.
-                .on_new_window(|url, _| {
-                    eprintln!("eidolon-consultation : nouvelle fenêtre refusée vers {}", url.origin().ascii_serialization());
+                .on_new_window(|_, _| {
+                    eprintln!("eidolon-consultation : {}", origin::NEW_WINDOW_REFUSED);
                     NewWindowResponse::Deny
                 })
                 .build()?;

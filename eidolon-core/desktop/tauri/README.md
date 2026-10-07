@@ -18,7 +18,8 @@ contrat de Core (Host, Origin, CSP) reste inchangé et n'est pas contourné.
 | Une seule origine | `on_navigation` : schéma `http`, hôte exactement `127.0.0.1`, port exact, sans identifiants. `localhost`, `[::1]`, une autre adresse ou un autre port sont refusés |
 | Pas de nouvelle fenêtre | `on_new_window` → `Deny` (`window.open` et `target=_blank`) |
 | Pas d'outils de développement | `.devtools(false)`, y compris en mode debug |
-| Pas de paramètre libre | seul `--port N` (ou `EIDOLON_CORE_PORT`) est accepté, de 1024 à 65535 ; défaut 8765 ; tout autre argument → code 2 |
+| Pas de paramètre libre | seul `--port N`, **une fois** (ou `EIDOLON_CORE_PORT`), est accepté, de 1024 à 65535 ; défaut 8765. Tout autre argument, une valeur non UTF-8, ou une variable présente mais invalide (même avec `--port`) → code 2 |
+| Diagnostics sans écho (G054) | messages **constants** : aucun argument, aucune valeur de variable ni aucune URL refusée n'est réaffiché (un jeton ou une adresse privée pourrait s'y trouver) |
 | Pas d'installation | `bundle.active=false` ; aucun démarrage automatique, aucun raccourci, aucune écriture système |
 
 La coquille **ne lance pas** le tunnel, ne lit ni ne stocke le jeton, et ne
