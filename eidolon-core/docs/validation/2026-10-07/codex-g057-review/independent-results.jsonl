@@ -1,0 +1,3 @@
+{"case": "cleaned_query_removed", "resume_result": {"archived": 1, "file": "research-archive-000001.json", "resumed": true}, "removed_active_runs": 1, "removed_cleaned_queries": 1}
+{"case": "wrong_guard_id", "resume_result": {"archived": 1, "file": "research-archive-000001.json", "resumed": true}, "removed_active_runs": 1, "removed_cleaned_queries": 1}
+{"case": "prior_archive_missing", "resume_result": {"archived": 1, "file": "research-archive-000002.json", "resumed": true}, "removed_active_runs": 1, "removed_cleaned_queries": 1}

@@ -1072,3 +1072,12 @@ Une heure effectuée, C-022–C-027 et G055/G056 intégrés sur la branche autor
 et archive validés. Quatre nouvelles tâches Claude ajoutées ; cinq restent
 prêtes (G057–G061) au dernier relevé distant, tête Claude 8c5f649. Activité de
 sa session non observable. Bilan codex-hour-1200 et journal des sept relevés.
+
+
+### Reprise du 07/10 à 14 h 36 Paris — C-028 / C-MSG-G081
+
+G057/C-D17 reçus sur 90aa669, intégration de la proposition seule. Sondes Claude
+rejouées ; trois défauts de reprise reproduits et attribués à G062. Codex réserve
+research_archive.py, tests/docs associés : validation stricte et bornée des
+exports, catalogue local et liste.md. Aucun retrait de recherche ou migration
+active dans C-028. Claude garde G058/G062/G059–G061 et le prototype de rotation.
