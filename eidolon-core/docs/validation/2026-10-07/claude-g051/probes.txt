@@ -1,0 +1,58 @@
+== K. pannes de vrais processus
+-- K1 SIGKILL après l'intention, avant tout contact
+   préalable : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=1
+   signal SIGKILL au PID 1034 (hook.reached) : code -9 ; contacts=1
+   inspection : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "provider_paused": false}
+   nouvelle recherche : {"error": "GuardError", "code": "WEB_RESEARCH_UNCERTAIN"} ; contacts=1 (aucun nouveau contact attendu)
+   revue explicite : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "resolve": {"state": "RESOLVED_UNKNOWN", "request_sent": false, "effect_known": false}, "provider_paused": false}
+   après revue, sans nouvel appel : contacts=1 (inchangé = pas de relance implicite)
+   nouvelle recherche explicite : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=2
+   inspection finale : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["RESOLVED_UNKNOWN", "RESOLVED_UNKNOWN", null]], "provider_paused": false}
+-- K2 SIGKILL pendant l'appel fournisseur
+   préalable : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=1
+   signal SIGKILL au PID 1041 (contact.started) : code -9 ; contacts=2
+   inspection : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "provider_paused": false}
+   nouvelle recherche : {"error": "GuardError", "code": "WEB_RESEARCH_UNCERTAIN"} ; contacts=2 (aucun nouveau contact attendu)
+   revue explicite : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "resolve": {"state": "RESOLVED_UNKNOWN", "request_sent": false, "effect_known": false}, "provider_paused": false}
+   après revue, sans nouvel appel : contacts=2 (inchangé = pas de relance implicite)
+   nouvelle recherche explicite : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=3
+   inspection finale : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["RESOLVED_UNKNOWN", "RESOLVED_UNKNOWN", null], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "provider_paused": false}
+-- K3 SIGTERM pendant l'appel fournisseur
+   préalable : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=1
+   signal SIGTERM au PID 1048 (contact.started) : code -15 ; contacts=2
+   inspection : {"runs": [["INTENT", "UNCERTAIN", null], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "provider_paused": false}
+   nouvelle recherche : {"error": "GuardError", "code": "WEB_RESEARCH_UNCERTAIN"} ; contacts=2 (aucun nouveau contact attendu)
+   revue explicite : {"runs": [["INTENT", "UNCERTAIN", null], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "resolve": {"state": "RESOLVED_UNKNOWN", "request_sent": false, "effect_known": false}, "provider_paused": false}
+   après revue, sans nouvel appel : contacts=2 (inchangé = pas de relance implicite)
+   nouvelle recherche explicite : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=3
+   inspection finale : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["RESOLVED_UNKNOWN", "RESOLVED_UNKNOWN", null], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "provider_paused": false}
+-- K4 429 → pause écrite, puis SIGKILL avant la fin
+   préalable : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} ; contacts=1
+   signal SIGKILL au PID 1055 (hook.reached) : code -9 ; contacts=2
+   inspection : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "provider_paused": true}
+   nouvelle recherche : {"error": "GuardError", "code": "WEB_RESEARCH_UNCERTAIN"} ; contacts=2 (aucun nouveau contact attendu)
+   revue explicite : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["INTENT", "UNCERTAIN", null]], "resolve": {"state": "RESOLVED_UNKNOWN", "request_sent": false, "effect_known": false}, "provider_paused": true}
+   après revue, sans nouvel appel : contacts=2 (inchangé = pas de relance implicite)
+   nouvelle recherche explicite : {"status": "NO_READABLE_SOURCE", "providers": ["RETRY_WAIT"]} ; contacts=2
+   inspection finale : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["RESOLVED_UNKNOWN", "RESOLVED_UNKNOWN", null], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "provider_paused": true}
+== C. concurrence : 6 processus en même temps (fournisseur lent 1,5 s)
+   préalable : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]}
+   résultats : {'WEB_RESEARCH_IN_FLIGHT': 5, 'NO_READABLE_SOURCE': 1} ; contacts lents=1 ; journal : ['COMPLETED', 'COMPLETED']
+== C2. pendant une recherche : inspection et revue par un autre processus
+   inspection : {"error": "GuardError", "code": "WEB_RESEARCH_IN_FLIGHT"}
+   revue : {"error": "GuardError", "code": "WEB_RESEARCH_IN_FLIGHT"}
+   fin de la recherche : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]}
+   journal ensuite : {"runs": [["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"], ["COMPLETED", "COMPLETED", "NO_READABLE_SOURCE"]], "provider_paused": false}
+== J. journal altéré ou incomplet
+   J1 dernier événement COMPLETED supprimé : {"error": "GuardError", "code": "INVALID_RESEARCH_AUDIT"} ; nouveau contact=0
+   J2 base en 0644 : {"error": "GuardError", "code": "RESEARCH_DATABASE_NOT_PRIVATE"} ; nouveau contact=0
+   J3 fichier de verrou supprimé : {"error": "GuardError", "code": "RESEARCH_GUARD_UNAVAILABLE"} ; nouveau contact=0
+   J4 base tronquée à 100 octets : {"error": "GuardError", "code": "RESEARCH_GUARD_UNAVAILABLE"} ; nouveau contact=0
+   J5 intention + son événement supprimés ensemble : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} (contournement documenté)
+   J6 dossier du journal supprimé après une panne : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]} (contournement documenté)
+== L. verrou remplacé pendant une recherche en cours
+   seconde recherche pendant la première : {"error": "GuardError", "code": "WEB_RESEARCH_UNCERTAIN"} ; contacts=1
+   première : {"status": "NO_READABLE_SOURCE", "providers": ["EMPTY"]}
+== H. capacité : 256 recherches, puis la 257e
+   {"réussies": 256, "257e": "GuardError RESEARCH_HISTORY_CAPACITY_REACHED"}
+   usage de la CLI : usage: research_guard.py [-h] --directory DIRECTORY [--format {json,human}] {inspect,resolve} ... Inspecter/revoir une recherche
