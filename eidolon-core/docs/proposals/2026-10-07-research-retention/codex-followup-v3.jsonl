@@ -1,0 +1,5 @@
+{"case": "short_write", "reported_archived": 2, "removed_active_runs": 2, "published_json_readable": true}
+{"case": "partial_before_uncertain_refusal", "result": "REFUS WEB_RESEARCH_UNCERTAIN", "unrecognized_partial_preserved": true}
+{"case": "cleaned_query_removed", "resume_result": "REFUS EXPORT_DOES_NOT_MATCH_JOURNAL", "removed_active_runs": 0, "removed_cleaned_queries": 0}
+{"case": "wrong_guard_id", "resume_result": "REFUS EXPORT_DOES_NOT_MATCH_JOURNAL", "removed_active_runs": 0, "removed_cleaned_queries": 0}
+{"case": "prior_archive_missing", "resume_result": "REFUS ARCHIVE_MISSING", "removed_active_runs": 0, "removed_cleaned_queries": 0}

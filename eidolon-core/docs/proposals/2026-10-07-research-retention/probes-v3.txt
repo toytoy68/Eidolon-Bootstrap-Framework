@@ -1,0 +1,30 @@
+== R. rotation nominale (3 plus anciennes)
+R avant : {'runs': 7, 'run_events': 14, 'cleaned_queries': 7, 'version': 2, 'archives': 0}
+R rotation : {'archived': 3, 'file': 'research-archive-000001.json', 'chain_index': 1, 'request_sent': False}
+R après : {'runs': 4, 'run_events': 8, 'cleaned_queries': 4, 'version': 3, 'archives': 1} ; vérification : {'archives': 1, 'chain_head': '38ccb889a08be5a00739e838c184158ccae525450759d71097fb8d1aa3ee3ca2', 'active': 4}
+R export : 3 recherches, textes nettoyés identiques : True ; mode 0o600
+R garde actuelle sur le journal de schéma 3 : REFUS UNSUPPORTED_RESEARCH_GUARD
+R deuxième rotation (tout le reste) : {'archived': 3, 'file': 'research-archive-000002.json', 'chain_index': 2, 'request_sent': False}
+R après : {'runs': 1, 'run_events': 2, 'cleaned_queries': 1, 'version': 3, 'archives': 2} ; vérification : {'archives': 2, 'chain_head': 'a0dd149acc42906526ff8d5d1f3a4c26cda826785654022f2031d6f926db0fa8', 'active': 1}
+R la recherche liée à la mission reste : True
+R mission libérée explicitement : {'archived': 1, 'file': 'research-archive-000003.json', 'chain_index': 3, 'request_sent': False} ; {'runs': 0, 'run_events': 0, 'cleaned_queries': 0, 'version': 3, 'archives': 3}
+== P. refus préalables
+P intention en cours : REFUS WEB_RESEARCH_UNCERTAIN
+P verrou absent : REFUS RESEARCH_LOCK_MISSING ; verrou recréé : False
+P dossier d'archive non privé : REFUS ARCHIVE_DIR_NOT_PRIVATE
+P journal incohérent : REFUS INVALID_RESEARCH_AUDIT ; {'runs': 7, 'run_events': 13, 'cleaned_queries': 7, 'version': 2, 'archives': 0}
+P recherche en cours (verrou tenu) : REFUS WEB_RESEARCH_IN_FLIGHT
+== K. coupures à chaque frontière
+K after_partial_write : code 9 ; journal {'runs': 7, 'run_events': 14, 'cleaned_queries': 7, 'version': 2, 'archives': 0} ; fichiers ['partial'] ; vérification : REFUS PARTIAL_EXPORT_PRESENT
+K   nouvelle rotation : REFUS PARTIAL_EXPORT_PRESENT
+K after_publish : code 9 ; journal {'runs': 7, 'run_events': 14, 'cleaned_queries': 7, 'version': 2, 'archives': 0} ; fichiers ['export'] ; vérification : REFUS UNCOMMITTED_EXPORT
+K   reprise : {'archived': 3, 'file': 'research-archive-000001.json', 'resumed': True, 'request_sent': False} ; {'runs': 4, 'run_events': 8, 'cleaned_queries': 4, 'version': 3, 'archives': 1} ; vérification : {'archives': 1, 'chain_head': 'b0a04fcea978d842841c9d9ea392e95ef34d83d8ec20eb32bcd0b23b1b23f283', 'active': 4}
+K inside_transaction : code 9 ; journal {'runs': 7, 'run_events': 14, 'cleaned_queries': 7, 'version': 2, 'archives': 0} ; fichiers ['export'] ; vérification : REFUS UNCOMMITTED_EXPORT
+K   reprise : {'archived': 3, 'file': 'research-archive-000001.json', 'resumed': True, 'request_sent': False} ; {'runs': 4, 'run_events': 8, 'cleaned_queries': 4, 'version': 3, 'archives': 1} ; vérification : {'archives': 1, 'chain_head': '1c5d50f9761bc86e33aaeb64f9274c9b1e7e860b7e7b54cb6afbd4c72f66f155', 'active': 4}
+K after_commit : code 9 ; journal {'runs': 4, 'run_events': 8, 'cleaned_queries': 4, 'version': 3, 'archives': 1} ; fichiers ['export'] ; vérification : {'archives': 1, 'chain_head': '6475ef22605ff3434341b6f4df2941e801cd249b696fe8a0a51f95935cc7a8ac', 'active': 4}
+== D. copie, restauration, altérations
+D deux rotations : {'runs': 3, 'run_events': 6, 'cleaned_queries': 3, 'version': 3, 'archives': 2} ; {'archives': 2, 'chain_head': 'bd407138e18c9013a8e2b686b57da9aa1db9ebc7569f15b52f8e618a811fa4f2', 'active': 3}
+D journal restauré d'avant les rotations : REFUS JOURNAL_ROLLED_BACK ; nouvelle rotation : REFUS JOURNAL_ROLLED_BACK
+D export modifié : REFUS ARCHIVE_ALTERED
+D export supprimé : REFUS ARCHIVE_MISSING
+D entrée de chaîne supprimée du journal : REFUS UNCOMMITTED_EXPORT ; reprise : REFUS EXPORT_DOES_NOT_MATCH_JOURNAL

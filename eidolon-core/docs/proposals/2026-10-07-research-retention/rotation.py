@@ -82,7 +82,8 @@ def _read_private(path, limit=None):
     """Open without following links, check owner/mode/size on the descriptor, always close it."""
     limit = MAX_EXPORT_BYTES if limit is None else limit
     try:
-        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+        # O_NONBLOCK: opening a FIFO never waits for a writer; it is then refused by S_ISREG.
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     except FileNotFoundError:
         raise RotationError("ARCHIVE_MISSING") from None
     except OSError:
@@ -215,7 +216,7 @@ def _check_archives(directory, archive_dir, snap, *, allow_uncommitted):
             raise RotationError("ARCHIVED_RUN_REAPPEARED")
         known[entry["file"]] = entry
     if list(Path(archive_dir).glob("*.partial")):
-        raise RotationError("PARTIAL_EXPORT_PRESENT")
+        raise RotationError("PARTIAL_EXPORT_PRESENT")    # auto_rotate may first prove them redundant
     unknown = [p for p in _exports(archive_dir) if p.name not in known]
     if not unknown:
         return None
@@ -301,26 +302,49 @@ def _commit(directory, archive_name, data, meta, snap, ids):
     _crash("after_commit")
 
 
+def _write_all(fd, data):
+    """os.write may write fewer bytes than asked (G063): loop, and treat 0 as a failure."""
+    view, done = memoryview(data), 0
+    while done < len(data):
+        try:
+            n = os.write(fd, view[done:])
+        except OSError as exc:            # ENOSPC, EIO...: the export is not durable
+            raise RotationError("ARCHIVE_WRITE_FAILED") from exc
+        if type(n) is not int or n <= 0:
+            raise RotationError("ARCHIVE_WRITE_FAILED")
+        done += n
+
+
 def _publish(archive_dir, index, data):
+    """Write a private partial created by THIS call, publish it exclusively, then re-read the
+    published file and require the exact bytes. On failure before publication, only our own
+    partial (O_EXCL, just created, data still in the journal) is removed."""
     name = f"research-archive-{index:06d}.json"
     partial = Path(archive_dir) / (name + "." + os.urandom(8).hex() + ".partial")
     out = os.open(partial, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW, 0o600)
+    published = False
     try:
-        os.write(out, data)
-        _crash("after_partial_write")
-        os.fsync(out)
-    finally:
-        os.close(out)
-    try:
+        try:
+            _write_all(out, data)
+            _crash("after_partial_write")
+            os.fsync(out)
+        finally:
+            os.close(out)
         os.link(partial, Path(archive_dir) / name)   # exclusive publication: fails if the name exists
+        published = True
     finally:
-        os.unlink(partial)
+        if not published:
+            os.unlink(partial)
+    os.unlink(partial)
     dfd = os.open(archive_dir, os.O_RDONLY)
     try:
         os.fsync(dfd)
     finally:
         os.close(dfd)
     _crash("after_publish")
+    if _read_private(Path(archive_dir) / name) != data:
+        # Published but not what was written: keep it for review, remove nothing from the journal.
+        raise RotationError("ARCHIVE_PUBLISH_MISMATCH")
     return name
 
 
@@ -401,11 +425,40 @@ def resume_uncommitted(directory, archive_dir, *, operations=(), guard_src):
         os.close(fd)
 
 
+PARTIAL_NAME = re.compile(r"research-archive-([0-9]{6})\.json\.[0-9a-f]{16}\.partial")
+
+
+def _remove_redundant_partials(archive_dir, snap):
+    """A partial is removed only when its provenance and redundancy are PROVEN: our name
+    pattern, private regular file, complete strict JSON for the next chain index of this
+    guard, and every run still present in the journal byte for byte (nothing would be lost).
+    Anything else is kept and the rotation is refused (G063)."""
+    removable = []
+    for p in sorted(Path(archive_dir).glob("*.partial")):
+        match = PARTIAL_NAME.fullmatch(p.name)
+        if match is None:
+            raise RotationError("PARTIAL_EXPORT_PRESENT")
+        try:
+            meta = _strict_json(_read_private(p))
+        except RotationError:
+            raise RotationError("PARTIAL_EXPORT_PRESENT") from None
+        if (type(meta) is not dict or set(meta) != EXPORT_KEYS or meta["guard_id"] != snap.guard_id
+                or meta["chain_index"] != len(snap.chain) + 1 or int(match.group(1)) != meta["chain_index"]
+                or meta["previous_chain_sha256"] != snap.head or type(meta["runs"]) is not list
+                or any(type(r) is not dict or snap.rows.get(r.get("id")) != r for r in meta["runs"])):
+            raise RotationError("PARTIAL_EXPORT_PRESENT")
+        removable.append(p)
+    for p in removable:
+        os.unlink(p)
+    return len(removable)
+
+
 def auto_rotate(directory, archive_dir, *, target=TARGET, terminal_operations=(), guard_src, clock_ms):
     """Safe boundary: call AFTER a research run is COMPLETED (lock free, no INTENT expected),
     never inside guard.execute. A refusal here says nothing about that research's effects.
 
-    - stale .partial files (never referenced, data still in the journal) are removed;
+    - a .partial is removed only if proven redundant (see _remove_redundant_partials), and
+      only after the INTENT refusal; otherwise it is kept and the call is refused;
     - a single uncommitted export extending the chain is finished first (resume rules);
     - then the oldest finished runs above `target` are archived, except runs of missions the
       caller does not declare terminal: if those keep the journal above target, it is reported."""
@@ -415,12 +468,10 @@ def auto_rotate(directory, archive_dir, *, target=TARGET, terminal_operations=()
     fd = _lock(directory)
     try:
         report = {"partials_removed": 0, "resumed": None, "archived": 0, "request_sent": False}
-        for p in Path(archive_dir).glob("research-archive-*.partial"):
-            info = os.lstat(p)
-            if stat.S_ISREG(info.st_mode) and info.st_uid == os.getuid():
-                os.unlink(p)
-                report["partials_removed"] += 1
         snap = _Snapshot(directory, guard_src)
+        if any(r["state"] == "INTENT" for r in snap.runs):
+            raise RotationError("WEB_RESEARCH_UNCERTAIN")        # before touching ANY file
+        report["partials_removed"] = _remove_redundant_partials(archive_dir, snap)
         if _check_archives(directory, archive_dir, snap, allow_uncommitted=True) is not None:
             report["resumed"] = _resume_locked(directory, archive_dir, snap, terminal_operations)
             snap = _Snapshot(directory, guard_src)

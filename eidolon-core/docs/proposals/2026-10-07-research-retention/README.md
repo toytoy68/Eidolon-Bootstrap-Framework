@@ -201,3 +201,55 @@ comme telle, jamais présentée comme à jour.
 - `resume_uncommitted` prend `operations` ;
 - `auto_rotate` est nouveau ;
 - le schéma 3 (table `archives`) reste à intégrer par Codex.
+
+## Version 3 du prototype — G063, 07/10/2026
+
+Fiche [C-TASK-G063](../../../collaboration/tasks/C-TASK-G063.md), après la
+[seconde contre-revue Codex](../../validation/2026-10-07/codex-g062-followup/README.md).
+La v2 reste dans Git (`42d6dde`).
+
+```sh
+cd docs/proposals/2026-10-07-research-retention
+G062_SRC=<copie>/eidolon-core/src python3 -m unittest -v tests_g063 tests_g062
+```
+
+| Défaut | Correction |
+| --- | --- |
+| écriture courte acceptée (`os.write` ne renvoie que la moitié) : 2 recherches retirées, export illisible | `_write_all` boucle jusqu'au dernier octet. 0 octet écrit ou erreur système (`ENOSPC`…) → `ARCHIVE_WRITE_FAILED` ; seul le partiel **créé par cet appel** (`O_EXCL`) est retiré, et rien n'est touché dans le journal |
+| contenu publié non relu | après publication, le fichier est **relu** : les octets doivent être exactement ceux écrits, sinon `ARCHIVE_PUBLISH_MISMATCH`. L'export est gardé pour revue, rien n'est retiré |
+| `.partial` inconnu supprimé avant le refus `WEB_RESEARCH_UNCERTAIN` | le refus d'intention passe **avant** tout fichier. Un partiel n'est supprimé que s'il est **prouvé redondant** : notre motif de nom, fichier privé ordinaire, JSON complet et strict, même garde, index suivant de la chaîne, et toutes ses recherches encore présentes octet pour octet dans le journal. Sinon il est gardé, avec le refus `PARTIAL_EXPORT_PRESENT` |
+| FIFO : `_read_private` pouvait bloquer | ouverture `O_NONBLOCK`, puis refus avant toute lecture (`NOT_PRIVATE`) ; un partiel FIFO est gardé et refusé, sans attente |
+
+Assertions : **21/21** (8 nouvelles + les 13 de G062), [sortie](tests_g063.txt).
+Après **chaque** cas, chaque recherche d'origine se retrouve identique,
+soit dans le journal, soit dans un export **lisible** :
+
+- écriture courte complétée, export lisible, vérification OK ;
+- 0 octet et `ENOSPC` : rien retiré, ni export ni partiel restant ;
+- export publié altéré : refus, rien retiré, la reprise est aussi refusée ;
+- partiel inconnu avec intention incertaine : gardé ;
+- partiel étranger ou tronqué : gardé, refus ;
+- partiel complet et redondant : retiré, puis rotation normale ;
+- pannes aux 4 frontières : données conservées, puis deux `auto_rotate`
+  successifs **idempotents** (le second ne fait rien) ;
+- FIFO comme export ou comme partiel : aucun blocage (délai de 5 s
+  vérifié), refus.
+
+Contre-sondes Codex rejouées sur la v3 ([sortie](codex-followup-v3.jsonl)) :
+
+- écriture courte : export **lisible**, les 2 recherches archivées sont
+  conservées ;
+- partiel inconnu **gardé** ;
+- les 3 anciens cas sont toujours refusés sans retrait.
+
+Sondes G057 inchangées par rapport à la v2 ([sortie](probes-v3.txt)).
+
+### Limites restantes
+
+- Un partiel tronqué par une vraie panne pendant l'écriture reste en
+  place et bloque l'archivage automatique : sa provenance ne peut être
+  établie. Il faut une revue manuelle, puis sa suppression.
+- `fsync` et `link` supposent un système de fichiers local POSIX. Ni NFS,
+  ni coupure de courant réelle.
+- Une réécriture cohérente du journal **et** des exports reste hors
+  détection.
