@@ -1,0 +1,47 @@
+== S. signaux d'accès (titre de défi, mot de passe)
+S1 défi, titre exact seul (témoin): CHALLENGE_SUSPECTED  ok
+S2 défi + icône <svg><title>: CHALLENGE_SUSPECTED  ok
+S3 défi + second <title> dans le corps: CHALLENGE_SUSPECTED  ok
+S4 défi, titre « Just a moment&hellip; » (entité): READ texte="Checking your browser before accessing the site."
+S5 défi en text/plain, commentaire en tête: CHALLENGE_SUSPECTED  ok
+S6 défi en text/plain, BOM UTF-8 en tête: CHALLENGE_SUSPECTED  ok
+S7 HTML en text/plain commençant par <body>: UNSUPPORTED_CONTENT  ok
+S8 connexion en text/plain, <div><form><input type=password>: LOGIN_SUSPECTED  ok
+S9 mot de passe, attributs type dupliqués (password puis text): LOGIN_SUSPECTED  ok
+S10 mot de passe dans <template> (invisible): LOGIN_SUSPECTED
+S11 abonnement, titre exact: PAYWALL_SUSPECTED  ok
+S12 article citant « CAPTCHA » dans le titre: READ texte="Un texte."  ok
+== C. option explicite et charset
+C1 HTML, lecteur par défaut (html_limits=None): UNSUPPORTED_CONTENT  ok
+C2 « text/html »: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+C2 « TEXT/HTML; Charset=UTF-8 »: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+C2 « text/html;charset="utf-8" »: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+C2 « text/html ; charset = utf-8 »: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+C2 « text/html; charset=utf8 »: UNSUPPORTED_CONTENT  ok
+C2 « text/html; charset=iso-8859-1 »: UNSUPPORTED_CONTENT  ok
+C2 « text/html; charset=utf-8; q=1 »: UNSUPPORTED_CONTENT  ok
+C2 « text/html; charset=utf-8; »: UNSUPPORTED_CONTENT  ok
+C2 « application/xhtml+xml »: UNSUPPORTED_CONTENT  ok
+C3 octets Latin-1 annoncés UTF-8: INVALID_ENCODING  ok
+C4 BOM UTF-8, text/html: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+C5 <meta charset=windows-1252> mais octets ASCII: READ texte="Le pont est ferme pour travaux.\n\nReouverture prevue en mai."  ok
+== P. partiel, vide, statuts prioritaires
+P1 profondeur > 128: EXTRACTION_PARTIAL  ok
+P1   texte=None ; pages lues=0 ; statut=NO_READABLE_SOURCE ; extraction.complete=False ; avertissements=['DEPTH_LIMIT']
+P1   deux exécutions du même coordinateur : 2 requêtes (pas de cache d'un partiel)
+P2 segments > 2000: EXTRACTION_PARTIAL  ok
+P3 script et style seulement: EMPTY_CONTENT  ok
+P4 429 + Retry-After, corps = défi HTML: RATE_LIMITED  ok
+P5 403, corps = article HTML: ACCESS_DENIED  ok
+P6 503, corps = article HTML: HTTP_ERROR
+P7 200 tronqué (Content-Length > corps): TRUNCATED  ok
+P8 200 de 130 000 octets: TOO_LARGE  ok
+== D. doublons et cache
+D1 deux habillages HTML, texte brut identique, texte brut avec BOM : ['READ', 'DUPLICATE_CONTENT', 'DUPLICATE_CONTENT', 'READ'] ; pages lues=2 ; statut=PARTIAL
+D2 cache : requêtes=1 ; cache_hit=True ; observed_at identique=True ; extraction identique=True
+D3 autres limites d'extraction : nouvelle requête=True ; état=READ
+== V. provenance octets/texte et instruction dans la page
+V1 état=READ ; statut rapport=READ_TARGET_MET ; trust=untrusted_external_text ; authorizes_execution=False
+V1 sha octets = retrieval = extraction.source : True ; text_sha256 = sha(texte) : True
+V1 clés du rapport : ['discovery_status', 'limitation', 'policy_id', 'providers', 'query_sha256', 'read_calls', 'readable_pages', 'required_pages', 'scope', 'sources', 'status', 'url_disclosure', 'version'] ; scope='retrieved text only; no claim verification or mission success'
+V1 « approve »/« authoriz » ailleurs que dans le texte : []
