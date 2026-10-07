@@ -564,3 +564,15 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Génération atomique et idempotente de liste.md ; fichiers manuscrits refusés.
 - [ ] Rotation automatique à cible 100 avec preuves des missions protégées.
 - [ ] Consultation Desktop via projection Core authentifiée, sans accès fichiers Tauri.
+
+
+## C-029 et réception G058–G062 — 07/10/2026
+
+- [x] Identité de garde liée au Store, adoption des missions existantes sans réécriture.
+- [x] Dossiers, garde et pauses manquants/incomplets refusés sans recréation.
+- [x] Quinze nouveaux tests d'initialisation ; 72 tests associés réussis.
+- [x] G060 : libellés de recherche intégrés au client ; récupération distinguée de vérité.
+- [x] Compatibilité du lecteur avec released_operations G062, vingt tests dédiés.
+- [ ] G063 : corriger écritures courtes et nettoyage prématuré du prototype.
+- [ ] G064 : contre-revue du lecteur et de l'initialisation.
+- [ ] G065 : diagnostics budget et mission historique inconnue.

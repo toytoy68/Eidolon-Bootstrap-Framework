@@ -108,3 +108,9 @@ Ce lot n’ajoute **aucune route HTTP**, aucun accès fichiers Tauri ni déclenc
 automatique. Il ne modifie pas la limite active actuelle de 256 recherches.
 
 [Validation et compatibilité G057](validation/2026-10-07/codex-research-archives/README.md).
+
+
+Compatibilité G062 : released_operations est optionnel pour les exports v1.
+Lorsqu'il existe, le lecteur exige la liste triée et unique des operation_id
+présents dans l'export. Cela ne prouve pas que les missions sont terminales :
+le lecteur ne consulte pas le Store actif. L'index affiche aussi la tête de chaîne.

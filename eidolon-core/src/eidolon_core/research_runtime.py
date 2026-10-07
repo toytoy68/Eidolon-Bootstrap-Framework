@@ -13,6 +13,7 @@ needs its own egress policy, mission binding and operational qualification.
 from dataclasses import dataclass
 from pathlib import Path
 import re
+import time
 
 from .contracts import ContractError, digest, encode, snapshot
 from .objectives import RESEARCH, RESEARCH_TOOL
@@ -88,14 +89,26 @@ class ResearchVerificationUnavailable(RuntimeError):
 
 
 class SyntheticResearchBackend:
-    def __init__(self, directory, *, scenario="readable"):
+    def __init__(self, directory, *, scenario="readable", create=None):
         if type(scenario) is not str or scenario not in SCENARIOS:
             raise ContractError("INVALID_RESEARCH_SCENARIO")
         self.directory = str(Path(directory).resolve())
         self.scenario = scenario
-        guard = ResearchGuard(Path(directory)/"guard",retain_queries=True)
+        root = Path(self.directory)
+        first_use = not root.exists()
+        if create is not None and type(create) is not bool:
+            raise ContractError("INVALID_RESEARCH_INITIALIZATION")
+        initialize = first_use if create is None else create
+        # Never repair an existing/incomplete folder, even when creation is allowed.
+        if initialize and not first_use:
+            raise ContractError("RESEARCH_INITIALIZATION_INCOMPLETE")
+        if not initialize and not (root/"pauses.sqlite3").is_file():
+            raise ContractError("RESEARCH_PAUSES_MISSING")
+        guard = ResearchGuard(root/"guard",retain_queries=True,create=initialize)
+        if not guard.retain_queries:
+            raise ContractError("QUERY_HISTORY_NOT_ENABLED")
         self.guard_id = guard.guard_id
-        ResearchPauses(Path(directory)/"pauses.sqlite3")
+        ResearchPauses(root/"pauses.sqlite3", create=initialize)
 
     def manifest(self):
         return {"protocol":"synthetic-research-backend/1","directory":self.directory,
@@ -117,7 +130,7 @@ class SyntheticResearchBackend:
         if not pauses_path.is_file():
             raise ContractError("RESEARCH_PAUSES_MISSING")
         coordinator = ResearchCoordinator([FixtureProvider(self.scenario)],FixtureReader(self.scenario),
-                     resolver=fixture_dns,guard=guard,pauses=ResearchPauses(pauses_path))
+                     resolver=fixture_dns,guard=guard,pauses=ResearchPauses(pauses_path,create=False))
         return coordinator.run(parameters["query"],required_pages=parameters["required_pages"],operation_id=parameters["operation_id"])
 
     def verify(self, parameters, context, result):
@@ -158,9 +171,44 @@ class SyntheticResearchBackend:
                     self.validate,self.execute,self.verify,"synthetic-research-journal-and-fixtures/1")
 
 
+def _bound_backend(store, scenario):
+    """Bind first-use evidence outside the fixture directory, in the mission Store.
+
+    Serializes constructors, not research execution. No provider is called here.
+    A coherent rollback of BOTH databases remains outside this local guarantee.
+    """
+    root = store.directory / "research-fixture"
+    with store.connection() as db:
+        db.execute("BEGIN IMMEDIATE")
+        row = db.execute("SELECT value FROM sync_metadata WHERE key='research_fixture_guard_id'").fetchone()
+        if row is None:
+            # Adopt existing C-021 missions without rewriting their configuration.
+            # Any prior research in this Store rules out a fresh default backend.
+            deadline = time.monotonic() + 2
+            db.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
+            legacy = db.execute("SELECT DISTINCT json_extract(body,'$.configuration.research_fixture.guard_id') "
+                                "FROM missions WHERE json_type(body,'$.configuration.research_fixture') IS NOT NULL LIMIT 2").fetchall()
+            db.set_progress_handler(None, 0)
+            if len(legacy) > 1 or (legacy and (type(legacy[0][0]) is not str
+                    or re.fullmatch(r"g-[0-9a-f]{32}", legacy[0][0]) is None)):
+                raise ContractError("RESEARCH_BACKEND_CHANGED")
+            expected = legacy[0][0] if legacy else None
+            initialize = not root.exists() and not legacy
+        else:
+            if type(row[0]) is not str or re.fullmatch(r"g-[0-9a-f]{32}", row[0]) is None:
+                raise ContractError("INVALID_RESEARCH_BACKEND_BINDING")
+            expected, initialize = row[0], False
+        backend = SyntheticResearchBackend(root, scenario=scenario, create=initialize)
+        if expected is not None and backend.guard_id != expected:
+            raise ContractError("RESEARCH_BACKEND_CHANGED")
+        if row is None:
+            db.execute("INSERT INTO sync_metadata(key,value) VALUES ('research_fixture_guard_id',?)", (backend.guard_id,))
+        return backend
+
+
 class ResearchRuntime(Runtime):
     def __init__(self, store, *, scenario="readable", backend=None, model=None, policy=None, **kwargs):
-        self.backend = backend or SyntheticResearchBackend(store.directory/"research-fixture",scenario=scenario)
+        self.backend = backend or _bound_backend(store, scenario)
         super().__init__(store, model=model or ResearchModel(),registry=Registry([self.backend.tool()]),
                          policy=policy or ResearchFixturePolicy(), **kwargs)
 

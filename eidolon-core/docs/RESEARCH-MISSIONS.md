@@ -94,6 +94,28 @@ modèle réel, accès Web/NAS, fournisseur configurable ou opération utilisateu
 externe n’est activé. Le futur raccordement réel reste conditionné par les
 permissions egress, le périmètre de destination et une recette distincte.
 
-La garde reste limitée à 256 recherches, et la rotation G057 n’est pas livrée.
+La garde reste limitée à 256 recherches, et la rotation G057/G062 reste un prototype isolé.
 Les anciennes versions sans ce type d’objectif ne doivent pas reprendre ces
 missions. POSIX uniquement ; Windows, VM et coupures électriques non validés.
+
+
+## Initialisation et conservation de l'identité (C-029)
+
+Le backend par défaut lie son guard_id dans sync_metadata du Store des missions.
+Une ouverture ultérieure refuse une garde, son verrou, les pauses ou le dossier
+research-fixture manquants. Elle ne crée pas de remplacement silencieux. Une
+base de pauses vide ou privée d'une table requise est refusée sans réparation.
+Les premières initialisations concurrentes sont sérialisées par le Store.
+
+Les missions C-021 existantes sont adoptées si leur identité de garde correspond,
+sans réécriture de leur configuration. Des identités contradictoires bloquent
+l'adoption. Une initialisation coupée laissant un dossier incomplet est refusée
+à la prochaine ouverture. Restaurer les fichiers originaux conserve leurs
+intentions incertaines ; aucune relance n'est autorisée par l'absence d'INTENT.
+
+La construction peut donc échouer avant toute reprise lorsque ces fichiers sont
+absents ou occupés. La garantie repose sur la conservation du Store : une
+restauration cohérente de toutes les bases ou une réécriture concertée reste hors
+détection. Un SyntheticResearchBackend utilisé directement, sans Store, ne peut
+pas reconnaître la disparition totale d'un ancien dossier. L'injection explicite
+d'un backend reste une API de confiance pour les tests et adaptateurs.

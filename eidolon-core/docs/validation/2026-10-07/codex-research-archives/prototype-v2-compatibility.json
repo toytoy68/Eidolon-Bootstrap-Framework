@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "actual_g057_exports_verified": 3,
+  "archived_runs": 7,
+  "cleaned_query_bindings_verified": 7,
+  "linked_mission_count": 1,
+  "original_files_unchanged": true,
+  "index_private": true,
+  "active_rotation_enabled": false,
+  "temporary_files_removed": true
+}
