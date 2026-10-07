@@ -38,6 +38,9 @@ ALLOW_FILES = ("LICENSE", "eidolon-core/README.md", "eidolon-core/pyproject.toml
                "eidolon-core/docs/BETA-SERVER-PC.md", "eidolon-core/docs/HTTP-READ-API.md",
                "eidolon-core/docs/HTTP-RECEIPTS.md", "eidolon-core/docs/HTTP-PREFLIGHT.md",
                "eidolon-core/docs/BETA-LOCAL-CHECK.md", "eidolon-core/docs/READ-TOKEN.md")
+# Include newer contracts when present without rejecting older valid bundles.
+OPTIONAL_FILES = ("eidolon-core/docs/QUERY-CLEANUP.md", "eidolon-core/docs/RESEARCH-GUARD.md",
+                  "eidolon-core/docs/INVOCATION-BUDGET.md")
 # Names refused even when tracked inside the allow-list: state, secrets, caches, bytecode.
 FORBIDDEN = re.compile(r"(^|/)(__pycache__|\.git|\.env|read-token|[^/]*\.(pyc|pyo|sqlite3?|db|key|pem|p12|log))(/|$)", re.I)
 SHA = re.compile(r"[0-9a-f]{40}")
@@ -55,7 +58,7 @@ def git(repo, *args, binary=False):
 
 
 def allowed(path):
-    return path in ALLOW_FILES or path.startswith(ALLOW_PREFIXES)
+    return path in ALLOW_FILES or path in OPTIONAL_FILES or path.startswith(ALLOW_PREFIXES)
 
 
 def collect(repo, commit):

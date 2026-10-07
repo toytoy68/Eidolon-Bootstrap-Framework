@@ -11,6 +11,7 @@ Explicit web assets work both from a checkout and from an installed wheel.
 No browser, SSH, GPU, network service or installer is exercised.
 """
 import argparse
+from contextlib import contextmanager
 import hashlib
 from importlib.metadata import version, PackageNotFoundError
 from http.client import HTTPConnection
@@ -18,10 +19,55 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 import tempfile
 import time
+
+
+class _Interrupted(BaseException):
+    def __init__(self, signum):
+        self.signum = signum
+
+
+@contextmanager
+def _termination_signals():
+    previous, stopping = {}, False
+    def interrupt(signum, frame):
+        nonlocal stopping
+        if not stopping:
+            stopping = True
+            raise _Interrupted(signum)
+        # A second signal must not cut short cleanup of owned children.
+    try:
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous[signum] = signal.signal(signum, interrupt)
+        yield
+    finally:
+        for signum, handler in previous.items():
+            signal.signal(signum, handler)
+
+
+def _stop_owned(child):
+    """Stop only a process group created with start_new_session by this recipe."""
+    if child.returncode is not None:
+        return
+    try:
+        try:
+            os.killpg(child.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        child.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        pass
+    finally:
+        # Also stop descendants that survived their group leader or ignored TERM.
+        try:
+            os.killpg(child.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        child.wait(timeout=3)
 
 
 def run(web_root, checks):
@@ -32,11 +78,19 @@ def run(web_root, checks):
     environment = dict(os.environ)
 
     def cli(module, *args, expected_code=0):
-        result = subprocess.run([sys.executable, "-m", module, *map(str, args)],
-                                env=environment, capture_output=True, text=True, timeout=30)
-        if result.returncode != expected_code:
+        child = subprocess.Popen([sys.executable, "-m", module, *map(str, args)],
+                                 env=environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                 text=True, start_new_session=True)
+        try:
+            stdout, _ = child.communicate(timeout=30)
+        finally:
+            try:
+                _stop_owned(child)
+            finally:
+                child.stdout.close(); child.stderr.close()
+        if child.returncode != expected_code:
             raise AssertionError("CLI failed: " + module)
-        return json.loads(result.stdout)
+        return json.loads(stdout)
 
     def check(name, condition):
         if not condition:
@@ -59,14 +113,8 @@ def run(web_root, checks):
         def stop():
             nonlocal child, stream
             try:
-                if child is not None and child.poll() is None:
-                    child.terminate()  # exact owned PID, never a process-name kill
-                    try:
-                        child.wait(timeout=3)
-                    except subprocess.TimeoutExpired:
-                        child.kill()
-                        child.wait(timeout=3)
-                        raise AssertionError("server did not terminate")
+                if child is not None:
+                    _stop_owned(child)
             finally:
                 child = None
                 if stream is not None:
@@ -79,7 +127,7 @@ def run(web_root, checks):
             stream = log.open("w")
             child = subprocess.Popen([sys.executable, "-m", "eidolon_core.http_api", "--state", str(state),
                                       "--token-file", str(file), "--port", "0", "--web-root", str(web_root)],
-                                     env=environment, stdout=stream, stderr=stream)
+                                     env=environment, stdout=stream, stderr=stream, start_new_session=True)
             deadline = time.monotonic() + 8
             while time.monotonic() < deadline:
                 if child.poll() is not None:
@@ -158,8 +206,12 @@ def main(argv=None):
     except PackageNotFoundError:
         report["package_version"] = "source-checkout"
     try:
-        report["asset_sha256"] = run(args.web_root, checks)
+        with _termination_signals():
+            report["asset_sha256"] = run(args.web_root, checks)
         report["status"] = "PASS"
+    except _Interrupted as exc:
+        report["error"] = "INTERRUPTED"
+        report["signal"] = exc.signum
     except KeyboardInterrupt:
         report["error"] = "INTERRUPTED"
     except Exception:

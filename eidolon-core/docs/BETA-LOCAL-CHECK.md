@@ -48,3 +48,20 @@ télécharge pas. Elle ne constitue pas l'archive de sources G044.
 Limites : pas de navigateur, Windows, tunnel SSH, serveur utilisateur, modèle
 ou intégration distante Memory Engine validés par ce résultat. Un PASS local
 ne qualifie pas l'assistant complet ni des actions distantes.
+
+## Interruption et construction — suivi G047
+
+SIGINT et SIGTERM déclenchent désormais le nettoyage des enfants possédés,
+puis un rapport FAIL / INTERRUPTED avec le numéro de signal et un code de
+retour 2. Les commandes CLI et serveurs temporaires ont chacun leur groupe
+de processus ; la recette termine ce groupe, avec SIGKILL de secours, puis
+retire son dossier temporaire. Aucun processus n'est sélectionné par son nom.
+Les gestionnaires de signaux précédents sont restaurés à la sortie.
+Un SIGKILL sur la recette elle-même ne peut pas déclencher ce nettoyage.
+
+Claude a observé un échec `install_layout` avec un setuptools fourni par sa
+distribution, et un succès en sélectionnant `SETUPTOOLS_USE_DISTUTILS=stdlib`
+dans cet environnement. Ce n'est pas une correction universelle : certaines
+versions Python ne fournissent plus distutils dans la bibliothèque standard.
+La preuve de paquet distingue donc le backend effectivement testé ; ne pas
+modifier globalement l'environnement Debian sur la base de ce seul résultat.

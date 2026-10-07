@@ -9,10 +9,14 @@ from contextlib import redirect_stdout
 import io
 import json
 import os
+import selectors
+import signal
+import socket
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -23,6 +27,75 @@ WEB = CORE / "desktop" / "connected"
 
 
 class BetaCheckTests(unittest.TestCase):
+    def test_sigterm_and_sigint_report_interruption_and_close_owned_server(self):
+        code = '''import signal,sys
+from eidolon_core import beta_check
+def pause_at_request(self,*args,**kwargs):
+ print('READY '+str(self.port),flush=True)
+ signal.pause()
+beta_check.HTTPConnection.request=pause_at_request
+raise SystemExit(beta_check.main(['--web-root',sys.argv[1]]))
+'''
+        for signum in (signal.SIGTERM, signal.SIGINT):
+            with self.subTest(signal=signum), tempfile.TemporaryDirectory() as directory:
+                child = subprocess.Popen([sys.executable, "-c", code, str(WEB)],
+                    env={**os.environ, "PYTHONPATH": str(CORE / "src"), "TMPDIR": directory},
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                try:
+                    with selectors.DefaultSelector() as selector:
+                        selector.register(child.stdout, selectors.EVENT_READ)
+                        self.assertTrue(selector.select(timeout=15), "recipe did not reach HTTP phase")
+                    ready = child.stdout.readline().strip()
+                    self.assertTrue(ready.startswith("READY "), ready)
+                    port = int(ready.partition(" ")[2])
+                    child.send_signal(signum)
+                    stdout, stderr = child.communicate(timeout=10)
+                    self.assertEqual(child.returncode, 2, stderr)
+                    report = json.loads(stdout)
+                    self.assertEqual((report["status"], report["error"], report["signal"]), ("FAIL", "INTERRUPTED", signum))
+                    self.assertEqual(list(Path(directory).iterdir()), [])
+                    with socket.socket() as client:
+                        client.settimeout(1)
+                        self.assertNotEqual(client.connect_ex(("127.0.0.1", port)), 0)
+                finally:
+                    if child.poll() is None:
+                        child.kill()
+                    child.communicate(timeout=5)
+
+    def test_owned_process_group_cleanup_includes_descendant_ignoring_term(self):
+        grandchild_code = "import signal,socket,time;signal.signal(signal.SIGTERM,signal.SIG_IGN);s=socket.socket();s.bind(('127.0.0.1',0));s.listen();print(s.getsockname()[1],flush=True);time.sleep(60)"
+        code = "import subprocess,sys,time;p=subprocess.Popen([sys.executable,'-c',sys.argv[1]],stdout=subprocess.PIPE,text=True);print(p.stdout.readline().strip(),flush=True);time.sleep(60)"
+        child = subprocess.Popen([sys.executable, "-c", code, grandchild_code], start_new_session=True,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ)
+                self.assertTrue(selector.select(timeout=5))
+            port = int(child.stdout.readline().strip())
+            beta_check._stop_owned(child)
+            self.assertIsNotNone(child.returncode)
+            deadline = time.monotonic() + 3
+            while time.monotonic() < deadline:
+                with socket.socket() as client:
+                    client.settimeout(.1)
+                    if client.connect_ex(("127.0.0.1", port)) != 0:
+                        break
+                time.sleep(.01)
+            else:
+                self.fail("owned descendant still running")
+        finally:
+            try:
+                os.killpg(child.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            child.communicate(timeout=5)
+
+    def test_signal_handlers_are_restored_after_failed_recipe(self):
+        previous = {s: signal.getsignal(s) for s in (signal.SIGINT, signal.SIGTERM)}
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(beta_check.main(["--web-root", "/nonexistent/private-assets"]), 2)
+        self.assertEqual({s: signal.getsignal(s) for s in previous}, previous)
+
     def test_real_recipe_from_unrelated_directory_has_machine_report(self):
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(
