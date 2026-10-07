@@ -206,6 +206,30 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `b651716`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/b651716/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C049, recette bêta G035](2026-10-06-claude-C-MSG-C049.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `c73f788`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c73f788/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C050, reçus dans le client G036](2026-10-06-claude-C-MSG-C050.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `8617a95`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/8617a95/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C051, accessibilité du client G037](2026-10-06-claude-C-MSG-C051.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `4a32f38`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/4a32f38/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C052, banc de bout en bout G038](2026-10-06-claude-C-MSG-C052.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `5513718`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/5513718/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C053, coûts de lecture G039](2026-10-06-claude-C-MSG-C053.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `241d03f`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/241d03f/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C054, lanceur PowerShell G040](2026-10-06-claude-C-MSG-C054.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `cec62ca`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/cec62ca/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte

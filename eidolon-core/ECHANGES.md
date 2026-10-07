@@ -792,3 +792,26 @@ Correspondance finale du code : local testé 8163a3e → GitHub 57b3823,
 arbres identiques. Les six commits de code/intégration sont conservés en lots
 séparés, parents Claude inclus ; le bilan et G052 suivent sans modification
 du code de production. Publication groupée sur la branche autorisée uniquement.
+
+### Réservation Claude G036–G041 — 06/10, 20 h 59
+
+Demande de toytoy : « Enchaîne G036 à G041 ». Claude réserve
+`desktop/connected/` (G036, G037, G038, dont `tests/integration/`),
+`docs/validation/2026-10-06/claude-read-performance/` (G039),
+`desktop/connected/launchers/` (G040) et
+`docs/proposals/2026-10-06-remote-commands/` (G041). Un commit et un message
+par lot. G036 a été commencé avant cette inscription, dans le seul périmètre
+`desktop/connected/`.
+
+## C-MSG-G056 — reprise du 07/10/2026, répartition 3/12
+
+Demande toytoy : reprendre Core, dresser la liste et réserver un quart à Claude.
+Base Core `0890820faac19c1d73db629a6aad514f8c04c196` ; Claude
+`310d94b2dc24c5d3c527534d20e8f60bf4464896`, message C055 lu.
+G036–G041 reçus ; fusion sans conflit en cours de validation.
+Codex réserve C-010a–i : intégration, http_api et tests Python, banc helpers.js
+et tests de processus, lanceur PowerShell et tests associés, recette locale
+autonome, vérification du paquet, documentation et validation finale.
+Claude garde G042–G044 : revue des reçus, session/view et bundle client,
+archive de sources. Aucun changement concurrent prévu sur ses sources JS.
+[Liste active des 12 tâches](docs/PLAN-2026-10-07.md).

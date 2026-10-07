@@ -20,6 +20,13 @@ Auteur : Claude, 06/10/2026. Contrat : [HTTP-READ-API.md](../../docs/HTTP-READ-A
   liste ».
 - En cas de panne, il garde le dernier état reçu, daté et marqué périmé.
 
+- **Reçu historique (G036)** : pour la mission sélectionnée, saisir un
+  identifiant client et une clé de commande, puis « Consulter le reçu »
+  (`POST /v1/command-receipt`). `FOUND` est un **enregistrement daté**, affiché
+  à côté de la capture actuelle, jamais fusionné avec elle. `NOT_FOUND` garde
+  l'incertitude : ce n'est pas une permission de renvoi. `STORE_CHANGED`
+  bloque toute autre consultation jusqu'à une reconnexion explicite.
+
 Il n'y a **aucune commande** : ni accord, ni lancement, ni annulation.
 
 ## Garde-fous contre les mélanges
@@ -47,8 +54,12 @@ avec un délai de 10 s.
 | `src/view.js` | rendu DOM |
 | `src/main.js` | démarrage navigateur, `fetch` |
 | `app.js` | **fichier généré** par `build.js` : `sync-state.js` et `mission-list-state.js` du prototype, puis les trois sources |
-| `tests/session.test.js` | 14 tests sur transport scripté (fixtures) |
+| `tests/session.test.js` | 20 tests sur transport scripté (fixtures), dont 6 reçus |
 | `tests/server.test.js` | 6 tests sur le **vrai serveur** Python et dans Chromium |
+| `tests/receipts.test.js` | 3 tests reçus sur le vrai serveur et le jeu bêta C-009g (dont 1 Chromium) |
+| `tests/a11y.test.js` | 8 tests Chromium : clavier, focus, zoom 200 %, 320×640, contraste, mouvement réduit (G037) |
+| `tests/integration/e2e.test.js` | 6 tests de bout en bout : pagination réelle, troncature à 200, reset entre deux pages, absence de réémission, nettoyage sur échec, 150 missions dans Chromium (G038) |
+| `tests/helpers.js` | outils partagés des bancs réels (CLI, jeu bêta, serveur, nettoyage) |
 
 Le serveur ne sert que trois fichiers (`/`, `/app.js`, `/style.css`) : d'où le
 fichier unique `app.js`. Après toute modification d'une source :
@@ -57,7 +68,7 @@ fichier unique `app.js`. Après toute modification d'une source :
 cd eidolon-core
 node desktop/connected/build.js          # régénère app.js
 node desktop/connected/build.js --check  # échoue si app.js est en retard
-NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/*.test.js"
+NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/**/*.test.js"
 ```
 
 Sans Python 3.11, sans Playwright ou sans exécutable Chromium, les tests concernés sont marqués

@@ -596,6 +596,8 @@
  *   - list epoch and selection token: owned by mission-list-state.js;
  *   - store_id: a reconnection to another store wipes everything shown.
  * There is no command here: no approve, run or cancel; authorizes_execution stays false.
+ * G036: a historical command receipt (docs/HTTP-RECEIPTS.md) can be looked up for the
+ * selected mission. It is kept apart from the snapshot and never changes it.
  */
 (function (root) {
   "use strict";
@@ -610,6 +612,9 @@
   var PAGE_LIMIT = 100;
   var MAX_LIST_PAGES = 3;       // 200 items at most are kept (MAX_ITEMS): never an endless loop
   var MAX_POLLS = 5;            // has_more drained at most 5 pages per explicit refresh
+  var RECEIPT_PROTOCOL = "eidolon-http-receipt/1";
+  var KEY = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$/;   // client_id and command_key, as the CLI
+  var RECEIPT_KINDS = { "eidolon-command-receipt/1": "decision", "eidolon-cancel-receipt/1": "cancel" };
 
   function clone(v) { return v === undefined || v === null ? v : JSON.parse(JSON.stringify(v)); }
   function isObject(v) { return v !== null && typeof v === "object" && !Array.isArray(v); }
@@ -625,12 +630,35 @@
     return null;
   }
 
+  function shortText(v) { return typeof v === "string" && v.length > 0 && v.length <= 64; }
+  function safeInt(v) { return Number.isSafeInteger(v) && v >= 0; }
+
+  // Structure only; never repaired. Every identifier must echo the question asked.
+  function validateReceiptAnswer(env, q) {
+    if (!isObject(env) || env.protocol !== RECEIPT_PROTOCOL) return "UNSUPPORTED_PROTOCOL";
+    if (env.execution_evidence !== false || env.effect_absence_evidence !== false
+        || env.authorizes_resend !== false || env.authorizes_execution !== false) return "AUTHORITY_CLAIMED";
+    if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return env[k] !== q[k]; })) return "QUERY_MISMATCH";
+    if (env.status === "NOT_FOUND") return env.receipt === null ? null : "INVALID_RECEIPT";
+    if (env.status !== "FOUND") return "UNKNOWN_STATUS";
+    var r = env.receipt;
+    if (!isObject(r) || !RECEIPT_KINDS[r.protocol]) return "INVALID_RECEIPT";
+    if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return r[k] !== q[k]; })) return "QUERY_MISMATCH";
+    if (r.execution_evidence !== false || ("authorizes_execution" in r && r.authorizes_execution !== false)) return "AUTHORITY_CLAIMED";
+    if (!shortText(r.status) || !shortText(r.recorded_at) || !safeInt(r.event_sequence) || !safeInt(r.mission_revision)) return "INVALID_RECEIPT";
+    if (RECEIPT_KINDS[r.protocol] === "decision"
+        && (["approve", "reject", "revoke"].indexOf(r.decision) < 0 || !shortText(r.approval_status_at_recording))) return "INVALID_RECEIPT";
+    if (RECEIPT_KINDS[r.protocol] === "cancel"
+        && (!shortText(r.cancel_outcome) || !shortText(r.mission_status_at_recording))) return "INVALID_RECEIPT";
+    return null;
+  }
+
   function createSession(options) {
     var transport = options.transport;
     var now = options.now || function () { return new Date().toISOString(); };
     var onChange = options.onChange || function () {};
     var token = null;
-    var loops = { list: 0, selection: 0 };
+    var loops = { list: 0, selection: 0, receipt: 0 };
 
     var state = {
       phase: "disconnected",   // disconnected | connecting | connected | offline | unavailable | unauthorized | refused
@@ -640,7 +668,9 @@
       lastSuccessAt: null,     // local time of the last accepted answer
       problem: null,           // { code, at, scope } last failure shown to the user
       notice: null,            // one-line explanation of an identity wipe
-      stats: { staleConnection: 0, staleSelection: 0, invalidResponses: 0 }
+      receipt: null,           // { query, status, receipt, code, receivedAt }: historical, never the current state
+      resyncRequired: false,   // STORE_CHANGED answered: reconnect before any other receipt lookup
+      stats: { staleConnection: 0, staleSelection: 0, invalidResponses: 0, staleReceipt: 0 }
     };
 
     function emit() { onChange(snapshot()); }
@@ -653,7 +683,10 @@
       if (state.list.selection) state.list.selection.sync = S.setConnection(state.list.selection.sync, mode);
     }
 
+    function forgetReceipt() { loops.receipt += 1; state.receipt = null; }
+
     function wipe() {
+      forgetReceipt();
       state.list = L.createState();
       state.storeId = null;
       state.lastSuccessAt = null;
@@ -686,7 +719,10 @@
         return { ok: false };
       }
       if (status === 403) { fail("refused", code || "FORBIDDEN", scope); return { ok: false }; }
-      if (status === 503 || status === 408) { fail("unavailable", code || "STATE_UNAVAILABLE", scope); return { ok: false }; }
+      if ((status === 503 && code !== "RECEIPT_UNAVAILABLE") || status === 408) {
+        fail("unavailable", code || "STATE_UNAVAILABLE", scope);
+        return { ok: false };
+      }
       if (!code) state.stats.invalidResponses += 1;
       state.problem = { code: code || "INVALID_RESPONSE", at: now(), scope: scope };
       return { ok: false, code: code || "INVALID_RESPONSE", status: status };
@@ -702,6 +738,7 @@
       state.connEpoch += 1;
       state.phase = "connecting";
       state.notice = null;
+      state.resyncRequired = false;
       emit();
       var r = await call("GET", "/v1/health", undefined, "connection");
       if (r.stale) return false;
@@ -767,6 +804,12 @@
             return;
           }
           state.lastSuccessAt = meta.receivedAt;
+          if (state.list.items.length >= L.MAX_ITEMS && state.list.nextCursor) {
+            // G038: the display bound is reached; a further page would be read then discarded.
+            state.list = clone(state.list);
+            state.list.truncated = true;
+            state.list.nextCursor = null;
+          }
         } else if (r.code) {
           state.list = L.receiveError(state.list, r.code, meta);
         }
@@ -777,6 +820,7 @@
 
     function selectMission(id) {
       if (typeof id !== "string" || !MISSION_ID.test(id)) return Promise.resolve(false);
+      forgetReceipt();
       state.list = L.select(state.list, id);
       emit();
       return refreshSelection();
@@ -820,11 +864,53 @@
       return refreshSelection();
     }
 
+    // Historical receipt of ONE command key for the selected mission. Read-only: FOUND is a
+    // record, NOT_FOUND keeps the uncertainty, neither changes the snapshot or allows a resend.
+    async function lookupReceipt(clientId, commandKey) {
+      var sel = state.list.selection;
+      if (state.phase !== "connected" || state.resyncRequired || !sel || !state.storeId) return false;
+      if (typeof clientId !== "string" || typeof commandKey !== "string" || !KEY.test(clientId) || !KEY.test(commandKey)) {
+        state.receipt = { query: null, status: "INVALID_QUERY", receipt: null, code: "INVALID_QUERY", receivedAt: now() };
+        emit();
+        return false;
+      }
+      var mine = ++loops.receipt, selToken = sel.token;
+      var q = { store_id: state.storeId, client_id: clientId, command_key: commandKey, mission_id: sel.missionId };
+      state.receipt = { query: q, status: "PENDING", receipt: null, code: null, receivedAt: null };
+      emit();
+      var r = await call("POST", "/v1/command-receipt", q, "receipt");
+      if (r.stale) return false;
+      if (mine !== loops.receipt || !state.list.selection || state.list.selection.token !== selToken) {
+        state.stats.staleReceipt += 1; emit(); return false;     // asked for another selection or key
+      }
+      var at = now();
+      if (r.ok) {
+        var bad = validateReceiptAnswer(r.json, q);
+        if (bad) {
+          state.stats.invalidResponses += 1;
+          state.receipt = { query: q, status: "ERROR", receipt: null, code: bad, receivedAt: at };
+        } else {
+          state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at };
+          state.lastSuccessAt = at;
+        }
+      } else {
+        state.receipt = { query: q, status: "ERROR", receipt: null, code: r.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", receivedAt: at };
+        if (r.code === "STORE_CHANGED") {
+          state.resyncRequired = true;
+          state.notice = "La base Core n'a plus l'identité affichée : se reconnecter pour resynchroniser. Rien n'a été renvoyé.";
+        }
+      }
+      emit();
+      return r.ok;
+    }
+
     return { connect: connect, disconnect: disconnect, relist: relist, selectMission: selectMission,
-      refreshSelection: refreshSelection, acceptReset: acceptReset, state: snapshot, hasToken: hasToken };
+      refreshSelection: refreshSelection, acceptReset: acceptReset, lookupReceipt: lookupReceipt,
+      state: snapshot, hasToken: hasToken };
   }
 
-  var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, createSession: createSession, validateHealth: validateHealth,
+  var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
+    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;
@@ -904,6 +990,9 @@
     if (s.list.lastError) text += " — erreur Core : " + s.list.lastError;
     byId(doc, "list-status").textContent = s.phase === "disconnected" ? "" : text;
     var list = byId(doc, "mission-list");
+    // G037: the buttons are rebuilt on every render; keep the keyboard focus on the same mission.
+    var active = doc.activeElement;
+    var focusedId = active && active.dataset && list.contains(active) ? active.dataset.missionId : null;
     clear(list);
     var selectedId = s.list.selection ? s.list.selection.missionId : null;
     var oldInventory = !s.list.items.length && s.list.previous;
@@ -921,6 +1010,7 @@
       if (note) button.appendChild(el(doc, "span", "mission-note", note));
       li.appendChild(button);
       list.appendChild(li);
+      if (m.id === focusedId) button.focus();
     });
   }
 
@@ -987,10 +1077,63 @@
     }
   }
 
+  var RECEIPT_ERRORS = {
+    INVALID_QUERY: "Identifiant client ou clé invalide : 1 à 80 caractères A-Z, a-z, 0-9, « _ », « . », « - », commençant par une lettre ou un chiffre. Rien n'a été envoyé.",
+    INVALID_RECEIPT_QUERY: "Requête refusée par Core (identifiants invalides).",
+    STORE_CHANGED: "La base n'a plus l'identité affichée : se reconnecter pour resynchroniser. Aucun renvoi.",
+    RECEIPT_MISSION_MISMATCH: "Cette clé existe mais pour une autre mission : aucune conclusion automatique.",
+    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière."
+  };
+
+  // The receipt is a dated record. It is shown next to the current capture, never merged into it.
+  function renderReceipt(doc, s) {
+    var section = byId(doc, "receipt");
+    var sel = s.list.selection;
+    section.hidden = !sel;
+    byId(doc, "receipt-lookup").disabled = s.phase !== "connected" || s.resyncRequired || !sel;
+    var out = byId(doc, "receipt-result");
+    clear(out);
+    var rec = s.receipt;
+    if (!sel || !rec) return;
+    if (rec.status === "PENDING") { out.appendChild(el(doc, "p", "empty", "Consultation en cours…")); return; }
+    if (rec.status === "ERROR" || rec.status === "INVALID_QUERY") {
+      out.appendChild(el(doc, "p", "receipt-error", RECEIPT_ERRORS[rec.code] || ("Réponse non exploitable : " + rec.code + ". Aucune conclusion.")));
+      return;
+    }
+    if (rec.status === "NOT_FOUND") {
+      out.appendChild(el(doc, "p", "receipt-missing", "Aucun reçu pour la clé « " + rec.query.command_key + " » dans cette base, à cette lecture ("
+        + fmt(rec.receivedAt) + "). Cela ne prouve pas que la commande n'est jamais partie : ne pas la renvoyer sur cette seule base."));
+      return;
+    }
+    var r = rec.receipt;
+    var kind = C.RECEIPT_KINDS[r.protocol];
+    out.appendChild(el(doc, "p", "receipt-found", "Enregistrement historique trouvé — "
+      + (kind === "decision" ? "décision « " + r.decision + " »" : "demande d'annulation")
+      + ". Ce n'est pas l'état actuel et ce n'est pas une preuve d'effet."));
+    var dl = el(doc, "dl", "fields");
+    row(doc, dl, "Enregistré le", fmt(r.recorded_at));
+    row(doc, dl, "Statut du reçu", r.status);
+    if (kind === "decision") row(doc, dl, "Accord à l'enregistrement", r.approval_status_at_recording);
+    else {
+      row(doc, dl, "Annulation", r.cancel_outcome);
+      row(doc, dl, "Mission à l'enregistrement", r.mission_status_at_recording);
+    }
+    row(doc, dl, "Révision à l'enregistrement", r.mission_revision);
+    row(doc, dl, "Événement", "séquence " + r.event_sequence);
+    var view = sel.sync && sel.sync.view;
+    if (view) {
+      var m = view.mission;
+      var now = kind === "decision" ? (m.action_view ? m.action_view.decision.status : "aucune proposition") : m.status;
+      row(doc, dl, "Capture actuelle", now + " (capture du " + fmt(view.observedAt) + ")");
+    }
+    out.appendChild(dl);
+  }
+
   function render(doc, s) {
     renderConnection(doc, s);
     renderList(doc, s);
     renderDetails(doc, s);
+    renderReceipt(doc, s);
   }
 
   var api = { render: render, PHASES: PHASES };
@@ -1047,7 +1190,11 @@
       var input = document.getElementById("token");
       var value = input.value.trim();
       input.value = "";                    // the DOM never keeps the token
-      session.connect(value);
+      // G037: success moves the focus to the mission list; a refusal keeps it on the token field.
+      session.connect(value).then(function (ok) {
+        if (ok) document.getElementById("missions").focus();
+        else input.focus();
+      });
     });
     document.getElementById("disconnect").addEventListener("click", function () { stopAuto(); session.disconnect(); });
     document.getElementById("relist").addEventListener("click", function () { session.relist(); });
@@ -1056,6 +1203,11 @@
     document.getElementById("mission-list").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-mission-id]");
       if (button) session.selectMission(button.dataset.missionId);
+    });
+    document.getElementById("receipt-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      session.lookupReceipt(document.getElementById("receipt-client").value.trim(),
+        document.getElementById("receipt-key").value.trim());
     });
     document.getElementById("auto").addEventListener("change", function (event) {
       if (!event.target.checked) { stopAuto(); return; }

@@ -70,6 +70,9 @@
     if (s.list.lastError) text += " — erreur Core : " + s.list.lastError;
     byId(doc, "list-status").textContent = s.phase === "disconnected" ? "" : text;
     var list = byId(doc, "mission-list");
+    // G037: the buttons are rebuilt on every render; keep the keyboard focus on the same mission.
+    var active = doc.activeElement;
+    var focusedId = active && active.dataset && list.contains(active) ? active.dataset.missionId : null;
     clear(list);
     var selectedId = s.list.selection ? s.list.selection.missionId : null;
     var oldInventory = !s.list.items.length && s.list.previous;
@@ -87,6 +90,7 @@
       if (note) button.appendChild(el(doc, "span", "mission-note", note));
       li.appendChild(button);
       list.appendChild(li);
+      if (m.id === focusedId) button.focus();
     });
   }
 
@@ -153,10 +157,63 @@
     }
   }
 
+  var RECEIPT_ERRORS = {
+    INVALID_QUERY: "Identifiant client ou clé invalide : 1 à 80 caractères A-Z, a-z, 0-9, « _ », « . », « - », commençant par une lettre ou un chiffre. Rien n'a été envoyé.",
+    INVALID_RECEIPT_QUERY: "Requête refusée par Core (identifiants invalides).",
+    STORE_CHANGED: "La base n'a plus l'identité affichée : se reconnecter pour resynchroniser. Aucun renvoi.",
+    RECEIPT_MISSION_MISMATCH: "Cette clé existe mais pour une autre mission : aucune conclusion automatique.",
+    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière."
+  };
+
+  // The receipt is a dated record. It is shown next to the current capture, never merged into it.
+  function renderReceipt(doc, s) {
+    var section = byId(doc, "receipt");
+    var sel = s.list.selection;
+    section.hidden = !sel;
+    byId(doc, "receipt-lookup").disabled = s.phase !== "connected" || s.resyncRequired || !sel;
+    var out = byId(doc, "receipt-result");
+    clear(out);
+    var rec = s.receipt;
+    if (!sel || !rec) return;
+    if (rec.status === "PENDING") { out.appendChild(el(doc, "p", "empty", "Consultation en cours…")); return; }
+    if (rec.status === "ERROR" || rec.status === "INVALID_QUERY") {
+      out.appendChild(el(doc, "p", "receipt-error", RECEIPT_ERRORS[rec.code] || ("Réponse non exploitable : " + rec.code + ". Aucune conclusion.")));
+      return;
+    }
+    if (rec.status === "NOT_FOUND") {
+      out.appendChild(el(doc, "p", "receipt-missing", "Aucun reçu pour la clé « " + rec.query.command_key + " » dans cette base, à cette lecture ("
+        + fmt(rec.receivedAt) + "). Cela ne prouve pas que la commande n'est jamais partie : ne pas la renvoyer sur cette seule base."));
+      return;
+    }
+    var r = rec.receipt;
+    var kind = C.RECEIPT_KINDS[r.protocol];
+    out.appendChild(el(doc, "p", "receipt-found", "Enregistrement historique trouvé — "
+      + (kind === "decision" ? "décision « " + r.decision + " »" : "demande d'annulation")
+      + ". Ce n'est pas l'état actuel et ce n'est pas une preuve d'effet."));
+    var dl = el(doc, "dl", "fields");
+    row(doc, dl, "Enregistré le", fmt(r.recorded_at));
+    row(doc, dl, "Statut du reçu", r.status);
+    if (kind === "decision") row(doc, dl, "Accord à l'enregistrement", r.approval_status_at_recording);
+    else {
+      row(doc, dl, "Annulation", r.cancel_outcome);
+      row(doc, dl, "Mission à l'enregistrement", r.mission_status_at_recording);
+    }
+    row(doc, dl, "Révision à l'enregistrement", r.mission_revision);
+    row(doc, dl, "Événement", "séquence " + r.event_sequence);
+    var view = sel.sync && sel.sync.view;
+    if (view) {
+      var m = view.mission;
+      var now = kind === "decision" ? (m.action_view ? m.action_view.decision.status : "aucune proposition") : m.status;
+      row(doc, dl, "Capture actuelle", now + " (capture du " + fmt(view.observedAt) + ")");
+    }
+    out.appendChild(dl);
+  }
+
   function render(doc, s) {
     renderConnection(doc, s);
     renderList(doc, s);
     renderDetails(doc, s);
+    renderReceipt(doc, s);
   }
 
   var api = { render: render, PHASES: PHASES };

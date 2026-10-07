@@ -117,6 +117,7 @@ input[type="password"] {
   padding: 1rem 1.5rem;
 }
 .panel {
+  overflow-wrap: anywhere;   /* long identifiers or keys never widen the page (G037) */
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -160,13 +161,25 @@ input[type="password"] {
 .fields dd { margin: 0; overflow-wrap: anywhere; }
 .events { padding-left: 1.25rem; margin: .25rem 0; font-size: .92rem; }
 
+.receipt { margin-top: 1.25rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+.receipt .help { margin: .25rem 0 .75rem; }
+.receipt-form { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5rem .75rem; align-items: center; margin-bottom: .75rem; }
+.receipt-form button { grid-column: 2; justify-self: start; }
+.receipt-form input {
+  font: inherit; min-height: 44px; padding: .5rem .75rem; min-width: 0;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink);
+}
+.receipt-found { font-weight: 600; }
+.receipt-missing, .receipt-error { color: var(--warn); font-weight: 600; }
+
 .foot { padding: 0 1.5rem 1.5rem; color: var(--muted); font-size: .9rem; }
 
 @media (max-width: 760px) {
   .top, .connection, .layout, .foot { padding-left: 1rem; padding-right: 1rem; }
   .layout { grid-template-columns: 1fr; }
   input[type="password"] { min-width: 0; width: 100%; }
-  .fields { grid-template-columns: 1fr; }
+  .fields, .receipt-form { grid-template-columns: 1fr; }
+  .receipt-form button { grid-column: 1; }
   .fields dd { margin-bottom: .4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
