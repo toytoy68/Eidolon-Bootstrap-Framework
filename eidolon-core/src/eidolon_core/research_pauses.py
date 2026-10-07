@@ -71,11 +71,21 @@ def _operator(value, maximum):
 
 
 class ResearchPauses:
-    def __init__(self, path, *, clock=time.time):
+    def __init__(self, path, *, clock=time.time, create=True):
         if not callable(clock):
             raise ContractError("INVALID_PAUSE_CLOCK")
         self.path = Path(path).resolve()
         self.clock = clock
+        if type(create) is not bool:
+            raise ContractError("INVALID_PAUSE_INITIALIZATION")
+        if not create:
+            with self._connection() as db:
+                db.execute('PRAGMA query_only=ON')
+                version = db.execute('PRAGMA user_version').fetchone()[0]
+                tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
+                if version != 1 or tables != {'pauses', 'pause_events'}:
+                    raise PauseStorageError('UNSUPPORTED_PAUSE_DATABASE')
+            return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self._connection(create=True) as db:
             version = db.execute('PRAGMA user_version').fetchone()[0]

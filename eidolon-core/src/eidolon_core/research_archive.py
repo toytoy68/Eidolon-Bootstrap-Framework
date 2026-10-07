@@ -70,7 +70,8 @@ def validate_export(data, filename):
         meta = _json(data.decode('utf-8'))
         fields = {'protocol', 'guard_id', 'chain_index', 'previous_chain_sha256', 'created_at_ms',
                   'runs', 'removed_ids_sha256', 'authorizes_execution'}
-        if (type(meta) is not dict or set(meta) != fields or meta['protocol'] != EXPORT_PROTOCOL
+        if (type(meta) is not dict or not fields <= set(meta) or not set(meta) <= fields | {'released_operations'}
+                or meta['protocol'] != EXPORT_PROTOCOL
                 or type(meta['guard_id']) is not str or re.fullmatch(r'g-[0-9a-f]{32}', meta['guard_id']) is None
                 or not _integer(meta['chain_index'], 1, 999999) or meta['chain_index'] != int(match[1])
                 or not _integer(meta['created_at_ms']) or meta['authorizes_execution'] is not False
@@ -125,6 +126,13 @@ def validate_export(data, filename):
                 queries[record['id']] = payload
             ids.add(row['id'])
             records.append(record)
+        if 'released_operations' in meta:
+            released = meta['released_operations']
+            linked = sorted({r['descriptor']['operation_id'] for r in records if 'operation_id' in r['descriptor']})
+            if (type(released) is not list or len(released) > 256
+                    or any(type(value) is not str or re.fullmatch(r'm-[0-9a-f]{32}', value) is None for value in released)
+                    or released != linked):
+                raise ValueError()
         if digest([r['id'] for r in records]) != meta['removed_ids_sha256']:
             raise ValueError()
         file_sha = hashlib.sha256(data).hexdigest()
@@ -264,7 +272,8 @@ def render_index(catalog):
              'Le journal actif n’est pas consulté : le commit des exports reste inconnu.',
              'Ce fichier ne permet aucune exécution, reprise ou suppression.', '',
              f"Archives : {catalog['archive_count']} ; recherches : {catalog['run_count']}.",
-             f"Empreinte du catalogue : {catalog['catalog_sha256']}", '',
+             f"Empreinte du catalogue : {catalog['catalog_sha256']}",
+             f"Tête de chaîne décrite : {catalog['chain_head']}", '',
              '| Archive | Recherches | Avec texte nettoyé | Sans texte historique |',
              '| --- | ---: | ---: | ---: |']
     for item in catalog['files']:

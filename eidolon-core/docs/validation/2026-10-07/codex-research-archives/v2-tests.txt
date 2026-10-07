@@ -1,0 +1,25 @@
+test_archive_edit_breaks_following_chain (tests.test_research_archive.ArchiveTests.test_archive_edit_breaks_following_chain) ... ok
+test_change_between_file_read_and_final_sample_is_refused (tests.test_research_archive.ArchiveTests.test_change_between_file_read_and_final_sample_is_refused) ... ok
+test_cleaned_query_missing_or_changed_is_refused (tests.test_research_archive.ArchiveTests.test_cleaned_query_missing_or_changed_is_refused) ... ok
+test_cli_json_human_and_constant_private_error (tests.test_research_archive.ArchiveTests.test_cli_json_human_and_constant_private_error) ... ok
+test_complete_chain_and_missing_prior_export (tests.test_research_archive.ArchiveTests.test_complete_chain_and_missing_prior_export) ... ok
+test_duplicate_keys_nonfinite_and_invalid_utf8_are_refused (tests.test_research_archive.ArchiveTests.test_duplicate_keys_nonfinite_and_invalid_utf8_are_refused) ... ok
+test_handwritten_index_and_symlink_are_not_overwritten (tests.test_research_archive.ArchiveTests.test_handwritten_index_and_symlink_are_not_overwritten) ... ok
+test_index_is_private_idempotent_and_does_not_modify_exports_or_guard (tests.test_research_archive.ArchiveTests.test_index_is_private_idempotent_and_does_not_modify_exports_or_guard) ... ok
+test_index_lock_contention_does_not_publish (tests.test_research_archive.ArchiveTests.test_index_lock_contention_does_not_publish) ... ok
+test_intent_or_inconsistent_event_is_refused (tests.test_research_archive.ArchiveTests.test_intent_or_inconsistent_event_is_refused) ... ok
+test_interruption_before_replace_retains_previous_complete_index (tests.test_research_archive.ArchiveTests.test_interruption_before_replace_retains_previous_complete_index) ... ok
+test_legacy_without_text_stays_explicit (tests.test_research_archive.ArchiveTests.test_legacy_without_text_stays_explicit) ... ok
+test_limits_and_partial_export_refuse_whole_catalog (tests.test_research_archive.ArchiveTests.test_limits_and_partial_export_refuse_whole_catalog) ... ok
+test_missing_directory_not_created_and_nonprivate_directory_refused (tests.test_research_archive.ArchiveTests.test_missing_directory_not_created_and_nonprivate_directory_refused) ... ok
+test_repeated_run_across_archives_is_refused (tests.test_research_archive.ArchiveTests.test_repeated_run_across_archives_is_refused) ... ok
+test_symlink_fifo_and_nonprivate_file_are_refused_without_reading_target (tests.test_research_archive.ArchiveTests.test_symlink_fifo_and_nonprivate_file_are_refused_without_reading_target) ... ok
+test_v2_missing_extra_duplicate_or_invalid_release_is_refused (tests.test_research_archive.ArchiveTests.test_v2_missing_extra_duplicate_or_invalid_release_is_refused) ... ok
+test_v2_released_operations_match_only_the_archived_missions (tests.test_research_archive.ArchiveTests.test_v2_released_operations_match_only_the_archived_missions) ... ok
+test_valid_catalog_is_read_only_and_contains_no_query_or_authority_claim (tests.test_research_archive.ArchiveTests.test_valid_catalog_is_read_only_and_contains_no_query_or_authority_claim) ... ok
+test_wrong_guard_authority_and_removed_ids_are_refused (tests.test_research_archive.ArchiveTests.test_wrong_guard_authority_and_removed_ids_are_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.127s
+
+OK

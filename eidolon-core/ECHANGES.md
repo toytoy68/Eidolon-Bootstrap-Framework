@@ -1086,3 +1086,27 @@ C-028 validé : 18 tests dédiés, 74 associés, suite globale 785 réussis/six
 ignorés. Trois exports G057 effectivement lus, sept textes liés et liste.md
 privé produit sans changer les sources. G058/G059 reçus sur 2ac483b et intégrés ;
 G059-1 (garde recréée par construction du runtime) passe en correction C-029.
+
+### C-029 — suivi G059-1, initialisation de recherche liée au Store
+
+Codex prend research_runtime.py, tests dédiés et contrat RESEARCH-MISSIONS.
+Refuser la recréation d’une garde/pauses manquantes après initialisation, et
+lier l’identité de garde dans sync_metadata pour détecter aussi la disparition
+de tout research-fixture. Compatibilité des missions existantes vérifiée sans
+réécriture de leurs configurations. Pas de relance automatique fondée sur la
+seule absence d’une intention ; les limites des restaurations cohérentes restent.
+
+C-029 inclut aussi le mode create=False de ResearchPauses : une base existante
+vide ou privée d'une table requise ne doit pas être réparée par l'exécutant.
+Le constructeur par défaut garde son usage explicite de préparation ; la garde
+et les pauses du backend existant utilisent uniquement le mode sans création.
+
+### C-MSG-G084 — file Claude renouvelée
+
+G061 reçu sur 62064ec, file vide déclarée par Claude. G063 (publication sans
+perte), G064 (contre-revue C028/C029) et G065 (diagnostics G061) attribués.
+Deux défauts G062 reproduits ; rotation active toujours différée.
+
+C-029 validé : 802 Python réussis/six ignorés ; 51 tests client réussis/13
+Chromium ignorés ; prototype 68 réussis et 24 lancements Chromium impossibles
+(exécutable absent). Paquet et CLI archives installés vérifiés. G064 attribué.

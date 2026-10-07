@@ -156,6 +156,20 @@ class ArchiveTests(unittest.TestCase):
         with self.assertRaisesRegex(archives.ArchiveError, 'ARCHIVE_CHAIN_BROKEN'):
             archives.read_catalog(self.directory)
 
+    def test_v2_released_operations_match_only_the_archived_missions(self):
+        value = dict(self.meta, released_operations=['m-' + 'b' * 32])
+        self.save(value)
+        report = archives.read_catalog(self.directory)
+        self.assertEqual(report['run_count'], 3)
+        self.assertFalse(report['committed_status_known'])
+        self.assertNotIn('released_operations', encode(report))
+
+    def test_v2_missing_extra_duplicate_or_invalid_release_is_refused(self):
+        for operations in ([], ['m-' + 'f' * 32], ['m-' + 'b' * 32] * 2, [True], 'all'):
+            self.save(dict(self.meta, released_operations=operations))
+            with self.subTest(operations=operations), self.assertRaisesRegex(archives.ArchiveError, 'INVALID_RESEARCH_ARCHIVE'):
+                archives.read_catalog(self.directory)
+
     def test_missing_directory_not_created_and_nonprivate_directory_refused(self):
         missing = self.root / 'missing'
         with self.assertRaises(archives.ArchiveError):
