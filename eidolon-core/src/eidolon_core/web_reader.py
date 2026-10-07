@@ -6,7 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
-"""Transport-to-research adapter; no provider, mission capability or HTML extractor.
+"""Transport-to-research adapter; no provider or mission capability; explicit optional HTML extraction.
 
 Injected connector/resolver are trusted code. Keep their semantics stable under
 transport_id; use a new reader/coordinator when changing transport configuration.
@@ -17,6 +17,7 @@ import time
 
 from .contracts import ContractError, digest
 from .research import AccessFailure, Page
+from .html_extract import ExtractLimits, VERSION as HTML_VERSION
 from .web_transport import TransportLimits, WebTransportError, fetch
 
 
@@ -27,17 +28,22 @@ class WebReader:
     limits: TransportLimits = field(default_factory=lambda: TransportLimits(max_body_bytes=128_000))
     transport_id: str = "stdlib-http/3"
     clock: object = time.monotonic
+    html_limits: ExtractLimits | None = None
 
     def __post_init__(self):
         if (not callable(self.resolver) or not callable(self.clock)
                 or not isinstance(self.limits, TransportLimits) or self.limits.max_body_bytes > 128_000
+                or (self.html_limits is not None and (not isinstance(self.html_limits, ExtractLimits)
+                    or self.html_limits.input_bytes > 128_000 or self.html_limits.output_chars > 64_000))
                 or type(self.transport_id) is not str
                 or not re.fullmatch(r"[A-Za-z0-9._/-]{1,100}", self.transport_id)):
             raise ContractError("invalid WebReader configuration")
 
     @property
     def reader_id(self):
-        return "web-reader/2/" + digest({"transport": self.transport_id, "limits": asdict(self.limits)})[:24]
+        return "web-reader/3/" + digest({"transport": self.transport_id, "limits": asdict(self.limits),
+                                      "html": None if self.html_limits is None else {
+                                          "version": HTML_VERSION, "limits": asdict(self.html_limits)}})[:24]
 
     def read(self, url, policy):
         return self.read_guarded(url, policy, None)
@@ -60,4 +66,4 @@ class WebReader:
                     "HEADERS_TOO_LARGE": "INVALID_RESPONSE", "REDIRECT_LOOP": "INVALID_RESPONSE"}.get(exc.code, "UNAVAILABLE")
             raise AccessFailure(code) from exc
         return Page(result.final_url, result.status, result.content_type or "", result.body,
-                    result.policy_id, deadline_exceeded=result.deadline_exceeded, retrieval=result.evidence())
+                    result.policy_id, deadline_exceeded=result.deadline_exceeded, retrieval=result.evidence(), html_limits=self.html_limits)

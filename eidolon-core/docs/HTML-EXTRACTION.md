@@ -6,6 +6,15 @@ protocole `eidolon-html-extract/1`. Bibliothèque standard seulement
 raccordement, et la classification des pages de challenge, de connexion et de
 paywall, restent à faire par Codex.
 
+## Mise à jour Codex du 07/10 — C-011
+
+Le statut autonome ci-dessus décrit la livraison G026. Le raccordement
+**optionnel** à WebReader/ResearchCoordinator est désormais livré :
+[contrat](WEB-READER.md#c-011--extraction-html-optionnelle-07102026).
+Le comportement de la fonction extract reste inchangé ; classement d'accès,
+provenance/cache et refus du partiel sont pris en charge par le coordinateur.
+Aucun accès externe ou mission réseau n'est activé par défaut.
+
 ## API
 
 ```python

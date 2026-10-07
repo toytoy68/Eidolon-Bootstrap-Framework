@@ -25,7 +25,7 @@ PROTOCOL = 'eidolon-research-pauses/1'
 MAX_RECORDS = 256  # ACTIVE scopes only; released records retain revision/history.
 MAX_INTEGER = 2**53 - 1
 REASONS = {'RATE_LIMITED', 'RETRY_WAIT', 'ACCESS_DENIED', 'CHALLENGE',
-           'CHALLENGE_SUSPECTED', 'LOGIN_SUSPECTED'}
+           'CHALLENGE_SUSPECTED', 'LOGIN_SUSPECTED', 'PAYWALL_SUSPECTED'}
 
 
 class PauseStorageError(ContractError):

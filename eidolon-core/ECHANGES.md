@@ -826,3 +826,12 @@ non exécutés ; 24 contrôles depuis sources et paquet isolé.
 Demande toytoy supplémentaire à 08 h 03 : redonner des tâches à Claude puis
 continuer ; prochaine tranche réservée Codex C-011, raccordement HTML candidat
 (web_reader/research/tests/docs), sans fournisseur externe ni outil runtime.
+
+### C-011 — livré localement, 07/10
+
+Extraction HTML optionnelle raccordée au coordinateur candidat, préservation
+source/texte, déduplication, refus partiel et signaux d'accès. 123 tests ciblés
+et 627 tests Python globaux réussis ; 6 intégrations mémoire non exécutées.
+[Preuves](docs/validation/2026-10-07/codex-html/README.md).
+Claude a livré G042–G044 et relecture D-G034-1 sur ba800da ; intégration suivante
+réservée, G042-1 (cohérence historique d'annulation) reçu comme défaut à traiter.

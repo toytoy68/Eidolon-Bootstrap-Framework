@@ -9,8 +9,8 @@
 """Candidate coordinator, independent of mission success and memory mutation.
 
 Providers/readers are trusted injectable code. No network implementation here.
-Only complete UTF-8 plain text/Markdown is readable in this first slice. HTML
-challenge/login detection is deliberately partial, not a universal classifier.
+Complete UTF-8 text/Markdown is readable; HTML extraction is an explicit reader
+option. Access-wall detection is deliberately partial, not a universal classifier.
 """
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -23,6 +23,7 @@ import time
 
 from .contracts import ContractError, digest, encode, snapshot
 from .egress import WebPolicy, decide
+from .html_extract import ExtractLimits, extract
 from .research_pauses import ResearchPauses, PauseStorageError, PauseCapacityError, provider_scope, origin_scope
 from .research_report import project_report
 
@@ -59,6 +60,7 @@ class Page:
     retry_review_required: bool = False
     deadline_exceeded: bool = False
     retrieval: dict | None = None
+    html_limits: ExtractLimits | None = None
 
 
 @dataclass(frozen=True)
@@ -101,7 +103,7 @@ class _HtmlSignals(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == "title":
             self.in_title = True
-        if tag == "input" and dict(attrs).get("type", "").lower() == "password":
+        if tag == "input" and (dict(attrs).get("type") or "").lower() == "password":
             self.password = True
 
     def handle_endtag(self, tag):
@@ -113,11 +115,13 @@ class _HtmlSignals(HTMLParser):
             self.title.append(data)
 
 
-def classify_page(page, limits):
+def _classify_page(page, limits):
     """Return a content state and optional readable text; HTTP 200 is insufficient."""
     if (not isinstance(page, Page) or type(page.status) is not int or not 100 <= page.status <= 599
             or type(page.complete) is not bool or type(page.body) is not bytes
             or type(page.retry_review_required) is not bool or type(page.deadline_exceeded) is not bool
+            or (page.html_limits is not None and (not isinstance(page.html_limits, ExtractLimits)
+                or page.html_limits.input_bytes > 128_000 or page.html_limits.output_chars > 64_000))
             or type(page.media_type) is not str or len(page.media_type) > 200
             or (page.retry_after is not None and (type(page.retry_after) is not int
                 or not 0 <= page.retry_after <= 86400))):
@@ -125,21 +129,21 @@ def classify_page(page, limits):
     # Refusal is known from the validated status even when its body is unusable.
     # Never downgrade a quota/access refusal into a retryable content problem.
     if page.status == 429:
-        return "RATE_LIMITED", None
+        return "RATE_LIMITED", None, None
     if page.status in {401, 403}:
-        return "ACCESS_DENIED", None
+        return "ACCESS_DENIED", None, None
     if len(page.body) > limits.body_bytes:
-        return "TOO_LARGE", None
+        return "TOO_LARGE", None, None
     if not page.complete:
-        return "TRUNCATED", None
+        return "TRUNCATED", None, None
     if page.status != 200:
-        return "HTTP_ERROR", None
+        return "HTTP_ERROR", None, None
     try:
         content = page.body.decode("utf-8")
     except UnicodeError:
-        return "INVALID_ENCODING", None
+        return "INVALID_ENCODING", None, None
     if not content.strip():
-        return "EMPTY_CONTENT", None
+        return "EMPTY_CONTENT", None, None
     media_type = page.media_type.partition(";")[0].strip().lower()
     looks_html = re.match(r"\s*<(?:!doctype\s+html|html|head|title|form)(?:\s|>)", content, re.I)
     if media_type == "text/html" or looks_html:
@@ -147,13 +151,35 @@ def classify_page(page, limits):
         parser.feed(content)
         title = " ".join(" ".join(parser.title).split()).lower()
         if title in {"just a moment...", "verify you are human", "verification required", "captcha"}:
-            return "CHALLENGE_SUSPECTED", None
+            return "CHALLENGE_SUSPECTED", None, None
         if parser.password:
-            return "LOGIN_SUSPECTED", None
-        return "UNSUPPORTED_CONTENT", None  # no HTML extractor silently invented
+            return "LOGIN_SUSPECTED", None, None
+        if title in {"subscribe to continue", "subscription required", "abonnez-vous pour continuer"}:
+            return "PAYWALL_SUSPECTED", None, None
+        if page.html_limits is None or media_type != "text/html":
+            return "UNSUPPORTED_CONTENT", None, None
+        # No charset guessing, extra parameters or extraction of mislabeled HTML.
+        if not re.fullmatch(r'text/html(?:\s*;\s*charset\s*=\s*(?:utf-8|"utf-8"))?\s*',
+                            page.media_type.strip(), re.I):
+            return "UNSUPPORTED_CONTENT", None, None
+        extracted = extract(page.body, page.html_limits)
+        details = {k: v for k, v in extracted.items() if k not in {"text", "title", "signals"}}
+        if extracted["status"] == "PARTIAL":
+            return "EXTRACTION_PARTIAL", None, details
+        if extracted["status"] == "REFUSED":
+            return "EXTRACTION_REFUSED", None, details
+        if extracted["status"] == "EMPTY":
+            return "EMPTY_CONTENT", None, details
+        return "READ", extracted["text"], details
     if media_type not in {"text/plain", "text/markdown"}:
-        return "UNSUPPORTED_CONTENT", None
-    return "READ", content
+        return "UNSUPPORTED_CONTENT", None, None
+    return "READ", content, None
+
+
+def classify_page(page, limits):
+    """Compatibility API: content state and text only; the coordinator retains details."""
+    state, text, _ = _classify_page(page, limits)
+    return state, text
 
 
 class ResearchCoordinator:
@@ -347,7 +373,7 @@ class ResearchCoordinator:
                         guarded = getattr(self.reader, "read_guarded", None)
                         page = (guarded(url, self.policy, before_hop) if callable(guarded)
                                 else self.reader.read(url, self.policy))
-                        state, content = classify_page(page, self.limits)
+                        state, content, extraction = _classify_page(page, self.limits)
                         if page.policy_id != self.policy.policy_id:
                             raise ContractError("reader policy mismatch")
                         retrieval = snapshot(page.retrieval) if page.retrieval is not None else None
@@ -359,7 +385,7 @@ class ResearchCoordinator:
                                     or type(retrieval.get("observed_at")) is not str
                                     or datetime.fromisoformat(retrieval["observed_at"]).tzinfo is None):
                                 raise ContractError("retrieval envelope mismatch")
-                            if state == "READ" and (type(retrieval.get("size")) is not int
+                            if (state == "READ" or extraction is not None) and (type(retrieval.get("size")) is not int
                                     or retrieval.get("sha256") != hashlib.sha256(page.body).hexdigest()
                                     or retrieval.get("size") != len(page.body)):
                                 raise ContractError("retrieval body mismatch")
@@ -368,12 +394,14 @@ class ResearchCoordinator:
                                       http_status=page.status, retry_after=page.retry_after,
                                       retry_review_required=page.retry_review_required,
                                       deadline_exceeded=page.deadline_exceeded)
+                        if extraction is not None:
+                            source["extraction"] = extraction
                         late_receipt = late_receipt or page.deadline_exceeded
                         if retrieval is not None:
                             source["retrieval"] = retrieval
-                        if (state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"}
+                        if (state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED", "PAYWALL_SUSPECTED"}
                                 or page.retry_after is not None or page.retry_review_required):
-                            pause_reason = state if state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED"} else "RETRY_WAIT"
+                            pause_reason = state if state in {"RATE_LIMITED", "ACCESS_DENIED", "CHALLENGE_SUSPECTED", "LOGIN_SUSPECTED", "PAYWALL_SUSPECTED"} else "RETRY_WAIT"
                             scopes = [origin_scope(*domain)]
                             # A parsed origin can be suspended even if its DNS
                             # has failed/changed since the completed request.
@@ -398,6 +426,8 @@ class ResearchCoordinator:
                                         "body_sha256": hashlib.sha256(page.body).hexdigest(),
                                         "body_bytes": len(page.body), "media_type": page.media_type,
                                         "reader_id": self.reader.reader_id, "policy_id": page.policy_id}
+                            if extraction is not None:
+                                evidence["extraction"] = extraction
                             if retrieval is not None:
                                 evidence["retrieval"] = retrieval
                             source.update(evidence)
@@ -417,12 +447,13 @@ class ResearchCoordinator:
                     except Exception:
                         source["state"] = "READER_ERROR"
                 if source["state"] == "READ":
+                    content_hash = source.get("extraction", {}).get("text_sha256", source["body_sha256"])
                     if source["final_url"] in final_seen:
                         source["state"] = "DUPLICATE_FINAL"
-                    elif source["body_sha256"] in body_seen:
-                        source.update(state="DUPLICATE_CONTENT", duplicate_of=body_seen[source["body_sha256"]])
+                    elif content_hash in body_seen:
+                        source.update(state="DUPLICATE_CONTENT", duplicate_of=body_seen[content_hash])
                     else:
-                        body_seen[source["body_sha256"]] = source['id']
+                        body_seen[content_hash] = source['id']
                         report["readable_pages"] += 1
                     # Even duplicate content has an observed final URL; a later
                     # response from that same URL cannot count as a new page.

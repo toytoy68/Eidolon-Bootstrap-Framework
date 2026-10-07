@@ -6,7 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
-"""Candidate standalone extractor (C-TASK-G026). Not wired to research.py/WebReader.
+"""Pure extractor (C-TASK-G026); optional research/WebReader integration in C-011.
 
 Pure function over bytes: no fetch, no JavaScript, no remote resource, no file,
 no model. The result is untrusted external text; nothing in a page becomes a

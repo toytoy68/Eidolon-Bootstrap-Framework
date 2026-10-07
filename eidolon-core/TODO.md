@@ -144,7 +144,8 @@ option liée au futur Desktop. Le code v0.1 n'en dispose pas encore.
 - [ ] F-W20 : requêtes sortantes toujours transmises au fournisseur injecté ;
   minimisation/confirmation à concevoir en G029 avant usage externe réel.
 - [ ] API fournisseur réelle choisie après comparaison, sans abonnement implicite.
-- [ ] Extraction HTML après transport contrôlé ; texte simple seulement à ce stade.
+- [x] C-011 : extraction HTML optionnelle après transport contrôlé ; source/texte
+  distincts, partiel refusé comme READ, cache/déduplication testés sans Internet.
 - [x] C-002c : pauses persistantes optionnelles par fournisseur/origine, levée
   explicite versionnée, audit, CLI et démo sans réseau. [Contrat](docs/RESEARCH-PAUSES.md).
 - [x] Claude G019/G020 : revues reçues dans ff51313/cc9831f. Suites corrigées :
@@ -414,3 +415,14 @@ Publication groupée à la clôture de la séance ; documentation READ-TOKEN.md.
   non exécutées ; 24 contrôles de recette Linux temporaire ; 18 tests client
   connecté réussis, deux Chromium ignorés. Détails et limites dans
   docs/validation/2026-10-06/codex-evening/README.md.
+
+## Suite C-011 — 07/10/2026
+
+- [x] Option HTML explicite sur WebReader, identité versionnée des limites.
+- [x] Intégration au coordinateur candidat, conservation des empreintes source/texte,
+  refus du partiel et des signaux d'accès, déduplication du texte HTML extrait.
+- [x] Tests sur doubles et vrai HTTP loopback, aucune ressource embarquée suivie.
+- [ ] Contre-revue indépendante du raccordement ; fournisseurs externes, maîtrise
+  des requêtes sortantes et permissions de mission restent des lots distincts.
+
+Suite Claude G045–G047 publiée après G042–G044. [Preuves C-011](docs/validation/2026-10-07/codex-html/README.md).
