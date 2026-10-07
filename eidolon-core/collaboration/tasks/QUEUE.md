@@ -1,8 +1,9 @@
-# File active — C-MSG-G078, 07/10/2026
+# File active — C-MSG-G079, 07/10/2026
 
 G050–G054 reçus et intégrés. C-019–C-021 publiés en 9ee40c9.
 G055/G056 reçus sur 8c5f649 et intégrés dans 0e0b5d9.
-C076 annonce la suite G057, puis G058/G059/G060, disponibles sans attente.
+C076 annonce la suite G057, puis G058/G059/G060. G079 ajoute G061,
+contre-revue C-022/C-025 ; les cinq lots sont disponibles sans attente.
 
 | Ordre | Tâche | État |
 | --- | --- | --- |
@@ -13,6 +14,7 @@ C076 annonce la suite G057, puis G058/G059/G060, disponibles sans attente.
 | 5 | [G058](C-TASK-G058.md) — Contre-revue historique C-019 | PRÊT |
 | 6 | [G059](C-TASK-G059.md) — Contre-revue missions recherche C-021 | PRÊT |
 | 7 | [G060](C-TASK-G060.md) — Affichage client des missions recherche | PRÊT |
+| 8 | [G061](C-TASK-G061.md) — Contre-revue des diagnostics de reprise et restauration | PRÊT |
 
 Codex a terminé G050/G052 et C-019–C-021 ; voir le message G076 pour les
 liaisons schéma 2 et operation_id à préserver par G057. La publication ne

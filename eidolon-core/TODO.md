@@ -7,13 +7,13 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## État courant — reprise du 07/10/2026 à 12 h Paris
 
-C-010–C-021 livrés ; G036–G054 intégrés. C-019 conserve le texte nettoyé avant
-appel ; C-021 le raccorde aux missions sur fixtures fixes. 733 tests Python,
-six intégrations mémoire et 49 tests client réussis à la clôture précédente.
-[Preuves](docs/validation/2026-10-07/codex-hour-1056/README.md).
+C-010–C-025 livrés ; G036–G056 intégrés. C-019 conserve le texte nettoyé avant
+appel ; C-021 le raccorde aux missions sur fixtures fixes. 761 tests Python,
+six intégrations mémoire et 49 tests client réussis dans cette séance.
+[Preuves](docs/validation/2026-10-07/codex-hour-1200/README.md).
 
-Claude : G055/G056 intégrés ; G057–G060 disponibles,
-voir la [file active](collaboration/tasks/QUEUE.md). Codex prend C-022 :
+Claude : G055/G056 intégrés ; G057–G061 disponibles,
+voir la [file active](collaboration/tasks/QUEUE.md). C-022 :
 diagnostic local de reprise livré ; C-023/C-024 suivis CSP/budget validés,
 C-025 inspection historique durcie. Fournisseurs externes, commandes
 distantes, rotation G057 et recette Windows/VM restent des lots distincts.

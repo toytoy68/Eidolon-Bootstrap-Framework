@@ -85,10 +85,11 @@ un dossier neuf, avec un jeton privé. Le diagnostic `http_api --check` vérifie
 les prérequis locaux avant un lancement explicite. Depuis le PC Windows, la
 page est destinée à être consultée par un tunnel SSH vers le serveur Linux.
 
-État du 07/10 après C-021 : **733 tests Python et six intégrations mémoire
+État du 07/10 après C-025 : **761 tests Python et six intégrations mémoire
 réussis** sur corpus synthétiques ; 49 tests client réussis, 12 Chromium non
 exécutés ici. Le paquet installé passe 24 contrôles bêta et la mission de
-recherche. [Preuves actuelles](docs/validation/2026-10-07/codex-research-runtime/README.md),
+recherche, puis les diagnostics de reprise et de copie historique.
+[Preuves actuelles](docs/validation/2026-10-07/codex-hour-1200/README.md),
 [historique C-019](docs/validation/2026-10-07/codex-query-history/README.md) et
 [C-020](docs/validation/2026-10-07/codex-text-evidence/README.md).
 

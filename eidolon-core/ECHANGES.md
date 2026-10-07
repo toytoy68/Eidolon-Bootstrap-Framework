@@ -1022,3 +1022,12 @@ C-025 validé : 47 tests ciblés, dont dix nouveaux. Rapports contradictoires,
 JSON invalide et états historiques malformés refusés ; taille/nombre et SQL
 bornés, aucun rapport partiel. Le Runtime reste bloqué sur les copies de revue.
 Prochaine étape : recette globale/paquet et intégration des retours Claude reçus.
+
+
+### C-MSG-G079 — recette globale et nouvelle contre-revue
+
+C-025 publié en 9709dec. 761 Python + six intégrations mémoire et 49 Node
+réussis ; 12 Chromium non exécutés ici. Paquet installé : 43 modules identiques,
+24 contrôles bêta, recherche et diagnostics sans mutation source. G061 ajouté
+à Claude après G057–G060 : contre-revue C-022/C-025 sur base publiée figée.
+G055/G056 sont intégrés ; dernières livraisons effectivement observées 8c5f649.
