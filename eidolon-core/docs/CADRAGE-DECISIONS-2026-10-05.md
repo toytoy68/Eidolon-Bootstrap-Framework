@@ -179,6 +179,15 @@ seul T4-A ».
 
 Rien n'est implémenté ni activé par cette décision.
 
+**C-D16 — D4 précisé : garder tous les retraits actuels.** Décision de
+toytoy, 07/10/2026 vers 09 h 22, en réponse à l'écart signalé par Claude
+(option A « garder aussi courriels, chemins locaux et liens web » ou B
+« seulement IP, IBAN, téléphone ») : « A ».
+Retenu : avant l'envoi, sont retirés **adresse IP, IBAN, téléphone,
+courriel, chemin local et URL** (avec ses paramètres). C'est le comportement
+actuel de `query_cleanup.py` : aucun changement de code requis. La citation
+longue d'un document privé n'est pas repérée automatiquement.
+
 ## Capacités réseau à livrer
 
 | Capacité | Premier usage attendu | Contrat et vérification |

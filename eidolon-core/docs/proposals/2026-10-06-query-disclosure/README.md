@@ -240,3 +240,5 @@ Complément du 07/10/2026 vers 09 h 20 : D2 = C (pas de confirmation),
 D3 = A (requête du modèle envoyée seule), D4 = IP, IBAN, téléphone,
 D5 = A (texte envoyé conservé), D6 sans objet. Voir
 [C-D15](../../CADRAGE-DECISIONS-2026-10-05.md).
+D4 précisé vers 09 h 22 : courriel, chemin local et URL restent aussi retirés
+([C-D16](../../CADRAGE-DECISIONS-2026-10-05.md)).
