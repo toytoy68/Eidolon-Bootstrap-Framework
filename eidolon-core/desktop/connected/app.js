@@ -615,6 +615,8 @@
   var RECEIPT_PROTOCOL = "eidolon-http-receipt/1";
   var KEY = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$/;   // client_id and command_key, as the CLI
   var RECEIPT_KINDS = { "eidolon-command-receipt/1": "decision", "eidolon-cancel-receipt/1": "cancel" };
+  // G048: how Core bound a FOUND receipt to its journal event (C-012). Absent = older server, unspecified.
+  var RECEIPT_BINDINGS = ["EVENT_HASH", "LEGACY_FIELDS"];
 
   function clone(v) { return v === undefined || v === null ? v : JSON.parse(JSON.stringify(v)); }
   function isObject(v) { return v !== null && typeof v === "object" && !Array.isArray(v); }
@@ -639,8 +641,9 @@
     if (env.execution_evidence !== false || env.effect_absence_evidence !== false
         || env.authorizes_resend !== false || env.authorizes_execution !== false) return "AUTHORITY_CLAIMED";
     if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return env[k] !== q[k]; })) return "QUERY_MISMATCH";
-    if (env.status === "NOT_FOUND") return env.receipt === null ? null : "INVALID_RECEIPT";
+    if (env.status === "NOT_FOUND") return env.receipt === null && !("receipt_binding" in env) ? null : "INVALID_RECEIPT";
     if (env.status !== "FOUND") return "UNKNOWN_STATUS";
+    if ("receipt_binding" in env && RECEIPT_BINDINGS.indexOf(env.receipt_binding) < 0) return "INVALID_BINDING";
     var r = env.receipt;
     if (!isObject(r) || !RECEIPT_KINDS[r.protocol]) return "INVALID_RECEIPT";
     if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return r[k] !== q[k]; })) return "QUERY_MISMATCH";
@@ -943,7 +946,9 @@
         } else {
           // G043: a historical receipt is dated by its own receivedAt; it does not make the
           // current capture (or the connection's last accepted read) look fresher.
-          state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at };
+          // G048: binding null = not stated by Core (older server), never EVENT_HASH by default.
+          state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at,
+            binding: r.json.status === "FOUND" && "receipt_binding" in r.json ? r.json.receipt_binding : null };
         }
       } else {
         state.receipt = { query: q, status: "ERROR", receipt: null, code: r.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", receivedAt: at };
@@ -962,7 +967,7 @@
   }
 
   var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
-    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, viewIsCurrent: viewIsCurrent,
+    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;
@@ -1143,8 +1148,22 @@
     INVALID_RECEIPT_QUERY: "Requête refusée par Core (identifiants invalides).",
     STORE_CHANGED: "La base n'a plus l'identité affichée : se reconnecter pour resynchroniser. Aucun renvoi.",
     RECEIPT_MISSION_MISMATCH: "Cette clé existe mais pour une autre mission : aucune conclusion automatique.",
-    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière."
+    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière.",
+    INVALID_BINDING: "Contrôle de liaison inconnu annoncé par Core : reçu non affiché, aucune conclusion."
   };
+
+  // G048: what Core checked between the receipt and its journal event. Never a signature,
+  // never evidence that an action ran or stopped; an absent field is not EVENT_HASH.
+  var BINDINGS = {
+    EVENT_HASH: "Liaison au journal vérifiée par Core à cette lecture (empreinte du reçu dans l'événement). "
+      + "Ce n'est ni une signature ni une preuve d'exécution : une réécriture cohérente de la base resterait invisible.",
+    LEGACY_FIELDS: "Contrôle limité (ancien format, sans empreinte) : seuls certains champs sont recoupés avec le journal. "
+      + "Pour une annulation, le statut de mission, la révision et l'indicateur enregistrés ne sont pas couverts."
+  };
+  var BINDING_UNSPECIFIED = "Non précisé par ce serveur Core (version antérieure) : aucun contrôle de liaison annoncé.";
+  function bindingText(binding) {
+    return Object.prototype.hasOwnProperty.call(BINDINGS, binding) ? BINDINGS[binding] : BINDING_UNSPECIFIED;
+  }
 
   // The receipt is a dated record. It is shown next to the current capture, never merged into it.
   function renderReceipt(doc, s) {
@@ -1181,6 +1200,7 @@
     }
     row(doc, dl, "Révision à l'enregistrement", r.mission_revision);
     row(doc, dl, "Événement", "séquence " + r.event_sequence);
+    row(doc, dl, "Contrôle d'intégrité", bindingText(rec.binding));
     var view = sel.sync && sel.sync.view;
     if (view) {
       var m = view.mission;
@@ -1197,7 +1217,7 @@
     renderReceipt(doc, s);
   }
 
-  var api = { render: render, PHASES: PHASES };
+  var api = { render: render, PHASES: PHASES, bindingText: bindingText };
   if (NODE) module.exports = api;
   else root.EidolonConnectedView = api;
 })(typeof window !== "undefined" ? window : this);

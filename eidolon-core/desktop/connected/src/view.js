@@ -171,8 +171,22 @@
     INVALID_RECEIPT_QUERY: "Requête refusée par Core (identifiants invalides).",
     STORE_CHANGED: "La base n'a plus l'identité affichée : se reconnecter pour resynchroniser. Aucun renvoi.",
     RECEIPT_MISSION_MISMATCH: "Cette clé existe mais pour une autre mission : aucune conclusion automatique.",
-    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière."
+    RECEIPT_UNAVAILABLE: "Reçu illisible ou incohérent dans la base : l'incertitude reste entière.",
+    INVALID_BINDING: "Contrôle de liaison inconnu annoncé par Core : reçu non affiché, aucune conclusion."
   };
+
+  // G048: what Core checked between the receipt and its journal event. Never a signature,
+  // never evidence that an action ran or stopped; an absent field is not EVENT_HASH.
+  var BINDINGS = {
+    EVENT_HASH: "Liaison au journal vérifiée par Core à cette lecture (empreinte du reçu dans l'événement). "
+      + "Ce n'est ni une signature ni une preuve d'exécution : une réécriture cohérente de la base resterait invisible.",
+    LEGACY_FIELDS: "Contrôle limité (ancien format, sans empreinte) : seuls certains champs sont recoupés avec le journal. "
+      + "Pour une annulation, le statut de mission, la révision et l'indicateur enregistrés ne sont pas couverts."
+  };
+  var BINDING_UNSPECIFIED = "Non précisé par ce serveur Core (version antérieure) : aucun contrôle de liaison annoncé.";
+  function bindingText(binding) {
+    return Object.prototype.hasOwnProperty.call(BINDINGS, binding) ? BINDINGS[binding] : BINDING_UNSPECIFIED;
+  }
 
   // The receipt is a dated record. It is shown next to the current capture, never merged into it.
   function renderReceipt(doc, s) {
@@ -209,6 +223,7 @@
     }
     row(doc, dl, "Révision à l'enregistrement", r.mission_revision);
     row(doc, dl, "Événement", "séquence " + r.event_sequence);
+    row(doc, dl, "Contrôle d'intégrité", bindingText(rec.binding));
     var view = sel.sync && sel.sync.view;
     if (view) {
       var m = view.mission;
@@ -225,7 +240,7 @@
     renderReceipt(doc, s);
   }
 
-  var api = { render: render, PHASES: PHASES };
+  var api = { render: render, PHASES: PHASES, bindingText: bindingText };
   if (NODE) module.exports = api;
   else root.EidolonConnectedView = api;
 })(typeof window !== "undefined" ? window : this);

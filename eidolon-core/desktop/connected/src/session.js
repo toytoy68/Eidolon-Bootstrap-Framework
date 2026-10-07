@@ -36,6 +36,8 @@
   var RECEIPT_PROTOCOL = "eidolon-http-receipt/1";
   var KEY = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$/;   // client_id and command_key, as the CLI
   var RECEIPT_KINDS = { "eidolon-command-receipt/1": "decision", "eidolon-cancel-receipt/1": "cancel" };
+  // G048: how Core bound a FOUND receipt to its journal event (C-012). Absent = older server, unspecified.
+  var RECEIPT_BINDINGS = ["EVENT_HASH", "LEGACY_FIELDS"];
 
   function clone(v) { return v === undefined || v === null ? v : JSON.parse(JSON.stringify(v)); }
   function isObject(v) { return v !== null && typeof v === "object" && !Array.isArray(v); }
@@ -60,8 +62,9 @@
     if (env.execution_evidence !== false || env.effect_absence_evidence !== false
         || env.authorizes_resend !== false || env.authorizes_execution !== false) return "AUTHORITY_CLAIMED";
     if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return env[k] !== q[k]; })) return "QUERY_MISMATCH";
-    if (env.status === "NOT_FOUND") return env.receipt === null ? null : "INVALID_RECEIPT";
+    if (env.status === "NOT_FOUND") return env.receipt === null && !("receipt_binding" in env) ? null : "INVALID_RECEIPT";
     if (env.status !== "FOUND") return "UNKNOWN_STATUS";
+    if ("receipt_binding" in env && RECEIPT_BINDINGS.indexOf(env.receipt_binding) < 0) return "INVALID_BINDING";
     var r = env.receipt;
     if (!isObject(r) || !RECEIPT_KINDS[r.protocol]) return "INVALID_RECEIPT";
     if (["store_id", "client_id", "command_key", "mission_id"].some(function (k) { return r[k] !== q[k]; })) return "QUERY_MISMATCH";
@@ -364,7 +367,9 @@
         } else {
           // G043: a historical receipt is dated by its own receivedAt; it does not make the
           // current capture (or the connection's last accepted read) look fresher.
-          state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at };
+          // G048: binding null = not stated by Core (older server), never EVENT_HASH by default.
+          state.receipt = { query: q, status: r.json.status, receipt: clone(r.json.receipt), code: null, receivedAt: at,
+            binding: r.json.status === "FOUND" && "receipt_binding" in r.json ? r.json.receipt_binding : null };
         }
       } else {
         state.receipt = { query: q, status: "ERROR", receipt: null, code: r.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", receivedAt: at };
@@ -383,7 +388,7 @@
   }
 
   var api = { PROTOCOL: PROTOCOL, TOKEN: TOKEN, KEY: KEY, RECEIPT_KINDS: RECEIPT_KINDS, createSession: createSession,
-    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, viewIsCurrent: viewIsCurrent,
+    validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote, listSummary: L.summary,
     shownItems: L.shownItems, syncSummary: S.summary };
   if (NODE) module.exports = api;
