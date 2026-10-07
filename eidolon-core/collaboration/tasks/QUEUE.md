@@ -1,3 +1,18 @@
+# File active — C-MSG-G068, 07/10/2026
+
+G045–G049 reçus et intégrés. Les corrections G049 sont prises par Codex (C-018).
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G050](C-TASK-G050.md) — Contre-revue nettoyage des requêtes C-013 | PRÊT |
+| 2 | [G051](C-TASK-G051.md) — Contre-revue garde durable C-014a | PRÊT |
+| 3 | [G052](C-TASK-G052.md) — Contre-revue budget et seuil des reçus | PRÊT |
+| 4 | [G053](C-TASK-G053.md) — Premier lot Tauri 2 en consultation | PRÊT |
+
+Enchaîner dans cet ordre. Autorisation toytoy de renouvellement reçue. Ce fichier ne démarre pas une session. Les sections suivantes sont historiques.
+
+---
+
 # File active — C-MSG-G061, 07/10/2026
 
 | Ordre | Tâche | État |
