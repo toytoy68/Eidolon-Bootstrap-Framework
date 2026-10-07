@@ -141,7 +141,7 @@ trois refus/contenus inexploités et résultat PARTIAL pour deux lectures requis
 
 ## Limites et prochaine tranche
 
-Pas d'extracteur HTML général, JavaScript, authentification, robots.txt,
+Extraction HTML optionnelle C-011 ci-dessous ; pas de JavaScript, authentification, robots.txt,
 minimisation automatique des requêtes, fournisseur réel, persistance du cache
 ou des quotas, ni intégration aux permissions/exécutants des missions. C-D08
 et les tests VM restent différés. Les hypothèses de G007 sont intégrées comme
@@ -158,3 +158,55 @@ avant chaque saut déjà présent ; aucun transport ni identité réseau modifi�
 Avec cette option, toutes les pauses exigent une levée explicite. Sans elle,
 les pauses décrites dans le présent document restent en RAM. La persistance ne
 couvre pas une réponse perdue avant son enregistrement : voir les limites du lot.
+
+## C-011 — extraction HTML optionnelle, 07/10/2026
+
+```python
+from eidolon_core.html_extract import ExtractLimits
+from eidolon_core.web_reader import WebReader
+
+# resolver/connector restent des composants de confiance explicitement fournis.
+reader = WebReader(resolver, connector, html_limits=ExtractLimits())
+```
+
+Par défaut `html_limits=None` : HTML reste inexploité. Le lecteur conserve
+les octets reçus et leur provenance ; le coordinateur effectue l'extraction
+locale. `reader_id` passe à `web-reader/3/…` et inclut version/limites de
+l'extracteur. Une modification de ces limites donne une autre identité/cache.
+Cette option n'active aucun fournisseur Internet ni outil de mission.
+
+Seuls `text/html` et `text/html; charset=utf-8` (casse/espaces/guillemets tolérés)
+sont extractibles. Charset différent, paramètres supplémentaires ou HTML
+détecté mais annoncé en texte brut : UNSUPPORTED_CONTENT. Pas de devinette
+d'encodage. UTF-8 strict ; BOM accepté par l'extracteur.
+
+Avant extraction : statuts HTTP, complétude du transport et taille restent
+prioritaires, puis signaux d'accès. Titres exacts de challenge déjà traités,
+champ password → LOGIN_SUSPECTED, titres exacts « Subscribe to continue »,
+« Subscription required », « Abonnez-vous pour continuer » → PAYWALL_SUSPECTED.
+Ce dernier état entre aussi dans les pauses persistantes nécessitant revue.
+Ce sont des **heuristiques limitées**, pas une détection universelle des murs
+d'accès ; un article parlant de CAPTCHA n'est pas refusé sur ce seul mot.
+
+| Extraction | État du lecteur dans le rapport | Compte comme page lue / cache |
+| --- | --- | --- |
+| OK, complète | READ | Oui, sauf annulation/délai pour le cache |
+| EMPTY | EMPTY_CONTENT | Non |
+| PARTIAL (taille/profondeur/segments) | EXTRACTION_PARTIAL | Non ; texte partiel non adopté |
+| REFUSED | EXTRACTION_REFUSED | Non |
+
+Le rapport conserve `body_sha256`/`body_bytes` et `retrieval` des octets reçus.
+Le champ `extraction` contient version, limites, statut/complétude, avertissements
+et SHA-256 source/texte. L'empreinte source doit correspondre au reçu HTTP,
+y compris pour une extraction partielle. Le cache conserve l'observation
+initiale et ces métadonnées, sans nouveau fetch des ressources intégrées.
+
+La déduplication utilise le hash du texte extrait pour HTML (celui des octets
+pour texte brut inchangé) : deux habillages HTML du même texte ne satisfont
+pas un objectif de deux pages. Cela ne prouve pas l'indépendance des sources.
+Le texte est `untrusted_external_text`, `authorizes_execution=false` : même
+une instruction visible dans la page reste une donnée, jamais un ordre.
+
+Pas de rendu CSS complet, JavaScript, authentification, contournement de défi
+ou abonnement. Les seuils de lecture ne constituent pas une réponse validée.
+[Preuves du raccordement](validation/2026-10-07/codex-html/README.md).

@@ -1,3 +1,30 @@
+# File active — C-MSG-G061, 07/10/2026
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G045](C-TASK-G045.md) — contre-revue saturation/SQL | PRÊT |
+| 2 | [G046](C-TASK-G046.md) — lanceur SSH | PRÊT |
+| 3 | [G047](C-TASK-G047.md) — recette/paquet et vérificateur d'archive corrigé | PRÊT |
+| 4 | [G048](C-TASK-G048.md) — liaison reçus et affichage des anciens | PRÊT |
+| 5 | [G049](C-TASK-G049.md) — contre-revue HTML | PRÊT |
+
+G042–G044 sont intégrés. La demande toytoy couvre la poursuite locale ; aucun
+nouveau feu vert requis. Un état PRÊT ne prétend pas qu'une session a démarré.
+
+---
+
+# File active — après intégration G042–G044, 07/10/2026
+
+G042/G043/G044 sont livrés sur ba800da et intégrés par Codex.
+**G045, G046 et G047 sont PRÊTS et attribués** : enchaîner selon la demande
+explicite de toytoy du 07/10 à 08 h 03. Aucune nouvelle confirmation n'est
+nécessaire pour ces revues locales déjà demandées ; ce fichier ne démarre
+pas une session Claude. Lire le dernier GPT-TO-CLAUDE avant la reprise.
+
+Les sections ci-dessous restent historiques et ne doivent pas rouvrir G042–G044.
+
+---
+
 # Suite active — C-MSG-G057, 07/10/2026
 
 G042–G044 restent attribués en premier. Après eux, trois contre-revues nouvelles

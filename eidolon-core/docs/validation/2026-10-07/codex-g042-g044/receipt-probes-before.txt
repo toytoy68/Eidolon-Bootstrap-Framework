@@ -1,0 +1,35 @@
+== A. reçus authentiques
+A cancel-requested: FOUND eidolon-cancel-receipt/1 REQUESTED NEW
+A cancel-again: FOUND eidolon-cancel-receipt/1 ALREADY_REQUESTED NEW
+A cancel-terminal: FOUND eidolon-cancel-receipt/1 ALREADY_TERMINAL CANCELLED
+A decision-approve: FOUND eidolon-command-receipt/1 approve APPROVED
+A decision-revoke: FOUND eidolon-command-receipt/1 revoke REVOKED
+== B. données privées
+B actor dans les réponses : absent ; reason : absent
+== C. altérations isolées (une ligne) et cohérentes (plusieurs lignes)
+C1 décision : approval_status_at_recording APPROVED→REVOKED: 503 RECEIPT_UNAVAILABLE
+C2 décision : decision approve→reject (statut assorti): 503 RECEIPT_UNAVAILABLE
+C3 décision : recorded_at modifié: 503 RECEIPT_UNAVAILABLE
+C4 décision : mission_revision +1: 503 RECEIPT_UNAVAILABLE
+C5 annulation : mission_status_at_recording NEW→RUNNING: FOUND → exporté : {"mission_status_at_recording": "RUNNING", "mission_revision": 0, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T06:16:23.328252+00:00"}
+C6 annulation : mission_revision +5: FOUND → exporté : {"mission_status_at_recording": "NEW", "mission_revision": 5, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T06:16:23.328252+00:00"}
+C7 annulation ALREADY_TERMINAL : cancel_requested_at_recording inversé: FOUND → exporté : {"mission_status_at_recording": "CANCELLED", "mission_revision": 1, "cancel_requested_at_recording": false, "recorded_at": "2026-10-07T06:16:23.331004+00:00"}
+C8 annulation ALREADY_TERMINAL : mission_status CANCELLED→SUCCEEDED: FOUND → exporté : {"mission_status_at_recording": "SUCCEEDED", "mission_revision": 1, "cancel_requested_at_recording": true, "recorded_at": "2026-10-07T06:16:23.331004+00:00"}
+C9 événement : actor modifié: 503 RECEIPT_UNAVAILABLE
+C10 événement : kind modifié: 503 RECEIPT_UNAVAILABLE
+C11 événement supprimé: 503 RECEIPT_UNAVAILABLE
+C12 corps > 32 768 octets: 503 RECEIPT_UNAVAILABLE
+C13 clé JSON dupliquée: 503 RECEIPT_UNAVAILABLE
+C14 corps d'un autre reçu sous cette clé: 503 RECEIPT_UNAVAILABLE
+C15 store_id de la base modifié: 409 STORE_CHANGED
+C16 COHÉRENT : recorded_at changé dans le reçu ET l'événement: FOUND → exporté : {"mission_revision": 9, "recorded_at": "2026-01-01T00:00:00+00:00", "approval_status_at_recording": "APPROVED"}
+== D. absence ambiguë et concurrence
+D1 avant la commande : NOT_FOUND
+D1 après la commande (même clé) : FOUND  — NOT_FOUND puis FOUND sans aucun renvoi
+D2 verrou d'écriture 0.5 s : HTTP 200 FOUND en 531 ms
+D2 verrou d'écriture 3.0 s : HTTP 503 STATE_UNAVAILABLE en 2016 ms
+== E. frontière HTTP
+E champ en plus: HTTP 400 INVALID_RECEIPT_QUERY ; données du reçu dans l'erreur : non
+E mission différente: HTTP 409 RECEIPT_MISSION_MISMATCH ; données du reçu dans l'erreur : non
+E autre store: HTTP 409 STORE_CHANGED ; données du reçu dans l'erreur : non
+E clé avec espace: HTTP 400 INVALID_RECEIPT_QUERY ; données du reçu dans l'erreur : non

@@ -1,0 +1,6 @@
+test_current_commit_bundle_runs_fixture_and_preflight (tests.test_build_beta_bundle.RealRepositoryBundleTest.test_current_commit_bundle_runs_fixture_and_preflight) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.631s
+
+OK

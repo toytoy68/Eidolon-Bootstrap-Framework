@@ -69,3 +69,22 @@ n’empêche pas la consultation du reçu historique valide.
 
 G036 développe l’affichage seulement ; les fixtures synthétiques validées sont
 dans le dossier de preuves, avec leur générateur dans examples/http_receipt_demo.py. Toujours distinguer enregistrement, état actuel et effet vérifié.
+
+## C-012 — liaison des nouveaux reçus, 07/10/2026
+
+Les nouveaux reçus décision/annulation sont liés à leur événement par
+`receipt_sha256`, écrit dans **la même transaction** que reçu et événement.
+La consultation vérifie cette empreinte avant tout export. Les altérations
+isolées du statut historique, de la révision ou du drapeau d'annulation
+renvoient RECEIPT_UNAVAILABLE, y compris CANCELLED remplacé par SUCCEEDED.
+
+Une réponse FOUND ajoute `receipt_binding` : `EVENT_HASH` si cette liaison
+est présente et valide, `LEGACY_FIELDS` pour un ancien événement sans hash.
+Les anciens reçus ne sont ni réécrits ni promus en intégrité complète. Le
+client actuel accepte ce champ additif ; son affichage dédié reste à compléter.
+Le statut historique d'annulation des anciens reçus garde la limite décrite
+plus haut. Le lecteur CLI local de confiance ne réalise pas ce contrôle HTTP.
+
+Un hash n'est pas une signature : une réécriture cohérente du reçu, de
+l'événement **et de l'empreinte** reste hors détection. Rien dans cette liaison
+ne prouve l'exécution d'une action, un arrêt effectif ou une identité humaine.

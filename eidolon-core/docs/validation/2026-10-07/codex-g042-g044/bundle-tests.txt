@@ -1,0 +1,14 @@
+test_cli_codes (tests.test_build_beta_bundle.BundleTests.test_cli_codes) ... ok
+test_commit_must_be_explicit_full_sha (tests.test_build_beta_bundle.BundleTests.test_commit_must_be_explicit_full_sha) ... ok
+test_existing_destination_is_never_overwritten (tests.test_build_beta_bundle.BundleTests.test_existing_destination_is_never_overwritten) ... ok
+test_manifest_lists_every_file_with_its_hash (tests.test_build_beta_bundle.BundleTests.test_manifest_lists_every_file_with_its_hash) ... ok
+test_only_tracked_allow_listed_content_from_the_commit (tests.test_build_beta_bundle.BundleTests.test_only_tracked_allow_listed_content_from_the_commit) ... ok
+test_symlink_forbidden_name_and_missing_file_are_refused (tests.test_build_beta_bundle.BundleTests.test_symlink_forbidden_name_and_missing_file_are_refused) ... ok
+test_tampered_or_unsafe_archive_fails_verification (tests.test_build_beta_bundle.BundleTests.test_tampered_or_unsafe_archive_fails_verification) ... ok
+test_two_builds_are_byte_identical_and_verify (tests.test_build_beta_bundle.BundleTests.test_two_builds_are_byte_identical_and_verify) ... ok
+test_current_commit_bundle_runs_fixture_and_preflight (tests.test_build_beta_bundle.RealRepositoryBundleTest.test_current_commit_bundle_runs_fixture_and_preflight) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.494s
+
+OK

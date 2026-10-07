@@ -127,6 +127,11 @@ def _decode(raw):
 def _bind_event(receipt, raw):
     """Rebuild only the recorded command, never export the event's private detail."""
     detail = _object(raw)
+    binding = "LEGACY_FIELDS"
+    if "receipt_sha256" in detail:
+        if not _match(r"[0-9a-f]{64}", detail["receipt_sha256"]) or detail["receipt_sha256"] != digest(receipt):
+            _fail()
+        binding = "EVENT_HASH"
     for name, bound in (("actor", 200), ("reason", 4000)):
         value = detail.get(name)
         if type(value) is not str or not value.strip() or len(value) > bound:
@@ -148,6 +153,7 @@ def _bind_event(receipt, raw):
             _fail()
     except (ContractError, UnicodeError, RecursionError):
         _fail()
+    return binding
 
 
 def lookup(store, query):
@@ -186,6 +192,6 @@ def lookup(store, query):
                 "CANCEL_REQUESTED" if receipt["cancel_outcome"] == "REQUESTED" else "CANCEL_COMMAND_RECORDED")
         if event is None or event[:3] != (query["mission_id"], receipt["recorded_at"], kind):
             _fail()
-        _bind_event(receipt, event[3])
-        result.update(status="FOUND", receipt=receipt)
+        binding = _bind_event(receipt, event[3])
+        result.update(status="FOUND", receipt=receipt, receipt_binding=binding)
     return result
