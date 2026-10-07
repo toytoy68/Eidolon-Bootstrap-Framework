@@ -1,0 +1,49 @@
+== M. migration 1 → 2
+M schéma initial 1 ; lecture d'historique : REFUS QUERY_HISTORY_NOT_ENABLED ; schéma ensuite 1
+M CLI de lecture sur schéma 1 : code 2 {"error":"QUERY_HISTORY_NOT_ENABLED","protocol":"eidolon-query-history/1","request_sent":false} ; schéma ensuite 1
+M ouverture create=False + retain_queries : REFUS QUERY_HISTORY_NOT_ENABLED ; schéma 1
+M migration explicite : schéma 2 ; anciennes fiches identiques octet pour octet : True
+M historique après une recherche : total=1 legacy=3 page=1 suivant=non
+M objet ouvert sans drapeau après migration : retain_queries=True
+M ancien objet resté en schéma 1, nouvelle recherche : REFUS UNSUPPORTED_RESEARCH_GUARD
+== C. pannes avant commit et pendant l'appel
+C before_commit : code 9 ; contacts=0 ; total=1 legacy=0 page=1 suivant=non ; dernière entrée : texte=False état=COMPLETED émission=CALL_SEQUENCE_COMPLETED
+C   nouvelle recherche : NO_READABLE_SOURCE
+C during_call : code 9 ; contacts=1 ; total=2 legacy=0 page=2 suivant=non ; dernière entrée : texte=True état=INTENT émission=UNKNOWN
+C   nouvelle recherche : REFUS WEB_RESEARCH_UNCERTAIN
+== D. doublons, orphelins, altérations (copies)
+D ligne orpheline ajoutée : lecture REFUS QUERY_HISTORY_BINDING_MISMATCH ; recherche REFUS QUERY_HISTORY_BINDING_MISMATCH ; contacts=0
+D ligne supprimée seule : lecture REFUS QUERY_HISTORY_BINDING_MISMATCH ; recherche REFUS QUERY_HISTORY_BINDING_MISMATCH ; contacts=0
+D texte modifié seul : lecture REFUS INVALID_QUERY_HISTORY_RECORD ; recherche REFUS INVALID_QUERY_HISTORY_RECORD ; contacts=0
+D ligne de 50 000 octets : lecture REFUS INVALID_RESEARCH_RECORD ; recherche REFUS INVALID_RESEARCH_RECORD ; contacts=0
+D clé dupliquée dans le JSON : lecture REFUS INVALID_RESEARCH_RECORD ; recherche REFUS INVALID_RESEARCH_RECORD ; contacts=0
+D caractère invisible U+200B ajouté au texte : lecture REFUS INVALID_QUERY_HISTORY_RECORD ; recherche REFUS INVALID_QUERY_HISTORY_RECORD ; contacts=0
+D réécriture cohérente (texte, empreintes, fiche, audit) : total=4 legacy=0 page=4 suivant=non ; texte lu : ['texte reecrit']  (hors garantie)
+D texte effacé + lien retiré partout (devient « ancienne ») : total=3 legacy=1 page=3 suivant=non  (hors garantie)
+== P. pagination et reset
+P 7 entrées par pages de 3 : [3, 3, 1] ; uniques=7 ; ordre chronologique=True
+P curseur offset 7 (= total) : total=7 legacy=0 page=0 suivant=non
+P curseur offset 8 : REFUS INVALID_QUERY_HISTORY_CURSOR
+P curseur offset 003 : total=7 legacy=0 page=3 suivant=oui
+P curseur autre journal : REFUS QUERY_HISTORY_RESET_REQUIRED
+P curseur révision fausse : REFUS QUERY_HISTORY_RESET_REQUIRED
+P curseur offset négatif : REFUS INVALID_QUERY_HISTORY_CURSOR
+P curseur espace final : REFUS INVALID_QUERY_HISTORY_CURSOR
+P curseur 151 caractères : REFUS INVALID_QUERY_HISTORY_CURSOR
+P nouvelle recherche puis page 2 : REFUS QUERY_HISTORY_RESET_REQUIRED
+P limite 0 : REFUS INVALID_QUERY_HISTORY_LIMIT
+P limite 51 : REFUS INVALID_QUERY_HISTORY_LIMIT
+P limite True : REFUS INVALID_QUERY_HISTORY_LIMIT
+P limite 3.0 : REFUS INVALID_QUERY_HISTORY_LIMIT
+== B. SQLite occupé
+B lecture pendant un verrou d'écriture de 4 s : REFUS RESEARCH_GUARD_UNAVAILABLE en 2.0 s
+B recherche pendant le verrou : REFUS RESEARCH_GUARD_UNAVAILABLE en 2.0 s ; contacts=0
+B ensuite : total=2 legacy=0 page=2 suivant=non
+== L. bornes, modes, données
+L requête de 999 caractères : NO_READABLE_SOURCE ; texte gardé de 999 caractères
+L modes : {'l': '0o700', 'research-runs.sqlite3': '0o600', 'research-runs.lock': '0o600'}
+L données personnelles brutes dans la base : []
+L empreintes de la requête brute 0 dans la lecture : []
+L empreintes de la requête brute 1 dans la lecture : []
+L base en 0644 : REFUS RESEARCH_DATABASE_NOT_PRIVATE
+L 200 anciennes + 56 nouvelles : total=56 legacy=200 page=50 suivant=oui ; 257e : REFUS RESEARCH_HISTORY_CAPACITY_REACHED
