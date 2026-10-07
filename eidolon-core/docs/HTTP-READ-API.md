@@ -38,7 +38,7 @@ base absente ou copie de restauration en revue refusée, sans création/migratio
 Erreurs JSON : `{protocol: 'eidolon-http-read/1', error: CODE,
 authorizes_execution: false}`. HTTP 401 authentification, 403 Host/Origin,
 400 entrée/curseur, 404 mission/route, 405 méthode, 413 volume requête,
-409 identité Store/mission du reçu divergente, 415 type, 503 stockage/état indisponible ou réponse trop volumineuse.
+409 identité Store/mission du reçu divergente, 415 type, 503 BUSY, stockage/état indisponible ou réponse trop volumineuse.
 Aucune exception brute/chemin/SQL renvoyé. RESET_REQUIRED reste HTTP 200 :
 c'est une réponse de protocole à appliquer explicitement, pas une panne réseau.
 
@@ -60,12 +60,18 @@ modifier `desktop/prototype/`, dont les scénarios doivent rester simulés.
 ## Limites
 
 Serveur local de développement, **quatre connexions simultanées au plus**.
-Une connexion supplémentaire est fermée sans attente ni nouveau thread ; le
-client peut constater une erreur réseau. Lecture : délai d’inactivité 3 s et
+Une connexion supplémentaire reçoit un **503 BUSY** fixe avant parsing et
+authentification, sans lecture de la base ni thread supplémentaire. Écriture
+bornée à 50 ms ; si le socket est déjà fermé/non inscriptible, la livraison de
+ce refus n’est pas garantie. Le client ne doit pas le confondre avec un résultat
+de commande ni renvoyer automatiquement une commande. Lecture : délai d’inactivité 3 s et
 échéance totale de 5 s pour ligne, en-têtes et corps, même si des octets arrivent
 régulièrement. Écriture : délai socket séparé de 3 s. Les connexions en attente
 de lecture sont interrompues à la fermeture du serveur, puis ses workers joints.
-Ce n’est pas un délai total garanti pour le traitement SQLite/CPU, ni une
+SQLite : budget coopératif de 2 s par connexion de lecture, contrôlé toutes
+les 1000 instructions de sa VM ; interruption renvoyée comme STATE_UNAVAILABLE,
+et attente des verrous déjà limitée à 2 s. Cela ne borne pas les E/S du système
+de fichiers ni les calculs Python. Ce n’est pas un délai total garanti, ni une
 protection contre tout déni de service local ; pas de serveur public. Pas de TLS intégré : le tunnel SSH protège le trajet PC–serveur.
 Pas de service systemd installé, pas de découverte/appairage automatique.
 La consultation ne valide ni le modèle, ni les effets, ni le fonctionnement
@@ -94,7 +100,8 @@ les échanges. Une rotation se fait avec un nouveau fichier puis un redémarrage
 **G031 est intégré** : ajouter à la dernière commande
 `--web-root desktop/connected` pour servir le [client connecté](../desktop/connected/README.md).
 Sans web-root, `/` renvoie 404. Le prototype autonome existant ne doit pas être
-passé comme web-root. La consultation des reçus dans le client attend G036.
+passé comme web-root. La consultation des reçus historiques G036 est intégrée ; elle ne modifie pas
+la capture courante et ne prouve pas l’exécution de la commande.
 
 Sur le PC, tunnel SSH (remplacer les deux valeurs entre chevrons) :
 

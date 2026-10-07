@@ -1,0 +1,43 @@
+{
+  "protocol": "eidolon-beta-check/1",
+  "status": "PASS",
+  "checks": [
+    "fixture_ready",
+    "preflight_pass",
+    "asset_/",
+    "asset_/app.js",
+    "asset_/style.css",
+    "authenticated_health",
+    "anonymous_refused",
+    "six_missions",
+    "snapshot_text_completed",
+    "snapshot_not_started",
+    "snapshot_approval_pending",
+    "snapshot_cancel_requested",
+    "snapshot_cancelled",
+    "snapshot_approval_revoked",
+    "receipt_cancel-requested",
+    "receipt_historical-approve",
+    "receipt_historical-revoke",
+    "read_state_unchanged",
+    "live_creation_visible",
+    "live_cancellation_visible",
+    "second_token_created",
+    "running_server_keeps_original_token",
+    "restart_uses_explicit_new_token",
+    "restart_preserves_store_and_cursor"
+  ],
+  "browser_tested": false,
+  "ssh_tested": false,
+  "windows_tested": false,
+  "user_server_tested": false,
+  "model_tested": false,
+  "python": "3.12.14",
+  "package_version": "source-checkout",
+  "asset_sha256": {
+    "/": "a3dac570f56d815cf35ea903397a46b44f693352226bbab5650230812b374a65",
+    "/app.js": "a147fefdfde38403c33fb06d37a041c4a9ceea2c46badef308ce8d6008cf6f4a",
+    "/style.css": "ac379885ffe26a80f5f009dd5c88569955cd6aabb7924143be6ddf0242424d65"
+  },
+  "checks_passed": 24
+}

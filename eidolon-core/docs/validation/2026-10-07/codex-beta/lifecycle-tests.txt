@@ -1,0 +1,17 @@
+✔ pagination over the real API: 150 extra missions read in two pages, exact cursor echoed, complete (1088.039501ms)
+✔ more than 200 missions: the client stops at 200, says truncated, and never loops (1064.499084ms)
+✔ a mission created by another process between two pages: RESET_REQUIRED, old inventory stale, explicit relist complete (1084.648819ms)
+✔ a cancellation by the Core CLI is observed once, over repeated polls, and the client only ever reads (1096.632692ms)
+✔ cleanup on failure paths: refused start, a throwing scenario, a browser that cannot start (1882.97238ms)
+﹣ Chromium on the real server: 150 missions listed and keyboard-selectable, then server stopped (0.18913ms) # Chromium executable unavailable
+✔ missing executable rejects without an unhandled spawn error (4.178898ms)
+✔ startup deadline waits for its silent owned child to exit (104.066482ms)
+✔ stderr is drained and a child ignoring TERM is killed, then stop is idempotent (100.965621ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 6533.042647

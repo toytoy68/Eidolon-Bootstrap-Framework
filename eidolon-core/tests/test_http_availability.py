@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from http.client import HTTPConnection
 import json
 import socket
+import sqlite3
 import tempfile
 import threading
 import time
@@ -90,17 +91,68 @@ class HTTPAvailabilityTests(unittest.TestCase):
         sockets = [self.idle() for _ in range(4)]
         try:
             self.wait_accepted(4)
-            extra = self.idle()
-            self.wait_accepted(5)
-            try:
-                self.assertEqual(extra.recv(1), b"")
-            except ConnectionResetError:
-                pass
+            status, data = self.health()
+            self.assertEqual(status, 503)
+            self.assertEqual(data, {"protocol": http_api.PROTOCOL, "error": "BUSY",
+                                    "authorizes_execution": False})
             with self.server._worker_lock:
                 self.assertEqual(len(self.server._workers), 4)
         finally:
             for s in sockets:
                 s.close()
+
+    def test_busy_response_is_fixed_pre_auth_and_service_recovers(self):
+        before = self.store.path.read_bytes()
+        sockets = [self.idle() for _ in range(4)]
+        self.wait_accepted(4)
+        with patch.object(self.server.store, "health", side_effect=AssertionError("no state lookup")):
+            for token in (TOKEN, "invalid"):
+                status, data = self.health(token=token)
+                self.assertEqual((status, data["error"]), (503, "BUSY"))
+                self.assertNotIn(token, json.dumps(data))
+        for s in sockets:
+            s.close()
+        deadline = time.monotonic() + 2
+        while time.monotonic() < deadline:
+            with self.server._worker_lock:
+                if not self.server._workers:
+                    break
+            time.sleep(.01)
+        self.assertEqual(self.health()[0], 200)
+        self.assertEqual(self.store.path.read_bytes(), before)
+
+    def test_unwritable_overload_response_closes_without_worker(self):
+        from unittest.mock import Mock
+        request = Mock()
+        request.sendall.side_effect = TimeoutError("synthetic backpressure")
+        with self.server._worker_lock:
+            self.server._closing = True
+        try:
+            with patch.object(self.server, "shutdown_request") as close:
+                self.server.process_request(request, ("127.0.0.1", 0))
+                close.assert_called_once_with(request)
+            request.settimeout.assert_called_once_with(http_api.BUSY_WRITE_TIMEOUT_SECONDS)
+        finally:
+            with self.server._worker_lock:
+                self.server._closing = False
+        self.assertEqual(self.health()[0], 200)
+
+    def test_expensive_sql_is_interrupted_without_mutation_and_next_read_recovers(self):
+        before = self.store.path.read_bytes()
+        self.server.store.query_budget_seconds = .02
+        with self.assertRaisesRegex(sqlite3.OperationalError, "interrupted"):
+            with self.server.store.connection() as db:
+                db.execute("WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n "
+                           "WHERE x<1000000000) SELECT sum(x) FROM n").fetchone()
+        self.assertEqual(self.health()[0], 200)
+        self.assertEqual(self.store.path.read_bytes(), before)
+
+    def test_sql_interruption_is_sanitized_at_http_boundary(self):
+        with patch.object(self.server.store, "health", side_effect=sqlite3.OperationalError("interrupted private SQL")):
+            status, data = self.health()
+        self.assertEqual((status, data["error"]), (503, "STATE_UNAVAILABLE"))
+        self.assertNotIn("private", json.dumps(data))
+        self.assertEqual(self.health()[0], 200)
 
     def test_shutdown_interrupts_idle_reads_and_joins_workers(self):
         idle = self.idle()

@@ -1,3 +1,11 @@
+# Suite active — C-MSG-G057, 07/10/2026
+
+G042–G044 restent attribués en premier. Après eux, trois contre-revues nouvelles
+sur d9265fa : [G045](C-TASK-G045.md), [G046](C-TASK-G046.md), [G047](C-TASK-G047.md).
+C-010a–i terminés ; Codex prend C-011 HTML. Aucun statut « en cours Claude » présumé.
+
+---
+
 # File active — 07/10/2026, C-MSG-G056
 
 Demande toytoy : 3 tâches Claude sur la tranche de 12.

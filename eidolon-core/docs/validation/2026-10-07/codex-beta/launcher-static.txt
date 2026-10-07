@@ -1,0 +1,15 @@
+✔ UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly (1.072719ms)
+✔ the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination (0.258232ms)
+✔ host key verification and system settings are never weakened (0.335947ms)
+✔ preview by default; connection only with -Connect; stop limited to its own recorded ssh process (0.389757ms)
+✔ no secret is read or printed; inputs are validated before reaching ssh or the remote shell (0.200067ms)
+✔ the optional remote diagnostic is C-009c --check, which starts nothing (0.175119ms)
+✔ remote relative paths keep their home anchor after cd; absolute paths remain literal (0.108501ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.683953

@@ -117,7 +117,8 @@ if ($User -notmatch '^[A-Za-z_][A-Za-z0-9_.-]{0,31}$') { Stop-WithError "Nom d'u
 $remoteArgs = @(@($RemoteCore, $RemoteState, $RemoteTokenFile) | Where-Object { $_ })   # always an array (StrictMode)
 if ($remoteArgs.Count -ne 0 -and $remoteArgs.Count -ne 3) { Stop-WithError 'Diagnostic distant : donner -RemoteCore, -RemoteState et -RemoteTokenFile ensemble.' }
 foreach ($path in $remoteArgs) {
-    if ($path -notmatch '^[A-Za-z0-9_./~-]{1,255}$' -or $path.StartsWith('-')) { Stop-WithError "Chemin distant refusé : $path" }
+    if ($path -notmatch '^[A-Za-z0-9_./~-]{1,255}$' -or $path.StartsWith('-') -or
+        ($path.StartsWith('~') -and $path -ne '~' -and -not $path.StartsWith('~/'))) { Stop-WithError "Chemin distant refusé : $path" }
 }
 
 $ssh = Get-Command 'ssh.exe' -ErrorAction SilentlyContinue
@@ -140,7 +141,14 @@ $tunnelArgs = @('-N', '-L', $forward, '-o', 'ExitOnForwardFailure=yes', '-o', 'S
                 '-o', 'ServerAliveCountMax=3', '--', "$User@$Server")
 $checkCommand = $null
 if ($remoteArgs.Count -eq 3) {
-    $q = { param($p) "'" + ($p -replace '^~/', '') + "'" }   # relative to the remote home directory
+    # Expand relative paths against the remote home even AFTER cd to RemoteCore.
+    # Inputs already exclude quotes, dollars and shell metacharacters.
+    $q = {
+        param($p)
+        if ($p.StartsWith('/')) { return "'" + $p + "'" }
+        if ($p -eq '~') { return '"$HOME"' }
+        return '"$HOME/' + ($p -replace '^~/', '') + '"'
+    }
     $checkCommand = "cd $(& $q $RemoteCore) && PYTHONPATH=src python3 -m eidolon_core.http_api --state $(& $q $RemoteState) " +
                     "--token-file $(& $q $RemoteTokenFile) --web-root desktop/connected --port $Port --check --format human"
 }

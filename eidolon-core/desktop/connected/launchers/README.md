@@ -61,3 +61,11 @@ démarre pas.
   [preuves](../../../docs/validation/2026-10-06/claude-g040/README.md).
 - **Non exécuté** : Windows, Windows PowerShell 5.1, vrai `ssh.exe`, vraie
   connexion, invite d'empreinte ou de mot de passe, navigateur Windows.
+
+## Correctif Codex C-010e — 07/10/2026
+
+Les chemins relatifs et `~/...` du diagnostic sont ancrés dans le dossier
+personnel distant, y compris après le `cd` vers RemoteCore. Les chemins
+absolus sont conservés ; `~autre-utilisateur` est refusé. Auparavant retirer
+`~/` faisait chercher état/jeton dans le dossier Core. Contrôles statiques ici ;
+PowerShell/Windows et SSH réels restent à exécuter.
