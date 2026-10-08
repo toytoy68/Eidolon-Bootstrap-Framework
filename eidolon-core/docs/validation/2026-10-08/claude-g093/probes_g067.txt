@@ -1,0 +1,47 @@
+Sources examinées : eidolon-core/src
+== A. tables vides ou altérées (API en processus, copie fraîche par cas)
+A0 Store sans mission : liste OK (0 missions, has_more=False) ; aucun fichier créé ni modifié
+A événements d'une mission supprimés : liste SyncError HISTORY_MISSING ; capture SyncError HISTORY_MISSING ; aucun fichier créé ni modifié
+A corps JSON invalide (1 mission sur 4) : liste SyncError INVALID_MISSION_JSON ; capture SyncError INVALID_MISSION_JSON ; aucun fichier créé ni modifié
+A clé dupliquée dans le corps : liste SyncError INVALID_MISSION_JSON ; capture SyncError INVALID_MISSION_JSON ; aucun fichier créé ni modifié
+A identité du corps différente de la ligne : liste SyncError INVALID_MISSION_IDENTITY ; capture SyncError INVALID_MISSION_IDENTITY ; aucun fichier créé ni modifié
+A révision 1.5 : liste SyncError UNSUPPORTED_INTEGER_RANGE ; capture SyncError UNSUPPORTED_INTEGER_RANGE ; aucun fichier créé ni modifié
+A révision '3' (texte, colonne INTEGER) : liste OK (4 missions, has_more=False) ; capture OK (SNAPSHOT) ; aucun fichier créé ni modifié
+A révision 2^53 : liste SyncError UNSUPPORTED_INTEGER_RANGE ; capture SyncError UNSUPPORTED_INTEGER_RANGE ; aucun fichier créé ni modifié
+A cancel_requested=2 : liste SyncError INVALID_CANCEL_FLAG ; capture SyncError INVALID_CANCEL_FLAG ; aucun fichier créé ni modifié
+A statut de 41 caractères : liste SyncError INVALID_MISSION_PROJECTION ; capture SyncError INVALID_MISSION_PROJECTION ; aucun fichier créé ni modifié
+A imbrication 100000 dans le corps : liste SyncError INVALID_MISSION_JSON ; capture SyncError INVALID_MISSION_JSON ; aucun fichier créé ni modifié
+A corps en BLOB UTF-16 : liste SyncError INVALID_MISSION_STORAGE_TYPE ; capture SyncError INVALID_MISSION_STORAGE_TYPE ; aucun fichier créé ni modifié
+A détail du dernier événement en BLOB : liste SyncError INVALID_EVENT_STORAGE_TYPE ; capture OK (SNAPSHOT) ; aucun fichier créé ni modifié
+A date du dernier événement vide : liste SyncError INVALID_EVENT_REFERENCE ; capture OK (SNAPSHOT) ; aucun fichier créé ni modifié
+A store_id retiré : liste ContractError INVALID_STORE_ID ; capture ContractError INVALID_STORE_ID ; aucun fichier créé ni modifié
+A user_version=2 : liste ContractError UNSUPPORTED_READ_SCHEMA ; capture ContractError UNSUPPORTED_READ_SCHEMA ; aucun fichier créé ni modifié
+A table command_receipts supprimée : liste ContractError UNSUPPORTED_READ_SCHEMA ; capture ContractError UNSUPPORTED_READ_SCHEMA ; aucun fichier créé ni modifié
+A mode revue (recovery_mode) : liste ContractError RECOVERY_REVIEW_ONLY ; capture ContractError RECOVERY_REVIEW_ONLY ; aucun fichier créé ni modifié
+== B. volumes (sous-processus ; temps mural et pic mémoire du processus)
+B0 référence 4 missions : liste {'result': 'OK 1573 octets JSON', 'seconds': 0.001, 'max_rss_mib': 27.3}
+B corps d'une mission 1 Mio (base 1 Mio) : liste {'result': 'OK 1573 octets JSON', 'seconds': 0.009, 'max_rss_mib': 32.6} ; capture {'result': 'OK 860 octets JSON', 'seconds': 0.006, 'max_rss_mib': 32.6}
+B corps d'une mission 16 Mio (base 16 Mio) : liste {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.059, 'max_rss_mib': 123.5} ; capture {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.046, 'max_rss_mib': 123.5}
+B corps d'une mission 64 Mio (base 64 Mio) : liste {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.139, 'max_rss_mib': 411.6} ; capture {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.12, 'max_rss_mib': 411.6}
+B corps d'une mission 256 Mio (base 256 Mio) : liste {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.365, 'max_rss_mib': 1563.5} ; capture {'result': 'SyncError MISSION_SIZE_LIMIT', 'seconds': 0.361, 'max_rss_mib': 1563.5}
+B 100 missions de 2 Mio dans une page : liste {'result': 'OK 29129 octets JSON', 'seconds': 0.869, 'max_rss_mib': 1563.5}
+B 100000 événements sur une mission : liste {'result': 'OK 1585 octets JSON', 'seconds': 0.006, 'max_rss_mib': 1563.5} ; capture {'result': 'OK 878 octets JSON', 'seconds': 0.01, 'max_rss_mib': 1563.5} ; rattrapage depuis la séquence 1 {'result': 'OK 912 octets JSON', 'seconds': 0.022, 'max_rss_mib': 1563.5}
+B 1000000 événements sur une mission : liste {'result': 'OK 1588 octets JSON', 'seconds': 0.028, 'max_rss_mib': 1563.5} ; capture {'result': 'OK 882 octets JSON', 'seconds': 0.094, 'max_rss_mib': 1563.5} ; rattrapage depuis la séquence 1 {'result': 'OK 916 octets JSON', 'seconds': 0.165, 'max_rss_mib': 1563.5}
+== C. budget SQL coopératif et verrous (distinguer délai SQL et blocage stockage)
+C budget 2.0 s, 300 000 événements : liste OK (4 missions, has_more=False) en 0.008 s
+C budget 0.005 s, 300 000 événements : liste OK (4 missions, has_more=False) en 0.008 s
+C budget 0.0 s, 300 000 événements : liste OK (4 missions, has_more=False) en 0.010 s
+C DELETE au repos : liste OK (4 missions, has_more=False) ; fichiers avant ['m-42926e5be4ab40898297e6caaba77911-8c34e3f92ba4f991f5800c36b54be2bec8592da5972af60e5c306a3324a48b76.worker.lock', 'm-42926e5be4ab40898297e6caaba77911-8c34e3f92ba4f991f5800c36b54be2bec8592da5972af60e5c306a3324a48b76.worker.receipt.json', 'm-42926e5be4ab40898297e6caaba77911.lock', 'missions.sqlite3'] ; aucun fichier créé ni modifié
+C DELETE, écrivain en transaction exclusive non validée : liste OperationalError database is locked en 2.01 s
+C WAL au repos : liste ContractError READ_ONLY_WAL_UNSUPPORTED ; fichiers avant ['m-42926e5be4ab40898297e6caaba77911-8c34e3f92ba4f991f5800c36b54be2bec8592da5972af60e5c306a3324a48b76.worker.lock', 'm-42926e5be4ab40898297e6caaba77911-8c34e3f92ba4f991f5800c36b54be2bec8592da5972af60e5c306a3324a48b76.worker.receipt.json', 'm-42926e5be4ab40898297e6caaba77911.lock', 'missions.sqlite3'] ; aucun fichier créé ni modifié
+C WAL, écrivain en transaction exclusive non validée : liste ContractError READ_ONLY_WAL_UNSUPPORTED en 0.00 s
+== D. auteur concurrent entre deux pages
+D création normale par Runtime entre les pages : RESET_REQUIRED STATE_CHANGED
+D corps réécrit en SQL sans événement entre les pages : PAGE (statut lu ['SUCCEEDED', 'FAILED']) — hors garantie documentée
+D 3 s de lectures pendant des créations continues : 27 pages cohérentes ; refus aucun
+== E. réponses HTTP réelles (aucune page partielle)
+E intact : HTTP 200 en 0.00 s ; 1452 octets ; 4 missions
+E corps invalide : HTTP 503 en 0.00 s ; 91 octets ; STATE_UNAVAILABLE
+E détail BLOB du dernier événement : HTTP 503 en 0.00 s ; 91 octets ; STATE_UNAVAILABLE
+E Store verrouillé par un écrivain : HTTP 503 en 2.01 s ; 91 octets ; STATE_UNAVAILABLE
+pic mémoire du processus principal : 1563 Mio

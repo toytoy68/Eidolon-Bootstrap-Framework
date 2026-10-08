@@ -1,0 +1,119 @@
+Sources examinées : eidolon-core/src
+== R. lecteur d'archives (CLI inspect)
+R1 nominal v2 : code 0 ; archives=3 recherches=7 missions liées=[0, 0, 1] ; drapeaux {'consistency_verified': True, 'authenticity_verified': False, 'live_journal_checked': False, 'committed_status_known': False, 'authorizes_execution': False, 'request_sent': False}
+R1   released_operations des exports : [True, True, True]
+R1   catalogue JSON sans texte privé : True 
+R1   format humain : code 0 ; ['[INFO] 3 archives ; 7 recherches.', '[ATTENTION] Cohérence seulement ; commit du journal et authenticité non vérifiés.']
+R2 export v1 (sans released_operations) : code 0 ; ACCEPTÉ (2 recherches) ✓ ; aucune sortie partielle, aucune mutation
+-- JSON ambigu ou hors type
+R3 clé dupliquée (protocol) : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 NaN : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 entier 2^53 : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 chain_index 1.0 : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 chain_index true : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 entier de 5000 chiffres : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 BOM UTF-8 : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 octet non UTF-8 : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 imbrication 100000 : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 champ inconnu : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R3 authorizes_execution true : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+-- texte ou événements altérés, chaînes incomplètes
+R4 surrogate isolé dans body : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 clé dupliquée dans body : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 texte nettoyé modifié : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 texte nettoyé retiré (null) : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 événement final ≠ corps : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 un seul événement : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 séquences inversées : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 recherche INTENT seule : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 removed_ids_sha256 faux : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 released_operations vide : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 released_operations en trop : code 2 ; INVALID_RESEARCH_ARCHIVE ✓ ; aucune sortie partielle, aucune mutation
+R4 export du milieu retiré : code 2 ; ARCHIVE_CHAIN_BROKEN ✓ ; aucune sortie partielle, aucune mutation
+R4 premier export retiré : code 2 ; ARCHIVE_CHAIN_BROKEN ✓ ; aucune sortie partielle, aucune mutation
+R4 dernier export retiré (troncature) : code 0 ; ACCEPTÉ (4 recherches) ✓ ; aucune sortie partielle, aucune mutation
+R4 export renommé 000002→000004 : code 2 ; ARCHIVE_CHAIN_BROKEN ✓ ; aucune sortie partielle, aucune mutation
+R4 export d'une autre garde chaîné en 4 : code 2 ; ARCHIVE_CHAIN_BROKEN ✓ ; aucune sortie partielle, aucune mutation
+R4 même recherche dans deux exports (rechaîné) : code 2 ; ARCHIVED_RUN_REPEATED ✓ ; aucune sortie partielle, aucune mutation
+-- cohérence n'est pas authenticité
+R5 réécriture cohérente du milieu (horodatage + rechaînage) : code 0 ; ACCEPTÉ (7 recherches) ✓ ; aucune sortie partielle, aucune mutation
+R5 recherche supprimée puis rechaînage cohérent : code 0 ; ACCEPTÉ (6 recherches) ✓ ; aucune sortie partielle, aucune mutation
+-- fichiers spéciaux, droits, noms
+R6 export lien symbolique : code 2 ; ARCHIVE_STORAGE_UNAVAILABLE ✓ ; aucune sortie partielle, aucune mutation
+R6 dossier lien symbolique : code 2 ; ARCHIVE_STORAGE_UNAVAILABLE ✓ ; aucune sortie partielle, aucune mutation
+R6 FIFO research-archive-000004.json : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+R6 sous-dossier research-archive-000004.json : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+R6 export 0644 : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+R6 dossier 0755 : code 2 ; ARCHIVE_DIRECTORY_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+R6 .partial présent : code 2 ; PARTIAL_EXPORT_PRESENT ✓ ; aucune sortie partielle, aucune mutation
+R6 nom research-archive-1.json : code 2 ; INVALID_ARCHIVE_FILENAME ✓ ; aucune sortie partielle, aucune mutation
+R6 fichiers étrangers (notes.txt, .liste-x.tmp) : code 0 ; ACCEPTÉ (7 recherches) ✓ ; aucune sortie partielle, aucune mutation
+R6 dossier absent : code 2 ; ARCHIVE_STORAGE_UNAVAILABLE ; créé ensuite : False
+-- bornes de volume
+R7 2049 entrées : code 2 ; ARCHIVE_COUNT_LIMIT ✓ ; aucune sortie partielle, aucune mutation
+R7 export de 16 Mio + 1 (creux) : code 2 ; ARCHIVE_SIZE_LIMIT ✓ ; aucune sortie partielle, aucune mutation
+R7 MAX_TOTAL_BYTES = deux premiers exports + 1 (en processus) : REFUS ARCHIVE_SIZE_LIMIT
+R7 MAX_ARCHIVES = 2 (en processus) : REFUS ARCHIVE_COUNT_LIMIT
+R7 main(--directory contenant NUL) : code 2 INVALID_ARCHIVE_ARGUMENT
+-- courses pendant la lecture (en processus)
+R8 export 1 remplacé à l'identique (nouvel inode) après sa lecture : REFUS ARCHIVE_CHANGED_DURING_READ
+R8 export 4 ajouté pendant la lecture : REFUS ARCHIVE_CHANGED_DURING_READ
+R8 horodatage de l'export 1 touché pendant la lecture : REFUS ARCHIVE_CHANGED_DURING_READ
+R8 export 1 allongé pendant sa propre lecture : REFUS ARCHIVE_CHANGED_DURING_READ
+R  dossier de base inchangé par toutes les lectures : True
+== L. liste.md (CLI index)
+L1 création : code 0 ; mode 0o600 ; propriétaire courant True ; index_changed True ; en-tête True
+L1   liens ['research-archive-000001.json', 'research-archive-000002.json', 'research-archive-000003.json'] ; données privées/identifiants : aucun ; exports inchangés True ; fichiers ['.archive-index.lock', 'liste.md', 'research-archive-000001.json', 'research-archive-000002.json', 'research-archive-000003.json']
+L2 deuxième index : code 0 ; index_changed False ; dossier identique (inode/mtime compris) True
+L2   format humain : code 0 ; [INFO] liste.md généré ; aucun journal ni export modifié.
+L3 liste.md manuscrit : code 2 ; ARCHIVE_INDEX_NOT_GENERATED ✓ ; aucune sortie partielle, aucune mutation
+L3 liste.md manuscrit commençant par le marqueur : code 0 ; ACCEPTÉ (7 recherches) ✓ ; MUTATION
+L3   → contenu manuel remplacé : True (documenté : le marqueur n'authentifie pas)
+L3 liste.md 0644 : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+L3 liste.md lien symbolique vers un fichier généré externe : code 2 ; ARCHIVE_STORAGE_UNAVAILABLE ✓ ; aucune sortie partielle, aucune mutation
+L3   → cible externe intacte : True
+L3 liste.md FIFO : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+L3 liste.md lié en dur ailleurs puis catalogue changé : code 0 ; second lien inchangé True ; liste.md mis à jour True
+L4 verrou 0644 : code 2 ; ARCHIVE_FILE_NOT_PRIVATE ✓ ; aucune sortie partielle, aucune mutation
+L4 verrou lien symbolique : code 2 ; ARCHIVE_STORAGE_UNAVAILABLE ✓ ; aucune sortie partielle, aucune mutation
+L4   → cible du lien non créée : True
+L4 verrou détenu par un autre processus : code 2 ; ARCHIVE_INDEX_BUSY ✓ ; aucune sortie partielle, aucune mutation
+L4   inspect pendant ce temps n'utilise pas le verrou : code 0 ; ACCEPTÉ (4 recherches) ✓ ; aucune sortie partielle, aucune mutation
+L5 8 index simultanés sur un dossier neuf : ['ARCHIVE_INDEX_BUSY', 'OK', 'OK', 'OK', 'OK', 'OK', 'OK', 'OK'] ; fichiers ['.archive-index.lock', 'liste.md'] ; liste.md complet True
+-- pannes de publication (sous-processus, os._exit)
+L6 liste.md absent, arrêt before_publish : code 9 ; liste.md absent ; temporaires [('.liste-…', '0o600')] ; index suivant 0  ; inspect 0 ; temporaire encore là True
+L6 liste.md présent, arrêt before_publish : code 9 ; liste.md ancien ; temporaires [('.liste-…', '0o600')] ; index suivant 0  ; inspect 0 ; temporaire encore là True
+L6 liste.md absent, arrêt after_publish : code 9 ; liste.md nouveau ; temporaires [] ; index suivant 0  ; inspect 0 ; temporaire encore là False
+L6 liste.md présent, arrêt after_publish : code 9 ; liste.md nouveau ; temporaires [] ; index suivant 0  ; inspect 0 ; temporaire encore là False
+-- fenêtre entre contrôle et remplacement (en processus)
+L7 manuscrit écrit entre la vérification de signature et os.replace : écrit ; manuscrit écrasé True
+L8 export altéré après génération : index 2 INVALID_RESEARCH_ARCHIVE ; liste.md ancien conservé True ; il affiche toujours « Catalogue privé généré. Cohérence vérifiée à la génération, authenticité non établie. »
+== I. initialisation liée au Store (C-029)
+I0 base du Store : missions.sqlite3
+I1 coupure du runtime et du worker après INTENT (fournisseur) : code -9 ; garde ['INTENT']
+I2 dossier research-fixture entier absent : ContractError RESEARCH_PAUSES_MISSING ; rien créé True ; restauré → construit (garde identique) ; garde ['INTENT']
+I2 garde seule absent : GuardError RESEARCH_GUARD_NOT_FOUND ; rien créé True ; restauré → construit (garde identique) ; garde ['INTENT']
+I2 verrou de garde absent : GuardError RESEARCH_GUARD_UNAVAILABLE ; rien créé True ; restauré → construit (garde identique) ; garde ['INTENT']
+I2 pauses absent : ContractError RESEARCH_PAUSES_MISSING ; rien créé True ; restauré → construit (garde identique) ; garde ['INTENT']
+I3 reprise après restauration : REVIEW_REQUIRED / UNKNOWN_EFFECT ; garde ['INTENT'] (aucune relance attendue)
+I4 même coupure (code -9) ; garde ['INTENT']
+I4 garde seule restaurée AVANT l'INTENT (même identité) : construction construit (garde identique) ; garde []
+I4   reprise : REVIEW_REQUIRED / UNKNOWN_EFFECT ; garde ensuite [] (aucune relance)
+I4 restauration conjointe Store+garde+pauses d'avant la mission : construction acceptée ; mission présente False ; garde [] (hors garantie, documenté)
+-- pauses : identité non liée
+I5 scénario bloqué : BLOCKED / RETRIEVAL_TARGET_NOT_MET ; pauses actives ['ACCESS_DENIED']
+I5 pauses remplacées par une base vide valide : ContractError RESEARCH_PAUSES_CHANGED ; pauses actives ensuite []
+-- initialisations coupées (sous-processus, os._exit)
+I6 arrêt guard_dir_only : code 9 ; fichiers ['research-fixture/guard'] ; liaison non liée ; réouverture ContractError RESEARCH_PAUSES_MISSING ; dossier inchangé True ; liaison ensuite non liée
+I6 arrêt before_pauses : code 9 ; fichiers ['research-fixture/guard', 'research-fixture/guard/research-runs.lock', 'research-fixture/guard/research-runs.sqlite3'] ; liaison non liée ; réouverture ContractError RESEARCH_PAUSES_MISSING ; dossier inchangé True ; liaison ensuite non liée
+I6 arrêt before_binding_commit : code 9 ; fichiers ['research-fixture/guard', 'research-fixture/guard/research-runs.lock', 'research-fixture/guard/research-runs.sqlite3', 'research-fixture/pauses.sqlite3'] ; liaison non liée ; réouverture ContractError RESEARCH_PAUSES_MIGRATION_REQUIRED ; dossier inchangé True ; liaison ensuite non liée
+I7 6 processus initialisent le même Store neuf : identités distinctes 1 ; erreurs [] ; journaux de garde 1
+-- missions C-021 (adoption sans réécriture)
+I8 3 missions, liaison retirée : construit (garde identique) ; missions identiques True ; liaison liée
+I8 identités contradictoires entre missions : ContractError RESEARCH_BACKEND_CHANGED ; liaison non liée ; missions identiques True
+-- Store occupé et délai du balayage historique
+I9 Store verrouillé par un autre écrivain : OperationalError database is locked après 5.0 s
+I9 20001 missions historiques, délai de 2 s du balayage dépassé (horloge simulée) : ContractError RESEARCH_BINDING_SCAN_TIMEOUT ; liaison non liée
+-- lecture CLI research-sim pendant qu'un autre écrivain tient le Store
+I10 C-029 : show --profile text → 2 STORAGE_UNAVAILABLE (5.2 s) ; show --profile research-sim → 2 STORAGE_UNAVAILABLE (5.2 s)
+I10 base e0365f2 : show --profile text → 2 STORAGE_UNAVAILABLE (5.2 s) ; show --profile research-sim → 2 STORAGE_UNAVAILABLE (5.2 s)

@@ -1,0 +1,7 @@
+arrêt before_binding_commit : code 9
+1 réouverture sans migration : ContractError RESEARCH_PAUSES_MIGRATION_REQUIRED
+2 migration sans motif : ContractError INVALID_PAUSE_REVIEW
+3 migration explicite : {'protocol': 'eidolon-research-pause-binding/1', 'status': 'BOUND', 'authorizes_execution': False, 'request_sent': False, 'pauses_released': False}
+4 réouverture après migration : construite
+5 seconde migration : {'protocol': 'eidolon-research-pause-binding/1', 'status': 'BOUND', 'database_id': 'pd-…', 'guard_id': 'g-…', 'authorizes_execution': False, 'request_sent': False, 'pauses_released': False}
+6 mission synthétique après migration : SUCCEEDED
