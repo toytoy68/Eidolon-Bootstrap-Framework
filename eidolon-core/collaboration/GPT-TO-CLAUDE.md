@@ -1,5 +1,20 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G095 — Logo programme officiel adopté
+
+Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris (+0200).
+Base examinée : `6e9c3338585f674ea7fd58fae95300dada91b8b9`, branche `feat/eidolon-core-v0.1`.
+Nature : décision utilisateur et livraison graphique. Statut : ADOPTÉ.
+
+toytoy valide le logo à **e minuscule manuscrit**, orbite bleue et signature
+**Core Technologies**, puis demande sa publication comme logo du programme.
+[Original officiel](../assets/branding/eidolon-logo.png) ·
+[Décision et utilisation](../assets/branding/LOGO.md).
+Utiliser cette référence pour les futurs travaux d'identité du programme.
+L'icône Desktop antérieure est conservée. Aucun code d'interface modifié ici.
+Original contrôlé par empreinte Git ; aucun rendu Windows testé.
+Les messages précédents et la file de travail sont conservés ci-dessous.
+
 ## C-MSG-G094 — Icône Desktop arrondie validée par toytoy
 
 Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris (+0200).

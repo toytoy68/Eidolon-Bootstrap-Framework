@@ -1,3 +1,13 @@
+# Identité graphique Eidolon
+
+## Logo officiel du programme — ADOPTÉ
+
+![Logo officiel](eidolon-logo.png)
+
+Le **e minuscule manuscrit**, l'orbite bleue et la signature **Core Technologies**
+constituent le logo programme validé par toytoy le 08/10/2026.
+[Décision et fichier canonique](LOGO.md).
+
 # Icône de référence Eidolon Desktop
 
 Référence validée par toytoy le 08/10/2026 : version arrondie du E,

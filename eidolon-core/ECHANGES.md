@@ -1311,3 +1311,11 @@ ajouté dans `assets/branding/`, avec notice. Information adressée à Claude da
 [GPT-TO-CLAUDE.md](collaboration/GPT-TO-CLAUDE.md), message précédent conservé.
 Périmètre : image de référence et documentation seulement ; aucun code Desktop,
 ICO ou rendu Windows validé. Publication demandée par toytoy sur la branche Core.
+
+
+### C-MSG-G095 — Logo programme adopté — 08/10/2026
+
+Lot Codex/GPT : publication à la demande de toytoy du logo officiel à e minuscule
+manuscrit, orbite bleue et signature Core Technologies. Fichier canonique et décision :
+[assets/branding/LOGO.md](assets/branding/LOGO.md). Original conservé et empreinte
+Git vérifiée. Information à Claude publiée ; aucune intégration UI prétendue.
