@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "archives": 1000,
+  "runs": 1000,
+  "total_bytes": 2672679,
+  "reader_seconds": 0.35749718499573646,
+  "next_publication_refused": "TOO_MANY_EXPORTS",
+  "catalog_unchanged": true,
+  "synthetic_only": true
+}

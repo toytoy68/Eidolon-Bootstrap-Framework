@@ -1,5 +1,9 @@
 # Eidolon Core v0.1
 
+![Logo officiel Eidolon Core Technologies](assets/branding/eidolon-logo.png)
+
+[Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
+
 [État fonctionnel et avancement du 08/10](docs/PROJECT-STATUS-2026-10-08.md).
 [Preuves de la séance de 11 h 11](docs/validation/2026-10-08/codex-hour-1111/README.md).
 [Ajouts et preuves du 08/10](docs/validation/2026-10-08/codex-hour-0435/README.md) :

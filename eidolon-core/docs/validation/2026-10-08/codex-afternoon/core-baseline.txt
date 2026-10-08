@@ -1,0 +1,8 @@
+Base de code runtime : 0b439f02683f475e81d8ef8926d2548aa2a75396
+Commande exécutée depuis eidolon-core :
+PYTHONPATH=src python3 -m unittest discover -s tests -q
+Résultat capturé :
+Ran 971 tests in 384.018s
+OK (skipped=6)
+Soit 965 réussis, 6 intégrations mémoire opt-in ignorées.
+Aucun fichier src ni tests runtime modifié dans C-046.

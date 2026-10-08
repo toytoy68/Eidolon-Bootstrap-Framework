@@ -10,6 +10,7 @@
 Synthetic journals built by the UNCHANGED ResearchGuard (schema 2, cleaned_queries,
 operation_id). Crashes are os._exit in subprocesses (probes_g057.rotate_sub)."""
 import json
+from contextlib import closing
 import os
 from pathlib import Path
 import shutil
@@ -161,7 +162,8 @@ class WalSnapshot(Base):
         g057.coordinator(guard).run("recherche ecrite dans le wal")
         raw_copy = self.tmp / "raw.sqlite3"
         shutil.copy2(g / "research-runs.sqlite3", raw_copy)      # what G057 v1 did
-        copied = sqlite3.connect(raw_copy).execute("SELECT count(*) FROM runs").fetchone()[0]
+        with closing(sqlite3.connect(raw_copy)) as copy_db:
+            copied = copy_db.execute("SELECT count(*) FROM runs").fetchone()[0]
         snap = rotation._Snapshot(g, SRC)
         reader.close()
         self.assertEqual(copied, 7, "the raw file copy misses the WAL row")
@@ -186,8 +188,9 @@ class Automatic(Base):
         g, a = self.build_many(104, ops)                  # 107 active, the 3 oldest belong to missions
         report = rotation.auto_rotate(g, a, target=100, terminal_operations=(ops[0],), guard_src=SRC, clock_ms=1)
         self.assertEqual((report["archived"], report["active"], report["above_target"]), (7, 100, 0))
-        remaining = {json.loads(b)["descriptor"].get("operation_id")
-                     for (b,) in sqlite3.connect(g / "research-runs.sqlite3").execute("SELECT body FROM runs")}
+        with closing(sqlite3.connect(g / "research-runs.sqlite3")) as read_db:
+            remaining = {json.loads(b)["descriptor"].get("operation_id")
+                         for (b,) in read_db.execute("SELECT body FROM runs")}
         self.assertNotIn(ops[0], remaining)               # terminal mission: archived
         self.assertTrue({ops[1], ops[2]} <= remaining)    # non-terminal missions: kept
         again = rotation.auto_rotate(g, a, target=100, guard_src=SRC, clock_ms=2)

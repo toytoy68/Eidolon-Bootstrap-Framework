@@ -741,3 +741,17 @@ tests sont distincts de cette revue. [Migration et limites](docs/PAUSE-BINDING.m
   à coordonner avec les états client ; refus STATE_UNAVAILABLE conservé ici.
 - [ ] G068 : aligner les limites producteur/lecteur avant intégration de la
   rotation ; pas d'activation automatique par la réception du prototype.
+
+
+## C-046 — bornes du prototype de rotation (08/10/2026 après-midi)
+
+- [x] Producteur relu par le lecteur Core ; bornes de taille/nombre/volume
+  appliquées avant publication et retrait. Horodatage JS strict.
+- [x] Budget coopératif de copie SQLite, fermeture sur refus, identité/schema
+  revérifiés dans la transaction finale.
+- [x] Corpus synthétique : quotas, export orphelin, mutations après publication,
+  quatre frontières de coupure, WAL et restauration réversible.
+- [ ] Contre-revue indépendante G080 ; intégration schéma 3 et déclenchement réel.
+
+Logo programme officiel publié, décision dans assets/branding/LOGO.md.
+G078–G083 attribués à Claude après G072–G077 ; aucune session présumée lancée.

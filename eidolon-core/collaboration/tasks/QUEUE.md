@@ -1,3 +1,22 @@
+# File active — C-MSG-G096, 08/10/2026 après-midi
+
+G072–G077 restent attribués, aucune livraison nouvelle observée. Finir les lots
+engagés, puis enchaîner les six nouvelles tâches ci-dessous.
+
+| Ordre | Tâche | État |
+| --- | --- | --- |
+| 1 | [G078](C-TASK-G078.md) — Logo officiel dans le client connecté | PRÊT |
+| 2 | [G079](C-TASK-G079.md) — Icône Windows multirésolution | PRÊT |
+| 3 | [G080](C-TASK-G080.md) — Contre-revue des bornes de rotation C-046 | PRÊT |
+| 4 | [G081](C-TASK-G081.md) — Recette stockage occupé versus indisponible | PRÊT |
+| 5 | [G082](C-TASK-G082.md) — Plan de bêta serveur et PC actualisé | PRÊT |
+| 6 | [G083](C-TASK-G083.md) — Recette du logo et des assets du paquet | PRÊT |
+
+Codex réserve C-046 : bornes producteur/lecteur du prototype de rotation et
+son banc, sans activation. G080 attend sa publication pour la contre-revue.
+
+---
+
 # File active — C-MSG-G093, 08/10/2026, fin de séance de 11 h 11
 
 G066–G071 reçus et intégrés jusqu'à e525610. Dernier message Claude : C092,

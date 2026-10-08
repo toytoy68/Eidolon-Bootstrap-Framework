@@ -285,3 +285,28 @@ est libéré avec cet écrivain, sans le GC. Ce n'est pas une fuite.
 
 Le banc de compatibilité producteur/lecteur est dans
 [2026-10-07-retention-integration](../2026-10-07-retention-integration/README.md).
+
+
+## Complément Codex C-046 — 08/10/2026 après-midi
+
+Le prototype v5 reste **isolé et non activé**.
+Les observations et sorties historiques ci-dessus décrivent leurs bases d'origine.
+[Preuves et limites C-046](../../validation/2026-10-08/codex-afternoon/README.md).
+
+- Le lecteur Core est importé pour vérifier chaque export et le catalogue.
+- Bornes lecteur en vigueur : 16 Mio/export, 1 000 exports, 64 Mio cumulés,
+  2 048 entrées du dossier ; marge de deux entrées pour la publication temporaire.
+- Horodatage strict : entier entre 0 et 2^53−1, booléens exclus.
+- Refus avant nouvel export/retrait si l'ajout dépasserait une borne.
+  Un export orphelin refusé est conservé pour revue ; aucun commit implicite.
+- Copie SQLite par pas de 64 pages, avec budget coopératif de 5 s sur l'attente
+  et la copie ; un appel système bloqué n'est pas interrompu de force.
+- Identité et version du journal revérifiées dans la transaction finale.
+- Les exports historiques dépassant ces bornes doivent être examinés ; aucune
+  suppression, découpe, migration ou hausse automatique de plafond n'est livrée.
+
+La suppression automatique d'un .partial reconnu redondant conserve les règles
+G063 ; les tests de quota C-046 n'autorisent aucun effacement supplémentaire.
+La croissance du catalogue, l'intégration du schéma 3 et le déclenchement réel
+restent ouverts. Le banc G068 historique des écarts reste inchangé ; sa section
+L doit être lue comme une preuve sur la version v4, pas comme un oracle du v5.
