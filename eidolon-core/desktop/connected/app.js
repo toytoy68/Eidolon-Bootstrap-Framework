@@ -602,6 +602,208 @@
   else root.EidolonMissionList = api;
 })(typeof window !== "undefined" ? window : this);
 
+/* ---- src/archives.js ---- */
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : archives.js
+ * Description : État pur du catalogue paginé des archives de recherche, contrat C-030 (C-TASK-G066)
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+
+/*
+ * Consumer of POST /v1/research-archives (docs/HTTP-RESEARCH-ARCHIVES.md). Pure functions only:
+ * the session owns the transport. Rules:
+ *   - one generation per explicit load: a later load makes every older answer stale;
+ *   - pages are appended only when store_id, catalog_sha256, chain_head and counts are those of
+ *     the first page AND the first index follows the last one shown: two catalogs never mix;
+ *   - RESET_REQUIRED, a refusal or an error keeps the shown list, marked stale, until an
+ *     explicit reload; nothing is retried automatically;
+ *   - only metadata is kept: no export, query text, path, mission or guard identifier.
+ * Coherence was checked by Core; authenticity and commit in the live journal were not.
+ */
+(function (root) {
+  "use strict";
+  var NODE = typeof module === "object" && module.exports;
+
+  var PROTOCOL = "eidolon-research-archive-page/1";
+  var LIMIT = 50;                              // default page size; the contract allows 1–100
+  var MAX_LIMIT = 100;
+  var MAX_ITEMS = 1000;                        // C-028 bound on archives: never more kept
+  var STORE_ID = /^s-[0-9a-f]{32}$/;
+  var SHA = /^[0-9a-f]{64}$/;
+  var FILE = /^research-archive-([0-9]{6})\.json$/;
+  var FLAGS = { snapshot_only: true, consistency_verified: true, authenticity_verified: false,
+    live_journal_checked: false, committed_status_known: false, authorizes_execution: false, request_sent: false };
+  var FIELDS = ["protocol", "status", "store_id", "catalog_sha256", "chain_head", "archive_count", "run_count",
+    "observed_at", "items", "has_more", "next_cursor"].concat(Object.keys(FLAGS));
+  var ITEM_FIELDS = ["file", "index", "sha256", "created_at_ms", "count", "queries_with_text",
+    "legacy_runs_without_text", "linked_missions"];
+  var CURSOR_FIELDS = ["version", "store_id", "catalog_sha256", "after_index"];
+  var RESET_REASONS = ["STORE_CHANGED", "CATALOG_CHANGED"];
+  // Archive-specific refusals: they concern this panel only, never the connection state.
+  var LOCAL_CODES = ["ARCHIVES_NOT_CONFIGURED", "ARCHIVES_BUSY", "ARCHIVES_UNAVAILABLE", "INVALID_ARCHIVE_CURSOR",
+    "INVALID_PAGE_LIMIT", "UNKNOWN_FIELD", "RESPONSE_TOO_LARGE"];
+
+  function isObject(v) { return v !== null && typeof v === "object" && !Array.isArray(v); }
+  function count(v) { return Number.isSafeInteger(v) && v >= 0; }
+  function sameKeys(o, keys) {
+    var own = Object.keys(o);
+    return own.length === keys.length && keys.every(function (k) { return Object.prototype.hasOwnProperty.call(o, k); });
+  }
+  function clone(v) { return v === undefined || v === null ? v : JSON.parse(JSON.stringify(v)); }
+
+  function create() {
+    return { generation: 0, pending: null, status: "empty", catalog: null, items: [], hasMore: false,
+      nextCursor: null, stale: false, staleReason: null, code: null, lastAt: null,
+      stats: { rejected: 0, staleAnswers: 0 } };
+  }
+
+  // Returns an error code, or null when the page may be shown. ctx: { storeId, after, catalog }.
+  function validatePage(p, ctx) {
+    if (!isObject(p) || p.protocol !== PROTOCOL) return "UNSUPPORTED_PROTOCOL";
+    var reset = p.status === "RESET_REQUIRED";
+    if (!sameKeys(p, reset ? FIELDS.concat(["reason"]) : FIELDS)) return "INVALID_ARCHIVE_PAGE";
+    if (Object.keys(FLAGS).some(function (k) { return p[k] !== FLAGS[k]; })) return "AUTHORITY_CLAIMED";
+    if (typeof p.store_id !== "string" || !STORE_ID.test(p.store_id)) return "INVALID_ARCHIVE_PAGE";
+    if (p.store_id !== ctx.storeId) return "STORE_MISMATCH";
+    if (typeof p.catalog_sha256 !== "string" || !SHA.test(p.catalog_sha256)
+        || typeof p.chain_head !== "string" || !SHA.test(p.chain_head)
+        || !count(p.archive_count) || p.archive_count > MAX_ITEMS || !count(p.run_count)
+        || typeof p.observed_at !== "string" || p.observed_at.length < 1 || p.observed_at.length > 64
+        || !Array.isArray(p.items) || typeof p.has_more !== "boolean") return "INVALID_ARCHIVE_PAGE";
+    if (reset) {
+      return RESET_REASONS.indexOf(p.reason) >= 0 && p.items.length === 0 && p.has_more === false
+        && p.next_cursor === null ? null : "INVALID_ARCHIVE_PAGE";
+    }
+    if (p.status !== "PAGE") return "UNKNOWN_STATUS";
+    if (ctx.catalog && (p.catalog_sha256 !== ctx.catalog.catalogSha || p.chain_head !== ctx.catalog.chainHead
+        || p.archive_count !== ctx.catalog.archiveCount || p.run_count !== ctx.catalog.runCount)) return "CATALOG_MISMATCH";
+    if (p.items.length > (ctx.limit || MAX_LIMIT)) return "INVALID_ARCHIVE_PAGE";
+    var expected = ctx.after + 1;
+    for (var i = 0; i < p.items.length; i++) {
+      var it = p.items[i];
+      if (!isObject(it) || !sameKeys(it, ITEM_FIELDS)) return "INVALID_ARCHIVE_PAGE";
+      var m = typeof it.file === "string" ? FILE.exec(it.file) : null;
+      if (!m || it.index !== Number(m[1]) || typeof it.sha256 !== "string" || !SHA.test(it.sha256)
+          || ITEM_FIELDS.slice(3).some(function (k) { return !count(it[k]); })
+          || it.count < 1 || it.queries_with_text + it.legacy_runs_without_text !== it.count
+          || it.linked_missions > it.count) return "INVALID_ARCHIVE_PAGE";
+      if (it.index !== expected + i) return "PAGE_GAP";
+    }
+    var end = ctx.after + p.items.length;
+    if (end > p.archive_count) return "INVALID_ARCHIVE_PAGE";
+    if (p.has_more !== (end < p.archive_count)) return "INVALID_ARCHIVE_PAGE";
+    if (!p.has_more) return p.next_cursor === null ? null : "INVALID_ARCHIVE_PAGE";
+    var c = p.next_cursor;
+    if (p.items.length === 0 || !isObject(c) || !sameKeys(c, CURSOR_FIELDS) || c.version !== 1
+        || c.store_id !== p.store_id || c.catalog_sha256 !== p.catalog_sha256 || c.after_index !== end) return "INVALID_ARCHIVE_PAGE";
+    return null;
+  }
+
+  // kind "first": explicit (re)load, new generation. kind "more": next page of the shown generation.
+  function request(st, kind, limit) {
+    var size = Number.isSafeInteger(limit) && limit >= 1 && limit <= MAX_LIMIT ? limit : LIMIT;
+    var s = clone(st);
+    if (kind === "first") {
+      s.generation += 1;
+      s.pending = { generation: s.generation, kind: "first", after: 0 };
+      s.status = "loading";
+      return { state: s, req: { generation: s.generation, kind: "first", after: 0, limit: size, body: { limit: size } } };
+    }
+    if (kind !== "more" || s.pending || s.stale || !s.catalog || !s.hasMore || !s.nextCursor
+        || s.items.length >= MAX_ITEMS) return { state: st, req: null };
+    var after = s.nextCursor.after_index;
+    s.pending = { generation: s.generation, kind: "more", after: after };
+    s.status = "loading";
+    return { state: s, req: { generation: s.generation, kind: "more", after: after, limit: size,
+      body: { limit: size, cursor: clone(s.nextCursor) } } };
+  }
+
+  function current(st, req) {
+    return req && st.pending && st.pending.generation === req.generation && st.pending.kind === req.kind
+      && st.pending.after === req.after && st.generation === req.generation;
+  }
+
+  function staleShown(s, reason, code) {
+    s.stale = s.items.length > 0 || s.catalog !== null;
+    s.staleReason = s.stale ? reason : null;
+    s.code = code;
+  }
+
+  function receive(st, req, page, storeId, receivedAt) {
+    if (!current(st, req)) { var t = clone(st); t.stats.staleAnswers += 1; return t; }
+    var s = clone(st);
+    s.pending = null;
+    var bad = validatePage(page, { storeId: storeId, after: req.after, limit: req.limit,
+      catalog: req.kind === "more" ? s.catalog : null });
+    if (bad) {
+      s.stats.rejected += 1;
+      s.status = "error";
+      staleShown(s, "REJECTED", bad);
+      return s;
+    }
+    if (page.status === "RESET_REQUIRED") {
+      // Keep the previous generation, frozen; the user reloads explicitly.
+      s.status = "reset";
+      s.hasMore = false;
+      s.nextCursor = null;
+      staleShown(s, page.reason, page.reason);
+      return s;
+    }
+    var meta = { storeId: page.store_id, catalogSha: page.catalog_sha256, chainHead: page.chain_head,
+      archiveCount: page.archive_count, runCount: page.run_count, observedAt: page.observed_at, receivedAt: receivedAt };
+    var items = page.items.map(function (it) {
+      var o = {};
+      ITEM_FIELDS.forEach(function (k) { o[k] = it[k]; });
+      return o;
+    });
+    if (req.kind === "first") { s.catalog = meta; s.items = items; }
+    else { s.items = s.items.concat(items); s.catalog.receivedAt = receivedAt; }
+    s.hasMore = page.has_more;
+    s.nextCursor = clone(page.next_cursor);
+    s.status = "loaded";
+    s.stale = false;
+    s.staleReason = null;
+    s.code = null;
+    s.lastAt = receivedAt;
+    return s;
+  }
+
+  function receiveError(st, req, code, receivedAt) {
+    if (!current(st, req)) { var t = clone(st); t.stats.staleAnswers += 1; return t; }
+    var s = clone(st);
+    s.pending = null;
+    s.status = "error";
+    s.lastAt = receivedAt;
+    staleShown(s, "ERROR", code);
+    return s;
+  }
+
+  // Connection lost or refused: what is shown stops being current; nothing is discarded.
+  function markStale(st, reason) {
+    if (st.stale || (!st.items.length && !st.catalog && !st.pending)) return st;
+    var s = clone(st);
+    s.pending = null;
+    if (s.status === "loading") s.status = "error";
+    staleShown(s, reason, s.code || reason);
+    return s;
+  }
+
+  function summary(st) {
+    var c = st.catalog;
+    return { shown: st.items.length, total: c ? c.archiveCount : null, runs: c ? c.runCount : null,
+      complete: Boolean(c) && !st.hasMore && st.items.length === c.archiveCount,
+      current: Boolean(c) && !st.stale && st.status === "loaded" };
+  }
+
+  var api = { PROTOCOL: PROTOCOL, LIMIT: LIMIT, MAX_LIMIT: MAX_LIMIT, MAX_ITEMS: MAX_ITEMS, LOCAL_CODES: LOCAL_CODES, FLAGS: FLAGS,
+    create: create, validatePage: validatePage, request: request, receive: receive, receiveError: receiveError,
+    markStale: markStale, summary: summary };
+  if (NODE) module.exports = api;
+  else root.EidolonArchives = api;
+})(typeof window !== "undefined" ? window : this);
+
 /* ---- src/session.js ---- */
 /* ==========================================================
  * Projet      : Eidolon Core
@@ -624,12 +826,16 @@
  * There is no command here: no approve, run or cancel; authorizes_execution stays false.
  * G036: a historical command receipt (docs/HTTP-RECEIPTS.md) can be looked up for the
  * selected mission. It is kept apart from the snapshot and never changes it.
+ * G066: the research archive catalog (docs/HTTP-RESEARCH-ARCHIVES.md) is read on explicit
+ * request only, in its own state (archives.js). Its refusals never change the connection
+ * phase; a new connection or store starts from an empty catalog view.
  */
 (function (root) {
   "use strict";
   var NODE = typeof module === "object" && module.exports;
   var S = NODE ? require("../../prototype/sync-state.js") : root.EidolonSync;
   var L = NODE ? require("../../prototype/mission-list-state.js") : root.EidolonMissionList;
+  var A = NODE ? require("./archives.js") : root.EidolonArchives;
 
   var PROTOCOL = "eidolon-http-read/1";
   var TOKEN = /^[A-Za-z0-9_-]{32,128}$/;
@@ -712,8 +918,9 @@
     var transport = options.transport;
     var now = options.now || function () { return new Date().toISOString(); };
     var onChange = options.onChange || function () {};
+    var archiveLimit = options.archiveLimit;   // G066: page size (tests, small screens); default 50
     var token = null;
-    var loops = { list: 0, selection: 0, receipt: 0 };
+    var loops = { list: 0, selection: 0, receipt: 0, archives: 0 };
 
     var state = {
       phase: "disconnected",   // disconnected | connecting | connected | offline | unavailable | unauthorized | refused
@@ -725,6 +932,7 @@
       notice: null,            // one-line explanation of an identity wipe
       receipt: null,           // { query, status, receipt, code, receivedAt }: historical, never the current state
       resyncRequired: false,   // STORE_CHANGED answered: reconnect before any other receipt lookup
+      archives: A.create(),    // G066: catalog metadata pages, separate from missions
       stats: { staleConnection: 0, staleSelection: 0, invalidResponses: 0, staleReceipt: 0 }
     };
 
@@ -743,8 +951,11 @@
 
     function forgetReceipt() { loops.receipt += 1; state.receipt = null; }
 
+    function forgetArchives() { loops.archives += 1; state.archives = A.create(); }
+
     function wipe() {
       forgetReceipt();
+      forgetArchives();
       state.list = L.createState();
       state.storeId = null;
       state.lastSuccessAt = null;
@@ -754,10 +965,12 @@
       state.phase = phase;
       state.problem = { code: code, at: now(), scope: scope };
       setOnline(false);
+      state.archives = A.markStale(state.archives, "CONNECTION_" + phase.toUpperCase());
     }
 
     // One request; returns { ok, json } or { ok:false } after recording the failure.
-    async function call(method, path, body, scope) {
+    // local: error codes that concern the caller's panel only (G066), never the connection phase.
+    async function call(method, path, body, scope, local) {
       var epoch = state.connEpoch;
       var answer;
       try {
@@ -773,6 +986,10 @@
       if (status === 200) {
         if (state.phase === "busy") state.phase = "connected";   // the server serves again
         return { ok: true, json: json };
+      }
+      if (local && code && local.indexOf(code) >= 0) {
+        state.problem = { code: code, at: now(), scope: scope };
+        return { ok: false, code: code, status: status };
       }
       if (status === 503 && code === "BUSY") {
         // G043: explicit saturation (C-010b). Not an outage: stay online, nothing retried
@@ -807,6 +1024,7 @@
       state.phase = "connecting";
       state.notice = null;
       state.resyncRequired = false;
+      forgetArchives();                    // G066: never mix two sessions' catalog pages
       emit();
       var r = await call("GET", "/v1/health", undefined, "connection");
       if (r.stale) return false;
@@ -987,8 +1205,30 @@
       return r.ok;
     }
 
+    // G066: one explicit page request; "first" (re)loads a new generation, "more" continues it.
+    async function loadArchives(kind) {
+      if (!canRead() || !state.storeId || state.resyncRequired) return false;
+      var r = A.request(state.archives, kind === "more" ? "more" : "first", archiveLimit);
+      if (!r.req) return false;
+      var mine = ++loops.archives, storeId = state.storeId;
+      state.archives = r.state;
+      emit();
+      var res = await call("POST", "/v1/research-archives", r.req.body, "archives", A.LOCAL_CODES);
+      if (res.stale || mine !== loops.archives) return false;
+      var at = now();
+      if (res.ok) {
+        state.archives = A.receive(state.archives, r.req, res.json, storeId, at);
+        if (state.archives.status !== "loaded" && state.archives.status !== "reset") state.stats.invalidResponses += 1;
+      } else {
+        state.archives = A.receiveError(state.archives, r.req, res.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", at);
+      }
+      emit();
+      return state.archives.status === "loaded";
+    }
+
     return { connect: connect, disconnect: disconnect, relist: relist, selectMission: selectMission,
       refreshSelection: refreshSelection, acceptReset: acceptReset, lookupReceipt: lookupReceipt,
+      loadArchives: function () { return loadArchives("first"); }, moreArchives: function () { return loadArchives("more"); },
       state: snapshot, hasToken: hasToken };
   }
 
@@ -996,7 +1236,7 @@
     validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote,
     objectiveLabel: S.objectiveLabel, researchNote: S.researchNote, listSummary: L.summary,
-    shownItems: L.shownItems, syncSummary: S.summary };
+    shownItems: L.shownItems, syncSummary: S.summary, archiveSummary: A.summary };
   if (NODE) module.exports = api;
   else root.EidolonConnected = api;
 })(typeof window !== "undefined" ? window : this);
@@ -1239,14 +1479,99 @@
     out.appendChild(dl);
   }
 
+  // G066: catalog metadata only. Nothing here opens, downloads, deletes or restores an archive.
+  var ARCHIVE_CODES = {
+    ARCHIVES_NOT_CONFIGURED: "Aucun dossier d'archives n'est configuré pour ce serveur Core (option --research-archives).",
+    ARCHIVES_BUSY: "Une autre lecture des archives est en cours sur le serveur : réessayer plus tard. Rien n'est relancé automatiquement.",
+    ARCHIVES_UNAVAILABLE: "Catalogue refusé ou illisible côté Core : aucune liste partielle n'est présentée comme actuelle.",
+    INVALID_ARCHIVE_CURSOR: "Position de page refusée par Core : recharger les archives.",
+    STORE_CHANGED: "La base Core a changé depuis la première page : recharger les archives.",
+    CATALOG_CHANGED: "Le catalogue a changé depuis la première page : recharger les archives pour une liste cohérente.",
+    STORE_MISMATCH: "Réponse d'une autre base Core que celle de la connexion : ignorée.",
+    CATALOG_MISMATCH: "Page d'un autre catalogue que la première : ignorée, les deux ne sont jamais mélangées.",
+    PAGE_GAP: "Page non contiguë à la précédente : ignorée.",
+    AUTHORITY_CLAIMED: "Réponse annonçant une garantie ou un droit que Core ne donne pas : ignorée."
+  };
+
+  function archiveMessage(code) {
+    return ARCHIVE_CODES[code] || ("Réponse non exploitable (" + code + ") : aucune conclusion.");
+  }
+
+  function dateMs(ms) {
+    var d = new Date(ms);
+    return isNaN(d.getTime()) ? String(ms) : d.toLocaleString("fr-FR");
+  }
+
+  function renderArchives(doc, s) {
+    var a = s.archives;
+    var online = s.phase === "connected" || s.phase === "busy";
+    var loading = a.status === "loading";
+    var load = byId(doc, "archives-load");
+    load.disabled = !online || loading || !s.storeId || s.resyncRequired;
+    load.textContent = a.catalog ? "Actualiser les archives" : "Charger les archives";
+    byId(doc, "archives-more").disabled = !online || loading || a.stale || !a.hasMore;
+    var sum = C.archiveSummary(a);
+    var parts = [];
+    if (s.phase === "disconnected") parts.push("");
+    else if (loading) parts.push("Lecture du catalogue en cours…");
+    else if (!a.catalog && a.status === "empty") parts.push("Catalogue non chargé : lecture sur demande uniquement.");
+    if (a.catalog) {
+      parts.push(sum.shown + " archive(s) affichée(s) sur " + sum.total + " ; " + sum.runs + " recherche(s) au total"
+        + (sum.complete ? "." : " — liste incomplète, page suivante disponible."));
+      parts.push("Catalogue lu par Core le " + fmt(a.catalog.observedAt) + ", reçu le " + fmt(a.catalog.receivedAt) + ".");
+    }
+    if (a.code) parts.push(archiveMessage(a.code));
+    if (a.stale && online) parts.push("Liste figée : elle ne représente plus forcément le catalogue actuel.");
+    else if (a.stale) parts.push("Liste périmée : connexion interrompue.");
+    byId(doc, "archives-status").textContent = parts.filter(Boolean).join(" ");
+    var body = byId(doc, "archives-body");
+    clear(body);
+    if (!a.items.length) {
+      if (a.catalog && !a.stale) body.appendChild(el(doc, "p", "empty", "Aucune archive dans ce catalogue."));
+      return;
+    }
+    var wrap = el(doc, "div", "table-wrap" + (a.stale ? " stale" : ""));
+    // Small screens scroll this region horizontally: reachable and named for keyboard users.
+    wrap.tabIndex = 0;
+    wrap.setAttribute("role", "region");
+    wrap.setAttribute("aria-label", "Tableau des archives, défilement horizontal possible");
+    var table = el(doc, "table", "archives-table");
+    table.appendChild(el(doc, "caption", null, a.stale ? "Archives (liste figée)" : "Archives"));
+    var head = el(doc, "tr");
+    ["Archive", "Créée le", "Recherches", "Avec texte nettoyé", "Sans texte (historique)", "Liées à une mission"].forEach(function (h) {
+      var th = el(doc, "th", null, h);
+      th.scope = "col";
+      head.appendChild(th);
+    });
+    var thead = el(doc, "thead");
+    thead.appendChild(head);
+    table.appendChild(thead);
+    var tbody = el(doc, "tbody");
+    a.items.forEach(function (it) {
+      var tr = el(doc, "tr");
+      var th = el(doc, "th", "archive-file", it.file);
+      th.scope = "row";
+      th.title = "Empreinte " + it.sha256;
+      tr.appendChild(th);
+      [dateMs(it.created_at_ms), it.count, it.queries_with_text, it.legacy_runs_without_text, it.linked_missions].forEach(function (v) {
+        tr.appendChild(el(doc, "td", null, v));
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    body.appendChild(wrap);
+  }
+
   function render(doc, s) {
     renderConnection(doc, s);
     renderList(doc, s);
     renderDetails(doc, s);
     renderReceipt(doc, s);
+    renderArchives(doc, s);
   }
 
-  var api = { render: render, PHASES: PHASES, bindingText: bindingText };
+  var api = { render: render, PHASES: PHASES, bindingText: bindingText, archiveMessage: archiveMessage };
   if (NODE) module.exports = api;
   else root.EidolonConnectedView = api;
 })(typeof window !== "undefined" ? window : this);
@@ -1310,6 +1635,8 @@
     document.getElementById("relist").addEventListener("click", function () { session.relist(); });
     document.getElementById("refresh").addEventListener("click", function () { session.refreshSelection(); });
     document.getElementById("accept-reset").addEventListener("click", function () { session.acceptReset(); });
+    document.getElementById("archives-load").addEventListener("click", function () { session.loadArchives(); });
+    document.getElementById("archives-more").addEventListener("click", function () { session.moreArchives(); });
     document.getElementById("mission-list").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-mission-id]");
       if (button) session.selectMission(button.dataset.missionId);

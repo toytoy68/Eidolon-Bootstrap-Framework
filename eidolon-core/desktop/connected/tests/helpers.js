@@ -61,6 +61,19 @@ function makeFixture() {
   return { dir, state: path.join(out, "state"), token, tokenFile, manifest, role };
 }
 
+// G066: Codex's research-archives beta profile: three real missions and three archive copies.
+function makeArchiveFixture() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "eidolon-g066-"));
+  const out = path.join(dir, "demo");
+  const r = spawnSync(PYTHON, ["-m", "eidolon_core.beta_fixture", "--output", out, "--profile", "research-archives"],
+    { cwd: CORE, env: ENV, encoding: "utf8" });
+  if (r.status !== 0) { fs.rmSync(dir, { recursive: true, force: true }); throw new Error("beta_fixture failed: " + r.stdout + r.stderr); }
+  const manifest = JSON.parse(fs.readFileSync(path.join(out, "manifest.json"), "utf8"));
+  const tokenFile = path.join(out, "read-token");
+  return { dir, state: path.join(out, "state"), archives: path.join(out, "archives"), tokenFile,
+    token: fs.readFileSync(tokenFile, "utf8").trim(), manifest };
+}
+
 // n extra NEW missions in ONE Python process (the CLI would start n processes). Same Runtime.create
 // as `eidolon_core create`; requests are synthetic and numbered.
 function bulkCreate(state, n) {
@@ -74,6 +87,7 @@ function bulkCreate(state, n) {
 async function startServer(env, webRoot, { spawnServer = spawn, timeoutMs = 10000 } = {}) {
   const args = ["-m", "eidolon_core.http_api", "--state", env.state, "--token-file", env.tokenFile, "--port", "0"];
   if (webRoot) args.push("--web-root", webRoot);
+  if (env.archives) args.push("--research-archives", env.archives);   // G066: C-030 catalog folder
   const child = spawnServer(PYTHON, args, { cwd: CORE, env: ENV, stdio: ["ignore", "pipe", "pipe"] });
   const server = { child };
   try {
@@ -149,4 +163,4 @@ async function cleanup({ browser, servers = [], dirs = [] }) {
 }
 
 module.exports = { CORE, WEB_ROOT, PYTHON, CAPTURES, ENV, chromium, chromiumUnavailable, hasPython, noPython,
-  cli, makeState, makeFixture, bulkCreate, startServer, stop, nodeTransport, cleanup };
+  cli, makeState, makeFixture, makeArchiveFixture, bulkCreate, startServer, stop, nodeTransport, cleanup };

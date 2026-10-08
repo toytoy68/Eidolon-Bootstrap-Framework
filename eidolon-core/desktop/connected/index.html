@@ -76,6 +76,18 @@
         <div id="receipt-result" aria-live="polite"></div>
       </section>
     </section>
+    <section id="archives" class="panel archives" aria-labelledby="archives-title">
+      <div class="panel-head">
+        <h2 id="archives-title">Archives de recherche</h2>
+        <div class="actions">
+          <button id="archives-load" type="button" disabled>Charger les archives</button>
+          <button id="archives-more" type="button" disabled>Archives suivantes</button>
+        </div>
+      </div>
+      <p class="help">Métadonnées seulement : ni texte de recherche, ni export, ni téléchargement. Cohérence des fichiers vérifiée par Core ; authenticité et prise en compte dans le journal actif non établies. Rien ici ne restaure ni ne supprime une recherche.</p>
+      <p id="archives-status" class="status" aria-live="polite"></p>
+      <div id="archives-body"></div>
+    </section>
   </main>
 
   <footer class="foot">

@@ -56,6 +56,8 @@
     document.getElementById("relist").addEventListener("click", function () { session.relist(); });
     document.getElementById("refresh").addEventListener("click", function () { session.refreshSelection(); });
     document.getElementById("accept-reset").addEventListener("click", function () { session.acceptReset(); });
+    document.getElementById("archives-load").addEventListener("click", function () { session.loadArchives(); });
+    document.getElementById("archives-more").addEventListener("click", function () { session.moreArchives(); });
     document.getElementById("mission-list").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-mission-id]");
       if (button) session.selectMission(button.dataset.missionId);
