@@ -1,37 +1,41 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C092 — C-TASK-G071 livré en c229040 : consultation HTTP des archives tenue 51/51
+## C-MSG-C093 — C-TASK-G072 livré en bd2d48a : planificateurs tenus sur 51 réponses hostiles, deux remarques faibles
 
-Auteur : Claude. Date : 08/10/2026, 11 h 50, Europe/Paris (+0200).
-Base : `638b392`. En réponse à : fiche C-TASK-G071.
-[C-MSG-C091 archivé à l'identique](archive/2026-10-08-claude-C-MSG-C091.md).
+Auteur : Claude. Date : 08/10/2026, 11 h 55, Europe/Paris (+0200).
+Base : `e525610`. En réponse à : fiche C-TASK-G072.
+[C-MSG-C092 archivé à l'identique](archive/2026-10-08-claude-C-MSG-C092.md).
 
-Commit `c2290407808543e258ab15c37251229b16ff60ba`, preuves seulement.
-[Rapport](../docs/validation/2026-10-07/claude-g071/README.md) ·
-[sondes](../docs/validation/2026-10-07/claude-g071/probes_g071.py) ·
-[sortie](../docs/validation/2026-10-07/claude-g071/probes.txt).
+Commit `bd2d48abcde1b300d208f089998cf995457e1b44`, preuves seulement.
+[Rapport](../docs/validation/2026-10-08/claude-g072/README.md) ·
+[sondes](../docs/validation/2026-10-08/claude-g072/probes_g072.py) ·
+[sortie](../docs/validation/2026-10-08/claude-g072/probes.txt).
+Aucun moteur réel n'est validé.
 
-### Confirmé sur l'API réelle (51/51)
+### Confirmé (Ollama et OpenAI-compatible, 51/51)
 
-- L'authentification passe avant toute lecture du catalogue (compté sur
-  `read_catalog`). Host et Origin sont stricts.
-- Corps strict : codes constants, catalogue non lu.
-- Pagination exhaustive avec `limit` 1, 2 et 100.
-- Curseurs : autre Store, empreinte inventée et catalogue changé donnent
-  `RESET_REQUIRED` ; un curseur au-delà de la fin donne 400.
-- Fichiers non privés, liens, FIFO, `.partial`, export trop gros, budget épuisé
-  et dossier supprimé donnent 503 sans page ni recréation.
-- Capacité : `ARCHIVES_BUSY` immédiat sur une seconde lecture ; `BUSY` à
-  saturation, puis reprise.
-- Aucune valeur privée dans 51 réponses, aucun champ d'autorité vrai.
-  Store et archives inchangés.
+- Une requête par appel, aucune relance.
+- Cadrage :
+  - EOF, chunk incomplet et longueur contradictoire ou dupliquée sont refusés avec
+    un code constant ;
+  - `chunked` valide accepté ;
+  - corps trop grand (trois cadrages) refusé.
+- Les 302 et `HTTP_PROXY` ne contactent jamais l'autre port.
+- Ni texte distant ni clé synthétique dans les erreurs.
+- Trois bornes mesurées :
+  - socket : 1,0 s ;
+  - adaptateur : aucune durée totale (7,8 s pour un corps distillé) ;
+  - exécutant runtime : mission arrêtée en 3,13 s (`call_seconds = 3`).
 
-### Observation à noter avant toute exposition
+### Remarques
 
-Quatre connexions lentes **sans jeton** occupent tous les exécutants jusqu'au
-délai d'inactivité de 3 s. Un processus local peut ainsi tenir le service
-occupé. C'est limité au loopback, mais à réexaminer avant un tunnel.
+- **G072-1 (faible)** : `HTTP/1.1 200 OK\r\nContent-Ty` suivi d'un EOF donne
+  `BAD_RESPONSE` au lieu de `TRANSPORT`, parce que `http.client` prend l'EOF pour
+  la fin des en-têtes. Le refus est correct, le code trompeur.
+- **G072-2 (documentation)** : `OLLAMA-ADAPTER.md` et `LOCAL-MODEL-CLI.md`
+  devraient dire que `timeout_seconds` borne chaque opération socket, et que
+  `--timeout` borne l'appel.
 
 ### File
 
-Suite : G072 (réponses HTTP des planificateurs).
+Suite : G073 (contrôle hors ligne des rapports).
