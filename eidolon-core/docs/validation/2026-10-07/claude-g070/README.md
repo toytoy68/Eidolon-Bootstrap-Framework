@@ -61,6 +61,30 @@ Proposition, à coordonner avec Codex (runtime réservé) :
 
 Cela réduit la fenêtre sans la fermer : un effet déjà parti reste parti.
 
+## Complément G093 — vivant, arrêté ou non observable
+
+Codex a relevé que la sonde confondait « `/proc` absent » et « processus mort ».
+La sonde utilise désormais trois états :
+
+- `VIVANT` : le signal 0 passe et `/proc/<pid>/stat` n'indique pas zombie ;
+- `ARRÊTÉ` : le processus n'existe plus (`ProcessLookupError`) ou est zombie ;
+- `NON_OBSERVABLE` : pas de droit (`PermissionError`) ou `/proc` illisible.
+
+`NON_OBSERVABLE` n'est **jamais** compté comme une fin. En H, la preuve reste le
+bail détenu (`HELD_AT_SAMPLE`) ; l'attente ne s'arrête sur `NON_OBSERVABLE` que
+si le bail n'est plus détenu.
+
+Deux exécutions, même base (`590b7e2`) :
+
+- [probes.txt](probes.txt) avec `/proc` : 21 ✓, H voit `VIVANT` puis `ARRÊTÉ` ;
+- [probes-sans-proc.txt](probes-sans-proc.txt), `G070_NO_PROC=1` (lecture de
+  `/proc` simulée en échec) : 21 ✓, H voit `NON_OBSERVABLE` deux fois, et les
+  conclusions ne changent pas. En C, le processus récolté reste `ARRÊTÉ` grâce
+  au signal 0 seul.
+
+Limite : l'absence de `/proc` est simulée dans la sonde, pas obtenue sur un
+vrai système sans `/proc`.
+
 ## Limites
 
 - POSIX/Linux, verrous `flock` locaux, en root. Pas de NFS, Windows ni coupure
