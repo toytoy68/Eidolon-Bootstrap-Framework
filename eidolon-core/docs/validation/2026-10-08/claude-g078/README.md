@@ -99,6 +99,24 @@ Sur la branche telle que poussée (logo ajouté, client inchangé), les suites
 restent vertes : client 73/73 ; `test_http_api`, `test_beta_check`,
 `test_build_beta_bundle`, `test_beta_fixture` et `test_preflight` OK.
 
+## Mise à jour après le lot média de Codex (`1a2a3a2`)
+
+Codex a modifié `index.html`, `style.css` et `main.js`. `client-logo.patch` a été
+**refait sur sa version** (base `9215834`). Il ne contient plus `app.js`, qui
+est généré : lancer `node desktop/connected/build.js` après l'application.
+
+Sur cette base, avec les deux correctifs appliqués :
+
+- Python : 971 OK, 7 ignorés ;
+- client : 78 réussis et 2 échecs. Ces deux échecs existent **aussi sans mes
+  correctifs** : `server.test.js` « no command button » et `receipts.test.js`
+  « no command button ». Ils viennent des deux boutons désactivés « Exécution
+  indisponible » du lot média, que le filtre `/exécut/i` de ces tests compte
+  comme commandes.
+
+Les mesures et captures ci-dessus ont été prises sur `8aeec52`. Le patch refait ne
+modifie que la position des lignes.
+
 ## Contraste
 
 - Un logotype n'est pas soumis au seuil de contraste WCAG 1.4.3.

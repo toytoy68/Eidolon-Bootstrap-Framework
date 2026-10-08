@@ -1,30 +1,5 @@
-diff --git a/eidolon-core/desktop/connected/app.js b/eidolon-core/desktop/connected/app.js
-index a8f71db..adbc448 100644
---- a/eidolon-core/desktop/connected/app.js
-+++ b/eidolon-core/desktop/connected/app.js
-@@ -1608,8 +1608,20 @@
-     }).finally(function () { clearTimeout(timer); });
-   }
- 
-+  // The logo is an optional asset: a server that does not serve it keeps the text name (G078).
-+  function showLogo() {
-+    var logo = document.getElementById("brand-logo");
-+    if (!logo || typeof logo.decode !== "function") return;
-+    logo.decode().then(function () {
-+      if (!logo.naturalWidth) return;
-+      logo.hidden = false;
-+      document.getElementById("brand-name").hidden = true;
-+    }, function () { /* not served: the text name stays */ });
-+  }
-+
-   function start() {
-     var autoTimer = null;
-+    showLogo();
-     var session = C.createSession({ transport: transport, onChange: function (s) {
-       V.render(document, s);
-       if (s.phase !== "connected" || !s.list.selection) stopAuto();
 diff --git a/eidolon-core/desktop/connected/index.html b/eidolon-core/desktop/connected/index.html
-index b35f70a..4b155c6 100644
+index db10e01..89992aa 100644
 --- a/eidolon-core/desktop/connected/index.html
 +++ b/eidolon-core/desktop/connected/index.html
 @@ -19,7 +19,9 @@
@@ -39,7 +14,7 @@ index b35f70a..4b155c6 100644
      </div>
      <form id="connect-form" class="connect" autocomplete="off" novalidate>
 diff --git a/eidolon-core/desktop/connected/src/main.js b/eidolon-core/desktop/connected/src/main.js
-index fcb0856..a859c22 100644
+index 919faba..1f5d205 100644
 --- a/eidolon-core/desktop/connected/src/main.js
 +++ b/eidolon-core/desktop/connected/src/main.js
 @@ -29,8 +29,20 @@
@@ -60,11 +35,11 @@ index fcb0856..a859c22 100644
    function start() {
      var autoTimer = null;
 +    showLogo();
+     var media = root.EidolonMediaAgents.mount(document);
+     window.addEventListener("pagehide", function () { media.clear(); });
      var session = C.createSession({ transport: transport, onChange: function (s) {
-       V.render(document, s);
-       if (s.phase !== "connected" || !s.list.selection) stopAuto();
 diff --git a/eidolon-core/desktop/connected/style.css b/eidolon-core/desktop/connected/style.css
-index 93402a5..a11c0bf 100644
+index 6f2bab6..934906f 100644
 --- a/eidolon-core/desktop/connected/style.css
 +++ b/eidolon-core/desktop/connected/style.css
 @@ -88,7 +88,11 @@ input[type="password"] {
@@ -88,11 +63,11 @@ index 93402a5..a11c0bf 100644
  }
  .connect { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
  .connect label { font-weight: 600; }
-@@ -189,6 +194,7 @@ input[type="password"] {
+@@ -217,6 +222,7 @@ input[type="password"] {
  
  @media (max-width: 760px) {
    .top, .connection, .layout, .foot { padding-left: 1rem; padding-right: 1rem; }
 +  .logo { height: 40px; }
    .layout { grid-template-columns: 1fr; }
+   .media-cards { grid-template-columns: 1fr; }
    input[type="password"] { min-width: 0; width: 100%; }
-   .fields, .receipt-form { grid-template-columns: 1fr; }
