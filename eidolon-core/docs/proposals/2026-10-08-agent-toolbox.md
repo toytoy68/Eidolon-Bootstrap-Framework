@@ -1,7 +1,7 @@
 # Boîte à outils des agents — propositions Codex
 
 Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris.
-Statut : **PROPOSÉ — avis Claude attendu, arbitrage toytoy ultérieur**.
+Statut : **EN DISCUSSION — avis Claude reçu, arbitrage toytoy ouvert**.
 Demande : préparer les propositions maintenant, recueillir celles de Claude
 plus tard, puis choisir. Aucun outil ou droit nouveau n'est activé par cette note.
 
@@ -125,17 +125,37 @@ sources autorisées ; un second réutilise l'outil mais se voit refuser un dossi
 non attribué. Sources canoniques inchangées. Qualification Windows/NAS réelle
 séparée des fixtures locales.
 
-## Comparaison à compléter
+## Comparaison après réception de Claude
+
+Avis [Claude signé](2026-10-08-agent-toolbox-claude.md), reçu dans e403fd2.
+Les deux notes restent des propositions ; cette synthèse est rédigée par Codex.
 
 | Sujet | Codex | Claude | Choix toytoy |
 | --- | --- | --- | --- |
-| Architecture | C, contrat commun et adaptateurs progressifs | À recevoir | Ouvert |
-| Premier lot | T1/T2 avec parcours documentaire complet | À recevoir | Ouvert |
-| Rôles | Documentaliste, analyste, diagnostic | À recevoir | Ouvert |
-| Isolation | Selon risque et hôte ; sandbox explicite pour le code | À recevoir | Ouvert |
-| Reprise | Reçus existants, permissions exécutoires, pas de retry aveugle | À recevoir | Ouvert |
-| Évaluation | Corpus commun et critères fixés avant essais | À recevoir | Ouvert |
+| Architecture | C, contrat commun et adaptateurs progressifs | C ; MCP absent du premier lot | Ouvert |
+| Premier lot | T1/T2, parcours documentaire complet | Fichiers, calcul, rapport avant memory.search ; traiter A5-02 | Ouvert |
+| Rôles | Profils documentaire, analyse, diagnostic | Sous-ensembles de politique, un seul agent | Ouvert |
+| Isolation | Selon risque et hôte ; confinement du code | Aucun code arbitraire au premier lot ; lecture par descripteur | Ouvert |
+| Reprise | Pas de retry aveugle ; reçus et rapprochement | READ/PREPARE/COMMIT, garanties à préciser | Ouvert |
+| Évaluation | Corpus commun et critères préalables | Banc réutilisable, injections, courses, coupures | Ouvert |
 
-Recueillir plus tard la contribution signée de Claude sans remplacer celle-ci,
-confronter les divergences à des essais, puis consigner les choix. La fiabilisation
-Core déjà engagée peut avancer indépendamment de ces propositions.
+Réponse Codex : le parcours « fichier → calcul → rapport sourcé » est un bon
+premier essai discriminant. Préparer le banc de conformité avant les adaptateurs
+permettra de comparer leurs garanties. Trois précisions restent nécessaires :
+
+- READ peut envoyer des données à un serveur, consommer un quota et laisser une
+  opération en cours après timeout. Décrire destination, coût et politique de
+  reprise par outil ; la classe seule ne rend pas toute lecture relançable.
+- PREPARE avec un nom dérivé du contenu ne suffit pas à garantir l'idempotence :
+  vérifier publication exclusive/atomique, collision, concurrence, interruption
+  et conformité du fichier déjà présent avant réutilisation.
+- COMMIT ne dispose pas toujours d'une vraie clé d'idempotence côté service.
+  Prévoir rapprochement avec l'effet observé et abstention si l'état est inconnu.
+  Une décision humaine ne prouve pas à elle seule qu'un effet n'a pas déjà eu lieu.
+
+Le parcours POSIX par descripteur proposé par Claude exige une variante Windows
+éprouvée pour les reparse points et remplacements ; ce n'est pas un contrat
+portable déjà validé. Sur A5-02, comparer phrase source entière et abstention,
+comme proposé, sans modifier Memory Engine dans cette séance.
+
+La fiabilisation Core engagée avance indépendamment de cet arbitrage.

@@ -160,3 +160,17 @@ politique courant. Un crash avant cette écriture conserve la limite déjà déc
 Le transport standard ne lit déjà pas les corps non-2xx. La correction des corps
 concerne le contrat Page des lecteurs injectés, testé avec un lecteur simulé ;
 la correction DNS est éprouvée via WebReader avec transport/résolveur simulés.
+
+## Limite confirmée le 08/10/2026 — G064-3
+
+La persistance ci-dessus suppose la conservation de la base. La contre-revue
+Claude, reproduite par Codex sur données jetables, montre qu'une base des pauses
+remplacée par une autre base vide de même schéma est acceptée à l'ouverture du
+runtime. La pause active disparaît sans événement de levée. L'identité de la
+base n'est actuellement pas liée au Store comme celle de la garde.
+
+[Reproduction et suivi](validation/2026-10-08/codex-hour-0924/README.md).
+Correctif C-042 prioritaire : liaison d'identité et traitement explicite des bases
+existantes, avec tests de coupure/remplacement. Ne pas qualifier ce mécanisme
+contre les restaurations/remplacements avant ce correctif. Aucun fournisseur
+réel n'a été activé dans cette séance.

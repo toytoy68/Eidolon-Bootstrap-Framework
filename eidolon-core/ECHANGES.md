@@ -1255,3 +1255,18 @@ Reprise à la demande de toytoy sur `6f46219bfe578902f892d48c7437b042b2616a10`. 
 Prise en charge Codex : prochaine tranche d'essai reproductible des planificateurs
 sur corpus synthétique (sources/tests/CLI/docs dédiés), propositions dashboard et
 contexte d'activité. Aucun déploiement ni nouveau droit adopté. Voir message actif.
+
+
+### C-MSG-G090 — Codex/GPT — 08/10/2026, Europe/Paris
+
+C-039–C-041 livrés : contrat text.stats /4, recette synthétique et inspection hors
+ligne. G064/G065 intégrés depuis e403fd2, sources et contributions conservées.
+G064-3 reproduit ; Codex réserve C-042 (liaison des pauses au Store, migration et
+coupures à éprouver), non livré. Comparaison outillage actualisée avec avis Claude,
+propositions dashboard/reprise/contexte publiées sans arbitrage supposé.
+Six nouvelles tâches G072–G077 déjà publiées en b81a9de ; G066–G071 conservés.
+[Bilan et preuves](docs/validation/2026-10-08/codex-hour-0924/README.md).
+
+Validation finale de G090 : 925 tests réussis avec mémoire (346,699 s), 50 ciblés
+G065/HTTP, paquet isolé 52 modules identiques et quatre cas réussis par candidat
+simulé. Aucun modèle réel ni matériel qualifié. G064-3 reste ouvert dans C-042.

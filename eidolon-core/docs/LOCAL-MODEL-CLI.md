@@ -157,3 +157,17 @@ C-037 : les manifestes courants sont `ollama-chat/3` et
 avec /1 ou /2 ne sont pas migrées automatiquement : leur reprise sous le
 nouveau contrat est bloquée. Une coupure de corps HTTP conserve l'échec, même
 si les octets déjà reçus forment un objet JSON lisible.
+
+
+## C-039/C-040 — contrat explicite et recette commune
+
+Les contrats actuels sont désormais /4. Une instruction système décrit
+`text.stats`, le format des références et la couverture attendue pour la mission
+textuelle supportée. Le choix des outils reste contrôlé par Core. Les anciennes
+missions non terminées sont bloquées si la configuration ne correspond plus.
+
+La commande `model-probe --config ... --plan-only` montre les quatre cas et les
+critères sans appel. `model-probe --config ... --output <nouveau-dossier>` les
+exécute explicitement sur le candidat choisi avec données synthétiques uniquement.
+[Commandes, preuves et limites](MODEL-PROBE.md). `PASSED_CASES` est un résultat
+restreint de recette, pas une qualification de modèle ou de GPU.

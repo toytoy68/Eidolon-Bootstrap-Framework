@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "offline_build": true,
+  "isolated_install": true,
+  "matching_installed_modules": 52,
+  "wheel_sha256": "d96a9aaa057a18460b2fe5186d7c57cfb55b028970c3709a698d74bdd7bae6e0",
+  "providers": [
+    {
+      "provider": "ollama",
+      "status": "PASS",
+      "successful_cases": 4,
+      "http_requests_for_full_run": 3,
+      "http_requests_for_stopped_run": 1,
+      "offline_plan": true,
+      "offline_inspection": true,
+      "private_artifacts_without_credential": true,
+      "corpus_sha256": "6e60aed0828d665c78107acf7122bc13c97cec4bbf87e719873419a55b53a8cb",
+      "criteria_sha256": "01c4b76127eeb9310aa7c082cfd3a50d4fc1fa2844a5ab17412b5c9811a36f9f",
+      "adapter": "ollama-chat/4"
+    },
+    {
+      "provider": "llama-server",
+      "status": "PASS",
+      "successful_cases": 4,
+      "http_requests_for_full_run": 3,
+      "http_requests_for_stopped_run": 1,
+      "offline_plan": true,
+      "offline_inspection": true,
+      "private_artifacts_without_credential": true,
+      "corpus_sha256": "6e60aed0828d665c78107acf7122bc13c97cec4bbf87e719873419a55b53a8cb",
+      "criteria_sha256": "01c4b76127eeb9310aa7c082cfd3a50d4fc1fa2844a5ab17412b5c9811a36f9f",
+      "adapter": "openai-chat-llamacpp/4"
+    }
+  ],
+  "real_model_or_gpu_tested": false,
+  "temporary_files_removed": true
+}

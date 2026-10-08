@@ -115,3 +115,14 @@ Compatibilité G062 : released_operations est optionnel pour les exports v1.
 Lorsqu'il existe, le lecteur exige la liste triée et unique des operation_id
 présents dans l'export. Cela ne prouve pas que les missions sont terminales :
 le lecteur ne consulte pas le Store actif. L'index affiche aussi la tête de chaîne.
+
+## Précisions après revue G064
+
+Le verrou d'index ne protège que les écrivains coopérants. Un écrivain qui
+l'ignore peut modifier liste.md entre le dernier contrôle et son remplacement ;
+son texte peut être écrasé (G064-1, rapport Claude). Conserver un fichier manuscrit
+séparé. Après un refus, l'ancienne liste peut encore afficher « Cohérence
+vérifiée » : cette affirmation décrit sa génération, pas l'état actuel des
+exports (G064-2). Une lecture `inspect` fraîche reste nécessaire. Le libellé
+sera précisé dans le suivi C-042 sans introduire un horodatage qui casserait
+l'idempotence d'un index inchangé.

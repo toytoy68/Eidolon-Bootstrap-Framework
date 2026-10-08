@@ -217,7 +217,7 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, 'NOT_A_RECOVERY_COPY'):
             inspect_review(self.store.directory)
         self.prepare()
-        with self.assertRaises(KeyError):
+        with self.assertRaisesRegex(ContractError, '^RECOVERY_MISSION_NOT_FOUND$'):
             inspect_review(self.target, mission_id='m-' + 'f' * 32)
         with closing(sqlite3.connect(self.target / 'missions.sqlite3')) as db:
             with db: db.execute("UPDATE sync_metadata SET value=? WHERE key='store_id'", ('s-' + 'f' * 32,))

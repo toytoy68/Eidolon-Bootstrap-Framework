@@ -1,10 +1,10 @@
-# File active — C-MSG-G089, 08/10/2026 matin
+# File active — C-MSG-G090, 08/10/2026 matin
 
 Demande toytoy : renouveler de 5/6 tâches pendant la reprise Core d'une heure.
-Six nouveaux lots attribués ci-dessous ; G064–G071 restent ouverts, aucune
-livraison supplémentaire constatée sur la branche Claude (56aa33f).
+Six nouveaux lots attribués ci-dessous. G064/G065 reçus dans e403fd2 et intégrés ;
+G066–G071 restent ouverts. Codex réserve C-042, correctifs issus de G064.
 Finir un lot engagé avant de changer de périmètre. Priorités conseillées :
-G064/G065, puis G066 pour le parcours client, puis cette série. Une revue
+G066 pour le parcours client, puis cette série. Une revue
 bloquée n'empêche pas une étude prête. Éviter deux auteurs dans les mêmes fichiers.
 
 | Ordre de la nouvelle série | Tâche | État |
@@ -16,8 +16,8 @@ bloquée n'empêche pas une étude prête. Éviter deux auteurs dans les mêmes 
 | 5 | [G076](C-TASK-G076.md) — Étude du dashboard inspiré de Jarvis et du thème Eidolon | PRÊT |
 | 6 | [G077](C-TASK-G077.md) — Étude du contexte d’activité et de la reprise suggérée | PRÊT |
 
-Codex réserve la prochaine tranche d'essai des planificateurs, les sources/tests
-Core associés et sa propre note de propositions. Claude conserve ses fichiers
+Codex a livré C-039–C-041 et sa note de propositions. Il réserve maintenant
+le suivi G064/C-042 ; G075 reçoit le complément de recette /4. Claude conserve ses fichiers
 Desktop déjà attribués. Aucun démarrage ni délai de livraison Claude présumé.
 Les sections suivantes sont historiques ; leurs états ne rouvrent pas un lot livré.
 

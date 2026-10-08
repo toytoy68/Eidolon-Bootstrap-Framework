@@ -7,13 +7,22 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## État courant — séance du 08/10/2026
 
-C-034–C-038 : deux adaptateurs de planification durcis (manifestes /3),
-choix explicite Ollama ou llama-server dans la CLI, qualification-check et
-model-config-check hors ligne. 886 tests avec mémoire réussis ; paquet installé, recettes 24+25.
-Le défaut reste déterministe. [Preuves](docs/validation/2026-10-08/codex-hour-0435/README.md).
-[Outillage des futurs agents](docs/proposals/2026-10-08-agent-toolbox.md) :
-huit propositions Codex, contribution Claude attendue plus tard, choix ouvert.
-Aucun nouvel outil d'agent activé. La file Claude G064–G071 reste inchangée.
+C-039–C-041 : contrat textuel explicite commun aux planificateurs (manifestes /4),
+`model-probe` sur quatre cas synthétiques et `model-probe-inspect` hors ligne,
+y compris après interruption. [Contrat et commandes](docs/MODEL-PROBE.md).
+Le défaut reste déterministe ; aucun vrai modèle, GPU, Windows ou VM qualifié.
+[Preuves de la séance du matin](docs/validation/2026-10-08/codex-hour-0924/README.md).
+Validation finale : 925 tests réussis avec mémoire, paquet installé de 52 modules
+contrôlé avec les deux serveurs simulés. Voir le bilan pour les limites.
+
+C-034–C-038 restent livrés : configuration explicite Ollama/llama-server,
+qualification-check et model-config-check ; 886 tests avec mémoire réussis à
+cette étape antérieure ([preuves](docs/validation/2026-10-08/codex-hour-0435/README.md)).
+Les huit [propositions d'outillage](docs/proposals/2026-10-08-agent-toolbox.md) restent
+ouvertes ; quatre [compléments dashboard/contexte](docs/proposals/2026-10-08-dashboard-context.md)
+sont proposés, sans choix adopté. G072–G077 sont les six nouvelles tâches Claude,
+publiées à la demande de toytoy. G064/G065 et la note outillage Claude reçus
+sur e403fd2 et intégrés ; G066–G071 préservés. G064-3 reproduit : C-042 ouvert. [File active](collaboration/tasks/QUEUE.md).
 
 ### État de la séance précédente — 07/10/2026 au soir
 
@@ -590,8 +599,8 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] G060 : libellés de recherche intégrés au client ; récupération distinguée de vérité.
 - [x] Compatibilité du lecteur avec released_operations G062, vingt tests dédiés.
 - [ ] G063 : corriger écritures courtes et nettoyage prématuré du prototype.
-- [ ] G064 : contre-revue du lecteur et de l'initialisation.
-- [ ] G065 : diagnostics budget et mission historique inconnue.
+- [x] G064 : contre-revue reçue et intégrée (e403fd2) ; suivi C-042 ouvert.
+- [x] G065 : diagnostics budget et mission historique inconnue intégrés (7b4cb2f).
 
 
 ## C-030 — catalogue archives pour le client — 07/10/2026
@@ -669,3 +678,48 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] JSON/humain, codes 0/2 ; ne transforme pas une syntaxe valide en qualification de modèle.
 - [x] Cinq tests nouveaux, dont accès à la variable de clé interdit pendant l'inspection.
 - [ ] Essai serveur réel distinct, choisi explicitement par l'opérateur.
+
+
+## C-039 — instructions des planificateurs (08/10/2026 matin)
+
+- [x] Outil text.stats, paramètres, format des références et couverture explicités.
+- [x] Même contrat statique pour les deux candidats, hors du contexte non fiable.
+- [x] Empreinte des variantes et de leur sélection ; manifestes /4 et reprise incompatible refusée.
+- [ ] Comparer l'adhésion au contrat sur les vrais modèles retenus pour essai.
+
+## C-040 — recette reproductible des planificateurs
+
+- [x] Corpus fixe : source simple, Unicode/deux références, instruction dans les données, mémoire vide.
+- [x] Préparation hors ligne ; exécution explicite dans un dossier privé neuf ; critères enregistrés avant appels.
+- [x] Résultats indépendants du plan, réserves des sources conservées, reprise terminée sans réémission.
+- [x] Arrêt dès erreur technique, aucune reprise implicite ; bilans et états partiels conservés.
+- [x] Tests HTTP synthétiques et paquet installé ; erreurs, permissions, reprises et panne de publication.
+- [ ] Essai réel serveur/GPU et protocole avancé : contexte utile, stabilité, vitesse, consommation.
+
+## C-041 — consultation hors ligne d'une recette
+
+- [x] Schémas, empreintes, ordre/comptes des cas et cohérence du rapport vérifiés sans Runtime/Store.
+- [x] Marqueur d'incomplétude prioritaire ; cas non enregistrés potentiellement commencés.
+- [x] Lecture bornée sans liens finaux/FIFO, diagnostics constants et aucun appel réseau.
+- [ ] Contre-revue indépendante complémentaire dans G075 ; cohérence documentaire distincte de preuves SQLite/matériel.
+
+## C-BRAIN-G013 — compléments de produit
+
+- [x] Accueil missions, carte de reprise expliquée, activité locale progressive et outils par mission proposés.
+- [ ] Études Claude G076/G077 puis comparaison/arbitrage toytoy ; aucune collecte activée.
+
+## C-042 — suivi prioritaire G064 (à faire)
+
+- [ ] Lier l'identité de pauses.sqlite3 au Store, refuser un remplacement valide
+  mais étranger ; définir la reprise explicite des bases existantes sans accepter
+  silencieusement une nouvelle identité. Tester coupures à chaque publication,
+  restauration et concurrence, conservation des pauses/audits, aucune relance.
+- [ ] G064-2 : libellé de cohérence « à la génération », préserver idempotence.
+- [x] G064-1 : limite du verrou coopératif documentée.
+- [ ] G064-4 : normaliser les erreurs SQLite de construction Python ; la CLI
+  normalise déjà STORAGE_UNAVAILABLE. Les sondes complètes Claude restent
+  rapportées ; G064-3 seul a été reproduit indépendamment dans cette séance.
+
+G064 est une revue livrée ; ces correctifs ne sont pas prétendus livrés avec elle.
+Codex réserve ce suivi pour la prochaine tranche, sans créer une septième tâche
+Claude ni lancer une session automatiquement.

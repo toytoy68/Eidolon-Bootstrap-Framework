@@ -5,6 +5,11 @@
 configuration explicite des deux planificateurs candidats, diagnostics hors
 ligne et réponses HTTP durcies. [Propositions d'outillage à comparer plus tard](docs/proposals/2026-10-08-agent-toolbox.md).
 [Compte rendu concis de la séance](docs/WORK-SESSION-2026-10-08.md).
+[Suite du matin : recette des planificateurs](docs/MODEL-PROBE.md) : instructions
+explicites, quatre cas synthétiques, arrêt sur erreur et consultation hors ligne
+d'un essai incomplet. [Propositions dashboard et contexte](docs/proposals/2026-10-08-dashboard-context.md)
+à comparer aux études Claude ; aucun changement de droits ou collecte du PC.
+
 
 Première tranche exécutable : demande → mission persistée → rappel mémoire →
 plan proposé → autorisation déterministe → outil local → vérification → résultat.

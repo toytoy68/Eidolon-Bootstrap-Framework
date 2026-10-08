@@ -52,6 +52,17 @@ inconnu demandant revue, budget épuisé/invalide, état terminal, annulation de
 Elles ne remplacent pas les contrôles exécutés par `run` ou `reconcile` au moment
 de l’action. Un résultat RETURNED déjà présent ne justifie pas de rejouer l’outil.
 
+Blocage enregistré (G065) : pour une mission `BLOCKED`, `recorded_block` donne le
+seul code constant de l’erreur enregistrée (jamais son message). Un code hors format
+devient `UNRECOGNIZED` ; hors blocage, la valeur est `null`. Une mission bloquée par
+`INVOCATION_BUDGET_EXHAUSTED` peut garder `remaining=1` : l’étape suivante demandait
+plus de réservations qu’il n’en restait. Le compteur est affiché exactement, avec
+l’indication `BLOCKED_INVOCATION_BUDGET_RECORDED` ; ce reste n’autorise aucun appel.
+Un `remaining=1` sans blocage enregistré n’est pas présenté comme épuisé.
+
+`recovery-inspect --mission-id` sur une mission absente de la copie historique
+renvoie le code 2 avec `RECOVERY_MISSION_NOT_FOUND`, sans création ni mutation.
+
 ## Données et limites
 
 Le rapport ne contient ni demande d’origine, contexte mémoire, paramètres du

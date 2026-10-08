@@ -28,7 +28,8 @@ import urllib.parse
 import urllib.request
 
 from .contracts import ContractError, digest, encode, snapshot
-from .ollama_model import PLAN_SCHEMA, SYSTEM_PROMPT  # same plan contract for comparable planners
+from .ollama_model import PLAN_SCHEMA
+from .planner_prompt import SYSTEM_PROMPT, messages as planner_messages, prompt_fingerprint
 
 LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1"}
 OPTION_KEYS = {"temperature", "seed", "max_tokens", "top_p", "top_k"}
@@ -133,10 +134,10 @@ class OpenAIChatConfig:
 
     def manifest(self):
         """Canonical, secret-free description that identifies this controller."""
-        return {"adapter": "openai-chat-llamacpp/3", "server_contract": "llama.cpp b11418",
+        return {"adapter": "openai-chat-llamacpp/4", "server_contract": "llama.cpp b11418",
                 "endpoint": self.endpoint.rstrip("/"), "model": self.model,
                 "options": dict(self.options), "response_format": digest(PLAN_SCHEMA),
-                "system_prompt": digest(SYSTEM_PROMPT), "context_tokens": self.context_tokens,
+                "system_prompt": prompt_fingerprint(), "context_tokens": self.context_tokens,
                 "allow_non_loopback": self.allow_non_loopback, "api_key_env": self.api_key_env,
                 "timeout_seconds": self.timeout_seconds,
                 "budgets": {"prompt_bytes": self.max_prompt_bytes,
@@ -193,10 +194,7 @@ class OpenAIChatModel:
         return f"openai-chat/{self.config.model}@{digest(self.config.manifest())[:16]}"
 
     def messages(self, request, context):
-        if not isinstance(request, str) or not request.strip():
-            raise ContractError("request must be non-empty text")
-        user = "REQUEST:\n" + request + "\n\nCONTEXT (untrusted data):\n" + encode(context)
-        return [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": user}]
+        return planner_messages(request, context)
 
     def body(self, request, context):
         return {"model": self.config.model, "messages": self.messages(request, context), "stream": False,

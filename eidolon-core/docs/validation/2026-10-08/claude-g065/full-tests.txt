@@ -1,0 +1,3 @@
+PYTHONPATH=src:. python3 -m unittest discover -s tests -t .
+Ran 890 tests in 253.944s
+OK (skipped=6)

@@ -44,6 +44,13 @@ def main(argv=None):
     qualification.add_argument("--report", required=True, help="existing regular JSON report file, at most 1 MB")
     model_check = commands.add_parser("model-config-check", help="validate local planner configuration offline; never read the secret or contact the server")
     model_check.add_argument("--config", required=True, help="private Ollama or llama-server JSON configuration file")
+    model_probe = commands.add_parser("model-probe", help="exercise the configured planner on four synthetic cases, or inspect the plan offline")
+    model_probe.add_argument("--config", required=True, help="private operator configuration; no default model")
+    model_probe.add_argument("--output", help="NEW private experiment directory in an existing trusted parent")
+    model_probe.add_argument("--repetitions", type=int, default=1, help="repeat the fixed suite 1 to 5 times")
+    model_probe.add_argument("--plan-only", action="store_true", help="inspect corpus and criteria without state, network or secret lookup")
+    probe_inspect = commands.add_parser("model-probe-inspect", help="read probe documents offline, including interrupted runs; never resume")
+    probe_inspect.add_argument("--directory", required=True, help="existing probe output directory")
     runtime_inspect = commands.add_parser("runtime-inspect", help="inspect existing mission and worker evidence; never resume")
     runtime_inspect.add_argument("mission_id")
     recovery = commands.add_parser("recovery-prepare", help="copy one mission database to a NEW review-only directory")
@@ -135,6 +142,29 @@ def main(argv=None):
             result = inspect_model_config(args.config)
             print(render_model_config(result) if args.format == "human" else encode(result))
             return 0  # Configuration checked; no server, credential or model qualification.
+        if args.command == "model-probe":
+            if (args.profile != "text" or args.memory_root is not None or args.targets is not None
+                    or args.allow_target is not None or args.research_scenario != "readable"
+                    or args.max_invocations != 64):
+                raise ValueError("MODEL_PROBE_OPTIONS_NOT_SUPPORTED")
+            if (args.plan_only and args.output is not None) or (not args.plan_only and args.output is None):
+                raise ValueError("MODEL_PROBE_REQUIRES_OUTPUT_OR_PLAN_ONLY")
+            from .model_probe import plan_probe, run_probe, render_probe
+            options = {"repetitions": args.repetitions, "call_seconds": args.timeout}
+            result = (plan_probe(args.config, **options) if args.plan_only else
+                      run_probe(args.config, args.output, **options))
+            print(render_probe(result) if args.format == "human" else encode(result))
+            if args.plan_only:
+                return 0
+            return {"PASSED_CASES": 0, "FAILED_CASES": 3, "INCOMPLETE": 2}[result["verdict"]]
+        if args.command == "model-probe-inspect":
+            if (args.profile != "text" or args.memory_root is not None or args.targets is not None
+                    or args.allow_target is not None or args.research_scenario != "readable"):
+                raise ValueError("MODEL_PROBE_INSPECTION_OPTIONS_NOT_SUPPORTED")
+            from .model_probe_inspect import inspect_probe, render_inspection
+            result = inspect_probe(args.directory)
+            print(render_inspection(result) if args.format == "human" else encode(result))
+            return 0 if result["status"] == "CONSISTENT" else 2
         if args.command == "runtime-inspect":
             from .runtime_inspect import inspect_runtime, render_inspection
             result = inspect_runtime(args.state, args.mission_id)
@@ -335,7 +365,8 @@ def main(argv=None):
               else encode({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)
         return 2
     except KeyboardInterrupt:
-        diagnostic = "state preserved; use show/run to diagnose"
+        diagnostic = ("probe output preserved; inspect partial evidence before a deliberate new run"
+                      if args.command == "model-probe" else "state preserved; use show/run to diagnose")
         print(render_error("INTERRUPTED", diagnostic) if args.format == "human"
               else encode({"error": "INTERRUPTED", "message": diagnostic}), file=sys.stderr)
         return 130

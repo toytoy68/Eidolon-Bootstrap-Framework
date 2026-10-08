@@ -62,7 +62,7 @@ class ModelConfigCheckTests(unittest.TestCase):
         for field in ("server_contacted", "secret_value_read", "authorizes_execution"):
             self.assertIs(result[field], False)
         self.assertEqual(result["manifest"]["api_key_env"], KEY_ENV)
-        self.assertEqual(result["manifest"]["adapter"], "openai-chat-llamacpp/3")
+        self.assertEqual(result["manifest"]["adapter"], "openai-chat-llamacpp/4")
         self.assertNotIn(SECRET, stdout + stderr)
         self.assertEqual(self.path.read_bytes(), before)
         self.assertFalse(self.state.exists())

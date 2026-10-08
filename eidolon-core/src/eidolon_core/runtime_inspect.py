@@ -13,6 +13,7 @@ lease is neither proof of a dead process nor of absence of an external effect.
 import fcntl
 import json
 import os
+import re
 import sqlite3
 import stat
 
@@ -28,6 +29,16 @@ MAX_MISSION_BYTES = 16 * 1024 * 1024
 STATUSES = TERMINAL | {"NEW", "RUNNING", "BLOCKED", "REVIEW_REQUIRED"}
 PHASES = {"RECALL", "PLAN", "READY", "EXECUTING", "VERIFY", "DONE"}
 CALL_STATES = {"PREPARED", "STARTED", "RETURNED", "VERIFIED", "UNKNOWN"}
+BLOCK_CODE = re.compile(r"[A-Z][A-Z0-9_]{0,63}")
+
+
+def _recorded_block(mission):
+    """Constant code of the recorded block only; never its message or provider text."""
+    if mission["status"] != "BLOCKED":
+        return None
+    error = mission.get("error")
+    code = error.get("code") if type(error) is dict else None
+    return code if type(code) is str and BLOCK_CODE.fullmatch(code) else "UNRECOGNIZED"
 
 
 class InspectionError(ContractError):
@@ -160,6 +171,7 @@ def _inspect(directory, identity):
                             "FROM missions WHERE id=?", (MAX_MISSION_BYTES + 1, identity)).fetchone()
         current_head = db.execute("SELECT max(sequence) FROM events WHERE mission_id=?", (identity,)).fetchone()[0]
         changed = (current_id != store_id or latest is None or latest != row or current_head != head)
+    recorded_block = _recorded_block(mission)
     hints = []
     if changed:
         hints.append("SNAPSHOT_CHANGED_RESAMPLE")
@@ -171,6 +183,10 @@ def _inspect(directory, identity):
         hints.append("EFFECT_UNKNOWN_REVIEW_REQUIRED")
     elif mission["phase"] == "VERIFY" and sampled and sampled[-1]["status"] == "RETURNED":
         hints.append("RETURNED_RESULT_AWAITS_VERIFICATION")
+    elif mission["status"] == "BLOCKED" and recorded_block == "INVOCATION_BUDGET_EXHAUSTED":
+        # The exact counter may still show remaining > 0: the next step needed more
+        # reservations than were left. Report the recorded stop; never a free slot.
+        hints.append("BLOCKED_INVOCATION_BUDGET_RECORDED")
     elif mission["status"] == "BLOCKED":
         hints.append("BLOCKED_REVIEW_MISSION")
     else:
@@ -183,7 +199,7 @@ def _inspect(directory, identity):
             "mission_id": identity, "revision": row[0], "as_of_sequence": head, "snapshot_sha256": anchor,
             "status": mission["status"], "phase": mission["phase"], "cancel_requested": mission["cancel_requested"],
             "changed_during_sampling": changed, "execution_lock": execution, "calls": sampled,
-            "invocation_budget": budget, "hints": hints,
+            "invocation_budget": budget, "recorded_block": recorded_block, "hints": hints,
             "filesystem_samples_atomic": False, "receipt_content_verified": False,
             "external_effects_known": False, "authorizes_execution": False,
             "research_guard_checked": False, "snapshot_only": True}
@@ -205,6 +221,12 @@ def inspect_runtime(directory, identity):
         raise InspectionError("INSPECTION_STATE_UNAVAILABLE") from None
 
 
+def _budget_line(budget):
+    if budget.get("remaining") is None:
+        return budget["state"]
+    return f"{budget['state']} (utilisé {budget['used']}/{budget['limit']}, reste {budget['remaining']})"
+
+
 def render_inspection(report):
     explanations = {
         "SNAPSHOT_CHANGED_RESAMPLE": "La mission a changé pendant le diagnostic ; consulter une nouvelle capture.",
@@ -212,6 +234,8 @@ def render_inspection(report):
         "TERMINAL_STATE_RETAIN_EVIDENCE": "Mission terminée ; conserver les preuves et les éventuels effets inconnus.",
         "EFFECT_UNKNOWN_REVIEW_REQUIRED": "Un appel interrompu exige une revue de ses effets avant toute décision de reprise.",
         "RETURNED_RESULT_AWAITS_VERIFICATION": "Un résultat reçu attend sa vérification ; sa présence ne justifie pas de relancer l’outil.",
+        "BLOCKED_INVOCATION_BUDGET_RECORDED": ("Mission bloquée faute de budget pour l’étape suivante ; le reste affiché "
+                                               "ne suffit pas et n’autorise aucun appel. Le diagnostic ne le modifie pas."),
         "BLOCKED_REVIEW_MISSION": "Mission bloquée ; examiner sa demande et son erreur locales avant une reprise explicite.",
         "NO_AUTOMATIC_RESUME": "Aucune reprise automatique n’est proposée.",
         "INVOCATION_BUDGET_INVALID": "Le compteur et son audit ne concordent pas ; le budget restant n’est pas fiable.",
@@ -222,7 +246,9 @@ def render_inspection(report):
     lines = [header(title="Diagnostic local de reprise"),
              message("INFO", f"{report['mission_id']} : {report['status']} / {report['phase']}"),
              message("INFO", "Verrou de mission : " + report["execution_lock"]["state"]),
-             message("INFO", "Budget : " + report["invocation_budget"]["state"])]
+             message("INFO", "Budget : " + _budget_line(report["invocation_budget"]))]
+    if report["recorded_block"] is not None:
+        lines.append(message("INFO", "Blocage enregistré : " + report["recorded_block"]))
     for call in report["calls"]:
         lines.append(message("INFO", f"Étape {call['index'] + 1}, tentative {call['attempt']} : {call['status']} ; "
                              f"verrou {call['lease']['state']}, reçu {call['receipt']['state']}"))

@@ -272,6 +272,77 @@ class RuntimeInspectionTests(unittest.TestCase):
                 self.assertIn("Eidolon Core Technologies", out.getvalue())
         self.assertEqual(self.files(), before)
 
+    def cli(self, *argv, state=None):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            rc = main(["--state", str(state or self.store.directory), *argv])
+        return rc, out.getvalue(), err.getvalue()
+
+    def test_budget_block_is_reported_with_exact_counter_in_json_and_human(self):
+        # G061-1: the next step needs two reservations; one is left. Exact counter, recorded block.
+        runtime = Runtime(self.store, limits=Limits(max_invocations=3))
+        mission = runtime.run(runtime.create(DEMO_REQUEST)["id"])
+        self.assertEqual((mission["status"], mission["error"]["code"]), ("BLOCKED", "INVOCATION_BUDGET_EXHAUSTED"))
+        before = self.files()
+        rc, out, _ = self.cli("runtime-inspect", mission["id"])
+        report = json.loads(out)
+        self.assertEqual(rc, 0)
+        self.assertEqual(report["invocation_budget"],
+                         {"state": "AVAILABLE", "limit": 3, "used": 2, "remaining": 1, "audit_checked": True})
+        self.assertEqual(report["recorded_block"], "INVOCATION_BUDGET_EXHAUSTED")
+        self.assertIn("BLOCKED_INVOCATION_BUDGET_RECORDED", report["hints"])
+        self.assertNotIn("BLOCKED_REVIEW_MISSION", report["hints"])
+        self.assertNotIn("INVOCATION_BUDGET_EXHAUSTED", report["hints"])  # the counter itself is not exhausted
+        self.assertFalse(report["authorizes_execution"])
+        self.assertFalse(any("authoriz" in key and value for key, value in report.items()))
+        rc, human, _ = self.cli("--format", "human", "runtime-inspect", mission["id"])
+        self.assertEqual(rc, 0)
+        self.assertIn("utilisé 2/3, reste 1", human)
+        self.assertIn("Blocage enregistré : INVOCATION_BUDGET_EXHAUSTED", human)
+        self.assertIn("n’autorise aucun appel", human)
+        self.assertEqual(self.files(), before)
+
+    def test_remaining_one_without_recorded_block_is_not_called_exhausted(self):
+        used = Runtime(self.store).run(self.mission["id"])["invocation_budget"]["used"]
+        runtime = Runtime(self.store, limits=Limits(max_invocations=used + 1))
+        mission = runtime.run(runtime.create(DEMO_REQUEST)["id"])
+        self.assertEqual(mission["status"], "SUCCEEDED")
+        report = self.inspect(mission)
+        self.assertEqual((report["invocation_budget"]["state"], report["invocation_budget"]["remaining"]), ("AVAILABLE", 1))
+        self.assertIsNone(report["recorded_block"])
+        self.assertEqual(report["hints"], ["TERMINAL_STATE_RETAIN_EVIDENCE"])
+
+    def test_other_recorded_block_keeps_generic_review_hint_and_exposes_code_only(self):
+        runtime = ResearchRuntime(self.store, scenario="blocked")
+        mission = runtime.run(runtime.create_research("synthetic blocked notice", required_pages=1)["id"])
+        self.assertEqual(mission["status"], "BLOCKED")
+        report = self.inspect(mission)
+        self.assertEqual(report["recorded_block"], mission["error"]["code"])
+        self.assertIn("BLOCKED_REVIEW_MISSION", report["hints"])
+        self.assertNotIn("message", report)
+        with sqlite3.connect(self.store.path) as db:
+            db.execute("UPDATE missions SET body=json_set(body,'$.error.code','free text: secret') WHERE id=?",
+                       (mission["id"],))
+        report = self.inspect(mission)
+        self.assertEqual(report["recorded_block"], "UNRECOGNIZED")
+        self.assertNotIn("secret", encode(report))
+
+    def test_unknown_mission_in_review_copy_has_stable_code_and_no_mutation(self):
+        Runtime(self.store).run(self.mission["id"])
+        review = self.root / "review"
+        prepare_review(self.store.path, review, actor="synthetic", reason="test")
+        before = self.files()
+        for output_format in ("json", "human"):
+            rc, out, err = self.cli("--format", output_format, "recovery-inspect", "--mission-id", "m-" + "e" * 32,
+                                    state=review)
+            self.assertEqual((rc, out), (2, ""))
+            self.assertIn("RECOVERY_MISSION_NOT_FOUND", err)
+            self.assertNotIn("KeyError", err)
+            self.assertNotIn(str(review), err)
+        rc, out, _ = self.cli("recovery-inspect", "--mission-id", self.mission["id"], state=review)
+        self.assertEqual((rc, json.loads(out)["mission"]["id"]), (0, self.mission["id"]))
+        self.assertEqual(self.files(), before)
+
 
 if __name__ == "__main__":
     unittest.main()

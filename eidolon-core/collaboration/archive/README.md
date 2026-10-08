@@ -346,6 +346,14 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `62064ec`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/62064ec/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C084, C-TASK-G063 livré : rotation v3, aucune perte sur écriture courte](2026-10-07-claude-C-MSG-C084.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a130882`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a130882/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C085, C-TASK-G064 livré : lecteur solide, pauses non liées](2026-10-08-claude-C-MSG-C085.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `921149f`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/921149f/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -418,3 +426,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G085](2026-10-07-gpt-C-MSG-G085.md) — copie exacte avant G086.
 
 - [G086](2026-10-07-gpt-C-MSG-G086.md) — copie exacte avant G087.
+
+- [C-MSG-G089, six tâches Claude et reprise du 08/10](2026-10-08-gpt-C-MSG-G089.md) :
+  copie exacte du message publié en b81a9de, remplacé par G090.

@@ -22,3 +22,15 @@ Livrer un commit distinct, une réponse signée et les preuves réellement exéc
 Préserver les autres contributions. Pas de main, déploiement ni modification du
 Memory Engine. Si un lot est bloqué, avancer un autre lot prêt. Les fiches ne
 lancent pas de session Claude.
+
+
+## Complément C-039–C-041 — séance Codex du 08/10 matin
+
+Dès publication du lot C-039–C-041 (noter son SHA), compléter la recette installée
+avec `model-probe --plan-only`, les quatre cas de chaque candidat et
+`model-probe-inspect` sur réussite, arrêt technique et essai incomplet. Vérifier
+que l'arrêt technique ne lance pas le cas suivant ; distinguer bilans enregistrés
+et cas commencés. Prober marqueur présent malgré rapport PASSED_CASES, dossier
+existant, documents discordants et consultation sans modèle/clé/Store. Les sources
+restent réservées à Codex ; publier les sondes et constats indépendants. Cette
+extension complète G075, elle ne crée pas une septième tâche de la série.

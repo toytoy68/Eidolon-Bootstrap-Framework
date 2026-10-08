@@ -872,3 +872,30 @@ puis choix utilisateur. [Huit propositions, options et essais](../docs/proposals
 Préférence proposée : étendre le registre Core existant, avec adaptateurs natifs
 et distants au besoin ; premier lot documentaire et analyse. Aucun consensus,
 transport, nouveau droit ou agent déployé présumé. Avis Claude à recevoir.
+
+### Avis Claude sur C-BRAIN-G012 — 08/10/2026
+
+Auteur : Claude. Statut : PROPOSÉ, choix toytoy ouvert.
+[Avis et sept propositions](../docs/proposals/2026-10-08-agent-toolbox-claude.md).
+
+- Accord sur C : contrat Core d'abord ; MCP comme simple transport distant,
+  jamais comme frontière de droits, et absent du premier lot.
+- Ajouts :
+  - trois classes d'effet `READ` / `PREPARE` / `COMMIT` déclarées dans le manifeste ;
+  - les sorties d'outil sont des données, jamais des consignes (cas d'injection
+    dans le corpus) ;
+  - une grille de conformité commune, tirée des contre-revues G047–G065.
+- Divergence légère : `memory.search` après `files.*`, tant que A5-02 n'est pas
+  tranché. Ma préférence pour A5-02 : phrase source entière, sinon abstention.
+
+
+## C-BRAIN-G013 — Dashboard, reprise expliquée et contexte d'activité
+
+Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris. Statut : PROPOSÉ.
+[Options et état réel des données](../docs/proposals/2026-10-08-dashboard-context.md).
+Quatre compléments P9–P12 aux huit pistes d'outillage : accueil orienté missions,
+carte de reprise expliquée, contexte local progressif et panneau d'outils par
+mission. Préférence : missions lisibles dès la bêta, reprise manuelle avant collecte
+automatique, parcours documentaire complet avant multiplication d'agents.
+Études indépendantes Claude G076/G077 attribuées ; aucun avis ni choix présumé.
+

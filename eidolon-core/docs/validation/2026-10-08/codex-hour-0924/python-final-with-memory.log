@@ -1,0 +1,36 @@
+======================================================================
+FAIL: test_concurrent_valid_reads_and_authentication_failures (tests.test_http_availability.HTTPAvailabilityTests.test_concurrent_valid_reads_and_authentication_failures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/51f84abf77ed/core/eidolon-core/tests/test_http_availability.py", line 190, in test_concurrent_valid_reads_and_authentication_failures
+    self.assertEqual([r[0] for r in results], [401 if i % 2 == 0 else 200 for i in range(18)])
+AssertionError: Lists differ: [401,[22 chars]00, 401, 200, 401, 200, 503, 200, 401, 200, 401, 200, 401, 200] != [401,[22 chars]00, 401, 200, 401, 200, 401, 200, 401, 200, 401, 200, 401, 200]
+
+First differing element 10:
+503
+401
+
+  [401,
+   200,
+   401,
+   200,
+   401,
+   200,
+   401,
+   200,
+   401,
+   200,
+-  503,
++  401,
+   200,
+   401,
+   200,
+   401,
+   200,
+   401,
+   200]
+
+----------------------------------------------------------------------
+Ran 920 tests in 294.909s
+
+FAILED (failures=1)

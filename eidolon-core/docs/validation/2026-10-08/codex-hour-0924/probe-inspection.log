@@ -1,0 +1,16 @@
+test_case_gap_duplicate_mission_and_report_disagreement_are_refused (tests.test_model_probe_inspect.ProbeInspectionTests.test_case_gap_duplicate_mission_and_report_disagreement_are_refused) ... ok
+test_cli_is_offline_has_explicit_inspection_status_and_preserves_corrupt_details (tests.test_model_probe_inspect.ProbeInspectionTests.test_cli_is_offline_has_explicit_inspection_status_and_preserves_corrupt_details) ... ok
+test_consistent_documents_are_read_only_not_hardware_or_sqlite_validation (tests.test_model_probe_inspect.ProbeInspectionTests.test_consistent_documents_are_read_only_not_hardware_or_sqlite_validation) ... ok
+test_directory_symlink_and_non_probe_folder_are_refused (tests.test_model_probe_inspect.ProbeInspectionTests.test_directory_symlink_and_non_probe_folder_are_refused) ... ok
+test_fifo_symlink_directory_and_oversized_documents_refused_without_following (tests.test_model_probe_inspect.ProbeInspectionTests.test_fifo_symlink_directory_and_oversized_documents_refused_without_following) ... ok
+test_incomplete_marker_overrides_even_a_consistent_success_report (tests.test_model_probe_inspect.ProbeInspectionTests.test_incomplete_marker_overrides_even_a_consistent_success_report) ... ok
+test_malformed_unknown_and_impossible_case_claims_are_refused (tests.test_model_probe_inspect.ProbeInspectionTests.test_malformed_unknown_and_impossible_case_claims_are_refused) ... ok
+test_missing_plan_returns_incomplete_only_when_marker_identifies_experiment (tests.test_model_probe_inspect.ProbeInspectionTests.test_missing_plan_returns_incomplete_only_when_marker_identifies_experiment) ... ok
+test_missing_report_preserves_recorded_results_and_unknown_started_count (tests.test_model_probe_inspect.ProbeInspectionTests.test_missing_report_preserves_recorded_results_and_unknown_started_count) ... ok
+test_modified_corpus_recomputed_hash_does_not_replace_the_fixed_suite (tests.test_model_probe_inspect.ProbeInspectionTests.test_modified_corpus_recomputed_hash_does_not_replace_the_fixed_suite) ... ok
+test_stopped_error_is_consistent_but_never_promoted_to_pass (tests.test_model_probe_inspect.ProbeInspectionTests.test_stopped_error_is_consistent_but_never_promoted_to_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.548s
+
+OK

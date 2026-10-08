@@ -34,6 +34,13 @@ class ObservedServer(http_api.ReadServer):
             self.accepted.notify_all()
         super().process_request(request, address)
 
+    def _serve_connection(self, request, address):
+        try:
+            super()._serve_connection(request, address)
+        finally:
+            with self.accepted:
+                self.accepted.notify_all()
+
 
 class HTTPAvailabilityTests(unittest.TestCase):
     def setUp(self):
@@ -53,6 +60,13 @@ class HTTPAvailabilityTests(unittest.TestCase):
     def wait_accepted(self, count):
         with self.server.accepted:
             self.assertTrue(self.server.accepted.wait_for(lambda: self.server.accepted_count >= count, timeout=2))
+
+    def wait_drained(self):
+        def drained():
+            with self.server._worker_lock:
+                return not self.server._workers
+        with self.server.accepted:
+            self.assertTrue(self.server.accepted.wait_for(drained, timeout=2))
 
     def idle(self):
         s = socket.create_connection(self.server.server_address, timeout=1)
@@ -185,12 +199,38 @@ class HTTPAvailabilityTests(unittest.TestCase):
         self.assertEqual(idle.recv(1), b"")
 
     def test_concurrent_valid_reads_and_authentication_failures(self):
+        # Receiving a response does not mean its server worker has released its
+        # slot yet. Keep this authentication test below capacity at the server,
+        # rather than only limiting simultaneously waiting client threads.
+        results = []
         with ThreadPoolExecutor(max_workers=3) as pool:
-            results = list(pool.map(lambda i: self.health(token=TOKEN if i % 2 else "invalid"), range(18)))
+            for start in range(0, 18, 3):
+                results.extend(pool.map(lambda i: self.health(token=TOKEN if i % 2 else "invalid"), range(start, start + 3)))
+                self.wait_drained()
         self.assertEqual([r[0] for r in results], [401 if i % 2 == 0 else 200 for i in range(18)])
         identities = {r[1]["store_id"] for r in results if r[0] == 200}
         self.assertEqual(len(identities), 1)
         self.assertNotIn(TOKEN, json.dumps(results))
+
+    def test_delivered_responses_can_occupy_slots_until_worker_cleanup(self):
+        release = threading.Event()
+        original = self.server.shutdown_request
+
+        def delayed_close(request):
+            if threading.current_thread().name == 'eidolon-read-connection':
+                release.wait(5)
+            return original(request)
+
+        with patch.object(self.server, 'shutdown_request', side_effect=delayed_close):
+            try:
+                for _ in range(4):
+                    self.assertEqual(self.health()[0], 200)
+                self.assertEqual(self.health(), (503, {'protocol': http_api.PROTOCOL,
+                                                      'error': 'BUSY', 'authorizes_execution': False}))
+            finally:
+                release.set()
+        self.wait_drained()
+        self.assertEqual(self.health()[0], 200)
 
     def test_worker_start_failure_releases_slot_and_closes_socket(self):
         with patch("threading.Thread.start", side_effect=RuntimeError("synthetic thread start failure")):
