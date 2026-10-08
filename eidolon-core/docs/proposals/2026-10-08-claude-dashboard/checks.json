@@ -1,0 +1,109 @@
+{
+ "captures": [
+  {
+   "name": "a-connected-1366x768.png",
+   "overflow": 0,
+   "orb_animation": "pulse",
+   "tab_order": [
+    "to-a",
+    "to-b",
+    "sources",
+    "",
+    "primary",
+    "mission",
+    "mission",
+    "mission"
+   ],
+   "external_requests": 0
+  },
+  {
+   "name": "b-connected-1366x768.png",
+   "overflow": 0,
+   "orb_animation": "pulse",
+   "tab_order": [
+    "to-a",
+    "to-b",
+    "sources",
+    "mission",
+    "mission",
+    "mission",
+    "mission",
+    "msgs"
+   ],
+   "external_requests": 0
+  },
+  {
+   "name": "a-offline-1366x768.png",
+   "overflow": 0,
+   "orb_animation": "none",
+   "tab_order": [
+    "to-a",
+    "to-b",
+    "sources",
+    "mission",
+    "mission",
+    "mission",
+    "mission",
+    ""
+   ],
+   "external_requests": 0
+  },
+  {
+   "name": "b-stale-1366x768-sources.png",
+   "overflow": 0,
+   "orb_animation": "none",
+   "tab_order": [
+    "mission",
+    "mission",
+    "mission",
+    "mission",
+    "msgs",
+    "",
+    "to-a",
+    "to-b"
+   ],
+   "external_requests": 0
+  },
+  {
+   "name": "b-connected-1920x1080-reduced.png",
+   "overflow": 0,
+   "orb_animation": "none",
+   "tab_order": [
+    "to-a",
+    "to-b",
+    "sources",
+    "mission",
+    "mission",
+    "mission",
+    "mission",
+    "msgs"
+   ],
+   "external_requests": 0
+  },
+  {
+   "name": "a-connected-1366x768-sources.png",
+   "overflow": 0,
+   "orb_animation": "pulse",
+   "tab_order": [
+    "",
+    "primary",
+    "mission",
+    "mission",
+    "mission",
+    "mission",
+    "",
+    ""
+   ],
+   "external_requests": 0
+  }
+ ],
+ "contrast": {
+  "texte / fond": 13.76,
+  "secondaire / panneau": 8.23,
+  "accent / panneau": 6.44,
+  "alerte / périmé": 7.55,
+  "OK / panneau": 8.74,
+  "bouton primaire": 5.87,
+  "focus / fond": 13.63
+ }
+}
