@@ -755,3 +755,23 @@ tests sont distincts de cette revue. [Migration et limites](docs/PAUSE-BINDING.m
 
 Logo programme officiel publié, décision dans assets/branding/LOGO.md.
 G078–G083 attribués à Claude après G072–G077 ; aucune session présumée lancée.
+
+
+## C-047/C-048 — Agents natifs Image/Vidéo (08/10/2026, soir)
+
+Décision directe toytoy : créer, modifier ET analyser depuis l'accueil.
+[Contrat et installation](docs/MEDIA-AGENTS.md).
+
+- [x] Accès Image/Vidéo et brouillons locaux, sans upload ni faux résultat.
+- [x] Deux agents livrés dans le paquet, commande eidolon-media, six opérations.
+- [x] Adaptateurs locaux ComfyUI/Ollama Vision et extraction FFmpeg bornée.
+- [x] Intention durable avant appel, retour incertain sans renvoi automatique.
+- [x] Installation isolée et recette CLI sur API loopback simulées.
+- [ ] Moteurs/poids/workflows réels et qualification sur le serveur.
+- [ ] Upload authentifié et artefacts contrôlés, import vérifié des résultats.
+- [ ] Outils média raccordés au worker/catalogue de missions, budgets GPU partagés.
+- [ ] Exécution depuis l'accueil avec identité/droits de commande distincts.
+- [ ] Analyse vidéo longue/son, rétention et galerie persistante.
+
+**Chat/conversation/mission entièrement confié à Claude : G084–G089**, priorité
+après son lot engagé. Codex conserve agents média ; aucune session présumée lancée.

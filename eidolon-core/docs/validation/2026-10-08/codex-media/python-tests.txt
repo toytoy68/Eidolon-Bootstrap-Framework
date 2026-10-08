@@ -1,0 +1,24 @@
+test_real_http_framing_redirect_refusal_and_no_retry (tests.test_media_agents.HttpTests.test_real_http_framing_redirect_refusal_and_no_retry) ... ok
+test_analysis_payload_and_unverified_result (tests.test_media_agents.MediaTests.test_analysis_payload_and_unverified_result) ... ok
+test_bad_comfy_receipt_never_success (tests.test_media_agents.MediaTests.test_bad_comfy_receipt_never_success) ... ok
+test_catalog_installed_not_configured (tests.test_media_agents.MediaTests.test_catalog_installed_not_configured) ... ok
+test_edit_requires_hash_bound_staged_source (tests.test_media_agents.MediaTests.test_edit_requires_hash_bound_staged_source) ... ok
+test_existing_job_never_resubmitted (tests.test_media_agents.MediaTests.test_existing_job_never_resubmitted) ... ok
+test_generation_binds_prompt_and_size_without_changing_config (tests.test_media_agents.MediaTests.test_generation_binds_prompt_and_size_without_changing_config) ... ok
+test_intent_durable_before_first_backend_call (tests.test_media_agents.MediaTests.test_intent_durable_before_first_backend_call) ... ok
+test_loopback_only_no_credentials_query_or_redirect_destination (tests.test_media_agents.MediaTests.test_loopback_only_no_credentials_query_or_redirect_destination) ... ok
+test_missing_workflow_blocks_before_job_or_network (tests.test_media_agents.MediaTests.test_missing_workflow_blocks_before_job_or_network) ... ok
+test_poll_corrupted_record_and_unknown_job_never_posts (tests.test_media_agents.MediaTests.test_poll_corrupted_record_and_unknown_job_never_posts) ... ok
+test_poll_missing_history_not_permission_to_retry (tests.test_media_agents.MediaTests.test_poll_missing_history_not_permission_to_retry) ... ok
+test_refuse_json_duplicates_and_nonfinite (tests.test_media_agents.MediaTests.test_refuse_json_duplicates_and_nonfinite) ... ok
+test_refuse_symlink_fifo_size_and_media_type (tests.test_media_agents.MediaTests.test_refuse_symlink_fifo_size_and_media_type) ... ok
+test_reject_invalid_drafts (tests.test_media_agents.MediaTests.test_reject_invalid_drafts) ... ok
+test_six_operations_and_pure_prepare (tests.test_media_agents.MediaTests.test_six_operations_and_pure_prepare) ... ok
+test_timeout_is_uncertain_without_retry (tests.test_media_agents.MediaTests.test_timeout_is_uncertain_without_retry) ... ok
+test_truncated_wrong_model_and_error_analysis_rejected (tests.test_media_agents.MediaTests.test_truncated_wrong_model_and_error_analysis_rejected) ... ok
+test_video_real_decode_is_partial_and_without_audio (tests.test_media_agents.MediaTests.test_video_real_decode_is_partial_and_without_audio) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.769s
+
+OK

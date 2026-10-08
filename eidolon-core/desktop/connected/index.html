@@ -39,6 +39,93 @@
   </section>
 
   <main class="layout">
+    <section id="media-agents" class="panel media-home" aria-labelledby="media-title">
+      <div class="panel-head">
+        <div><p class="media-eyebrow">Vos espaces créatifs</p><h2 id="media-title">Image &amp; Vidéo</h2></div>
+        <span class="media-badge">Préparation locale</span>
+      </div>
+      <p class="help">Créez, transformez ou explorez vos médias. Préparez votre demande ici ; les moteurs restent à raccorder.</p>
+      <div class="media-cards">
+        <button type="button" id="open-image" class="media-card" aria-controls="image-workspace" aria-expanded="false" disabled>
+          <span class="media-symbol" aria-hidden="true">▧</span><strong>Image</strong>
+          <span>Créer une image, la retoucher ou en comprendre le contenu.</span>
+          <span class="media-link">Ouvrir l’espace Image →</span>
+        </button>
+        <button type="button" id="open-video" class="media-card" aria-controls="video-workspace" aria-expanded="false" disabled>
+          <span class="media-symbol" aria-hidden="true">▷</span><strong>Vidéo</strong>
+          <span>Créer une séquence, la modifier ou analyser une vidéo.</span>
+          <span class="media-link">Ouvrir l’espace Vidéo →</span>
+        </button>
+      </div>
+      <noscript><p>Activez JavaScript pour préparer une demande.</p></noscript>
+
+      <section id="image-workspace" class="media-workspace" aria-labelledby="image-title" hidden>
+        <div class="panel-head">
+          <h3 id="image-title" tabindex="-1">Agent Image</h3>
+          <button id="image-back" class="media-secondary" type="button">Retour aux deux espaces</button>
+        </div>
+        <p id="image-engine" class="notice">Moteur non raccordé — génération, modification et analyse indisponibles pour le moment.</p>
+        <form id="image-form" class="media-form" autocomplete="off" novalidate>
+          <label for="image-mode">Que souhaitez-vous faire ?</label>
+          <select id="image-mode"><option value="create">Créer</option><option value="edit">Modifier</option><option value="analyze">Analyser</option></select>
+          <label id="image-prompt-label" for="image-prompt">Décrivez votre idée</label>
+          <textarea id="image-prompt" rows="4" maxlength="4000" aria-describedby="image-privacy" placeholder="Sujet, ambiance, détails importants…"></textarea>
+          <label id="image-source-label" for="image-source">Fichier de référence (facultatif)</label>
+          <input id="image-source" type="file" aria-describedby="image-file-help image-privacy">
+          <p id="image-file-help" class="help"></p>
+          <div id="image-settings" class="media-settings"><label for="image-format">Format souhaité</label>
+            <select id="image-format"><option value="square">Carré · 1:1</option><option value="landscape">Paysage · 16:9</option><option value="portrait">Portrait · 9:16</option></select></div>
+          <p id="image-privacy" class="help">Brouillon limité à cette page, effacé au rechargement ou à la déconnexion. Seuls le nom, le type et la taille du fichier sont utilisés ; son contenu n’est ni lu ni envoyé.</p>
+          <div class="actions">
+            <button id="image-prepare" type="submit">Préparer le brouillon</button>
+            <button id="image-clear" class="media-secondary" type="button">Effacer</button>
+            <button id="image-run" type="button" disabled aria-describedby="image-engine">Exécution indisponible</button>
+          </div>
+          <p id="image-status" class="status" role="status" aria-live="polite"></p>
+          <div id="image-draft" class="media-draft" hidden>
+            <h4>Brouillon local — non envoyé</h4>
+            <p id="image-summary"></p>
+            <p id="image-request" class="media-request"></p>
+            <p id="image-file-summary" class="help"></p>
+          </div>
+        </form>
+      </section>
+
+      <section id="video-workspace" class="media-workspace" aria-labelledby="video-title" hidden>
+        <div class="panel-head">
+          <h3 id="video-title" tabindex="-1">Agent Vidéo</h3>
+          <button id="video-back" class="media-secondary" type="button">Retour aux deux espaces</button>
+        </div>
+        <p id="video-engine" class="notice">Moteur non raccordé — génération, modification et analyse indisponibles pour le moment.</p>
+        <form id="video-form" class="media-form" autocomplete="off" novalidate>
+          <label for="video-mode">Que souhaitez-vous faire ?</label>
+          <select id="video-mode"><option value="create">Créer</option><option value="edit">Modifier</option><option value="analyze">Analyser</option></select>
+          <label id="video-prompt-label" for="video-prompt">Décrivez votre idée</label>
+          <textarea id="video-prompt" rows="4" maxlength="4000" aria-describedby="video-privacy" placeholder="Sujet, ambiance, détails importants…"></textarea>
+          <label id="video-source-label" for="video-source">Fichier de référence (facultatif)</label>
+          <input id="video-source" type="file" aria-describedby="video-file-help video-privacy">
+          <p id="video-file-help" class="help"></p>
+          <div id="video-settings" class="media-settings"><label for="video-format">Format souhaité</label>
+            <select id="video-format"><option value="landscape">Paysage · 16:9</option><option value="portrait">Portrait · 9:16</option><option value="square">Carré · 1:1</option></select>
+            <label for="video-duration">Durée souhaitée</label>
+            <select id="video-duration"><option value="5">5 secondes</option><option value="10">10 secondes</option><option value="15">15 secondes</option></select></div>
+          <p id="video-privacy" class="help">Brouillon limité à cette page, effacé au rechargement ou à la déconnexion. Seuls le nom, le type et la taille du fichier sont utilisés ; son contenu n’est ni lu ni envoyé.</p>
+          <div class="actions">
+            <button id="video-prepare" type="submit">Préparer le brouillon</button>
+            <button id="video-clear" class="media-secondary" type="button">Effacer</button>
+            <button id="video-run" type="button" disabled aria-describedby="video-engine">Exécution indisponible</button>
+          </div>
+          <p id="video-status" class="status" role="status" aria-live="polite"></p>
+          <div id="video-draft" class="media-draft" hidden>
+            <h4>Brouillon local — non envoyé</h4>
+            <p id="video-summary"></p>
+            <p id="video-request" class="media-request"></p>
+            <p id="video-file-summary" class="help"></p>
+          </div>
+        </form>
+      </section>
+    </section>
+
     <section id="missions" class="panel" aria-labelledby="missions-title" tabindex="-1">
       <div class="panel-head">
         <h2 id="missions-title">Missions</h2>

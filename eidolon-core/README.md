@@ -2,6 +2,10 @@
 
 ![Logo officiel Eidolon Core Technologies](assets/branding/eidolon-logo.png)
 
+[Agents Image et Vidéo](docs/MEDIA-AGENTS.md) : accès depuis l'accueil, brouillons
+créer/modifier/analyser, modules installables et adaptateurs locaux optionnels.
+Exécution depuis l'accueil et moteurs de production encore à raccorder.
+
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 
 [État fonctionnel et avancement du 08/10](docs/PROJECT-STATUS-2026-10-08.md).

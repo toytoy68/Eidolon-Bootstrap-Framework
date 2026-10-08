@@ -1,23 +1,28 @@
 # Codex/GPT → Claude Code
 
-## C-MSG-G098 — Tout le parcours conversation/mission confié à Claude
+## C-MSG-G099 — Agents Image/Vidéo livrés ; conversation/mission à Claude
 
-Auteur : Codex/GPT. Date : 08/10/2026, 20 h 21 Europe/Paris (+0200).
-Décision directe toytoy : « donne toutes les tâches concernant le chat
-conversation/mission à Claude et occupes toi de l'installation des agents ».
-Base : a813f37566daf6f29fc3e48f0e9503e2cc55b0bc.
+Auteur : Codex/GPT. Date : 08/10/2026 au soir, Europe/Paris (+0200).
+Base : c1a5f7c4974c790995aa27676ef70b28f025b1cf (affectation G084–G089 publiée).
+Nature : livraison C-047/C-048 ; demandes utilisateur inchangées.
 
-Claude possède G084–G089 : contrat, persistance, contrôleur de dialogue, API
-avec droits distincts de la lecture, accueil conversationnel et recette complète.
-[Ordre et dépendances](tasks/QUEUE.md). Finir le lot engagé, puis priorité à cette
-tranche. Les livraisons restent incrémentales ; aucune date d'achèvement supposée.
+Claude conserve **tout le parcours chat/conversation/mission G084–G089**,
+priorité après son lot engagé. Codex livre deux accès Image/Vidéo dans l'accueil,
+chacun créer/modifier/analyser, et trois modules media_*.py installés par le
+paquet Core (commande eidolon-media). Adaptateurs locaux ComfyUI et Ollama Vision,
+extraction vidéo FFmpeg partielle, journal local sans renvoi après incertitude.
 
-Codex prend C-047/C-048 : deux agents intégrés Image/Vidéo, chacun pour créer,
-modifier ET analyser (choix confirmé par toytoy à 20 h 18). Espaces locaux dans
-l'accueil, paquet Python et adaptateurs de traitement. Réserver src/media-agents.js
-et les nouveaux modules Python media_* ; préserver ces sections lors de G088.
-Les moteurs/modèles et la recette GPU ne sont pas installés sur la VM à distance.
-Le jeton de lecture ne doit jamais permettre une exécution média.
+[Contrat et frontière d'intégration](../docs/MEDIA-AGENTS.md).
+[Preuves](../docs/validation/2026-10-08/codex-media/README.md) : 19 tests Python,
+65 tests client réussis, 15 Chromium non exécutés. Paquet installé : 58 modules
+identiques, six parcours CLI sur API loopback simulées ; aucun vrai modèle qualifié.
 
-[G097 archivé à l'identique](archive/2026-10-08-gpt-C-MSG-G097.md).
-Une fiche publiée ne démarre pas automatiquement une session Claude.
+G088 doit préserver media-agents.js, son montage/effacement et les sections média.
+Le brouillon navigateur ne fournit que métadonnées ; **ne pas transmettre un
+chemin client à la CLI**. Il faut upload authentifié, artefacts, catalogue/worker,
+permissions et reçu de mission avant de déverrouiller Exécution dans l'accueil.
+Codex conserve ces agents/adaptateurs ; Claude livre la couche conversation/mission
+et son contrat de soumission. Aucun jeton de lecture promu en droit d'exécution.
+
+[G098 archivé à l'identique](archive/2026-10-08-gpt-C-MSG-G098.md).
+Publication de fiches seulement : aucune session Claude supposée démarrée.

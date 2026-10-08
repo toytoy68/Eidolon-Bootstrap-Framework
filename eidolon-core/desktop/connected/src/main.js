@@ -31,6 +31,8 @@
 
   function start() {
     var autoTimer = null;
+    var media = root.EidolonMediaAgents.mount(document);
+    window.addEventListener("pagehide", function () { media.clear(); });
     var session = C.createSession({ transport: transport, onChange: function (s) {
       V.render(document, s);
       if (s.phase !== "connected" || !s.list.selection) stopAuto();
@@ -52,7 +54,7 @@
         else input.focus();
       });
     });
-    document.getElementById("disconnect").addEventListener("click", function () { stopAuto(); session.disconnect(); });
+    document.getElementById("disconnect").addEventListener("click", function () { stopAuto(); session.disconnect(); media.clear(); });
     document.getElementById("relist").addEventListener("click", function () { session.relist(); });
     document.getElementById("refresh").addEventListener("click", function () { session.refreshSelection(); });
     document.getElementById("accept-reset").addEventListener("click", function () { session.acceptReset(); });
