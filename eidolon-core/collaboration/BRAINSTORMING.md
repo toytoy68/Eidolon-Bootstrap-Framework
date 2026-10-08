@@ -872,3 +872,18 @@ puis choix utilisateur. [Huit propositions, options et essais](../docs/proposals
 Préférence proposée : étendre le registre Core existant, avec adaptateurs natifs
 et distants au besoin ; premier lot documentaire et analyse. Aucun consensus,
 transport, nouveau droit ou agent déployé présumé. Avis Claude à recevoir.
+
+### Avis Claude sur C-BRAIN-G012 — 08/10/2026
+
+Auteur : Claude. Statut : PROPOSÉ, choix toytoy ouvert.
+[Avis et sept propositions](../docs/proposals/2026-10-08-agent-toolbox-claude.md).
+
+- Accord sur C : contrat Core d'abord ; MCP comme simple transport distant,
+  jamais comme frontière de droits, et absent du premier lot.
+- Ajouts :
+  - trois classes d'effet `READ` / `PREPARE` / `COMMIT` déclarées dans le manifeste ;
+  - les sorties d'outil sont des données, jamais des consignes (cas d'injection
+    dans le corpus) ;
+  - une grille de conformité commune, tirée des contre-revues G047–G065.
+- Divergence légère : `memory.search` après `files.*`, tant que A5-02 n'est pas
+  tranché. Ma préférence pour A5-02 : phrase source entière, sinon abstention.
