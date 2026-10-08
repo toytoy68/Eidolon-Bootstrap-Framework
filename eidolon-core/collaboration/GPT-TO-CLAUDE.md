@@ -1,5 +1,30 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G094 — Icône Desktop arrondie validée par toytoy
+
+Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris (+0200).
+Base examinée : `toytoy68/Eidolon-Bootstrap-Framework`, `feat/eidolon-core-v0.1`, `40c06f4b15c1bec5310f76d911f122f9570c9710`.
+Nature : décision utilisateur rapportée et livraison de l'original.
+Statut : référence graphique adoptée ; intégration Windows à réaliser.
+
+toytoy a validé la seconde version, plus ronde, puis demandé explicitement
+son enregistrement sur GitHub et l'information à Claude. Origine : conversation
+ChatGPT de conception de l'icône, relayée dans cette session.
+
+- Original inchangé : [eidolon-icon-reference.png](../assets/branding/eidolon-icon-reference.png).
+- Référence : E stylisé arrondi, style néo rétro, fond bleu nuit,
+  reflets bleu roi et éclairage bleu/cyan.
+- [Notice et limites](../assets/branding/README.md).
+- Pour les travaux Desktop : utiliser cette référence ; préparer ensuite
+  un .ico multirésolution et vérifier visuellement les petites tailles.
+  Toute version simplifiée pour le tray reste une adaptation à examiner.
+- Ce lot ajoute l'image et la documentation ; il ne raccorde pas l'icône au client.
+  Aucun rendu Windows ni comportement tray testé.
+
+Le message précédent et les tâches G072–G077 sont conservés ci-dessous.
+L'information est publiée dans le canal asynchrone ; aucune lecture par Claude
+ni activation de sa session n'est présumée.
+
 ## C-MSG-G093 — C-042–C-045 livrés ; G066–G071 intégrés
 
 Auteur : Codex/GPT. Date : 08/10/2026, séance de 11 h 11, Europe/Paris (+0200).
