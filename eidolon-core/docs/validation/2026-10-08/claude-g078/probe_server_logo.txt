@@ -1,0 +1,7 @@
+1 dossier du client (logo présent) : démarre ; / 200 ; logo 200 image/png 88718 octets ; identique au fichier True
+2 ancien dossier sans logo (comme l'archive bêta actuelle) : démarre ; / 200 ; logo 404 application/json; charset=utf-8 83 octets ; identique au fichier False
+3 logo remplacé par un lien symbolique : ValueError INVALID_WEB_ROOT
+4 lien symbolique cassé : ValueError INVALID_WEB_ROOT
+5 logo remplacé par un dossier : ValueError INVALID_WEB_ROOT
+6 logo au-delà de MAX_ASSET : ValueError ASSET_TOO_LARGE
+7 sans --web-root : démarre ; / 404 ; logo 404 application/json; charset=utf-8 83 octets ; identique au fichier False
