@@ -3,7 +3,13 @@
 **Choix de toytoy (08/10/2026) :** « On remplace le E de l'icône par un gros "e"
 manuscrit. Sinon b+c. »
 
-Le « e » manuscrit est **réalisé et installé** dans `desktop/tauri/icons/` :
+**Mise à jour, même jour :** toytoy et GPT ont validé le logo programme
+(`assets/branding/eidolon-logo.png`). L'icône installée utilise désormais **le « e »
+de ce logo** ([logo_e.js](logo_e.js), [planche](logo-e-lisibilite.png),
+`png/logo-e-*.png`), à la place de mon « e » dessiné, qui reste ci-dessous comme
+historique.
+
+Premier « e » manuscrit (dessin Claude, remplacé) :
 
 - générateur [manuscrit.js](manuscrit.js) ;
 - [planche de lisibilité](manuscrit-lisibilite.png) ;

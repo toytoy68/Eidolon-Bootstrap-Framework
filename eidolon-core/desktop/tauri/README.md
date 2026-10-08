@@ -42,25 +42,28 @@ cargo build                     # binaire : target/debug/eidolon-consultation
 Versions exactes : `tauri =2.12.1`, `tauri-build =2.7.1`, `Cargo.lock`
 versionné. Aucune CLI Tauri ni Node n'est nécessaire.
 
-## Icône « e manuscrit » (choix toytoy du 08/10/2026)
+## Icône « e » du logo programme (validé par toytoy le 08/10/2026)
 
-L'icône reprend le **cadre** de la référence validée
-([assets/branding/eidolon-icon-reference.png](../../assets/branding/eidolon-icon-reference.png),
-non modifiée) : carré arrondi, liseré et halo bleus, coins rendus transparents.
-Le E y est remplacé par un **gros « e » manuscrit**, tracé à la plume (épaisseurs
-pleins/déliés) avec un halo bleu.
+L'icône combine deux pièces validées, sans les modifier :
 
-- Générateur :
-  [docs/proposals/2026-10-08-claude-icon-variants/manuscrit.js](../../docs/proposals/2026-10-08-claude-icon-variants/manuscrit.js).
-- `icon.png` (512 px, RGBA), `32x32.png`, `128x128.png`, `128x128@2x.png` : version
-  lumineuse.
-- `icon.ico` : version **simplifiée** à 16, 20 et 24 px (« e » plein, sans halo),
-  version lumineuse de 32 à 256 px (9 images).
-- Déclarés dans `bundle.icon` ; l'empaquetage reste désactivé. Rendu Windows non vu.
-- [Planche de lisibilité](../../docs/proposals/2026-10-08-claude-icon-variants/manuscrit-lisibilite.png).
+- le **cadre** de [l'icône de référence](../../assets/branding/eidolon-icon-reference.png) :
+  carré arrondi, liseré et halo bleus, coins rendus transparents ;
+- le **« e » manuscrit** du [logo programme](../../assets/branding/eidolon-logo.png).
+  Ce sont ses propres pixels, découpés avant « IDOLON » avec le début de l'orbite,
+  bords estompés et composés en mode *screen* sur l'intérieur repeint.
 
-Aucune police n'est utilisée : le tracé est une courbe dessinée, donc sans
-question de licence.
+Fichiers :
+
+- générateur :
+  [docs/proposals/2026-10-08-claude-icon-variants/logo_e.js](../../docs/proposals/2026-10-08-claude-icon-variants/logo_e.js) ;
+- `icon.png` (512 px, RGBA), 32, 128 et 256 px : version complète ;
+- `icon.ico` (9 images) : de 16 à 24 px, le « e » seul, agrandi et éclairci sur
+  carré plat ; de 32 à 256 px, la version complète.
+
+Les fichiers sont déclarés dans `bundle.icon`. L'empaquetage reste désactivé et
+le rendu Windows n'a pas été vu.
+[Planche de lisibilité](../../docs/proposals/2026-10-08-claude-icon-variants/logo-e-lisibilite.png) :
+le trait du logo est fin, mais le « e » reste reconnaissable à 16 px.
 
 ## Limites connues
 
