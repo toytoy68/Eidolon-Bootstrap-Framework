@@ -89,6 +89,12 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
+Codex/GPT C-047 — 08/10/2026, 20 h 18 Europe/Paris. Base `a813f37566daf6f29fc3e48f0e9503e2cc55b0bc`.
+Décision directe toytoy : deux agents Image/Vidéo accessibles à l'accueil,
+pour création/modification ET analyse. Lot pris : espaces de préparation locale
+dans desktop/connected, contrat de raccordement et tests. Moteurs non raccordés,
+aucune exécution média annoncée. Préserver les zones logo G078/G079 de Claude.
+
 Lot Codex/GPT C-002c livré le 06/10/2026 sur d330615, après intégration G010/G016
 à 1b9f7dd : suspensions Web persistantes, reprise manuelle versionnée, CLI/tests.
 Fichiers research_pauses.py, research.py, CLI, tests et démo/docs ; pas de Desktop.
@@ -1335,3 +1341,20 @@ et schema du journal revérifiés avant retrait. 37 tests rotation réussis.
 [Preuves consolidées](docs/validation/2026-10-08/codex-afternoon/README.md).
 Logo officiel visible dans README Core. G078–G083 publiés pour Claude.
 Aucune activation rotation, main ou VM ; contre-revue G080 ouverte.
+
+
+### C-MSG-G099 — C-047/C-048 : agents média et répartition du travail — 08/10 soir
+
+Décision toytoy : accès natifs Image/Vidéo, création/modification et analyse.
+Chat/conversation/mission confié entièrement à Claude, G084–G089 publiés dans
+c1a5f7c ; Codex possède les agents média. Deux espaces d'accueil livrés avec
+brouillons sans envoi. Modules Python/CLI installables et adaptateurs locaux
+ComfyUI/Ollama Vision, vidéo FFmpeg échantillonnée sans audio, journal de travaux
+avec INTENT préalable et aucun renvoi automatique.
+
+19 tests Python dédiés réussis ; client 65 réussis/15 Chromium non exécutés.
+Paquet installé : 58 modules identiques et parcours CLI sur moteurs simulés.
+[Contrat, frontières et limites](docs/MEDIA-AGENTS.md),
+[preuves](docs/validation/2026-10-08/codex-media/README.md).
+Moteurs/poids, upload, sorties vérifiées et rattachement au runtime/commandes
+restent à livrer ; aucune exécution depuis l'accueil, VM ou main modifiée.

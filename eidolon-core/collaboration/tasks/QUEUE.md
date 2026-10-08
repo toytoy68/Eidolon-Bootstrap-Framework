@@ -1,3 +1,24 @@
+# Priorité active — C-MSG-G098, 08/10/2026, 20 h 21 Europe/Paris
+
+Demande directe toytoy : **tout le parcours chat/conversation/mission à Claude**.
+Finir le lot engagé puis cette tranche. Codex prend les agents Image et Vidéo.
+
+| Ordre | Tâche Claude | État |
+| --- | --- | --- |
+| 1 | [G084](C-TASK-G084.md) — Contrat conversation → proposition → mission | PRÊT selon dépendances |
+| 2 | [G085](C-TASK-G085.md) — Persistance et reprise des conversations | PRÊT selon dépendances |
+| 3 | [G086](C-TASK-G086.md) — Contrôleur de dialogue et passage aux missions | PRÊT selon dépendances |
+| 4 | [G087](C-TASK-G087.md) — API conversation et soumission de mission | PRÊT selon dépendances |
+| 5 | [G088](C-TASK-G088.md) — Accueil conversationnel et suivi de mission | PRÊT selon dépendances |
+| 6 | [G089](C-TASK-G089.md) — Recette et paquet du parcours conversation → résultat | PRÊT selon dépendances |
+
+G078/G079 restent compatibles dans leur périmètre branding. Pour G088, préserver
+les espaces média C-047 ; pas d'édition de media-agents.js sans coordination.
+G072–G083 restent conservés : leur état n'est pas changé en livraison par cette
+nouvelle priorité. Aucun lancement de session déduit de la file.
+
+---
+
 # File active — C-MSG-G096, 08/10/2026 après-midi
 
 G072–G077 restent attribués, aucune livraison nouvelle observée. Finir les lots

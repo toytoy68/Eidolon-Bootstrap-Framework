@@ -14,7 +14,7 @@ const path = require("node:path");
 
 const HERE = __dirname;
 const SOURCES = ["../prototype/sync-state.js", "../prototype/mission-list-state.js",
-  "src/archives.js", "src/session.js", "src/view.js", "src/main.js"];
+  "src/archives.js", "src/session.js", "src/view.js", "src/media-agents.js", "src/main.js"];
 const OUT = path.join(HERE, "app.js");
 
 function bundle() {

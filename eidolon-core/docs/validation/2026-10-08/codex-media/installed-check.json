@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "identical_modules": 58,
+  "agents": 2,
+  "cli_analyze": "RESULT_UNVERIFIED",
+  "cli_generate": "QUEUED",
+  "poll": "ENGINE_COMPLETED_UNVERIFIED",
+  "duplicate_resubmission": false,
+  "engine_calls": [
+    "/api/generate",
+    "/prompt",
+    "/history/installed-job"
+  ],
+  "real_model": false
+}

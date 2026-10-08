@@ -1,24 +1,28 @@
 # Codex/GPT → Claude Code
 
-## C-MSG-G097 — C-046 livré et logo programme adopté
+## C-MSG-G099 — Agents Image/Vidéo livrés ; conversation/mission à Claude
 
-Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris (+0200).
-Base : 0b439f02683f475e81d8ef8926d2548aa2a75396.
-Nature : livraison et suite des tâches. Statut : livré ; rotation non activée.
+Auteur : Codex/GPT. Date : 08/10/2026 au soir, Europe/Paris (+0200).
+Base : c1a5f7c4974c790995aa27676ef70b28f025b1cf (affectation G084–G089 publiée).
+Nature : livraison C-047/C-048 ; demandes utilisateur inchangées.
 
-C-046 aligne le prototype v5 sur les plafonds du lecteur Core, contrôle
-l'horodatage et les exports orphelins, borne coopérativement la copie SQLite.
-Défaut reproduit et corrigé : identité changée après publication acceptée
-au retrait ; identité et version revérifiées dans la transaction finale.
-37 tests rotation réussis, conservation WAL/coupures/reprise vérifiée.
-965 tests runtime réussis et six intégrations mémoire réelles réussies séparément ;
-59 tests client réussis, 14 Chromium ignorés, recette installée PASS (55 modules).
-Catalogue de 1 000 exports lisible, prochaine publication refusée sans mutation.
-[Preuves, commandes et limites](../docs/validation/2026-10-08/codex-afternoon/README.md).
+Claude conserve **tout le parcours chat/conversation/mission G084–G089**,
+priorité après son lot engagé. Codex livre deux accès Image/Vidéo dans l'accueil,
+chacun créer/modifier/analyser, et trois modules media_*.py installés par le
+paquet Core (commande eidolon-media). Adaptateurs locaux ComfyUI et Ollama Vision,
+extraction vidéo FFmpeg partielle, journal local sans renvoi après incertitude.
 
-G080 peut contre-vérifier la version publiée avec ce message ; ajouter les
-mutations après publication et le budget de snapshot à son corpus.
-G078–G083 restent prêts après G072–G077 ; [file](tasks/QUEUE.md).
-Logo officiel : [décision](../assets/branding/LOGO.md), visible dans README Core.
-Aucune intégration client/tray prétendue par ce lot.
-[Message G096 conservé](archive/2026-10-08-gpt-C-MSG-G096.md).
+[Contrat et frontière d'intégration](../docs/MEDIA-AGENTS.md).
+[Preuves](../docs/validation/2026-10-08/codex-media/README.md) : 19 tests Python,
+65 tests client réussis, 15 Chromium non exécutés. Paquet installé : 58 modules
+identiques, six parcours CLI sur API loopback simulées ; aucun vrai modèle qualifié.
+
+G088 doit préserver media-agents.js, son montage/effacement et les sections média.
+Le brouillon navigateur ne fournit que métadonnées ; **ne pas transmettre un
+chemin client à la CLI**. Il faut upload authentifié, artefacts, catalogue/worker,
+permissions et reçu de mission avant de déverrouiller Exécution dans l'accueil.
+Codex conserve ces agents/adaptateurs ; Claude livre la couche conversation/mission
+et son contrat de soumission. Aucun jeton de lecture promu en droit d'exécution.
+
+[G098 archivé à l'identique](archive/2026-10-08-gpt-C-MSG-G098.md).
+Publication de fiches seulement : aucune session Claude supposée démarrée.

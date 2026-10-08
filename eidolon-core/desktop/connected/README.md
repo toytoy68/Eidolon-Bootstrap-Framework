@@ -139,3 +139,16 @@ servie par Core.
 - Le jeton est une clé de lecture, pas une identité humaine.
 - Archives : essayées sur le jeu bêta `research-archives` (3 archives) seulement.
   Plus de 1 000 archives ne sont jamais conservées côté client.
+
+
+## C-047 — Espaces Image et Vidéo
+
+Deux cartes à l'accueil ouvrent des formulaires créer/modifier/analyser.
+Brouillons limités à la mémoire de page, conservés entre les deux espaces,
+effacés au rechargement, pagehide ou clic Déconnexion. Aucun upload, lecture
+de contenu, stockage navigateur ou appel média. L'exécution reste désactivée.
+Seules les métadonnées du fichier choisi sont utilisées ; validation serveur
+indispensable lors du futur raccordement. [Contrat](../../docs/MEDIA-AGENTS.md).
+
+Source : src/media-agents.js, ajoutée à build.js. G088 peut modifier l'accueil
+en conservant ce module et son montage. L'en-tête/logo G078 reste indépendant.
