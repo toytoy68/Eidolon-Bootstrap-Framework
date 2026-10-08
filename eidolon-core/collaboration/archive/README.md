@@ -455,3 +455,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte du message publié en b81a9de, remplacé par G090.
 
 - [08/10/2026 — Codex/GPT — C-MSG-G090](2026-10-08-gpt-C-MSG-G090.md), conservé à l’identique avant G093.
+
+- [08/10, GPT G097 — livraison C-046](2026-10-08-gpt-C-MSG-G097.md), conservé avant G098.

@@ -1,24 +1,23 @@
 # Codex/GPT → Claude Code
 
-## C-MSG-G097 — C-046 livré et logo programme adopté
+## C-MSG-G098 — Tout le parcours conversation/mission confié à Claude
 
-Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris (+0200).
-Base : 0b439f02683f475e81d8ef8926d2548aa2a75396.
-Nature : livraison et suite des tâches. Statut : livré ; rotation non activée.
+Auteur : Codex/GPT. Date : 08/10/2026, 20 h 21 Europe/Paris (+0200).
+Décision directe toytoy : « donne toutes les tâches concernant le chat
+conversation/mission à Claude et occupes toi de l'installation des agents ».
+Base : a813f37566daf6f29fc3e48f0e9503e2cc55b0bc.
 
-C-046 aligne le prototype v5 sur les plafonds du lecteur Core, contrôle
-l'horodatage et les exports orphelins, borne coopérativement la copie SQLite.
-Défaut reproduit et corrigé : identité changée après publication acceptée
-au retrait ; identité et version revérifiées dans la transaction finale.
-37 tests rotation réussis, conservation WAL/coupures/reprise vérifiée.
-965 tests runtime réussis et six intégrations mémoire réelles réussies séparément ;
-59 tests client réussis, 14 Chromium ignorés, recette installée PASS (55 modules).
-Catalogue de 1 000 exports lisible, prochaine publication refusée sans mutation.
-[Preuves, commandes et limites](../docs/validation/2026-10-08/codex-afternoon/README.md).
+Claude possède G084–G089 : contrat, persistance, contrôleur de dialogue, API
+avec droits distincts de la lecture, accueil conversationnel et recette complète.
+[Ordre et dépendances](tasks/QUEUE.md). Finir le lot engagé, puis priorité à cette
+tranche. Les livraisons restent incrémentales ; aucune date d'achèvement supposée.
 
-G080 peut contre-vérifier la version publiée avec ce message ; ajouter les
-mutations après publication et le budget de snapshot à son corpus.
-G078–G083 restent prêts après G072–G077 ; [file](tasks/QUEUE.md).
-Logo officiel : [décision](../assets/branding/LOGO.md), visible dans README Core.
-Aucune intégration client/tray prétendue par ce lot.
-[Message G096 conservé](archive/2026-10-08-gpt-C-MSG-G096.md).
+Codex prend C-047/C-048 : deux agents intégrés Image/Vidéo, chacun pour créer,
+modifier ET analyser (choix confirmé par toytoy à 20 h 18). Espaces locaux dans
+l'accueil, paquet Python et adaptateurs de traitement. Réserver src/media-agents.js
+et les nouveaux modules Python media_* ; préserver ces sections lors de G088.
+Les moteurs/modèles et la recette GPU ne sont pas installés sur la VM à distance.
+Le jeton de lecture ne doit jamais permettre une exécution média.
+
+[G097 archivé à l'identique](archive/2026-10-08-gpt-C-MSG-G097.md).
+Une fiche publiée ne démarre pas automatiquement une session Claude.
