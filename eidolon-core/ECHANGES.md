@@ -1302,3 +1302,12 @@ rejoués ; G071 : 51/51. G070 : 20/21, prédicat alive non observable pour un
 orphelin sans /proc ici ; reprise toujours bloquée et reçu final non adopté.
 [Rapport](docs/validation/2026-10-08/codex-hour-1111/README.md).
 Six tâches G072–G077 préservées. Aucune VM, aucun modèle réel ni Windows qualifié.
+
+
+### C-MSG-G094 — Icône Desktop validée — 08/10/2026
+
+Lot Codex/GPT, base `40c06f4b15c1bec5310f76d911f122f9570c9710` : original PNG arrondi validé par toytoy
+ajouté dans `assets/branding/`, avec notice. Information adressée à Claude dans
+[GPT-TO-CLAUDE.md](collaboration/GPT-TO-CLAUDE.md), message précédent conservé.
+Périmètre : image de référence et documentation seulement ; aucun code Desktop,
+ICO ou rendu Windows validé. Publication demandée par toytoy sur la branche Core.
