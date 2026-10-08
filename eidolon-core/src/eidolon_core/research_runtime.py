@@ -11,8 +11,10 @@ No injected provider, URL, transport or DNS adapter. A future real connector
 needs its own egress policy, mission binding and operational qualification.
 """
 from dataclasses import dataclass
+from contextlib import contextmanager
 from pathlib import Path
 import re
+import sqlite3
 import time
 
 from .contracts import ContractError, digest, encode, snapshot
@@ -108,7 +110,7 @@ class SyntheticResearchBackend:
         if not guard.retain_queries:
             raise ContractError("QUERY_HISTORY_NOT_ENABLED")
         self.guard_id = guard.guard_id
-        ResearchPauses(root/"pauses.sqlite3", create=initialize)
+        self.pause_id = ResearchPauses(root/"pauses.sqlite3", create=initialize).database_id
 
     def manifest(self):
         return {"protocol":"synthetic-research-backend/1","directory":self.directory,
@@ -129,8 +131,13 @@ class SyntheticResearchBackend:
         pauses_path = Path(self.directory)/"pauses.sqlite3"
         if not pauses_path.is_file():
             raise ContractError("RESEARCH_PAUSES_MISSING")
+        pauses = ResearchPauses(pauses_path, create=False)
+        if self.pause_id is None:
+            raise ContractError("RESEARCH_PAUSES_MIGRATION_REQUIRED")
+        if pauses.database_id != self.pause_id:
+            raise ContractError("RESEARCH_PAUSES_CHANGED")
         coordinator = ResearchCoordinator([FixtureProvider(self.scenario)],FixtureReader(self.scenario),
-                     resolver=fixture_dns,guard=guard,pauses=ResearchPauses(pauses_path,create=False))
+                     resolver=fixture_dns,guard=guard,pauses=pauses)
         return coordinator.run(parameters["query"],required_pages=parameters["required_pages"],operation_id=parameters["operation_id"])
 
     def verify(self, parameters, context, result):
@@ -171,16 +178,37 @@ class SyntheticResearchBackend:
                     self.validate,self.execute,self.verify,"synthetic-research-journal-and-fixtures/1")
 
 
-def _bound_backend(store, scenario):
+@contextmanager
+def _binding_connection(store):
+    try:
+        with store.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            from .research_binding import ExistingResearchStore
+            ExistingResearchStore.validate(db)
+            yield db
+    except sqlite3.Error as exc:
+        code = getattr(exc, 'sqlite_errorcode', None)
+        code = code & 255 if type(code) is int else None
+        diagnostic = {sqlite3.SQLITE_BUSY: 'RESEARCH_BINDING_BUSY',
+                      sqlite3.SQLITE_LOCKED: 'RESEARCH_BINDING_BUSY',
+                      sqlite3.SQLITE_INTERRUPT: 'RESEARCH_BINDING_SCAN_TIMEOUT'}.get(
+                          code, 'RESEARCH_BINDING_UNAVAILABLE')
+        raise ContractError(diagnostic) from None
+
+
+def _bound_backend(store, scenario, *, adoption=None):
     """Bind first-use evidence outside the fixture directory, in the mission Store.
 
     Serializes constructors, not research execution. No provider is called here.
     A coherent rollback of BOTH databases remains outside this local guarantee.
     """
     root = store.directory / "research-fixture"
-    with store.connection() as db:
-        db.execute("BEGIN IMMEDIATE")
+    with _binding_connection(store) as db:
         row = db.execute("SELECT value FROM sync_metadata WHERE key='research_fixture_guard_id'").fetchone()
+        pause_row = db.execute("SELECT value FROM sync_metadata WHERE key='research_fixture_pause_id'").fetchone()
+        if pause_row is not None and (type(pause_row[0]) is not str
+                or re.fullmatch(r'pd-[0-9a-f]{32}', pause_row[0]) is None):
+            raise ContractError('INVALID_RESEARCH_PAUSE_BINDING')
         if row is None:
             # Adopt existing C-021 missions without rewriting their configuration.
             # Any prior research in this Store rules out a fresh default backend.
@@ -201,9 +229,67 @@ def _bound_backend(store, scenario):
         backend = SyntheticResearchBackend(root, scenario=scenario, create=initialize)
         if expected is not None and backend.guard_id != expected:
             raise ContractError("RESEARCH_BACKEND_CHANGED")
+        if pause_row is not None:
+            if backend.pause_id != pause_row[0]:
+                raise ContractError('RESEARCH_PAUSES_CHANGED')
+        elif not initialize:
+            if adoption is None:
+                raise ContractError('RESEARCH_PAUSES_MIGRATION_REQUIRED')
+            store_row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
+            if store_row is None:
+                raise ContractError('INVALID_RESEARCH_BACKEND_BINDING')
+            pauses = ResearchPauses(root / 'pauses.sqlite3', create=False)
+            backend.pause_id = pauses.adopt_identity(store_id=store_row[0], guard_id=backend.guard_id,
+                                                    **adoption)
+            db.execute("INSERT INTO sync_metadata(key,value) VALUES ('research_fixture_pause_adoption',?)",
+                       (encode({'database_id': backend.pause_id, **adoption}),))
+        elif adoption is not None:
+            # A migration is never a request to create a missing backend.
+            raise ContractError('RESEARCH_PAUSES_MISSING')
         if row is None:
             db.execute("INSERT INTO sync_metadata(key,value) VALUES ('research_fixture_guard_id',?)", (backend.guard_id,))
+        if pause_row is None:
+            db.execute("INSERT INTO sync_metadata(key,value) VALUES ('research_fixture_pause_id',?)", (backend.pause_id,))
         return backend
+
+
+def migrate_research_pauses(store, *, actor, reason):
+    """Bind reviewed existing evidence, without runtime/model/provider execution."""
+    from .research_pauses import _operator
+    _operator(actor, 200); _operator(reason, 4000)
+    if not (store.directory / 'research-fixture' / 'pauses.sqlite3').is_file():
+        raise ContractError('RESEARCH_PAUSES_MISSING')
+    backend = _bound_backend(store, 'readable', adoption={'actor': actor, 'reason': reason})
+    return {'protocol': 'eidolon-research-pause-binding/1', 'status': 'BOUND',
+            'database_id': backend.pause_id, 'guard_id': backend.guard_id,
+            'authorizes_execution': False, 'request_sent': False, 'pauses_released': False}
+
+
+@contextmanager
+def bound_research_pauses(store):
+    """Existing binding only, for an operator release; never adopt or initialize.
+
+    Keep the Store transaction while the caller reviews/releases the pause, so
+    a cooperating binder cannot change the expected identities in between.
+    """
+    with _binding_connection(store) as db:
+        identities = dict(db.execute("SELECT key,value FROM sync_metadata WHERE key IN "
+                                     "('research_fixture_guard_id','research_fixture_pause_id')"))
+        guard_id = identities.get('research_fixture_guard_id')
+        pause_id = identities.get('research_fixture_pause_id')
+        if guard_id is None or pause_id is None:
+            raise ContractError('RESEARCH_PAUSES_MIGRATION_REQUIRED')
+        if (type(guard_id) is not str or re.fullmatch(r'g-[0-9a-f]{32}', guard_id) is None
+                or type(pause_id) is not str or re.fullmatch(r'pd-[0-9a-f]{32}', pause_id) is None):
+            raise ContractError('INVALID_RESEARCH_PAUSE_BINDING')
+        root = store.directory / 'research-fixture'
+        backend = SyntheticResearchBackend(root, create=False)
+        if backend.guard_id != guard_id:
+            raise ContractError('RESEARCH_BACKEND_CHANGED')
+        pauses = ResearchPauses(root / 'pauses.sqlite3', create=False)
+        if pauses.database_id != pause_id:
+            raise ContractError('RESEARCH_PAUSES_CHANGED')
+        yield pauses
 
 
 class ResearchRuntime(Runtime):

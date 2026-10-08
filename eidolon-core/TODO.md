@@ -22,7 +22,7 @@ Les huit [propositions d'outillage](docs/proposals/2026-10-08-agent-toolbox.md) 
 ouvertes ; quatre [compléments dashboard/contexte](docs/proposals/2026-10-08-dashboard-context.md)
 sont proposés, sans choix adopté. G072–G077 sont les six nouvelles tâches Claude,
 publiées à la demande de toytoy. G064/G065 et la note outillage Claude reçus
-sur e403fd2 et intégrés ; G066–G071 préservés. G064-3 reproduit : C-042 ouvert. [File active](collaboration/tasks/QUEUE.md).
+sur e403fd2 et intégrés ; G066–G071 préservés. G064-3 corrigé dans C-042 ; contre-revue et qualification réelle ouvertes. [File active](collaboration/tasks/QUEUE.md).
 
 ### État de la séance précédente — 07/10/2026 au soir
 
@@ -708,18 +708,36 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Accueil missions, carte de reprise expliquée, activité locale progressive et outils par mission proposés.
 - [ ] Études Claude G076/G077 puis comparaison/arbitrage toytoy ; aucune collecte activée.
 
-## C-042 — suivi prioritaire G064 (à faire)
+## C-042 — suivi prioritaire G064 — 08/10/2026
 
-- [ ] Lier l'identité de pauses.sqlite3 au Store, refuser un remplacement valide
+- [x] Lier l'identité de pauses.sqlite3 au Store, refuser un remplacement valide
   mais étranger ; définir la reprise explicite des bases existantes sans accepter
   silencieusement une nouvelle identité. Tester coupures à chaque publication,
   restauration et concurrence, conservation des pauses/audits, aucune relance.
-- [ ] G064-2 : libellé de cohérence « à la génération », préserver idempotence.
+- [x] G064-2 : libellé de cohérence « à la génération », préserver idempotence.
 - [x] G064-1 : limite du verrou coopératif documentée.
-- [ ] G064-4 : normaliser les erreurs SQLite de construction Python ; la CLI
+- [x] G064-4 : normaliser les erreurs SQLite de construction Python ; la CLI
   normalise déjà STORAGE_UNAVAILABLE. Les sondes complètes Claude restent
   rapportées ; G064-3 seul a été reproduit indépendamment dans cette séance.
 
-G064 est une revue livrée ; ces correctifs ne sont pas prétendus livrés avec elle.
-Codex réserve ce suivi pour la prochaine tranche, sans créer une septième tâche
-Claude ni lancer une session automatiquement.
+La revue G064 reste conservée intacte. Les corrections C-042 et leurs nouveaux
+tests sont distincts de cette revue. [Migration et limites](docs/PAUSE-BINDING.md).
+- [x] Migration explicite auditée, sans création de Store ni levée des pauses.
+- [x] Reprise après coupure entre les bases par revue explicite ; intents conservés.
+- [ ] Contre-revue indépendante et recette sur le stockage réel de toytoy.
+
+## C-043–C-045 — parcours opérateur et revue G067 — 08/10/2026
+
+- [x] C-043 : `research --create-only` retourne 0 pour une création NEW sans appel.
+- [x] C-043 : levée des pauses research-sim liée aux identités Store/garde/pauses.
+- [x] C-044 : diagnostic `research-binding-inspect`, trois identités observées,
+  pas de création, migration, levée ni permission de reprise.
+- [x] G066 : client archives reçu (d87b6d2), intégré et tests Node reproduits.
+- [x] G067–G069 : revues/recette/prototype reçus depuis 97770f5 ; contributions conservées.
+- [x] C-045 / G067-1 : refus WAL avant les consultations concernées, sans fichiers annexes.
+- [x] C-045 / G067-2/4 : lectures mission/ancres bornées en SQL à 16 Mio,
+  texte UTF-8 explicite ; rattrapage sans chargement de chaque détail d'événement.
+- [ ] G067-3 : distinguer stockage occupé et indisponible dans le protocole HTTP,
+  à coordonner avec les états client ; refus STATE_UNAVAILABLE conservé ici.
+- [ ] G068 : aligner les limites producteur/lecteur avant intégration de la
+  rotation ; pas d'activation automatique par la réception du prototype.

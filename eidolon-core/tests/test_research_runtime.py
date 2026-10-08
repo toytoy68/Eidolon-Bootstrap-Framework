@@ -6,6 +6,8 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 import json
+from contextlib import redirect_stdout, redirect_stderr
+import io
 from pathlib import Path
 import subprocess
 import sys
@@ -58,6 +60,24 @@ class ResearchRuntimeTests(unittest.TestCase):
 
     def guard(self):
         return ResearchGuard(self.store.directory/'research-fixture/guard',create=False)
+
+    def test_cli_create_only_succeeds_without_running_mission_json_and_human(self):
+        from eidolon_core.cli import main
+        for form in ('json', 'human'):
+            out, err = io.StringIO(), io.StringIO()
+            with redirect_stdout(out), redirect_stderr(err), patch.object(
+                    ResearchRuntime, 'run', side_effect=AssertionError('creation must not run')):
+                rc = main(['--state', str(self.store.directory), '--profile', 'research-sim',
+                           '--format', form, 'research', 'synthetic prepared', '--create-only'])
+            self.assertEqual((rc, err.getvalue()), (0, ''))
+            if form == 'json':
+                mission = json.loads(out.getvalue())
+                self.assertEqual((mission['status'], mission['calls'], mission['invocation_budget']['used']),
+                                 ('NEW', [], 0))
+                self.assertEqual(self.store.get(mission['id'])['status'], 'NEW')
+            else:
+                self.assertIn('Eidolon Core Technologies', out.getvalue())
+            self.assertEqual(self.guard().inspect()['runs'], [])
 
     def test_end_to_end_success_is_retrieval_not_truth(self):
         result=self.execute()

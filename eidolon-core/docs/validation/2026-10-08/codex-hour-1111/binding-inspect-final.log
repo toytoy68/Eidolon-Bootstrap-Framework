@@ -1,0 +1,16 @@
+test_changes_between_samples_are_not_reported_bound (tests.test_research_binding_inspect.BindingInspectionTests.test_changes_between_samples_are_not_reported_bound) ... ok
+test_cli_json_human_exit_codes_and_no_runtime (tests.test_research_binding_inspect.BindingInspectionTests.test_cli_json_human_exit_codes_and_no_runtime) ... ok
+test_legacy_and_missing_binding_report_review_without_adoption (tests.test_research_binding_inspect.BindingInspectionTests.test_legacy_and_missing_binding_report_review_without_adoption) ... ok
+test_malformed_and_oversized_identity_is_not_echoed_or_repaired (tests.test_research_binding_inspect.BindingInspectionTests.test_malformed_and_oversized_identity_is_not_echoed_or_repaired) ... ok
+test_missing_store_and_review_copy_never_created_or_activated (tests.test_research_binding_inspect.BindingInspectionTests.test_missing_store_and_review_copy_never_created_or_activated) ... ok
+test_query_connections_are_readonly_and_cannot_write (tests.test_research_binding_inspect.BindingInspectionTests.test_query_connections_are_readonly_and_cannot_write) ... ok
+test_replacement_and_missing_evidence_have_distinct_diagnostics (tests.test_research_binding_inspect.BindingInspectionTests.test_replacement_and_missing_evidence_have_distinct_diagnostics) ... ok
+test_store_rebinding_between_samples_is_detected (tests.test_research_binding_inspect.BindingInspectionTests.test_store_rebinding_between_samples_is_detected) ... ok
+test_symlink_fifo_and_directory_are_refused_without_opening_target (tests.test_research_binding_inspect.BindingInspectionTests.test_symlink_fifo_and_directory_are_refused_without_opening_target) ... ok
+test_three_ids_observed_readonly_without_content_or_authority_claim (tests.test_research_binding_inspect.BindingInspectionTests.test_three_ids_observed_readonly_without_content_or_authority_claim) ... ok
+test_wal_identity_change_is_detected_even_without_main_file_change (tests.test_research_binding_inspect.BindingInspectionTests.test_wal_identity_change_is_detected_even_without_main_file_change) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.119s
+
+OK

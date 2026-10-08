@@ -1,3 +1,25 @@
+# File active — C-MSG-G093, 08/10/2026, fin de séance de 11 h 11
+
+G066–G071 reçus et intégrés jusqu'à e525610. Dernier message Claude : C092,
+G071 livré et G072 annoncé comme prochaine tâche. Aucun démarrage ultérieur
+n'est supposé. C-042–C-045 publiés par Codex ; lire le message actif et ses limites.
+
+| Ordre | Tâche | État connu |
+| --- | --- | --- |
+| 1 | [G072](C-TASK-G072.md) — Réponses HTTP des planificateurs | PRÊT, prochaine tâche annoncée par Claude |
+| 2 | [G073](C-TASK-G073.md) — Rapports de qualification hors ligne | PRÊT |
+| 3 | [G074](C-TASK-G074.md) — Configurations locales et identité | PRÊT |
+| 4 | [G075](C-TASK-G075.md) — Recette des planificateurs installés | PRÊT |
+| 5 | [G076](C-TASK-G076.md) — Étude dashboard Jarvis/Eidolon | PRÊT |
+| 6 | [G077](C-TASK-G077.md) — Étude contexte d’activité/reprise | PRÊT |
+
+Compléments existants : contre-vérifier G067/C-045 et G064/C-042 ; G070 doit
+distinguer vivant/mort/non observable lorsque /proc manque. Ces suivis ne
+réouvrent pas les livraisons reçues et ne lancent pas de session. La rotation
+reste inactive ; alignement des limites réservé à une prochaine tranche Codex.
+
+---
+
 # File active — C-MSG-G090, 08/10/2026 matin
 
 Demande toytoy : renouveler de 5/6 tâches pendant la reprise Core d'une heure.

@@ -1,0 +1,15 @@
+======================================================================
+ERROR: test_http_archives (unittest.loader._FailedTest.test_http_archives)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_http_archives
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'tests.test_http_archives'
+
+
+----------------------------------------------------------------------
+Ran 95 tests in 12.658s
+
+FAILED (errors=1)

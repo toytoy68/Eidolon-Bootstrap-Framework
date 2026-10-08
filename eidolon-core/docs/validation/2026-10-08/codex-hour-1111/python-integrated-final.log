@@ -1,0 +1,29 @@
+======================================================================
+ERROR: test_wal_writer_cannot_mix_store_identity_and_receipt (tests.test_receipt_lookup.ReceiptLookupTests.test_wal_writer_cannot_mix_store_identity_and_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_receipt_lookup.py", line 332, in test_wal_writer_cannot_mix_store_identity_and_receipt
+    self.assertEqual(lookup(self.reader, self.query)["receipt"], receipt)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/receipt_lookup.py", line 169, in lookup
+    with store.connection() as db:
+         ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_receipt_lookup.py", line 319, in interleaved
+    with connection() as db:
+         ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/http_api.py", line 104, in connection
+    require_rollback_journal(self.path)
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/readonly_sqlite.py", line 30, in require_rollback_journal
+    raise ContractError('READ_ONLY_WAL_UNSUPPORTED')
+eidolon_core.contracts.ContractError: READ_ONLY_WAL_UNSUPPORTED
+
+----------------------------------------------------------------------
+Ran 971 tests in 343.616s
+
+FAILED (errors=1)

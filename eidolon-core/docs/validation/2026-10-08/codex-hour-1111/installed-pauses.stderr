@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/codex-hour-1111/installed-pauses.py", line 105, in <module>
+    main()
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/codex-hour-1111/installed-pauses.py", line 79, in main
+    command([*base, 'research', 'synthetic inspected', '--create-only'])
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/codex-hour-1111/installed-pauses.py", line 35, in command
+    assert result.returncode == expected, (result.returncode, result.stdout[:200], result.stderr[:300])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (2, '{"calls":[],"cancel_requested":false,"configuration":{"call_seconds":10.0,"max_invocations":64,"memory":"synthetic-memory/1","memory_root":null,"model":"deterministic-research-fixture/1","policy":{"al', '')

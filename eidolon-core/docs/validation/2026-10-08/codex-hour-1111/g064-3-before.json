@@ -1,0 +1,11 @@
+{
+  "finding": "G064-3",
+  "reproduced": true,
+  "active_before": [
+    "ACCESS_DENIED"
+  ],
+  "records_after_replacement": 0,
+  "runtime_reopened": true,
+  "synthetic_only": true,
+  "research_rerun_after_replacement": false
+}

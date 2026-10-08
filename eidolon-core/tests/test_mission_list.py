@@ -144,7 +144,7 @@ class MissionListTests(unittest.TestCase):
                 class Proxy:
                     def execute(_, sql, parameters=()):
                         result = db.execute(sql, parameters)
-                        if sql.startswith('SELECT value FROM sync_metadata'):
+                        if "FROM sync_metadata WHERE key='store_id'" in sql:
                             row = result.fetchone()  # first read pins the SQLite snapshot
                             writer.request_cancel(mission['id'])
                             return SimpleNamespace(fetchone=lambda: row)

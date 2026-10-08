@@ -157,3 +157,27 @@ de son ACL IPC : la coquille seule n’est pas un filtre réseau des sous-ressou
 Option serveur --research-archives : [contrat et codes](HTTP-RESEARCH-ARCHIVES.md).
 POST /v1/research-archives est une consultation paginée authentifiée, sans mutation.
 Sans option, ARCHIVES_NOT_CONFIGURED. Aucun chemin n'est fourni par le client.
+
+## Lecture bornée et mode SQLite — C-045, 08/10/2026
+
+La consultation prend en charge le journal SQLite classique utilisé par Core.
+Une base passée extérieurement en WAL est refusée **avant la connexion** avec
+`READ_ONLY_WAL_UNSUPPORTED` côté Python ; l'API conserve son refus public
+`STATE_UNAVAILABLE`. Cela évite que SQLite `mode=ro` crée des fichiers `-wal`
+et `-shm`. Le diagnostic ne change jamais le mode de journalisation, ne supprime
+pas ces fichiers et n'utilise pas `immutable=1`, qui ignorerait les verrous des
+écrivains normaux. Une conversion éventuelle exige un arrêt et une opération
+SQLite explicite hors de cette API, après sauvegarde et examen de l'état.
+
+Les corps de mission et les détails d'événement utilisés pour les empreintes
+sont bornés **dans la requête SQL**, à 16 Mio + un octet sentinelle. Au-delà,
+la page entière est refusée ; aucun JSON partiel n'est présenté. La projection
+publique garde sa taille et son protocole. Le rattrapage ne charge plus le corps
+de chaque événement : seules ses références et les ancres nécessaires sont lues.
+Les champs stockés doivent être du texte UTF-8 ; un BLOB UTF-16/UTF-8 n'est pas
+silencieusement interprété comme un corps de mission ou un détail valide.
+
+Ces limites bornent les valeurs chargées en Python, pas le coût total d'une base
+arbitraire, du stockage ou du décodage d'un corps admissible. Le délai SQL demeure
+coopératif. Les changements de mode/remplacements par un écrivain extérieur qui
+ignore ces prérequis restent hors garantie de concurrence du Core.

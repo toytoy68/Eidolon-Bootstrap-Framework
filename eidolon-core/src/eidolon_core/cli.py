@@ -61,11 +61,15 @@ def main(argv=None):
     inspect = commands.add_parser("recovery-inspect", help="inspect a historical review copy without starting Core")
     inspect.add_argument("--mission-id")
     commands.add_parser("research-pauses", help="inspect existing durable Web pauses; no network")
+    commands.add_parser('research-binding-inspect', help='inspect existing research identities without migration, release or execution')
     release = commands.add_parser("research-release", help="release one reviewed pause; does not send a request")
     release.add_argument("pause_id")
     release.add_argument("--revision", type=int, required=True)
     release.add_argument("--actor", required=True)
     release.add_argument("--reason", required=True)
+    pause_migrate = commands.add_parser("research-pauses-migrate", help="explicitly bind existing research fixture pauses; no release or execution")
+    pause_migrate.add_argument("--actor", required=True)
+    pause_migrate.add_argument("--reason", required=True)
     commands.add_parser("presentation-preview", help="preview the common presentation without creating any state")
     commands.add_parser("demo", help="run the restricted text mission; deterministic unless --model-config")
     research = commands.add_parser("research", help="retrieve fixed synthetic pages, requires --profile research-sim")
@@ -181,14 +185,52 @@ def main(argv=None):
             else:
                 print(encode(result))
             return 0  # Copy/inspection completed, never permission to resume.
+        if args.command == 'research-binding-inspect':
+            if (args.profile not in {'text', 'research-sim'} or args.memory_root is not None
+                    or args.targets is not None or args.allow_target is not None
+                    or args.research_scenario != 'readable'):
+                raise ValueError('RESEARCH_BINDING_INSPECTION_OPTIONS_NOT_SUPPORTED')
+            from .research_binding_inspect import inspect_research_binding, render_binding_inspection
+            result = inspect_research_binding(args.state)
+            print(render_binding_inspection(result) if args.format == 'human' else encode(result))
+            return 0 if result['status'] == 'BOUND' else 2
+        if args.command == "research-pauses-migrate":
+            if (args.profile != 'research-sim' or args.memory_root is not None
+                    or args.targets is not None or args.allow_target is not None
+                    or args.research_scenario != 'readable'):
+                raise ValueError('RESEARCH_PAUSE_MIGRATION_OPTIONS_NOT_SUPPORTED')
+            from .research_runtime import migrate_research_pauses
+            # Open existing Store without calling its schema-creating constructor.
+            # The binding operation validates metadata and uses the usual recovery guard.
+            from .research_binding import ExistingResearchStore
+            result = migrate_research_pauses(ExistingResearchStore(args.state), actor=args.actor, reason=args.reason)
+            if args.format == 'human':
+                from .presentation import header, message
+                print(header(title='Liaison des suspensions') + message('INFO', encode(result)))
+            else:
+                print(encode(result))
+            return 0
         if args.command in {"research-pauses", "research-release"}:
             from .research_pauses import ResearchPauses
-            path = Path(args.state) / "research-pauses.sqlite3"
+            if args.profile not in {'text', 'research-sim'}:
+                raise ValueError('RESEARCH_PAUSE_PROFILE_NOT_SUPPORTED')
+            path = (Path(args.state) / 'research-fixture' / 'pauses.sqlite3'
+                    if args.profile == 'research-sim' else Path(args.state) / 'research-pauses.sqlite3')
             if not path.is_file():
                 raise FileNotFoundError("research pauses require an existing pause database")
-            pauses = ResearchPauses(path)
-            result = (pauses.inspect() if args.command == "research-pauses" else
-                      pauses.release(args.pause_id, expected_revision=args.revision, actor=args.actor, reason=args.reason))
+            if args.command == 'research-pauses':
+                from .readonly_sqlite import require_rollback_journal
+                require_rollback_journal(path)
+            if args.command == 'research-release' and args.profile == 'research-sim':
+                from .research_binding import ExistingResearchStore
+                from .research_runtime import bound_research_pauses
+                with bound_research_pauses(ExistingResearchStore(args.state)) as pauses:
+                    result = pauses.release(args.pause_id, expected_revision=args.revision,
+                                            actor=args.actor, reason=args.reason)
+            else:
+                pauses = ResearchPauses(path, create=False)
+                result = (pauses.inspect() if args.command == "research-pauses" else
+                          pauses.release(args.pause_id, expected_revision=args.revision, actor=args.actor, reason=args.reason))
             if args.format == "human":
                 from .presentation import header, message
                 print(header(title="Suspensions Web") + message("INFO", encode(result)))
@@ -351,7 +393,7 @@ def main(argv=None):
                                        actor=args.actor, reason=args.reason, output=output,
                                        confirm_no_effect=args.confirm_no_effect)
         print(render_result(result) if args.format == "human" else encode(presented_mission(result)))
-        if args.command in {"show", "create", "reconcile", "decide"} or (args.command == "diagnose" and args.create_only):
+        if args.command in {"show", "create", "reconcile", "decide"} or (args.command in {"diagnose", "research"} and args.create_only):
             return 0
         return {"SUCCEEDED": 0, "FAILED": 3, "CANCELLED": 4, "ABANDONED": 4}.get(result["status"], 2)
     except sqlite3.Error as exc:
