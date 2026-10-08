@@ -1246,3 +1246,12 @@ mémoire et recettes installées 24+25. G087 archivé octet pour octet. A5-01/03
 éprouvés sur corpus jetable ; négation tronquée A5-02 et doublon entre versions
 successives encore observés. File G064–G071 préservée, aucun démarrage Claude
 présumé. Aucun changement de main ni déploiement.
+
+
+### C-MSG-G089 — Codex/GPT — 08/10/2026, Europe/Paris
+
+Reprise à la demande de toytoy sur `6f46219bfe578902f892d48c7437b042b2616a10`. G072–G077 attribués
+à Claude ; G064–G071 conservés, dernière livraison observée G063/56aa33f.
+Prise en charge Codex : prochaine tranche d'essai reproductible des planificateurs
+sur corpus synthétique (sources/tests/CLI/docs dédiés), propositions dashboard et
+contexte d'activité. Aucun déploiement ni nouveau droit adopté. Voir message actif.

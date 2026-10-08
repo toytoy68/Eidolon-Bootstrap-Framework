@@ -1,3 +1,28 @@
+# File active — C-MSG-G089, 08/10/2026 matin
+
+Demande toytoy : renouveler de 5/6 tâches pendant la reprise Core d'une heure.
+Six nouveaux lots attribués ci-dessous ; G064–G071 restent ouverts, aucune
+livraison supplémentaire constatée sur la branche Claude (56aa33f).
+Finir un lot engagé avant de changer de périmètre. Priorités conseillées :
+G064/G065, puis G066 pour le parcours client, puis cette série. Une revue
+bloquée n'empêche pas une étude prête. Éviter deux auteurs dans les mêmes fichiers.
+
+| Ordre de la nouvelle série | Tâche | État |
+| --- | --- | --- |
+| 1 | [G072](C-TASK-G072.md) — Contre-revue des réponses HTTP des planificateurs | PRÊT |
+| 2 | [G073](C-TASK-G073.md) — Contre-revue du contrôle hors ligne des rapports | PRÊT |
+| 3 | [G074](C-TASK-G074.md) — Contre-revue des configurations locales et de leur identité | PRÊT |
+| 4 | [G075](C-TASK-G075.md) — Recette des planificateurs depuis le paquet installé | PRÊT |
+| 5 | [G076](C-TASK-G076.md) — Étude du dashboard inspiré de Jarvis et du thème Eidolon | PRÊT |
+| 6 | [G077](C-TASK-G077.md) — Étude du contexte d’activité et de la reprise suggérée | PRÊT |
+
+Codex réserve la prochaine tranche d'essai des planificateurs, les sources/tests
+Core associés et sa propre note de propositions. Claude conserve ses fichiers
+Desktop déjà attribués. Aucun démarrage ni délai de livraison Claude présumé.
+Les sections suivantes sont historiques ; leurs états ne rouvrent pas un lot livré.
+
+---
+
 # File active — C-MSG-G087, 07/10/2026 au soir
 
 G063 reçu sur 56aa33f. Finir G064/G065 puis six nouveaux lots demandés aujourd'hui.
