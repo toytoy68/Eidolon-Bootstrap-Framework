@@ -1,0 +1,24 @@
+✓ archive reproductible (deux constructions identiques) — sha256 a8531b2e881f52e5c2a032f3c3e5d4780f669b517a06ce4956b55782bf831a9a, 89 fichiers
+✓ manifeste de l'archive vérifié
+✓ ressources Desktop présentes dans l'archive — index.html, app.js (identique au dépôt), style.css
+✓ app.js de l'archive contient le panneau archives G066
+✓ construction hors réseau sans réglage (échoue dans ce conteneur, documenté) — install_layout → nouvel essai avec SETUPTOOLS_USE_DISTUTILS=stdlib
+✓ module importé depuis le venv, pas du dépôt — version 0.1.0
+✓ modules installés identiques à l'archive — 52 modules
+✓ aucune ressource Desktop dans le paquet Python (servie depuis l'archive)
+✓ commande eidolon-core installée
+✓ recherche synthétique puis reprise identique
+✓ runtime-inspect sans mutation ni donnée privée — champ recorded_block (G065) présent
+✓ recovery-inspect mission absente : code 2 constant (G065)
+✓ jeu bêta research-archives généré
+✓ prédiagnostic HTTP avec archives
+✓ client servi = fichiers extraits de l'archive
+✓ catalogue HTTP paginé (C-030) depuis le paquet installé
+✓ aucune route vers un export brut
+✓ client Desktop extrait, servi par le paquet installé, archives affichées à 360 px — {"rows": 3, "overflow": 0, "errors": []}
+✓ model-config-check : valide sans contacter le serveur — VALID_CONFIG
+✓ CLI planificateur local sur faux serveur loopback : un seul appel, reprise sans rappel — appels ['/api/chat']
+✓ configuration publique refusée avant tout appel
+✓ tous les processus créés sont arrêtés — 1 serveur(s)
+✓ dépôt source inchangé (HEAD et état git)
+{"status": "PASS", "checks": 23, "failed": []}
