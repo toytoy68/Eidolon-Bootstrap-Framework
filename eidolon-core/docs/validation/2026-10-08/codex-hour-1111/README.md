@@ -61,3 +61,65 @@ identiques et 25 contrôles bêta ; cette étape précède C-044 et sera complé
 `integrated-targeted.log` conserve une erreur de sélection du module de test
 inexistant tests.test_http_archives. La commande corrigée avec
 `tests.test_archive_page` passe 109 tests (`integrated-corrected.log`).
+
+## Bilan final intégré — C-042–C-045 et G066–G071
+
+**971 tests Python réussis, aucun ignoré, 279,392 s** : `python-final.log`.
+Les six intégrations Memory Engine sont activées sur b33c3a0, corpus jetables.
+`connected-integrated.log` : **59 réussis, 14 Chromium non exécutés**, zéro échec.
+`installed-integrated.json` : **55 modules identiques**, inspections de liaison,
+migration/rejet, idempotence et **25 contrôles bêta** réussis hors du checkout.
+
+C-045 ajoute les lectures bornées SQL et le refus WAL. `g067-before.log` reproduit
+l'acceptation des BLOB et le défaut WAL avant correction. Les essais intermédiaires
+ont détecté un OSError non normalisé après disparition de la base (corrigé) et
+deux points d'injection de tests devenus inopérants après modification des SELECT
+(adaptés en conservant leurs assertions). `g067-corrected.log` : 102 PASS.
+La première suite intégrée (`python-integrated-final.log`) a ensuite révélé un
+ancien test exigeant WAL du lecteur HTTP. La transaction est désormais testée
+avec le Store local ; la frontière HTTP teste le refus WAL. 37 tests ciblés
+passent (`receipt-wal-corrected.log`), puis les 971 de la suite finale passent.
+
+Le banc C-044 avait éprouvé la détection d'un changement en WAL ; le contrat
+final C-045 est plus restrictif : la consultation refuse WAL avant connexion,
+pour ne pas créer ses fichiers annexes. Aucun mode de journal n'est modifié.
+G067-3 (distinction BUSY en HTTP) reste ouvert ; refus constant conservé.
+
+### Contributions Claude et contre-vérification
+
+- G066–G071 intégrés depuis e525610, sans réécriture des rapports/scripts.
+- G068 : **4/4** tests de fermeture/snapshot rejoués (`g068-replayed.log`).
+  Producteur toujours isolé ; divergences de taille/nombre/date restent à traiter.
+- G069 : recette **23/23 rapportée par Claude**, pas rejouée intégralement ici
+  (Chromium absent). Notre recette indépendante installée ci-dessus est distincte.
+- G071 : **51/51** assertions rejouées sur le code intégré (`g071-replayed.log`).
+- G070 : **20/21** ici (`g070-replayed.log`). Ne pas l'annoncer entièrement PASS.
+  Le contrôle H combine bail détenu et présence dans /proc. Le premier est vrai,
+  le second indisponible. `g070-environment.py` enveloppe seulement le prédicat
+  alive du script original, en conservant toutes les assertions et leurs retours.
+  Sa sortie (`g070-environment.log`) montre kill(pid,0) réussi, mais /proc/PID/stat
+  absent pour l'orphelin. Le script le considère à tort comme mort. L'effet finit
+  ensuite, le reçu est présent non adopté, aucune seconde exécution n'a lieu.
+  Rejouer ce contrôle sur VM et distinguer « non observable » de « terminé ».
+  Aucun correctif PDEATHSIG n'est prétendu livré ; cela reste une étude séparée.
+
+### Publication et archive
+
+Commit de code préparé : **c3746df25212b5279e648431b6287608173be352**.
+Arbre : **c1c8ec0c6bc2360668a1a5d1ed28941fb4ef5a9e**, identique au local testé.
+Git HTTPS sans identifiant en écriture dans cette session ; objets préparés par
+le connecteur GitHub, avec fadc3bc et la branche Claude e525610 comme parents.
+La référence finale ajoute le présent bilan, les derniers journaux et la file.
+
+`archive-check.json` : **95 fichiers identiques aux objets Git**, trois verdicts
+de qualification et deux contrôles de configuration exécutés après extraction,
+sans création d'état ni appel modèle. Archive SHA-256 :
+`646f1a42ad85d5619a9baf0bf89f0fa1a6be8f903426a4365b74118846610ca3`.
+
+```sh
+python tools/build_beta_bundle.py --commit c3746df25212b5279e648431b6287608173be352 --output /tmp/eidolon-beta-c3746df.tar.gz
+python docs/validation/2026-10-08/codex-hour-0435/archive-check.py --archive /tmp/eidolon-beta-c3746df.tar.gz --commit c3746df25212b5279e648431b6287608173be352
+```
+
+Les pourcentages 80 % bêta observateur / 40 % vision complète restent des
+estimations de périmètre. Qualification VM/Windows/modèle réel encore à faire.

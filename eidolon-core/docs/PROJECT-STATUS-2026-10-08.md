@@ -13,7 +13,7 @@ La validation réelle VM100/PC Windows et le choix d'un modèle contrôleur rest
 | C-044 | Diagnostic de liaison en lecture seule : distingue identité correcte, ancienne liaison à examiner, remplacement et élément manquant |
 | C-045 | Consultation SQL bornée en octets, BLOB inattendus refusés et WAL refusé avant ouverture sur les parcours sans mutation |
 | Claude G066 | Panneau d'archives connecté, lecture paginée sur demande, liste figée si le catalogue change ou devient indisponible |
-| Claude G067–G069 | Revues de lecture SQLite, prototype de rotation amélioré et recette indépendante du paquet reçus ; la rotation reste isolée |
+| Claude G067–G071 | Revues de lecture SQLite, prototype de rotation amélioré, recette indépendante et revues des interruptions/API reçus ; la rotation reste isolée |
 
 ## Ce qui reste bloquant pour qualifier la bêta
 
@@ -35,3 +35,9 @@ indépendante du nombre de tests ou de commits.
 
 [Preuves, commandes et limites de la séance](validation/2026-10-08/codex-hour-1111/README.md).
 [File active de Claude](../collaboration/tasks/QUEUE.md).
+
+Validation finale : **971 tests Python réussis**, 59 tests client réussis et
+14 Chromium non exécutés. Paquet installé : 55 modules identiques, 25 contrôles
+bêta réussis. G071 rejoué : 51/51. G070 rejoué : 20/21, un contrôle de présence
+d’orphelin non observable ici via /proc ; à confirmer sur VM. Les 971 tests ne
+masquent pas cette limite du banc indépendant.

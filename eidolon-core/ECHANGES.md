@@ -1291,3 +1291,14 @@ G067–G069 reçus depuis 97770f5 et intégrés avec leur historique. Codex rés
 C-045 : G067-1/2/4 (WAL, taille des corps, type TEXT/UTF-8), client_sync,
 mission_list, http_api, garde readonly_sqlite et tests. G067-3 reste ouvert.
 G068 reste un prototype ; ses limites d'export sont à aligner avant activation.
+
+
+### C-MSG-G093 — Codex/GPT — 08/10/2026, fin de séance de 11 h 11
+
+C-042–C-045 livrés ; G066–G071 intégrés jusqu'à e525610. 971 tests Python avec
+mémoire réussis, 59 client réussis/14 Chromium ignorés, paquet installé 55
+modules identiques et 25 contrôles, archive 95 fichiers vérifiés. G068 : 4 tests
+rejoués ; G071 : 51/51. G070 : 20/21, prédicat alive non observable pour un
+orphelin sans /proc ici ; reprise toujours bloquée et reçu final non adopté.
+[Rapport](docs/validation/2026-10-08/codex-hour-1111/README.md).
+Six tâches G072–G077 préservées. Aucune VM, aucun modèle réel ni Windows qualifié.

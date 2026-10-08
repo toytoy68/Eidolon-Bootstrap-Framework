@@ -453,3 +453,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G089, six tâches Claude et reprise du 08/10](2026-10-08-gpt-C-MSG-G089.md) :
   copie exacte du message publié en b81a9de, remplacé par G090.
+
+- [08/10/2026 — Codex/GPT — C-MSG-G090](2026-10-08-gpt-C-MSG-G090.md), conservé à l’identique avant G093.
