@@ -113,15 +113,22 @@ def main():
                 state = root / (provider + "-state")
                 arguments = [cli, "--state", state, "--model-config", config_file]
                 initial_requests = len(requests)
+                checked = json.loads(command([cli, "--state", state, "model-config-check", "--config", config_file]))
+                assert checked["status"] == "VALID_CONFIG" and checked["server_contacted"] is False
+                assert checked["secret_value_read"] is False and checked["model_available"] is None
+                assert not state.exists() and len(requests) == initial_requests
+                assert synthetic_key not in json.dumps(checked)
                 mission = json.loads(command([*arguments, "demo"]))
                 assert mission["status"] == "SUCCEEDED" and len(requests) == initial_requests + 1
+                assert checked["model_id"] == mission["configuration"]["model"]
                 assert requests[-1] == (path, "Bearer " + synthetic_key if provider == "llama-server" else None)
                 assert json.loads(command([*arguments, "run", mission["id"]])) == mission
                 assert len(requests) == initial_requests + 1
                 assert synthetic_key not in json.dumps(mission)
                 assert all(synthetic_key.encode() not in file.read_bytes() for file in state.rglob("*") if file.is_file())
                 model_results.append({"provider": provider, "status": "PASS", "requests": 1,
-                                      "resume_without_replay": True, "credential_absent_from_state": True})
+                                      "resume_without_replay": True, "credential_absent_from_state": True,
+                                      "configuration_check_network_free": True})
         finally:
             server.shutdown()
             thread.join(5)

@@ -111,6 +111,15 @@ perdue après écriture. Même corpus pour A/B/C. Mesurer correction/provenance,
 refus attendus, absence de double effet, durée, CPU/RAM et complexité d'installation.
 Fixer les seuils avant l'essai ; aucun gain chiffré revendiqué ici.
 
+Cas ajoutés après contrôle de l'adaptateur mémoire le 08/10 sur b33c3a0 : une
+tranche de texte aux positions exactes peut perdre la négation située à gauche
+du terme recherché ; deux versions successives d'une conversation peuvent
+rappeler le même message. Le corpus comparatif doit donc vérifier le contexte
+nécessaire à l'interprétation et distinguer répétition du même message de
+confirmation indépendante. Comparer retour au message source, élargissement
+de l'extrait ou abstention explicite ; aucune de ces options n'est adoptée ici.
+Les reproductions sont dans [memory-recheck.json](../validation/2026-10-08/codex-hour-0435/memory-recheck.json).
+
 Résultat utile attendu : un agent produit un rapport contrôlable à partir des
 sources autorisées ; un second réutilise l'outil mais se voit refuser un dossier
 non attribué. Sources canoniques inchangées. Qualification Windows/NAS réelle

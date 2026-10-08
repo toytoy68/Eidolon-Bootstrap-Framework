@@ -7,9 +7,9 @@ ils ne constituent pas des fonctionnalités livrées.
 
 ## État courant — séance du 08/10/2026
 
-C-034–C-037 : deux adaptateurs de planification durcis (manifestes /3),
-choix explicite Ollama ou llama-server dans la CLI et qualification-check
-hors ligne. 881 tests avec mémoire réussis ; paquet installé, recettes 24+25.
+C-034–C-038 : deux adaptateurs de planification durcis (manifestes /3),
+choix explicite Ollama ou llama-server dans la CLI, qualification-check et
+model-config-check hors ligne. 886 tests avec mémoire réussis ; paquet installé, recettes 24+25.
 Le défaut reste déterministe. [Preuves](docs/validation/2026-10-08/codex-hour-0435/README.md).
 [Outillage des futurs agents](docs/proposals/2026-10-08-agent-toolbox.md) :
 huit propositions Codex, contribution Claude attendue plus tard, choix ouvert.
@@ -288,6 +288,14 @@ explicités avant activation ; les accès réels ne sont pas supposés disponibl
 - [ ] Revalider l'adaptateur après les corrections A5-01 (exports recouvrants),
   A5-02 (contexte/négation) et A5-03 (content.parts). Suivre ces corrections dans
   l'autre session, ne pas les implémenter ici.
+  Vérification du 08/10 sur b33c3a0 : imports de conversations identiques
+  recouvrantes et refus des parts mal formées confirmés via corpus synthétique.
+  A5-02 reste présent à travers Core : « Ne pas acheter la V100 cette semaine. »
+  devient « acheter la V100 cette semaine. » pour la requête « acheter V100 ».
+  Référence exacte, UNVERIFIED, needs_review et truncated restent conservés ;
+  cela ne restaure pas la négation coupée. Deux versions successives d'une même
+  conversation peuvent aussi rappeler deux fois le même message. Aucun correctif
+  sémantique appliqué dans Core ; [preuve reproductible](docs/validation/2026-10-08/codex-hour-0435/memory-recheck.json).
   Actualisation du 05/10 : correctif A5-03 publié dans `d34a365`, diff lu ici,
   tests non réexécutés dans ce lot. A5-01/A5-02 restent ouverts sur cette tête.
 - [ ] Contrat de fraîcheur/révision à la frontière d'une action réelle.
@@ -654,3 +662,10 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Lecture commune bornée, diagnostic sans texte distant, aucun retry automatique.
 - [x] Manifestes /3 ; missions antérieures refusées à la reprise sans migration implicite.
 - [ ] Contre-revue indépendante et qualification avec les moteurs réels retenus pour essai.
+
+## C-038 — diagnostic de configuration locale — 08/10/2026
+
+- [x] model-config-check affiche manifeste et identifiant sans réseau, état ni valeur de clé.
+- [x] JSON/humain, codes 0/2 ; ne transforme pas une syntaxe valide en qualification de modèle.
+- [x] Cinq tests nouveaux, dont accès à la variable de clé interdit pendant l'inspection.
+- [ ] Essai serveur réel distinct, choisi explicitement par l'opérateur.

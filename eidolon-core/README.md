@@ -1,6 +1,9 @@
 # Eidolon Core v0.1
 
 [État fonctionnel, limites et avancement au 07/10 au soir](docs/PROJECT-STATUS-2026-10-07.md).
+[Ajouts et preuves du 08/10](docs/validation/2026-10-08/codex-hour-0435/README.md) :
+configuration explicite des deux planificateurs candidats, diagnostics hors
+ligne et réponses HTTP durcies. [Propositions d'outillage à comparer plus tard](docs/proposals/2026-10-08-agent-toolbox.md).
 
 Première tranche exécutable : demande → mission persistée → rappel mémoire →
 plan proposé → autorisation déterministe → outil local → vérification → résultat.
@@ -381,19 +384,21 @@ Codes CLI : 0 succès de commande (`show/create/reconcile/decide/fixture`) ou mi
 Le délai `--timeout` est **par appel**, démarrage du processus compris, 10 s par
 défaut. Ce n'est pas encore un budget global de mission.
 
-## Modules optionnels intégrés, activation différée
+## Planificateurs optionnels, choix explicite
 
 Le [catalogue de cibles](docs/TARGETS-CONTRACT.md) et l'[adaptateur Ollama](docs/OLLAMA-ADAPTER.md)
 de Claude sont intégrés au paquet. Le catalogue est raccordé au runtime et à la
 CLI pour le diagnostic synthétique C-004a ; l'adaptateur peut être injecté via
-l'API Python mais n'est ni le
-modèle par défaut, ni une option de la CLI. Ses tests emploient des transports
+l'API Python ou choisi avec --model-config pour les commandes text demo/create/run.
+Il n'est pas le modèle par défaut. Ses tests emploient des transports
 simulés et un faux serveur HTTP loopback. Aucun vrai modèle n'est qualifié.
 
 L'[adaptateur chat candidat llama.cpp](docs/OPENAI-CHAT-ADAPTER.md) de Claude
 est également intégré, avec validation renforcée des réponses et protection
-contre la réflexion de la clé d'accès dans les traces. Il reste injectable via
-Python, hors CLI. Cette démonstration utilise uniquement un faux serveur local :
+contre la réflexion de la clé d'accès dans les traces. Il est injectable via
+Python et sélectionnable dans le fichier privé --model-config. Aucun moteur
+n'est retenu pour le projet. [Configuration et limites](docs/LOCAL-MODEL-CLI.md).
+Cette démonstration utilise uniquement un faux serveur local :
 
 ```bash
 PYTHONPATH=src:. python -m examples.openai_chat_demo
@@ -476,13 +481,15 @@ PYTHONPATH=src:. python -m examples.action_view_demo --format human
 ## Rapports de qualification G-017
 
 ```bash
-PYTHONPATH=src:. python -m examples.qualification_demo
+PYTHONPATH=src python -m eidolon_core qualification-check --report examples/qualification/passed-scope-synthetic.json
 ```
 
 Le [validateur livré par Claude](docs/QUALIFICATION-REPORTS.md) distingue
 REJECTED, INCOMPLETE et PASSED_SCOPE. Il vérifie la cohérence du rapport, jamais
 l'authenticité des mesures ni la qualification générale d'un modèle. Les mesures
 absentes et un corpus vide ne deviennent pas un succès.
+La CLI ouvre un fichier régulier borné, sans runtime ni état, et rend les codes
+0/2/3 selon le verdict. Le mode humain s'active avec --format human.
 
 ## Documents et limites
 
@@ -546,6 +553,9 @@ empreintes ; aucun export brut, requête, annotation ou droit d'exécution.
 synthétiques consultables et copies privées, sans suppression de recherches actives.
 
 
-[Planificateur Ollama en CLI](docs/LOCAL-MODEL-CLI.md) : configuration opérateur
-explicite pour la mission textuelle restreinte, sans changement du défaut déterministe.
-Parcours testé sur faux serveur loopback ; modèle/GPU réels encore à qualifier.
+[Planificateurs locaux en CLI](docs/LOCAL-MODEL-CLI.md) : Ollama ou llama-server,
+configuration opérateur explicite pour la mission textuelle restreinte, sans
+changement du défaut déterministe. `model-config-check --config fichier-prive.json`
+vérifie ce fichier et affiche son manifeste sans appeler le serveur, lire la
+valeur de clé ou créer de mission. Parcours testés sur faux serveur loopback ;
+modèles/GPU réels encore à qualifier.

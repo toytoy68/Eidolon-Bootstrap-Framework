@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "commit": "d281745be18709e675c3d59b97c784274b19af61",
+  "archive_sha256": "31fcb51d208073d6ac8534e86b9399e12aca9ee0ef94ccc84694cec3b191cccd",
+  "manifest_files_verified": 85,
+  "source_modules": 49,
+  "qualification_fixtures_present": 3,
+  "qualification_cli": [
+    {
+      "status": "PASSED_SCOPE",
+      "exit_code": 0
+    },
+    {
+      "status": "INCOMPLETE",
+      "exit_code": 2
+    },
+    {
+      "status": "REJECTED",
+      "exit_code": 3
+    }
+  ],
+  "state_not_created": true,
+  "real_model_or_hardware_qualified": false,
+  "temporary_extraction_removed": true
+}

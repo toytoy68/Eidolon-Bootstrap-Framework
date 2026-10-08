@@ -1,0 +1,47 @@
+{
+  "corpus": "synthetic_temporary_only",
+  "engine_revision": "b33c3a0",
+  "overlapping_identical_conversations": {
+    "status": "PASS",
+    "first_new": 2,
+    "overlap_replayed": 1,
+    "second_new": 1,
+    "distinct_recalled_items": 3,
+    "canonical_originals_unchanged": true,
+    "repeated_import_unchanged": true,
+    "core_recall_read_only": true
+  },
+  "malformed_parts": {
+    "status": "PASS",
+    "refused_types": [
+      "str",
+      "dict",
+      "NoneType",
+      "int",
+      "bool"
+    ],
+    "existing_corpus_unchanged": true
+  },
+  "negation_context": {
+    "status": "LIMIT_OBSERVED",
+    "original": "Ne pas acheter la V100 cette semaine.",
+    "excerpt": "acheter la V100 cette semaine.",
+    "start": 7,
+    "end": 37,
+    "exact_source_slice": true,
+    "left_negation_present": false,
+    "needs_review": true,
+    "truncated": true,
+    "epistemic_status": "UNVERIFIED",
+    "core_recall_read_only": true
+  },
+  "continued_versions": {
+    "status": "LIMIT_OBSERVED",
+    "recalled_items": 2,
+    "distinct_message_references": 1,
+    "canonical_versions_preserved": true
+  },
+  "engine_sources_modified": false,
+  "semantic_fact_confirmation": false,
+  "temporary_corpus_removed": true
+}

@@ -98,3 +98,24 @@ def load_model(path):
     finally:
         if handle is not None:
             os.close(handle)
+
+
+def inspect_model_config(path):
+    """Validate the explicit local CLI policy, without checking server or secret."""
+    model = load_model(path)
+    return {"schema": "eidolon-model-config-check/1", "status": "VALID_CONFIG",
+            "model_id": model.model_id, "manifest": model.config.manifest(),
+            "server_contacted": False, "secret_value_read": False,
+            "model_available": None, "authorizes_execution": False,
+            "limits": ["Configuration syntax and local CLI policy only.",
+                       "Server availability, credentials and model quality are not checked."]}
+
+
+def render_model_config(result):
+    from .contracts import encode
+    from .presentation import header, message
+    return "\n".join((header(title="Configuration du planificateur"),
+                      message("OK", "Configuration conforme au contrat local de la CLI."),
+                      message("INFO", "Identifiant : " + result["model_id"]),
+                      message("INFO", "Manifeste : " + encode(result["manifest"])),
+                      message("ATTENTION", "Serveur non contacté, valeur de clé non lue ; disponibilité et qualité du modèle non vérifiées.")))

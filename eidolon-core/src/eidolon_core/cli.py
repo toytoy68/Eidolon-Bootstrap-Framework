@@ -42,6 +42,8 @@ def main(argv=None):
     commands = parser.add_subparsers(dest="command", required=True)
     qualification = commands.add_parser("qualification-check", help="check one report offline; no state, model or hardware qualification")
     qualification.add_argument("--report", required=True, help="existing regular JSON report file, at most 1 MB")
+    model_check = commands.add_parser("model-config-check", help="validate local planner configuration offline; never read the secret or contact the server")
+    model_check.add_argument("--config", required=True, help="private Ollama or llama-server JSON configuration file")
     runtime_inspect = commands.add_parser("runtime-inspect", help="inspect existing mission and worker evidence; never resume")
     runtime_inspect.add_argument("mission_id")
     recovery = commands.add_parser("recovery-prepare", help="copy one mission database to a NEW review-only directory")
@@ -125,6 +127,14 @@ def main(argv=None):
             result = check_report(args.report)
             print(render_check(result) if args.format == "human" else encode(result))
             return EXIT_CODES[result["status"]]
+        if args.command == "model-config-check":
+            if (args.profile != "text" or args.memory_root is not None or args.targets is not None
+                    or args.allow_target is not None or args.research_scenario != "readable"):
+                raise ValueError("MODEL_CHECK_OPTIONS_NOT_SUPPORTED")
+            from .model_config import inspect_model_config, render_model_config
+            result = inspect_model_config(args.config)
+            print(render_model_config(result) if args.format == "human" else encode(result))
+            return 0  # Configuration checked; no server, credential or model qualification.
         if args.command == "runtime-inspect":
             from .runtime_inspect import inspect_runtime, render_inspection
             result = inspect_runtime(args.state, args.mission_id)

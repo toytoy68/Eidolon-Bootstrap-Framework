@@ -44,6 +44,25 @@ facultatifs et reprennent les bornes de l'adaptateur.
 
 ## Essai restreint
 
+Avant tout essai réseau, contrôler le fichier privé sans lancer de mission :
+
+```sh
+PYTHONPATH=src python -m eidolon_core model-config-check --config /chemin/modele-prive.json
+PYTHONPATH=src python -m eidolon_core --format human model-config-check --config /chemin/modele-prive.json
+```
+
+C-038 : `VALID_CONFIG` signifie seulement que le fichier respecte le schéma et
+la politique locale de la CLI. Le manifeste et l'identifiant du planificateur
+sont affichés pour comparer deux configurations ; la valeur de clé n'est pas
+lue. `server_contacted`, `secret_value_read` et `authorizes_execution` restent
+false ; `model_available` reste null. Cela ne prouve ni présence du modèle,
+ni validité de la clé, ni disponibilité ou qualité du serveur. Code retour 0 si
+configuration valide, 2 avec diagnostic constant sur stderr sinon. Aucun état
+créé, même si --state désigne un dossier absent. Les options de mission sont
+refusées ; la commande prend --config, pas l'option globale --model-config.
+
+Puis, lorsque l'opérateur veut effectivement essayer le serveur choisi :
+
 ```sh
 PYTHONPATH=src python -m eidolon_core --state /chemin/etat-neuf \
   --timeout 90 --model-config /chemin/ollama-prive.json demo

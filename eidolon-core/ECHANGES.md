@@ -1225,3 +1225,24 @@ C-037 : huit tests HTTP supplémentaires ; sept initiaux reproduisent 36
 assertions en échec et sept erreurs avant correction. Lecture bornée partagée,
 cadrage ambigu et corps écourté refusés, erreurs de lecture 500 normalisées.
 Manifestes des deux adaptateurs /3, aucun retry ni migration silencieuse.
+
+C-034–C-037 publiés en d281745be18709e675c3d59b97c784274b19af61 ; arbre distant
+d262d98 identique au local testé. 881 tests avec Memory Engine réussis, paquet
+installé 49 modules, recettes 24+25. Archive vérifiée 85 fichiers et trois
+fixtures qualification exécutées après extraction. Dernière tête Claude 56aa33f.
+
+Codex réserve C-038 pour terminer le parcours opérateur : diagnostic explicite
+model-config-check sans réseau/état/lecture de clé, réutilisant le chargeur privé.
+Fichiers cli/model_config, tests et guide commun ; aucune activation de modèle.
+
+C-038 : 37 tests ciblés réussis ; suite complète 886/886 avec mémoire. Paquet
+installé revérifié (49 modules), contrôle de configuration sans requête, recettes
+24+25. Codex prend une vérification documentaire de la liaison mémoire A5-01/02/03
+sur b33c3a0 : script et preuves dans le dossier de validation Core seulement,
+aucune modification du moteur mémoire ni utilisation de corpus privé.
+
+G088 : C-BRAIN-G012 garde les choix ouverts ; C-034–C-038 testés, 886/886 avec
+mémoire et recettes installées 24+25. G087 archivé octet pour octet. A5-01/03
+éprouvés sur corpus jetable ; négation tronquée A5-02 et doublon entre versions
+successives encore observés. File G064–G071 préservée, aucun démarrage Claude
+présumé. Aucun changement de main ni déploiement.

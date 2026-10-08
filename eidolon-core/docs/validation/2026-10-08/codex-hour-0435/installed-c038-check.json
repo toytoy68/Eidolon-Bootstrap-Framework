@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "offline_build": true,
+  "isolated_install": true,
+  "installed_modules_match_source": 49,
+  "wheel_sha256": "933f6e52fdea009e5e410337f7e840dabb3080f5bbd5ac0294099e9d21ba497b",
+  "qualification_cli": [
+    {
+      "status": "PASSED_SCOPE",
+      "exit_code": 0
+    },
+    {
+      "status": "INCOMPLETE",
+      "exit_code": 2
+    },
+    {
+      "status": "REJECTED",
+      "exit_code": 3
+    }
+  ],
+  "synthetic_model_cli": [
+    {
+      "provider": "ollama",
+      "status": "PASS",
+      "requests": 1,
+      "resume_without_replay": true,
+      "credential_absent_from_state": true,
+      "configuration_check_network_free": true
+    },
+    {
+      "provider": "llama-server",
+      "status": "PASS",
+      "requests": 1,
+      "resume_without_replay": true,
+      "credential_absent_from_state": true,
+      "configuration_check_network_free": true
+    }
+  ],
+  "recipes": [
+    {
+      "profile": "missions",
+      "checks_passed": 24,
+      "status": "PASS"
+    },
+    {
+      "profile": "research-archives",
+      "checks_passed": 25,
+      "status": "PASS"
+    }
+  ],
+  "real_model_or_hardware_qualified": false,
+  "temporary_files_removed": true
+}

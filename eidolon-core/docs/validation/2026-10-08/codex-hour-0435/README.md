@@ -68,3 +68,55 @@ PYTHONPATH=src:. python -m unittest tests.test_model_http tests.test_ollama_mode
 PYTHONPATH=src:.:/chemin/vers/memory-engine EIDOLON_MEMORY_INTEGRATION=1 python -m unittest discover -s tests -t . -q
 python docs/validation/2026-10-08/codex-hour-0435/installed-check.py
 ```
+
+## C-038 et fin de validation de code
+
+model-config-check.log : 37 tests ciblés, dont cinq nouveaux. Inspection privée
+sans Store/runtime/réseau, sans accès à la variable contenant la clé (accès
+explicitement interdit par le test), état existant préservé. VALID_CONFIG
+n'établit pas la disponibilité d'un modèle. Guide et README raccordés.
+
+python-c038-final.log : **886 tests réussis, aucun ignoré**, 160,606 s,
+intégration Memory Engine comprise. installed-c038-check.json : 49 modules
+installés identiques, contrôles hors ligne des deux configurations puis un seul
+appel HTTP factice par fournisseur, reprise sans réémission ; recettes 24+25.
+Le rapport installé initial reste conservé comme preuve de C-034–C-037.
+
+## Archive de la première publication
+
+d281745be18709e675c3d59b97c784274b19af61 contient C-034–C-037 et les propositions.
+L'arbre Git distant d262d98e7df809b0f77663c66d68dbc554d1ba8d est identique à celui
+testé localement. Publication via connecteur GitHub après refus d'authentification
+du push HTTPS ; aucune modification de main. Les deux commits locaux antérieurs
+restent conservés sur une branche locale de sauvegarde.
+
+archive-check.json : archive de ce commit, 85 fichiers et 49 modules, trois
+fixtures synthétiques qualification incluses. Empreintes vérifiées ; les trois
+verdicts fonctionnent après extraction, sans création d'état. SHA-256 :
+31fcb51d208073d6ac8534e86b9399e12aca9ee0ef94ccc84694cec3b191cccd.
+Cette archive précède C-038 ; elle n'est pas annoncée comme le dernier paquet.
+
+## Liaison Memory Engine : A5-01/02/03
+
+memory-recheck.py/json utilise uniquement un corpus temporaire synthétique,
+le code réel Memory Engine b33c3a0 et EngineMemory de Core. Aucune source du
+dépôt mémoire modifiée, aucun corpus personnel ouvert.
+
+- Conversations identiques dans deux exports recouvrants : une occurrence
+  rejouée, une ajoutée, trois éléments distincts au rappel ; octets canoniques
+  existants préservés. Réimporter le second fichier ne change aucun octet.
+- Cinq types de content.parts mal formés sont refusés avant mutation du corpus.
+- **A5-02 toujours présent** : le rappel « acheter V100 » coupe « Ne pas » dans
+  une phrase synthétique. L'extrait reste une tranche exacte du texte, avec
+  needs_review, truncated et UNVERIFIED ; cela ne protège pas son sens à lui seul.
+- **Versions successives** : importer une conversation poursuivie conserve deux
+  archives et peut rappeler deux fois le même message. Distinct du replay
+  d'une conversation identique corrigé dans A5-01.
+
+Toutes les lectures Core ont conservé les octets du corpus (hors verrou technique
+documenté). Les limites observées sont consignées pour la session mémoire ;
+elles ne sont ni corrigées dans Core ni masquées par les 886 tests de régression.
+
+```sh
+PYTHONPATH=src:/chemin/vers/memory-engine python docs/validation/2026-10-08/codex-hour-0435/memory-recheck.py
+```
