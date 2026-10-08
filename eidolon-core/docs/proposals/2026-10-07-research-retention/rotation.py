@@ -2,7 +2,7 @@
 # Projet      : Eidolon Core
 # Organisation: Eidolon Core Technologies (ECT)
 # Fichier     : rotation.py
-# Description : PROTOTYPE ISOLÉ v4 — export puis retrait des anciennes recherches de la garde (C-TASK-G057/G062)
+# Description : PROTOTYPE ISOLÉ v5 — export puis retrait des anciennes recherches de la garde (C-TASK-G057/G062)
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 """Prototype only: never imported by Core, never run on a real journal.
@@ -29,16 +29,17 @@ import shutil
 import sqlite3
 import stat
 import tempfile
+import time
 
 import fcntl
 
 PROTOCOL = "eidolon-research-archive/1"
 FINISHED = {"COMPLETED", "RESOLVED_UNKNOWN"}
 TARGET = 100                       # C-D17: « une centaine », read as 100 (follow-up answer)
-MAX_EXPORT_BYTES = 32 * 1024 * 1024
-MAX_EXPORTS = 4096
+MAX_EXPORT_BYTES = 16 * 1024 * 1024  # compatibility alias; Core reader is authoritative
+MAX_EXPORTS = 1000                 # compatibility alias; Core reader is authoritative
 MAX_RUNS_PER_EXPORT = 256
-SNAPSHOT_BUDGET_SECONDS = 5.0      # G068: wait for the journal read lock at most this long
+SNAPSHOT_BUDGET_SECONDS = 5.0      # cooperative total lock/copy budget; not a hard syscall timeout
 EXPORT_KEYS = {"protocol", "guard_id", "chain_index", "previous_chain_sha256", "created_at_ms", "runs",
                "removed_ids_sha256", "released_operations", "authorizes_execution"}
 RUN_KEYS = {"id", "body", "events", "cleaned_query"}
@@ -46,6 +47,77 @@ RUN_KEYS = {"id", "body", "events", "cleaned_query"}
 
 class RotationError(Exception):
     pass
+
+
+def _reader():
+    # _Snapshot first resolves guard_src. Reuse the Core reader, never a second schema.
+    from eidolon_core import research_archive
+    return research_archive
+
+
+def _clock(clock_ms, guard_src):
+    import sys
+    if guard_src not in sys.path:
+        sys.path.insert(0, guard_src)
+    from eidolon_core.research_guard import MAX_INTEGER
+    if type(clock_ms) is not int or not 0 <= clock_ms <= MAX_INTEGER:
+        raise RotationError("INVALID_CLOCK")
+
+
+def _reader_export(data, name):
+    reader = _reader()
+    if len(data) > reader.MAX_ARCHIVE_BYTES:
+        raise RotationError("ARCHIVE_TOO_LARGE")
+    try:
+        return reader.validate_export(data, name)
+    except reader.ArchiveError:
+        raise RotationError("ARCHIVE_UNREADABLE") from None
+
+
+def _reader_catalog(archive_dir):
+    reader = _reader()
+    try:
+        return reader.read_catalog(archive_dir, time_budget_seconds=5)
+    except reader.ArchiveError as exc:
+        raise RotationError(str(exc)) from None
+
+
+def _catalog_budget(archive_dir, candidate=None):
+    try:
+        return _catalog_budget_checked(archive_dir, candidate)
+    except OSError:
+        raise RotationError("ARCHIVE_UNREADABLE") from None
+
+
+def _catalog_budget_checked(archive_dir, candidate=None):
+    """Bound the complete directory before publication or removal, including orphan exports."""
+    reader = _reader()
+    total = count = entries = 0
+    with os.scandir(archive_dir) as files:
+        for entry in files:
+            entries += 1
+            if entries > reader.MAX_DIRECTORY_ENTRIES:
+                raise RotationError("TOO_MANY_EXPORTS")
+            if entry.name.startswith("research-archive-") and entry.name.endswith(".json"):
+                if not reader.NAME.fullmatch(entry.name):
+                    raise RotationError("ARCHIVE_UNREADABLE")
+                info = entry.stat(follow_symlinks=False)
+                if stat.S_ISLNK(info.st_mode):
+                    raise RotationError("ARCHIVE_UNREADABLE")
+                if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+                    raise RotationError("NOT_PRIVATE")
+                count += 1
+                total += info.st_size
+                if info.st_size > reader.MAX_ARCHIVE_BYTES:
+                    raise RotationError("ARCHIVE_TOO_LARGE")
+    if candidate is not None:
+        count += 1
+        total += len(candidate)
+        entries += 2  # own partial and final coexist during exclusive publication
+    if count > reader.MAX_ARCHIVES or entries > reader.MAX_DIRECTORY_ENTRIES:
+        raise RotationError("TOO_MANY_EXPORTS")
+    if total > reader.MAX_TOTAL_BYTES:
+        raise RotationError("ARCHIVE_TOTAL_LIMIT")
 
 
 def _sha(data):
@@ -81,7 +153,7 @@ def _crash(point):
 
 def _read_private(path, limit=None):
     """Open without following links, check owner/mode/size on the descriptor, always close it."""
-    limit = MAX_EXPORT_BYTES if limit is None else limit
+    limit = min(MAX_EXPORT_BYTES, _reader().MAX_ARCHIVE_BYTES) if limit is None else limit
     try:
         # O_NONBLOCK: opening a FIFO never waits for a writer; it is then refused by S_ISREG.
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
@@ -134,6 +206,8 @@ def _has_archives(db):
 
 
 def _chain(db):
+    if _has_archives(db) and db.execute("SELECT count(*) FROM archives").fetchone()[0] > _reader().MAX_ARCHIVES:
+        raise RotationError("TOO_MANY_EXPORTS")
     rows = db.execute("SELECT seq, body FROM archives ORDER BY seq").fetchall() if _has_archives(db) else []
     previous, entries = "0" * 64, []
     for i, (seq, body) in enumerate(rows, 1):
@@ -148,7 +222,7 @@ def _chain(db):
 
 def _exports(archive_dir):
     names = sorted(p for p in Path(archive_dir).glob("research-archive-*.json"))
-    if len(names) > MAX_EXPORTS:
+    if len(names) > min(MAX_EXPORTS, _reader().MAX_ARCHIVES):
         raise RotationError("TOO_MANY_EXPORTS")
     return names
 
@@ -171,14 +245,19 @@ class _Snapshot:
             fd = os.open(target, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
             os.close(fd)
             # G068: Python retries a BUSY backup step forever (Codex g063-backup-contention).
-            # Take the read lock first, bounded by SQLite's busy timeout, then copy everything in
-            # ONE step inside that read transaction: no writer can interleave, nothing loops.
+            # Take a bounded read lock, then copy in chunks under the same read transaction.
+            # A cooperative deadline also bounds retries/copy progress, not one blocking syscall.
+            deadline = time.monotonic() + SNAPSHOT_BUDGET_SECONDS
+
+            def progress(status, remaining, total):
+                if time.monotonic() >= deadline:
+                    raise RotationError("JOURNAL_SNAPSHOT_BUDGET_EXHAUSTED")
             src = sqlite3.connect(f"file:{Path(directory) / 'research-runs.sqlite3'}?mode=ro", uri=True,
                                   timeout=SNAPSHOT_BUDGET_SECONDS, isolation_level=None)
             dst = sqlite3.connect(target)
             src.execute("BEGIN")
             src.execute("SELECT count(*) FROM sqlite_master").fetchone()
-            src.backup(dst, pages=-1)
+            src.backup(dst, pages=64, progress=progress, sleep=0.01)
             src.execute("COMMIT")
             src.close()
             src = None
@@ -229,6 +308,7 @@ class _Snapshot:
 def _check_archives(directory, archive_dir, snap, *, allow_uncommitted):
     """Every chained export present, private, bounded, unaltered and absent from the journal.
     Unknown exports: none, or (when allowed) exactly one extending the head."""
+    _catalog_budget(archive_dir)
     known = {}
     for entry in snap.chain:
         if type(entry.get("file")) is not str or not re.fullmatch(r"research-archive-[0-9]{6}\.json", entry["file"]):
@@ -241,11 +321,14 @@ def _check_archives(directory, archive_dir, snap, *, allow_uncommitted):
             raise RotationError("ARCHIVE_ALTERED")
         if any(run.get("id") in snap.rows for run in meta.get("runs", [])):
             raise RotationError("ARCHIVED_RUN_REAPPEARED")
+        if _reader_export(data, entry["file"])["entry"] != entry:
+            raise RotationError("ARCHIVE_CHAIN_BROKEN")
         known[entry["file"]] = entry
     if list(Path(archive_dir).glob("*.partial")):
         raise RotationError("PARTIAL_EXPORT_PRESENT")    # auto_rotate may first prove them redundant
     unknown = [p for p in _exports(archive_dir) if p.name not in known]
     if not unknown:
+        _reader_catalog(archive_dir)
         return None
     metas = [(p, _read_private(p)) for p in unknown]
     parsed = [(p, d, _strict_json(d)) for p, d in metas]
@@ -301,6 +384,9 @@ def _commit(directory, archive_name, data, meta, snap, ids):
             if head != snap.head or len(chain) != len(snap.chain):
                 raise RotationError("JOURNAL_CHANGED")
             v = db.execute("PRAGMA user_version").fetchone()[0]
+            live_identity = db.execute("SELECT value FROM metadata WHERE key='guard_id'").fetchone()
+            if v != snap.version or live_identity != (snap.guard_id,):
+                raise RotationError("JOURNAL_CHANGED")
             for run in meta["runs"]:
                 live_body = db.execute("SELECT body FROM runs WHERE id=?", (run["id"],)).fetchone()
                 live_events = [list(e) for e in db.execute("SELECT sequence, kind, body FROM run_events WHERE run_id=? "
@@ -403,6 +489,8 @@ def _rotate_locked(directory, archive_dir, snap, *, count, operations, clock_ms)
     data = _canon(meta)
     if len(data) > MAX_EXPORT_BYTES:
         raise RotationError("ARCHIVE_TOO_LARGE")
+    _reader_export(data, f"research-archive-{meta['chain_index']:06d}.json")
+    _catalog_budget(archive_dir, candidate=data)
     name = _publish(archive_dir, meta["chain_index"], data)
     _commit(directory, name, data, meta, snap, ids)
     return {"archived": len(ids), "file": name, "chain_index": meta["chain_index"], "request_sent": False}
@@ -417,6 +505,7 @@ def verify(directory, archive_dir, *, guard_src):
 
 
 def rotate(directory, archive_dir, *, count, operations=(), guard_src, clock_ms):
+    _clock(clock_ms, guard_src)
     if type(count) is not int or not 1 <= count <= MAX_RUNS_PER_EXPORT:
         raise RotationError("INVALID_COUNT")
     directory, archive_dir = _check_dirs(directory, archive_dir)
@@ -437,6 +526,8 @@ def _resume_locked(directory, archive_dir, snap, operations):
     if any(r["state"] == "INTENT" for r in snap.runs):
         raise RotationError("WEB_RESEARCH_UNCERTAIN")
     ids = _check_export(meta, snap, operations=operations)
+    _reader_export(data, path.name)
+    _reader_catalog(archive_dir)
     _commit(directory, path.name, data, meta, snap, ids)
     return {"archived": len(ids), "file": path.name, "resumed": True, "request_sent": False}
 
@@ -489,6 +580,7 @@ def auto_rotate(directory, archive_dir, *, target=TARGET, terminal_operations=()
     - a single uncommitted export extending the chain is finished first (resume rules);
     - then the oldest finished runs above `target` are archived, except runs of missions the
       caller does not declare terminal: if those keep the journal above target, it is reported."""
+    _clock(clock_ms, guard_src)
     if type(target) is not int or not 1 <= target <= 256:
         raise RotationError("INVALID_TARGET")
     directory, archive_dir = _check_dirs(directory, archive_dir)

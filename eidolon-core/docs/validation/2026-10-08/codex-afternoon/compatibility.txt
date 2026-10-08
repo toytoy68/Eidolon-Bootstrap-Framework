@@ -1,0 +1,25 @@
+== N. 100 actives, missions non terminales protégées, lecture par le lecteur Core
+✓ auto_rotate garde 100 recherches actives — 123 → 100 actives, 23 archivées en 0.04 s
+✓ runs des missions non terminales toujours actifs
+✓ run de la mission terminale archivé et déclaré libéré
+✓ le lecteur Core accepte la chaîne produite — OK 1 exports / 23 recherches
+✓ conservation octet pour octet (actives ∪ exports = origine)
+✓ second appel idempotent
+✓ liste.md Core générée sur la chaîne du producteur — ['research-archive-000001.json']
+== D. dépassement explicite quand seules des missions non terminales restent
+✓ aucun retrait, dépassement signalé — active=105 above_target=5
+✓ aucun export créé
+== W. journal en WAL
+✓ rotation sur un journal WAL lue par Core — OK 1 exports / 23 recherches
+✓ conservation en WAL
+✓ le journal reste en WAL, schéma 3 — wal, user_version 3
+✓ la garde Core actuelle refuse le schéma 3 (pas d'usage silencieux) — UNSUPPORTED_RESEARCH_GUARD
+== C. coupure à chaque frontière puis reprises répétées
+✓ after_partial_write : code 9, lecteur juste après « REFUS PARTIAL_EXPORT_PRESENT », trois reprises — puis OK 1 exports / 23 recherches ; reprises [(1, False, 23), (0, False, 0), (0, False, 0)]
+✓ after_publish : code 9, lecteur juste après « OK 1 exports / 23 recherches », trois reprises — puis OK 1 exports / 23 recherches ; reprises [(0, True, 0), (0, False, 0), (0, False, 0)]
+✓ inside_transaction : code 9, lecteur juste après « OK 1 exports / 23 recherches », trois reprises — puis OK 1 exports / 23 recherches ; reprises [(0, True, 0), (0, False, 0), (0, False, 0)]
+✓ after_commit : code 9, lecteur juste après « OK 1 exports / 23 recherches », trois reprises — puis OK 1 exports / 23 recherches ; reprises [(0, False, 0), (0, False, 0), (0, False, 0)]
+== R. migration schéma 2 → 3 réversible avant tout retrait définitif
+✓ journal restauré depuis les exports = journal d'origine (lignes octet pour octet)
+✓ la garde Core actuelle rouvre le journal restauré en schéma 2
+Failures: []

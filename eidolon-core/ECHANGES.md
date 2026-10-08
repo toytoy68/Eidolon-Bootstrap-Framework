@@ -1326,3 +1326,12 @@ Git vérifiée. Information à Claude publiée ; aucune intégration UI prétend
 Codex réserve C-046 : rotation.py prototype, banc indépendant et documentation
 des bornes. Claude reçoit G078–G083 après sa file existante ; voir QUEUE.md.
 Aucun démarrage de session présumé. Logo programme déjà publié dans 0b439f0.
+
+
+### C-MSG-G097 — C-046 livré — 08/10/2026 après-midi
+
+Bornes producteur/lecteur et budget de snapshot du prototype isolé ; identité
+et schema du journal revérifiés avant retrait. 37 tests rotation réussis.
+[Preuves consolidées](docs/validation/2026-10-08/codex-afternoon/README.md).
+Logo officiel visible dans README Core. G078–G083 publiés pour Claude.
+Aucune activation rotation, main ou VM ; contre-revue G080 ouverte.
