@@ -2,7 +2,7 @@
 # Projet      : Eidolon Core
 # Organisation: Eidolon Core Technologies (ECT)
 # Fichier     : rotation.py
-# Description : PROTOTYPE ISOLÉ v2 — export puis retrait des anciennes recherches de la garde (C-TASK-G057/G062)
+# Description : PROTOTYPE ISOLÉ v4 — export puis retrait des anciennes recherches de la garde (C-TASK-G057/G062)
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 """Prototype only: never imported by Core, never run on a real journal.
@@ -38,6 +38,7 @@ TARGET = 100                       # C-D17: « une centaine », read as 100 (fol
 MAX_EXPORT_BYTES = 32 * 1024 * 1024
 MAX_EXPORTS = 4096
 MAX_RUNS_PER_EXPORT = 256
+SNAPSHOT_BUDGET_SECONDS = 5.0      # G068: wait for the journal read lock at most this long
 EXPORT_KEYS = {"protocol", "guard_id", "chain_index", "previous_chain_sha256", "created_at_ms", "runs",
                "removed_ids_sha256", "released_operations", "authorizes_execution"}
 RUN_KEYS = {"id", "body", "events", "cleaned_query"}
@@ -162,21 +163,31 @@ class _Snapshot:
             sys.path.insert(0, guard_src)
         from eidolon_core.research_guard import ResearchGuard
         self.tmp = tempfile.mkdtemp(prefix="g062-shadow-")
+        src = dst = None
         try:
             shadow = Path(self.tmp) / "guard"
             shadow.mkdir(mode=0o700)
             target = shadow / "research-runs.sqlite3"
             fd = os.open(target, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
             os.close(fd)
-            src = sqlite3.connect(f"file:{Path(directory) / 'research-runs.sqlite3'}?mode=ro", uri=True)
+            # G068: Python retries a BUSY backup step forever (Codex g063-backup-contention).
+            # Take the read lock first, bounded by SQLite's busy timeout, then copy everything in
+            # ONE step inside that read transaction: no writer can interleave, nothing loops.
+            src = sqlite3.connect(f"file:{Path(directory) / 'research-runs.sqlite3'}?mode=ro", uri=True,
+                                  timeout=SNAPSHOT_BUDGET_SECONDS, isolation_level=None)
             dst = sqlite3.connect(target)
-            try:
-                src.backup(dst)
-            finally:
-                src.close()
+            src.execute("BEGIN")
+            src.execute("SELECT count(*) FROM sqlite_master").fetchone()
+            src.backup(dst, pages=-1)
+            src.execute("COMMIT")
+            src.close()
+            src = None
             self.version = dst.execute("PRAGMA user_version").fetchone()[0]
             self.chain, self.head = _chain(dst)
-            self.guard_id = dst.execute("SELECT value FROM metadata WHERE key='guard_id'").fetchone()[0]
+            identity = dst.execute("SELECT value FROM metadata WHERE key='guard_id'").fetchone()
+            if identity is None or type(identity[0]) is not str:
+                raise RotationError("JOURNAL_IDENTITY_INVALID")
+            self.guard_id = identity[0]
             self.rows = {}
             for identity, body in dst.execute("SELECT id, body FROM runs"):
                 events = [list(e) for e in dst.execute("SELECT sequence, kind, body FROM run_events WHERE run_id=? "
@@ -190,13 +201,29 @@ class _Snapshot:
                 dst.execute("PRAGMA user_version=2")
                 dst.commit()
             dst.close()
+            dst = None
             fd = os.open(shadow / "research-runs.lock", os.O_CREAT | os.O_WRONLY, 0o600)
             os.close(fd)
             self.runs = ResearchGuard(shadow, create=False).inspect()["runs"]
-        except BaseException:
-            shutil.rmtree(self.tmp, ignore_errors=True)
+        except RotationError:
             raise
-        shutil.rmtree(self.tmp, ignore_errors=True)
+        except sqlite3.OperationalError as exc:
+            busy = getattr(exc, "sqlite_errorcode", None) in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED)
+            raise RotationError("JOURNAL_BUSY" if busy else "JOURNAL_UNAVAILABLE") from None
+        except (sqlite3.Error, OSError):
+            raise RotationError("JOURNAL_UNAVAILABLE") from None
+        except (ValueError, TypeError, KeyError, IndexError, UnicodeError, RecursionError) as exc:
+            # The unchanged guard's refusals (GuardError) keep their constant code; anything else
+            # (missing metadata, TypeError...) becomes JOURNAL_INVALID, never a raw exception.
+            code = str(exc) if isinstance(exc, ValueError) else ""
+            raise RotationError(code if re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", code) else "JOURNAL_INVALID") from None
+        finally:
+            # Codex G087 proposal: also close on backup, metadata or chain failures (GC disabled).
+            if src is not None:
+                src.close()
+            if dst is not None:
+                dst.close()
+            shutil.rmtree(self.tmp, ignore_errors=True)
 
 
 def _check_archives(directory, archive_dir, snap, *, allow_uncommitted):
