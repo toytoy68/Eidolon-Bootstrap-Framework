@@ -4,6 +4,7 @@
 [Ajouts et preuves du 08/10](docs/validation/2026-10-08/codex-hour-0435/README.md) :
 configuration explicite des deux planificateurs candidats, diagnostics hors
 ligne et réponses HTTP durcies. [Propositions d'outillage à comparer plus tard](docs/proposals/2026-10-08-agent-toolbox.md).
+[Compte rendu concis de la séance](docs/WORK-SESSION-2026-10-08.md).
 
 Première tranche exécutable : demande → mission persistée → rappel mémoire →
 plan proposé → autorisation déterministe → outil local → vérification → résultat.

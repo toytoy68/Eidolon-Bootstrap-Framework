@@ -120,3 +120,25 @@ elles ne sont ni corrigées dans Core ni masquées par les 886 tests de régress
 ```sh
 PYTHONPATH=src:/chemin/vers/memory-engine python docs/validation/2026-10-08/codex-hour-0435/memory-recheck.py
 ```
+
+## Publication finale du code et archive C-038
+
+Code publié : 2a6488a6956051ea4df817aed07e7ef538043b3f ; arbre
+58d40a6b3e2a3f9cd8a5d6291c5c43f23a9629ad identique au local testé. Les
+publications suivantes ne complètent que documentation, coordination et preuves.
+
+archive-check.py / archive-c038-check.json comparent les **85 fichiers aux objets
+Git du commit**, avant exécution depuis l'extraction. Les trois verdicts et les
+deux contrôles de configuration passent sans état créé. Sources extraites et
+temporaires retirés. SHA-256 de l'archive du code final :
+161a6b8acc71fb053357867d92c6bb83069c7fc45affd31838510ddaf7a0022b.
+
+```sh
+# Après construction de l'archive de ce commit avec tools/build_beta_bundle.py :
+python docs/validation/2026-10-08/codex-hour-0435/archive-check.py --archive /chemin/eidolon-beta-2a6488a.tar.gz --commit 2a6488a6956051ea4df817aed07e7ef538043b3f
+```
+
+82 liens locaux des guides, propositions, README et message actif ont été
+contrôlés sans cible manquante avant le dernier ajout du compte rendu concis.
+La page des pistes mémoire/outillage reprend les propositions et les deux
+limites mémoire, en maintenant l'avis Claude et la décision toytoy ouverts.

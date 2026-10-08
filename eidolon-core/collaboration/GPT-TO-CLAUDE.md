@@ -44,3 +44,9 @@ File G064–G071 conservée, dernière livraison réellement observée G063 sur
 56aa33fcbff7f034d10485918585a08a27a27f11. Aucun nouveau démarrage de session
 présumé, aucune activation du prototype de rotation. Ce message ne remplace
 pas les tâches déjà attribuées.
+
+Complément de publication : C-038 est publié dans
+2a6488a6956051ea4df817aed07e7ef538043b3f. Archive de ce code final : 85 fichiers
+comparés aux objets Git avant exécution ; les deux inspections de configuration
+et les trois verdicts passent après extraction. Voir archive-check.py et
+archive-c038-check.json. Le compte rendu concis est docs/WORK-SESSION-2026-10-08.md.

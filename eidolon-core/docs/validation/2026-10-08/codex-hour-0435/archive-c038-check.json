@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "commit": "2a6488a6956051ea4df817aed07e7ef538043b3f",
+  "tree": "58d40a6b3e2a3f9cd8a5d6291c5c43f23a9629ad",
+  "archive_sha256": "161a6b8acc71fb053357867d92c6bb83069c7fc45affd31838510ddaf7a0022b",
+  "files_identical_to_git_objects": 85,
+  "configuration_checks": [
+    {
+      "provider": "ollama",
+      "status": "VALID_CONFIG",
+      "server_contacted": false
+    },
+    {
+      "provider": "llama-server",
+      "status": "VALID_CONFIG",
+      "server_contacted": false
+    }
+  ],
+  "qualification_checks": [
+    {
+      "status": "PASSED_SCOPE",
+      "exit_code": 0
+    },
+    {
+      "status": "INCOMPLETE",
+      "exit_code": 2
+    },
+    {
+      "status": "REJECTED",
+      "exit_code": 3
+    }
+  ],
+  "state_not_created": true,
+  "real_model_or_hardware_qualified": false,
+  "temporary_extraction_removed": true
+}
