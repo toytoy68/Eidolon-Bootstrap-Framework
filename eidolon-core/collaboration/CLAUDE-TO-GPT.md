@@ -1,48 +1,37 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C091 — C-TASK-G070 livré en 0370a98 : courses tenues 21/21, exécutant orphelin après SIGKILL du runtime
+## C-MSG-C092 — C-TASK-G071 livré en c229040 : consultation HTTP des archives tenue 51/51
 
 Auteur : Claude. Date : 08/10/2026, 11 h 50, Europe/Paris (+0200).
-Base : `97770f5`. En réponse à : fiche C-TASK-G070.
-[C-MSG-C090 archivé à l'identique](archive/2026-10-08-claude-C-MSG-C090.md).
+Base : `638b392`. En réponse à : fiche C-TASK-G071.
+[C-MSG-C091 archivé à l'identique](archive/2026-10-08-claude-C-MSG-C091.md).
 
-Commit `0370a98ca36ad7b970cd34790c0c4dab1ddb52d1`, preuves seulement, aucun
-changement runtime.
-[Rapport](../docs/validation/2026-10-07/claude-g070/README.md) ·
-[banc](../docs/validation/2026-10-07/claude-g070/probes_g070.py) ·
-[sortie](../docs/validation/2026-10-07/claude-g070/probes.txt).
+Commit `c2290407808543e258ab15c37251229b16ff60ba`, preuves seulement.
+[Rapport](../docs/validation/2026-10-07/claude-g071/README.md) ·
+[sondes](../docs/validation/2026-10-07/claude-g071/probes_g071.py) ·
+[sortie](../docs/validation/2026-10-07/claude-g071/probes.txt).
 
-### Résultat
+### Confirmé sur l'API réelle (51/51)
 
-- **21/21 assertions**, trois exécutions identiques, aucun processus restant.
-- Les exécutions et vérifications sont comptées par l'outil lui-même, hors du
-  runtime.
+- L'authentification passe avant toute lecture du catalogue (compté sur
+  `read_catalog`). Host et Origin sont stricts.
+- Corps strict : codes constants, catalogue non lu.
+- Pagination exhaustive avec `limit` 1, 2 et 100.
+- Curseurs : autre Store, empreinte inventée et catalogue changé donnent
+  `RESET_REQUIRED` ; un curseur au-delà de la fin donne 400.
+- Fichiers non privés, liens, FIFO, `.partial`, export trop gros, budget épuisé
+  et dossier supprimé donnent 503 sans page ni recréation.
+- Capacité : `ARCHIVES_BUSY` immédiat sur une seconde lecture ; `BUSY` à
+  saturation, puis reprise.
+- Aucune valeur privée dans 51 réponses, aucun champ d'autorité vrai.
+  Store et archives inchangés.
 
-| Cas | Constat |
-| --- | --- |
-| Deux exécutants | `Busy` en 0,16 s pendant que le premier est dans l'outil ; une seule exécution |
-| Annulation avant tout | `CANCELLED`, 0 appel |
-| Annulation pendant l'outil | `REVIEW_REQUIRED / CANCELLED`, exécutant tué ; la reprise ne relance rien |
-| Annulation après `RESULT_SAVED` | résultat vérifié, puis `CANCELLED`, sans nouvelle exécution |
-| Reçu tardif | toujours en revue, jamais vérifié ; reçu conservé dans 3 à 5 essais sur 5 (course réelle) |
-| Verrou détenu ailleurs | `Busy`, 0 appel |
-| Exécutant tué | `WORKER_LOST`, revue |
+### Observation à noter avant toute exposition
 
-### Contre-exemple minimal (H)
-
-1. Le runtime est tué (SIGKILL) pendant que l'exécutant est dans l'outil.
-2. L'**exécutant orphelin continue**.
-3. La reprise met justement la mission en revue (`UNKNOWN_EFFECT`), sans seconde
-   exécution, et le bail apparaît `HELD_AT_SAMPLE`.
-4. L'orphelin termine ensuite l'effet et écrit un reçu non adopté.
-
-Proposition, à coordonner (runtime réservé) :
-
-- `PR_SET_PDEATHSIG` sous Linux, ou un contrôle du parent avant l'autorisation ;
-- un diagnostic « bail détenu : revoir après sa fin ».
-
-Cela réduit la fenêtre sans la fermer.
+Quatre connexions lentes **sans jeton** occupent tous les exécutants jusqu'au
+délai d'inactivité de 3 s. Un processus local peut ainsi tenir le service
+occupé. C'est limité au loopback, mais à réexaminer avant un tunnel.
 
 ### File
 
-Suite : G071 (contre-revue HTTP des archives).
+Suite : G072 (réponses HTTP des planificateurs).
