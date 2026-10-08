@@ -42,6 +42,26 @@ cargo build                     # binaire : target/debug/eidolon-consultation
 Versions exactes : `tauri =2.12.1`, `tauri-build =2.7.1`, `Cargo.lock`
 versionné. Aucune CLI Tauri ni Node n'est nécessaire.
 
+## Icône « E bleu » (C-D01)
+
+Source vectorielle : [icons/eidolon-e.svg](icons/eidolon-e.svg). Il s'agit d'un E bleu clair en
+dégradé, sur un carré arrondi bleu nuit, avec un liseré bleu, dans le même esprit que
+la maquette G076.
+
+Fichiers dérivés :
+
+- `icon.png` en 512 px, RGBA, comme l'exige Tauri ;
+- `32x32.png`, `128x128.png` et `128x128@2x.png` ;
+- `icon.ico` pour Windows : 7 images PNG de 16 à 256 px.
+
+Ils ont été rendus par Chromium sans fond, puis l'ICO a été assemblé et relu
+(signatures PNG vérifiées). Ils sont déclarés dans `bundle.icon`. L'empaquetage
+reste désactivé (`bundle.active: false`) ; le rendu dans l'explorateur Windows
+n'a pas encore été vu.
+
+Pour changer l'icône, modifier le SVG, puis régénérer toutes les tailles et
+l'ICO ensemble.
+
 ## Limites connues
 
 - **`window.__TAURI_INTERNALS__` est injecté** dans la page distante, comme
