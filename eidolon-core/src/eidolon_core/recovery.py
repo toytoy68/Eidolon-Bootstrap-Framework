@@ -261,7 +261,7 @@ def _inspect_review(directory, *, mission_id=None):
                 selected = projection
         if mission_id is not None:
             if selected is None:
-                raise KeyError("mission not found in historical copy")
+                raise ContractError("RECOVERY_MISSION_NOT_FOUND")
             report["mission"] = selected
         return report
 

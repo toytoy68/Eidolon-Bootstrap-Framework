@@ -1,0 +1,19 @@
+mission : BLOCKED / INVOCATION_BUDGET_EXHAUSTED
+runtime-inspect JSON (code 0) : budget {'audit_checked': True, 'limit': 3, 'remaining': 1, 'state': 'AVAILABLE', 'used': 2} ; recorded_block INVOCATION_BUDGET_EXHAUSTED ; hints ['BLOCKED_INVOCATION_BUDGET_RECORDED'] ; authorizes_execution False
+runtime-inspect humain (code 0) :
+[INFO] Budget : AVAILABLE (utilisé 2/3, reste 1)
+[INFO] Blocage enregistré : INVOCATION_BUDGET_EXHAUSTED
+[ATTENTION] Mission bloquée faute de budget pour l’étape suivante ; le reste affiché ne suffit pas et n’autorise aucun appel. Le diagnostic ne le modifie pas.
+recovery-inspect mission absente (json) : code 2 ; stdout vide True ; stderr {"error":"ContractError","message":"RECOVERY_MISSION_NOT_FOUND"}
+recovery-inspect mission absente (human) : code 2 ; stdout vide True ; stderr #########################################################
+#                                                       #
+#                      Eidolon Core                     #
+#                       Diagnostic                      #
+#                                                       #
+#########################################################
+
+Eidolon Core Technologies (ECT)
+Local AI • Modular • Reliable • Reproducible
+Version            : 0.1.0
+
+[ERREUR] ContractError : RECOVERY_MISSION_NOT_FOUND
