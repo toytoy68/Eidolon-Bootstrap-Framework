@@ -1,0 +1,155 @@
+{
+ "fichier": "icon.ico",
+ "octets": 170238,
+ "reserved": 0,
+ "type": 1,
+ "images": 9,
+ "entrees": [
+  {
+   "taille_annoncee": "16x16",
+   "png": "16x16",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 781,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 75.0,
+   "contraste_e_fond": 8.4
+  },
+  {
+   "taille_annoncee": "20x20",
+   "png": "20x20",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 1148,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 78.0,
+   "contraste_e_fond": 7.6
+  },
+  {
+   "taille_annoncee": "24x24",
+   "png": "24x24",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 1468,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 79.9,
+   "contraste_e_fond": 8.3
+  },
+  {
+   "taille_annoncee": "32x32",
+   "png": "32x32",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 3001,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 83.2,
+   "contraste_e_fond": 5.5
+  },
+  {
+   "taille_annoncee": "40x40",
+   "png": "40x40",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 4422,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 85.0,
+   "contraste_e_fond": 6.6
+  },
+  {
+   "taille_annoncee": "48x48",
+   "png": "48x48",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 5937,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 81.4,
+   "contraste_e_fond": 7.1
+  },
+  {
+   "taille_annoncee": "64x64",
+   "png": "64x64",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 9792,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 84.0,
+   "contraste_e_fond": 7.1
+  },
+  {
+   "taille_annoncee": "128x128",
+   "png": "128x128",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 32888,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 84.3,
+   "contraste_e_fond": 8.2
+  },
+  {
+   "taille_annoncee": "256x256",
+   "png": "256x256",
+   "coherent": true,
+   "planes": 1,
+   "bits": 32,
+   "octets": 110651,
+   "alpha_coins": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "opaque_pct": 85.2,
+   "contraste_e_fond": 9.2
+  }
+ ],
+ "chevauchement": false,
+ "en_tete_attendu": true
+}
