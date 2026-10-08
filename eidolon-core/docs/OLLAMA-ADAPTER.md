@@ -122,3 +122,49 @@ existante. Le manifeste inclut aussi le choix d'autoriser un endpoint non loopba
 La limite de réponse est vérifiée par l'adaptateur même avec un transport injecté.
 Les tests ne qualifient toujours ni Ollama ni le matériel. L'étude V100 (étape 1)
 reste ouverte ; ce module constitue uniquement l'étape 2 candidate.
+
+## C-034 — Frontières strictes du contrat version 2 — 08/10/2026
+
+Le manifeste courant devient `ollama-chat/2`. Le changement d'identité bloque
+la reprise automatique des missions créées avec la version 1 ; aucune mission
+historique ni configuration enregistrée n'est réécrite. Les missions terminales
+restent consultables. Créer un état/une mission de qualification neufs.
+
+Le lecteur refuse les clés JSON dupliquées, nombres non finis (y compris 1e999),
+substituts Unicode isolés, statuts HTTP de type invalide et tool_calls qui ne
+sont ni null ni une liste. Une liste non vide reste TOOL_CALL_REFUSED.
+Le comportement historique done_reason absent → stop est conservé.
+
+Les erreurs HTTP/modèle et motifs d'arrêt distants ne sont plus recopiés dans
+la mission ni ses événements : ils peuvent contenir le prompt ou du contexte
+privé reflété par le serveur. Les codes locaux restent explicites. Les erreurs
+de protocole HTTP deviennent TRANSPORT sans réémission de leur texte distant.
+
+Configuration Python et fichier CLI partagent désormais les domaines bornés :
+num_predict 1–8192, num_ctx 256–262144, seed/top_k entiers 0–2^31−1,
+temperature 0–2 et top_p dans ]0,1]. Ce sont les bornes choisies par Core,
+pas une déclaration des capacités maximales d'Ollama. L'API Python permet
+encore d'omettre les options ; seule la CLI exige num_predict explicitement.
+Ports invalides, caractères de contrôle, identifiants même vides et délimiteurs
+query/fragment sont refusés avant transport.
+
+Preuves : tests/test_ollama_boundaries.py et journal
+validation/2026-10-08/codex-hour-0435/. Les tests utilisent un protocole factice
+et des workers locaux. Aucun modèle réel ni GPU qualifié.
+## Transport HTTP version 3 — C-037, 08/10/2026
+
+Le manifeste courant est `ollama-chat/3`. La lecture HTTP utilise le même
+contrôle de cadrage que le candidat llama-server. Une longueur annoncée qui
+dépasse le budget est refusée avant lecture ; un corps écourté donne
+`INCOMPLETE_HTTP`, même s'il forme déjà du JSON valide. Longueurs multiples,
+longueur avec Transfer-Encoding, ou encodage de transfert autre que le seul
+`chunked` donnent `BAD_HTTP_FRAMING`. L'absence des deux en-têtes reste admise
+avec fin de connexion. Ce choix local est conservateur, pas une implémentation
+complète de toutes les variantes HTTP.
+
+Les erreurs de lecture d'une réponse HTTP d'échec sont maintenant traitées par
+le même diagnostic `TRANSPORT` sans contenu distant que les réponses 200.
+Aucune relance automatique. Le budget du worker reste la limite externe de
+durée ; un délai socket ne constitue pas à lui seul un délai total contre un
+serveur qui envoie très lentement. Les missions des contrats /1 ou /2 gardent
+leur identité historique et sont refusées à la reprise avec /3.

@@ -863,3 +863,12 @@ puis remplacer l'identité de base. L'interface doit garder l'état daté, expli
 la resynchronisation et ne déclencher aucune action. Le curseur n'est pas un
 jeton d'autorisation. Authentification et reçus de commandes forment la tranche
 serveur suivante ; leur intégration n'est pas déduite du prototype local.
+
+## C-BRAIN-G012 — Boîte à outils commune aux futurs agents
+
+Auteur : Codex/GPT. Date : 08/10/2026, Europe/Paris. Statut : PROPOSÉ.
+Demande toytoy : propositions Codex maintenant, celles de Claude plus tard,
+puis choix utilisateur. [Huit propositions, options et essais](../docs/proposals/2026-10-08-agent-toolbox.md).
+Préférence proposée : étendre le registre Core existant, avec adaptateurs natifs
+et distants au besoin ; premier lot documentaire et analyse. Aucun consensus,
+transport, nouveau droit ou agent déployé présumé. Avis Claude à recevoir.

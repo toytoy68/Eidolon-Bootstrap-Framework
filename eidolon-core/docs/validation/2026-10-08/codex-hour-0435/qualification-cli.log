@@ -1,0 +1,37 @@
+test_change_during_read_and_disappearing_path_are_refused (tests.test_qualification_cli.QualificationCLITests.test_change_during_read_and_disappearing_path_are_refused) ... ok
+test_early_failures_close_descriptor_deterministically (tests.test_qualification_cli.QualificationCLITests.test_early_failures_close_descriptor_deterministically) ... ok
+test_execution_options_are_refused_before_loading (tests.test_qualification_cli.QualificationCLITests.test_execution_options_are_refused_before_loading) ... ok
+test_existing_state_is_untouched (tests.test_qualification_cli.QualificationCLITests.test_existing_state_is_untouched) ... ok
+test_growth_beyond_read_limit_is_refused (tests.test_qualification_cli.QualificationCLITests.test_growth_beyond_read_limit_is_refused) ... ok
+test_hardware_origin_does_not_authenticate_telemetry (tests.test_qualification_cli.QualificationCLITests.test_hardware_origin_does_not_authenticate_telemetry) ... ok
+test_human_output_neutralizes_control_characters (tests.test_qualification_cli.QualificationCLITests.test_human_output_neutralizes_control_characters) ... ok
+test_malformed_diagnostics_do_not_echo_report_or_path (tests.test_qualification_cli.QualificationCLITests.test_malformed_diagnostics_do_not_echo_report_or_path) ... ok
+test_nonregular_and_oversize_files_are_refused_without_waiting (tests.test_qualification_cli.QualificationCLITests.test_nonregular_and_oversize_files_are_refused_without_waiting) ... ok
+test_real_cli_json_and_human_pass_are_bounded_to_report (tests.test_qualification_cli.QualificationCLITests.test_real_cli_json_and_human_pass_are_bounded_to_report) ... ok
+test_replacement_between_read_and_path_check_is_refused (tests.test_qualification_cli.QualificationCLITests.test_replacement_between_read_and_path_check_is_refused) ... ok
+test_three_verdicts_with_digest_without_runtime_or_mutation (tests.test_qualification_cli.QualificationCLITests.test_three_verdicts_with_digest_without_runtime_or_mutation) ... ok
+test_fixtures_give_the_three_verdicts (tests.test_qualification.FixtureTests.test_fixtures_give_the_three_verdicts) ... ok
+test_passed_scope_is_limited_to_the_announced_scope (tests.test_qualification.FixtureTests.test_passed_scope_is_limited_to_the_announced_scope) ... ok
+test_absent_measurement_stays_absent_not_zero (tests.test_qualification.IncompleteTests.test_absent_measurement_stays_absent_not_zero) ... ok
+test_missing_case_is_incomplete (tests.test_qualification.IncompleteTests.test_missing_case_is_incomplete) ... ok
+test_invalid_units_and_metrics (tests.test_qualification.MalformedTests.test_invalid_units_and_metrics) ... ok
+test_model_supplied_validation_flag_is_refused (tests.test_qualification.MalformedTests.test_model_supplied_validation_flag_is_refused) ... ok
+test_non_finite_numbers (tests.test_qualification.MalformedTests.test_non_finite_numbers) ... ok
+test_size_depth_duplicates_and_encoding (tests.test_qualification.MalformedTests.test_size_depth_duplicates_and_encoding) ... ok
+test_structure_bounds_and_types (tests.test_qualification.MalformedTests.test_structure_bounds_and_types) ... ok
+test_criteria_must_be_fixed_before_the_run_and_unchanged (tests.test_qualification.RejectionTests.test_criteria_must_be_fixed_before_the_run_and_unchanged) ... ok
+test_failed_or_errored_case_rejects (tests.test_qualification.RejectionTests.test_failed_or_errored_case_rejects) ... ok
+test_inconsistent_counts_reject (tests.test_qualification.RejectionTests.test_inconsistent_counts_reject) ... ok
+test_mixed_synthetic_and_hardware_data_rejects (tests.test_qualification.RejectionTests.test_mixed_synthetic_and_hardware_data_rejects) ... ok
+test_one_violation_among_many_successes_rejects (tests.test_qualification.RejectionTests.test_one_violation_among_many_successes_rejects) ... ok
+test_threshold_breach_rejects (tests.test_qualification.RejectionTests.test_threshold_breach_rejects) ... ok
+test_violation_is_not_hidden_by_missing_data (tests.test_qualification.RejectionTests.test_violation_is_not_hidden_by_missing_data) ... ok
+test_empty_corpus_is_incomplete_and_does_not_hide_rejection (tests.test_qualification_boundaries.QualificationBoundaryTests.test_empty_corpus_is_incomplete_and_does_not_hide_rejection) ... ok
+test_exponent_overflow_large_integer_and_surrogates_are_report_errors (tests.test_qualification_boundaries.QualificationBoundaryTests.test_exponent_overflow_large_integer_and_surrogates_are_report_errors) ... ok
+test_physical_metric_domains_and_improvement (tests.test_qualification_boundaries.QualificationBoundaryTests.test_physical_metric_domains_and_improvement) ... ok
+test_unhashable_metric_gives_contract_error (tests.test_qualification_boundaries.QualificationBoundaryTests.test_unhashable_metric_gives_contract_error) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.532s
+
+OK

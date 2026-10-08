@@ -1185,3 +1185,43 @@ Six intégrations mémoire et 13 Chromium non exécutés dans cette validation.
 Six nouvelles tâches G066–G071, après G064/G065 ; dernière livraison reçue G063.
 G068 reçoit aussi une sonde de backup : attente >6 s sous writer SQL exclusif,
 sans mutation. Bilan fonctionnel et estimations dans PROJECT-STATUS-2026-10-07.
+
+### Reprise du 08/10 à 04 h 35 Paris — Codex
+
+Base examinée fdf1123b00e13bc1fed7fc88bca12f49d726b242, checkout propre dédié.
+Memory Engine b33c3a0 lu comme référence, inchangé. Dernière livraison Claude
+observée G063 sur 56aa33f ; file G064–G071 conservée. C-BRAIN-G012 formalise les
+propositions d'outillage demandées ; choix différé jusqu'à la contribution Claude.
+Codex réserve C-034 : audit des frontières de configuration/planificateur Ollama,
+puis C-035 : parcours CLI du validateur de qualification existant, tests/docs.
+Sources client, rotation Claude et changements de politique d'outils hors de ce lot.
+
+C-034 : dix tests de frontières reproduisent avant correction 28 assertions en
+échec et six erreurs ; après correction, 68 tests associés réussissent.
+JSON ambigu, scalaires hors bornes et texte d'erreur distant traité localement.
+Manifeste ollama-chat/2, reprise ancienne refusée. Pas de modèle/GPU qualifié.
+
+C-035 : qualification-check raccorde le validateur existant à une commande
+sans runtime/état/réseau. Lecture régulière bornée et stable, erreurs non
+réfléchies, empreinte des octets et verdict borné au périmètre déclaré. 32 tests
+réussis, dont 12 nouveaux CLI. L'origine hardware_reported n'authentifie rien.
+Intégration Memory Engine b33c3a0 : six tests opt-in exécutés et réussis sur
+corpus temporaire synthétique ; dépôt mémoire inchangé.
+
+Codex réserve C-036 : raccorder l'adaptateur llama-server déjà présent au même
+parcours CLI explicite (model_config, cli, tests et guides). Fournisseur choisi
+dans le fichier opérateur, aucun changement de défaut ni choix de moteur pour
+le projet. Qualification réelle toujours distincte. C-037 réservé : traitement
+des réponses HTTP interrompues des deux transports, après reproduction ciblée.
+
+C-036 : fournisseur llama-server explicite, clé par nom de variable facultatif,
+max_tokens requis et borné ; aucun changement du planificateur par défaut.
+32 tests associés réussis, dont 11 nouveaux. Reprise sans réémission, absence de
+clé, reflet de clé, configuration changée et plans interdits éprouvés en CLI.
+Suite C-034/C-035 intermédiaire : 862 découverts, 856 réussis/six ignorés ;
+le bilan final sera refait après les derniers changements de code.
+
+C-037 : huit tests HTTP supplémentaires ; sept initiaux reproduisent 36
+assertions en échec et sept erreurs avant correction. Lecture bornée partagée,
+cadrage ambigu et corps écourté refusés, erreurs de lecture 500 normalisées.
+Manifestes des deux adaptateurs /3, aucun retry ni migration silencieuse.

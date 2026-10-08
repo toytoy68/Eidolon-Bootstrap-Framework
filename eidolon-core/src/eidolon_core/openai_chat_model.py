@@ -133,7 +133,7 @@ class OpenAIChatConfig:
 
     def manifest(self):
         """Canonical, secret-free description that identifies this controller."""
-        return {"adapter": "openai-chat-llamacpp/2", "server_contract": "llama.cpp b11418",
+        return {"adapter": "openai-chat-llamacpp/3", "server_contract": "llama.cpp b11418",
                 "endpoint": self.endpoint.rstrip("/"), "model": self.model,
                 "options": dict(self.options), "response_format": digest(PLAN_SCHEMA),
                 "system_prompt": digest(SYSTEM_PROMPT), "context_tokens": self.context_tokens,
@@ -153,11 +153,12 @@ class UrllibChatTransport:
         # No proxy and no redirect: the configured endpoint is the only destination.
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
         try:
-            with opener.open(request, timeout=timeout) as response:
-                return response.status, response.headers.get("Content-Type", ""), _bounded(response, max_bytes)
-        except urllib.error.HTTPError as exc:
-            with exc:
-                return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+            try:
+                response = opener.open(request, timeout=timeout)
+            except urllib.error.HTTPError as exc:
+                response = exc
+            with response:
+                return response.status, (response.headers or {}).get("Content-Type", ""), _bounded(response, max_bytes)
         except (urllib.error.URLError, OSError, ValueError, HTTPException) as exc:
             reason = getattr(exc, "reason", exc)
             raise OpenAIChatError("TRANSPORT", type(reason).__name__) from None
@@ -169,10 +170,8 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def _bounded(stream, max_bytes):
-    body = stream.read(max_bytes + 1)
-    if len(body) > max_bytes:
-        raise OpenAIChatError("RESPONSE_TOO_LARGE", f"more than {max_bytes} bytes")
-    return body
+    from .model_http import read_body
+    return read_body(stream, max_bytes, OpenAIChatError)
 
 
 def _reject_constant(name):

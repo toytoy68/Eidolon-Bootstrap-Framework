@@ -8,7 +8,8 @@
 """Explicit CLI configuration, never obtained from a model or memory source.
 
 Loading config sends nothing. Execution sends the mission request and recalled
-context to the literal loopback endpoint. No remote opt-out or secret is accepted.
+context to the literal loopback endpoint. No remote opt-out or inline secret is
+accepted; llama-server may name a credential environment variable for call time.
 """
 import json
 import os
@@ -17,10 +18,12 @@ from urllib.parse import urlsplit
 
 from .contracts import ContractError
 from .ollama_model import OllamaConfig, OllamaModel
+from .openai_chat_model import OpenAIChatConfig, OpenAIChatModel
 
 MAX_CONFIG_BYTES = 16384
 REQUIRED = {"version", "provider", "endpoint", "model", "options"}
 OPTIONAL = {"timeout_seconds", "max_prompt_bytes", "max_response_bytes", "max_output_bytes"}
+PROVIDERS = {"ollama", "llama-server"}
 
 
 class ModelConfigError(ContractError):
@@ -41,31 +44,34 @@ def _decode(raw):
 
     try:
         value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique, parse_constant=nonfinite)
-        if (type(value) is not dict or not REQUIRED <= set(value) or not set(value) <= REQUIRED | OPTIONAL
+        if (type(value) is not dict or not REQUIRED <= set(value)
                 or type(value["version"]) is not int or value["version"] != 1
-                or value["provider"] != "ollama" or type(value["endpoint"]) is not str
+                or type(value["provider"]) is not str or value["provider"] not in PROVIDERS
+                or type(value["endpoint"]) is not str
                 or any(ord(c) <= 32 or ord(c) == 127 for c in value["endpoint"])):
             raise ValueError()
+        provider = value["provider"]
+        optional = OPTIONAL | ({"context_tokens", "api_key_env"} if provider == "llama-server" else set())
+        if not set(value) <= REQUIRED | optional:
+            raise ValueError()
         url = urlsplit(value["endpoint"])
-        if url.hostname not in {"127.0.0.1", "::1"} or url.port is not None and not 1 <= url.port <= 65535:
+        if (url.hostname not in {"127.0.0.1", "::1"} or url.port is not None and not 1 <= url.port <= 65535
+                or url.username is not None or url.password is not None
+                or "?" in value["endpoint"] or "#" in value["endpoint"]):
             raise ValueError()
         options = value["options"]
-        if (type(options) is not dict or type(options.get("num_predict")) is not int
-                or not 1 <= options["num_predict"] <= 8192):
+        token_option = "num_predict" if provider == "ollama" else "max_tokens"
+        if (type(options) is not dict or type(options.get(token_option)) is not int
+                or not 1 <= options[token_option] <= 8192):
             raise ValueError()
-        for field in ("num_ctx", "top_k", "seed"):
-            if field in options and (type(options[field]) is not int or not 0 <= options[field] <= 2**31 - 1):
-                raise ValueError()
-        if "num_ctx" in options and not 256 <= options["num_ctx"] <= 262144:
-            raise ValueError()
-        if "temperature" in options and not 0 <= options["temperature"] <= 2:
-            raise ValueError()
-        if "top_p" in options and not 0 < options["top_p"] <= 1:
-            raise ValueError()
-        config = OllamaConfig(**{key: child for key, child in value.items() if key not in {"version", "provider"}})
+        # The adapter owns scalar domains, shared with direct Python callers.
+        # This loader additionally requires an explicit output-token budget.
+        config_type, model_type = ((OllamaConfig, OllamaModel) if provider == "ollama"
+                                   else (OpenAIChatConfig, OpenAIChatModel))
+        config = config_type(**{key: child for key, child in value.items() if key not in {"version", "provider"}})
         # Validate complete UTF-8 serialization before a configuration is used.
         json.dumps(config.manifest(), ensure_ascii=False, allow_nan=False).encode("utf-8")
-        return OllamaModel(config)
+        return model_type(config)
     except (ValueError, TypeError, KeyError, OverflowError, RecursionError, UnicodeError):
         raise ModelConfigError("INVALID_MODEL_CONFIG") from None
 

@@ -31,7 +31,7 @@ def main(argv=None):
     parser.add_argument("--max-invocations", type=int, default=64,
                         help="durable per-mission invocation limit (1–4096); 0 explicitly uses the legacy unbounded configuration")
     parser.add_argument("--memory-root", help="existing isolated Memory Engine data root (optional)")
-    parser.add_argument("--model-config", help="private Ollama JSON configuration; text demo/create/run only, literal loopback")
+    parser.add_argument("--model-config", help="private Ollama or llama-server JSON configuration; text demo/create/run only, literal loopback")
     parser.add_argument("--profile", choices=("text", "service-sim", "action-sim", "research-sim"), default="text")
     parser.add_argument("--research-scenario", choices=("readable","partial","empty","blocked"), default="readable",
                         help="fixed research fixtures only; no network")
@@ -40,6 +40,8 @@ def main(argv=None):
     parser.add_argument("--format", choices=("json", "human"), default="json",
                         help="JSON for automation (default), human for the Eidolon console presentation")
     commands = parser.add_subparsers(dest="command", required=True)
+    qualification = commands.add_parser("qualification-check", help="check one report offline; no state, model or hardware qualification")
+    qualification.add_argument("--report", required=True, help="existing regular JSON report file, at most 1 MB")
     runtime_inspect = commands.add_parser("runtime-inspect", help="inspect existing mission and worker evidence; never resume")
     runtime_inspect.add_argument("mission_id")
     recovery = commands.add_parser("recovery-prepare", help="copy one mission database to a NEW review-only directory")
@@ -115,6 +117,14 @@ def main(argv=None):
                 raise ValueError("MODEL_CONFIG_COMMAND_NOT_SUPPORTED")
             from .model_config import load_model
             model = load_model(args.model_config)
+        if args.command == "qualification-check":
+            if (args.profile != "text" or args.memory_root is not None or args.targets is not None
+                    or args.allow_target is not None or args.research_scenario != "readable"):
+                raise ValueError("QUALIFICATION_OPTIONS_NOT_SUPPORTED")
+            from .qualification_io import EXIT_CODES, check_report, render_check
+            result = check_report(args.report)
+            print(render_check(result) if args.format == "human" else encode(result))
+            return EXIT_CODES[result["status"]]
         if args.command == "runtime-inspect":
             from .runtime_inspect import inspect_runtime, render_inspection
             result = inspect_runtime(args.state, args.mission_id)

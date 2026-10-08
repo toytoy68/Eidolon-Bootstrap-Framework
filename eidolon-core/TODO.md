@@ -5,7 +5,17 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — séance du 07/10/2026 au soir
+## État courant — séance du 08/10/2026
+
+C-034–C-037 : deux adaptateurs de planification durcis (manifestes /3),
+choix explicite Ollama ou llama-server dans la CLI et qualification-check
+hors ligne. 881 tests avec mémoire réussis ; paquet installé, recettes 24+25.
+Le défaut reste déterministe. [Preuves](docs/validation/2026-10-08/codex-hour-0435/README.md).
+[Outillage des futurs agents](docs/proposals/2026-10-08-agent-toolbox.md) :
+huit propositions Codex, contribution Claude attendue plus tard, choix ouvert.
+Aucun nouvel outil d'agent activé. La file Claude G064–G071 reste inchangée.
+
+### État de la séance précédente — 07/10/2026 au soir
 
 C-030–C-033 : catalogue archives HTTP, recette recherches et planificateur Ollama
 explicite en CLI. Le défaut reste déterministe, fournisseurs réels désactivés.
@@ -609,3 +619,38 @@ Contrat [RESEARCH-MISSIONS.md](docs/RESEARCH-MISSIONS.md),
 - [x] Pagination/reset, preuves actives inchangées, jeton et reprise serveur vérifiés.
 - [x] Échec de requête nettoyé, fichiers étrangers préservés ; huit tests de recette passent.
 - [x] Les 24 contrôles du profil initial restent inchangés.
+
+## C-034 — Frontières du planificateur Ollama — 08/10/2026
+
+- [x] Réponses ambiguës, scalaires invalides et réflexion de texte d'erreur reproduits.
+- [x] JSON strict, paramètres bornés partagés, erreurs distantes non recopiées.
+- [x] Manifeste version 2 ; reprise sous ancien contrat bloquée sans réécriture.
+- [x] Dix nouveaux tests ; 68 tests des adaptateurs/configuration/intégration réussis.
+- [ ] Qualification modèle/GPU et contre-revue indépendante.
+
+## C-BRAIN-G012 — Outillage des futurs agents — 08/10/2026
+
+- [x] Huit propositions Codex, trois options et corpus comparatif documentés.
+- [ ] Contribution Claude à recevoir plus tard, puis arbitrage toytoy.
+- [ ] Implémentation des options retenues seulement après choix ; aucun outil activé.
+
+## C-035 — vérification de rapports hors ligne (08/10/2026)
+
+- [x] Commande `qualification-check --report`, sorties JSON/humaine et codes 0/2/3.
+- [x] Lecture bornée, refus FIFO/liens finaux, mutation détectée, aucun runtime.
+- [x] 32 tests du validateur et de la CLI ; aucune télémétrie réelle qualifiée.
+- [ ] Collecte matérielle réelle et décision de qualification avec preuves externes.
+
+## C-036 — candidat llama-server explicite en CLI — 08/10/2026
+
+- [x] Choix provider dans la configuration privée, limites communes et options distinctes.
+- [x] Nom de variable de clé facultatif ; aucune clé littérale dans le fichier ou le manifeste.
+- [x] 11 nouveaux tests, 32 avec chargeur Ollama et CLI qualification.
+- [ ] Qualification réelle du contrat à la version du moteur installé ; aucun moteur retenu.
+
+## C-037 — cadrage HTTP des planificateurs — 08/10/2026
+
+- [x] Coupure malgré JSON valide, en-têtes ambigus et erreurs de corps HTTP reproduits.
+- [x] Lecture commune bornée, diagnostic sans texte distant, aucun retry automatique.
+- [x] Manifestes /3 ; missions antérieures refusées à la reprise sans migration implicite.
+- [ ] Contre-revue indépendante et qualification avec les moteurs réels retenus pour essai.

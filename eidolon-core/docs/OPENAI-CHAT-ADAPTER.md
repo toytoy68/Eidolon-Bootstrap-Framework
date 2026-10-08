@@ -1,9 +1,14 @@
 # Adaptateur candidat `openai-chat-llamacpp/1` — API chat de llama-server
 
 Auteur : Claude, 05/10/2026, fiche [C-TASK-G004](../collaboration/tasks/C-TASK-G004.md).
-Base : `c0fa5ba`. Statut : module **candidat**, non raccordé à la CLI, jamais
-choisi par défaut. La démonstration Core garde le modèle déterministe. Aucun
+Base initiale : `c0fa5ba`. Statut : module **candidat**, raccordé explicitement
+à la CLI depuis C-036 (08/10), jamais choisi par défaut. La démonstration Core
+garde le modèle déterministe. Aucun
 moteur n'est retenu par ce lot (voir [l'étude des moteurs](INFERENCE-RUNTIME-COMPARISON.md)).
+
+Configuration CLI privée `provider: llama-server` : [guide commun](LOCAL-MODEL-CLI.md).
+Le contrat versionné courant est décrit dans les compléments d'intégration
+en fin de ce document ; le titre conserve le nom de la livraison initiale.
 
 Module : [`src/eidolon_core/openai_chat_model.py`](../src/eidolon_core/openai_chat_model.py).
 Tests : [`tests/test_openai_chat_model.py`](../tests/test_openai_chat_model.py), 20 tests.
@@ -144,3 +149,19 @@ illimitée ni budget fractionnaire. Endpoint borné, sans contrôles, port valid
 les nombres trop grands donnent ContractError plutôt qu'une exception de conversion.
 
 [Preuves et limites du lot intégré](validation/2026-10-05/codex-g004/README.md).
+
+## Transport HTTP version 3 — C-037, 08/10/2026
+
+Le manifeste courant est `openai-chat-llamacpp/3`. Le lecteur borné commun aux
+deux adaptateurs refuse les réponses à cadrage ambigu (`BAD_HTTP_FRAMING`) et
+les corps écourtés malgré un Content-Length annoncé (`INCOMPLETE_HTTP`). Il
+admet une longueur unique, `chunked` seul, ou une réponse terminée par fermeture
+de connexion. Le refus d'une longueur annoncée supérieure au budget précède
+la lecture. C'est un choix conservateur de l'adaptateur, pas une promesse de
+compatibilité HTTP universelle.
+
+Le traitement sans réflexion de contenu couvre aussi les erreurs pendant la
+lecture du corps d'un statut HTTP d'échec. Pas de nouvelle tentative implicite.
+Le timeout socket est distinct de la limite externe d'appel du worker. Une
+ancienne mission /1 ou /2 ne reprend pas sous /3 : configuration différente,
+historique inchangé. Tests sur serveur loopback brut ; moteur réel non qualifié.

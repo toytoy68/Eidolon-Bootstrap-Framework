@@ -1,0 +1,398 @@
+test_changed_adapter_contract_blocks_preexisting_mission (tests.test_ollama_boundaries.OllamaBoundaryTests.test_changed_adapter_contract_blocks_preexisting_mission) ... FAIL
+test_duplicate_control_keys_refused_at_every_object_level (tests.test_ollama_boundaries.OllamaBoundaryTests.test_duplicate_control_keys_refused_at_every_object_level) ... 
+  test_duplicate_control_keys_refused_at_every_object_level (tests.test_ollama_boundaries.OllamaBoundaryTests.test_duplicate_control_keys_refused_at_every_object_level) (document='{"model": "synthetic-planner:1b", "created_at": "2026-10-05T12:00:00Z", "message": {"role": "assistant", "content": "{}"}, "done":false,"done":true, "done_reason": "stop", "eval_count": 12}') ... FAIL
+test_duplicate_control_keys_refused_at_every_object_level (tests.test_ollama_boundaries.OllamaBoundaryTests.test_duplicate_control_keys_refused_at_every_object_level) ... ERROR
+test_invalid_control_field_types_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_control_field_types_refused) ... 
+  test_invalid_control_field_types_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_control_field_types_refused) (calls=False) ... FAIL
+test_invalid_control_field_types_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_control_field_types_refused) ... ERROR
+test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) ... 
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:99999') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:bad') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:\n11434') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://[::1') ... ERROR
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://@127.0.0.1:11434') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:11434?') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:11434#') ... FAIL
+  test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:\x7f') ... FAIL
+test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) ... 
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... ERROR
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['timeout_seconds']) ... ERROR
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['model']) ... FAIL
+  test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['model']) ... FAIL
+test_invalid_transport_status_refused_without_echo (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_transport_status_refused_without_echo) ... FAIL
+test_malformed_http_status_is_a_sanitized_transport_error (tests.test_ollama_boundaries.OllamaBoundaryTests.test_malformed_http_status_is_a_sanitized_transport_error) ... ERROR
+test_overflow_numbers_and_unpaired_surrogates_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_overflow_numbers_and_unpaired_surrogates_refused) ... FAIL
+test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) ... 
+  test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='http') ... FAIL
+  test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='model') ... FAIL
+  test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='finish') ... FAIL
+test_valid_scalar_boundaries_remain_usable (tests.test_ollama_boundaries.OllamaBoundaryTests.test_valid_scalar_boundaries_remain_usable) ... ok
+
+======================================================================
+ERROR: test_duplicate_control_keys_refused_at_every_object_level (tests.test_ollama_boundaries.OllamaBoundaryTests.test_duplicate_control_keys_refused_at_every_object_level)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 54, in test_duplicate_control_keys_refused_at_every_object_level
+    self.assertEqual(raised.exception.code, 'BAD_RESPONSE')
+                     ^^^^^^^^^^^^^^^^
+AttributeError: '_AssertRaisesContext' object has no attribute 'exception'
+
+======================================================================
+ERROR: test_invalid_control_field_types_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_control_field_types_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 72, in test_invalid_control_field_types_refused
+    self.assertEqual(raised.exception.code, 'BAD_RESPONSE')
+                     ^^^^^^^^^^^^^^^^
+AttributeError: '_AssertRaisesContext' object has no attribute 'exception'
+
+======================================================================
+ERROR: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://[::1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 92, in test_invalid_endpoints_fail_before_transport
+    config(endpoint=endpoint)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_model.py", line 71, in config
+    return OllamaConfig(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 11, in __init__
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 94, in __post_init__
+    url = urllib.parse.urlsplit(self.endpoint) if isinstance(self.endpoint, str) else None
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py", line 514, in urlsplit
+    raise ValueError("Invalid IPv6 URL")
+ValueError: Invalid IPv6 URL
+
+======================================================================
+ERROR: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 105, in test_invalid_scalar_options_have_consistent_contract_errors
+    config(**values)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_model.py", line 71, in config
+    return OllamaConfig(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 11, in __init__
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 107, in __post_init__
+    if type(value) not in (int, float) or not math.isfinite(value):
+                                              ^^^^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['timeout_seconds'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 105, in test_invalid_scalar_options_have_consistent_contract_errors
+    config(**values)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_model.py", line 71, in config
+    return OllamaConfig(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 11, in __init__
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 110, in __post_init__
+    if (type(self.timeout_seconds) not in (int, float) or not math.isfinite(self.timeout_seconds)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_malformed_http_status_is_a_sanitized_transport_error (tests.test_ollama_boundaries.OllamaBoundaryTests.test_malformed_http_status_is_a_sanitized_transport_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 136, in test_malformed_http_status_is_a_sanitized_transport_error
+    model.propose(DEMO_REQUEST, {'items': []})
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 198, in propose
+    status, content_type, raw = self.transport.post(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 144, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 325, in _read_status
+    raise BadStatusLine(line)
+http.client.BadStatusLine: synthetic-private-error-content
+
+
+======================================================================
+FAIL: test_changed_adapter_contract_blocks_preexisting_mission (tests.test_ollama_boundaries.OllamaBoundaryTests.test_changed_adapter_contract_blocks_preexisting_mission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 154, in test_changed_adapter_contract_blocks_preexisting_mission
+    self.assertEqual(result['error']['code'], 'CONFIGURATION_CHANGED')
+AssertionError: 'MODEL_UNAVAILABLE' != 'CONFIGURATION_CHANGED'
+- MODEL_UNAVAILABLE
++ CONFIGURATION_CHANGED
+
+
+======================================================================
+FAIL: test_duplicate_control_keys_refused_at_every_object_level (tests.test_ollama_boundaries.OllamaBoundaryTests.test_duplicate_control_keys_refused_at_every_object_level) (document='{"model": "synthetic-planner:1b", "created_at": "2026-10-05T12:00:00Z", "message": {"role": "assistant", "content": "{}"}, "done":false,"done":true, "done_reason": "stop", "eval_count": 12}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 52, in test_duplicate_control_keys_refused_at_every_object_level
+    with self.subTest(document=document), self.assertRaises(OllamaError) as raised:
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_invalid_control_field_types_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_control_field_types_refused) (calls=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 70, in test_invalid_control_field_types_refused
+    with self.subTest(calls=calls), self.assertRaises(OllamaError) as raised:
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:99999')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:bad')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:\n11434')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://@127.0.0.1:11434')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:11434?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:11434#')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_endpoints_fail_before_transport (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_endpoints_fail_before_transport) (endpoint='http://127.0.0.1:\x7f')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 91, in test_invalid_endpoints_fail_before_transport
+    with self.subTest(endpoint=endpoint), self.assertRaises(ContractError):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['options'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['model'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_scalar_options_have_consistent_contract_errors (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_scalar_options_have_consistent_contract_errors) (fields=['model'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 104, in test_invalid_scalar_options_have_consistent_contract_errors
+    with self.subTest(fields=list(values)), self.assertRaises(ContractError):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_invalid_transport_status_refused_without_echo (tests.test_ollama_boundaries.OllamaBoundaryTests.test_invalid_transport_status_refused_without_echo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 80, in test_invalid_transport_status_refused_without_echo
+    with self.assertRaises(OllamaError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_overflow_numbers_and_unpaired_surrogates_refused (tests.test_ollama_boundaries.OllamaBoundaryTests.test_overflow_numbers_and_unpaired_surrogates_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 62, in test_overflow_numbers_and_unpaired_surrogates_refused
+    with self.assertRaises(OllamaError) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='http')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 125, in test_server_error_text_never_reaches_mission_events_or_storage
+    self.assertNotIn(CANARY, json.dumps(mission) + json.dumps(store.events(mission['id'])))
+AssertionError: 'synthetic-private-error-content' unexpectedly found in '{"calls": [], "cancel_requested": false, "configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "context": {"excluded_counts": {}, "items": [{"applicability": "UNKNOWN", "confidence": "LOW", "content": "Ne pas acheter la V100 cette semaine. Ceci est une donn\\u00e9e synth\\u00e9tique.", "epistemic_status": "UNVERIFIED", "excerpt_reference": {"end": 70, "source": "fixture/1", "start": 0}, "information_id": "synthetic-note", "needs_review": true, "operational_state": "PLANNED", "provenance": {"kind": "original_source", "source": "synthetic-fixture"}, "relations": [], "revision": 1, "temporal": {}, "truncated": false, "verification": {}}], "policy_version": "synthetic-memory/1", "query": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration."}, "created_at": "2026-10-08T02:43:13.533520+00:00", "error": {"code": "MODEL_UNAVAILABLE", "message": "HTTP_STATUS: status 500: synthetic-private-error-content"}, "id": "m-e22949dd775045a3bccd37c232668810", "invocation_budget": {"limit": 64, "used": 2}, "model_output": null, "objective": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}, "outcome": {"status": "NOT_ACHIEVED", "scope": "recalled_snapshot", "covered_references": [], "missing_references": ["synthetic-note@1"], "code": "NO_VERIFIED_RESULT"}, "phase": "PLAN", "plan": null, "progress": {"completed": 0, "total": null}, "request": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration.", "result": null, "revision": 6, "status": "BLOCKED"}[{"sequence": 1, "at": "2026-10-08T02:43:13.533805+00:00", "kind": "CREATED", "detail": {"configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "objective": {"context_sha256": null, "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": null, "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}}}, {"sequence": 2, "at": "2026-10-08T02:43:13.534534+00:00", "kind": "RESUMED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 3, "at": "2026-10-08T02:43:13.534844+00:00", "kind": "RECALL_STARTED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 4, "at": "2026-10-08T02:43:13.535231+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 1, "outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 5, "at": "2026-10-08T02:43:13.608208+00:00", "kind": "CONTEXT_SAVED", "detail": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 6, "at": "2026-10-08T02:43:13.608761+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 2, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 7, "at": "2026-10-08T02:43:13.704688+00:00", "kind": "BLOCKED", "detail": {"error": {"code": "MODEL_UNAVAILABLE", "message": "HTTP_STATUS: status 500: synthetic-private-error-content"}, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "BLOCKED"}}]'
+
+======================================================================
+FAIL: test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='model')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 125, in test_server_error_text_never_reaches_mission_events_or_storage
+    self.assertNotIn(CANARY, json.dumps(mission) + json.dumps(store.events(mission['id'])))
+AssertionError: 'synthetic-private-error-content' unexpectedly found in '{"calls": [], "cancel_requested": false, "configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "context": {"excluded_counts": {}, "items": [{"applicability": "UNKNOWN", "confidence": "LOW", "content": "Ne pas acheter la V100 cette semaine. Ceci est une donn\\u00e9e synth\\u00e9tique.", "epistemic_status": "UNVERIFIED", "excerpt_reference": {"end": 70, "source": "fixture/1", "start": 0}, "information_id": "synthetic-note", "needs_review": true, "operational_state": "PLANNED", "provenance": {"kind": "original_source", "source": "synthetic-fixture"}, "relations": [], "revision": 1, "temporal": {}, "truncated": false, "verification": {}}], "policy_version": "synthetic-memory/1", "query": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration."}, "created_at": "2026-10-08T02:43:13.706633+00:00", "error": {"code": "MODEL_UNAVAILABLE", "message": "MODEL_ERROR: synthetic-private-error-content"}, "id": "m-1645b5ff7b6b41eca86df937279348f6", "invocation_budget": {"limit": 64, "used": 2}, "model_output": null, "objective": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}, "outcome": {"status": "NOT_ACHIEVED", "scope": "recalled_snapshot", "covered_references": [], "missing_references": ["synthetic-note@1"], "code": "NO_VERIFIED_RESULT"}, "phase": "PLAN", "plan": null, "progress": {"completed": 0, "total": null}, "request": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration.", "result": null, "revision": 6, "status": "BLOCKED"}[{"sequence": 1, "at": "2026-10-08T02:43:13.706956+00:00", "kind": "CREATED", "detail": {"configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "objective": {"context_sha256": null, "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": null, "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}}}, {"sequence": 2, "at": "2026-10-08T02:43:13.707591+00:00", "kind": "RESUMED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 3, "at": "2026-10-08T02:43:13.708151+00:00", "kind": "RECALL_STARTED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 4, "at": "2026-10-08T02:43:13.708538+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 1, "outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 5, "at": "2026-10-08T02:43:13.782236+00:00", "kind": "CONTEXT_SAVED", "detail": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 6, "at": "2026-10-08T02:43:13.782806+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 2, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 7, "at": "2026-10-08T02:43:13.878493+00:00", "kind": "BLOCKED", "detail": {"error": {"code": "MODEL_UNAVAILABLE", "message": "MODEL_ERROR: synthetic-private-error-content"}, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "BLOCKED"}}]'
+
+======================================================================
+FAIL: test_server_error_text_never_reaches_mission_events_or_storage (tests.test_ollama_boundaries.OllamaBoundaryTests.test_server_error_text_never_reaches_mission_events_or_storage) (mode='finish')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_ollama_boundaries.py", line 125, in test_server_error_text_never_reaches_mission_events_or_storage
+    self.assertNotIn(CANARY, json.dumps(mission) + json.dumps(store.events(mission['id'])))
+AssertionError: 'synthetic-private-error-content' unexpectedly found in '{"calls": [], "cancel_requested": false, "configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "context": {"excluded_counts": {}, "items": [{"applicability": "UNKNOWN", "confidence": "LOW", "content": "Ne pas acheter la V100 cette semaine. Ceci est une donn\\u00e9e synth\\u00e9tique.", "epistemic_status": "UNVERIFIED", "excerpt_reference": {"end": 70, "source": "fixture/1", "start": 0}, "information_id": "synthetic-note", "needs_review": true, "operational_state": "PLANNED", "provenance": {"kind": "original_source", "source": "synthetic-fixture"}, "relations": [], "revision": 1, "temporal": {}, "truncated": false, "verification": {}}], "policy_version": "synthetic-memory/1", "query": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration."}, "created_at": "2026-10-08T02:43:13.880390+00:00", "error": {"code": "MODEL_UNAVAILABLE", "message": "INCOMPLETE: done_reason \'synthetic-private-error-content\'"}, "id": "m-506b5459cd14447ca2496f26032bb545", "invocation_budget": {"limit": 64, "used": 2}, "model_output": null, "objective": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}, "outcome": {"status": "NOT_ACHIEVED", "scope": "recalled_snapshot", "covered_references": [], "missing_references": ["synthetic-note@1"], "code": "NO_VERIFIED_RESULT"}, "phase": "PLAN", "plan": null, "progress": {"completed": 0, "total": null}, "request": "Calculer les statistiques du texte synth\\u00e9tique de d\\u00e9monstration.", "result": null, "revision": 6, "status": "BLOCKED"}[{"sequence": 1, "at": "2026-10-08T02:43:13.880596+00:00", "kind": "CREATED", "detail": {"configuration": {"call_seconds": 10.0, "max_invocations": 64, "memory": "synthetic-memory/1", "memory_root": null, "model": "ollama/synthetic-planner:1b@188e184492312297", "policy": {"allowed_effect": "none", "allowed_tools": ["text.stats"], "id": "local-pure-only/1"}, "tools": {"text.stats": {"effect": "none", "verifier": "text-stats-recompute/1", "version": "1"}}}, "objective": {"context_sha256": null, "kind": "recalled_text_statistics", "request_sha256": "50f3016d401ceb62532e4077fe461c8d7cd35c365ffdbeb3c31db6aea6f579b6", "required_references": null, "scope": "recalled_snapshot", "tool": "text.stats", "version": 1}}}, {"sequence": 2, "at": "2026-10-08T02:43:13.881356+00:00", "kind": "RESUMED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 3, "at": "2026-10-08T02:43:13.881613+00:00", "kind": "RECALL_STARTED", "detail": {"outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 4, "at": "2026-10-08T02:43:13.882157+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 1, "outcome": {"code": "AWAITING_EVIDENCE", "covered_references": [], "missing_references": [], "scope": "recalled_snapshot", "status": "PENDING"}, "phase": "RECALL", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 5, "at": "2026-10-08T02:43:13.953564+00:00", "kind": "CONTEXT_SAVED", "detail": {"context_sha256": "473a09c5110dc0296880ddd84831c0418edca7ba7f8239b4fda00a2ac049b095", "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING"}}, {"sequence": 6, "at": "2026-10-08T02:43:13.954103+00:00", "kind": "INVOCATION_RESERVED", "detail": {"call_id": null, "limit": 64, "ordinal": 2, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "RUNNING", "verification": false}}, {"sequence": 7, "at": "2026-10-08T02:43:14.056627+00:00", "kind": "BLOCKED", "detail": {"error": {"code": "MODEL_UNAVAILABLE", "message": "INCOMPLETE: done_reason \'synthetic-private-error-content\'"}, "outcome": {"code": "NO_VERIFIED_RESULT", "covered_references": [], "missing_references": ["synthetic-note@1"], "scope": "recalled_snapshot", "status": "NOT_ACHIEVED"}, "phase": "PLAN", "progress": {"completed": 0, "total": null}, "status": "BLOCKED"}}]'
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.719s
+
+FAILED (failures=28, errors=6)

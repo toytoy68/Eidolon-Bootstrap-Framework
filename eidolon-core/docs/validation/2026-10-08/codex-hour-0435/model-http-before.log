@@ -1,0 +1,826 @@
+test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) ... 
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nContent-Length: 3\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nContent-Length: 3\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nContent-Length: 2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nContent-Length: 2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: -1\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: -1\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: +2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: +2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: synthetic-private-http-error\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: synthetic-private-http-error\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Transfer-Encoding: gzip, chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Transfer-Encoding: gzip, chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nContent-Length: 3\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nContent-Length: 3\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nContent-Length: 2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nContent-Length: 2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: -1\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: -1\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: +2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: +2\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: synthetic-private-http-error\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: synthetic-private-http-error\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n') ... ERROR
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n') ... ERROR
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Transfer-Encoding: gzip, chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Transfer-Encoding: gzip, chunked\r\n') ... FAIL
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n') ... ERROR
+  test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n') ... ERROR
+test_complete_content_length_chunked_and_close_delimited (tests.test_model_http.ModelHTTPTests.test_complete_content_length_chunked_and_close_delimited) ... ok
+test_error_body_read_failure_is_sanitized_and_closed (tests.test_model_http.ModelHTTPTests.test_error_body_read_failure_is_sanitized_and_closed) ... ERROR
+test_malformed_chunk_in_http_error_uses_sanitized_transport_error (tests.test_model_http.ModelHTTPTests.test_malformed_chunk_in_http_error_uses_sanitized_transport_error) ... 
+  test_malformed_chunk_in_http_error_uses_sanitized_transport_error (tests.test_model_http.ModelHTTPTests.test_malformed_chunk_in_http_error_uses_sanitized_transport_error) (provider='ollama', status=500) ... ERROR
+  test_malformed_chunk_in_http_error_uses_sanitized_transport_error (tests.test_model_http.ModelHTTPTests.test_malformed_chunk_in_http_error_uses_sanitized_transport_error) (provider='llama', status=500) ... ERROR
+test_malformed_json_traceback_does_not_reflect_unknown_key (tests.test_model_http.ModelHTTPTests.test_malformed_json_traceback_does_not_reflect_unknown_key) ... ok
+test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) ... 
+  test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='ollama') ... FAIL
+  test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='llama') ... FAIL
+  test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='ollama') ... FAIL
+  test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='llama') ... FAIL
+test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) ... 
+  test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='ollama', status=200) ... FAIL
+  test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='llama', status=200) ... FAIL
+  test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='ollama', status=500) ... FAIL
+  test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='llama', status=500) ... FAIL
+
+======================================================================
+ERROR: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 160, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'{}'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 58, in post
+    return UrllibTransport().post(self.url, b"{}", timeout=.5, max_bytes=budget)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 164, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 176, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 156, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'{}'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 59, in post
+    return UrllibChatTransport().post(self.url, b"{}", headers={"Content-Type": "application/json"},
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 160, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 172, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 160, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'{}'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 58, in post
+    return UrllibTransport().post(self.url, b"{}", timeout=.5, max_bytes=budget)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 164, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 176, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 156, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'{}'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 59, in post
+    return UrllibChatTransport().post(self.url, b"{}", headers={"Content-Type": "application/json"},
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 160, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 172, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_error_body_read_failure_is_sanitized_and_closed (tests.test_model_http.ModelHTTPTests.test_error_body_read_failure_is_sanitized_and_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 160, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 130, in fail_open
+    raise failed
+urllib.error.HTTPError: HTTP Error 500: server error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 134, in test_error_body_read_failure_is_sanitized_and_closed
+    self.post(provider)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 58, in post
+    return UrllibTransport().post(self.url, b"{}", timeout=.5, max_bytes=budget)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 164, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 176, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 121, in read
+    raise OSError(CANARY)
+OSError: synthetic-private-http-error
+
+======================================================================
+ERROR: test_malformed_chunk_in_http_error_uses_sanitized_transport_error (tests.test_model_http.ModelHTTPTests.test_malformed_chunk_in_http_error_uses_sanitized_transport_error) (provider='ollama', status=500)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 160, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'synthetic-private-http-error\r\n'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 58, in post
+    return UrllibTransport().post(self.url, b"{}", timeout=.5, max_bytes=budget)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 164, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/ollama_model.py", line 176, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_malformed_chunk_in_http_error_uses_sanitized_transport_error (tests.test_model_http.ModelHTTPTests.test_malformed_chunk_in_http_error_uses_sanitized_transport_error) (provider='llama', status=500)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 156, in post
+    with opener.open(request, timeout=timeout) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Synthetic
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+           ^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 16: b'synthetic-private-http-error\r\n'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 71, in assertRefused
+    self.post(provider, budget)
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 59, in post
+    return UrllibChatTransport().post(self.url, b"{}", headers={"Content-Type": "application/json"},
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 160, in post
+    return exc.code, (exc.headers or {}).get("Content-Type", ""), _bounded(exc, max_bytes)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/src/eidolon_core/openai_chat_model.py", line 172, in _bounded
+    body = stream.read(max_bytes + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py", line 499, in func_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nContent-Length: 3\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nContent-Length: 3\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nContent-Length: 2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nContent-Length: 2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: -1\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: -1\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: +2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: +2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: synthetic-private-http-error\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: synthetic-private-http-error\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 72, in assertRefused
+    self.assertEqual(raised.exception.code, code)
+AssertionError: 'TRANSPORT' != 'BAD_HTTP_FRAMING'
+- TRANSPORT
++ BAD_HTTP_FRAMING
+
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Content-Length: 2\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 72, in assertRefused
+    self.assertEqual(raised.exception.code, code)
+AssertionError: 'TRANSPORT' != 'BAD_HTTP_FRAMING'
+- TRANSPORT
++ BAD_HTTP_FRAMING
+
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Transfer-Encoding: gzip, chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Transfer-Encoding: gzip, chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=200, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 72, in assertRefused
+    self.assertEqual(raised.exception.code, code)
+AssertionError: 'TRANSPORT' != 'BAD_HTTP_FRAMING'
+- TRANSPORT
++ BAD_HTTP_FRAMING
+
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=200, headers='Transfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 72, in assertRefused
+    self.assertEqual(raised.exception.code, code)
+AssertionError: 'TRANSPORT' != 'BAD_HTTP_FRAMING'
+- TRANSPORT
++ BAD_HTTP_FRAMING
+
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nContent-Length: 3\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nContent-Length: 3\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: 2\r\nContent-Length: 2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: 2\r\nContent-Length: 2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: -1\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: -1\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: +2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: +2\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Content-Length: synthetic-private-http-error\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Content-Length: synthetic-private-http-error\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='ollama', status=500, headers='Transfer-Encoding: gzip, chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_ambiguous_or_invalid_http_framing_is_refused (tests.test_model_http.ModelHTTPTests.test_ambiguous_or_invalid_http_framing_is_refused) (provider='llama', status=500, headers='Transfer-Encoding: gzip, chunked\r\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='ollama')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='llama')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='ollama')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_oversized_header_or_body_respects_budget (tests.test_model_http.ModelHTTPTests.test_oversized_header_or_body_respects_budget) (provider='llama')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='ollama', status=200)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='llama', status=200)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+======================================================================
+FAIL: test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='ollama', status=500)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OllamaError not raised
+
+======================================================================
+FAIL: test_premature_eof_is_not_a_complete_body_even_when_json_parses (tests.test_model_http.ModelHTTPTests.test_premature_eof_is_not_a_complete_body_even_when_json_parses) (provider='llama', status=500)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb2b08eb6ad8/eidolon-core/eidolon-core/tests/test_model_http.py", line 70, in assertRefused
+    with self.assertRaises(error) as raised:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OpenAIChatError not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.154s
+
+FAILED (failures=36, errors=7)
