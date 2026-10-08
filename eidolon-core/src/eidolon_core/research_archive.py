@@ -287,7 +287,8 @@ def render_index(catalog):
     # Values below are generated constants, validated filenames, integers and hashes.
     # Never interpolate query text, actors, provider labels or arbitrary Markdown.
     lines = [INDEX_HEADER.rstrip(), '# Archives de recherche — Eidolon Core', '',
-             'Catalogue privé généré. Cohérence vérifiée, authenticité non établie.',
+             'Catalogue privé généré. Cohérence vérifiée à la génération, authenticité non établie.',
+             'Toute modification ultérieure exige une nouvelle inspection des exports.',
              'Le journal actif n’est pas consulté : le commit des exports reste inconnu.',
              'Ce fichier ne permet aucune exécution, reprise ou suppression.', '',
              f"Archives : {catalog['archive_count']} ; recherches : {catalog['run_count']}.",

@@ -224,6 +224,8 @@ class ArchiveTests(unittest.TestCase):
         self.assertFalse(second['index_changed'])
         self.assertEqual(archives._signature((self.directory / 'liste.md').stat()), signature)
         self.assertTrue((self.directory / 'liste.md').read_text().startswith(archives.INDEX_HEADER))
+        self.assertIn('Cohérence vérifiée à la génération', (self.directory / 'liste.md').read_text())
+        self.assertIn('nouvelle inspection', (self.directory / 'liste.md').read_text())
 
     def test_handwritten_index_and_symlink_are_not_overwritten(self):
         index = self.directory / 'liste.md'; index.write_text('My notes'); index.chmod(0o600)

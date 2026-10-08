@@ -309,11 +309,13 @@ class ReceiptLookupTests(unittest.TestCase):
             db.execute("DELETE FROM missions")
         self.assert_error("RECEIPT_UNAVAILABLE")
 
-    def test_wal_writer_cannot_mix_store_identity_and_receipt(self):
+    def test_local_transaction_cannot_mix_store_identity_and_receipt(self):
         receipt = self.record()
         with self.store.connection() as db:
             db.execute("PRAGMA journal_mode=WAL")
-        connection = self.reader.connection
+        # Test lookup's transaction independently of the HTTP reader, which now
+        # deliberately refuses externally enabled WAL before opening SQLite.
+        connection = self.store.connection
         @contextmanager
         def interleaved():
             with connection() as db:
@@ -330,7 +332,9 @@ class ReceiptLookupTests(unittest.TestCase):
                 yield Proxy()
         with patch.object(self.reader, "connection", interleaved):
             self.assertEqual(lookup(self.reader, self.query)["receipt"], receipt)
-        self.assert_error("STORE_CHANGED")
+        with self.assertRaises(ReceiptLookupError) as caught:
+            lookup(self.store, self.query)
+        self.assertEqual(caught.exception.code, 'STORE_CHANGED')
 
 
 class HTTPReceiptTests(unittest.TestCase):

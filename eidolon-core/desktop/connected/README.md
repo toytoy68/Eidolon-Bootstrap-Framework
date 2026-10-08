@@ -69,16 +69,18 @@ avec un délai de 10 s.
 | Fichier | Rôle |
 | --- | --- |
 | `index.html`, `style.css` | page et mise en page (une colonne sous 760 px) |
+| `src/archives.js` | état pur du catalogue paginé des archives : validation C-030, générations, pages figées (G066) |
 | `src/session.js` | session : transport injecté, erreurs, époques |
 | `src/view.js` | rendu DOM |
 | `src/main.js` | démarrage navigateur, `fetch` |
-| `app.js` | **fichier généré** par `build.js` : `sync-state.js` et `mission-list-state.js` du prototype, puis les trois sources |
+| `app.js` | **fichier généré** par `build.js` : `sync-state.js` et `mission-list-state.js` du prototype, puis les quatre sources |
 | `tests/session.test.js` | tests sur transport scripté (fixtures), dont 7 reçus (G036, G048) |
 | `tests/server.test.js` | 6 tests sur le **vrai serveur** Python et dans Chromium |
 | `tests/receipts.test.js` | 3 tests reçus sur le vrai serveur et le jeu bêta C-009g (dont 1 Chromium) |
 | `tests/research.test.js` | 3 tests missions de recherche C-021 sur projections Core réelles (dont 1 Chromium) |
 | `tests/a11y.test.js` | 8 tests Chromium : clavier, focus, zoom 200 %, 320×640, contraste, mouvement réduit (G037) |
 | `tests/integration/e2e.test.js` | 6 tests de bout en bout : pagination réelle, troncature à 200, reset entre deux pages, absence de réémission, nettoyage sur échec, 150 missions dans Chromium (G038) |
+| `tests/archives.test.js` | 9 tests archives (G066) : 6 sur réponses scriptées, 2 sur le vrai serveur C-030, 1 Chromium clavier et 360 px |
 | `tests/helpers.js` | outils partagés des bancs réels (CLI, jeu bêta, serveur, nettoyage) |
 
 Le serveur ne sert que trois fichiers (`/`, `/app.js`, `/style.css`) : d'où le
@@ -93,6 +95,29 @@ NODE_PATH=<dossier contenant playwright> node --test "desktop/connected/tests/**
 
 Sans Python 3.11, sans Playwright ou sans exécutable Chromium, les tests concernés sont marqués
 « skipped », jamais réussis.
+
+## Archives de recherche (G066)
+
+Panneau « Archives de recherche » sous les missions, contrat
+[HTTP-RESEARCH-ARCHIVES.md](../../docs/HTTP-RESEARCH-ARCHIVES.md) :
+
+- lecture **sur demande seulement** (« Charger les archives », puis « Archives
+  suivantes » par pages de 50) ; rien n'est lu à la connexion ni relancé seul ;
+- métadonnées seulement : nom, date enregistrée, nombres de recherches. Ni lien,
+  ni téléchargement, ni texte de recherche, ni identifiant de mission ou de garde ;
+- chaque page est contrôlée : drapeaux de garantie exacts, même base que la
+  connexion, même catalogue (`catalog_sha256`, tête de chaîne, totaux) que la
+  première page, numéros contigus. Sinon elle est ignorée ;
+- `RESET_REQUIRED`, un refus ou une coupure **figent** la liste affichée
+  (« Liste figée ») jusqu'à un rechargement explicite, qui remplace tout :
+  deux catalogues ne sont jamais concaténés. Une nouvelle connexion repart vide ;
+- les refus propres aux archives (`ARCHIVES_NOT_CONFIGURED`, `ARCHIVES_BUSY`,
+  `ARCHIVES_UNAVAILABLE`, curseur refusé) restent dans ce panneau et ne
+  déclarent pas la connexion perdue ;
+- « Cohérence vérifiée par Core » n'est ni une authenticité ni une preuve que
+  l'export a été pris en compte dans le journal actif.
+
+Le serveur doit être lancé avec `--research-archives DOSSIER`.
 
 ## Lancer
 
@@ -112,3 +137,5 @@ servie par Core.
 - Les événements affichés sont ceux reçus **depuis la sélection** ; le passé
   antérieur à la capture n'est pas récupéré (contrat `client-sync/1`).
 - Le jeton est une clé de lecture, pas une identité humaine.
+- Archives : essayées sur le jeu bêta `research-archives` (3 archives) seulement.
+  Plus de 1 000 archives ne sont jamais conservées côté client.

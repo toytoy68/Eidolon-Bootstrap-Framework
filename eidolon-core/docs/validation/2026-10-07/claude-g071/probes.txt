@@ -1,0 +1,57 @@
+Sources examinées : 638b392 (arbre src figé par git archive)
+== 1. authentification avant lecture, Host/Origin, corps strict
+✓ sans Authorization → 401, catalogue non lu — 401 UNAUTHORIZED
+✓ mauvais jeton → 401, catalogue non lu — 401 UNAUTHORIZED
+✓ schéma « bearer » en minuscules → 401, catalogue non lu — 401 UNAUTHORIZED
+✓ deux en-têtes Authorization → 401 — 401 UNAUTHORIZED
+✓ corps de 9 Kio sans jeton → refusé avant lecture — 413 REQUEST_TOO_LARGE
+✓ Host étranger → 403 — 403 HOST_REFUSED
+✓ Origin étrangère → 403 — 403 ORIGIN_REFUSED
+✓ Origin null → 403 — 403 ORIGIN_REFUSED
+✓ Host localhost du même port → 200 — 200 PAGE
+✓ Host absent → 403 — 403 HOST_REFUSED
+✓ JSON invalide → 400 INVALID_JSON, catalogue non lu — 400 INVALID_JSON
+✓ clé dupliquée → 400 INVALID_JSON, catalogue non lu — 400 INVALID_JSON
+✓ tableau → 400 INVALID_JSON, catalogue non lu — 400 INVALID_JSON
+✓ limit 0 → 400 INVALID_PAGE_LIMIT, catalogue non lu — 400 INVALID_PAGE_LIMIT
+✓ limit 101 → 400 INVALID_PAGE_LIMIT, catalogue non lu — 400 INVALID_PAGE_LIMIT
+✓ limit true → 400 INVALID_PAGE_LIMIT, catalogue non lu — 400 INVALID_PAGE_LIMIT
+✓ limit "5" → 400 INVALID_PAGE_LIMIT, catalogue non lu — 400 INVALID_PAGE_LIMIT
+✓ limit 1.0 → 400 INVALID_PAGE_LIMIT, catalogue non lu — 400 INVALID_PAGE_LIMIT
+✓ champ inconnu → 400 UNKNOWN_FIELD, catalogue non lu — 400 UNKNOWN_FIELD
+✓ curseur chaîne → 400 INVALID_ARCHIVE_CURSOR, catalogue non lu — 400 INVALID_ARCHIVE_CURSOR
+✓ curseur after_index 0 → 400 INVALID_ARCHIVE_CURSOR, catalogue non lu — 400 INVALID_ARCHIVE_CURSOR
+✓ Content-Type text/plain → 415 — 415 JSON_REQUIRED
+✓ Transfer-Encoding chunked → 400 — 400 UNSUPPORTED_TRANSFER
+✓ corps plus court qu'annoncé → refus borné — 408 REQUEST_TIMEOUT en 3.0 s
+✓ GET sur la route → 404 (aucune lecture par GET) — 404 NOT_FOUND
+✓ export brut par son nom → 404 — 404 NOT_FOUND
+== 2. pagination exhaustive, curseurs périmés ou d'un autre Store
+✓ limit 1 : toutes les archives une fois, dans l'ordre — 3 page(s) ; indices [1, 2, 3]
+✓ limit 2 : toutes les archives une fois, dans l'ordre — 2 page(s) ; indices [1, 2, 3]
+✓ limit 100 : toutes les archives une fois, dans l'ordre — 1 page(s) ; indices [1, 2, 3]
+✓ garanties : cohérence vraie, champs d'autorité faux, en-têtes de sécurité
+✓ curseur d'un autre Store → RESET STORE_CHANGED, aucun élément — 200 RESET_REQUIRED
+✓ curseur d'un catalogue inventé → RESET CATALOG_CHANGED — 200 RESET_REQUIRED
+✓ curseur au-delà de la fin → 400 — 400 INVALID_ARCHIVE_CURSOR
+✓ catalogue changé entre deux pages → RESET CATALOG_CHANGED, aucun mélange — 200 RESET_REQUIRED
+✓ catalogue restauré à l'identique → le curseur redevient valide (même empreinte) — 200 PAGE
+✓ aucune mutation du Store ni des archives par les lectures (sections 1–2)
+== 3. fichiers privés, liens, FIFO, bornes de lecture
+✓ export en 0644 → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ export remplacé par un lien symbolique → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ FIFO research-archive-000004.json (sans blocage) → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ .partial présent → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ dossier en 0755 → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ export creux de 16 Mio + 1 → 503 ARCHIVES_UNAVAILABLE, aucune page — 503 ARCHIVES_UNAVAILABLE en 0.00 s
+✓ budget de lecture épuisé → 503 ARCHIVES_UNAVAILABLE — 503 ARCHIVES_UNAVAILABLE
+✓ dossier supprimé après démarrage → 503, non recréé — 503 ARCHIVES_UNAVAILABLE
+✓ archives remises à l'identique après chaque essai destructif (section 3)
+== 4. capacité saturée et lecture exclusive du catalogue
+✓ deux lectures simultanées → la seconde reçoit 503 ARCHIVES_BUSY sans attendre — 503 ARCHIVES_BUSY ; première 200 PAGE
+✓ serveur saturé (4 connexions lentes) → 503 BUSY immédiat — 503 BUSY en 0.00 s
+✓ après expiration des connexions lentes, le service reprend
+✓ serveur sans --research-archives → 404 ARCHIVES_NOT_CONFIGURED — 404 ARCHIVES_NOT_CONFIGURED
+✓ aucune valeur privée dans les 51 réponses (requêtes, guard_id, missions, chemins, runs) — []
+✓ aucun champ d'autorité vrai dans aucune réponse — []
+Échecs : aucun

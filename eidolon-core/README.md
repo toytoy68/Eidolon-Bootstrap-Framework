@@ -1,6 +1,7 @@
 # Eidolon Core v0.1
 
-[État fonctionnel, limites et avancement au 07/10 au soir](docs/PROJECT-STATUS-2026-10-07.md).
+[État fonctionnel et avancement du 08/10](docs/PROJECT-STATUS-2026-10-08.md).
+[Preuves de la séance de 11 h 11](docs/validation/2026-10-08/codex-hour-1111/README.md).
 [Ajouts et preuves du 08/10](docs/validation/2026-10-08/codex-hour-0435/README.md) :
 configuration explicite des deux planificateurs candidats, diagnostics hors
 ligne et réponses HTTP durcies. [Propositions d'outillage à comparer plus tard](docs/proposals/2026-10-08-agent-toolbox.md).
@@ -9,6 +10,10 @@ ligne et réponses HTTP durcies. [Propositions d'outillage à comparer plus tard
 explicites, quatre cas synthétiques, arrêt sur erreur et consultation hors ligne
 d'un essai incomplet. [Propositions dashboard et contexte](docs/proposals/2026-10-08-dashboard-context.md)
 à comparer aux études Claude ; aucun changement de droits ou collecte du PC.
+
+[Correction G064 : identité et migration des pauses](docs/PAUSE-BINDING.md) :
+remplacements refusés, bases existantes à examiner avant adoption explicite,
+pauses et audit conservés. Aucun fournisseur réel activé.
 
 
 Première tranche exécutable : demande → mission persistée → rappel mémoire →

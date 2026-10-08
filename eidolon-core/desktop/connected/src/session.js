@@ -19,12 +19,16 @@
  * There is no command here: no approve, run or cancel; authorizes_execution stays false.
  * G036: a historical command receipt (docs/HTTP-RECEIPTS.md) can be looked up for the
  * selected mission. It is kept apart from the snapshot and never changes it.
+ * G066: the research archive catalog (docs/HTTP-RESEARCH-ARCHIVES.md) is read on explicit
+ * request only, in its own state (archives.js). Its refusals never change the connection
+ * phase; a new connection or store starts from an empty catalog view.
  */
 (function (root) {
   "use strict";
   var NODE = typeof module === "object" && module.exports;
   var S = NODE ? require("../../prototype/sync-state.js") : root.EidolonSync;
   var L = NODE ? require("../../prototype/mission-list-state.js") : root.EidolonMissionList;
+  var A = NODE ? require("./archives.js") : root.EidolonArchives;
 
   var PROTOCOL = "eidolon-http-read/1";
   var TOKEN = /^[A-Za-z0-9_-]{32,128}$/;
@@ -107,8 +111,9 @@
     var transport = options.transport;
     var now = options.now || function () { return new Date().toISOString(); };
     var onChange = options.onChange || function () {};
+    var archiveLimit = options.archiveLimit;   // G066: page size (tests, small screens); default 50
     var token = null;
-    var loops = { list: 0, selection: 0, receipt: 0 };
+    var loops = { list: 0, selection: 0, receipt: 0, archives: 0 };
 
     var state = {
       phase: "disconnected",   // disconnected | connecting | connected | offline | unavailable | unauthorized | refused
@@ -120,6 +125,7 @@
       notice: null,            // one-line explanation of an identity wipe
       receipt: null,           // { query, status, receipt, code, receivedAt }: historical, never the current state
       resyncRequired: false,   // STORE_CHANGED answered: reconnect before any other receipt lookup
+      archives: A.create(),    // G066: catalog metadata pages, separate from missions
       stats: { staleConnection: 0, staleSelection: 0, invalidResponses: 0, staleReceipt: 0 }
     };
 
@@ -138,8 +144,11 @@
 
     function forgetReceipt() { loops.receipt += 1; state.receipt = null; }
 
+    function forgetArchives() { loops.archives += 1; state.archives = A.create(); }
+
     function wipe() {
       forgetReceipt();
+      forgetArchives();
       state.list = L.createState();
       state.storeId = null;
       state.lastSuccessAt = null;
@@ -149,10 +158,12 @@
       state.phase = phase;
       state.problem = { code: code, at: now(), scope: scope };
       setOnline(false);
+      state.archives = A.markStale(state.archives, "CONNECTION_" + phase.toUpperCase());
     }
 
     // One request; returns { ok, json } or { ok:false } after recording the failure.
-    async function call(method, path, body, scope) {
+    // local: error codes that concern the caller's panel only (G066), never the connection phase.
+    async function call(method, path, body, scope, local) {
       var epoch = state.connEpoch;
       var answer;
       try {
@@ -168,6 +179,10 @@
       if (status === 200) {
         if (state.phase === "busy") state.phase = "connected";   // the server serves again
         return { ok: true, json: json };
+      }
+      if (local && code && local.indexOf(code) >= 0) {
+        state.problem = { code: code, at: now(), scope: scope };
+        return { ok: false, code: code, status: status };
       }
       if (status === 503 && code === "BUSY") {
         // G043: explicit saturation (C-010b). Not an outage: stay online, nothing retried
@@ -202,6 +217,7 @@
       state.phase = "connecting";
       state.notice = null;
       state.resyncRequired = false;
+      forgetArchives();                    // G066: never mix two sessions' catalog pages
       emit();
       var r = await call("GET", "/v1/health", undefined, "connection");
       if (r.stale) return false;
@@ -382,8 +398,30 @@
       return r.ok;
     }
 
+    // G066: one explicit page request; "first" (re)loads a new generation, "more" continues it.
+    async function loadArchives(kind) {
+      if (!canRead() || !state.storeId || state.resyncRequired) return false;
+      var r = A.request(state.archives, kind === "more" ? "more" : "first", archiveLimit);
+      if (!r.req) return false;
+      var mine = ++loops.archives, storeId = state.storeId;
+      state.archives = r.state;
+      emit();
+      var res = await call("POST", "/v1/research-archives", r.req.body, "archives", A.LOCAL_CODES);
+      if (res.stale || mine !== loops.archives) return false;
+      var at = now();
+      if (res.ok) {
+        state.archives = A.receive(state.archives, r.req, res.json, storeId, at);
+        if (state.archives.status !== "loaded" && state.archives.status !== "reset") state.stats.invalidResponses += 1;
+      } else {
+        state.archives = A.receiveError(state.archives, r.req, res.code || (state.problem && state.problem.code) || "UNKNOWN_ERROR", at);
+      }
+      emit();
+      return state.archives.status === "loaded";
+    }
+
     return { connect: connect, disconnect: disconnect, relist: relist, selectMission: selectMission,
       refreshSelection: refreshSelection, acceptReset: acceptReset, lookupReceipt: lookupReceipt,
+      loadArchives: function () { return loadArchives("first"); }, moreArchives: function () { return loadArchives("more"); },
       state: snapshot, hasToken: hasToken };
   }
 
@@ -391,7 +429,7 @@
     validateHealth: validateHealth, validateReceiptAnswer: validateReceiptAnswer, RECEIPT_BINDINGS: RECEIPT_BINDINGS, viewIsCurrent: viewIsCurrent,
     errorCode: errorCode, missionLabel: S.missionLabel, cancelNote: S.cancelNote,
     objectiveLabel: S.objectiveLabel, researchNote: S.researchNote, listSummary: L.summary,
-    shownItems: L.shownItems, syncSummary: S.summary };
+    shownItems: L.shownItems, syncSummary: S.summary, archiveSummary: A.summary };
   if (NODE) module.exports = api;
   else root.EidolonConnected = api;
 })(typeof window !== "undefined" ? window : this);

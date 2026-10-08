@@ -13,7 +13,7 @@ The generation detects normal Core writes, not arbitrary SQL/history rewrites.
 import json
 import re
 
-from .client_sync import MAX_SAFE_INTEGER, SyncError, decode_mission, project_mission
+from .client_sync import MAX_SAFE_INTEGER, SyncError, decode_mission, project_mission, read_mission_row, read_event_row
 from .contracts import digest
 from .store import now
 
@@ -91,12 +91,11 @@ class MissionList:
         with self.store.connection() as db:
             db.execute('PRAGMA query_only=ON')
             db.execute('BEGIN')
-            row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
+            row = db.execute("SELECT substr(value,1,35) FROM sync_metadata WHERE key='store_id'").fetchone()
             if row is None or not _match(r's-[0-9a-f]{32}', row[0]):
                 raise SyncError('INVALID_STORE_ID')
             store_id = row[0]
-            head = db.execute('SELECT sequence,mission_id,at,kind,detail FROM events '
-                              'ORDER BY sequence DESC LIMIT 1').fetchone()
+            head = read_event_row(db)
             event_count = db.execute('SELECT count(*) FROM events').fetchone()[0]
             mission_count = db.execute('SELECT count(*) FROM missions').fetchone()[0]
             generation = {'sequence': head[0] if head else 0, 'event_count': event_count,
@@ -118,12 +117,11 @@ class MissionList:
                     raise SyncError('INVALID_LIST_CURSOR')
             after = cursor['after_id'] if cursor is not None else ''
             # Fetch IDs first: don't hold 101 potentially large raw mission bodies.
-            identities = db.execute('SELECT id FROM missions WHERE id>? ORDER BY id LIMIT ?',
+            identities = db.execute('SELECT substr(id,1,35) FROM missions WHERE id>? ORDER BY id LIMIT ?',
                                     (after, limit + 1)).fetchall()
             for (identity,) in identities[:limit]:
                 self.store.check_id(identity)
-                revision, cancel, body = db.execute(
-                    'SELECT revision,cancel_requested,body FROM missions WHERE id=?', (identity,)).fetchone()
+                revision, cancel, body = read_mission_row(db, identity)
                 mission = decode_mission(identity, revision, cancel, body)
                 sequence = db.execute('SELECT max(sequence) FROM events WHERE mission_id=?',
                                       (identity,)).fetchone()[0]

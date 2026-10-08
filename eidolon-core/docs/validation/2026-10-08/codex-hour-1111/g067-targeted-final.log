@@ -1,0 +1,48 @@
+======================================================================
+ERROR: test_missing_database_is_never_recreated (tests.test_http_api.HTTPReadTests.test_missing_database_is_never_recreated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_http_api.py", line 221, in test_missing_database_is_never_recreated
+    self.assertEqual(self.post()[0], 503)
+                     ^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_http_api.py", line 71, in post
+    return self.json("/v1/missions", method="POST", data={} if data is None else data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_http_api.py", line 67, in json
+    status, headers, raw = self.request(path, **kwargs)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_http_api.py", line 62, in request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+======================================================================
+FAIL: test_transaction_does_not_mix_snapshot_with_concurrent_cancel (tests.test_client_sync.ClientSyncTests.test_transaction_does_not_mix_snapshot_with_concurrent_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_client_sync.py", line 183, in test_transaction_does_not_mix_snapshot_with_concurrent_cancel
+    self.assertTrue(after['snapshot']['mission']['cancel_requested'])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_wal_writer_cannot_mix_generation_and_mission_view (tests.test_mission_list.MissionListTests.test_wal_writer_cannot_mix_generation_and_mission_view)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_mission_list.py", line 157, in test_wal_writer_cannot_mix_generation_and_mission_view
+    self.assertEqual(self.listing.page(cursor=old['next_cursor'])['status'], 'RESET_REQUIRED')
+AssertionError: 'PAGE' != 'RESET_REQUIRED'
+- PAGE
++ RESET_REQUIRED
+
+
+----------------------------------------------------------------------
+Ran 102 tests in 10.110s
+
+FAILED (failures=2, errors=1)

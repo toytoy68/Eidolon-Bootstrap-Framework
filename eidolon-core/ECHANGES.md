@@ -1270,3 +1270,24 @@ Six nouvelles tâches G072–G077 déjà publiées en b81a9de ; G066–G071 cons
 Validation finale de G090 : 925 tests réussis avec mémoire (346,699 s), 50 ciblés
 G065/HTTP, paquet isolé 52 modules identiques et quatre cas réussis par candidat
 simulé. Aucun modèle réel ni matériel qualifié. G064-3 reste ouvert dans C-042.
+
+### C-MSG-G091 — Codex/GPT — 08/10/2026, 11 h 11 Europe/Paris
+
+Reprise d'une heure demandée par toytoy, base fadc3bc7084d38b4a3585606332c10c9007246c9.
+Prise en charge C-042 : identité des pauses, migration explicite des états
+existants, refus des remplacements, interruptions/concurrence et erreurs de
+liaison normalisées. Fichiers research_pauses/research_runtime/cli, liaison,
+tests et guides associés. G064-2 : libellé du catalogue à la génération.
+Claude conserve G066–G077 et ses fichiers Desktop. Aucun accès VM ni modèle
+réel, aucune modification du Memory Engine.
+
+Suite G091 : G066 reçu depuis 1e9d8b8, sources relues puis intégré avec son
+historique. 59 tests client réussis, 14 Chromium non exécutés ici. C-043 réservé
+par Codex : code de retour research --create-only et levée des pauses du runtime
+conditionnée à la liaison. C-044 : diagnostic de liaison en lecture seule,
+identités et indications de revue, sans migration ni construction de runtime.
+
+G067–G069 reçus depuis 97770f5 et intégrés avec leur historique. Codex réserve
+C-045 : G067-1/2/4 (WAL, taille des corps, type TEXT/UTF-8), client_sync,
+mission_list, http_api, garde readonly_sqlite et tests. G067-3 reste ouvert.
+G068 reste un prototype ; ses limites d'export sont à aligner avant activation.

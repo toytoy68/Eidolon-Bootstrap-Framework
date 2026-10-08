@@ -20,6 +20,8 @@ from .store import now
 
 PROTOCOL = "eidolon-client-sync/1"
 MAX_SAFE_INTEGER = 2**53 - 1  # JSON numbers consumed by JavaScript without rounding
+MAX_MISSION_BYTES = 16 * 1024 * 1024
+MAX_EVENT_BYTES = 16 * 1024 * 1024
 CURSOR_FIELDS = {"version", "store_id", "mission_id", "sequence", "event_count", "anchor_sha256"}
 
 
@@ -92,6 +94,8 @@ def decode_mission(identity, revision, cancel, body):
         raise ValueError("nonfinite number")
 
     try:
+        if type(body) is bytes:
+            body = body.decode('utf-8')  # Never infer UTF-16/32 from a stored BLOB.
         mission = json.loads(body, object_pairs_hook=unique, parse_constant=nonfinite)
     except (ValueError, TypeError, RecursionError):
         raise SyncError("INVALID_MISSION_JSON") from None
@@ -102,6 +106,44 @@ def decode_mission(identity, revision, cancel, body):
     _integer(revision)
     mission.update(revision=revision, cancel_requested=bool(cancel))
     return mission
+
+
+def _stored_text(storage_type, raw, maximum, code):
+    if storage_type != 'text' or type(raw) is not bytes:
+        raise SyncError('INVALID_' + code + '_STORAGE_TYPE')
+    if len(raw) > maximum:
+        raise SyncError(code + '_SIZE_LIMIT')
+    try:
+        return raw.decode('utf-8')
+    except UnicodeError:
+        raise SyncError('INVALID_' + code + '_UTF8') from None
+
+
+def read_mission_row(db, identity):
+    row = db.execute('SELECT revision,cancel_requested,typeof(body),'
+                     'substr(CAST(body AS BLOB),1,?) FROM missions WHERE id=?',
+                     (MAX_MISSION_BYTES + 1, identity)).fetchone()
+    if row is None:
+        raise KeyError('mission not found')
+    return row[0], row[1], _stored_text(row[2], row[3], MAX_MISSION_BYTES, 'MISSION')
+
+
+def read_event_row(db, *, identity=None, sequence=None):
+    conditions, parameters = [], [MAX_EVENT_BYTES + 1]
+    if identity is not None:
+        conditions.append('mission_id=?'); parameters.append(identity)
+    if sequence is not None:
+        conditions.append('sequence=?'); parameters.append(sequence)
+    where = ' WHERE ' + ' AND '.join(conditions) if conditions else ''
+    row = db.execute('SELECT sequence,substr(mission_id,1,35),substr(at,1,65),substr(kind,1,65),typeof(detail),'
+                     'substr(CAST(detail AS BLOB),1,?) FROM events' + where +
+                     ' ORDER BY sequence DESC LIMIT 1', parameters).fetchone()
+    if row is None:
+        return None
+    _event_reference(row)
+    if type(row[1]) is not str or re.fullmatch(r'm-[0-9a-f]{32}', row[1]) is None:
+        raise SyncError('INVALID_EVENT_REFERENCE')
+    return (*row[:4], _stored_text(row[4], row[5], MAX_EVENT_BYTES, 'EVENT'))
 
 
 def _event_reference(row):
@@ -157,18 +199,14 @@ class ClientSync:
         with self.store.connection() as db:
             db.execute("PRAGMA query_only=ON")
             db.execute("BEGIN")  # all SELECTs share a snapshot, including cancel_requested
-            meta = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
-            if not meta or not re.fullmatch(r"s-[0-9a-f]{32}", meta[0]):
+            meta = db.execute("SELECT substr(value,1,35) FROM sync_metadata WHERE key='store_id'").fetchone()
+            if not meta or type(meta[0]) is not str or not re.fullmatch(r"s-[0-9a-f]{32}", meta[0]):
                 raise SyncError("INVALID_STORE_ID")
             store_id = meta[0]
-            row = db.execute("SELECT revision,cancel_requested,body FROM missions WHERE id=?",
-                             (identity,)).fetchone()
-            if row is None:
-                raise KeyError("mission not found")
+            row = read_mission_row(db, identity)
             mission = decode_mission(identity, *row)
-            fields = "sequence,mission_id,at,kind,detail"
-            head = db.execute(f"SELECT {fields} FROM events WHERE mission_id=? ORDER BY sequence DESC LIMIT 1",
-                              (identity,)).fetchone()
+            fields = "sequence,substr(mission_id,1,35),substr(at,1,65),substr(kind,1,65)"
+            head = read_event_row(db, identity=identity)
             count = db.execute("SELECT count(*) FROM events WHERE mission_id=?", (identity,)).fetchone()[0]
             if head is None:
                 raise SyncError("HISTORY_MISSING")
@@ -190,8 +228,7 @@ class ClientSync:
             elif cursor["sequence"] > head[0]:
                 reason = "CURSOR_AHEAD"
             else:
-                anchor = db.execute(f"SELECT {fields} FROM events WHERE mission_id=? AND sequence=?",
-                                    (identity, cursor["sequence"])).fetchone()
+                anchor = read_event_row(db, identity=identity, sequence=cursor['sequence'])
                 prior_count = db.execute("SELECT count(*) FROM events WHERE mission_id=? AND sequence<=?",
                                          (identity, cursor["sequence"])).fetchone()[0]
                 if anchor is None or _anchor(anchor) != cursor["anchor_sha256"]:
@@ -206,6 +243,6 @@ class ClientSync:
             page = rows[:limit]
             response.update(status="DELTA", has_more=len(rows) > limit,
                             events=[_event_reference(r) for r in page],
-                            cursor=_cursor(store_id, identity, page[-1], cursor["event_count"]+len(page))
+                            cursor=_cursor(store_id, identity, read_event_row(db, identity=identity, sequence=page[-1][0]), cursor["event_count"]+len(page))
                             if page else dict(cursor))
             return response

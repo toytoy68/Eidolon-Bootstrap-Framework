@@ -1,0 +1,95 @@
+test_wal_read_refused_before_sqlite_can_create_sidecars (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_wal_read_refused_before_sqlite_can_create_sidecars) ... FAIL
+test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) ... 
+  test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-16') ... FAIL
+  test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-16') ... FAIL
+  test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-8') ... FAIL
+  test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-8') ... FAIL
+test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) ... ERROR
+
+======================================================================
+ERROR: test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/core-c045-before/eidolon-core/src/eidolon_core/contracts.py", line 26, in encode
+    raw = json.dumps(value, ensure_ascii=False, sort_keys=True,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type bytes is not JSON serializable
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 81, in test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text
+    consumer()
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 41, in <lambda>
+    return (lambda: MissionList(self.reader).page(),
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/core-c045-before/eidolon-core/src/eidolon_core/mission_list.py", line 103, in page
+    'mission_count': mission_count, 'anchor_sha256': digest(list(head)) if head else None}
+                                                     ^^^^^^^^^^^^^^^^^^
+  File "/tmp/core-c045-before/eidolon-core/src/eidolon_core/contracts.py", line 42, in digest
+    return hashlib.sha256(encode(value).encode("utf-8")).hexdigest()
+                          ^^^^^^^^^^^^^
+  File "/tmp/core-c045-before/eidolon-core/src/eidolon_core/contracts.py", line 31, in encode
+    raise ContractError("value is not finite UTF-8 JSON") from exc
+eidolon_core.contracts.ContractError: value is not finite UTF-8 JSON
+
+======================================================================
+FAIL: test_wal_read_refused_before_sqlite_can_create_sidecars (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_wal_read_refused_before_sqlite_can_create_sidecars)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 119, in test_wal_read_refused_before_sqlite_can_create_sidecars
+    with self.assertRaisesRegex(ContractError, '^READ_ONLY_WAL_UNSUPPORTED$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+======================================================================
+FAIL: test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-16')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 75, in test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text
+    with self.subTest(encoding=encoding), self.assertRaisesRegex(sync.SyncError, '^INVALID_MISSION_STORAGE_TYPE$'):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SyncError not raised
+
+======================================================================
+FAIL: test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-16')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 75, in test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text
+    with self.subTest(encoding=encoding), self.assertRaisesRegex(sync.SyncError, '^INVALID_MISSION_STORAGE_TYPE$'):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SyncError not raised
+
+======================================================================
+FAIL: test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-8')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 75, in test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text
+    with self.subTest(encoding=encoding), self.assertRaisesRegex(sync.SyncError, '^INVALID_MISSION_STORAGE_TYPE$'):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SyncError not raised
+
+======================================================================
+FAIL: test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text (tests.test_read_storage_bounds.ReadStorageBoundsTests.test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text) (encoding='utf-8')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_read_storage_bounds.py", line 75, in test_blob_json_is_not_silently_decoded_as_utf16_or_accepted_as_text
+    with self.subTest(encoding=encoding), self.assertRaisesRegex(sync.SyncError, '^INVALID_MISSION_STORAGE_TYPE$'):
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SyncError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.010s
+
+FAILED (failures=5, errors=1)

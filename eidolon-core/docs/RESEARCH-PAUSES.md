@@ -138,8 +138,10 @@ avant le minimum connu. Une levée déjà enregistrée reste observable dans la 
   « Aucun nouvel appel HTTP » ne signifie pas « aucune résolution DNS ».
 - Hôtes et identifiants fournisseurs distincts ne constituent pas un quota global
   par opérateur. Aucune rotation d'identité, proxy ni contournement de challenge.
-- Pas de garantie contre SQL brut, fichier supprimé/remplacé, clone ou restauration
-  ancienne. La copie de revue C-008d ne sauvegarde que missions.sqlite3, pas cette base.
+- Le runtime synthétique lie désormais l’identité de cette base au Store (C-042).
+  Un remplacement par une autre identité est refusé. SQL brut, clone de même identité
+  et restauration ancienne restent hors garantie. La copie de revue C-008d ne
+  sauvegarde que missions.sqlite3, pas cette base.
 - Les détections HTML challenge/login restent celles, partielles, du coordinateur.
   Aucun nouveau parseur universel, fournisseur réel ou intégration Memory Engine.
 - Avant utilisation réelle : journal des appels en vol/reconciliation, stratégie
@@ -161,16 +163,14 @@ Le transport standard ne lit déjà pas les corps non-2xx. La correction des cor
 concerne le contrat Page des lecteurs injectés, testé avec un lecteur simulé ;
 la correction DNS est éprouvée via WebReader avec transport/résolveur simulés.
 
-## Limite confirmée le 08/10/2026 — G064-3
+## Correction du 08/10/2026 — G064-3 / C-042
 
-La persistance ci-dessus suppose la conservation de la base. La contre-revue
-Claude, reproduite par Codex sur données jetables, montre qu'une base des pauses
-remplacée par une autre base vide de même schéma est acceptée à l'ouverture du
-runtime. La pause active disparaît sans événement de levée. L'identité de la
-base n'est actuellement pas liée au Store comme celle de la garde.
+Le remplacement par une base valide vide a été reproduit sur fadc3bc, puis
+corrigé par une identité de base liée au Store. Les anciennes bases exigent une
+migration explicite conservant pauses, révisions et audit. L'inspection du profil
+research-sim désigne désormais les pauses du runtime ; aucun schéma n'est créé
+par une consultation. Les reprises incertaines restent bloquées.
 
-[Reproduction et suivi](validation/2026-10-08/codex-hour-0924/README.md).
-Correctif C-042 prioritaire : liaison d'identité et traitement explicite des bases
-existantes, avec tests de coupure/remplacement. Ne pas qualifier ce mécanisme
-contre les restaurations/remplacements avant ce correctif. Aucun fournisseur
-réel n'a été activé dans cette séance.
+[Contrat, commandes, coupures et limites](PAUSE-BINDING.md).
+Une copie ancienne de même identité reste indétectable sans ancre externe.
+Aucun fournisseur réel n'a été activé par ce correctif.

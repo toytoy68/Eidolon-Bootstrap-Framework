@@ -95,11 +95,13 @@ class ReadOnlyStore:
 
     @contextmanager
     def connection(self):
+        from .readonly_sqlite import require_rollback_journal
         if (self.directory / "BETA-PREPARATION-INCOMPLETE").exists():
             raise ContractError("BETA_PREPARATION_INCOMPLETE")
         if any((self.directory / name).exists() for name in
                ("RECOVERY-REVIEW-ONLY", "review.pending.sqlite3")):
             raise ContractError("RECOVERY_REVIEW_ONLY")
+        require_rollback_journal(self.path)
         db = sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True, timeout=2)
         try:
             # Cooperative SQLite VM deadline, shared across this read connection.
@@ -114,7 +116,7 @@ class ReadOnlyStore:
                 raise ContractError("UNSUPPORTED_READ_SCHEMA")
             if db.execute("SELECT 1 FROM sync_metadata WHERE key='recovery_mode'").fetchone():
                 raise ContractError("RECOVERY_REVIEW_ONLY")
-            row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
+            row = db.execute("SELECT substr(value,1,35) FROM sync_metadata WHERE key='store_id'").fetchone()
             if not row or type(row[0]) is not str or not re.fullmatch(r"s-[0-9a-f]{32}", row[0]):
                 raise ContractError("INVALID_STORE_ID")
             yield db

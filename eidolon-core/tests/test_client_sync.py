@@ -170,7 +170,7 @@ class ClientSyncTests(unittest.TestCase):
                 class Proxy:
                     def execute(_, sql, parameters=()):
                         result = db.execute(sql, parameters)
-                        if sql.startswith('SELECT revision,cancel_requested,body'):
+                        if sql.startswith('SELECT revision,cancel_requested,') and 'FROM missions WHERE id=?' in sql:
                             mission_row = result.fetchone()
                             writer.request_cancel(self.identity)  # commit between SELECTs
                             return SimpleNamespace(fetchone=lambda: mission_row)

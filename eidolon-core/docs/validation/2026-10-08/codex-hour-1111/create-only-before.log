@@ -1,0 +1,25 @@
+test_cli_create_only_succeeds_without_running_mission_json_and_human (tests.test_research_runtime.ResearchRuntimeTests.test_cli_create_only_succeeds_without_running_mission_json_and_human) ... FAIL
+
+======================================================================
+FAIL: test_cli_create_only_succeeds_without_running_mission_json_and_human (tests.test_research_runtime.ResearchRuntimeTests.test_cli_create_only_succeeds_without_running_mission_json_and_human)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_research_runtime.py", line 72, in test_cli_create_only_succeeds_without_running_mission_json_and_human
+    self.assertEqual((rc, err.getvalue()), (0, ''))
+AssertionError: Tuples differ: (2, '') != (0, '')
+
+First differing element 0:
+2
+0
+
+- (2, '')
+?  ^
+
++ (0, '')
+?  ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.022s
+
+FAILED (failures=1)

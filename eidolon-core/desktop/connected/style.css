@@ -172,6 +172,19 @@ input[type="password"] {
 .receipt-found { font-weight: 600; }
 .receipt-missing, .receipt-error { color: var(--warn); font-weight: 600; }
 
+/* G066: the archive panel spans both columns; only its table scrolls on small screens. */
+.archives { grid-column: 1 / -1; }
+#archives-more { background: var(--panel); color: var(--accent); }
+.table-wrap { overflow-x: auto; max-width: 100%; }
+.table-wrap.stale table { background: var(--stale-bg); }
+.archives-table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+.archives-table caption { text-align: left; color: var(--muted); padding-bottom: .35rem; }
+.archives-table th, .archives-table td { border-bottom: 1px solid var(--line); padding: .4rem .6rem; text-align: left;
+  overflow-wrap: normal; white-space: nowrap; }   /* never squeezed letter by letter: the wrapper scrolls */
+.table-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.archives-table td { font-variant-numeric: tabular-nums; }
+.archive-file { overflow-wrap: normal; white-space: nowrap; }
+
 .foot { padding: 0 1.5rem 1.5rem; color: var(--muted); font-size: .9rem; }
 
 @media (max-width: 760px) {

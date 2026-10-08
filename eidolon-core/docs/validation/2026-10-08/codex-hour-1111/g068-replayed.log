@@ -1,0 +1,9 @@
+test_backup_under_exclusive_writer_is_refused_within_budget (tests_g068.Snapshot.test_backup_under_exclusive_writer_is_refused_within_budget) ... ok
+test_backup_with_a_reserved_writer_still_copies_committed_state (tests_g068.Snapshot.test_backup_with_a_reserved_writer_still_copies_committed_state) ... ok
+test_invalid_metadata_closes_everything_without_gc (tests_g068.Snapshot.test_invalid_metadata_closes_everything_without_gc) ... ok
+test_unexpected_journal_content_is_a_constant_refusal (tests_g068.Snapshot.test_unexpected_journal_content_is_a_constant_refusal) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.654s
+
+OK

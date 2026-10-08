@@ -1,0 +1,31 @@
+Sources examinées : 97770f5 (arbre src figé par git archive)
+✓ N nominal : chaque étape exécutée et vérifiée une fois — 1 étapes, journal {'exec-start': 1, 'exec-end': 1, 'verify': 1}
+✓ N reprise d'une mission réussie : aucun nouvel appel
+== A. deux exécutants
+✓ A le premier exécutant est dans l'outil
+✓ A le second exécutant est refusé sans attendre (Busy) — 0.16 s, état pendant : EXECUTING
+✓ A le premier termine ; aucun double appel — {'exec-start': 1, 'exec-end': 1, 'verify': 1}
+== B. annulation avant l'outil
+✓ B annulation demandée avant tout : CANCELLED, zéro appel d'outil — {'status': 'CANCELLED', 'code': 'CANCELLED'} {'exec-start': 0, 'exec-end': 0, 'verify': 0}
+== C. annulation pendant l'outil
+✓ C effet inconnu, jamais « annulée » : REVIEW_REQUIRED / CANCELLED — {'status': 'REVIEW_REQUIRED', 'code': 'CANCELLED'} ; appels ['STARTED']
+✓ C l'exécutant a été arrêté dans l'outil (exec-end absent) — pid 642 vivant=False, journal {'exec-start': 1, 'exec-end': 0, 'verify': 0}
+✓ C diagnostic : revue requise et annulation non prouvée — ['EFFECT_UNKNOWN_REVIEW_REQUIRED', 'CANCELLATION_REQUESTED_NOT_PROOF_OF_STOP']
+✓ C reprise : reste en revue, aucun nouvel appel
+== D. annulation après un résultat reçu (coupure après RESULT_SAVED)
+✓ D le résultat reçu est vérifié malgré l'annulation, puis CANCELLED — coupure EXIT 9 ; appels ['VERIFIED'] ; journal {'exec-start': 1, 'exec-end': 1, 'verify': 0} → {'exec-start': 1, 'exec-end': 1, 'verify': 1}
+✓ D aucune nouvelle exécution d'outil après l'annulation
+✓ D annulée ≠ réussie : aucun résultat de mission
+== E. reçu tardif : l'outil finit pendant que l'annulation est enregistrée (5 essais)
+✓ E toujours REVIEW_REQUIRED / CANCELLED, jamais vérifié, jamais réexécuté — reçu tardif conservé dans 4/5 essais (course réelle avec l'arrêt de l'exécutant)
+== F. verrou de mission réellement détenu par un autre processus
+✓ F Busy, aucun appel tant que le verrou est détenu
+✓ F verrou libéré par la fin du détenteur : exécution normale
+== G. exécutant tué (SIGKILL) dans l'outil
+✓ G effet inconnu : REVIEW_REQUIRED / WORKER_LOST, aucune relance — {'status': 'REVIEW_REQUIRED', 'code': 'WORKER_LOST'} {'exec-start': 1, 'exec-end': 0, 'verify': 0}
+== H. runtime tué (SIGKILL) pendant que l'exécutant est dans l'outil
+✓ H l'exécutant orphelin continue ; le diagnostic voit son bail détenu — baux ['HELD_AT_SAMPLE']
+✓ H reprise pendant que l'orphelin travaille : revue, aucune seconde exécution — {'status': 'REVIEW_REQUIRED', 'code': 'UNKNOWN_EFFECT'}
+✓ H l'orphelin a fini l'effet APRÈS la revue ; son reçu reste non adopté — reçus ['PRESENT_UNVERIFIED']
+✓ tous les processus créés sont arrêtés — []
+Échecs : aucun

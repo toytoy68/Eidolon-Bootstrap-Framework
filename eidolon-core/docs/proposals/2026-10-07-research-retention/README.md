@@ -253,3 +253,35 @@ Sondes G057 inchangées par rapport à la v2 ([sortie](probes-v3.txt)).
   ni coupure de courant réelle.
 - Une réécriture cohérente du journal **et** des exports reste hors
   détection.
+
+## v4 — G068 : copie du journal bornée et toujours refermée
+
+Ce lot suit les compléments Codex G086/G087 ([preuves Codex](../../validation/2026-10-07/codex-hour-1948/README.md)).
+
+- **Fermeture** : la proposition Codex est intégrée. `src` et `dst` sont fermés
+  dans un `finally`, aussi après un échec de copie, de métadonnées ou de chaîne.
+- **Codes constants** :
+  - `JOURNAL_IDENTITY_INVALID` (métadonnées absentes) ;
+  - `JOURNAL_BUSY` (verrou) ;
+  - `JOURNAL_UNAVAILABLE` (stockage) ;
+  - `JOURNAL_INVALID` pour le reste.
+  - Les refus de la garde gardent leur code. Plus de `TypeError` brut.
+- **Budget de copie** :
+  - la copie prend d'abord le verrou de lecture (attente bornée à
+    `SNAPSHOT_BUDGET_SECONDS` = 5 s), puis copie tout en **une seule étape**
+    dans cette transaction ;
+  - Python ne reboucle donc plus indéfiniment sur `SQLITE_BUSY` ;
+  - un écrivain qui a seulement réservé la base ne bloque pas la copie.
+- [tests_g068.py](tests_g068.py) : 4 tests, avec GC désactivé.
+  [Sortie des 25 tests](../2026-10-07-retention-integration/prototype-tests.txt).
+- Sondes Codex rejouées :
+  - contention : refus après 5,15 s au lieu d'une attente de plus de 6 s ;
+  - métadonnées absentes : descripteurs 4 → 4 sans GC, `RotationError`.
+  - [Sortie](../2026-10-07-retention-integration/codex-probes-replayed.txt).
+
+Observation : SQLite garde volontairement un descripteur ouvert tant qu'une
+**autre connexion du même processus** tient des verrous POSIX sur le fichier. Il
+est libéré avec cet écrivain, sans le GC. Ce n'est pas une fuite.
+
+Le banc de compatibilité producteur/lecteur est dans
+[2026-10-07-retention-integration](../2026-10-07-retention-integration/README.md).

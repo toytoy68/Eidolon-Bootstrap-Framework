@@ -235,14 +235,99 @@
     out.appendChild(dl);
   }
 
+  // G066: catalog metadata only. Nothing here opens, downloads, deletes or restores an archive.
+  var ARCHIVE_CODES = {
+    ARCHIVES_NOT_CONFIGURED: "Aucun dossier d'archives n'est configuré pour ce serveur Core (option --research-archives).",
+    ARCHIVES_BUSY: "Une autre lecture des archives est en cours sur le serveur : réessayer plus tard. Rien n'est relancé automatiquement.",
+    ARCHIVES_UNAVAILABLE: "Catalogue refusé ou illisible côté Core : aucune liste partielle n'est présentée comme actuelle.",
+    INVALID_ARCHIVE_CURSOR: "Position de page refusée par Core : recharger les archives.",
+    STORE_CHANGED: "La base Core a changé depuis la première page : recharger les archives.",
+    CATALOG_CHANGED: "Le catalogue a changé depuis la première page : recharger les archives pour une liste cohérente.",
+    STORE_MISMATCH: "Réponse d'une autre base Core que celle de la connexion : ignorée.",
+    CATALOG_MISMATCH: "Page d'un autre catalogue que la première : ignorée, les deux ne sont jamais mélangées.",
+    PAGE_GAP: "Page non contiguë à la précédente : ignorée.",
+    AUTHORITY_CLAIMED: "Réponse annonçant une garantie ou un droit que Core ne donne pas : ignorée."
+  };
+
+  function archiveMessage(code) {
+    return ARCHIVE_CODES[code] || ("Réponse non exploitable (" + code + ") : aucune conclusion.");
+  }
+
+  function dateMs(ms) {
+    var d = new Date(ms);
+    return isNaN(d.getTime()) ? String(ms) : d.toLocaleString("fr-FR");
+  }
+
+  function renderArchives(doc, s) {
+    var a = s.archives;
+    var online = s.phase === "connected" || s.phase === "busy";
+    var loading = a.status === "loading";
+    var load = byId(doc, "archives-load");
+    load.disabled = !online || loading || !s.storeId || s.resyncRequired;
+    load.textContent = a.catalog ? "Actualiser les archives" : "Charger les archives";
+    byId(doc, "archives-more").disabled = !online || loading || a.stale || !a.hasMore;
+    var sum = C.archiveSummary(a);
+    var parts = [];
+    if (s.phase === "disconnected") parts.push("");
+    else if (loading) parts.push("Lecture du catalogue en cours…");
+    else if (!a.catalog && a.status === "empty") parts.push("Catalogue non chargé : lecture sur demande uniquement.");
+    if (a.catalog) {
+      parts.push(sum.shown + " archive(s) affichée(s) sur " + sum.total + " ; " + sum.runs + " recherche(s) au total"
+        + (sum.complete ? "." : " — liste incomplète, page suivante disponible."));
+      parts.push("Catalogue lu par Core le " + fmt(a.catalog.observedAt) + ", reçu le " + fmt(a.catalog.receivedAt) + ".");
+    }
+    if (a.code) parts.push(archiveMessage(a.code));
+    if (a.stale && online) parts.push("Liste figée : elle ne représente plus forcément le catalogue actuel.");
+    else if (a.stale) parts.push("Liste périmée : connexion interrompue.");
+    byId(doc, "archives-status").textContent = parts.filter(Boolean).join(" ");
+    var body = byId(doc, "archives-body");
+    clear(body);
+    if (!a.items.length) {
+      if (a.catalog && !a.stale) body.appendChild(el(doc, "p", "empty", "Aucune archive dans ce catalogue."));
+      return;
+    }
+    var wrap = el(doc, "div", "table-wrap" + (a.stale ? " stale" : ""));
+    // Small screens scroll this region horizontally: reachable and named for keyboard users.
+    wrap.tabIndex = 0;
+    wrap.setAttribute("role", "region");
+    wrap.setAttribute("aria-label", "Tableau des archives, défilement horizontal possible");
+    var table = el(doc, "table", "archives-table");
+    table.appendChild(el(doc, "caption", null, a.stale ? "Archives (liste figée)" : "Archives"));
+    var head = el(doc, "tr");
+    ["Archive", "Créée le", "Recherches", "Avec texte nettoyé", "Sans texte (historique)", "Liées à une mission"].forEach(function (h) {
+      var th = el(doc, "th", null, h);
+      th.scope = "col";
+      head.appendChild(th);
+    });
+    var thead = el(doc, "thead");
+    thead.appendChild(head);
+    table.appendChild(thead);
+    var tbody = el(doc, "tbody");
+    a.items.forEach(function (it) {
+      var tr = el(doc, "tr");
+      var th = el(doc, "th", "archive-file", it.file);
+      th.scope = "row";
+      th.title = "Empreinte " + it.sha256;
+      tr.appendChild(th);
+      [dateMs(it.created_at_ms), it.count, it.queries_with_text, it.legacy_runs_without_text, it.linked_missions].forEach(function (v) {
+        tr.appendChild(el(doc, "td", null, v));
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    body.appendChild(wrap);
+  }
+
   function render(doc, s) {
     renderConnection(doc, s);
     renderList(doc, s);
     renderDetails(doc, s);
     renderReceipt(doc, s);
+    renderArchives(doc, s);
   }
 
-  var api = { render: render, PHASES: PHASES, bindingText: bindingText };
+  var api = { render: render, PHASES: PHASES, bindingText: bindingText, archiveMessage: archiveMessage };
   if (NODE) module.exports = api;
   else root.EidolonConnectedView = api;
 })(typeof window !== "undefined" ? window : this);

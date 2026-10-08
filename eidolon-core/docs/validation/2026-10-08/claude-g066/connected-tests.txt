@@ -1,0 +1,448 @@
+TAP version 13
+# Subtest: keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+ok 1 - keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+  ---
+  duration_ms: 3102.557531
+  type: 'test'
+  ...
+# Subtest: focus after a refused token goes back to the token field, with the status announced
+ok 2 - focus after a refused token goes back to the token field, with the status announced
+  ---
+  duration_ms: 2549.319622
+  type: 'test'
+  ...
+# Subtest: visible focus indicator on every control reached by Tab
+ok 3 - visible focus indicator on every control reached by Tab
+  ---
+  duration_ms: 3046.351215
+  type: 'test'
+  ...
+# Subtest: layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 4 - layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 2726.666782
+  type: 'test'
+  ...
+# Subtest: layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 5 - layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 2946.570594
+  type: 'test'
+  ...
+# Subtest: layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 6 - layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+  ---
+  duration_ms: 3165.823147
+  type: 'test'
+  ...
+# Subtest: reduced motion: no animation or transition anywhere
+ok 7 - reduced motion: no animation or transition anywhere
+  ---
+  duration_ms: 2908.66754
+  type: 'test'
+  ...
+# Subtest: dark color scheme keeps contrast
+ok 8 - dark color scheme keeps contrast
+  ---
+  duration_ms: 2753.63147
+  type: 'test'
+  ...
+# Subtest: G066 pages of one generation are appended in order; the list is complete only at the end
+ok 9 - G066 pages of one generation are appended in order; the list is complete only at the end
+  ---
+  duration_ms: 5.95466
+  type: 'test'
+  ...
+# Subtest: G066 refused pages never change what is shown and are never mixed
+ok 10 - G066 refused pages never change what is shown and are never mixed
+  ---
+  duration_ms: 2.552858
+  type: 'test'
+  ...
+# Subtest: G066 RESET_REQUIRED freezes the previous list until an explicit reload of a new generation
+ok 11 - G066 RESET_REQUIRED freezes the previous list until an explicit reload of a new generation
+  ---
+  duration_ms: 1.234269
+  type: 'test'
+  ...
+# Subtest: G066 an answer to an older request is ignored after a reload
+ok 12 - G066 an answer to an older request is ignored after a reload
+  ---
+  duration_ms: 0.686096
+  type: 'test'
+  ...
+# Subtest: G066 archive refusals stay in their panel; connection failures freeze the list
+ok 13 - G066 archive refusals stay in their panel; connection failures freeze the list
+  ---
+  duration_ms: 8.24332
+  type: 'test'
+  ...
+# Subtest: G066 nothing is read without an explicit request, and a late answer after disconnect is dropped
+ok 14 - G066 nothing is read without an explicit request, and a late answer after disconnect is dropped
+  ---
+  duration_ms: 0.794228
+  type: 'test'
+  ...
+# Subtest: G066 real Core C-030 pages: two pages, change between pages, unavailable folder
+ok 15 - G066 real Core C-030 pages: two pages, change between pages, unavailable folder
+  ---
+  duration_ms: 2352.275469
+  type: 'test'
+  ...
+# Subtest: G066 real Core without --research-archives: ARCHIVES_NOT_CONFIGURED, missions still readable
+ok 16 - G066 real Core without --research-archives: ARCHIVES_NOT_CONFIGURED, missions still readable
+  ---
+  duration_ms: 2469.723297
+  type: 'test'
+  ...
+# Subtest: G066 Chromium: keyboard load, table of metadata only, small screen without page scroll
+ok 17 - G066 Chromium: keyboard load, table of metadata only, small screen without page scroll
+  ---
+  duration_ms: 3696.997752
+  type: 'test'
+  ...
+# Subtest: pagination over the real API: 150 extra missions read in two pages, exact cursor echoed, complete
+ok 18 - pagination over the real API: 150 extra missions read in two pages, exact cursor echoed, complete
+  ---
+  duration_ms: 2304.918474
+  type: 'test'
+  ...
+# Subtest: more than 200 missions: the client stops at 200, says truncated, and never loops
+ok 19 - more than 200 missions: the client stops at 200, says truncated, and never loops
+  ---
+  duration_ms: 2724.19273
+  type: 'test'
+  ...
+# Subtest: a mission created by another process between two pages: RESET_REQUIRED, old inventory stale, explicit relist complete
+ok 20 - a mission created by another process between two pages: RESET_REQUIRED, old inventory stale, explicit relist complete
+  ---
+  duration_ms: 2172.30419
+  type: 'test'
+  ...
+# Subtest: a cancellation by the Core CLI is observed once, over repeated polls, and the client only ever reads
+ok 21 - a cancellation by the Core CLI is observed once, over repeated polls, and the client only ever reads
+  ---
+  duration_ms: 2366.688421
+  type: 'test'
+  ...
+# Subtest: cleanup on failure paths: refused start, a throwing scenario, a browser that cannot start
+ok 22 - cleanup on failure paths: refused start, a throwing scenario, a browser that cannot start
+  ---
+  duration_ms: 3691.173737
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: 150 missions listed and keyboard-selectable, then server stopped
+ok 23 - Chromium on the real server: 150 missions listed and keyboard-selectable, then server stopped
+  ---
+  duration_ms: 3197.879588
+  type: 'test'
+  ...
+# Subtest: UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly
+ok 24 - UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly
+  ---
+  duration_ms: 2.896528
+  type: 'test'
+  ...
+# Subtest: the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination
+ok 25 - the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination
+  ---
+  duration_ms: 0.577655
+  type: 'test'
+  ...
+# Subtest: host key verification and system settings are never weakened
+ok 26 - host key verification and system settings are never weakened
+  ---
+  duration_ms: 0.92422
+  type: 'test'
+  ...
+# Subtest: preview by default; connection only with -Connect; stop limited to its own recorded ssh process
+ok 27 - preview by default; connection only with -Connect; stop limited to its own recorded ssh process
+  ---
+  duration_ms: 0.62054
+  type: 'test'
+  ...
+# Subtest: no secret is read or printed; inputs are validated before reaching ssh or the remote shell
+ok 28 - no secret is read or printed; inputs are validated before reaching ssh or the remote shell
+  ---
+  duration_ms: 0.276854
+  type: 'test'
+  ...
+# Subtest: the optional remote diagnostic is C-009c --check, which starts nothing
+ok 29 - the optional remote diagnostic is C-009c --check, which starts nothing
+  ---
+  duration_ms: 0.206801
+  type: 'test'
+  ...
+# Subtest: remote relative paths keep their home anchor after cd; absolute paths remain literal
+ok 30 - remote relative paths keep their home anchor after cd; absolute paths remain literal
+  ---
+  duration_ms: 0.312355
+  type: 'test'
+  ...
+# Subtest: missing executable rejects without an unhandled spawn error
+ok 31 - missing executable rejects without an unhandled spawn error
+  ---
+  duration_ms: 9.672057
+  type: 'test'
+  ...
+# Subtest: startup deadline waits for its silent owned child to exit
+ok 32 - startup deadline waits for its silent owned child to exit
+  ---
+  duration_ms: 111.42809
+  type: 'test'
+  ...
+# Subtest: stderr is drained and a child ignoring TERM is killed, then stop is idempotent
+ok 33 - stderr is drained and a child ignoring TERM is killed, then stop is idempotent
+  ---
+  duration_ms: 111.964196
+  type: 'test'
+  ...
+# Subtest: real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+ok 34 - real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+  ---
+  duration_ms: 2342.922985
+  type: 'test'
+  ...
+# Subtest: real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+ok 35 - real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+  ---
+  duration_ms: 4892.590504
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: receipt lookup shown next to the current capture, no command button
+ok 36 - Chromium on the real server: receipt lookup shown next to the current capture, no command button
+  ---
+  duration_ms: 3836.60512
+  type: 'test'
+  ...
+# Subtest: G060 real Core projections of research missions: labels, notes, no query or page text
+ok 37 - G060 real Core projections of research missions: labels, notes, no query or page text
+  ---
+  duration_ms: 3625.86212
+  type: 'test'
+  ...
+# Subtest: G060 labels never claim truth; unknown objectives and outcomes stay as received
+ok 38 - G060 labels never claim truth; unknown objectives and outcomes stay as received
+  ---
+  duration_ms: 1.095646
+  type: 'test'
+  ...
+# Subtest: G060 Chromium on the real server: research note shown, no command, no query
+ok 39 - G060 Chromium on the real server: research note shown, no command, no query
+  ---
+  duration_ms: 1694.003731
+  type: 'test'
+  ...
+# Subtest: served assets are the committed ones and app.js is the current bundle
+ok 40 - served assets are the committed ones and app.js is the current bundle
+  ---
+  duration_ms: 2068.531707
+  type: 'test'
+  ...
+# Subtest: real server: list, snapshot, a cancellation written by another process seen by poll and relist
+ok 41 - real server: list, snapshot, a cancellation written by another process seen by poll and relist
+  ---
+  duration_ms: 1788.97249
+  type: 'test'
+  ...
+# Subtest: real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+ok 42 - real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+  ---
+  duration_ms: 1870.59374
+  type: 'test'
+  ...
+# Subtest: real server: another state behind the same address wipes the display
+ok 43 - real server: another state behind the same address wipes the display
+  ---
+  duration_ms: 3321.923926
+  type: 'test'
+  ...
+# Subtest: Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+ok 44 - Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+  ---
+  duration_ms: 2475.102963
+  type: 'test'
+  ...
+# Subtest: Chromium: a page opened through another Host is refused by the server, and the client says so
+ok 45 - Chromium: a page opened through another Host is refused by the server, and the client says so
+  ---
+  duration_ms: 1934.647193
+  type: 'test'
+  ...
+# Subtest: token format is checked locally; nothing is sent for a malformed token
+ok 46 - token format is checked locally; nothing is sent for a malformed token
+  ---
+  duration_ms: 2.702866
+  type: 'test'
+  ...
+# Subtest: connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+ok 47 - connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+  ---
+  duration_ms: 5.838949
+  type: 'test'
+  ...
+# Subtest: pagination sends next_cursor unchanged and stops at the end; never more than three pages
+ok 48 - pagination sends next_cursor unchanged and stops at the end; never more than three pages
+  ---
+  duration_ms: 3.282264
+  type: 'test'
+  ...
+# Subtest: list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+ok 49 - list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+  ---
+  duration_ms: 1.55049
+  type: 'test'
+  ...
+# Subtest: 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+ok 50 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+  ---
+  duration_ms: 1.046373
+  type: 'test'
+  ...
+# Subtest: 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+ok 51 - 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+  ---
+  duration_ms: 1.649867
+  type: 'test'
+  ...
+# Subtest: network failure: offline, data kept and dated; reconnect to the same store resumes
+ok 52 - network failure: offline, data kept and dated; reconnect to the same store resumes
+  ---
+  duration_ms: 1.280717
+  type: 'test'
+  ...
+# Subtest: reconnection to another store wipes the previous display: no mixed identities
+ok 53 - reconnection to another store wipes the previous display: no mixed identities
+  ---
+  duration_ms: 1.154739
+  type: 'test'
+  ...
+# Subtest: a list answering for another store than health is refused and nothing is shown
+ok 54 - a list answering for another store than health is refused and nothing is shown
+  ---
+  duration_ms: 0.567712
+  type: 'test'
+  ...
+# Subtest: an answer for a previous selection never replaces the current one
+ok 55 - an answer for a previous selection never replaces the current one
+  ---
+  duration_ms: 2.374718
+  type: 'test'
+  ...
+# Subtest: disconnect forgets token and display; a late answer is dropped
+ok 56 - disconnect forgets token and display; a late answer is dropped
+  ---
+  duration_ms: 0.802395
+  type: 'test'
+  ...
+# Subtest: poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+ok 57 - poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+  ---
+  duration_ms: 1.930091
+  type: 'test'
+  ...
+# Subtest: an invalid or authority-claiming answer is rejected, never displayed
+ok 58 - an invalid or authority-claiming answer is rejected, never displayed
+  ---
+  duration_ms: 0.584206
+  type: 'test'
+  ...
+# Subtest: a malformed mission id is never turned into a request path
+ok 59 - a malformed mission id is never turned into a request path
+  ---
+  duration_ms: 0.381507
+  type: 'test'
+  ...
+# Subtest: G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+ok 60 - G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+  ---
+  duration_ms: 2.588938
+  type: 'test'
+  ...
+# Subtest: G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+ok 61 - G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+  ---
+  duration_ms: 1.973921
+  type: 'test'
+  ...
+# Subtest: G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+ok 62 - G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+  ---
+  duration_ms: 2.136013
+  type: 'test'
+  ...
+# Subtest: G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+ok 63 - G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+  ---
+  duration_ms: 3.318592
+  type: 'test'
+  ...
+# Subtest: G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+ok 64 - G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+  ---
+  duration_ms: 3.610652
+  type: 'test'
+  ...
+# Subtest: G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+ok 65 - G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+  ---
+  duration_ms: 4.049678
+  type: 'test'
+  ...
+# Subtest: G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused
+ok 66 - G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused
+  ---
+  duration_ms: 7.850088
+  type: 'test'
+  ...
+# Subtest: G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+ok 67 - G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+  ---
+  duration_ms: 1.382109
+  type: 'test'
+  ...
+# Subtest: G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+ok 68 - G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+  ---
+  duration_ms: 2.596528
+  type: 'test'
+  ...
+# Subtest: G043 an answer for a previous list epoch does not advance freshness
+ok 69 - G043 an answer for a previous list epoch does not advance freshness
+  ---
+  duration_ms: 0.97038
+  type: 'test'
+  ...
+# Subtest: G043 two concurrent connections: only the last one is applied, the first answer never counts
+ok 70 - G043 two concurrent connections: only the last one is applied, the first answer never counts
+  ---
+  duration_ms: 0.575762
+  type: 'test'
+  ...
+# Subtest: G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+ok 71 - G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+  ---
+  duration_ms: 0.786084
+  type: 'test'
+  ...
+# Subtest: G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry
+ok 72 - G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry
+  ---
+  duration_ms: 1.393978
+  type: 'test'
+  ...
+# Subtest: G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture
+ok 73 - G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture
+  ---
+  duration_ms: 0.708884
+  type: 'test'
+  ...
+1..73
+# tests 73
+# suites 0
+# pass 73
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35518.104016

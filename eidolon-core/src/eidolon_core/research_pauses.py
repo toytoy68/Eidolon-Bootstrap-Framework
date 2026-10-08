@@ -18,6 +18,7 @@ from pathlib import Path
 import re
 import sqlite3
 import time
+import uuid
 
 from .contracts import ContractError, digest, encode
 
@@ -78,36 +79,94 @@ class ResearchPauses:
         self.clock = clock
         if type(create) is not bool:
             raise ContractError("INVALID_PAUSE_INITIALIZATION")
-        if not create:
-            with self._connection() as db:
-                db.execute('PRAGMA query_only=ON')
-                version = db.execute('PRAGMA user_version').fetchone()[0]
-                tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
-                if version != 1 or tables != {'pauses', 'pause_events'}:
-                    raise PauseStorageError('UNSUPPORTED_PAUSE_DATABASE')
-            return
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self._connection(create=True) as db:
+        if create:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self._connection(create=create, write=create) as db:
             version = db.execute('PRAGMA user_version').fetchone()[0]
             tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
-            if version not in (0, 1) or (version == 0 and tables):
-                raise PauseStorageError('UNSUPPORTED_PAUSE_DATABASE')
-            db.executescript('''
-                CREATE TABLE IF NOT EXISTS pauses (id TEXT PRIMARY KEY, body TEXT NOT NULL);
-                CREATE TABLE IF NOT EXISTS pause_events (
+            if create and version == 0 and not tables:
+                db.execute('CREATE TABLE pauses (id TEXT PRIMARY KEY, body TEXT NOT NULL)')
+                db.execute('''CREATE TABLE pause_events (
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT, pause_id TEXT NOT NULL,
-                    at_ms INTEGER NOT NULL, kind TEXT NOT NULL, body TEXT NOT NULL);
-                PRAGMA user_version=1;
-            ''')
+                    at_ms INTEGER NOT NULL, kind TEXT NOT NULL, body TEXT NOT NULL)''')
+                self._create_identity(db)
+            self.database_id = self._identity(db)
+
+    @staticmethod
+    def _create_identity(db):
+        # DDL and identity share a transaction; executescript would commit early.
+        db.execute('CREATE TABLE pause_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)')
+        db.execute("INSERT INTO pause_metadata VALUES ('database_id',?)", ('pd-' + uuid.uuid4().hex,))
+        db.execute('PRAGMA user_version=2')
+
+    @staticmethod
+    def _identity(db):
+        version = db.execute('PRAGMA user_version').fetchone()[0]
+        tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
+        expected = {'pauses', 'pause_events'}
+        if version == 1 and tables == expected:
+            db.execute('SELECT id,body FROM pauses LIMIT 0')
+            db.execute('SELECT sequence,pause_id,at_ms,kind,body FROM pause_events LIMIT 0')
+            return None  # Readable legacy evidence; runtime adoption must be explicit.
+        if version != 2 or tables != expected | {'pause_metadata'}:
+            raise PauseStorageError('UNSUPPORTED_PAUSE_DATABASE')
+        db.execute('SELECT id,body FROM pauses LIMIT 0')
+        db.execute('SELECT sequence,pause_id,at_ms,kind,body FROM pause_events LIMIT 0')
+        values = db.execute('SELECT key,value FROM pause_metadata').fetchmany(3)
+        rows = dict(values)
+        identity = rows.get('database_id')
+        if (len(values) != len(rows) or set(rows) - {'database_id', 'adoption'} or type(identity) is not str
+                or re.fullmatch(r'pd-[0-9a-f]{32}', identity) is None):
+            raise PauseStorageError('INVALID_PAUSE_DATABASE_IDENTITY')
+        return identity
+
+    def adopt_identity(self, *, store_id, guard_id, actor, reason):
+        """Explicit, audited schema upgrade/adoption; never releases any pause.
+
+        The caller must hold the mission Store transaction and reject an existing
+        contradictory binding BEFORE invoking this method. A crash after this
+        commit requires the same explicit review command, never auto-adoption.
+        """
+        _operator(actor, 200); _operator(reason, 4000)
+        if (type(store_id) is not str or re.fullmatch(r's-[0-9a-f]{32}', store_id) is None
+                or type(guard_id) is not str or re.fullmatch(r'g-[0-9a-f]{32}', guard_id) is None):
+            raise ContractError('INVALID_PAUSE_ADOPTION')
+        with self._connection(write=True) as db:
+            # Refuse malformed records before schema mutation. Existing audit
+            # bytes and pause revisions are never rewritten by an adoption.
+            self._active_count(db)
+            if self.database_id is None:
+                self._create_identity(db)
+            identity = self._identity(db)
+            row = db.execute("SELECT value FROM pause_metadata WHERE key='adoption'").fetchone()
+            if row is None:
+                audit = {'store_id': store_id, 'guard_id': guard_id, 'actor': actor,
+                         'reason': reason, 'at_ms': self._now()}
+                db.execute("INSERT INTO pause_metadata VALUES ('adoption',?)", (encode(audit),))
+            else:
+                try:
+                    audit = json.loads(row[0])
+                    if audit['store_id'] != store_id or audit['guard_id'] != guard_id:
+                        raise PauseStorageError('PAUSE_ADOPTION_CHANGED')
+                except (ValueError, KeyError, TypeError) as exc:
+                    if isinstance(exc, PauseStorageError):
+                        raise
+                    raise PauseStorageError('INVALID_PAUSE_ADOPTION') from None
+        # Update only after commit succeeds. Never pin an uncommitted identity.
+        self.database_id = identity
+        return identity
 
     @contextmanager
-    def _connection(self, *, create=False):
+    def _connection(self, *, create=False, write=False):
         db = None
         try:
             db = (sqlite3.connect(self.path, timeout=5) if create else
                   sqlite3.connect(self.path.as_uri() + '?mode=rw', uri=True, timeout=5))
             db.execute('PRAGMA synchronous=FULL')
             with db:
+                db.execute('BEGIN IMMEDIATE' if write else 'BEGIN')
+                if hasattr(self, 'database_id') and self._identity(db) != self.database_id:
+                    raise PauseStorageError('RESEARCH_PAUSES_CHANGED')
                 yield db
         except (sqlite3.Error, OSError, ValueError, KeyError, TypeError) as exc:
             if isinstance(exc, ContractError):
@@ -151,11 +210,10 @@ class ResearchPauses:
     def inspect(self):
         with self._connection() as db:
             db.execute('PRAGMA query_only=ON')
-            db.execute('BEGIN')
             rows = [self._decode(identity, body) for identity, body in db.execute('SELECT id,body FROM pauses ORDER BY id')]
             count = db.execute('SELECT count(*) FROM pause_events').fetchone()[0]
             return {'protocol': PROTOCOL, 'authorizes_execution': False, 'automatic_release': False,
-                    'pauses': rows, 'audit_events': count}
+                    'database_id': self.database_id, 'pauses': rows, 'audit_events': count}
 
     def _active_count(self, db):
         # Validate rather than treating corrupt/unknown states as free capacity.
@@ -170,7 +228,6 @@ class ResearchPauses:
         identities = {'p-' + digest(_scope(scope)) for scope in scopes}
         with self._connection() as db:
             db.execute('PRAGMA query_only=ON')
-            db.execute('BEGIN')
             total = self._active_count(db)
             missing = 0
             for identity in identities:
@@ -190,8 +247,7 @@ class ResearchPauses:
         delay = retry_after if retry_after is not None else 60 if reason == 'RATE_LIMITED' else None
         deadline = stamp + delay * 1000 if delay is not None else None
         result = []
-        with self._connection() as db:
-            db.execute('BEGIN IMMEDIATE')
+        with self._connection(write=True) as db:
             total = self._active_count(db)
             for identity, scope in identities.items():
                 existing = db.execute('SELECT body FROM pauses WHERE id=?', (identity,)).fetchone()
@@ -223,8 +279,7 @@ class ResearchPauses:
             raise ContractError('INVALID_PAUSE_REVIEW')
         _operator(actor, 200); _operator(reason, 4000)
         stamp = self._now()
-        with self._connection() as db:
-            db.execute('BEGIN IMMEDIATE')
+        with self._connection(write=True) as db:
             row = db.execute('SELECT body FROM pauses WHERE id=?', (identity,)).fetchone()
             if row is None:
                 raise ContractError('PAUSE_NOT_FOUND')

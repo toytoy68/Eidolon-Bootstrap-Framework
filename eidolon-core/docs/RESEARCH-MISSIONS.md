@@ -17,6 +17,8 @@ PYTHONPATH=src python -m eidolon_core.query_history --directory /tmp/eidolon-res
 ```
 
 `--create-only` crée une mission sans lancer le rappel, le modèle ni la recherche.
+Son code de retour est 0 lorsque la création réussit ; la mission reste `NEW`,
+sans appel ni résultat. Cela ne signifie pas qu'une recherche a été exécutée.
 Remplacer `m-ID` par l’identifiant obtenu. `run` sur une réussite ne rejoue rien.
 L’API/client de consultation peuvent lire l’état de ces missions avec leur
 protocole existant ; aucune commande distante n’est ajoutée.
