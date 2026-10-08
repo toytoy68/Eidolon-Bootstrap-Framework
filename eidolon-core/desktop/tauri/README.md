@@ -42,26 +42,25 @@ cargo build                     # binaire : target/debug/eidolon-consultation
 Versions exactes : `tauri =2.12.1`, `tauri-build =2.7.1`, `Cargo.lock`
 versionné. Aucune CLI Tauri ni Node n'est nécessaire.
 
-## Icône « E bleu » (C-D01)
+## Icône « e manuscrit » (choix toytoy du 08/10/2026)
 
-Référence validée par toytoy :
-[assets/branding/eidolon-icon-reference.png](../../assets/branding/eidolon-icon-reference.png)
-(1254 px, RGB). L'original n'est pas modifié.
+L'icône reprend le **cadre** de la référence validée
+([assets/branding/eidolon-icon-reference.png](../../assets/branding/eidolon-icon-reference.png),
+non modifiée) : carré arrondi, liseré et halo bleus, coins rendus transparents.
+Le E y est remplacé par un **gros « e » manuscrit**, tracé à la plume (épaisseurs
+pleins/déliés) avec un halo bleu.
 
-Les fichiers de `icons/` en sont **dérivés** par deux opérations seulement :
+- Générateur :
+  [docs/proposals/2026-10-08-claude-icon-variants/manuscrit.js](../../docs/proposals/2026-10-08-claude-icon-variants/manuscrit.js).
+- `icon.png` (512 px, RGBA), `32x32.png`, `128x128.png`, `128x128@2x.png` : version
+  lumineuse.
+- `icon.ico` : version **simplifiée** à 16, 20 et 24 px (« e » plein, sans halo),
+  version lumineuse de 32 à 256 px (9 images).
+- Déclarés dans `bundle.icon` ; l'empaquetage reste désactivé. Rendu Windows non vu.
+- [Planche de lisibilité](../../docs/proposals/2026-10-08-claude-icon-variants/manuscrit-lisibilite.png).
 
-1. un recadrage de 80 px sur chaque bord, qui retire du fond sombre et garde le halo ;
-2. une réduction par divisions successives par deux, en lissage haute qualité.
-
-Les fichiers obtenus :
-
-- `icon.png` en 512 px (RGBA, exigé par Tauri) ;
-- `32x32.png`, `128x128.png` et `128x128@2x.png` ;
-- `icon.ico` pour Windows : 9 images PNG en 16, 20, 24, 32, 40, 48, 64, 128 et 256 px.
-
-Ils sont déclarés dans `bundle.icon`. L'empaquetage reste désactivé.
-Scripts et planche de lisibilité :
-[docs/validation/2026-10-08/claude-icon](../../docs/validation/2026-10-08/claude-icon/README.md).
+Aucune police n'est utilisée : le tracé est une courbe dessinée, donc sans
+question de licence.
 
 ## Limites connues
 

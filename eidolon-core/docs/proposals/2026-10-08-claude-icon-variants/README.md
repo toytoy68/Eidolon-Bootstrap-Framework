@@ -1,4 +1,19 @@
-# Variantes de l'icône Eidolon — à comparer (rien n'est installé)
+# Variantes de l'icône Eidolon
+
+**Choix de toytoy (08/10/2026) :** « On remplace le E de l'icône par un gros "e"
+manuscrit. Sinon b+c. »
+
+Le « e » manuscrit est **réalisé et installé** dans `desktop/tauri/icons/` :
+
+- générateur [manuscrit.js](manuscrit.js) ;
+- [planche de lisibilité](manuscrit-lisibilite.png) ;
+- fichiers `png/manuscrit-*.png`.
+
+Il garde le cadre de la référence (coins transparents, comme B), avec une
+version simplifiée jusqu'à 24 px (le principe de C). Les variantes A, B et C
+ci-dessous restent comme historique de la comparaison.
+
+## Comparaison initiale (A, B, C)
 
 Claude, 08/10/2026. Statut : **PROPOSITION, choix toytoy**. Référence validée et
 intacte : `assets/branding/eidolon-icon-reference.png`. Les icônes installées dans
