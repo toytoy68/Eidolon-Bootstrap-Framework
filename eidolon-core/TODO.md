@@ -5,7 +5,27 @@ sans déploiement VM ni modification du Memory Engine. Pas de pourcentage global
 emprunté au moteur mémoire. Les concepts G-001–006/G-017 guident les frontières,
 ils ne constituent pas des fonctionnalités livrées.
 
-## État courant — séance du 08/10/2026
+## État courant — reprise Codex du 09/10/2026 après 17 h 37
+
+Claude arrêté (limite rapportée par toytoy), reprise autorisée à Codex.
+C-068/C-069 : G124-R1 réponses tardives, G123-R1 identifiant exact du travail,
+G099-R1 digest des liens, G125 verrou/indisponibilité et courses de soumission
+de mission. Code et tests livrés ; 69 cas JavaScript exercés dans V8.
+**13 nouveaux tests Python non exécutés**, migration v5 et suite complète à
+valider. Les 1 332 tests C-067 restent un résultat antérieur, non transférable.
+[État détaillé](docs/PROJECT-STATUS-2026-10-09.md).
+
+- [x] Correctifs client, tests de concurrence et bundle généré.
+- [x] Correctifs serveur et tests de régression préparés.
+- [ ] Exécuter Python/SQLite/Node/Chromium et recette installée C-068/C-069.
+- [ ] G122/G123 : achever le flux dialogue → soumission média → worker → page.
+- [ ] G126 : contre-revue indépendante après reprise de Claude.
+- [ ] G127 : recette intégrée, puis modèles réels et matériel.
+
+Les sections datées ci-dessous sont historiques ; leurs cases peuvent décrire
+un jalon antérieur. Ne pas compter les cases pour calculer une maturité globale.
+
+## État historique — séance du 08/10/2026
 
 C-039–C-041 : contrat textuel explicite commun aux planificateurs (manifestes /4),
 `model-probe` sur quatre cas synthétiques et `model-probe-inspect` hors ligne,

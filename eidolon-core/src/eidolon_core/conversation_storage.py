@@ -24,11 +24,13 @@ import stat
 
 from . import conversation_store as cs
 from .contracts import ContractError, digest
+from .sqlite_errors import is_busy
 
 # Tables present in every supported version, and the order that defines their logical content.
 CORE_TABLES = {"conversations": "conversation_id", "turns": "conversation_id, sequence", "replies": "turn_id",
                "proposals": "proposal_id, version", "submissions": "client_id, command_key"}
-OPTIONAL_TABLES = {"attempts": "turn_id", "attachments": "conversation_id, artifact_id"}
+OPTIONAL_TABLES = {"attempts": "turn_id", "attachments": "conversation_id, artifact_id",
+                   "media_links": "conversation_id, proposal_sha256"}
 INSPECTION = "eidolon-conversation-store-inspection/1"
 
 
@@ -94,7 +96,7 @@ def inspect(path):
         finally:
             db.close()
     except sqlite3.DatabaseError as exc:
-        code = "CONVERSATION_STORE_BUSY" if "locked" in str(exc) else "CONVERSATION_STORE_UNAVAILABLE"
+        code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "CONVERSATION_STORE_UNAVAILABLE"
         raise StorageError(code + ": database unreadable") from None
     return {"protocol": INSPECTION, **report, "integrity": "ok" if integrity == "ok" else "FAILED",
             "logical_sha256": sha, "rows": counts, "supported_versions": sorted(cs.SCHEMAS),

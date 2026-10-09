@@ -1,5 +1,15 @@
 # Eidolon Core v0.1
 
+**Reprise du 09/10 après 17 h 37 — C-068/C-069 :** corrections des réponses
+tardives de mission/annulation, identité exacte des résultats média, digest
+de sauvegarde et distinction du stockage occupé. Schéma conversations **v5** :
+migration explicite avec sauvegarde, anciennes liaisons média non requalifiées.
+**Validation Python/SQLite/Chromium et paquet installé de ce lot en attente**
+(environnement indisponible). 69 cas JavaScript exercés dans V8, transports
+scriptés ; ce ne sont pas des essais Windows ou de moteurs IA.
+[État courant](docs/PROJECT-STATUS-2026-10-09.md) et
+[migration](docs/CONVERSATION-STORE.md).
+
 ![Logo officiel Eidolon Core Technologies](desktop/connected/eidolon-logo.png)
 
 [Agents Image et Vidéo](docs/MEDIA-AGENTS.md) : accès depuis l'accueil, brouillons

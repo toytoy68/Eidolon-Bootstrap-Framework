@@ -37,6 +37,7 @@ from .presentation import header, message
 from .receipt_lookup import ReceiptLookupError, lookup as lookup_receipt
 from .research_archive import ArchiveError, read_catalog
 from .store import Store
+from .sqlite_errors import is_busy
 
 PROTOCOL = "eidolon-http-read/1"
 MAX_REQUEST = 8192
@@ -346,7 +347,9 @@ class _Handler(BaseHTTPRequestHandler):
                            "INVALID_PAGE_LIMIT", "INVALID_LIST_CURSOR"}
             self._error(400 if exc.code in bad_request else 503,
                         exc.code if exc.code in bad_request else "STATE_UNAVAILABLE")
-        except (sqlite3.Error, ContractError, ValueError, TypeError, KeyError,
+        except sqlite3.Error as exc:
+            self._error(503, "STATE_BUSY" if is_busy(exc) else "STATE_UNAVAILABLE")
+        except (ContractError, ValueError, TypeError, KeyError,
                 IndexError, RecursionError, UnicodeError):
             self._error(503, "STATE_UNAVAILABLE")
         except TimeoutError:

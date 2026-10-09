@@ -1,3 +1,26 @@
+# Suite active — C-MSG-G134, 09/10/2026, reprise Codex
+
+Claude arrêté (limite rapportée par toytoy) ; C-068/C-069 implémentent les trois
+correctifs C122, G125 et les courses du client conversation.
+**Validation Python/SQLite/Node/Chromium et paquet installé encore à exécuter.**
+69 cas V8 sur transports scriptés réussis ; 13 nouveaux tests Python préparés.
+
+| Tâche | État réel |
+| --- | --- |
+| G122 dialogue/soumission média | À faire |
+| G123 résultats worker | Raccordement complet à faire ; G123-R1 corrigé dans le code, test Python à exécuter |
+| G124 annulation | Correctifs client exercés dans V8 ; recette Node/Chromium/HTTP à faire |
+| G125 stockage occupé | Implémenté, tests Python/SQLite réel à exécuter |
+| G126 contre-revue worker | À reprendre indépendamment par Claude |
+| G127 recette intégrée | À faire après raccordement et validation |
+| G099-R1 digest de sauvegarde | Corrigé dans le code ; migration explicite v5 et tests à valider |
+
+[Relève et preuves](../GPT-TO-CLAUDE.md). Les consignes de réservation plus
+anciennes ci-dessous décrivent leurs séances ; elles ne bloquent pas la reprise
+Codex autorisée par toytoy. Aucun lancement de session présumé.
+
+---
+
 # Reprise Codex — C-MSG-G133, 09/10/2026
 
 Toytoy signale à 17 h 37 Europe/Paris que Claude est arrêté, limite atteinte,

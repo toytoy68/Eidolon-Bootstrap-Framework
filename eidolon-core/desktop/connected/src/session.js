@@ -184,12 +184,12 @@
         state.problem = { code: code, at: now(), scope: scope };
         return { ok: false, code: code, status: status };
       }
-      if (status === 503 && code === "BUSY") {
+      if (status === 503 && (code === "BUSY" || code === "STATE_BUSY")) {
         // G043: explicit saturation (C-010b). Not an outage: stay online, nothing retried
         // automatically, and the shown data stop being presented as current.
         state.phase = "busy";
-        state.problem = { code: "BUSY", at: now(), scope: scope };
-        return { ok: false, code: "BUSY", status: status };
+        state.problem = { code: code, at: now(), scope: scope };
+        return { ok: false, code: code, status: status };
       }
       if (status === 401) {
         token = null; state.connEpoch += 1;  // every answer still in flight is now foreign

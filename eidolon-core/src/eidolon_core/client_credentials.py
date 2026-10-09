@@ -22,6 +22,7 @@ import sqlite3
 import stat
 
 from .contracts import ContractError
+from .sqlite_errors import is_busy
 from .store import now
 
 TOKEN_PATTERN = r"ecc_[A-Za-z0-9_-]{43}"
@@ -75,7 +76,8 @@ class ClientCredentials:
                         COMMIT;
                     """ % (SCHEMA, self.store_id))
             except sqlite3.Error as exc:
-                raise CredentialError("CREDENTIALS_UNAVAILABLE: " + str(exc)[:60]) from None
+                raise CredentialError(("CREDENTIALS_BUSY" if is_busy(exc) else "CREDENTIALS_UNAVAILABLE")
+                                      + ": credential database unavailable") from None
             finally:
                 db.close()
         with self._db():
@@ -104,8 +106,9 @@ class ClientCredentials:
     def _connect(self):
         try:
             return sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True, timeout=2, isolation_level=None)
-        except sqlite3.Error:
-            raise CredentialError("CREDENTIALS_UNAVAILABLE: cannot open") from None
+        except sqlite3.Error as exc:
+            code = "CREDENTIALS_BUSY" if is_busy(exc) else "CREDENTIALS_UNAVAILABLE"
+            raise CredentialError(code + ": cannot open") from None
 
     @contextmanager
     def _db(self, *, write=False):
@@ -124,7 +127,8 @@ class ClientCredentials:
         except sqlite3.Error as exc:
             if db.in_transaction:
                 db.rollback()
-            raise CredentialError("CREDENTIALS_UNAVAILABLE: " + str(exc)[:60]) from None
+            raise CredentialError(("CREDENTIALS_BUSY" if is_busy(exc) else "CREDENTIALS_UNAVAILABLE")
+                                      + ": credential database unavailable") from None
         except BaseException:
             if db.in_transaction:
                 db.rollback()

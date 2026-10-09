@@ -47,7 +47,9 @@
   function renderConnection(doc, s) {
     var online = s.phase === "connected" || s.phase === "busy";   // explicit retries allowed when busy
     var status = byId(doc, "connection-status");
-    status.textContent = PHASES[s.phase] || s.phase;
+    status.textContent = s.phase === "busy" && s.problem && s.problem.code === "STATE_BUSY"
+      ? "Stockage Core occupé : la lecture n’a pas abouti. L’affichage conserve la dernière lecture acceptée ; réessayez explicitement."
+      : PHASES[s.phase] || s.phase;
     status.className = "status phase-" + s.phase;
     var parts = [];
     if (s.storeId) parts.push("Base " + s.storeId);
@@ -126,7 +128,7 @@
     var stale = s.phase !== "connected";
     body.appendChild(el(doc, "p", "mission-title", C.missionLabel(m)));
     if (stale) body.appendChild(el(doc, "p", "stale-note", s.phase === "busy"
-      ? "Capture non actualisée : serveur occupé, la dernière demande n'a pas été traitée."
+      ? "Capture non actualisée : serveur ou stockage occupé, aucune nouvelle lecture acceptée."
       : "Capture périmée : connexion interrompue."));
     else if (!C.viewIsCurrent(s)) {
       // G043: a pending reset or a refused answer means the shown capture is not the current state.

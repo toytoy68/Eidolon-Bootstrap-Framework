@@ -276,3 +276,321 @@ test("G101: media results are read on demand, errors are said, closing forgets t
   conv.close();
   assert.equal(conv.state().media, null);
 });
+
+
+function deferredResponse() {
+  let resolve;
+  const promise = new Promise((done) => { resolve = done; });
+  return { promise, resolve };
+}
+async function preparedCancellation(answers, recent) {
+  const sha = await C.digest(cancelProposal);
+  const script = scripted([opened, ok({ kind: "PROPOSAL", proposal: cancelProposal,
+    proposal_sha256: sha, mission_status: "RUNNING" }), ...answers], recent);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.cancelPropose(MID);
+  return { conv, script };
+}
+
+test("G124-R1: a late cancellation of A cannot confirm the newly selected B", async () => {
+  const late = deferredResponse(), p2 = { ...cancelProposal, mission_id: OTHER };
+  const { conv, script } = await preparedCancellation([() => late.promise,
+    ok({ kind: "PROPOSAL", proposal: p2, proposal_sha256: await C.digest(p2), mission_status: "RUNNING" })]);
+  const pending = conv.cancelSubmit("Arrêter A");
+  await conv.cancelPropose(OTHER);
+  const before = conv.state().cancel;
+  late.resolve(ok({ mission_id: MID, stage: "effect_observed", mission_status: "CANCELLED" }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().cancel, before);
+  assert.equal(conv.state().cancel.proposal.mission_id, OTHER);
+  assert.equal(script.calls.filter((c) => c.path.endsWith("/cancel")).length, 1);
+  assert.ok(!C.cancelStatusText(conv.state().cancel).includes("Arrêt confirmé"));
+});
+
+test("G124-R1: a late error cannot erase a new review, even for the same mission", async () => {
+  const late = deferredResponse();
+  const { conv } = await preparedCancellation([() => late.promise,
+    ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: await C.digest(cancelProposal), mission_status: "RUNNING" })]);
+  const pending = conv.cancelSubmit("première sélection");
+  await conv.cancelPropose(MID);
+  const before = conv.state().cancel;
+  late.resolve({ status: 503, json: { error: "STATE_BUSY" } });
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().cancel, before);
+});
+
+test("G124-R1: cancellation proposals arriving out of order keep the latest selection", async () => {
+  const late = deferredResponse(), p2 = { ...cancelProposal, mission_id: OTHER };
+  const script = scripted([opened, () => late.promise,
+    ok({ kind: "PROPOSAL", proposal: p2, proposal_sha256: await C.digest(p2), mission_status: "RUNNING" })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.cancelPropose(MID);
+  await conv.cancelPropose(OTHER);
+  const before = conv.state().cancel;
+  late.resolve(ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: await C.digest(cancelProposal),
+    mission_status: "RUNNING" }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().cancel, before);
+});
+
+test("G124-R1: a hashed proposal for another requested mission is refused", async () => {
+  const { conv } = await preparedCancellation([
+    ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: await C.digest(cancelProposal), mission_status: "RUNNING" })]);
+  assert.equal(await conv.cancelPropose(OTHER), false);
+  assert.equal(conv.state().cancel.error, "DIGEST_MISMATCH");
+  assert.equal(await conv.cancelSubmit("ne rien envoyer"), false);
+});
+
+test("G124-R1: receipt lookup from A cannot rewrite a review of B", async () => {
+  const late = deferredResponse(), p2 = { ...cancelProposal, mission_id: OTHER };
+  const { conv } = await preparedCancellation([new Error("lost"), () => late.promise,
+    ok({ kind: "PROPOSAL", proposal: p2, proposal_sha256: await C.digest(p2), mission_status: "RUNNING" })]);
+  await conv.cancelSubmit("arrêt");
+  const pending = conv.cancelCheck();
+  await conv.cancelPropose(OTHER);
+  const before = conv.state().cancel;
+  late.resolve(ok({ status: "FOUND", receipt: { mission_id: MID }, stage: "effect_observed", mission_status: "CANCELLED" }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().cancel, before);
+});
+
+test("G124-R1: receipt queries cannot race the initial submission", async () => {
+  const late = deferredResponse();
+  const { conv, script } = await preparedCancellation([() => late.promise]);
+  const pending = conv.cancelSubmit("arrêt");
+  assert.equal(await conv.cancelCheck(), false);
+  assert.equal(script.calls.filter((c) => c.path.endsWith("/cancel_receipt")).length, 0);
+  late.resolve(ok({ stage: "request_received", mission_status: "RUNNING" }));
+  await pending;
+});
+
+test("G124-R1: older NOT_FOUND cannot undo a newer confirmed receipt", async () => {
+  const late = deferredResponse();
+  const { conv } = await preparedCancellation([new Error("lost"), () => late.promise,
+    ok({ status: "FOUND", receipt: { mission_id: MID }, stage: "effect_observed", mission_status: "CANCELLED" })]);
+  await conv.cancelSubmit("arrêt");
+  const pending = conv.cancelCheck();
+  await conv.cancelCheck();
+  const before = conv.state().cancel;
+  late.resolve(ok({ status: "NOT_FOUND", receipt: null, mission_status: "RUNNING" }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().cancel, before);
+  assert.equal(await conv.cancelSubmit("pas de deuxième arrêt"), false);
+});
+
+test("G124-R1: unknown receipt status and disappearance of a known receipt never permit resend", async () => {
+  for (const known of [false, true]) {
+    const { conv, script } = await preparedCancellation([
+      known ? ok({ stage: "request_received", mission_status: "RUNNING" }) : new Error("lost"),
+      ok({ status: known ? "NOT_FOUND" : "UNRECOGNIZED", receipt: null, mission_status: "RUNNING" })]);
+    await conv.cancelSubmit("arrêt");
+    assert.equal(await conv.cancelCheck(), false);
+    assert.equal(conv.state().cancel.status, "uncertain");
+    assert.equal(await conv.cancelSubmit("pas de renvoi"), false);
+    assert.equal(script.calls.filter((c) => c.path.endsWith("/cancel")).length, 1);
+  }
+});
+
+test("G124-R1: an explicit resend keeps the entire original command including its reason", async () => {
+  const { conv, script } = await preparedCancellation([new Error("lost"),
+    ok({ status: "NOT_FOUND", receipt: null, mission_status: "RUNNING" }),
+    ok({ stage: "request_received", mission_status: "RUNNING" })]);
+  await conv.cancelSubmit("motif original");
+  await conv.cancelCheck();
+  assert.equal(await conv.cancelSubmit("motif changé pendant la coupure"), true);
+  const sent = script.calls.filter((c) => c.path.endsWith("/cancel"));
+  assert.deepEqual(sent[1].body, sent[0].body);
+});
+
+test("G124-R1: closing and resuming discard outstanding cancellation responses", async () => {
+  for (const resume of [false, true]) {
+    const late = deferredResponse(), cid = "c-" + "9".repeat(32);
+    const { conv } = await preparedCancellation([() => late.promise,
+      ok({ items: [], has_more: false, next_after: 0 })], [{ conversation_id: cid, turn_count: 0 }]);
+    const pending = conv.cancelSubmit("arrêt");
+    if (resume) await conv.resume(cid); else conv.close();
+    late.resolve(ok({ mission_id: MID, stage: "effect_observed", mission_status: "CANCELLED" }));
+    assert.equal(await pending, false);
+    assert.equal(conv.state().cancel, null);
+  }
+});
+
+test("G123: an older media refresh cannot replace the latest view", async () => {
+  const late = deferredResponse(), script = scripted([opened, () => late.promise, ok({ results: [{ job_id: "new" }] })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.loadMedia();
+  await conv.loadMedia();
+  const before = conv.state().media;
+  late.resolve(ok({ results: [{ job_id: "old" }] }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().media, before);
+});
+
+test("G125: busy storage is explained without converting uncertainty into absence or retrying", async () => {
+  for (const code of ["STATE_BUSY", "CONVERSATION_STORE_BUSY", "CREDENTIALS_BUSY", "BUSY"]) {
+    const { conv, script } = await preparedCancellation([{ status: 503, json: { error: code } }]);
+    await conv.cancelSubmit("arrêt");
+    assert.equal(conv.state().cancel.status, "uncertain");
+    assert.match(C.cancelStatusText(conv.state().cancel), /occupé/);
+    assert.match(C.cancelStatusText(conv.state().cancel), /reçu avant tout renvoi/);
+    assert.equal(script.calls.filter((c) => c.path.endsWith("/cancel")).length, 1);
+    assert.equal(await conv.cancelSubmit("pas de nouvel envoi"), false);
+  }
+  for (const code of ["CONVERSATION_UNAVAILABLE", "STORE_CHANGED", "CREDENTIALS_MISSING"]) {
+    assert.equal(C.busyNote(code), null);
+  }
+});
+
+test("G125: a busy receipt read retains the old receipt without claiming a fresh confirmation", async () => {
+  const { conv, script } = await preparedCancellation([
+    ok({ stage: "request_received", mission_status: "RUNNING" }),
+    { status: 503, json: { error: "STATE_BUSY" } }]);
+  await conv.cancelSubmit("arrêt");
+  const before = conv.state().cancel.receipt;
+  assert.equal(await conv.cancelCheck(), false);
+  assert.deepEqual(conv.state().cancel.receipt, before);
+  assert.match(C.cancelStatusText(conv.state().cancel), /n’a pas pu être vérifié/);
+  assert.equal(script.calls.filter((c) => c.path.endsWith("/cancel")).length, 1);
+});
+
+function nextMissionReply() {
+  const proposal = { ...reply.proposal, version: 2, request: "nouvelle demande synthétique" };
+  return C.digest(proposal).then(sha => ({ ...reply, proposal, proposal_sha256: sha }));
+}
+
+test("C069: a delayed mission submission cannot become the new proposal's receipt", async () => {
+  const late = deferredResponse(), newer = await nextMissionReply();
+  const script = scripted([opened, turnReply(reply), () => late.promise, turnReply(newer),
+    body => ok({ status: "MISSION_CREATED", mission_id: OTHER, command_key: body.command_key })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("première demande");
+  const pending = conv.submit("première validation");
+  await new Promise(resolve => setImmediate(resolve));
+  await conv.send("nouvelle demande");
+  await conv.submit("nouvelle validation");
+  const before = conv.state();
+  late.resolve(ok({ status: "MISSION_CREATED", mission_id: MID }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state(), before);
+  assert.equal(conv.state().submission.receipt.mission_id, OTHER);
+});
+
+test("C069: closing during the asynchronous digest sends no mission command", async () => {
+  const script = scripted([opened, turnReply(reply)]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("demande");
+  const pending = conv.submit("motif");
+  conv.close();
+  assert.equal(await pending, false);
+  assert.equal(script.calls.filter(c => c.path.endsWith("/submit")).length, 0);
+  assert.equal(conv.state().phase, "closed");
+  assert.equal(conv.state().submission, null);
+});
+
+test("C069: rapid duplicate validation emits only one submission", async () => {
+  const late = deferredResponse(), script = scripted([opened, turnReply(reply), () => late.promise,
+    () => { throw Error("duplicate command"); }]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("demande");
+  const first = conv.submit("motif"), second = conv.submit("motif");
+  await new Promise(resolve => setImmediate(resolve));
+  late.resolve(ok({ status: "MISSION_CREATED", mission_id: MID }));
+  assert.deepEqual(await Promise.all([first, second]), [true, false]);
+  assert.equal(script.calls.filter(c => c.path.endsWith("/submit")).length, 1);
+  assert.equal(await conv.submit("encore"), false);
+  assert.equal(script.calls.filter(c => c.path.endsWith("/submit")).length, 1);
+});
+
+test("C069: a late receipt lookup cannot overwrite a newer mission submission", async () => {
+  const late = deferredResponse(), newer = await nextMissionReply();
+  const script = scripted([opened, turnReply(reply), new Error("lost"), () => late.promise,
+    turnReply(newer), body => ok({ status: "MISSION_CREATED", mission_id: OTHER, command_key: body.command_key })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("première demande"); await conv.submit("motif");
+  const pending = conv.checkReceipt();
+  await conv.send("nouvelle demande"); await conv.submit("motif 2");
+  const before = conv.state().submission;
+  late.resolve(ok({ status: "FOUND", receipt: { status: "MISSION_CREATED", mission_id: MID } }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().submission, before);
+});
+
+test("C069: an old mission receipt lookup cannot downgrade a more recent FOUND", async () => {
+  const late = deferredResponse(), script = scripted([opened, turnReply(reply), new Error("lost"),
+    () => late.promise, ok({ status: "FOUND", receipt: { status: "MISSION_CREATED", mission_id: MID } })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("demande"); await conv.submit("motif");
+  const pending = conv.checkReceipt();
+  await conv.checkReceipt();
+  const before = conv.state().submission;
+  late.resolve(ok({ status: "NOT_FOUND", receipt: null }));
+  assert.equal(await pending, false);
+  assert.deepEqual(conv.state().submission, before);
+});
+
+test("C069: switching conversations ignores the previous conversation's late turn", async () => {
+  const late = deferredResponse(), cid = "c-" + "9".repeat(32);
+  const script = scripted([opened, () => late.promise, ok({ items: [], has_more: false, next_after: 0 })],
+    [{ conversation_id: cid, turn_count: 0 }]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.send("ancienne conversation");
+  await conv.resume(cid);
+  late.resolve(turnReply(reply));
+  assert.equal(await pending, false);
+  assert.equal(conv.state().conversationId, cid);
+  assert.equal(conv.state().items.length, 0);
+});
+
+test("C069: concurrent conversation resumes keep the last requested conversation", async () => {
+  const late = deferredResponse(), ca = "c-" + "8".repeat(32), cb = "c-" + "9".repeat(32);
+  const script = scripted([opened, () => late.promise, ok({ items: [], has_more: false, next_after: 0 })],
+    [{ conversation_id: ca, turn_count: 0 }, { conversation_id: cb, turn_count: 0 }]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.resume(ca);
+  await conv.resume(cb);
+  late.resolve(ok({ items: [], has_more: false, next_after: 0 }));
+  assert.equal(await pending, false);
+  assert.equal(conv.state().conversationId, cb);
+});
+
+test("C069: a malformed replacement key closes the previous session and drops its response", async () => {
+  const late = deferredResponse(), script = scripted([opened, () => late.promise]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.send("demande");
+  assert.equal(await conv.open("invalid"), false);
+  late.resolve(turnReply(reply));
+  assert.equal(await pending, false);
+  assert.equal(conv.state().phase, "closed");
+  assert.equal(conv.state().proposal, null);
+  assert.equal(conv.state().items.length, 0);
+});
+
+test("C069: out-of-order turn answers do not replace a newer proposal or erase its receipt", async () => {
+  const late = deferredResponse(), newer = await nextMissionReply();
+  const script = scripted([opened, () => late.promise, turnReply(newer),
+    ok({ status: "MISSION_CREATED", mission_id: OTHER })]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY);
+  const pending = conv.send("première demande");
+  await conv.send("deuxième demande"); await conv.submit("validation de la deuxième");
+  const before = conv.state().submission;
+  late.resolve(turnReply(reply)); await pending;
+  assert.equal(conv.state().proposal.version, 2);
+  assert.deepEqual(conv.state().submission, before);
+});
+
+test("C069: a receipt check during submission sends no concurrent lookup", async () => {
+  const late = deferredResponse(), script = scripted([opened, turnReply(reply), () => late.promise]);
+  const conv = C.createConversation({ transport: script.transport });
+  await conv.open(KEY); await conv.send("demande");
+  const pending = conv.submit("validation");
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(await conv.checkReceipt(), false);
+  late.resolve(ok({ status: "MISSION_CREATED", mission_id: MID })); await pending;
+  assert.equal(script.calls.filter(c => c.path.endsWith("/receipt")).length, 0);
+});

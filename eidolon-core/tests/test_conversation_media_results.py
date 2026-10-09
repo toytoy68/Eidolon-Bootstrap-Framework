@@ -197,7 +197,7 @@ class LinkAndRouteTests(Base):
                  artifact_root=str(self.root))
         with self.assertRaisesRegex(ContractError, "MEDIA_LINK_CONFLICT"):
             self.conv.link_media(owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(wrong),
-                                 artifact_root=str(self.root))
+                                 artifact_root=str(self.root), job_id=self.job(p)["id"])
         with self.assertRaisesRegex(ContractError, "MEDIA_JOB_UNAVAILABLE"):
             link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
                      job_dir=str(Path(self.tmp.name) / "absent"), artifact_root=str(self.root))
@@ -231,6 +231,81 @@ class LinkAndRouteTests(Base):
                                      {**headers, "Authorization": ["Bearer " + other]},
                                      json.dumps({"conversation_id": self.cid}).encode())
         self.assertEqual((status, refused["error"]), (404, "CONVERSATION_UNKNOWN"))
+
+
+    def test_equal_request_with_replaced_job_id_never_shows_foreign_observation(self):
+        from eidolon_core.conversation_media_results import link_job, views_for
+        from eidolon_core.media_agents import write_record
+        p = self.proposal("analyze")
+        job = self.job(p, state="RESULT_UNVERIFIED", result={"state": "RESULT_UNVERIFIED", "text": "original"})
+        folder = self.write_job(job)
+        link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                 job_dir=str(folder), artifact_root=str(self.root))
+        original = views_for(self.conv, owner_client_id="pc", conversation_id=self.cid)[0]
+        self.assertEqual((original["binding"], original["observation"]["text"]), ("MATCHED", "original"))
+        other = {**job, "id": "media-" + "9" * 32,
+                 "result": {"state": "RESULT_UNVERIFIED", "text": "foreign observation"}}
+        write_record(folder, other)
+        reopened = cs.ConversationStore(self.conv.store)
+        view = views_for(reopened, owner_client_id="pc", conversation_id=self.cid)[0]
+        self.assertEqual((view["binding"], view["job_id"]), ("WRONG_JOB", job["id"]))
+        self.assertEqual((view["outputs"], view["observation"], view["state_received"], view["source"]),
+                         ([], None, None, None))
+        with self.assertRaisesRegex(ContractError, "MEDIA_LINK_CONFLICT"):
+            link_job(reopened, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                     job_dir=str(folder), artifact_root=str(self.root))
+        write_record(folder, job)
+        self.assertEqual(views_for(reopened, owner_client_id="pc", conversation_id=self.cid)[0]["binding"],
+                         "MATCHED")
+
+    def test_equal_request_and_matching_foreign_collection_are_both_excluded(self):
+        from eidolon_core.conversation_media_results import link_job, views_for
+        from eidolon_core.media_agents import write_record
+        p = self.proposal()
+        job = self.job(p); collection_id = "mc-" + "2" * 32
+        output = self.output(job["id"], collection_id)
+        folder = self.write_job(job)
+        coll = self.write_collection(self.collection(job, [output]))
+        link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                 job_dir=str(folder), artifact_root=str(self.root), collection_dir=str(coll))
+        other = {**job, "id": "media-" + "9" * 32}
+        foreign = self.output(other["id"], collection_id, index=1, name="foreign.png")
+        write_record(folder, other); write_record(coll, self.collection(other, [foreign]))
+        view = views_for(self.conv, owner_client_id="pc", conversation_id=self.cid)[0]
+        self.assertEqual((view["binding"], view["outputs"], view["collection"]), ("WRONG_JOB", [], None))
+        self.assertNotIn("foreign.png", json.dumps(view))
+
+    def test_v4_link_migration_preserves_data_without_adopting_the_current_job(self):
+        import sqlite3
+        from eidolon_core import conversation_storage as storage
+        from eidolon_core.conversation_media_results import link_job, views_for
+        p = self.proposal(); job = self.job(p); folder = self.write_job(job)
+        link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                 job_dir=str(folder), artifact_root=str(self.root))
+        with sqlite3.connect(self.conv.path) as db:
+            row = db.execute("SELECT conversation_id, proposal_sha256, owner_client_id, proposal, "
+                             "job_dir, collection_dir, artifact_root, linked_at FROM media_links").fetchone()
+            db.execute("DROP TABLE media_links")
+            db.execute(cs.MEDIA_LINKS_TABLE)                # exact v4 layout, no pinned id
+            db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?)", row)
+            db.execute("UPDATE meta SET value=? WHERE key='schema'", (cs.SCHEMAS[4],))
+            db.execute("PRAGMA user_version=4")
+        with self.assertRaisesRegex(ContractError, "MIGRATION_REQUIRED"):
+            cs.ConversationStore(self.conv.store)
+        saved = Path(self.tmp.name) / "v4-backup.sqlite3"
+        migrated = storage.migrate_with_backup(self.conv.store, saved)
+        self.assertEqual((migrated["from_version"], migrated["version"]), (4, cs.VERSION))
+        self.assertEqual(storage.inspect(saved)["rows"]["media_links"], 1)
+        reopened = cs.ConversationStore(self.conv.store)
+        link = reopened.media_links(owner_client_id="pc", conversation_id=self.cid)[0]
+        self.assertIsNone(link["job_id"])
+        self.assertEqual(link["proposal"], p)
+        view = views_for(reopened, owner_client_id="pc", conversation_id=self.cid)[0]
+        self.assertEqual((view["binding"], view["job_id"], view["outputs"], view["observation"]),
+                         ("LEGACY_UNVERIFIABLE", None, [], None))
+        with self.assertRaisesRegex(ContractError, "MEDIA_LINK_CONFLICT"):
+            link_job(reopened, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                     job_dir=str(folder), artifact_root=str(self.root))
 
 
 if __name__ == "__main__":

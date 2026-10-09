@@ -89,6 +89,14 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
+Codex/GPT C-068/C-069 — livraison de la reprise du 09/10 après 17 h 37.
+Trois retours C122 et G125 implémentés ; dix cas supplémentaires de courses
+conversation/soumission traités. 69 cas V8 réussis, 13 nouveaux tests Python
+préparés mais non exécutés (environnement système indisponible). Schéma v5 :
+migration explicite, liens historiques non requalifiés. Voir
+[état actuel](docs/PROJECT-STATUS-2026-10-09.md) et
+[preuve/limites](docs/validation/2026-10-09/codex-takeover-c068/README.md).
+
 Codex/GPT C-068 — 09/10/2026, reprise autorisée par toytoy à 17 h 37 Europe/Paris.
 Claude arrêté (limite rapportée par toytoy). Base 8d50015 ; reprise des trois
 retours C122 et G125 selon faisabilité. Périmètre et limites d'exécution dans

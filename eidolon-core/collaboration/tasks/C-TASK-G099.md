@@ -12,3 +12,9 @@ Conserver G084–G089 en priorité, puis respecter les dépendances de G090–G1
 Les autres tâches G080–G083 restent attribuées. Lire la tête actuelle et coordonner
 les fichiers partagés. Publier code, tests exécutés et limites séparément des
 résultats rapportés. Aucun main, déploiement ou changement Memory Engine.
+
+## Reprise Codex du 09/10 après 17 h 37 — C-068/C-069
+
+Toytoy signale Claude arrêté et autorise Codex à poursuivre.
+G099-R1 : media_links ajoutée au digest logique et aux comptages. Schéma v5 pour job_id figé ; sauvegarde et migration explicites. Tests Python à exécuter.
+[Preuves et limites](../../docs/validation/2026-10-09/codex-takeover-c068/README.md).

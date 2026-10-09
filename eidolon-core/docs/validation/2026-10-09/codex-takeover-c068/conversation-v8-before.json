@@ -1,0 +1,126 @@
+{
+  "runtime": "V8 isolate with minimal node:test/assert/fs/path shims; JS SHA-256; deterministic test-only random IDs; no Node/DOM/HTTP server",
+  "passed": 16,
+  "failed": 11,
+  "results": [
+    {
+      "name": "the canonical digest matches Core's published proposal digest",
+      "status": "PASS"
+    },
+    {
+      "name": "a malformed key is refused locally and the key never appears in the state",
+      "status": "PASS"
+    },
+    {
+      "name": "read token refused by the server keeps the conversation closed",
+      "status": "PASS"
+    },
+    {
+      "name": "a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal",
+      "status": "PASS"
+    },
+    {
+      "name": "submission sends the locally verified digest and identity; a tampered proposal is never sent",
+      "status": "PASS"
+    },
+    {
+      "name": "an uncertain submission is resolved by its receipt, never by a new key",
+      "status": "PASS"
+    },
+    {
+      "name": "answers that arrive after closing are ignored",
+      "status": "PASS"
+    },
+    {
+      "name": "mission stages: created, running, result, unknown effect, never invented",
+      "status": "PASS"
+    },
+    {
+      "name": "G091: a partial context is said in words; a complete one says nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "G098: each reply names its profile and model; a change is said; nothing is invented",
+      "status": "PASS"
+    },
+    {
+      "name": "G101: media results are plain text lines; wrong job, partial, copied reference, HTML",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: finished missions and media jobs are said, nothing is offered",
+      "status": "PASS"
+    },
+    {
+      "name": "G101: media results are read on demand, errors are said, closing forgets them",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: a late cancellation of A cannot confirm the newly selected B",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: a late error cannot erase a new review, even for the same mission",
+      "status": "FAIL",
+      "error": "Error: expected {\"status\":\"review\",\"proposal\":{\"protocol\":\"eidolon-cancel-proposal/1\",\"store_id\":\"s-11111111111111111111111111111111\",\"conversation_id\":\"c-22222222222222222222222222222222\",\"client_id\":\"pc-exemple\",\"mission_id\":\"m-44444444444444444444444444444444\",\"mission_request_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"link_sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"action\":\"REQUEST_MISSION_STOP\",\"engine_interrupt\":\"NEVER\",\"requires_human_submission\":true,\"authorizes_execution\":false,\"success_claim\":\"ONLY_FROM_MISSION_STATUS_CANCELLED\"},\"sha\":\"18e5ea684b91c7b969d08d3adbee72fc7f306a56eef11a6e256336b859e86832\",\"missionStatus\":\"RUNNING\",\"candidates\":[],\"code\":null,\"key\":null,\"receipt\":null,\"stage\":null,\"error\":null}, got {\"status\":\"uncertain\",\"proposal\":{\"protocol\":\"eidolon-cancel-proposal/1\",\"store_id\":\"s-11111111111111111111111111111111\",\"conversation_id\":\"c-22222222222222222222222222222222\",\"client_id\":\"pc-exemple\",\"mission_id\":\"m-44444444444444444444444444444444\",\"mission_request_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"link_sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"action\":\"REQUEST_MISSION_STOP\",\"engine_interrupt\":\"NEVER\",\"requires_human_submission\":true,\"authorizes_execution\":false,\"success_claim\":\"ONLY_FROM_MISSION_STATUS_CANCELLED\"},\"sha\":\"18e5ea684b91c7b969d08d3adbee72fc7f306a56eef11a6e256336b859e86832\",\"missionStatus\":\"RUNNING\",\"candidates\":[],\"code\":null,\"key\":null,\"receipt\":null,\"stage\":null,\"error\":\"STATE_BUSY\"}"
+    },
+    {
+      "name": "G124-R1: cancellation proposals arriving out of order keep the latest selection",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: a hashed proposal for another requested mission is refused",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: receipt lookup from A cannot rewrite a review of B",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: receipt queries cannot race the initial submission",
+      "status": "FAIL",
+      "error": "Error: expected 0, got 1"
+    },
+    {
+      "name": "G124-R1: older NOT_FOUND cannot undo a newer confirmed receipt",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: unknown receipt status and disappearance of a known receipt never permit resend",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    },
+    {
+      "name": "G124-R1: an explicit resend keeps the entire original command including its reason",
+      "status": "FAIL",
+      "error": "Error: expected {\"command_key\":\"cancel-2700000000000000\",\"conversation_id\":\"c-22222222222222222222222222222222\",\"mission_id\":\"m-44444444444444444444444444444444\",\"proposal_sha256\":\"18e5ea684b91c7b969d08d3adbee72fc7f306a56eef11a6e256336b859e86832\",\"reason\":\"motif original\"}, got {\"command_key\":\"cancel-2700000000000000\",\"conversation_id\":\"c-22222222222222222222222222222222\",\"mission_id\":\"m-44444444444444444444444444444444\",\"proposal_sha256\":\"18e5ea684b91c7b969d08d3adbee72fc7f306a56eef11a6e256336b859e86832\",\"reason\":\"motif changé pendant la coupure\"}"
+    },
+    {
+      "name": "G124-R1: closing and resuming discard outstanding cancellation responses",
+      "status": "FAIL",
+      "error": "TypeError: Cannot set properties of null (setting 'status')"
+    },
+    {
+      "name": "G123: an older media refresh cannot replace the latest view",
+      "status": "FAIL",
+      "error": "Error: expected false, got true"
+    }
+  ]
+}

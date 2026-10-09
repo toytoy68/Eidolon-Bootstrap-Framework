@@ -105,7 +105,7 @@ ou une référence écrits par le modèle ou envoyés par le navigateur.
 | Contrôle | Effet |
 | --- | --- |
 | seul le propriétaire de la conversation lit le résultat | sinon `MEDIA_RESULT_UNKNOWN`, même réponse qu'une absence |
-| le travail a la requête préparée **identique** à la proposition soumise | sinon `WRONG_JOB` : rien n'est listé |
+| le travail porte l'identifiant figé dans la liaison v5 et la requête préparée **identique** à la proposition soumise | sinon `WRONG_JOB` : rien n'est listé |
 | la collecte porte ce travail ; chaque sortie a la provenance de ce travail et de cette collecte | sinon exclue et comptée (`excluded_outputs`) : une référence copiée n'est jamais affichée |
 | chaque fichier est relu par le magasin | `hash_verified`, `modified`, `unavailable` ou `busy` ; le contenu reste **non vérifié** |
 | collecte interrompue | « collecte partielle : n sur m », fichiers déjà importés conservés |
@@ -118,8 +118,11 @@ bouton. L'opérateur passe par `eidolon-media artifact-export`.
 
 ### Raccordement à la page
 
-- **Lien proposition → travail** : dépôt des conversations, schéma v4, table
-  `media_links`. Les chemins restent sur le serveur.
+- **Lien proposition → travail** : dépôt des conversations, schéma v5, table
+  `media_links`. L'identifiant exact est figé avec les chemins privés.
+  Une liaison v4 migrée n'adopte aucun identifiant : `LEGACY_UNVERIFIABLE`,
+  sans observation ni fichier affiché. Voir la migration dans
+  [CONVERSATION-STORE.md](CONVERSATION-STORE.md).
   - Commande opérateur, en attendant le worker de Codex :
 
     ```
@@ -133,7 +136,9 @@ bouton. L'opérateur passe par `eidolon-media artifact-export`.
     déjà lié à un autre travail (`MEDIA_LINK_CONFLICT`).
 - **Route** `media_results`. Les enregistrements sont relus à chaque appel :
   - un fichier modifié depuis apparaît « modifié » ;
-  - un travail disparu apparaît « illisible ».
+  - un travail disparu apparaît « illisible » ;
+  - un autre identifiant au même endroit, même avec la même requête, donne
+    `WRONG_JOB`, sans exposer son état, son texte ou sa collecte.
 - **Page** : bloc « Résultats image et vidéo », bouton « Afficher les
   résultats ». Le contenu est en texte seulement, sans bouton d'ouverture.
 - **Tests** :

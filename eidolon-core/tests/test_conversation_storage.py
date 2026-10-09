@@ -200,5 +200,86 @@ class CommandTests(Base):
         self.assertEqual((self.core(), self.missions()), (self.core_before, missions))
 
 
+
+class MediaLinkStorageTests(unittest.TestCase):
+    """The media association is part of the backup's logical evidence in both v4 and v5."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
+        self.base = Path(self.tmp.name)
+        self.store = Store(self.base / "state")
+        self.conv = cs.ConversationStore(self.store, create=True)
+        self.path = self.conv.path
+        self.cid = self.conv.open(client_id="pc", client_key="media")["conversation_id"]
+        with sqlite3.connect(self.path) as db:
+            db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?,?)",
+                       (self.cid, "a" * 64, "pc", "{}", "/private/job", "/private/collection",
+                        "/private/artifacts", "2026-10-09T00:00:00Z", "media-" + "1" * 32))
+
+    def as_v4(self):
+        with sqlite3.connect(self.path) as db:
+            row = db.execute("SELECT conversation_id, proposal_sha256, owner_client_id, proposal, "
+                             "job_dir, collection_dir, artifact_root, linked_at FROM media_links").fetchone()
+            db.execute("DROP TABLE media_links"); db.execute(cs.MEDIA_LINKS_TABLE)
+            db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?)", row)
+            db.execute("UPDATE meta SET value=? WHERE key='schema'", (cs.SCHEMAS[4],))
+            db.execute("PRAGMA user_version=4")
+
+    def test_media_link_insert_changes_digest_and_is_counted(self):
+        before = st.inspect(self.path)
+        self.assertEqual(before["rows"]["media_links"], 1)
+        with sqlite3.connect(self.path) as db:
+            db.execute("DELETE FROM media_links")
+        after = st.inspect(self.path)
+        self.assertEqual(after["rows"]["media_links"], 0)
+        self.assertNotEqual(before["logical_sha256"], after["logical_sha256"])
+
+    def test_every_link_column_changes_digest_and_backup_matches_before_each_edit(self):
+        for index, column in enumerate(("conversation_id", "proposal_sha256", "owner_client_id", "proposal",
+                                       "job_dir", "collection_dir", "artifact_root", "linked_at", "job_id")):
+            with self.subTest(column=column):
+                before = st.inspect(self.path)
+                saved = st.backup(self.path, self.base / ("backup-%d.sqlite3" % index))
+                self.assertEqual(saved["logical_sha256"], before["logical_sha256"])
+                with sqlite3.connect(self.path) as db:
+                    db.execute(f"UPDATE media_links SET {column}=?", ("changed-" + column,))
+                self.assertNotEqual(st.inspect(self.path)["logical_sha256"], before["logical_sha256"])
+
+    def test_v4_backup_contains_links_and_stale_link_blocks_migration(self):
+        self.as_v4()
+        original = st.backup
+
+        def backup_then_change_link(source, output):
+            saved = original(source, output)
+            with sqlite3.connect(self.path) as db:
+                db.execute("UPDATE media_links SET job_dir='/private/replacement'")
+            return saved
+
+        with patch.object(st, "backup", backup_then_change_link):
+            with self.assertRaisesRegex(ContractError, "BACKUP_STALE"):
+                st.migrate_with_backup(self.store, self.base / "v4.sqlite3")
+        report = st.inspect(self.path)
+        self.assertEqual((report["version"], report["rows"]["media_links"]), (4, 1))
+        saved = st.verify_backup(self.base / "v4.sqlite3")
+        self.assertEqual((saved["version"], saved["rows"]["media_links"]), (4, 1))
+        self.assertNotEqual(saved["logical_sha256"], report["logical_sha256"])
+
+    def test_migration_v4_interruption_leaves_old_links_unmodified(self):
+        self.as_v4()
+        before = st.inspect(self.path)
+
+        def crash(name):
+            if name == "MIGRATION_STEP_4":
+                raise Crash()
+
+        with self.assertRaises(Crash):
+            st.migrate_with_backup(self.store, self.base / "before-crash.sqlite3", checkpoint=crash)
+        self.assertEqual(st.inspect(self.path), before)
+        migrated = st.migrate_with_backup(self.store, self.base / "retry.sqlite3")
+        self.assertEqual((migrated["from_version"], migrated["version"]), (4, 5))
+        with sqlite3.connect(self.path) as db:
+            self.assertEqual(db.execute("SELECT job_id FROM media_links").fetchall(), [(None,)])
+
+
 if __name__ == "__main__":
     unittest.main()

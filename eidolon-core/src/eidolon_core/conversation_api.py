@@ -31,6 +31,7 @@ from .commands import lookup_receipt
 from .contracts import ContractError
 from . import conversation_storage
 from .conversation_store import ConversationStore
+from .sqlite_errors import is_busy
 from .dialogue import Dialogue
 
 PROTOCOL = "eidolon-conversation-api/1"
@@ -115,7 +116,9 @@ class ConversationAPI:
             if code in ("CONVERSATION_STORE_BUSY", "SERVER_STOPPING", "CONVERSATION_STORE_MIGRATION_REQUIRED"):
                 return 503, self._error(code)
             return 503, self._error("CONVERSATION_UNAVAILABLE")
-        except (KeyError, sqlite3.Error, OSError, ValueError, TypeError):
+        except sqlite3.Error as exc:
+            return 503, self._error("STATE_BUSY" if is_busy(exc) else "CONVERSATION_UNAVAILABLE")
+        except (KeyError, OSError, ValueError, TypeError):
             return 503, self._error("CONVERSATION_UNAVAILABLE")
 
     def close(self):
