@@ -77,6 +77,18 @@ def render_job(record):
              message("INFO", "Dernière étape enregistrée : " + (PHASES[phase] if phase else "non renseignée ou non reconnue"))]
     if state == "RESULT_UNVERIFIED":
         lines.extend(_analysis_coverage(record, key))
+    reservation = record.get("resource_reservation")
+    if reservation is not None:
+        lines.append(section("Réservation enregistrée"))
+        if (type(reservation) is dict and type(reservation.get("pool_id")) is str
+                and re.fullmatch(r"mrp-[0-9a-f]{32}", reservation["pool_id"])
+                and type(reservation.get("lease_id")) is str
+                and re.fullmatch(r"mrl-[0-9a-f]{32}", reservation["lease_id"])):
+            lines.extend([message("INFO", "Groupe : " + reservation["pool_id"]),
+                          message("INFO", "Réservation : " + reservation["lease_id"])])
+        else:
+            lines.append(message("ATTENTION", "Identifiants de réservation non reconnus."))
+        lines.append(message("INFO", "Ce journal ne donne pas l'état actuel du groupe ; consulter resource-inspect. Aucune libération automatique."))
     backend = record.get("backend")
     receipt = record.get("result") if state == "QUEUED" else (
         record.get("phase_evidence") if state in {"INTENT", "REVIEW_REQUIRED"} and phase == "QUEUE_ACKNOWLEDGED" else None)

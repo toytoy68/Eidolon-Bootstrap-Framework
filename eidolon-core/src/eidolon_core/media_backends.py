@@ -90,7 +90,7 @@ def json_http(method, url, payload, timeout=90):
 class LocalMediaBackend:
     def __init__(self, config, *, transport=None, raw_transport=None):
         if type(config) is not dict or set(config) - {
-                "ollama_endpoint", "vision_model", "comfy_endpoint", "workflows", "staged_sources", "ffmpeg", "artifact_store", "source_transfer"}:
+                "ollama_endpoint", "vision_model", "comfy_endpoint", "workflows", "staged_sources", "ffmpeg", "artifact_store", "source_transfer", "resource_pool"}:
             raise MediaError("INVALID_MEDIA_CONFIG")
         if config.get("source_transfer", "verify-staged") not in ("verify-staged", "upload-verified"):
             raise MediaError("INVALID_SOURCE_TRANSFER")

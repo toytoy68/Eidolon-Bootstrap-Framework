@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-060
+# Agents natifs Image et Vidéo — C-047 à C-061
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -350,6 +350,76 @@ l'export. Le résultat est une copie indépendante en mode 0600. Une coupure peu
 laisser un temporaire d'export dans ce répertoire, ou un résultat complet sans
 accusé final ; inspecter les fichiers et leurs empreintes avant toute nouvelle
 demande. Aucun nettoyage ou écrasement automatique n'est effectué.
+
+## Réservation durable entre travaux média — C-061
+
+Lorsque ComfyUI et Ollama partagent le même GPU, plusieurs demandes peuvent
+se concurrencer. Le paquet fournit un **groupe à une place**, choisi explicitement
+par l'opérateur. Tous les fichiers de configuration devant partager cette place
+référencent le même groupe. Sans `resource_pool`, le comportement précédent
+reste inchangé : aucune coordination de concurrence n'est activée.
+
+Créer un dossier **nouveau**, privé, dans un parent existant, privé et de confiance :
+
+```sh
+eidolon-media resource-init --root /chemin/prive/reservation-media
+```
+
+Conserver le `pool_id` retourné (`mrp-` suivi de 32 caractères hexadécimaux) et
+ajouter à `moteurs.json` :
+
+```json
+{"resource_pool":{"root":"/chemin/prive/reservation-media","pool_id":"mrp-IDENTIFIANT_RETOURNE"}}
+```
+
+Cet extrait est à fusionner avec la configuration existante ; l'identifiant est
+un emplacement à remplacer, pas une valeur valide. Aucun moteur, modèle ou GPU
+n'est détecté automatiquement. Le groupe peut couvrir ComfyUI et Ollama ensemble
+si les deux configurations le désignent. Il ne couvre **ni le dialogue Core, ni
+les clients externes, ni les lancements utilisant une autre configuration**.
+
+`run` valide la demande et les sources, puis réserve avant le premier appel
+moteur, transfert ou décodage FFmpeg. Une place occupée donne `RESOURCE_RESERVED`,
+sans créer le second travail ni appeler le moteur. Les accès concurrents au
+registre sont non bloquants (`RESOURCE_POOL_BUSY` en cas de contention) ; aucun
+renvoi automatique. La réservation est fsyncée avant tout effet externe. Le
+journal du travail contient son identifiant `mrl-…`, celui du groupe et la date.
+
+**Aucune libération automatique**, y compris après une analyse terminée. Un reçu
+ComfyUI, un délai écoulé, la disparition du PID, l'arrêt du client ou l'absence
+d'historique ne prouvent pas que le moteur est au repos. Une réservation peut
+survivre à une coupure avant même la création de `job.json` : elle reste visible
+dans le groupe. Ne pas effacer le registre ni créer un autre groupe pour passer
+outre. Vérifier le moteur et les autres clients qui l'utilisent.
+
+```sh
+eidolon-media resource-inspect --root /chemin/prive/reservation-media --pool-id mrp-IDENTIFIANT_RETOURNE --format human
+```
+
+Après vérification opérateur que les travaux sont effectivement arrêtés/terminés :
+
+```sh
+eidolon-media resource-release --root /chemin/prive/reservation-media --pool-id mrp-IDENTIFIANT_RETOURNE --lease-id mrl-RESERVATION_OBSERVEE --reviewed-idle --reason "Travail terminé et moteur vérifié au repos"
+```
+
+La commande refuse une réservation ancienne ou différente. Elle conserve la
+**dernière** libération (date et motif borné), sans effacer le travail, annuler le
+moteur ni relancer une demande. Le motif est une déclaration de l'opérateur,
+jamais une preuve mesurée par Core. Le registre reste borné ; les journaux de
+travaux conservent les identifiants de réservations antérieures.
+
+`config-check` et `preflight` affichent l'état observé du groupe sans réserver.
+`CONFIGURED_SCOPE` et `LOCAL_INPUTS_VALID` peuvent coexister avec `RESERVED` : la
+configuration et les entrées sont valides, mais un lancement serait bloqué.
+`inspect --format human` montre la réservation enregistrée dans le travail et
+renvoie à `resource-inspect` pour l'état actuel. `poll` et `collect` ne libèrent
+rien. Aucune inspection n'écrit dans le groupe ou le journal.
+
+Ce garde contrôle **une admission coopérative**, pas des mégaoctets de VRAM.
+Il ne garantit ni mémoire suffisante, ni déchargement du modèle, ni disponibilité
+matérielle, ni réussite du contenu. Son stockage POSIX privé refuse liens,
+fichiers non réguliers, identités étrangères et remplacement observé en cours
+d'instance ; il ne défend pas contre un processus hostile du même utilisateur.
 
 ## États, résultats et limites
 

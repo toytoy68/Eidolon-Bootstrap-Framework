@@ -1,0 +1,13 @@
+======================================================================
+ERROR: test_inspection_config_and_human_output_have_no_effects (tests.test_media_resources.ResourceTests.test_inspection_config_and_human_output_have_no_effects)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_media_resources.py", line 233, in test_inspection_config_and_human_output_have_no_effects
+    self.assertEqual(pre["resource_pool"]["state"], "RESERVED")
+                     ~~~^^^^^^^^^^^^^^^^^
+KeyError: 'resource_pool'
+
+----------------------------------------------------------------------
+Ran 122 tests in 6.510s
+
+FAILED (errors=1)

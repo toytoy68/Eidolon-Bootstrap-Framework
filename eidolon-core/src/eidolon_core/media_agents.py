@@ -184,11 +184,21 @@ def execute(request, config, directory, *, backend=None):
     source, evidence = read_source(req, config)
     plan = runner.plan(req, evidence)  # reject missing models/workflows BEFORE any job/network
     target = Path(directory)
+    # A reservation outlives this caller, including a crash before job publication.
+    # A configured pool is never inferred from the engine address or created here.
+    from .media_resources import configured
+    pool = configured(config)
+    if target.exists() or target.is_symlink():
+        raise FileExistsError(str(target))
+    job_id = "media-" + uuid.uuid4().hex
+    reservation = pool.reserve(job_id, req["agent"] + "." + req["operation"]) if pool else None
     target.mkdir(mode=0o700, parents=False, exist_ok=False)
-    record = {"schema": "media-job/1", "id": "media-" + uuid.uuid4().hex,
+    record = {"schema": "media-job/1", "id": job_id,
               "agent": req["agent"], "operation": req["operation"], "state": "INTENT",
               "request": req, "source_evidence": evidence, "backend": plan,
               "core_mission": None, "verified": False, "automatic_retry": False}
+    if reservation is not None:
+        record["resource_reservation"] = reservation
     write_record(target, record)
     def progress(stage, info):
         if stage not in {"SOURCE_UPLOAD_STARTED", "SOURCE_UPLOAD_ACKNOWLEDGED", "SOURCE_VERIFYING", "SOURCE_VERIFIED",

@@ -18,12 +18,26 @@ from .media_preflight import preflight, render_preflight
 from .media_setup import check_configuration, render_configuration, render_setup_error
 from .media_status import render_job
 from .media_workflows import OPERATIONS
+from .media_resources import ResourcePool, initialize as initialize_pool, render_pool
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — agents Image et Vidéo")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("agents", help="list installed agents; no engine contact")
+    p = sub.add_parser("resource-init", help="create a NEW private group with one durable media slot")
+    p.add_argument("--root", required=True)
+    for name in ("resource-inspect", "resource-release"):
+        p = sub.add_parser(name, help="inspect a reservation or explicitly release after engine review")
+        p.add_argument("--root", required=True)
+        p.add_argument("--pool-id", required=True)
+        if name == "resource-inspect":
+            p.add_argument("--format", choices=("json", "human"), default="json")
+        else:
+            p.add_argument("--lease-id", required=True)
+            p.add_argument("--reviewed-idle", action="store_true", required=True,
+                           help="operator has checked the engine is idle; never inferred from process exit")
+            p.add_argument("--reason", required=True)
     p = sub.add_parser("config-check", help="inspect six operation configurations offline, without a source or engine")
     p.add_argument("--config", required=True)
     p.add_argument("--require", choices=OPERATIONS, action="append", help="required operation; repeatable, default: all six")
@@ -75,6 +89,12 @@ def main(argv=None):
     try:
         if args.command == "agents":
             result = catalog()
+        elif args.command == "resource-init":
+            result = initialize_pool(args.root)
+        elif args.command in {"resource-inspect", "resource-release"}:
+            pool = ResourcePool(args.root, args.pool_id)
+            result = (pool.inspect() if args.command == "resource-inspect" else
+                      pool.release(args.lease_id, reviewed_idle=args.reviewed_idle, reason=args.reason))
         elif args.command == "config-check":
             result = check_configuration(load_json(args.config), require=args.require)
         elif args.command == "preflight":
@@ -112,7 +132,9 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        if args.command == "inspect" and args.format == "human":
+        if args.command == "resource-inspect" and args.format == "human":
+            print(render_pool(result))
+        elif args.command == "inspect" and args.format == "human":
             print(render_job(result))
         elif args.command == "config-check" and args.format == "human":
             print(render_configuration(result))

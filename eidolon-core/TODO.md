@@ -900,3 +900,22 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
   installation distincte, 68 modules identiques et journal/JSON inchangés.
 
 [Preuves C-060](docs/validation/2026-10-09/codex-c060/README.md).
+
+
+## C-061 — Réservation durable des agents média (09/10/2026)
+
+- [x] Groupe privé à une place, opt-in par resource_pool ; identité et verrou
+  vérifiés, publication atomique et fsync avant appel moteur ou décodage.
+- [x] Coupure, réponse perdue et mise en file ne libèrent jamais la réservation.
+  Libération opérateur de l'identifiant exact après revue, motif et dernière trace.
+- [x] CLI init/inspect/release, état dans config-check/preflight, réservation dans
+  le journal humain ; lectures sans moteur ni écriture, fonctionnement historique
+  conservé sans configuration du garde.
+- [x] 11 tests dédiés : huit processus concurrents, coupure réelle du processus,
+  panne disque, identités, liens, libération périmée et intégration génération/analyse.
+  122 tests média passent ; 1 177 complets sur première version, finition couverte
+  par la dernière passe média. Détails dans le bilan daté.
+- [ ] Arbitrage dialogue/GPU commun et mesure de VRAM restent à faire.
+
+C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confiés
+à Claude avec reproducteur. Raccordement G088 dans http_api.py confié à Claude.

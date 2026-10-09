@@ -14,6 +14,11 @@ indique les réglages manquants pour les six opérations ;
 étapes enregistrées et les suites de revue après interruption. Aucun appel moteur
 par ces deux contrôles. [Livraison et preuves du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953/README.md).
 
+Un groupe de réservation facultatif empêche les travaux média configurés ensemble
+de démarrer en concurrence. Il persiste après une coupure et réclame une libération
+opérateur après vérification du moteur. Voir `resource-init`, `resource-inspect`
+et `resource-release` dans le [guide des agents média](docs/MEDIA-AGENTS.md).
+
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 
 [État fonctionnel et avancement du 08/10](docs/PROJECT-STATUS-2026-10-08.md).

@@ -93,6 +93,9 @@ def preflight(request, config, *, probe_local=False, transport=None):
     req = prepare(request)
     configuration_sha = fingerprint(config)
     runner = LocalMediaBackend(config)
+    from .media_resources import configured
+    pool = configured(config)
+    resources = pool.inspect() if pool else {"state": "NOT_CONFIGURED"}
     source, evidence = read_source(req, config)
     del source  # no content survives in the diagnostic or reaches a probe
     plan = runner.plan(req, evidence)
@@ -107,6 +110,7 @@ def preflight(request, config, *, probe_local=False, transport=None):
               "agent": req["agent"], "operation": req["operation"],
               "request_sha256": fingerprint(req), "configuration_sha256": configuration_sha,
               "source_evidence": evidence, "diagnostic_backend": plan,
+              "resource_pool": resources,
               "future_run_calls": calls, "probe_requested": probe_local,
               "probe_calls": [], "checks": [], "submitted": False,
               "execution_authorized": False, "plan_reusable": False,
@@ -156,6 +160,11 @@ def render_preflight(report):
              message("INFO", "Diagnostic local : aucune génération, aucun upload, aucun téléchargement."),
              "Agent / opération : " + safe_text(report["agent"] + " / " + report["operation"]),
              section("Contrôles"), message("OK", "Demande, configuration sélectionnée et source éventuelle contrôlées localement.")]
+    resources = report["resource_pool"]["state"]
+    lines.append(message("ATTENTION" if resources != "AVAILABLE" else "INFO",
+                         "Réservation média : " + resources + " ; aucune place réservée par ce diagnostic."))
+    if resources == "RESERVED":
+        lines.append(message("INFO", "Un lancement serait bloqué ; vérifier resource-inspect et le moteur avant libération."))
     if report["probe_requested"]:
         lines.append(message("INFO", "Sondes de métadonnées tentées : " + str(len(report["probe_calls"]))))
         for check in report["checks"]:

@@ -7,8 +7,8 @@
 # ==========================================================
 """Offline installation aid, not an engine health check or execution permission.
 
-Only configured FFmpeg file metadata and an optional artifact-store marker are
-read. No source, inventory payload, socket, subprocess, job or model is opened.
+Only configured FFmpeg file metadata, an optional artifact-store marker and
+an optional resource-pool register are read. No source, inventory payload, socket, subprocess, job or model is opened.
 CONFIGURED_SCOPE means structural configuration for the requested operations.
 The per-request preflight and execution still validate their actual inputs.
 """
@@ -20,6 +20,7 @@ from .media_artifacts import ArtifactStore
 from .media_backends import LocalMediaBackend, endpoint, ffmpeg_executable, vision_model
 from .media_preflight import fingerprint
 from .media_workflows import OPERATIONS, WORKFLOW_OPERATIONS, definition
+from .media_resources import configured
 from .presentation import header, message, section
 
 HINTS = {
@@ -43,6 +44,11 @@ HINTS = {
     "ARTIFACT_STORE_MISMATCH": "Utiliser l'identité du magasin choisi ; ne pas remplacer son marqueur.",
     "ARTIFACT_PERMISSIONS": "Vérifier propriétaire, permissions privées et absence de liens du magasin choisi.",
     "WORKFLOW_TOO_LARGE": "Réduire le modèle de workflow sous 500 000 octets ; la demande réelle sera revérifiée.",
+    "INVALID_RESOURCE_CONFIG": "Vérifier resource_pool : root et pool_id retournés par resource-init.",
+    "RESOURCE_POOL_MISMATCH": "Utiliser le groupe de réservation choisi et son identité exacte.",
+    "RESOURCE_PERMISSIONS": "Vérifier les droits privés et l'absence de liens du groupe de réservation.",
+    "RESOURCE_RESERVED": "Consulter resource-inspect puis vérifier le moteur avant toute libération explicite.",
+    "RESOURCE_POOL_BUSY": "Le registre est occupé par un autre accès ; aucune inférence lancée par ce contrôle.",
 }
 DEFAULT_HINT = "Vérifier la configuration et les fichiers choisis avec le guide MEDIA-AGENTS ; aucune réparation automatique."
 
@@ -100,6 +106,9 @@ def check_configuration(config, *, require=None):
             or ".." in name or name == "." for sha, name in staged.items())):
         common.append(issue("INVALID_STAGED_SOURCES"))
     artifact = _attempt(lambda: _artifact(config), common)
+    pool = _attempt(lambda: configured(config), common)
+    resource = (_attempt(pool.inspect, common) if pool is not None else
+                {"state": "INVALID" if "resource_pool" in config else "NOT_CONFIGURED"})
     rows = []
     for key in OPERATIONS:
         agent, operation = key.split(".")
@@ -142,6 +151,7 @@ def check_configuration(config, *, require=None):
             "configuration_sha256": config_sha, "required_operations": required,
             "operations": rows, "issues": common,
             "artifact_store": artifact or {"state": "INVALID", "contents_checked": False},
+            "resource_pool": resource or {"state": "INVALID"},
             "staged_source_count": len(staged) if type(staged) is dict else None,
             "staged_sources_content_checked": False, "server_contacted": False,
             "source_content_read": False, "process_started": False, "job_created": False,
@@ -164,6 +174,11 @@ def render_configuration(report):
     lines.extend(message("ERREUR", e["code"] + " — " + e["action"]) for e in report["issues"])
     artifact = report["artifact_store"]
     lines.append(message("INFO", "Magasin d'artefacts : " + artifact["state"] + " ; contenus et capacité non contrôlés."))
+    resource = report["resource_pool"]["state"]
+    lines.append(message("ATTENTION" if resource in {"RESERVED", "INVALID", "NOT_CONFIGURED"} else "INFO",
+                         "Réservation média : " + resource + " ; aucune mesure GPU, aucun arbitrage du dialogue."))
+    if resource == "RESERVED":
+        lines.append(message("INFO", "Configuration lisible, mais démarrage bloqué : vérifier resource-inspect et le moteur avant libération."))
     lines.extend([section("Étape suivante"),
                   message("INFO", "Préparer une demande, puis utiliser eidolon-media preflight pour ses entrées réelles."),
                   message("ATTENTION", "La présence des modèles, nœuds et GPU n'est pas vérifiée. Ce diagnostic n'autorise aucune exécution.")])

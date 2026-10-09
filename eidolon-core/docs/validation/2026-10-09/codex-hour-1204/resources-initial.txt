@@ -1,0 +1,16 @@
+test_abrupt_process_exit_cannot_release_or_hide_reservation (tests.test_media_resources.ResourceTests.test_abrupt_process_exit_cannot_release_or_hide_reservation) ... ok
+test_backend_failure_keeps_reservation_and_job_uncertainty (tests.test_media_resources.ResourceTests.test_backend_failure_keeps_reservation_and_job_uncertainty) ... ok
+test_bad_plan_and_existing_job_do_not_take_reservation (tests.test_media_resources.ResourceTests.test_bad_plan_and_existing_job_do_not_take_reservation) ... ok
+test_cli_exact_release_and_unconfigured_compatibility (tests.test_media_resources.ResourceTests.test_cli_exact_release_and_unconfigured_compatibility) ... ok
+test_eight_processes_can_only_reserve_one_slot (tests.test_media_resources.ResourceTests.test_eight_processes_can_only_reserve_one_slot) ... ok
+test_generation_and_analysis_hold_slot_until_explicit_release (tests.test_media_resources.ResourceTests.test_generation_and_analysis_hold_slot_until_explicit_release) ... ok
+test_inspection_config_and_human_output_have_no_effects (tests.test_media_resources.ResourceTests.test_inspection_config_and_human_output_have_no_effects) ... ok
+test_lifecycle_exact_lease_release_no_reuse_and_bounded_audit (tests.test_media_resources.ResourceTests.test_lifecycle_exact_lease_release_no_reuse_and_bounded_audit) ... ok
+test_private_paths_links_hardlinks_and_foreign_identity_refused (tests.test_media_resources.ResourceTests.test_private_paths_links_hardlinks_and_foreign_identity_refused) ... ok
+test_replacement_corruption_and_missing_files_are_not_repaired (tests.test_media_resources.ResourceTests.test_replacement_corruption_and_missing_files_are_not_repaired) ... ok
+test_storage_failure_after_admission_stays_visible_without_network (tests.test_media_resources.ResourceTests.test_storage_failure_after_admission_stays_visible_without_network) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.112s
+
+OK

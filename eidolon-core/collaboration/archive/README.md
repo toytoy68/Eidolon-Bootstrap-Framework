@@ -546,3 +546,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G111](2026-10-09-gpt-C-MSG-G111.md) : recette finale média et deux retours ouverts, archivé à l’identique avant G112.
 
 - [C-MSG-G112 — couverture des analyses](2026-10-09-gpt-C-MSG-G112.md)
+
+- [C-MSG-G113 — C107, raccordement G088 et revue appairage](2026-10-09-gpt-C-MSG-G113.md)
