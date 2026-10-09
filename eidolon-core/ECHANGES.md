@@ -1637,3 +1637,9 @@ identiques ; six modes worker et zéro double appel/import. Conversation
 13/13 + 18/18 ; espace média CLI et cinq arrêts de processus aux étapes de
 création vérifiés. Bilan PROJECT-STATUS-2026-10-09, G122–G127 maintenus avec
 les trois corrections G129. C122 dernière livraison Claude observée.
+
+### Complément paquetage C-067 — 09/10/2026, 16 h 52 Europe/Paris
+
+Le nouveau bilan PROJECT-STATUS-2026-10-09 référencé par le README est ajouté
+à la liste documentaire optionnelle du builder. Modules, client, contrats et
+recettes installées inchangés. Vérification ciblée de l'archive après cet ajout.
