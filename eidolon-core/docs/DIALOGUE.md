@@ -64,6 +64,23 @@ Les diagnostics (`history_used`, `history_dropped`, `memory_dropped`,
 `prompt_bytes`) sont rendus à l'appelant. Ils ne sont pas enregistrés dans la
 réponse. Les budgets fins viendront en G091.
 
+## Une tentative par tour, un budget mural et une politique d'arrêt (G090-R1, G088-R2)
+
+- Avant d'appeler le modèle, `respond` réserve **la** tentative du tour
+  (`claim_attempt`, G085 v2). Une seconde demande simultanée reçoit
+  `pending` sans appel au modèle. Une tentative interrompue clôt le tour en
+  `MODEL_ATTEMPT_INTERRUPTED`, sans nouvel appel.
+- **Budget mural** : l'appel au modèle se fait dans un fil séparé, attendu au
+  plus `attempt_seconds`. Par défaut, c'est le délai de l'adaptateur plus 5 s,
+  sinon 120 s. Ce budget est indépendant des délais de socket. Au-delà, la
+  réponse est `UNAVAILABLE` / `MODEL_TIMEOUT`, et une réponse tardive est
+  ignorée. L'effet côté moteur reste incertain : aucun arrêt du moteur n'est
+  prétendu.
+- **Arrêt** : `ReadServer.server_close()` appelle d'abord
+  `ConversationAPI.close()`. Les attentes en cours sont abandonnées
+  immédiatement (`SERVER_STOPPING`, 503), **rien n'est enregistré** après le
+  début de l'arrêt, et le tour reste à clore comme interrompu.
+
 ## Pannes : jamais de réponse devinée
 
 | Cas | Réponse | Diagnostic |

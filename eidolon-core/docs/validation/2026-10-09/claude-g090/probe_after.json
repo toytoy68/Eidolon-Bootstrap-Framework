@@ -1,0 +1,75 @@
+{
+ "source": "<copie after>/eidolon-core/src",
+ "held": 8,
+ "total": 8,
+ "scenarios": [
+  {
+   "scenario": "double clic, même clé (5 envois simultanés)",
+   "missions": 1,
+   "distinct_mission_ids": 1,
+   "statuses": [
+    200
+   ],
+   "held": true
+  },
+  {
+   "scenario": "double clic, nouvelle clé à chaque clic",
+   "missions": 1,
+   "answers": [
+    "MISSION_CREATED",
+    "PROPOSAL_ALREADY_SUBMITTED",
+    "PROPOSAL_ALREADY_SUBMITTED",
+    "PROPOSAL_ALREADY_SUBMITTED",
+    "PROPOSAL_ALREADY_SUBMITTED"
+   ],
+   "held": true
+  },
+  {
+   "scenario": "deux clients concurrents",
+   "missions": 2,
+   "own_submissions": [
+    "MISSION_CREATED",
+    "MISSION_CREATED"
+   ],
+   "cross_submit": "CLIENT_MISMATCH",
+   "cross_read": 404,
+   "held": true
+  },
+  {
+   "scenario": "réponse de tour perdue puis renvoi",
+   "model_calls": 1,
+   "same_reply": true,
+   "held": true
+  },
+  {
+   "scenario": "même tour envoyé deux fois en même temps",
+   "model_calls": 1,
+   "second_answer": "pending",
+   "held": true
+  },
+  {
+   "scenario": "redémarrage du serveur : reçus retrouvables",
+   "missions": 1,
+   "receipt_found": "FOUND",
+   "same_mission": true,
+   "held": true
+  },
+  {
+   "scenario": "proposition modifiée : ancien accord réutilisé",
+   "missions": 1,
+   "v2_with_v1_digest": "PROPOSAL_CHANGED",
+   "old_key_replays_v1_only": true,
+   "v1_new_key": "PROPOSAL_STALE",
+   "held": true
+  },
+  {
+   "scenario": "processus tué pendant l'appel modèle, puis renvoi",
+   "killed_exit": 9,
+   "first_process_model_calls": 1,
+   "right_after_restart": "pending",
+   "after_deadline": "MODEL_ATTEMPT_INTERRUPTED",
+   "model_calls_after_restart": 0,
+   "held": true
+  }
+ ]
+}

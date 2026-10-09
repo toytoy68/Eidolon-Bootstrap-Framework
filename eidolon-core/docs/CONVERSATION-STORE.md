@@ -12,7 +12,7 @@ Contrat des objets : [CONVERSATION-CONTRACT.md](CONVERSATION-CONTRACT.md) (G084)
 - C'est une **base séparée** : `missions.sqlite3` n'est jamais migré ni écrit par
   ce module. Un test vérifie que son empreinte reste identique après des tours,
   des réponses et des lectures.
-- Le schéma est versionné (`eidolon-conversation-store/1`, `user_version` 1).
+- Le schéma est versionné (`eidolon-conversation-store/2`, `user_version` 2 ; v1 seulement par migration explicite).
   Une autre version est refusée.
 - Le dépôt est **lié au Store des missions** par son `store_id`. Copié à côté
   d'un autre Store, il est refusé (`STORE_CHANGED`).
@@ -48,6 +48,28 @@ Correctifs des constats G085-R1 à R4 de Codex (C-MSG-G107) :
 
 Ces protections visent les erreurs et les substitutions de fichiers. Elles ne
 défendent pas contre un processus hostile qui tourne sous le même utilisateur.
+
+## Schéma v2 : une seule tentative de réponse par tour (G090-R1)
+
+- La table `attempts` enregistre, **avant** l'appel au modèle, une tentative
+  par tour, avec son échéance. `claim_attempt` rend l'un de quatre états :
+
+  | État | Signification |
+  | --- | --- |
+  | `answered` | une réponse existe déjà |
+  | `claimed` | cet appelant appelle le modèle, une seule fois |
+  | `busy` | une autre tentative est dans son délai : réponse « en préparation » |
+  | `expired` | tentative commencée sans réponse enregistrée |
+
+- Une tentative `expired` (coupure, plantage, délai dépassé) n'autorise
+  **jamais** un second appel au modèle. Le tour est clos en `UNAVAILABLE`,
+  avec `MODEL_ATTEMPT_INTERRUPTED`, et l'utilisateur renvoie un nouveau
+  message s'il le souhaite.
+- **Migration explicite v1 → v2** :
+  `python -m eidolon_core.conversation_api --state <état> migrate`, ou
+  `ConversationStore(store, migrate=True)`. Elle s'exécute en une transaction,
+  sur le même Store, et ne réécrit rien d'autre. Sans migration, un dépôt v1
+  est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être modifié**.
 
 ## Ce qui est garanti
 
