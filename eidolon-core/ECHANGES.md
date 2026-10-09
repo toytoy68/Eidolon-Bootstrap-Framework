@@ -1575,3 +1575,11 @@ C121/8d26133 reçu, avance rapide locale ; revue indépendante en cours. Six nou
 fiches G122–G127 à Claude. Codex réserve media_worker.py, CLI dédiée, tests, guide,
 paquet : file durable et un seul essai explicite par proposition soumise. Claude
 conserve conversation/mission/API/dialogue/UI. Aucun main, VM ou Memory modifié.
+
+
+### C-064 / C-MSG-G128 — 09/10/2026, 16 h 11 Europe/Paris
+
+Worker média durable livré, 19 tests dédiés et 1 313 complets réussis avant
+finition affichage (19 rejoués). Un seul essai explicite, groupe C-061 requis,
+job_id préassigné, collecte unique et vue G101 liée. C122 reçu : blocs UI déjà
+livrés, G123/G124 recentrés. Revue indépendante et paquet installé à suivre.

@@ -15,6 +15,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import stat
 import uuid
@@ -162,7 +163,7 @@ def write_record(directory, record):
     """Atomic record publication inside an owned, private job directory."""
     temp = directory / (".record-" + uuid.uuid4().hex)
     try:
-        with temp.open("xb") as stream:
+        with os.fdopen(os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600), "wb") as stream:
             stream.write(json.dumps(record, ensure_ascii=False, allow_nan=False).encode("utf-8"))
             stream.flush()
             os.fsync(stream.fileno())
@@ -176,7 +177,7 @@ def write_record(directory, record):
         temp.unlink(missing_ok=True)
 
 
-def execute(request, config, directory, *, backend=None):
+def execute(request, config, directory, *, backend=None, job_id=None):
     """Explicit local execution, once per NEW directory. No recovery by resubmit."""
     from .media_backends import LocalMediaBackend
     req = prepare(request)
@@ -190,9 +191,17 @@ def execute(request, config, directory, *, backend=None):
     pool = configured(config)
     if target.exists() or target.is_symlink():
         raise FileExistsError(str(target))
-    job_id = "media-" + uuid.uuid4().hex
+    if job_id is None:
+        job_id = "media-" + uuid.uuid4().hex
+    if not isinstance(job_id, str) or re.fullmatch(r"media-[0-9a-f]{32}", job_id) is None:
+        raise MediaError("INVALID_JOB_ID")
     reservation = pool.reserve(job_id, req["agent"] + "." + req["operation"]) if pool else None
     target.mkdir(mode=0o700, parents=False, exist_ok=False)
+    parent_fd = os.open(target.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(parent_fd)
+    finally:
+        os.close(parent_fd)
     record = {"schema": "media-job/1", "id": job_id,
               "agent": req["agent"], "operation": req["operation"], "state": "INTENT",
               "request": req, "source_evidence": evidence, "backend": plan,

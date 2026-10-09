@@ -1,0 +1,18 @@
+test_claim_disk_failure_before_effect_does_not_call_engine (tests.test_media_worker.WorkerTests.test_claim_disk_failure_before_effect_does_not_call_engine) ... ok
+test_eight_processes_same_ticket_only_one_effect (tests.test_media_worker.WorkerTests.test_eight_processes_same_ticket_only_one_effect) ... ok
+test_enqueue_does_not_create_job_reserve_or_call_engine (tests.test_media_worker.WorkerTests.test_enqueue_does_not_create_job_reserve_or_call_engine) ... ok
+test_final_queue_write_failure_retains_attempt_and_linked_result (tests.test_media_worker.WorkerTests.test_final_queue_write_failure_retains_attempt_and_linked_result) ... ok
+test_foreign_owner_and_identical_request_other_job_not_visible (tests.test_media_worker.WorkerTests.test_foreign_owner_and_identical_request_other_job_not_visible) ... ok
+test_job_publication_failure_after_claim_never_retries (tests.test_media_worker.WorkerTests.test_job_publication_failure_after_claim_never_retries) ... ok
+test_killed_process_after_submit_phase_no_second_attempt (tests.test_media_worker.WorkerTests.test_killed_process_after_submit_phase_no_second_attempt) ... ok
+test_modified_artifact_before_attempt_never_calls_engine (tests.test_media_worker.WorkerTests.test_modified_artifact_before_attempt_never_calls_engine) ... ok
+test_private_paths_replacement_hardlinks_and_corruption_fail_closed (tests.test_media_worker.WorkerTests.test_private_paths_replacement_hardlinks_and_corruption_fail_closed) ... ok
+test_queue_limit_rejects_without_engine_effect (tests.test_media_worker.WorkerTests.test_queue_limit_rejects_without_engine_effect) ... ok
+test_scope_actor_stale_digest_and_changed_command_refused (tests.test_media_worker.WorkerTests.test_scope_actor_stale_digest_and_changed_command_refused) ... ok
+test_six_modes_single_attempt_and_result_view (tests.test_media_worker.WorkerTests.test_six_modes_single_attempt_and_result_view) ... ok
+test_threads_same_ticket_only_one_effect (tests.test_media_worker.WorkerTests.test_threads_same_ticket_only_one_effect) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.246s
+
+OK

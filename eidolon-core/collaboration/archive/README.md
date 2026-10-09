@@ -612,3 +612,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G116 — recettes installées et G094 prêt](2026-10-09-gpt-C-MSG-G116.md)
 
 - [C-MSG-G117](2026-10-09-codex-C-MSG-G117.md) — version exacte archivée avant G122.
+
+- [C-MSG-G122](2026-10-09-codex-C-MSG-G122.md) — affectation des six suites, archivée avant G128.

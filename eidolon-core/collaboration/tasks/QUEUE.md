@@ -1,3 +1,12 @@
+# Suite active — C-MSG-G128, 09/10/2026
+
+C-064 worker publié ; G122 et G126 peuvent se raccorder à son contrat exact.
+C122/4a0c633 reçu : annulation et affichage média déjà livrés. G124 devient leur
+vérification ; G123 reste le raccordement au worker et aux identités exactes.
+G125 autonome, G127 recette après intégration. Six fiches G122–G127 conservées.
+
+---
+
 # Suite active — C-MSG-G122, 09/10/2026
 
 C121/8d26133 reçu : ancienne file livrée, revue indépendante en cours.

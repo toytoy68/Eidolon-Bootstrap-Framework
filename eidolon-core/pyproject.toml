@@ -12,6 +12,7 @@ dependencies = []
 [project.scripts]
 eidolon-core = "eidolon_core.cli:main"
 eidolon-media = "eidolon_core.media_cli:main"
+eidolon-media-worker = "eidolon_core.media_worker_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

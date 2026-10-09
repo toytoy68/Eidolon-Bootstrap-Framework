@@ -534,3 +534,11 @@ les en-têtes sont interrompus avec `INCOMPLETE_HTTP`. Une coupure avant tout oc
 reste indisponible au niveau transport ; un JSON incomplet après des en-têtes
 complets reste refusé à la lecture du corps. Aucun nouvel appel automatique :
 consulter le journal et son reçu éventuel, car la requête peut déjà avoir eu un effet.
+
+
+## File de propositions soumises — C-064
+
+Le [worker média](MEDIA-WORKER.md) relie les propositions serveur à des tickets
+durables ; la soumission ne lance rien. Un essai opérateur explicite par ticket,
+un groupe de ressources requis, collecte unique et résultats non vérifiés.
+Le raccordement du dialogue et des routes/page reste confié à Claude (G122/G123).
