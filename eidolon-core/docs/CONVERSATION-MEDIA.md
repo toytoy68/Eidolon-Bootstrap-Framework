@@ -90,12 +90,40 @@ Un identifiant opaque n'est **pas** une autorisation. Depuis G097 :
 Tests : [test_conversation_media_binding.py](../tests/test_conversation_media_binding.py)
 (15 tests, avec un vrai magasin d'artefacts de Codex en dossier temporaire).
 
+## Présentation des résultats dans la conversation (G101)
+
+Code : [conversation_media_results.py](../src/eidolon_core/conversation_media_results.py)
+et `mediaResultLines` dans [conversation.js](../desktop/connected/src/conversation.js).
+Tests : [test_conversation_media_results.py](../tests/test_conversation_media_results.py) (7)
+et `conversation.test.js`.
+
+`result_view` construit `eidolon-media-result-view/1` à partir des seuls
+enregistrements du serveur : le travail `media-job/1`, la collecte
+`media-collection/1` et le magasin d'artefacts. Il n'utilise jamais un chemin
+ou une référence écrits par le modèle ou envoyés par le navigateur.
+
+| Contrôle | Effet |
+| --- | --- |
+| seul le propriétaire de la conversation lit le résultat | sinon `MEDIA_RESULT_UNKNOWN`, même réponse qu'une absence |
+| le travail a la requête préparée **identique** à la proposition soumise | sinon `WRONG_JOB` : rien n'est listé |
+| la collecte porte ce travail ; chaque sortie a la provenance de ce travail et de cette collecte | sinon exclue et comptée (`excluded_outputs`) : une référence copiée n'est jamais affichée |
+| chaque fichier est relu par le magasin | `hash_verified`, `modified`, `unavailable` ou `busy` ; le contenu reste **non vérifié** |
+| collecte interrompue | « collecte partielle : n sur m », fichiers déjà importés conservés |
+| texte d'analyse | « observation du modèle, non vérifiée », affiché comme texte |
+| historique ancien sans requête structurée | état seulement (`LEGACY_UNVERIFIABLE`), aucun fichier |
+
+Aucun état n'est un succès (`success_claim: false`). L'ouverture d'un fichier
+depuis la page est **non disponible** et dite comme telle : il n'y a aucun
+bouton. L'opérateur passe par `eidolon-media artifact-export`.
+
 ## Reste à raccorder (non livré ici)
 
 Ces étapes dépendent de choix à coordonner :
 
 - **Le dialogue** : ajouter les gabarits média au catalogue de confiance du
   prompt et à `decide_reply`.
+- **Route et affichage dans la page** de `result_view` : ils attendent le
+  lancement par le worker, qui enregistrera le lien proposition → travail.
 - **Lancer** la demande après soumission : par le worker partagé de Codex, ou
   par l'opérateur avec `eidolon-media run`. Le reçu ne doit jamais devenir
   `SUCCEEDED`.

@@ -257,6 +257,48 @@
     return e;
   }
 
+  // G101: a media result view (eidolon-media-result-view/1) in plain-text lines. Nothing here is a
+  // button: opening an artifact is not available from the page, and no state is shown as a success.
+  var MEDIA_STAGES = { created: "Travail créé", running: "En cours", result_unverified: "Résultat reçu, non vérifié",
+    unknown_effect: "Effet inconnu : revue nécessaire", draft: "Brouillon", received_as_is: "État reçu" };
+  var VERIFICATION = { hash_verified: "empreinte vérifiée", modified: "modifié depuis l'import : ne pas utiliser",
+    unavailable: "indisponible", busy: "magasin occupé, réessayer plus tard" };
+  var BINDING = { WRONG_JOB: "Ce résultat appartient à un autre travail : il n'est pas affiché.",
+    LEGACY_UNVERIFIABLE: "Historique ancien : seul l'état est connu, aucun fichier n'est affiché.",
+    UNVERIFIABLE: "Résultat impossible à rattacher : rien n'est affiché.",
+    UNREADABLE: "Résultat illisible : rien n'est affiché." };
+  function mediaResultLines(view) {
+    if (!view || typeof view !== "object") return [];
+    var lines = [];
+    var stage = MEDIA_STAGES[view.stage] || ("État reçu : " + (view.state_received || "inconnu"));
+    lines.push({ cls: "conv-media-stage", text: stage + (view.state_received ? " (" + view.state_received + ")" : "") });
+    if (view.binding !== "MATCHED") {
+      lines.push({ cls: "conv-media-binding", text: BINDING[view.binding] || "Résultat non rattaché : rien n'est affiché." });
+      return lines;
+    }
+    if (view.source) lines.push({ cls: "conv-media-source", text: "Fichier source " + view.source.artifact_id + " : " +
+      (VERIFICATION[view.source.verification] || view.source.verification) });
+    var c = view.collection;
+    if (c && c.state === "WRONG_JOB") lines.push({ cls: "conv-media-binding", text: "Collecte d'un autre travail : ignorée." });
+    else if (c && c.partial) lines.push({ cls: "conv-media-partial", text: "Collecte partielle : " + c.imported +
+      (c.expected === null || c.expected === undefined ? "" : " sur " + c.expected) + " fichier(s) importé(s)." });
+    (view.outputs || []).forEach(function (o) {
+      var p = o.provenance || {};
+      lines.push({ cls: "conv-media-output", text: String(o.display_name) + " — " + String(o.media_type) + " — " +
+        (VERIFICATION[o.verification] || o.verification) + " ; contenu non vérifié ; travail " + p.job_id +
+        ", nœud " + p.node_id + ", sortie " + p.output_index });
+    });
+    if (view.excluded_outputs) lines.push({ cls: "conv-media-excluded", text: view.excluded_outputs +
+      " référence(s) sans lien avec ce travail : non affichée(s)." });
+    if (view.observation) lines.push({ cls: "conv-media-observation", text: "Observation du modèle, non vérifiée : " + view.observation.text });
+    lines.push({ cls: "help conv-media-open", text: "Ouverture depuis la page : non disponible (export par l'opérateur)." });
+    return lines;
+  }
+  function renderMediaResult(doc, container, view) {
+    container.textContent = "";
+    mediaResultLines(view).forEach(function (line) { container.appendChild(el(doc, "p", line.cls, line.text)); });
+  }
+
   function missionView(submission, missionStatus) {
     if (!submission || !submission.receipt) return null;
     var r = submission.receipt;
@@ -402,7 +444,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

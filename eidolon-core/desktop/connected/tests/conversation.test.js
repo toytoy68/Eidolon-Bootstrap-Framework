@@ -170,3 +170,28 @@ test("G098: each reply names its profile and model; a change is said; nothing is
   assert.equal(C.modelLabel({}, null), null);                         // older replies: nothing guessed
   assert.match(C.NOTES.DIALOGUE_PROFILE_UNAVAILABLE, /aucun autre n'est pris à sa place/);
 });
+
+test("G101: media results are plain text lines; wrong job, partial, copied reference, HTML", () => {
+  const out = { artifact_id: "ma-1", display_name: "<b>sortie</b>.png", media_type: "image/png", verification: "hash_verified",
+    provenance: { job_id: "media-1", node_id: "9", output_index: 0, collection_id: "mc-2" } };
+  const view = { stage: "unknown_effect", state_received: "COLLECTION_INCOMPLETE", binding: "MATCHED",
+    source: { artifact_id: "ma-0", verification: "unavailable" }, outputs: [out], excluded_outputs: 1,
+    collection: { state: "COLLECTION_INCOMPLETE", expected: 3, imported: 1, partial: true },
+    observation: { text: '<img src=x onerror="alert(1)">', verified: false } };
+  const text = C.mediaResultLines(view).map((l) => l.text);
+  assert.deepEqual(text.slice(0, 3), ["Effet inconnu : revue nécessaire (COLLECTION_INCOMPLETE)",
+    "Fichier source ma-0 : indisponible", "Collecte partielle : 1 sur 3 fichier(s) importé(s)."]);
+  assert.match(text[3], /^<b>sortie<\/b>\.png — image\/png — empreinte vérifiée ; contenu non vérifié ; travail media-1/);
+  assert.match(text[4], /1 référence\(s\) sans lien avec ce travail/);
+  assert.equal(text[5], 'Observation du modèle, non vérifiée : <img src=x onerror="alert(1)">');
+  assert.match(text[6], /non disponible/);
+  assert.ok(!text.some((t) => /succès|réussi|terminé avec succès/i.test(t)));
+  assert.deepEqual(C.mediaResultLines({ stage: "result_unverified", state_received: "X", binding: "WRONG_JOB", outputs: [out] })
+    .map((l) => l.text)[1], "Ce résultat appartient à un autre travail : il n'est pas affiché.");
+  const made = [];
+  const doc = { createElement: (tag) => { const e = { tag, children: [], appendChild(c) { this.children.push(c); } }; made.push(e); return e; } };
+  const box = { textContent: "x", children: [], appendChild(c) { this.children.push(c); } };
+  C.renderMediaResult(doc, box, view);
+  assert.ok(made.every((e) => e.tag === "p" && !("innerHTML" in e)));           // text only, never a button
+  assert.equal(box.children[5].textContent, text[5]);
+});
