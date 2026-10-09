@@ -991,12 +991,12 @@
         state.problem = { code: code, at: now(), scope: scope };
         return { ok: false, code: code, status: status };
       }
-      if (status === 503 && code === "BUSY") {
-        // G043: explicit saturation (C-010b). Not an outage: stay online, nothing retried
-        // automatically, and the shown data stop being presented as current.
+      if (status === 503 && (code === "BUSY" || code === "STATE_BUSY")) {
+        // G043: explicit saturation (C-010b); G125: a writer holds the Core database. Neither is an
+        // outage: stay online, nothing retried automatically, shown data stop being current.
         state.phase = "busy";
-        state.problem = { code: "BUSY", at: now(), scope: scope };
-        return { ok: false, code: "BUSY", status: status };
+        state.problem = { code: code, at: now(), scope: scope };
+        return { ok: false, code: code, status: status };
       }
       if (status === 401) {
         token = null; state.connEpoch += 1;  // every answer still in flight is now foreign
@@ -1271,6 +1271,10 @@
     refused: "Accès refusé par le serveur : ouvrir l'adresse servie par Core (127.0.0.1 ou localhost, même port)."
   };
 
+  // G125: the database is locked by a writer for a moment; not a failure of the base itself.
+  var STORAGE_BUSY = "Base Core occupée par une écriture (STATE_BUSY) : la lecture n'a pas eu lieu. " +
+    "L'affichage date de la dernière lecture acceptée ; réessayer dans quelques secondes avec « Actualiser ».";
+
   function fmt(iso) {
     if (typeof iso !== "string") return "—";
     var d = new Date(iso);
@@ -1291,7 +1295,8 @@
   function renderConnection(doc, s) {
     var online = s.phase === "connected" || s.phase === "busy";   // explicit retries allowed when busy
     var status = byId(doc, "connection-status");
-    status.textContent = PHASES[s.phase] || s.phase;
+    status.textContent = s.phase === "busy" && s.problem && s.problem.code === "STATE_BUSY" ? STORAGE_BUSY
+      : PHASES[s.phase] || s.phase;
     status.className = "status phase-" + s.phase;
     var parts = [];
     if (s.storeId) parts.push("Base " + s.storeId);

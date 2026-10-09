@@ -203,3 +203,27 @@ Ces limites bornent les valeurs chargées en Python, pas le coût total d'une ba
 arbitraire, du stockage ou du décodage d'un corps admissible. Le délai SQL demeure
 coopératif. Les changements de mode/remplacements par un écrivain extérieur qui
 ignore ces prérequis restent hors garantie de concurrence du Core.
+
+## Base occupée ou indisponible (G125, Claude, 09/10/2026)
+
+Suite de G067-3 et de la matrice [G081](validation/2026-10-09/claude-g081/README.md).
+
+| Cause | Réponse | Client |
+| --- | --- | --- |
+| verrou SQLite tenu par un écrivain (`SQLITE_BUSY` / `SQLITE_LOCKED`) | 503 `STATE_BUSY`, en-tête `Retry-After: 2` | phase « occupé » : données gardées mais marquées non actuelles, réessai **manuel** |
+| corruption, fichier absent, permissions, WAL, identité, budget SQL épuisé | 503 `STATE_UNAVAILABLE` (inchangé) | « Base Core indisponible » |
+| saturation des connexions | 503 `BUSY` (inchangé) | phase « occupé » |
+
+- Seuls les codes de verrou de SQLite donnent `STATE_BUSY`. Le budget SQL
+  (`interrupted`) reste `STATE_UNAVAILABLE`, car sa cause peut durer.
+- Aucune nouvelle tentative automatique, ni pour une lecture ni pour une
+  commande.
+- Un client plus ancien traite `STATE_BUSY` comme « indisponible » : c'est
+  plus pessimiste, mais correct.
+- L'API de conversation distinguait déjà `CONVERSATION_STORE_BUSY` et
+  `CONVERSATION_UNAVAILABLE`.
+- Tests :
+  - `test_http_api.py` : vrai verrou EXCLUSIVE, base corrompue, fichier
+    absent non recréé ;
+  - `session.test.js` : occupé contre indisponible, sans réessai
+    automatique.

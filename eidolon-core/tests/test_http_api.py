@@ -201,6 +201,29 @@ class HTTPReadTests(unittest.TestCase):
         status, _, result = self.json("/v1/missions/" + self.mission["id"])
         self.assertEqual((status, result["error"]), (503, "STATE_UNAVAILABLE"))
 
+    def test_g125_real_lock_is_state_busy_with_retry_after_and_nothing_is_written(self):
+        holder = sqlite3.connect(self.store.path, isolation_level=None, timeout=0)
+        self.addCleanup(holder.close)
+        holder.execute("BEGIN EXCLUSIVE")
+        before = time.monotonic()
+        status, headers, result = self.json("/v1/missions/" + self.mission["id"])
+        waited = time.monotonic() - before
+        holder.execute("ROLLBACK")
+        self.assertEqual((status, result["error"], headers.get("Retry-After")), (503, "STATE_BUSY", "2"))
+        self.assertLess(waited, 6)
+        self.assertEqual(self.json("/v1/missions/" + self.mission["id"])[0], 200)   # explicit retry served
+        self.assertEqual(http_api.storage_busy(sqlite3.OperationalError("interrupted")), False)
+        self.assertEqual(http_api.storage_busy(sqlite3.OperationalError("database disk image is malformed")), False)
+        self.assertEqual(http_api.storage_busy(sqlite3.OperationalError("unable to open database file")), False)
+
+    def test_g125_corrupt_or_missing_base_stays_state_unavailable(self):
+        self.store.path.write_bytes(b"not a database" + self.store.path.read_bytes()[14:])
+        status, headers, result = self.json("/v1/missions/" + self.mission["id"])
+        self.assertEqual((status, result["error"], headers.get("Retry-After")), (503, "STATE_UNAVAILABLE", None))
+        self.store.path.unlink()
+        self.assertEqual(self.json("/v1/missions/" + self.mission["id"])[2]["error"], "STATE_UNAVAILABLE")
+        self.assertFalse(self.store.path.exists())
+
     def test_recovery_marker_added_after_start_blocks_reads(self):
         (self.store.directory / "RECOVERY-REVIEW-ONLY").write_text("test")
         self.assertEqual(self.json("/v1/health")[0], 503)

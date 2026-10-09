@@ -48,6 +48,16 @@ IDLE_TIMEOUT_SECONDS = 3.0
 READ_DEADLINE_SECONDS = 5.0
 SQL_BUDGET_SECONDS = 2.0
 BUSY_WRITE_TIMEOUT_SECONDS = 0.05
+STATE_BUSY_RETRY_SECONDS = 2
+
+
+def storage_busy(exc):
+    """True only for SQLite's own lock codes (a writer holds the database), never for corruption,
+    a missing file, permissions or an interrupted statement (SQL budget): those stay unavailable."""
+    code = getattr(exc, "sqlite_errorcode", None)
+    if code is not None:
+        return code & 0xFF in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED)
+    return str(exc).startswith(("database is locked", "database table is locked"))
 TOKEN_PATTERN = r"[A-Za-z0-9_-]{32,128}"
 MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
@@ -207,7 +217,7 @@ class _Handler(BaseHTTPRequestHandler):
         self._error(405 if code == 501 else code,
                     "METHOD_NOT_ALLOWED" if code == 501 else "HTTP_REQUEST_REJECTED")
 
-    def _send(self, status, body, content_type="application/json; charset=utf-8"):
+    def _send(self, status, body, content_type="application/json; charset=utf-8", extra=()):
         # Reading may have consumed its deadline; writes get a separate bounded
         # socket timeout, including the final sanitized timeout response.
         self.request.settimeout(self.server.idle_timeout_seconds)
@@ -215,21 +225,23 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        for name, value in SECURITY_HEADERS:
+        for name, value in SECURITY_HEADERS + tuple(extra):
             self.send_header(name, value)
         self.send_header("Connection", "close")
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(body)
 
-    def _json(self, status, value):
+    def _json(self, status, value, extra=()):
         body = json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
         if len(body) > MAX_RESPONSE:
             raise APIError(503, "RESPONSE_TOO_LARGE")
-        self._send(status, body)
+        self._send(status, body, extra=extra)
 
     def _error(self, status, code):
-        self._json(status, {"protocol": PROTOCOL, "error": code, "authorizes_execution": False})
+        # G125: a storage lock held by a writer is temporary; the client may retry EXPLICITLY.
+        extra = (("Retry-After", str(STATE_BUSY_RETRY_SECONDS)),) if code == "STATE_BUSY" else ()
+        self._json(status, {"protocol": PROTOCOL, "error": code, "authorizes_execution": False}, extra)
 
     def _one(self, name):
         values = self.headers.get_all(name, [])
@@ -346,6 +358,9 @@ class _Handler(BaseHTTPRequestHandler):
                            "INVALID_PAGE_LIMIT", "INVALID_LIST_CURSOR"}
             self._error(400 if exc.code in bad_request else 503,
                         exc.code if exc.code in bad_request else "STATE_UNAVAILABLE")
+        except sqlite3.OperationalError as exc:
+            # G125 (G067-3/G081): a lock held by another writer is "busy", anything else unavailable.
+            self._error(503, "STATE_BUSY" if storage_busy(exc) else "STATE_UNAVAILABLE")
         except (sqlite3.Error, ContractError, ValueError, TypeError, KeyError,
                 IndexError, RecursionError, UnicodeError):
             self._error(503, "STATE_UNAVAILABLE")

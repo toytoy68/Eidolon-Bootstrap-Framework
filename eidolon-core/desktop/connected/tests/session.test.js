@@ -579,6 +579,28 @@ test("G043 503 BUSY is not an outage: data kept and marked not current, explicit
   assert.equal(t.calls.filter((c) => c.path.endsWith("/poll")).length, 2, "poll only after an explicit, successful relist");
 });
 
+test("G125 503 STATE_BUSY (database locked by a writer) is busy, not unavailable; explicit retry only", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1])), err(503, "STATE_BUSY"), ok(page([1, 2]))],
+    ["GET /v1/missions/" + id(1)]: [ok(sync(1, "SNAPSHOT"))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.relist();
+  let st = s.state();
+  assert.deepEqual([st.phase, st.problem.code, st.list.connection], ["busy", "STATE_BUSY", "online"]);
+  assert.equal(C.shownItems(st.list).length, 1, "last accepted data kept");
+  assert.equal(t.calls.filter((c) => c.path === "/v1/missions").length, 2, "no automatic retry");
+  await s.relist();
+  assert.equal(s.state().phase, "connected");
+});
+
+test("G125 STATE_UNAVAILABLE stays an outage of the base, distinct from busy", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())], "POST /v1/missions": [ok(page([1])), err(503, "STATE_UNAVAILABLE")] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.relist();
+  assert.equal(s.state().phase, "unavailable");
+});
+
 test("G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture", async () => {
   const q = { store_id: STORE, client_id: "beta-fixture", command_key: "k", mission_id: id(1) };
   const answer = Object.assign({ protocol: "eidolon-http-receipt/1" }, q, { status: "NOT_FOUND", receipt: null,
