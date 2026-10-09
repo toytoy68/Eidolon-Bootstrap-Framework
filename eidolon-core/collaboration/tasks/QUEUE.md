@@ -1,3 +1,19 @@
+# Suite active — C-MSG-G122, 09/10/2026
+
+C121/8d26133 reçu : ancienne file livrée, revue indépendante en cours.
+Six nouvelles tâches attribuées par toytoy ; liens ci-dessous.
+
+- [G122](C-TASK-G122.md) — Dialogue et soumission persistante des propositions média.
+- [G123](C-TASK-G123.md) — Route et affichage des résultats média dans le chat.
+- [G124](C-TASK-G124.md) — Annulation ciblée utilisable dans la page.
+- [G125](C-TASK-G125.md) — Stockage occupé distinct de stockage indisponible.
+- [G126](C-TASK-G126.md) — Contre-revue indépendante du worker média Codex.
+- [G127](C-TASK-G127.md) — Recette intégrée accueil conversation et agents média.
+
+G124/G125 autonomes ; G122 commence maintenant, G123/G126/G127 attendent le contrat C-064 selon leur périmètre. Codex : worker média et paquet. Aucun démarrage de session présumé.
+
+---
+
 # Suite active — C-MSG-G117, 09/10/2026
 
 C110/8f20041 reçu et intégré : G084–G089 livrés. G085-R1 à R5, G086-R1 et

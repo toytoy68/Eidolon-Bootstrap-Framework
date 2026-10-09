@@ -1567,3 +1567,11 @@ préparées, 72 modules identiques au paquet f021878 déjà recetté. Memory Eng
 reste inchangé. G088-R2 transmis : fermeture HTTP attend l'appel modèle ; contre-
 exemple avec timeout socket 0,3 s et réponse active lente, attente observée 0,8 s
 puis terminaison contrôlée. Pas d'attente infinie ni de modèle réel revendiqués.
+
+
+### Prise en charge C-064 et C-MSG-G122 — 09/10/2026, 16 h 03 Europe/Paris
+
+C121/8d26133 reçu, avance rapide locale ; revue indépendante en cours. Six nouvelles
+fiches G122–G127 à Claude. Codex réserve media_worker.py, CLI dédiée, tests, guide,
+paquet : file durable et un seul essai explicite par proposition soumise. Claude
+conserve conversation/mission/API/dialogue/UI. Aucun main, VM ou Memory modifié.
