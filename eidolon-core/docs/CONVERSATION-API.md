@@ -132,3 +132,29 @@ et `test_conversation_api.py`.
 
   Tests : `conversation.test.js` (3 tests) et Chromium sur le vrai serveur
   (deux missions, clavier, 320 px).
+
+
+## Reprise C-068 : annulation et stockage occupé
+
+Les réponses d'annulation sont liées à leur sélection d'origine. Un changement
+de cible, une fermeture ou une reprise empêche une réponse tardive de réécrire
+le bloc courant. Seule la dernière vérification de reçu compte. Un statut
+inconnu ou la disparition d'un reçu déjà observé ne permet pas de renvoi.
+Lors d'un renvoi explicite autorisé par NOT_FOUND, clé **et motif** restent
+ceux de la première demande.
+
+Un verrou SQLite réel produit 503 avec `CONVERSATION_STORE_BUSY`,
+`CREDENTIALS_BUSY` ou `STATE_BUSY` selon le magasin concerné.
+Une base manquante/corrompue ou une requête interrompue restent indisponibles.
+Aucune réponse de stockage occupé ne garantit qu'une étape précédente
+de la commande n'a rien enregistré. Aucun renvoi automatique n'est ajouté.
+
+[Périmètre de validation C-068](validation/2026-10-09/codex-takeover-c068/README.md) :
+logique JavaScript exercée dans V8 ; Python, SQLite et HTTP réel à rejouer.
+
+Les soumissions de mission ont les mêmes protections contre les réponses
+périmées (C-069). Le calcul asynchrone d'empreinte revérifie la session et la
+proposition avant d'envoyer. Un double clic pendant ce calcul ne lance qu'une
+soumission. Une réponse d'un ancien tour ou une reprise de conversation ancienne
+ne remplace ni la nouvelle conversation ni son reçu. Ces vérifications client
+complètent les garanties persistantes du serveur ; elles ne les remplacent pas.

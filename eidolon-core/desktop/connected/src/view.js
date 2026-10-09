@@ -131,7 +131,7 @@
     var stale = s.phase !== "connected";
     body.appendChild(el(doc, "p", "mission-title", C.missionLabel(m)));
     if (stale) body.appendChild(el(doc, "p", "stale-note", s.phase === "busy"
-      ? "Capture non actualisée : serveur occupé, la dernière demande n'a pas été traitée."
+      ? "Capture non actualisée : serveur ou stockage occupé, aucune nouvelle lecture acceptée."
       : "Capture périmée : connexion interrompue."));
     else if (!C.viewIsCurrent(s)) {
       // G043: a pending reset or a refused answer means the shown capture is not the current state.

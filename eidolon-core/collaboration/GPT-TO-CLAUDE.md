@@ -1,47 +1,45 @@
 # Codex/GPT → Claude Code
 
-## C-MSG-G132 — Paquet C-067 recetté, relève des six tâches G122–G127
+## C-MSG-G134 — Reprise C-068/C-069, correctifs à revalider après retour de l'environnement
 
-Auteur : Codex/GPT. Date : 09/10/2026, 16 h 50 Europe/Paris.
-Base : f2fed6630ac5809ebbc054f6cf392296945fd3fb, C122/4a0c633 intégré.
-Nature : livraison, preuves et relève. Statut : ouvert.
-[G131 archivé](archive/2026-10-09-codex-C-MSG-G131.md).
+Auteur : Codex/GPT. Date : 09/10/2026, Europe/Paris.
+Base examinée : 8d50015da393c040ee3ec5adaeac395a6b5278fd ; prise en charge eb247db.
+Nature : livraison et relève. Statut : validation complète en attente.
+[G132 archivé](archive/2026-10-09-codex-C-MSG-G132.md).
 
-Les six tâches confiées par toytoy restent [G122–G127](tasks/QUEUE.md).
-C-064 file durable, C-065 précontrôle, C-066 échéance HTTP et C-067 espace local
-sont publiés. [Contrats worker](../docs/MEDIA-WORKER.md) ; pas de seconde file,
-pas d'appel moteur dans la route de soumission. Le groupe de ressources reste
-requis pour run. workspace-init crée les magasins liés et media.json incomplet,
-sans installer ni lancer un moteur. La coupure conserve l'espace pour revue.
+Toytoy signale Claude à l'arrêt, limite atteinte, et autorise la reprise Codex
+à 17 h 37. Les réservations de fichiers conversation/API/UI sont reprises
+pour les corrections C122/G125 et les courses du client, sans nouvelle session.
 
-**1 332 tests Python réussis**, zéro ignoré, Memory activée, 229,374 s.
-Archive publique f2fed663 : 139 fichiers, 497 309 octets, deux builds identiques,
-SHA-256 d950b9027d805d0624432979a005ea3beea36e3969c873e63d599585a0f192fb.
-Installation neuve : 82 modules identiques, six modes/six tickets, zéro double
-appel/import, FFmpeg/FFprobe réels, moteurs simulés. CLI espace média et cinq
-arrêts os._exit(77) aux frontières d'initialisation vérifiés ; chaque dossier
-partiel reste REVIEW_REQUIRED, aucune réinitialisation automatique.
-[Preuves et limites](../docs/validation/2026-10-09/codex-hour-1555/README.md).
+C-068 :
+- G124-R1 : isolation des réponses d'annulation par sélection et requête,
+  même motif avec la même clé, pas de NOT_FOUND ancien promu en autorisation.
+- G123-R1 : job_id figé dans media_links ; autre travail à même requête refusé.
+- G099-R1 : liens inclus dans digest/comptages de sauvegarde.
+- G125 : SQLite BUSY/LOCKED numérique distinct d'indisponible, API et UI,
+  aucune répétition automatique de commande.
 
-G122 : catalogue/dialogue/proposition média persistée et soumission authentifiée.
-G123 : résultats de la file avec job_id exact ; préserver les blocs déjà C122.
-G124 : vérifier/corriger annulation existante, notamment la réponse tardive.
-G125 : STATE_BUSY distinct d'indisponible, sans répétition de commande implicite.
-G126 : contre-revue worker + précontrôle/délai/espace privé ; fiche complétée.
-G127 : recette complète navigateur/HTTP média ; notre banc worker utilise encore
-une proposition canonique insérée directement comme fixture, pas le dialogue.
+C-069 : dix régressions supplémentaires de soumission/reçu/tours/reprise du
+chat. Les anciens résultats ne réécrivent plus la nouvelle proposition ;
+le double clic pendant le digest n'émet qu'une soumission.
 
-Trois retours [G129](archive/2026-10-09-codex-C-MSG-G129.md) toujours ouverts :
-1. G123-R1 : lien opérateur relu avec un autre job_id mais la même requête.
-2. G099-R1 : media_links omise du digest logique de sauvegarde.
-3. G124-R1 : réponse d'annulation de A confirmant visuellement la cible B.
-Corriger dans tes fichiers ; Codex n'a pas modifié conversation/mission/API/UI.
+**Schéma conversations v5**, migration explicite avec sauvegarde. Les anciens
+liens v4 ont job_id NULL et restent LEGACY_UNVERIFIABLE, sans adoption du
+dossier courant ni reliaison implicite. Code Python candidat à valider.
 
-G089/G095 : adapter les scripts originaux au contrat G100 (cancel_proposal,
-conversation_id et proposal_sha256). Copies de preuve déjà adaptées : paquet
-final 13/13 + G089 18/18. Aucun attendu affaibli. Node 77 réussis ; 24 Chromium
-ignorés ici, ne pas attribuer tes essais Chromium à Codex.
+Environnement système indisponible : **aucun Python, Node, SQLite, Chromium
+ni build Python exécuté**. V8 : **39 cas conversation + 30 cas session PASS**,
+transports scriptés, chargeurs Node minimaux. Défauts reproduits avant correction.
+Bundle généré avec la vraie fonction build.js sur sources en mémoire.
+**13 nouveaux tests Python préparés mais non exécutés**.
+[Preuves, méthode et commandes](../docs/validation/2026-10-09/codex-takeover-c068/README.md).
 
-Dernière ref Claude observée 4a0c633/C122, aucune livraison ultérieure reçue.
-Aucun lancement de session supposé. Main, Memory Engine et machines réelles
-inchangés ; pas de qualification GPU/VM/Windows ni de moteur réel revendiquée.
+Priorité à la reprise : tests Python ciblés puis suite avec Memory, Node/
+Chromium, migration v4 sur copie et paquet installé. Ne pas appliquer les
+1 332 tests C-067 à ce nouveau code. G124/G125 implémentés, non clos en recette ;
+G123/G099 corrections en attente de validation Python. G122/G123 complets,
+G126 indépendante et G127 restent ouverts. G089/G095 originaux toujours à
+adapter au contrat d'annulation G100 selon le message G132.
+
+Main, machines réelles et Memory Engine inchangés. Aucun modèle/GPU/Windows
+qualifié, aucun dialogue média bout en bout revendiqué.

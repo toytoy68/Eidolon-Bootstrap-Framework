@@ -314,6 +314,57 @@ class PairingCliTests(unittest.TestCase):
                 self.assertEqual(api.main(["--state", tmp, "pair", "--client-id", "pc", "--actor", "toytoy"]), 2)
             self.assertIn("CLIENT_EXISTS", again.getvalue())
 
+    
+class BusyStorageTests(Base):
+    def lock(self, path):
+        db = sqlite3.connect(path)
+        db.execute("BEGIN EXCLUSIVE")
+        return db
+
+    def test_conversation_lock_is_busy_and_a_later_explicit_request_can_read(self):
+        cid = self.conversation()
+        lock = self.lock(self.api.conversations.path)
+        try:
+            status, body = self.post("page", {"conversation_id": cid})
+            self.assertEqual((status, body["error"]), (503, "CONVERSATION_STORE_BUSY"))
+            self.assertFalse(body["authorizes_execution"])
+        finally:
+            lock.rollback(); lock.close()
+        self.assertEqual(self.post("page", {"conversation_id": cid})[0], 200)
+
+    def test_credential_lock_is_busy_not_bad_authentication(self):
+        cid = self.conversation()
+        lock = self.lock(self.api.credentials.path)
+        try:
+            status, body = self.post("page", {"conversation_id": cid})
+            self.assertEqual((status, body["error"]), (503, "CREDENTIALS_BUSY"))
+            self.assertNotIn(self.me["token"], json.dumps(body))
+        finally:
+            lock.rollback(); lock.close()
+        self.assertEqual(self.post("page", {"conversation_id": cid})[0], 200)
+
+    def test_mission_lock_is_busy_and_submission_never_gets_replayed_implicitly(self):
+        cid = self.conversation()
+        proposal = self.proposal_for(cid)
+        submission = self.submission(proposal)
+        lock = self.lock(self.runtime.store.path)
+        try:
+            status, body = self.post("submit", submission)
+            self.assertEqual((status, body["error"]), (503, "STATE_BUSY"))
+        finally:
+            lock.rollback(); lock.close()
+        self.assertEqual(self.missions(), [])
+        status, receipt = self.post("submit", submission)    # explicit same-key retry after examining state
+        self.assertEqual((status, receipt["status"]), (200, "MISSION_CREATED"))
+        self.assertEqual(len(self.missions()), 1)
+
+    def test_missing_conversation_database_is_not_reported_as_busy(self):
+        cid = self.conversation()
+        self.api.conversations.path.unlink()
+        status, body = self.post("page", {"conversation_id": cid})
+        self.assertEqual((status, body["error"]), (503, "CONVERSATION_UNAVAILABLE"))
+        self.assertFalse(self.api.conversations.path.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

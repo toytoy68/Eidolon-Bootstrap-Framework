@@ -1,0 +1,107 @@
+{
+  "schema": "eidolon-source-review-manifest/1",
+  "base_commit": "8d50015da393c040ee3ec5adaeac395a6b5278fd",
+  "validation": "69 JavaScript cases in V8; Python tests NOT RUN; Node/Chromium/installed package NOT RUN",
+  "files": [
+    {
+      "path": "eidolon-core/desktop/connected/src/conversation.js",
+      "bytes": 39418,
+      "sha256": "706003236a76c305e46abf7c460ef6e656c74bb14a24bef655346af356cdce88"
+    },
+    {
+      "path": "eidolon-core/desktop/connected/tests/conversation.test.js",
+      "bytes": 34641,
+      "sha256": "792c2b8a10d7c2a1c3822c59ea39f4e06f37841a94216d9fe3b9c910f60917ea"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/conversation_store.py",
+      "bytes": 43797,
+      "sha256": "59bea78ddae6255ae85bdd09d4af7a3d43ab44579ba37d947dc3f540c8a6b5a9"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/conversation_storage.py",
+      "bytes": 8384,
+      "sha256": "e06ccd2dbb84f716e0f2ee48e2f3d925f7a1601bbc4fa8f36792b8f0181cf439"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/conversation_media_results.py",
+      "bytes": 9322,
+      "sha256": "fd338f68f2d6a6d9066cfba29c5d09ef3db23fd006ce8d779e4c55148fea20a2"
+    },
+    {
+      "path": "eidolon-core/tests/test_conversation_media_results.py",
+      "bytes": 20333,
+      "sha256": "41938871d2fbb833622d2fe27f345037416b71977be463ed3dc4eb37afb52cae"
+    },
+    {
+      "path": "eidolon-core/tests/test_conversation_storage.py",
+      "bytes": 15424,
+      "sha256": "e338e1ff15184e615d51a6cffcfa29bf272b7de4b565340b669550f5ce004052"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/sqlite_errors.py",
+      "bytes": 909,
+      "sha256": "fb40963b5ec4b63bfd80044145a615a2b1d902a3402b22f0213bfd37e7fec6b2"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/http_api.py",
+      "bytes": 24817,
+      "sha256": "42abb2580b5ff6f3be84e0af1f623a64366d6d4e97649c868a9eeee040907d46"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/conversation_api.py",
+      "bytes": 23598,
+      "sha256": "e45417a4599db8e9afdfeb350faa7cf95dec47a1d23c182db4a49416e4abc901"
+    },
+    {
+      "path": "eidolon-core/src/eidolon_core/client_credentials.py",
+      "bytes": 7579,
+      "sha256": "3d820401a4a0fd6ea18efb70d58d953e911291df1aa706b47f7d97d2355bf207"
+    },
+    {
+      "path": "eidolon-core/desktop/connected/src/session.js",
+      "bytes": 22006,
+      "sha256": "e74d0b98e6bfde789fad6b28b3edefd7ddd90731f06e9096889a5d2d4c3ab44c"
+    },
+    {
+      "path": "eidolon-core/desktop/connected/src/view.js",
+      "bytes": 17855,
+      "sha256": "96c1e0f51976f1b445dcd0b49f0591cf163889941adfa4029dfb70a32beabf86"
+    },
+    {
+      "path": "eidolon-core/desktop/connected/tests/session.test.js",
+      "bytes": 33283,
+      "sha256": "749995467a92d9a255401e920aad49ee64051cf6a094f0451f16cced29b0d626"
+    },
+    {
+      "path": "eidolon-core/tests/test_conversation_api.py",
+      "bytes": 20789,
+      "sha256": "37395fb38081a32d735e5f38590d5dadc46f611028f2436102b70b6c7883f804"
+    },
+    {
+      "path": "eidolon-core/tests/test_http_api.py",
+      "bytes": 19592,
+      "sha256": "007005592d82d52e93dc6a16c4d5545fa07c354176de46306b60fab5cc674019"
+    },
+    {
+      "path": "eidolon-core/tests/test_sqlite_errors.py",
+      "bytes": 1477,
+      "sha256": "0bf078e250187c82597d395e6ea85f5427ac457be7b8cae2e80e69e9e4cd414f"
+    },
+    {
+      "path": "eidolon-core/desktop/connected/app.js",
+      "bytes": 135224,
+      "sha256": "be9020931b380f793c23c04b2f516a49f918337d70d9886c7f8672a8936cbea6"
+    },
+    {
+      "path": "eidolon-core/docs/validation/2026-10-09/codex-takeover-c068/conversation-v8-harness.js",
+      "bytes": 5011,
+      "sha256": "df63ac01a688ca99b6931b437aa02868c4c72bf40d1f17bcd9be39858bee2a03"
+    },
+    {
+      "path": "eidolon-core/docs/validation/2026-10-09/codex-takeover-c068/session-v8-harness.js",
+      "bytes": 2493,
+      "sha256": "95bd295109de0ceeb8590007c2f2739c1ab193f5a1b4e40cbeef11f215b76315"
+    }
+  ]
+}

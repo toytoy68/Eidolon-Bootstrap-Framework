@@ -29,12 +29,14 @@ from . import conversation as cv
 from .commands import validate_scope
 from .contracts import ContractError, digest, encode
 from .store import now
+from .sqlite_errors import is_busy
 
-SCHEMA = "eidolon-conversation-store/5"
+SCHEMA = "eidolon-conversation-store/6"
 SCHEMA_V1 = "eidolon-conversation-store/1"
-VERSION = 5
+VERSION = 6
 SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: "eidolon-conversation-store/3",
-           4: "eidolon-conversation-store/4", 5: SCHEMA}
+           4: "eidolon-conversation-store/4",
+           5: "eidolon-conversation-store/5", 6: SCHEMA}
 # v2 adds one durable model attempt per turn (G090-R1). v1 is migrated only on explicit request.
 ATTEMPTS_TABLE = ("CREATE TABLE attempts (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, "
                   "started_at TEXT NOT NULL, deadline REAL NOT NULL)")
@@ -50,14 +52,16 @@ MEDIA_LINKS_TABLE = ("CREATE TABLE media_links (conversation_id TEXT NOT NULL, p
                      "owner_client_id TEXT NOT NULL, proposal TEXT NOT NULL, job_dir TEXT NOT NULL, "
                      "collection_dir TEXT, artifact_root TEXT NOT NULL, linked_at TEXT NOT NULL, "
                      "PRIMARY KEY(conversation_id, proposal_sha256))")
-# v5 (G122/G123-R1): media proposals are persisted next to mission proposals, each kind with its own
-# version chain; "current" is the one frozen from the latest turn. A link now names the EXACT job id.
+# v5 (Codex C-068, G123-R1) pins the exact job identity at link time. Existing v4 links stay
+# NULL/unverifiable: never adopt the job currently found at an old path during migration.
+MEDIA_LINK_JOB_ID = "ALTER TABLE media_links ADD COLUMN job_id TEXT"
+# v6 (G122): media proposals are persisted next to mission proposals, each kind with its own version
+# chain; "current" is the one frozen from the latest turn.
 MEDIA_PROPOSALS_TABLE = ("CREATE TABLE media_proposals (proposal_id TEXT NOT NULL, version INTEGER NOT NULL, "
                          "conversation_id TEXT NOT NULL, source_sequence INTEGER NOT NULL, body TEXT NOT NULL, "
                          "sha256 TEXT NOT NULL, PRIMARY KEY(proposal_id, version))")
-MEDIA_LINK_JOB_ID = "ALTER TABLE media_links ADD COLUMN job_id TEXT"
-MIGRATIONS = {1: (ATTEMPTS_TABLE,), 2: (ATTACHMENTS_TABLE,), 3: (MEDIA_LINKS_TABLE,),
-              4: (MEDIA_PROPOSALS_TABLE, MEDIA_LINK_JOB_ID)}
+MIGRATIONS = {1: (ATTEMPTS_TABLE,), 2: (ATTACHMENTS_TABLE,), 3: (MEDIA_LINKS_TABLE,), 4: (MEDIA_LINK_JOB_ID,),
+              5: (MEDIA_PROPOSALS_TABLE,)}
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
@@ -152,7 +156,7 @@ class ConversationStore:
                         %s;
                         INSERT INTO meta VALUES ('schema', '%s');
                         INSERT INTO meta VALUES ('store_id', '%s');
-                        PRAGMA user_version=5;
+                        PRAGMA user_version=6;
                         COMMIT;
                     """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, MEDIA_LINKS_TABLE, MEDIA_LINK_JOB_ID, MEDIA_PROPOSALS_TABLE,
                            SCHEMA, self.store_id))
@@ -161,7 +165,7 @@ class ConversationStore:
             finally:
                 db.close()
         except sqlite3.OperationalError as exc:
-            code = "CONVERSATION_STORE_BUSY" if "locked" in str(exc) else "CONVERSATION_STORE_UNAVAILABLE"
+            code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "CONVERSATION_STORE_UNAVAILABLE"
             raise ConversationError(code + ": " + str(exc)[:80]) from None
         except sqlite3.DatabaseError as exc:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: " + str(exc)[:80]) from None
@@ -244,8 +248,9 @@ class ConversationStore:
         self._check_file()
         try:
             db = self._connect()
-        except sqlite3.Error:
-            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: cannot open") from None
+        except sqlite3.Error as exc:
+            code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "CONVERSATION_STORE_UNAVAILABLE"
+            raise ConversationError(code + ": cannot open") from None
         try:
             db.execute("PRAGMA synchronous=FULL")
             db.execute("BEGIN IMMEDIATE" if write else "BEGIN")
@@ -255,7 +260,7 @@ class ConversationStore:
             db.execute("COMMIT")
         except sqlite3.OperationalError as exc:
             db.rollback() if db.in_transaction else None
-            if "locked" in str(exc) or "busy" in str(exc):
+            if is_busy(exc):
                 raise ConversationError("CONVERSATION_STORE_BUSY: retry later") from None
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: " + str(exc)[:80]) from None
         except sqlite3.DatabaseError as exc:
@@ -515,14 +520,15 @@ class ConversationStore:
         return [attachment(store_id=self.store_id, owner_client_id=owner_client_id, conversation_id=conversation_id,
                            reference=json.loads(r[0])) for r in rows]
 
-    def link_media(self, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, collection_dir=None,
-                   job_id=None):
-        """Record which media job serves a submitted media proposal (operator or media worker). Idempotent."""
+    def link_media(self, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, job_id, collection_dir=None):
+        """Pin the job id and private locations of a media proposal; never silently rebind an old link."""
         from .conversation_media import validate_proposal
         proposal = validate_proposal(proposal)
         if (proposal["owner_client_id"] != owner_client_id or proposal["conversation_id"] != conversation_id
                 or proposal["store_id"] != self.store_id):
             raise ConversationError("CONVERSATION_UNKNOWN: proposal of another owner or conversation")
+        if not isinstance(job_id, str) or re.fullmatch(r"media-[0-9a-f]{32}", job_id) is None:
+            raise ConversationError("INVALID_CONVERSATION: an exact media job identity is required")
         paths = [job_dir, artifact_root] + ([collection_dir] if collection_dir is not None else [])
         if any(not isinstance(p, str) or not os.path.isabs(p) or len(p) > 1024 for p in paths):
             raise ConversationError("INVALID_CONVERSATION: absolute server paths required")
@@ -538,8 +544,8 @@ class ConversationStore:
                 if tuple(existing) != (job_dir, collection_dir, artifact_root, job_id):
                     raise ConversationError("MEDIA_LINK_CONFLICT: this proposal is already linked to another job")
                 return sha
-            db.execute("INSERT INTO media_links (conversation_id, proposal_sha256, owner_client_id, proposal, job_dir, "
-                       "collection_dir, artifact_root, linked_at, job_id) VALUES (?,?,?,?,?,?,?,?,?)",
+            db.execute("INSERT INTO media_links (conversation_id, proposal_sha256, owner_client_id, proposal, "
+                       "job_dir, collection_dir, artifact_root, linked_at, job_id) VALUES (?,?,?,?,?,?,?,?,?)",
                        (conversation_id, sha, owner_client_id, encode(proposal), job_dir, collection_dir,
                         artifact_root, now(), job_id))
         return sha
@@ -550,8 +556,8 @@ class ConversationStore:
             rows = db.execute("SELECT proposal, job_dir, collection_dir, artifact_root, job_id FROM media_links "
                               "WHERE conversation_id=? AND owner_client_id=? ORDER BY linked_at, proposal_sha256",
                               (conversation_id, owner_client_id)).fetchall()
-        return [{"proposal": json.loads(r[0]), "job_dir": r[1], "collection_dir": r[2], "artifact_root": r[3],
-                 "job_id": r[4]} for r in rows]
+        return [{"proposal": json.loads(r[0]), "job_dir": r[1], "collection_dir": r[2], "artifact_root": r[3], "job_id": r[4]}
+                for r in rows]
 
     def select_profile(self, name, *, actor):
         """Explicit operator choice of the dialogue profile (G098). Never made by a model or a fallback."""

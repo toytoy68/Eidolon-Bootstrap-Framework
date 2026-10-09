@@ -1375,7 +1375,7 @@
     var stale = s.phase !== "connected";
     body.appendChild(el(doc, "p", "mission-title", C.missionLabel(m)));
     if (stale) body.appendChild(el(doc, "p", "stale-note", s.phase === "busy"
-      ? "Capture non actualisée : serveur occupé, la dernière demande n'a pas été traitée."
+      ? "Capture non actualisée : serveur ou stockage occupé, aucune nouvelle lecture acceptée."
       : "Capture périmée : connexion interrompue."));
     else if (!C.viewIsCurrent(s)) {
       // G043: a pending reset or a refused answer means the shown capture is not the current state.
@@ -1797,11 +1797,20 @@
     return parts.length ? "Contexte partiel : " + parts.join(" ; ") + "." : null;
   }
 
+  // C-068 (Codex): a busy server or storage is temporary; retries stay explicit.
+  function busyNote(code) {
+    if (code === "BUSY") return "Serveur occupé : réessayez explicitement plus tard.";
+    if (["STATE_BUSY", "CONVERSATION_STORE_BUSY", "CREDENTIALS_BUSY", "MEDIA_WORKER_BUSY"].indexOf(code) >= 0) {
+      return "Stockage occupé : réessayez explicitement plus tard.";
+    }
+    return null;
+  }
+
   function stageOf(status) { return Object.prototype.hasOwnProperty.call(STAGES, status) ? STAGES[status] : null; }
 
   function createConversation(options) {
     var transport = options.transport, onChange = options.onChange || function () {};
-    var token = null, epoch = 0;
+    var token = null, epoch = 0, cancelRead = 0, submissionRead = 0, resumeRead = 0;
     var state = { phase: "closed", error: null, conversationId: null, identity: null, items: [],
       proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
 
@@ -1820,7 +1829,7 @@
 
     async function open(key) {
       if (typeof key !== "string" || !KEY.test(key)) {
-        state.phase = "closed"; state.error = "KEY_FORMAT"; emit(); return false;
+        close(); state.error = "KEY_FORMAT"; emit(); return false;
       }
       epoch += 1; token = key;
       state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
@@ -1846,10 +1855,11 @@
     // without a reply becomes "pending": checking it reuses ITS key, so Core replays, never duplicates.
     async function resume(conversationId) {
       if (state.phase !== "open" || !state.recent.some(function (c) { return c.conversation_id === conversationId; })) return false;
+      var mine = epoch, read = ++resumeRead;
       var items = [], after = 0;
       for (var i = 0; i < 20; i++) {
         var r = await call("page", { conversation_id: conversationId, after: after, limit: 50 });
-        if (r.stale) return false;
+        if (r.stale || mine !== epoch || read !== resumeRead) return false;
         if (!r.ok) { state.error = r.code; emit(); return false; }
         r.json.items.forEach(function (it) {
           items.push({ key: it.turn.client_turn_key, text: it.turn.text, reply: it.reply, error: null,
@@ -1859,6 +1869,7 @@
         if (!r.json.has_more) break;
       }
       var last = items.filter(function (it) { return it.reply && it.reply.kind === "PROPOSAL"; }).pop();
+      epoch += 1;                                       // outstanding requests belong to the previous conversation
       state.conversationId = conversationId;
       state.items = items;
       state.proposal = last ? last.reply.proposal : null;
@@ -1888,16 +1899,20 @@
         item = { key: randomKey("turn"), text: text, status: "draft", reply: null, error: null };
         state.items.push(item);
       }
+      var mine = epoch, conversationId = state.conversationId;
       item.status = "sent"; emit();
-      var r = await call("turn", { conversation_id: state.conversationId, client_turn_key: item.key, text: item.text });
-      if (r.stale) return false;
-      item = state.items.filter(function (i) { return i.key === item.key; })[0];
+      var r = await call("turn", { conversation_id: conversationId, client_turn_key: item.key, text: item.text });
+      if (r.stale || mine !== epoch || state.conversationId !== conversationId || state.items.indexOf(item) < 0) return false;
       if (r.ok && r.json.pending) {
         item.status = "pending";                          // another attempt owns this turn (G090-R1)
       } else if (r.ok) {
         item.status = "received"; item.reply = r.json.reply;
         if (r.json.reply && r.json.reply.kind === "PROPOSAL") {
-          state.proposal = r.json.reply.proposal; state.proposalSha = r.json.reply.proposal_sha256; state.submission = null;
+          // Out-of-order answers: the proposal shown is the one of the LATEST answered turn (C-069).
+          var latest = state.items.filter(function (i) { return i.reply && i.reply.kind === "PROPOSAL"; }).pop().reply;
+          if (state.proposalSha !== latest.proposal_sha256) {
+            state.proposal = latest.proposal; state.proposalSha = latest.proposal_sha256; state.submission = null;
+          }
         }
       } else {
         // A lost answer may still have been recorded: same key again is safe (Core replays the turn).
@@ -1911,9 +1926,13 @@
     async function submit(reason) {
       if (state.phase !== "open" || !state.proposal || !state.identity) return false;
       if (typeof reason !== "string" || !reason.trim() || reason.length > 4000) return false;
-      var p = state.proposal;
+      if (state.submission && (state.submission.status === "sent" || state.submission.status === "recorded")) return false;
+      var p = state.proposal, sha = state.proposalSha, mine = epoch, identity = state.identity;
       var local = await digest(p);
-      if (local !== state.proposalSha) {                  // shown ≠ frozen: never submitted
+      // C-069: closed, replaced or already submitted during the digest → nothing is sent.
+      if (mine !== epoch || p !== state.proposal || identity !== state.identity || sha !== state.proposalSha) return false;
+      if (state.submission && (state.submission.status === "sent" || state.submission.status === "recorded")) return false;
+      if (local !== sha) {                                // shown ≠ frozen: never submitted
         state.submission = { key: null, proposalVersion: p.version, reason: reason, status: "refused",
           receipt: null, error: "DIGEST_MISMATCH" };
         emit();
@@ -1923,15 +1942,14 @@
         state.submission = { key: randomKey("submit"), proposalVersion: p.version, reason: reason.trim(),
           status: "draft", receipt: null, error: null };
       }
-      var s = state.submission;
+      var s = state.submission, read = ++submissionRead;
       s.status = "sent"; emit();
       var body = { protocol: "eidolon-proposal-submission/1", store_id: p.store_id, client_id: state.identity.clientId,
         command_key: s.key, conversation_id: p.conversation_id, proposal_id: p.proposal_id,
         proposal_version: p.version, proposal_sha256: local, actor: state.identity.actor, reason: s.reason };
       var r = await call("submit", body);
-      if (r.stale) return false;
-      s = state.submission;
-      if (r.ok) { s.status = "recorded"; s.receipt = r.json; }
+      if (r.stale || mine !== epoch || s !== state.submission || read !== submissionRead) return false;
+      if (r.ok) { s.status = "recorded"; s.receipt = r.json; s.error = null; }
       else { s.status = r.network || r.status >= 500 ? "uncertain" : "refused"; s.error = r.code; }
       emit();
       return r.ok;
@@ -1950,7 +1968,7 @@
       if (!storage || !k) return;
       var keep = state.cancels.filter(function (r) { return r.key && FINAL_STAGES.indexOf(r.stage) < 0; })
         .map(function (r) { return { missionId: r.missionId, conversationId: r.conversationId, key: r.key, sha: r.sha,
-          proposal: r.proposal, status: r.status === "sent" ? "uncertain" : r.status, stage: r.stage }; });
+          proposal: r.proposal, reason: r.reason, status: r.status === "sent" ? "uncertain" : r.status, stage: r.stage }; });
       try { if (keep.length) storage.setItem(k, JSON.stringify(keep)); else storage.removeItem(k); } catch (e) { /* no storage */ }
     }
     function restoreCancels() {
@@ -1960,7 +1978,7 @@
       (Array.isArray(raw) ? raw : []).forEach(function (r) {
         if (!r || !MISSION.test(r.missionId) || !/^c-[0-9a-f]{32}$/.test(r.conversationId) || typeof r.key !== "string") return;
         state.cancels.push({ missionId: r.missionId, conversationId: r.conversationId, key: r.key, sha: r.sha,
-          proposal: r.proposal, status: "restored", stage: r.stage || null, missionStatus: null, receipt: null,
+          proposal: r.proposal, reason: typeof r.reason === "string" ? r.reason : null, status: "restored", stage: r.stage || null, missionStatus: null, receipt: null,
           error: null, code: null, candidates: [] });
       });
     }
@@ -1984,13 +2002,13 @@
         proposal: null, sha: null, missionStatus: null, candidates: [], code: null, key: null, receipt: null,
         stage: null, error: null };
       emit();
+      var c = state.cancel, read = ++cancelRead;
       var r = await call("cancel_proposal", body);
-      if (r.stale) return false;
-      var c = state.cancel;
+      if (r.stale || c !== state.cancel || read !== cancelRead) return false;   // a newer selection wins
       if (!r.ok) { c.status = "error"; c.error = r.code; emit(); return false; }
       if (r.json.kind === "PROPOSAL") {
         var local = await digest(r.json.proposal);
-        if (mine !== epoch) return false;
+        if (mine !== epoch || c !== state.cancel || read !== cancelRead) return false;
         var id = r.json.proposal.mission_id;
         if (local !== r.json.proposal_sha256 || !MISSION.test(id) || (missionId && id !== missionId)) {
           c.status = "error"; c.error = "DIGEST_MISMATCH"; emit(); return false;
@@ -2019,11 +2037,14 @@
       var rec = state.cancel;
       if (state.phase !== "open" || !rec || !rec.proposal || (rec.status !== "review" && rec.status !== "not_recorded")) return false;
       if (typeof reason !== "string" || !reason.trim() || reason.length > 4000) return false;
-      if (!rec.key) rec.key = randomKey("cancel");        // the same key on a resend: Core replays, never doubles
+      if (!rec.key || !rec.reason) {                      // one key always carries the same command body
+        rec.key = rec.key || randomKey("cancel"); rec.reason = reason.trim();
+      }
+      var read = rec.read = ++cancelRead;
       rec.status = "sent"; rec.error = null; persistCancels(); emit();
       var r = await call("cancel", { command_key: rec.key, conversation_id: rec.conversationId,
-        mission_id: rec.missionId, proposal_sha256: rec.sha, reason: reason.trim() });
-      if (r.stale) return false;
+        mission_id: rec.missionId, proposal_sha256: rec.sha, reason: rec.reason });
+      if (r.stale || rec.read !== read) return false;   // a newer request on this record wins
       // The answer belongs to THIS record, whatever is selected now (G124-R1).
       if (r.ok && r.json.mission_id === rec.missionId) {
         rec.status = "recorded"; rec.receipt = r.json; rec.stage = r.json.stage; rec.missionStatus = r.json.mission_status;
@@ -2036,14 +2057,22 @@
 
     async function cancelCheck(missionId) {
       var rec = missionId ? recordFor(missionId) : state.cancel;
-      if (state.phase !== "open" || !rec || !rec.key || !rec.missionId) return false;
+      if (state.phase !== "open" || !rec || !rec.key || !rec.missionId
+          || ["uncertain", "recorded", "restored"].indexOf(rec.status) < 0) return false;
+      var read = rec.read = ++cancelRead;
       var r = await call("cancel_receipt", { command_key: rec.key, conversation_id: rec.conversationId,
         mission_id: rec.missionId });
-      if (r.stale) return false;
+      if (r.stale || rec.read !== read) return false;
       if (!r.ok) { rec.error = r.code; emit(); return false; }
       rec.missionStatus = r.json.mission_status;
       if (r.json.status === "FOUND") { rec.status = "recorded"; rec.receipt = r.json.receipt; rec.stage = r.json.stage; rec.error = null; }
-      else { rec.status = rec.proposal ? "not_recorded" : "unavailable"; rec.stage = null; }   // nothing recorded
+      else if (r.json.status === "NOT_FOUND" && !rec.receipt) {
+        rec.status = rec.proposal ? "not_recorded" : "unavailable"; rec.stage = null; rec.error = null;   // nothing recorded
+      } else {
+        // C-068: an unknown status, or a receipt seen before that now "disappears", never permits a resend.
+        rec.status = "uncertain"; rec.stage = null; rec.error = "INVALID_RESPONSE";
+        persistCancels(); emit(); return false;
+      }
       persistCancels(); emit();
       return true;
     }
@@ -2058,10 +2087,10 @@
     async function loadMedia() {
       if (state.phase !== "open") return false;
       var previous = state.media && state.media.results ? state.media.results : [];
-      state.media = { status: "loading", results: previous, error: null };
+      var media = state.media = { status: "loading", results: previous, tickets: [], error: null };
       emit();
       var r = await call("media_results", { conversation_id: state.conversationId });
-      if (r.stale) return false;
+      if (r.stale || state.media !== media) return false;     // only the latest refresh is shown
       state.media = r.ok && Array.isArray(r.json.results)
         ? { status: "ready", results: r.json.results, tickets: Array.isArray(r.json.tickets) ? r.json.tickets : [], error: null }
         : { status: "error", results: [], error: r.code || "INVALID_RESPONSE" };
@@ -2070,11 +2099,14 @@
     }
 
     async function checkReceipt() {
-      if (state.phase !== "open" || !state.submission) return false;
-      var r = await call("receipt", { command_key: state.submission.key });
-      if (r.stale || !r.ok) return false;
-      if (r.json.status === "FOUND") { state.submission.status = "recorded"; state.submission.receipt = r.json.receipt; }
-      else state.submission.status = "uncertain";
+      var s = state.submission;
+      if (state.phase !== "open" || !s || s.status !== "uncertain") return false;
+      var mine = epoch, read = ++submissionRead;
+      var r = await call("receipt", { command_key: s.key });
+      if (r.stale || mine !== epoch || s !== state.submission || read !== submissionRead) return false;
+      if (!r.ok) { s.error = r.code; emit(); return false; }
+      if (r.json.status === "FOUND") { s.status = "recorded"; s.receipt = r.json.receipt; s.error = null; }
+      else s.status = "uncertain";
       emit();
       return true;
     }
@@ -2101,7 +2133,7 @@
   var VERIFICATION = { hash_verified: "empreinte vérifiée", modified: "modifié depuis l'import : ne pas utiliser",
     unavailable: "indisponible", busy: "magasin occupé, réessayer plus tard" };
   var BINDING = { WRONG_JOB: "Ce résultat appartient à un autre travail : il n'est pas affiché.",
-    LEGACY_UNVERIFIABLE: "Historique ancien : seul l'état est connu, aucun fichier n'est affiché.",
+    LEGACY_UNVERIFIABLE: "Historique ancien : identité du travail non vérifiable, aucun fichier n'est affiché.",
     UNVERIFIABLE: "Résultat impossible à rattacher : rien n'est affiché.",
     UNREADABLE: "Résultat illisible : rien n'est affiché." };
   function mediaResultLines(view) {
@@ -2200,7 +2232,7 @@
       st.phase === "open" ? "Conversation ouverte (" + st.identity.actor + ")." :
       st.error === "KEY_FORMAT" ? "Clé de conversation au mauvais format." :
       st.error === "READ_TOKEN_NOT_ALLOWED" ? "Le jeton de lecture ne permet pas de converser : utilisez une clé de conversation." :
-      st.error ? "Conversation refusée ou indisponible (" + st.error + ")." :
+      st.error ? (busyNote(st.error) || "Conversation refusée ou indisponible (" + st.error + ").") :
       "Sans clé de conversation, cette page reste en lecture seule.";
     var recentBox = doc.getElementById("conv-recent"), recentList = doc.getElementById("conv-recent-list");
     recentList.textContent = "";
@@ -2219,7 +2251,7 @@
     st.items.forEach(function (item) {
       var li = el(doc, "li", "conv-turn");
       li.appendChild(el(doc, "p", "conv-user", item.text));
-      li.appendChild(el(doc, "p", "conv-state state-" + item.status, LABELS[item.status] + (item.error ? " (" + item.error + ")" : "")));
+      li.appendChild(el(doc, "p", "conv-state state-" + item.status, LABELS[item.status] + (item.error ? " — " + (busyNote(item.error) || item.error) : "")));
       if (item.status === "uncertain" || item.status === "pending") {
         var retry = el(doc, "button", "media-secondary", item.status === "pending" ? "Vérifier la réponse" : "Renvoyer le même message");
         retry.type = "button"; retry.dataset.retry = item.key;
@@ -2266,7 +2298,8 @@
       var s = st.submission;
       var sstate = doc.getElementById("conv-submission-state");
       sstate.textContent = !s ? LABELS.draft : s.status === "sent" ? "Validation envoyée…" :
-        s.status === "uncertain" ? LABELS.uncertain + (s.error ? " (" + s.error + ")" : "") :
+        s.status === "uncertain" ? (busyNote(s.error) ? busyNote(s.error) + " La validation a peut-être été enregistrée : vérifiez son reçu avant tout renvoi."
+          : LABELS.uncertain + (s.error ? " (" + s.error + ")" : "")) :
         s.status === "refused" ? (SUBMIT_ERRORS[s.error] || "Validation refusée (" + s.error + ").") : "Validation enregistrée.";
       doc.getElementById("conv-check").hidden = !(s && s.status === "uncertain");
       var mv = media ? ticketView(s) : missionView(s, missionStatus);
@@ -2286,6 +2319,9 @@
 
   function cancelStatusText(c) {
     if (!c) return "";
+    if (busyNote(c.error)) return busyNote(c.error) + (c.key
+      ? " L'état de la demande n'a pas pu être vérifié : consultez son reçu avant tout renvoi."
+      : " Aucune proposition d'arrêt disponible.");
     if (c.status === "loading") return "Préparation de la proposition d'arrêt…";
     if (c.status === "choose") return CANCEL_CODES.MISSION_AMBIGUOUS;
     if (c.status === "restored") return "Demande d'arrêt envoyée avant le rechargement de la page : vérifiez son état, rien n'est renvoyé.";
@@ -2346,7 +2382,7 @@
     var tickets = m && m.tickets ? m.tickets : [];
     var count = m ? m.results.length + tickets.length : 0;
     line.textContent = !m ? "" : m.status === "loading" ? "Lecture des résultats…" :
-      m.status === "error" ? "Résultats indisponibles (" + m.error + ")." :
+      m.status === "error" ? (busyNote(m.error) || "Résultats indisponibles (" + m.error + ").") :
       !count ? "Aucune demande ni résultat image ou vidéo pour cette conversation." :
       count + " demande(s) ou résultat(s) lu(s) maintenant sur le serveur.";
     if (!m) return;
@@ -2427,7 +2463,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaRequestText: mediaRequestText, ticketView: ticketView, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { busyNote: busyNote, createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaRequestText: mediaRequestText, ticketView: ticketView, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

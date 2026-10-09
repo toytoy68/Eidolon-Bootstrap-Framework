@@ -618,3 +618,31 @@ test("G043 a FOUND receipt does not refresh the connection's last accepted read 
   assert.equal(after.lastSuccessAt, before.lastSuccessAt);
   assert.deepEqual(after.list.selection.sync.view, before.list.selection.sync.view);
 });
+
+test("G125 STATE_BUSY keeps the last read visible and permits only an explicit read retry", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())],
+    "POST /v1/missions": [ok(page([1])), err(503, "STATE_BUSY"), ok(page([1, 2]))] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  const fresh = s.state().lastSuccessAt;
+  await s.relist();
+  assert.equal(s.state().phase, "busy");
+  assert.equal(s.state().problem.code, "STATE_BUSY");
+  assert.equal(s.state().lastSuccessAt, fresh);
+  assert.equal(C.shownItems(s.state().list).length, 1);
+  assert.equal(t.calls.filter((c) => c.path === "/v1/missions").length, 2);
+  await s.relist();
+  assert.equal(s.state().phase, "connected");
+  assert.equal(s.state().list.items.length, 2);
+  assert.equal(t.calls.filter((c) => c.path === "/v1/missions").length, 3);
+});
+
+test("G125 missing or corrupt storage remains unavailable, not busy", async () => {
+  const t = scripted({ "GET /v1/health": [ok(health())],
+    "POST /v1/missions": [ok(page([1])), err(503, "STATE_UNAVAILABLE")] });
+  const s = clockSession(t);
+  await s.connect(TOKEN);
+  await s.relist();
+  assert.equal(s.state().phase, "unavailable");
+  assert.equal(s.state().problem.code, "STATE_UNAVAILABLE");
+});

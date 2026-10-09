@@ -1,0 +1,128 @@
+{
+  "runtime": "V8 isolate; minimal node:test/assert module loader; scripted transports, no Node or browser",
+  "passed": 29,
+  "failed": 1,
+  "results": [
+    {
+      "name": "token format is checked locally; nothing is sent for a malformed token",
+      "status": "PASS"
+    },
+    {
+      "name": "connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument",
+      "status": "PASS"
+    },
+    {
+      "name": "pagination sends next_cursor unchanged and stops at the end; never more than three pages",
+      "status": "PASS"
+    },
+    {
+      "name": "list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor",
+      "status": "PASS"
+    },
+    {
+      "name": "401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight",
+      "status": "PASS"
+    },
+    {
+      "name": "403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture",
+      "status": "PASS"
+    },
+    {
+      "name": "network failure: offline, data kept and dated; reconnect to the same store resumes",
+      "status": "PASS"
+    },
+    {
+      "name": "reconnection to another store wipes the previous display: no mixed identities",
+      "status": "PASS"
+    },
+    {
+      "name": "a list answering for another store than health is refused and nothing is shown",
+      "status": "PASS"
+    },
+    {
+      "name": "an answer for a previous selection never replaces the current one",
+      "status": "PASS"
+    },
+    {
+      "name": "disconnect forgets token and display; a late answer is dropped",
+      "status": "PASS"
+    },
+    {
+      "name": "poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload",
+      "status": "PASS"
+    },
+    {
+      "name": "an invalid or authority-claiming answer is rejected, never displayed",
+      "status": "PASS"
+    },
+    {
+      "name": "a malformed mission id is never turned into a request path",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused",
+      "status": "PASS"
+    },
+    {
+      "name": "G036 a receipt answer arriving after another selection, or after disconnect, is dropped",
+      "status": "PASS"
+    },
+    {
+      "name": "G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 an answer for a previous list epoch does not advance freshness",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 two concurrent connections: only the last one is applied, the first answer never counts",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry",
+      "status": "PASS"
+    },
+    {
+      "name": "G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture",
+      "status": "PASS"
+    },
+    {
+      "name": "G125 STATE_BUSY keeps the last read visible and permits only an explicit read retry",
+      "status": "FAIL",
+      "error": "Error: expected \"busy\" got \"unavailable\""
+    },
+    {
+      "name": "G125 missing or corrupt storage remains unavailable, not busy",
+      "status": "PASS"
+    }
+  ]
+}

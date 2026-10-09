@@ -1,0 +1,163 @@
+{
+  "runtime": "V8 isolate with minimal node:test/assert/fs/path shims; JS SHA-256; deterministic test-only random IDs; no Node/DOM/HTTP server",
+  "passed": 39,
+  "failed": 0,
+  "results": [
+    {
+      "name": "the canonical digest matches Core's published proposal digest",
+      "status": "PASS"
+    },
+    {
+      "name": "a malformed key is refused locally and the key never appears in the state",
+      "status": "PASS"
+    },
+    {
+      "name": "read token refused by the server keeps the conversation closed",
+      "status": "PASS"
+    },
+    {
+      "name": "a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal",
+      "status": "PASS"
+    },
+    {
+      "name": "submission sends the locally verified digest and identity; a tampered proposal is never sent",
+      "status": "PASS"
+    },
+    {
+      "name": "an uncertain submission is resolved by its receipt, never by a new key",
+      "status": "PASS"
+    },
+    {
+      "name": "answers that arrive after closing are ignored",
+      "status": "PASS"
+    },
+    {
+      "name": "mission stages: created, running, result, unknown effect, never invented",
+      "status": "PASS"
+    },
+    {
+      "name": "G091: a partial context is said in words; a complete one says nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "G098: each reply names its profile and model; a change is said; nothing is invented",
+      "status": "PASS"
+    },
+    {
+      "name": "G101: media results are plain text lines; wrong job, partial, copied reference, HTML",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key",
+      "status": "PASS"
+    },
+    {
+      "name": "G100: finished missions and media jobs are said, nothing is offered",
+      "status": "PASS"
+    },
+    {
+      "name": "G101: media results are read on demand, errors are said, closing forgets them",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: a late cancellation of A cannot confirm the newly selected B",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: a late error cannot erase a new review, even for the same mission",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: cancellation proposals arriving out of order keep the latest selection",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: a hashed proposal for another requested mission is refused",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: receipt lookup from A cannot rewrite a review of B",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: receipt queries cannot race the initial submission",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: older NOT_FOUND cannot undo a newer confirmed receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: unknown receipt status and disappearance of a known receipt never permit resend",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: an explicit resend keeps the entire original command including its reason",
+      "status": "PASS"
+    },
+    {
+      "name": "G124-R1: closing and resuming discard outstanding cancellation responses",
+      "status": "PASS"
+    },
+    {
+      "name": "G123: an older media refresh cannot replace the latest view",
+      "status": "PASS"
+    },
+    {
+      "name": "G125: busy storage is explained without converting uncertainty into absence or retrying",
+      "status": "PASS"
+    },
+    {
+      "name": "G125: a busy receipt read retains the old receipt without claiming a fresh confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: a delayed mission submission cannot become the new proposal's receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: closing during the asynchronous digest sends no mission command",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: rapid duplicate validation emits only one submission",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: a late receipt lookup cannot overwrite a newer mission submission",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: an old mission receipt lookup cannot downgrade a more recent FOUND",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: switching conversations ignores the previous conversation's late turn",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: concurrent conversation resumes keep the last requested conversation",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: a malformed replacement key closes the previous session and drops its response",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: out-of-order turn answers do not replace a newer proposal or erase its receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "C069: a receipt check during submission sends no concurrent lookup",
+      "status": "PASS"
+    }
+  ]
+}

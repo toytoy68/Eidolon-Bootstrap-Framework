@@ -79,6 +79,18 @@ class HTTPReadTests(unittest.TestCase):
                 chunks.append(chunk)
         return b"".join(chunks)
 
+    def test_locked_storage_is_busy_and_recovers_after_explicit_read(self):
+        lock = sqlite3.connect(self.store.path)
+        lock.execute("BEGIN EXCLUSIVE")
+        try:
+            status, _, body = self.json("/v1/health")
+            self.assertEqual((status, body["error"]), (503, "STATE_BUSY"))
+            self.assertFalse(body["authorizes_execution"])
+            self.assertNotIn(str(self.store.path), json.dumps(body))
+        finally:
+            lock.rollback(); lock.close()
+        self.assertEqual(self.json("/v1/health")[0], 200)
+
     def test_authenticated_health_and_loopback_only(self):
         status, headers, result = self.json("/v1/health")
         self.assertEqual(status, 200)

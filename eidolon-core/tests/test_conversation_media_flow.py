@@ -229,10 +229,10 @@ class StorageTests(Base):
                 UPDATE meta SET value='eidolon-conversation-store/4' WHERE key='schema'; PRAGMA user_version=4;
             """ % cs.MEDIA_LINKS_TABLE)
         result = st.migrate_with_backup(self.runtime.store, Path(self.tmp.name) / "backup-v4.sqlite3")
-        self.assertEqual((result["from_version"], result["version"]), (4, 5))
+        self.assertEqual((result["from_version"], result["version"]), (4, cs.VERSION))
         conv = cs.ConversationStore(self.runtime.store)
         self.assertEqual([v["binding"] for v in views_for(conv, owner_client_id="pc", conversation_id=self.cid)],
-                         ["UNVERIFIABLE"])
+                         ["LEGACY_UNVERIFIABLE"])
         self.assertTrue(ref)
 
 

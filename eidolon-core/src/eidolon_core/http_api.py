@@ -37,6 +37,7 @@ from .presentation import header, message
 from .receipt_lookup import ReceiptLookupError, lookup as lookup_receipt
 from .research_archive import ArchiveError, read_catalog
 from .store import Store
+from .sqlite_errors import is_busy
 
 PROTOCOL = "eidolon-http-read/1"
 MAX_REQUEST = 8192
@@ -52,12 +53,10 @@ STATE_BUSY_RETRY_SECONDS = 2
 
 
 def storage_busy(exc):
-    """True only for SQLite's own lock codes (a writer holds the database), never for corruption,
-    a missing file, permissions or an interrupted statement (SQL budget): those stay unavailable."""
-    code = getattr(exc, "sqlite_errorcode", None)
-    if code is not None:
-        return code & 0xFF in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED)
-    return str(exc).startswith(("database is locked", "database table is locked"))
+    """G125: SQLite's own lock codes only (shared classification, sqlite_errors.is_busy)."""
+    return is_busy(exc)
+
+
 TOKEN_PATTERN = r"[A-Za-z0-9_-]{32,128}"
 MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
@@ -72,7 +71,6 @@ SECURITY_HEADERS = (("Cache-Control", "no-store"),
                     ("Content-Security-Policy", "default-src 'none'; script-src 'self'; "
                      "style-src 'self'; connect-src 'self'; img-src 'self'; "
                      "base-uri 'none'; frame-ancestors 'none'; form-action 'none'"))
-
 
 class APIError(ValueError):
     def __init__(self, status, code):
@@ -358,10 +356,9 @@ class _Handler(BaseHTTPRequestHandler):
                            "INVALID_PAGE_LIMIT", "INVALID_LIST_CURSOR"}
             self._error(400 if exc.code in bad_request else 503,
                         exc.code if exc.code in bad_request else "STATE_UNAVAILABLE")
-        except sqlite3.OperationalError as exc:
-            # G125 (G067-3/G081): a lock held by another writer is "busy", anything else unavailable.
-            self._error(503, "STATE_BUSY" if storage_busy(exc) else "STATE_UNAVAILABLE")
-        except (sqlite3.Error, ContractError, ValueError, TypeError, KeyError,
+        except sqlite3.Error as exc:
+            self._error(503, "STATE_BUSY" if is_busy(exc) else "STATE_UNAVAILABLE")
+        except (ContractError, ValueError, TypeError, KeyError,
                 IndexError, RecursionError, UnicodeError):
             self._error(503, "STATE_UNAVAILABLE")
         except TimeoutError:

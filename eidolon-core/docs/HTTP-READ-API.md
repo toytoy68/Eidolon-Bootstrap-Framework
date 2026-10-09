@@ -227,3 +227,15 @@ Suite de G067-3 et de la matrice [G081](validation/2026-10-09/claude-g081/README
     absent non recréé ;
   - `session.test.js` : occupé contre indisponible, sans réessai
     automatique.
+
+## Stockage occupé — C-068 / G125 (09/10/2026)
+
+Une lecture empêchée par un verrou SQLite réel (code BUSY/LOCKED) répond
+`503 STATE_BUSY`. La saturation des connexions reste `503 BUSY`.
+Une base absente/corrompue, une identité invalide ou un dépassement du budget
+SQL reste `STATE_UNAVAILABLE` : le texte de l'exception n'est pas utilisé
+pour inventer un verrou.
+
+Le client conserve la dernière lecture datée et propose une nouvelle lecture
+explicite. Aucune tentative automatique n'est ajoutée. Voir
+[les limites de validation de ce lot](validation/2026-10-09/codex-takeover-c068/README.md).

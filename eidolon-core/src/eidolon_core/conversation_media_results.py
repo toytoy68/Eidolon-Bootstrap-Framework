@@ -29,7 +29,8 @@ def _verification(artifact_store, reference):
     return "hash_verified"
 
 
-def result_view(proposal, job, *, conversations, artifact_store, viewer_client_id, collection=None):
+def result_view(proposal, job, *, conversations, artifact_store, viewer_client_id, collection=None,
+                expected_job_id=None):
     proposal = cm.validate_proposal(proposal)
     if (viewer_client_id != proposal["owner_client_id"]
             or conversations.owner(proposal["conversation_id"]) != viewer_client_id
@@ -42,6 +43,9 @@ def result_view(proposal, job, *, conversations, artifact_store, viewer_client_i
             "authorizes_execution": False}
     if not isinstance(job, dict) or job.get("schema") != "media-job/1" or not isinstance(job.get("id"), str):
         return {**view, "binding": "UNREADABLE"}
+    if expected_job_id is not None and job["id"] != expected_job_id:
+        # Do not expose the replacement job\'s state, observation or outputs, even for an equal request.
+        return {**view, "job_id": expected_job_id, "binding": "WRONG_JOB"}
     state = job.get("observed_state") or job.get("state")
     view.update(job_id=job["id"], state_received=state if isinstance(state, str) else None)
     view["stage"] = cm.stage(view["state_received"]) or "received_as_is"
@@ -130,6 +134,12 @@ def views_for(conversations, *, owner_client_id, conversation_id):
     from .media_outputs import inspect_collection
     views = []
     for link in conversations.media_links(owner_client_id=owner_client_id, conversation_id=conversation_id):
+        if link["job_id"] is None:
+            # Migrated v4 records lack the original id. Reading the current path cannot recover it.
+            view = result_view(link["proposal"], None, conversations=conversations,
+                               artifact_store=_UnavailableStore(), viewer_client_id=owner_client_id)
+            views.append({**view, "binding": "LEGACY_UNVERIFIABLE"})
+            continue
         try:
             job = inspect_job(link["job_dir"])
         except (MediaError, OSError, ValueError):
@@ -138,7 +148,8 @@ def views_for(conversations, *, owner_client_id, conversation_id):
             # G123-R1: an equal request is not the same job. A v4 link without job id must be redone.
             view = result_view(link["proposal"], None, conversations=conversations, artifact_store=_UnavailableStore(),
                                viewer_client_id=owner_client_id)
-            views.append({**view, "binding": "WRONG_JOB" if link["job_id"] else "UNVERIFIABLE"})
+            views.append({**view, "binding": "WRONG_JOB" if link["job_id"] else "LEGACY_UNVERIFIABLE",
+                          "job_id": link["job_id"]})     # the pinned identity, never the job found now
             continue
         collection = None
         if link["collection_dir"] is not None:
@@ -151,5 +162,6 @@ def views_for(conversations, *, owner_client_id, conversation_id):
         except (MediaError, OSError, ValueError):
             store = _UnavailableStore()
         views.append(result_view(link["proposal"], job, conversations=conversations, artifact_store=store,
-                                 viewer_client_id=owner_client_id, collection=collection))
+                                 viewer_client_id=owner_client_id, collection=collection,
+                                 expected_job_id=link["job_id"]))
     return views

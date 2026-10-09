@@ -12,7 +12,7 @@ Contrat des objets : [CONVERSATION-CONTRACT.md](CONVERSATION-CONTRACT.md) (G084)
 - C'est une **base séparée** : `missions.sqlite3` n'est jamais migré ni écrit par
   ce module. Un test vérifie que son empreinte reste identique après des tours,
   des réponses et des lectures.
-- Le schéma est versionné (`eidolon-conversation-store/4`, `user_version` 4 ; v1 à v3 seulement par migration explicite).
+- Le schéma est versionné (`eidolon-conversation-store/5`, `user_version` 5 ; v1 à v4 seulement par migration explicite).
   Une autre version est refusée.
 - Le dépôt est **lié au Store des missions** par son `store_id`. Copié à côté
   d'un autre Store, il est refusé (`STORE_CHANGED`).
@@ -69,7 +69,7 @@ défendent pas contre un processus hostile qui tourne sous le même utilisateur.
   `python -m eidolon_core.conversation_api --state <état> migrate --backup <nouveau fichier>`
   (sauvegarde vérifiée d'abord, voir G099 ci-dessous), ou, dans le code,
   `ConversationStore(store, migrate=True)`. Elle avance d'une version à la
-  fois (v1 → v2 → v3 → v4), **une transaction par étape**, sur le même Store, et ne
+  fois (v1 → v2 → v3 → v4 → v5), **une transaction par étape**, sur le même Store, et ne
   réécrit rien d'autre. Une migration interrompue laisse une version
   intermédiaire valide, que la même commande reprend. Sans migration, un
   dépôt ancien est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être
@@ -117,6 +117,24 @@ a pas de migration descendante : un ancien code refuse une base plus récente.
 ouvert est détecté seulement s'il écrit après la sauvegarde) ; la sauvegarde
 n'est ni chiffrée ni signée, son empreinte prouve l'intégrité, pas
 l'authenticité ; aucun test sur un vrai disque plein.
+
+## Schéma v5 : identité exacte du travail média (C-068)
+
+`media_links.job_id` conserve l'identifiant du travail constaté au moment du
+rattachement. Une requête identique ne suffit pas à accepter un autre travail.
+La migration v4 → v5 est explicite, avec sauvegarde vérifiée, et laisse NULL
+pour les anciennes liaisons dont l'identité n'avait pas été enregistrée :
+elles deviennent `LEGACY_UNVERIFIABLE`, sans adoption du dossier courant.
+`media-link` refuse de réécrire ces liens (`MEDIA_LINK_CONFLICT`).
+Les chemins, propositions et dates historiques sont conservés.
+
+`media_links` participe désormais au digest logique et au comptage des
+sauvegardes, tant en v4 qu'en v5. Une modification entre sauvegarde et migration
+rend cette sauvegarde périmée (`BACKUP_STALE`).
+
+Validation C-068 : tests Python ajoutés mais non exécutés, environnement
+indisponible. Les résultats historiques ci-dessous qualifient leurs bases
+respectives. [Périmètre et vérifications](validation/2026-10-09/codex-takeover-c068/README.md).
 
 ## Schéma v4 : liens proposition média → travail
 
