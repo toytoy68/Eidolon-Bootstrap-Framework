@@ -1,0 +1,11 @@
+Processing /tmp/eidolon-1555-extracted/eidolon-beta-e354e6fc61ad/eidolon-core
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: eidolon-core
+  Building wheel for eidolon-core (pyproject.toml): started
+  Building wheel for eidolon-core (pyproject.toml): finished with status 'done'
+  Created wheel for eidolon-core: filename=eidolon_core-0.1.0-py3-none-any.whl size=284763 sha256=341b08020de1526c9649d138e7324727fcbdd0511ecfc1b85aff7cba43d48be1
+  Stored in directory: /root/.cache/pip/wheels/72/32/93/1671a6615f19bdb3d8ea24f845de258e068b7f6dd18d86a79f
+Successfully built eidolon-core
+Installing collected packages: eidolon-core
+Successfully installed eidolon-core-0.1.0

@@ -620,3 +620,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G122](2026-10-09-codex-C-MSG-G122.md) — affectation des six suites, archivée avant G128.
 
 - [C-MSG-G128](2026-10-09-codex-C-MSG-G128.md) — contrat worker C-064 et coordination C122.
+
+- [C-MSG-G129](2026-10-09-codex-C-MSG-G129.md) — contre-revue C122, trois reproducteurs.

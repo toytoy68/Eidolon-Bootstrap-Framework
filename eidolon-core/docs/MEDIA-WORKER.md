@@ -84,6 +84,10 @@ eidolon-media-worker --root /CHEMIN_PRIVE/media-worker --state /ETAT_CORE \
   --worker-id mw-IDENTIFIANT list --client-id pc
 
 eidolon-media-worker --root /CHEMIN_PRIVE/media-worker --state /ETAT_CORE \
+  --worker-id mw-IDENTIFIANT check --client-id pc --ticket mt-IDENTIFIANT \
+  --config /CONFIG_PRIVEE/media.json
+
+eidolon-media-worker --root /CHEMIN_PRIVE/media-worker --state /ETAT_CORE \
   --worker-id mw-IDENTIFIANT run --client-id pc --ticket mt-IDENTIFIANT \
   --config /CONFIG_PRIVEE/media.json --execute-local
 
@@ -137,3 +141,19 @@ C-064 fournit code, CLI, contrats et tests synthétiques. G122/G123 raccordent
 encore le dialogue, la soumission et l'interface. Aucun démon de traitement ni
 lancement automatique depuis l'accueil n'est activé par cette livraison.
 Les essais modèles réels, V100, VM et PC restent distincts.
+
+
+## Précontrôle du ticket — C-065
+
+La commande check et worker.check() lisent la proposition, la source et la
+configuration locales ; aucun HTTP, décodage FFmpeg, réservation ou essai.
+LOCAL_INPUTS_VALID et ready indiquent uniquement les prérequis locaux ; un
+groupe déjà réservé donne ready: false. Le matériel et le moteur restent non
+qualifiés. Ni chemins ni plan contenant le prompt dans cette réponse.
+
+run_once refait ces contrôles avant de consommer l'essai. Une configuration
+locale invalide, une pièce jointe modifiée ou un groupe déjà occupé laisse le
+ticket ACCEPTED. Après correction locale/revue de la réservation, l'opérateur
+peut lancer ce même ticket : aucun effet n'avait été admis. Une panne **après**
+admission garde les règles conservatrices de C-064. Les fichiers sont relus
+à l'exécution ; le précontrôle n'est ni un cache ni une permission.

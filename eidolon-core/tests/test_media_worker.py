@@ -390,3 +390,48 @@ w.run_once(sys.argv[4],client_id="pc",conversations=ConversationStore(Store(sys.
         self.assertIn("Eidolon Core Technologies", out.getvalue()); self.assertIn("ACCEPTED", out.getvalue())
         self.assertNotIn("Un phare", out.getvalue()); self.assertNotIn(str(self.root), out.getvalue())
         self.assertEqual(before, ((self.state / "missions.sqlite3").read_bytes(), self.conv.path.read_bytes()))
+
+    def test_bad_local_configuration_can_be_fixed_without_consuming_ticket(self):
+        from eidolon_core.media_backends import LocalMediaBackend
+        from tests.test_media_agents import config
+        ticket = self.enqueue()
+        with self.assertRaises(MediaError):
+            self.worker.run_once(ticket["ticket_id"], client_id="pc", conversations=self.conv,
+                                 config=self.cfg, execute_local=True)
+        self.assertEqual(self.worker.tickets(client_id="pc")[0]["state"], "ACCEPTED")
+        self.assertEqual(self.pool.inspect()["state"], "AVAILABLE")
+        fixed = {**config(), **self.cfg}
+        sent = []
+        def transport(*args): sent.append(args); return {"prompt_id": "fixed"}
+        result = self.worker.run_once(ticket["ticket_id"], client_id="pc", conversations=self.conv,
+                                      config=fixed, execute_local=True, backend=LocalMediaBackend(fixed, transport=transport))
+        self.assertEqual(result["state"], "RETURNED")
+        self.assertEqual(len(sent), 1)
+
+    def test_busy_resource_leaves_waiting_ticket_accepted(self):
+        first = self.enqueue(); second = self.enqueue(self.proposal())
+        self.run_ticket(first)
+        with self.assertRaisesRegex(MediaError, "RESOURCE_RESERVED"):
+            self.run_ticket(second)
+        self.assertEqual(self.worker.tickets(client_id="pc")[1]["state"], "ACCEPTED")
+        self.assertEqual(self.backend.calls, 1)
+        current = self.pool.inspect()["current"]
+        self.pool.release(current["lease_id"], reviewed_idle=True, reason="Synthetic review")
+        self.assertEqual(self.run_ticket(second)["state"], "RETURNED")
+        self.assertEqual(self.backend.calls, 2)
+
+    def test_check_offline_has_no_effect_or_path_and_detects_resource_busy(self):
+        from tests.test_media_agents import config
+        ticket = self.enqueue(); fixed = {**config(), **self.cfg}
+        before = (self.path / "queue.json").read_bytes(), self.conv.path.read_bytes()
+        with patch("eidolon_core.media_backends.json_http", side_effect=AssertionError("network")):
+            ready = self.worker.check(ticket["ticket_id"], client_id="pc", conversations=self.conv, config=fixed)
+        self.assertTrue(ready["ready"])
+        self.assertEqual(ready["resource_state"], "AVAILABLE")
+        self.assertFalse(ready["hardware_qualified"])
+        self.assertNotIn(str(self.root), json.dumps(ready))
+        self.assertEqual(before, ((self.path / "queue.json").read_bytes(), self.conv.path.read_bytes()))
+        self.pool.reserve("media-" + "a" * 32, "video.create")
+        blocked = self.worker.check(ticket["ticket_id"], client_id="pc", conversations=self.conv, config=fixed)
+        self.assertFalse(blocked["ready"])
+        self.assertEqual(self.worker.tickets(client_id="pc")[0]["state"], "ACCEPTED")

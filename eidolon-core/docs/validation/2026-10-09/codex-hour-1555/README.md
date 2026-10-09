@@ -43,3 +43,27 @@ affiché) et G099-R1 (media_links exclue du digest logique ; pas de perte physiq
 de sauvegarde revendiquée). probe_c122_cancel_race.js reproduit G124-R1 : réponse
 d'annulation de A affichée « arrêt confirmé » tandis que la cible sélectionnée
 est B. Transport scripté, aucune annulation réelle. Transmis à Claude G129.
+
+
+## C-065 — Précontrôle et paquet installé
+
+22 tests worker réussis ; c065-full-suite.txt : 1 319 tests Python réussis,
+zéro ignoré, 226,842 s, Memory activée. Paquet au commit local e354e6fc61adfb51b29e3ac3f328dbd77d9aa8c0 :
+137 fichiers, 492 825 octets ; SHA-256 af0e720c076bb9e22c8fc11872808e91eec3c72f58337915b2e9bca5ec9a4685.
+Deux builds identiques, manifeste vérifié, installation neuve sans index/dépendance
+réseau depuis l'archive. 80 modules installés identiques aux sources.
+
+installed-worker.json : six modes, six tickets, quatre mises en file, deux
+analyses, deux uploads vérifiés, quatre collectes ; aucune répétition d'effet
+ou d'import au rejeu. Six inspections humaines sans mutation ni chemins, six
+libérations opérateur exactes. HTTP local et FFmpeg/FFprobe réels, moteurs simulés.
+La recette utilise un authentificateur réel puis insère la proposition canonique
+directement dans la table de test : pas de faux récit de dialogue/HTTP média.
+
+G089 original échoue sur son ancien appel cancel (sans proposition figée G100) ;
+installed-g089-first-error.txt conserve l'erreur. G095 original échoue en parsant
+sa sortie vide. Copies adaptées dans installed_conversation_recipe.py et
+installed_complete_recipe.py : demande cancel_proposal, vérifie le digest, ajoute
+conversation_id et proposal_sha256 à cancel. Aucun attendu affaibli.
+installed-complete.json : 13/13 et G089 adapté 18/18. Les originaux Claude ne sont
+pas modifiés, retour pour G127. Le stderr conserve la coupure réseau volontaire.

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-09/claude-g089/recipe_g089.py", line 168, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-09/claude-g089/recipe_g089.py", line 141, in main
+    check("annulation demandée, non confirmée", cancel["meaning"] == "CANCELLATION_REQUESTED_NOT_CONFIRMED"
+                                                ~~~~~~^^^^^^^^^^^
+KeyError: 'meaning'

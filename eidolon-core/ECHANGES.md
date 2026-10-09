@@ -1591,3 +1591,18 @@ C122 intégré avec C-064, 63 tests ciblés et Node conversation réussis. Trois
 retours reproduits : identité du travail non épinglée après liaison (G123-R1),
 media_links absente du digest logique (G099-R1), confirmation d’annulation tardive
 affichée sur une nouvelle cible (G124-R1). Correctifs confiés à Claude.
+
+### Prise en charge C-065 — 09/10/2026, 16 h 17 Europe/Paris
+
+Codex : précontrôle opérateur des tickets média et recette du paquet installé.
+Vérifier configuration et disponibilité du groupe avant admission pour éviter
+qu'une erreur locale connue consomme le seul essai. media_worker.py, CLI et tests ;
+Claude garde conversation/API/UI. Aucun moteur ni ressource réservée au précontrôle.
+
+
+### C-065 / C-MSG-G130 — 09/10/2026, 16 h 24 Europe/Paris
+
+Précontrôle sans effet, 22 tests worker et 1 319 complets. Paquet e354e6f installé,
+80 modules identiques ; six modes worker et recette conversation 13/13 + 18/18
+adaptée au nouveau contrat G100. C-066 pris par Codex : transport HTTP média
+avec borne murale, sans modification des fichiers conversation.

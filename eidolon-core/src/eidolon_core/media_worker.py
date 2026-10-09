@@ -26,7 +26,7 @@ import uuid
 from . import conversation as cv
 from . import conversation_media as cm
 from .contracts import ContractError, digest, snapshot
-from .media_agents import MediaError, execute, parse_json, prepare
+from .media_agents import MediaError, execute, parse_json, prepare, read_source
 from .media_artifacts import ArtifactStore, _directory, _private, _read, _write, _encoded
 
 MAX_TICKETS = 128
@@ -222,6 +222,42 @@ class MediaWorker:
             job["observed_state"] = "REVIEW_REQUIRED"
         return job
 
+    def _inputs(self, row, conversations, config, backend=None):
+        """Offline local checks only. An invalid config or a held pool consumes no attempt."""
+        from .media_backends import LocalMediaBackend
+        from .media_resources import configured
+        pool = configured(config)
+        if pool is None:
+            raise MediaError("WORKER_RESOURCE_POOL_REQUIRED")
+        resources = pool.inspect()
+        artifact_store = None
+        if row["proposal"]["artifact"] is not None:
+            storage = config.get("artifact_store") if isinstance(config, dict) else None
+            if type(storage) is not dict or set(storage) != {"root", "store_id"}:
+                raise MediaError("ARTIFACT_STORE_NOT_CONFIGURED")
+            artifact_store = ArtifactStore(storage["root"], expected_store_id=storage["store_id"])
+        request = cm.verify_for_execution(row["proposal"], conversations, artifact_store)
+        runner = backend or LocalMediaBackend(config)
+        source, evidence = read_source(prepare(request), config)
+        del source
+        runner.plan(prepare(request), evidence)  # no inference, upload, FFmpeg or HTTP
+        return request, runner, resources
+
+    def check(self, ticket_id, *, client_id, conversations, config):
+        """Offline readiness of one ticket. No admission, mutation, HTTP or inference."""
+        self._scope(conversations)
+        config = snapshot(config)
+        with self._locked() as (_, value):
+            row = self._row(value, ticket_id, client_id)
+            receipt = self._receipt(row)
+            if row["state"] != "ACCEPTED":
+                return {"receipt": receipt, "state": "ATTEMPT_ALREADY_RECORDED", "ready": False,
+                        "authorizes_execution": False, "hardware_qualified": False}
+            _, _, resources = self._inputs(row, conversations, config)
+            return {"receipt": receipt, "state": "LOCAL_INPUTS_VALID", "resource_state": resources["state"],
+                    "ready": resources["state"] == "AVAILABLE", "authorizes_execution": False,
+                    "hardware_qualified": False}
+
     def run_once(self, ticket_id, *, client_id, conversations, config, execute_local=False, backend=None):
         """Explicit one-shot worker, NEVER called just because a proposal was submitted.
 
@@ -237,22 +273,15 @@ class MediaWorker:
             row = self._row(value, ticket_id, client_id)
             if row["state"] != "ACCEPTED":
                 return self._receipt(row)  # no re-read/upload/resubmit or engine query
-            from .media_resources import configured
-            if configured(config) is None:
-                raise MediaError("WORKER_RESOURCE_POOL_REQUIRED")
-            artifact_store = None
-            if row["proposal"]["artifact"] is not None:
-                storage = config.get("artifact_store") if isinstance(config, dict) else None
-                if type(storage) is not dict or set(storage) != {"root", "store_id"}:
-                    raise MediaError("ARTIFACT_STORE_NOT_CONFIGURED")
-                artifact_store = ArtifactStore(storage["root"], expected_store_id=storage["store_id"])
-            request = cm.verify_for_execution(row["proposal"], conversations, artifact_store)
+            request, runner, resources = self._inputs(row, conversations, config, backend)
+            if resources["state"] != "AVAILABLE":
+                raise MediaError("RESOURCE_RESERVED")
             row["state"] = "ATTEMPTED"
             row["configuration_sha256"] = digest(config)
             _save(fd, value)  # durable before execute (including resource-pool reservation)
             frozen = snapshot(row)
         try:
-            execute(request, config, self.path / ticket_id, backend=backend, job_id=frozen["job_id"])
+            execute(request, config, self.path / ticket_id, backend=runner, job_id=frozen["job_id"])
         except Exception:
             # Do not copy engine text, prompts, paths, exceptions or config into the receipt.
             self._finish(ticket_id, "REVIEW_REQUIRED", "MEDIA_ATTEMPT_UNCERTAIN")

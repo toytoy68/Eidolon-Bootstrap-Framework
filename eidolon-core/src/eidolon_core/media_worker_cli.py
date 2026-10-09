@@ -29,6 +29,8 @@ def render(value):
                            ("execution", "Exécution"), ("failure_code", "Diagnostic")):
             if row.get(key) is not None:
                 lines.append(message("INFO", f"{label} : {row[key]}"))
+    if "ready" in value:
+        lines.append(message("INFO", f"Précontrôle local : {value.get('state')} ; prêt localement : {value['ready']}"))
     view = value.get("result")
     if isinstance(view, dict):
         lines.append(section("Résultat non vérifié"))
@@ -58,12 +60,13 @@ def main(argv=None):
     sub.add_parser("init", help="créer une NOUVELLE file privée, sans moteur")
     listing = sub.add_parser("list", help="reçus d'un client, lecture locale")
     listing.add_argument("--client-id", required=True)
-    for name in ("run", "result", "poll", "collect"):
+    for name in ("check", "run", "result", "poll", "collect"):
         p = sub.add_parser(name)
         p.add_argument("--client-id", required=True)
         p.add_argument("--ticket", required=True)
-        if name == "run":
+        if name in {"check", "run"}:
             p.add_argument("--config", required=True)
+        if name == "run":
             p.add_argument("--execute-local", action="store_true", required=True,
                            help="autoriser cet essai moteur local ; ne découle pas de la soumission")
         if name in {"result", "collect"}:
@@ -83,6 +86,9 @@ def main(argv=None):
             worker = MediaWorker(args.root, worker_id=args.worker_id, store_id=conversations.store_id)
             if args.command == "list":
                 value = {"tickets": worker.tickets(client_id=args.client_id)}
+            elif args.command == "check":
+                value = worker.check(args.ticket, client_id=args.client_id, conversations=conversations,
+                                     config=load_json(args.config))
             elif args.command == "run":
                 value = worker.run_once(args.ticket, client_id=args.client_id, conversations=conversations,
                                         config=load_json(args.config), execute_local=args.execute_local)

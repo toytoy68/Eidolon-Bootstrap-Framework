@@ -1,0 +1,178 @@
+{
+ "recipe": "G095 with G089 adapted to current cancellation contract",
+ "installed_module": "/eidolon_core/__init__.py",
+ "passed": 13,
+ "total": 13,
+ "checks": [
+  {
+   "section": "A",
+   "check": "recette G089 adaptée au contrat annulation G100",
+   "ok": true,
+   "detail": "18/18"
+  },
+  {
+   "section": "B",
+   "check": "contexte partiel annoncé",
+   "ok": true,
+   "detail": "{\"history_excluded\": 2, \"history_sent\": 20, \"memory\": \"none\", \"memory_items\": 0, \"memory_truncated_items\": 0, \"observations_excluded\": 0, \"observations_sent\": 0, \"partial\": true}"
+  },
+  {
+   "section": "B",
+   "check": "reprise : conversation listée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "C",
+   "check": "stockage occupé : 503 explicite, borné",
+   "ok": true,
+   "detail": "503 CONVERSATION_STORE_BUSY en 2.0 s"
+  },
+  {
+   "section": "C",
+   "check": "après libération : le même tour aboutit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "D",
+   "check": "processus tué : tentative en cours, pas de réponse inventée",
+   "ok": true,
+   "detail": "{\"pending\": true, \"model_called\": false}"
+  },
+  {
+   "section": "D",
+   "check": "après l'échéance : interrompu, jamais relancé",
+   "ok": true,
+   "detail": "appels moteur 1"
+  },
+  {
+   "section": "E",
+   "check": "export : cohérent, historique, sans clé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "E",
+   "check": "export falsifié détecté",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "F",
+   "check": "artefact rejeté par le magasin",
+   "ok": true,
+   "detail": "{\"error\": \"UNSUPPORTED_MEDIA_HEADER\", \"automatic_retry\": false}"
+  },
+  {
+   "section": "F",
+   "check": "proposition média : référence rattachée, jamais un chemin",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "F",
+   "check": "artefact d'un autre propriétaire refusé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "section": "F",
+   "check": "aucun état média ne vaut succès",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "g089": [
+  {
+   "check": "ouverture avec la clé de conversation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "réponse",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "clarification avec candidats du catalogue",
+   "ok": true,
+   "detail": "TARGET_AMBIGUOUS"
+  },
+  {
+   "check": "proposition figée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "hors capacités expliqué",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "lecteur refusé en écriture",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "proposition modifiée refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "réponse perdue : reçu retrouvé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "doublon : même reçu",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "autre clé pour la même proposition refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "une seule mission créée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "soumission ne lance rien",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "résultat lu par l'API de lecture",
+   "ok": true,
+   "detail": "service_diagnostic.synthetic"
+  },
+  {
+   "check": "références du résultat : lien vérifié",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "la clé de conversation ne lit pas",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "annulation demandée, non confirmée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "arrêt confirmé par le runtime",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "modèle indisponible : rien de deviné",
+   "ok": true,
+   "detail": "MODEL_UNAVAILABLE"
+  }
+ ]
+}
