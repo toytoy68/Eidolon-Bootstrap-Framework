@@ -228,6 +228,19 @@ Serveur : `--conversations … --personality <fichier>
 | fichier absent ou invalide, copie valide | — | copie utilisée (`PERSONALITY_FILE_REFUSED+LAST_VALID_KEPT`) | copie utilisée |
 | fichier absent ou invalide, aucune copie valide | consignes standard, `personality: null` | consignes standard, `personality: null` | **conversation bloquée** : `UNAVAILABLE` `PERSONALITY_REQUIRED_UNAVAILABLE`, aucun modèle appelé |
 
+**Version exacte exigée** (demande de toytoy, 09/10/2026) :
+`--personality-mode required --personality-sha256 <empreinte>`.
+
+- L'opérateur obtient l'empreinte de son fichier, après validation, avec
+  `python -m eidolon_core.personality <fichier>`.
+- Seule cette version peut servir. Un autre fichier, même valide, est refusé
+  (`PERSONALITY_VERSION_MISMATCH`) et **ne remplace pas** la copie.
+- La copie n'est utilisée que si elle porte cette empreinte. Sinon
+  (`…+COPY_NOT_EXPECTED_VERSION`), la conversation est bloquée comme
+  ci-dessus.
+- Une empreinte mal formée, ou donnée hors du mode `required`, empêche le
+  démarrage.
+
 Dans tous les cas, les missions continuent : soumission, reçu, exécution et
 annulation. Un fichier modifié après le démarrage ne change rien avant le
 redémarrage suivant.
@@ -235,7 +248,7 @@ redémarrage suivant.
 La page affiche « Personnalité : version … (empreinte) », « Personnalité :
 aucune chargée », ou rien pour une réponse plus ancienne que ce champ.
 
-Tests : [test_personality.py](../tests/test_personality.py) (19).
+Tests : [test_personality.py](../tests/test_personality.py) (24).
 
 ## Pannes : jamais de réponse devinée
 
@@ -286,6 +299,5 @@ Le parcours simulé, en un test :
   - la sauvegarde du dépôt des conversations (G099) ne copie pas
     `personality-last-valid.json` : après une restauration, la copie revient
     du fichier de l'opérateur au démarrage suivant ;
-  - exiger une version **précise** (empreinte attendue) n'est pas
-    implémenté : `required` exige une personnalité valide, quelle qu'elle
-    soit.
+  - changer la version exigée demande un redémarrage avec la nouvelle
+    empreinte.

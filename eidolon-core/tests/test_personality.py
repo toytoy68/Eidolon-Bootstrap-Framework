@@ -271,6 +271,55 @@ class RestartTests(Base):
         self.assertEqual(pe.load("none", None, self.directory).event, "PERSONALITY_NONE")
 
 
+class ExactVersionTests(Base):
+    """toytoy, 09/10/2026: required mode may demand one exact version (sha256)."""
+
+    def test_the_demanded_version_is_used(self):
+        self.write(value())
+        sha = pe.build(value()).sha256
+        state = pe.load("required", str(self.file), self.directory, sha)
+        self.assertEqual((state.current.sha256, state.event, state.blocked), (sha, "PERSONALITY_LOADED", False))
+
+    def test_another_valid_file_is_refused_never_copied_and_the_copy_is_used(self):
+        self.write(value()); pinned = self.load().current                 # v0.2 copied
+        self.write(value(version="0.3"))
+        state = pe.load("required", str(self.file), self.directory, pinned.sha256)
+        self.assertEqual((state.current, state.event), (pinned, "PERSONALITY_VERSION_MISMATCH+LAST_VALID_KEPT"))
+        self.assertEqual(pe.read_copy(self.directory), value())              # the copy was not replaced
+
+    def test_without_the_demanded_version_only_the_conversation_is_blocked(self):
+        self.write(value(version="0.3")); self.load()                       # the copy holds 0.3
+        expected = pe.build(value()).sha256                                  # the operator demands 0.2
+        state = pe.load("required", str(self.file), self.directory, expected)
+        self.assertEqual((state.current, state.blocked), (None, True))
+        self.assertEqual(state.event, "PERSONALITY_VERSION_MISMATCH+COPY_NOT_EXPECTED_VERSION")
+        self.write(b"{", 0o600)
+        state = pe.load("required", str(self.file), self.directory, expected)
+        self.assertEqual((state.blocked, state.event), (True, "PERSONALITY_FILE_REFUSED+COPY_NOT_EXPECTED_VERSION"))
+        reply = self.say(dg.Dialogue(self.conversations, Recording(self.runtime.catalog), self.runtime.catalog,
+                                     personality=state), "t1")["reply"]
+        self.assertEqual((reply["kind"], reply["core_note"]), ("UNAVAILABLE", "PERSONALITY_REQUIRED_UNAVAILABLE"))
+
+    def test_the_pin_is_checked(self):
+        self.write(value())
+        sha = pe.build(value()).sha256
+        for mode, expected in (("last-valid", sha), ("required", sha.upper()), ("required", sha[:16])):
+            with self.subTest(mode=mode, expected=expected):
+                with self.assertRaisesRegex(ContractError, "INVALID_PERSONALITY"):
+                    pe.load(mode, str(self.file), self.directory, expected)
+
+    def test_the_operator_helper_prints_the_sha_to_demand(self):
+        import contextlib, io
+        self.write(value())
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(pe.main([str(self.file)]), 0)
+        self.assertEqual(out.getvalue().splitlines()[-1], pe.build(value()).sha256)
+        self.write(value(), 0o644)
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(pe.main([str(self.file)]), 2)
+
+
 class RequiredModeTests(Base):
     """GPT, C-070: required personality without a valid copy blocks the conversation only."""
 

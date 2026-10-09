@@ -406,8 +406,8 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None)):
-        """personality: (mode, private file or None), C-070; only with conversations."""
+                 media_workspace=None, personality=("none", None, None)):
+        """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
         if type(port) is not int or not 0 <= port <= 65535:
@@ -428,7 +428,8 @@ class ReadServer(HTTPServer):
             worker, artifacts = open_media_workspace(*media_workspace) if media_workspace else (None, None)
             self.conversation_api = ConversationAPI(synthetic_runtime(Store(state)), dialogue_model=conversations(),
                                                     read_token=token, media_worker=worker, media_artifacts=artifacts,
-                                                    personality_mode=personality[0], personality_file=personality[1])
+                                                    personality_mode=personality[0], personality_file=personality[1],
+                                                    personality_sha256=personality[2] if len(personality) > 2 else None)
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -520,6 +521,8 @@ def main(argv=None):
                         help="Fichier privé de personnalité du dialogue (C-070), avec --conversations")
     parser.add_argument("--personality-mode", choices=("none", "last-valid", "required"),
                         help="none (défaut sans fichier), last-valid (défaut avec fichier) ou required")
+    parser.add_argument("--personality-sha256", metavar="EMPREINTE",
+                        help="Version exacte exigée (64 caractères hexadécimaux), avec --personality-mode required")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
     if args.format and not args.check:
@@ -530,6 +533,9 @@ def main(argv=None):
     mode = args.personality_mode or ("last-valid" if args.personality else "none")
     if (args.personality or args.personality_mode) and not args.conversations:
         parser.error("--personality exige --conversations")
+    if args.personality_sha256 is not None and (mode != "required"
+                                                or not re.fullmatch(r"[0-9a-f]{64}", args.personality_sha256)):
+        parser.error("--personality-sha256 exige --personality-mode required et 64 caractères hexadécimaux minuscules")
     if (mode == "none") != (args.personality is None):
         parser.error("--personality-mode none exclut --personality ; les autres modes l'exigent")
     if args.check:
@@ -558,15 +564,16 @@ def main(argv=None):
         media = (args.media_workspace, args.media_workspace_id) if args.media_workspace else None
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
-                        media_workspace=media, personality=(mode, args.personality)) as server:
+                        media_workspace=media, personality=(mode, args.personality, args.personality_sha256)) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality
                 used = (f"version {state.current.version}, empreinte {state.current.sha256[:16]}"
                         if state.current else "aucune personnalité chargée")
                 level = "INFO" if state.event in ("PERSONALITY_LOADED", "PERSONALITY_NONE") else "ATTENTION"
+                pinned = f" ; version exigée {state.expected[:16]}" if state.expected else ""
                 blocked = " ; conversation BLOQUÉE (personnalité exigée)" if state.blocked else ""
-                print(message(level, f"Personnalité ({state.mode}) : {state.event} — {used}{blocked}."), flush=True)
+                print(message(level, f"Personnalité ({state.mode}) : {state.event} — {used}{pinned}{blocked}."), flush=True)
             mode = ("lecture seule ; conversations ACTIVES sur /v1/conversations/ (clé appairée, création de missions)"
                     if conversations is not None else "lecture seule")
             print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — {mode}."), flush=True)

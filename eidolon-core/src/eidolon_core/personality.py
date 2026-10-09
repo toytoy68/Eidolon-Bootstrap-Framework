@@ -22,6 +22,8 @@ Modes:
   last-valid  the operator's file, else the last valid copy, else none (said in each reply);
   required    as last-valid, but without any valid personality the CONVERSATION is blocked
               (missions, receipts and cancellations are not).
+              With an expected sha256, only that exact version may be used: another valid file is
+              refused and does NOT replace the copy; without that version, the conversation is blocked.
 """
 import json
 import os
@@ -70,6 +72,7 @@ class PersonalityState:
     mode: str
     current: Personality | None
     event: str
+    expected: str | None = None
 
     @property
     def blocked(self):
@@ -177,8 +180,13 @@ def write_copy(directory, value):
         raise ContractError("PERSONALITY_COPY_UNWRITABLE: the last valid copy cannot be kept") from None
 
 
-def load(mode, path, directory):
+SHA256 = re.compile(r"[0-9a-f]{64}")
+
+
+def load(mode, path, directory, expected_sha256=None):
     """Decide the personality once, at start. directory: Core's conversations directory.
+
+    expected_sha256 (required mode only): the exact version the operator demands.
 
     A refused operator file is never a startup failure (the last valid copy is kept); a valid file
     whose copy cannot be written is, so that the guarantee "last valid version kept" holds.
@@ -191,10 +199,22 @@ def load(mode, path, directory):
         return PersonalityState(mode, None, "PERSONALITY_NONE")
     if path is None:
         raise ContractError("INVALID_PERSONALITY: a personality file is required by this mode")
+    if expected_sha256 is not None and (mode != "required" or not isinstance(expected_sha256, str)
+                                        or not SHA256.fullmatch(expected_sha256)):
+        raise ContractError("INVALID_PERSONALITY: an expected sha256 needs mode required and 64 lowercase hex")
+    expected = expected_sha256
+
+    def state(personality, event):
+        return PersonalityState(mode, personality, event, expected)
     try:
         value = read_operator_file(path)
-    except ContractError:
-        refused = "PERSONALITY_FILE_REFUSED"    # unreadable, unsafe or invalid: the reason is not guessed further
+        if expected is not None and digest(value) != expected:
+            # Valid, but not the demanded version: refused like an invalid file, and never copied.
+            raise ContractError("PERSONALITY_VERSION_MISMATCH")
+    except ContractError as exc:
+        # unreadable, unsafe or invalid: the reason is not guessed further
+        refused = "PERSONALITY_VERSION_MISMATCH" if str(exc) == "PERSONALITY_VERSION_MISMATCH" \
+            else "PERSONALITY_FILE_REFUSED"
     else:
         try:
             kept = read_copy(directory)
@@ -202,11 +222,35 @@ def load(mode, path, directory):
             kept = None                     # a bad copy is replaced by the valid operator file
         if kept != value:
             write_copy(directory, value)
-        return PersonalityState(mode, build(value), "PERSONALITY_LOADED")
+        return state(build(value), "PERSONALITY_LOADED")
     try:
         kept = read_copy(directory)
     except ContractError:
-        return PersonalityState(mode, None, refused + "+PERSONALITY_COPY_INVALID")
+        return state(None, refused + "+PERSONALITY_COPY_INVALID")
     if kept is None:
-        return PersonalityState(mode, None, refused + "+NO_VALID_COPY")
-    return PersonalityState(mode, build(kept), refused + "+LAST_VALID_KEPT")
+        return state(None, refused + "+NO_VALID_COPY")
+    if expected is not None and digest(kept) != expected:
+        return state(None, refused + "+COPY_NOT_EXPECTED_VERSION")
+    return state(build(kept), refused + "+LAST_VALID_KEPT")
+
+
+def main(argv=None):
+    """Operator helper: check a personality file and print the sha256 to demand with --personality-sha256."""
+    import argparse
+    import sys
+    from .presentation import message
+    parser = argparse.ArgumentParser(description="Eidolon Core — vérifier un fichier de personnalité (C-070)")
+    parser.add_argument("fichier", help="Fichier privé de personnalité (0600)")
+    args = parser.parse_args(argv)
+    try:
+        personality = build(read_operator_file(args.fichier))
+    except ContractError:
+        print(message("ERREUR", "PERSONALITY_FILE_REFUSED : fichier illisible, non privé ou invalide."), file=sys.stderr)
+        return 2
+    print(message("OK", f"Personnalité valide : version {personality.version}."))
+    print(personality.sha256)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
