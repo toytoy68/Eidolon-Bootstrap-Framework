@@ -251,6 +251,7 @@ def validate_context_note(context):
                 or context["memory_truncated_items"] > 0 or context["observations_excluded"] > 0)
 
 
+MEDIA_TEMPLATE = re.compile(r"media\.(image|video)\.(create|edit|analyze)")
 PROFILE_NAME = re.compile(r"[a-z0-9][a-z0-9_.-]{0,39}")
 
 
@@ -280,7 +281,7 @@ def citation_check(model_text, sources):
     return {"claimed": claimed, "unsupported": [c for c in claimed if c not in sources]}
 
 
-def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None, model=None):
+def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None, model=None, media=None):
     """Core's reply to one user turn. The model text is quoted; Core decides the kind."""
     turn = validate_turn(turn)
     context = validate_context_note(context)
@@ -310,6 +311,12 @@ def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), c
         return {**reply, "kind": "OUT_OF_SCOPE", "core_note": "MODEL_DECLINED",
                 "candidates": [c["template"] for c in capabilities()]}
     template, parameters = output["proposal"]["template"], output["proposal"]["parameters"]
+    if media is not None and MEDIA_TEMPLATE.fullmatch(template):
+        # G122: Core freezes the media proposal itself (conversation_media.freeze over ITS attachments).
+        kind, value = media(turn, output["proposal"])
+        if kind == "PROPOSAL":
+            return {**reply, "kind": "PROPOSAL", "proposal": value, "proposal_sha256": digest(value)}
+        return {**reply, "kind": kind, "core_note": value}
     spec = TEMPLATES.get(template)
     if spec is None:
         return {**reply, "kind": "OUT_OF_SCOPE", "core_note": "TEMPLATE_UNSUPPORTED",

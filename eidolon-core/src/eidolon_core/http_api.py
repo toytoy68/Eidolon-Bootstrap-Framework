@@ -372,6 +372,21 @@ class _Handler(BaseHTTPRequestHandler):
     do_GET = do_POST = do_HEAD = do_PUT = do_DELETE = do_PATCH = do_OPTIONS = _dispatch
 
 
+def open_media_workspace(root, workspace_id):
+    """G122/G123: Codex's local media workspace (C-067), fixed by the operator at startup. Only a coherent
+    workspace is used: its durable queue and its artifact store. Nothing is run or contacted here."""
+    from .media_artifacts import ArtifactStore
+    from .media_workspace import inspect as inspect_workspace
+    from .media_worker import MediaWorker
+    report = inspect_workspace(root, workspace_id=workspace_id)
+    if report["state"] != "LOCAL_WORKSPACE_READY":
+        raise ValueError("MEDIA_WORKSPACE_REVIEW_REQUIRED")
+    with open(Path(root) / "workspace.json", "rb") as handle:
+        components = json.loads(handle.read(8192))["components"]
+    worker = MediaWorker(Path(root) / "worker", worker_id=components["worker"], store_id=report["store_id"])
+    return worker, ArtifactStore(Path(root) / "artifacts", expected_store_id=components["artifacts"])
+
+
 def read_assets(web_root):
     """Load the same bounded, fixed asset set for startup and diagnostics."""
     assets = {}
@@ -393,7 +408,8 @@ def read_assets(web_root):
 
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
-    def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None):
+    def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
+                 media_workspace=None):
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
         if type(port) is not int or not 0 <= port <= 65535:
@@ -411,8 +427,9 @@ class ReadServer(HTTPServer):
             from .conversation_api import ConversationAPI
             from .diagnostics import synthetic_runtime
             from .store import Store
+            worker, artifacts = open_media_workspace(*media_workspace) if media_workspace else (None, None)
             self.conversation_api = ConversationAPI(synthetic_runtime(Store(state)), dialogue_model=conversations(),
-                                                    read_token=token)
+                                                    read_token=token, media_worker=worker, media_artifacts=artifacts)
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -497,10 +514,16 @@ def main(argv=None):
                              "(profils nommés, choix explicite) ou configuration de modèle privée")
     parser.add_argument("--dialogue-profiles", metavar="FICHIER",
                         help="Fichier privé des profils de dialogue (avec --conversations profiles)")
+    parser.add_argument("--media-workspace", metavar="DOSSIER",
+                        help="Espace média privé de Codex (C-067) : file des demandes et magasin d'artefacts")
+    parser.add_argument("--media-workspace-id", metavar="mws-…", help="Identifiant exact de cet espace")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
     if args.format and not args.check:
         parser.error("--format exige --check")
+    if (args.media_workspace is None) != (args.media_workspace_id is None) or (
+            args.media_workspace and not args.conversations):
+        parser.error("--media-workspace exige --media-workspace-id et --conversations")
     if args.check:
         from .preflight import inspect, render
         report = inspect(args.state, args.token_file, port=args.port, web_root=args.web_root,
@@ -524,8 +547,10 @@ def main(argv=None):
             else:
                 conversations = ((lambda: SimulatedDialogueModel(demo_catalog())) if args.conversations == "simulated"
                                  else (lambda: ChatDialogueModel(load_model(args.conversations), demo_catalog())))
+        media = (args.media_workspace, args.media_workspace_id) if args.media_workspace else None
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
-                        research_archives=args.research_archives, conversations=conversations) as server:
+                        research_archives=args.research_archives, conversations=conversations,
+                        media_workspace=media) as server:
             print(header(title="API de consultation locale"), flush=True)
             mode = ("lecture seule ; conversations ACTIVES sur /v1/conversations/ (clé appairée, création de missions)"
                     if conversations is not None else "lecture seule")

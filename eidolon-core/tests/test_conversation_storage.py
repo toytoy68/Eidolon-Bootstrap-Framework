@@ -61,7 +61,7 @@ class Base(unittest.TestCase):
         self.path = conv.path
         self.missions_db = Path(self.runtime.store.directory) / "missions.sqlite3"
         with sqlite3.connect(self.path) as db:
-            db.executescript("DROP TABLE media_links; DROP TABLE attempts; DROP TABLE attachments; UPDATE meta SET value='%s' "
+            db.executescript("DROP TABLE media_proposals; DROP TABLE media_links; DROP TABLE attempts; DROP TABLE attachments; UPDATE meta SET value='%s' "
                              "WHERE key='schema'; PRAGMA user_version=1;" % cs.SCHEMA_V1)
         self.core_before = self.core()
 

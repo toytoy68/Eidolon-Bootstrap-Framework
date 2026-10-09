@@ -27,8 +27,10 @@ import sys
 from . import conversation as cv
 from .client_credentials import ClientCredentials, CredentialError
 from . import conversation_cancel
+from . import conversation_media as cm
 from .commands import lookup_receipt
-from .contracts import ContractError
+from .media_agents import MediaError
+from .contracts import ContractError, digest
 from . import conversation_storage
 from .conversation_store import ConversationStore
 from .dialogue import Dialogue
@@ -43,6 +45,11 @@ ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "can
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
+# Codex's media queue errors (C-064) → HTTP. Anything else from the queue is an unavailable worker.
+MEDIA_STATUS = {"MEDIA_COMMAND_KEY_REUSED": (409, "MEDIA_COMMAND_KEY_REUSED"),
+                "MEDIA_PROPOSAL_ALREADY_SUBMITTED": (409, "MEDIA_PROPOSAL_ALREADY_SUBMITTED"),
+                "MEDIA_TICKET_UNKNOWN": (404, "MEDIA_TICKET_UNKNOWN"), "MEDIA_CLIENT_MISMATCH": (403, "CLIENT_MISMATCH"),
+                "WORKER_BUSY": (503, "MEDIA_WORKER_BUSY"), "WORKER_CAPACITY": (503, "MEDIA_WORKER_FULL")}
 SECURITY_HEADERS = (("Cache-Control", "no-store"), ("X-Content-Type-Options", "nosniff"),
                     ("Referrer-Policy", "no-referrer"),
                     ("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'"))
@@ -83,14 +90,23 @@ def _fields(data, required, optional=()):
 
 
 class ConversationAPI:
-    def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None):
-        """runtime: the mission Runtime whose Store, catalogue and configuration missions use."""
+    def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None,
+                 media_worker=None, media_artifacts=None):
+        """runtime: the mission Runtime whose Store, catalogue and configuration missions use.
+
+        media_worker / media_artifacts (G122/G123): Codex's durable queue and artifact store, fixed by the
+        server configuration. Without them no media proposal is offered and nothing media is submitted.
+        """
         self.runtime = runtime
         self.conversations = ConversationStore(runtime.store)
         self.credentials = ClientCredentials(runtime.store)
+        if (media_worker is None) != (media_artifacts is None):
+            raise ContractError("INVALID_CONVERSATION: a media worker and its artifact store go together")
+        self.media_worker, self.media_artifacts = media_worker, media_artifacts
         # attempt_seconds=None: wall budget per attempt = the adapter's own timeout + 5 s, 120 s otherwise,
         # derived per turn from the model actually used (a profile may change between turns, G098).
-        self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds)
+        self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds,
+                                 media_proposals=media_worker is not None)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
 
@@ -104,6 +120,9 @@ class ConversationAPI:
             return exc.status, self._error(exc.code)
         except CredentialError as exc:
             return 503, self._error(str(exc).split(":")[0])
+        except MediaError as exc:
+            return MEDIA_STATUS.get(exc.code, (503, "MEDIA_WORKER_UNAVAILABLE"))[0], self._error(
+                MEDIA_STATUS.get(exc.code, (503, "MEDIA_WORKER_UNAVAILABLE"))[1])
         except ContractError as exc:
             code = str(exc).split(":")[0]
             if code.endswith("_UNKNOWN") or code == "PROPOSAL_UNKNOWN":
@@ -212,6 +231,20 @@ class ConversationAPI:
         if submission["actor"] != client["actor"]:
             raise APIError(403, "ACTOR_MISMATCH")
         self._own(client, submission["conversation_id"])
+        if any(p["proposal_id"] == submission["proposal_id"]
+               for p in self.conversations.media_proposals(submission["conversation_id"])):
+            # G122: a media proposal goes to Codex's durable queue: a ticket, never an engine call here.
+            if self.media_worker is None:
+                raise APIError(503, "MEDIA_WORKER_NOT_CONFIGURED")
+            known = self.media_worker.receipt(client_id=client["client_id"], command_key=submission["command_key"])
+            current = self.conversations.current_proposal(submission["conversation_id"])
+            if known is None and (current or {}).get("protocol") != cm.PROPOSAL_PROTOCOL:
+                # A later MISSION proposal supersedes it (an exact replay still finds its ticket).
+                raise ContractError("PROPOSAL_STALE: a newer proposal exists; review it")
+            ticket = self.media_worker.enqueue(submission, conversations=self.conversations,
+                                               authenticated_client_id=client["client_id"],
+                                               authenticated_actor=client["actor"])
+            return {**ticket, "kind": "media", "execution": "NOT_STARTED_BY_SUBMISSION"}
         runtime = self.runtime
         receipt = self.conversations.submit(submission, create=lambda request, intent: runtime.store.create(
             request, runtime.configuration(), intent=intent))
@@ -220,6 +253,10 @@ class ConversationAPI:
     def _receipt(self, client, data):
         _fields(data, {"command_key"})
         receipt = self.conversations.receipt(client_id=client["client_id"], command_key=data["command_key"])
+        if receipt is None and self.media_worker is not None:
+            receipt = self.media_worker.receipt(client_id=client["client_id"], command_key=data["command_key"])
+            if receipt is not None:
+                receipt = {**receipt, "kind": "media"}
         return {"protocol": PROTOCOL, "status": "FOUND" if receipt else "NOT_FOUND", "receipt": receipt,
                 "authorizes_resend": False}
 
@@ -264,8 +301,18 @@ class ConversationAPI:
         _fields(data, {"conversation_id"})
         self._own(client, data["conversation_id"])
         from .conversation_media_results import views_for
-        return {"protocol": PROTOCOL, "results": views_for(self.conversations, owner_client_id=client["client_id"],
-                                                           conversation_id=data["conversation_id"]),
+        tickets = []
+        if self.media_worker is not None:
+            # G123: the queue is authoritative; its ticket names the EXACT job id reserved before running.
+            mine = {digest(p) for p in self.conversations.media_proposals(data["conversation_id"])}
+            for ticket in self.media_worker.tickets(client_id=client["client_id"]):
+                if ticket["proposal_sha256"] in mine:
+                    tickets.append(self.media_worker.result(ticket["ticket_id"], client_id=client["client_id"],
+                                                            conversations=self.conversations,
+                                                            artifact_store=self.media_artifacts))
+        return {"protocol": PROTOCOL, "tickets": tickets,
+                "results": views_for(self.conversations, owner_client_id=client["client_id"],
+                                     conversation_id=data["conversation_id"]),
                 "authorizes_execution": False}
 
     def _cancel_receipt(self, client, data):

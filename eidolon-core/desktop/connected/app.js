@@ -1747,7 +1747,8 @@
     MEDIA_CANCEL_NOT_AVAILABLE: "L'arrêt d'une tâche image ou vidéo n'est pas disponible.",
     MISSION_UNKNOWN: "Mission inconnue pour cette conversation.",
     PROPOSAL_CHANGED: "La proposition d'arrêt a changé : redemandez-la avant de confirmer.",
-    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé." };
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé.",
+    RECEIPT_MISMATCH: "La réponse reçue ne nomme pas cette mission : état incertain, vérifiez." };
   var FINAL_STAGES = ["effect_observed", "finished_without_cancellation", "already_finished"];
   // Submission refusals worth explaining in words (others are shown with their code).
   var SUBMIT_ERRORS = {
@@ -1802,7 +1803,7 @@
     var transport = options.transport, onChange = options.onChange || function () {};
     var token = null, epoch = 0;
     var state = { phase: "closed", error: null, conversationId: null, identity: null, items: [],
-      proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
+      proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
 
     function emit() { onChange(JSON.parse(JSON.stringify(state))); }
     function errorOf(res) { return res && res.json && typeof res.json.error === "string" ? res.json.error : "NETWORK"; }
@@ -1822,7 +1823,7 @@
         state.phase = "closed"; state.error = "KEY_FORMAT"; emit(); return false;
       }
       epoch += 1; token = key;
-      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
+      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
       emit();
       var r = await call("open", { client_key: randomKey("page") });
       if (r.stale) return false;
@@ -1831,6 +1832,7 @@
       state.conversationId = r.json.conversation_id;
       state.identity = { clientId: r.json.client_id, actor: r.json.actor, storeId: r.json.store_id };
       state.recent = [];
+      restoreCancels();
       emit();
       var rec = await call("recent", { limit: 5 });
       if (!rec.stale && rec.ok && Array.isArray(rec.json.conversations)) {
@@ -1862,7 +1864,7 @@
       state.proposal = last ? last.reply.proposal : null;
       state.proposalSha = last ? last.reply.proposal_sha256 : null;
       state.submission = null;                            // unknown after a reload: never assumed, never resent
-      state.cancel = null; state.media = null;
+      state.cancel = null; state.media = null;            // pending cancellations (state.cancels) are kept
       state.recent = state.recent.filter(function (c) { return c.conversation_id !== conversationId; });
       state.resumed = true;
       emit();
@@ -1871,7 +1873,7 @@
 
     function close() {
       epoch += 1; token = null;
-      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
+      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
       emit();
     }
 
@@ -1935,17 +1937,52 @@
       return r.ok;
     }
 
-    // ---- G100: targeted cancellation (proposal → human confirmation → request, never a confirmed stop)
+    // ---- G100/G124: targeted cancellation (proposal → human confirmation → request, never a confirmed stop)
+    // One record PER MISSION, kept with its own key, conversation and proposal: a late answer updates
+    // the record it belongs to, never the mission selected meanwhile (G124-R1). Unfinished records are
+    // saved in the page's session storage (no secret: ids, key and digest) to be CHECKED after a reload.
+    var storage = options.storage || null;
+    function storageKey() {
+      return state.identity ? "eidolon-cancel:" + state.identity.storeId + ":" + state.identity.clientId : null;
+    }
+    function persistCancels() {
+      var k = storageKey();
+      if (!storage || !k) return;
+      var keep = state.cancels.filter(function (r) { return r.key && FINAL_STAGES.indexOf(r.stage) < 0; })
+        .map(function (r) { return { missionId: r.missionId, conversationId: r.conversationId, key: r.key, sha: r.sha,
+          proposal: r.proposal, status: r.status === "sent" ? "uncertain" : r.status, stage: r.stage }; });
+      try { if (keep.length) storage.setItem(k, JSON.stringify(keep)); else storage.removeItem(k); } catch (e) { /* no storage */ }
+    }
+    function restoreCancels() {
+      var k = storageKey(), raw = null;
+      if (!storage || !k) return;
+      try { raw = JSON.parse(storage.getItem(k) || "[]"); } catch (e) { raw = []; }
+      (Array.isArray(raw) ? raw : []).forEach(function (r) {
+        if (!r || !MISSION.test(r.missionId) || !/^c-[0-9a-f]{32}$/.test(r.conversationId) || typeof r.key !== "string") return;
+        state.cancels.push({ missionId: r.missionId, conversationId: r.conversationId, key: r.key, sha: r.sha,
+          proposal: r.proposal, status: "restored", stage: r.stage || null, missionStatus: null, receipt: null,
+          error: null, code: null, candidates: [] });
+      });
+    }
+    function recordFor(missionId) {
+      return state.cancels.filter(function (r) { return r.missionId === missionId; })[0] || null;
+    }
+
     async function cancelPropose(missionId) {
       if (state.phase !== "open") return false;
       var body = { conversation_id: state.conversationId };
       if (missionId !== undefined && missionId !== null) {
         if (!MISSION.test(missionId)) return false;
         body.mission_id = missionId;
+        var known = recordFor(missionId);
+        if (known && known.key && known.conversationId !== state.conversationId) {
+          state.cancel = known; emit(); return true;      // a restored request: check it, never re-propose here
+        }
       }
       var mine = epoch;
-      state.cancel = { status: "loading", proposal: null, sha: null, missionStatus: null, candidates: [], code: null,
-        key: null, receipt: null, stage: null, error: null };
+      state.cancel = { status: "loading", missionId: missionId || null, conversationId: state.conversationId,
+        proposal: null, sha: null, missionStatus: null, candidates: [], code: null, key: null, receipt: null,
+        stage: null, error: null };
       emit();
       var r = await call("cancel_proposal", body);
       if (r.stale) return false;
@@ -1954,10 +1991,19 @@
       if (r.json.kind === "PROPOSAL") {
         var local = await digest(r.json.proposal);
         if (mine !== epoch) return false;
-        if (local !== r.json.proposal_sha256 || !MISSION.test(r.json.proposal.mission_id)) {
+        var id = r.json.proposal.mission_id;
+        if (local !== r.json.proposal_sha256 || !MISSION.test(id) || (missionId && id !== missionId)) {
           c.status = "error"; c.error = "DIGEST_MISMATCH"; emit(); return false;
         }
-        c.status = "review"; c.proposal = r.json.proposal; c.sha = local; c.missionStatus = r.json.mission_status;
+        var existing = recordFor(id);
+        if (existing && existing.key) {
+          existing.missionStatus = r.json.mission_status; state.cancel = existing;   // keep its key and state
+        } else {
+          if (existing) state.cancels.splice(state.cancels.indexOf(existing), 1);
+          c.status = "review"; c.missionId = id; c.proposal = r.json.proposal; c.sha = local;
+          c.missionStatus = r.json.mission_status;
+          state.cancels.push(c);
+        }
       } else if (r.json.kind === "CLARIFICATION") {
         c.code = r.json.code;
         c.candidates = (r.json.candidates || []).filter(function (m) { return MISSION.test(m); });
@@ -1970,34 +2016,42 @@
     }
 
     async function cancelSubmit(reason) {
-      var c = state.cancel;
-      if (state.phase !== "open" || !c || !c.proposal || (c.status !== "review" && c.status !== "not_recorded")) return false;
+      var rec = state.cancel;
+      if (state.phase !== "open" || !rec || !rec.proposal || (rec.status !== "review" && rec.status !== "not_recorded")) return false;
       if (typeof reason !== "string" || !reason.trim() || reason.length > 4000) return false;
-      if (!c.key) c.key = randomKey("cancel");            // the same key on a resend: Core replays, never doubles
-      c.status = "sent"; c.error = null; emit();
-      var r = await call("cancel", { command_key: c.key, conversation_id: state.conversationId,
-        mission_id: c.proposal.mission_id, proposal_sha256: c.sha, reason: reason.trim() });
+      if (!rec.key) rec.key = randomKey("cancel");        // the same key on a resend: Core replays, never doubles
+      rec.status = "sent"; rec.error = null; persistCancels(); emit();
+      var r = await call("cancel", { command_key: rec.key, conversation_id: rec.conversationId,
+        mission_id: rec.missionId, proposal_sha256: rec.sha, reason: reason.trim() });
       if (r.stale) return false;
-      c = state.cancel;
-      if (r.ok) { c.status = "recorded"; c.receipt = r.json; c.stage = r.json.stage; c.missionStatus = r.json.mission_status; }
-      else { c.status = r.network || r.status >= 500 ? "uncertain" : "refused"; c.error = r.code; }
-      emit();
+      // The answer belongs to THIS record, whatever is selected now (G124-R1).
+      if (r.ok && r.json.mission_id === rec.missionId) {
+        rec.status = "recorded"; rec.receipt = r.json; rec.stage = r.json.stage; rec.missionStatus = r.json.mission_status;
+      } else if (r.ok) {
+        rec.status = "uncertain"; rec.error = "RECEIPT_MISMATCH";
+      } else { rec.status = r.network || r.status >= 500 ? "uncertain" : "refused"; rec.error = r.code; }
+      persistCancels(); emit();
       return r.ok;
     }
 
-    async function cancelCheck() {
-      var c = state.cancel;
-      if (state.phase !== "open" || !c || !c.key || !c.proposal) return false;
-      var r = await call("cancel_receipt", { command_key: c.key, conversation_id: state.conversationId,
-        mission_id: c.proposal.mission_id });
+    async function cancelCheck(missionId) {
+      var rec = missionId ? recordFor(missionId) : state.cancel;
+      if (state.phase !== "open" || !rec || !rec.key || !rec.missionId) return false;
+      var r = await call("cancel_receipt", { command_key: rec.key, conversation_id: rec.conversationId,
+        mission_id: rec.missionId });
       if (r.stale) return false;
-      c = state.cancel;
-      if (!r.ok) { c.error = r.code; emit(); return false; }
-      c.missionStatus = r.json.mission_status;
-      if (r.json.status === "FOUND") { c.status = "recorded"; c.receipt = r.json.receipt; c.stage = r.json.stage; c.error = null; }
-      else { c.status = "not_recorded"; c.stage = null; }   // nothing recorded: confirming again is safe
-      emit();
+      if (!r.ok) { rec.error = r.code; emit(); return false; }
+      rec.missionStatus = r.json.mission_status;
+      if (r.json.status === "FOUND") { rec.status = "recorded"; rec.receipt = r.json.receipt; rec.stage = r.json.stage; rec.error = null; }
+      else { rec.status = rec.proposal ? "not_recorded" : "unavailable"; rec.stage = null; }   // nothing recorded
+      persistCancels(); emit();
       return true;
+    }
+
+    function cancelSelect(missionId) {
+      var rec = recordFor(missionId);
+      if (!rec) return false;
+      state.cancel = rec; emit(); return true;
     }
 
     // ---- G101: media results linked to this conversation, read fresh from the server
@@ -2009,7 +2063,7 @@
       var r = await call("media_results", { conversation_id: state.conversationId });
       if (r.stale) return false;
       state.media = r.ok && Array.isArray(r.json.results)
-        ? { status: "ready", results: r.json.results, error: null }
+        ? { status: "ready", results: r.json.results, tickets: Array.isArray(r.json.tickets) ? r.json.tickets : [], error: null }
         : { status: "error", results: [], error: r.code || "INVALID_RESPONSE" };
       emit();
       return r.ok;
@@ -2026,7 +2080,8 @@
     }
 
     return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt, resume: resume,
-      cancelPropose: cancelPropose, cancelSubmit: cancelSubmit, cancelCheck: cancelCheck, loadMedia: loadMedia,
+      cancelPropose: cancelPropose, cancelSubmit: cancelSubmit, cancelCheck: cancelCheck, cancelSelect: cancelSelect,
+      loadMedia: loadMedia,
       state: function () { return JSON.parse(JSON.stringify(state)); } };
   }
 
@@ -2080,6 +2135,43 @@
     container.textContent = "";
     mediaResultLines(view).forEach(function (line) { container.appendChild(el(doc, "p", line.cls, line.text)); });
   }
+
+  // G122: a media proposal, shown from Core's frozen fields only (the prompt is the normalized one).
+  var AGENTS = { image: "Image", video: "Vidéo" };
+  var OPERATIONS = { create: "création", edit: "retouche", analyze: "analyse" };
+  function isMedia(p) { return !!p && p.protocol === "eidolon-media-proposal/1"; }
+  function mediaRequestText(p) {
+    return (AGENTS[p.agent] || p.agent) + " — " + (OPERATIONS[p.operation] || p.operation) + " : « " + p.prompt + " »";
+  }
+  function mediaMetaText(p) {
+    var parts = ["Version " + p.version];
+    if (p.artifact) parts.push("fichier joint " + p.artifact.artifact_id);
+    if (p.format) parts.push("format " + p.format);
+    if (p.duration_seconds) parts.push(p.duration_seconds + " s");
+    return parts.join(" · ") + " · rien n'est lancé : après votre accord, l'opérateur lance le travail.";
+  }
+  // Ticket of Codex's queue (media-ticket/1). No state here is an achieved objective.
+  var TICKET_STATES = {
+    ACCEPTED: "Demande enregistrée — en attente du lancement par l'opérateur.",
+    ATTEMPTED: "Tentative enregistrée — le moteur peut encore travailler ; effet à vérifier.",
+    RETURNED: "Le moteur a répondu — résultat non vérifié.",
+    REVIEW_REQUIRED: "Revue nécessaire — aucun nouvel essai automatique." };
+  function ticketText(receipt) {
+    return (TICKET_STATES[receipt.state] || "État reçu : " + receipt.state) +
+      (receipt.failure_code ? " (" + receipt.failure_code + ")" : "");
+  }
+  function ticketView(submission) {
+    if (!submission || !submission.receipt) return null;
+    var r = submission.receipt;
+    if (typeof r.ticket_id !== "string") return { stage: null, text: "Soumission : " + r.status };
+    return { stage: r.state === "REVIEW_REQUIRED" ? "unknown_effect" : null, missionId: null,
+      text: "Ticket " + r.ticket_id + " — " + ticketText(r) };
+  }
+  var OBSERVATIONS = {
+    NOT_STARTED: "Pas encore lancé.",
+    RECORDED_UNVERIFIED: "Résultat enregistré, non vérifié.",
+    JOB_UNAVAILABLE_OR_CHANGED: "Journal du travail absent ou modifié : effet inconnu, rien n'est relancé.",
+    COLLECTION_UNAVAILABLE_OR_CHANGED: "Collecte absente ou modifiée : effet inconnu, rien n'est relancé." };
 
   function missionView(submission, missionStatus) {
     if (!submission || !submission.receipt) return null;
@@ -2166,16 +2258,18 @@
     var p = st.proposal;
     card.hidden = !p || closed;
     if (p && !closed) {
-      doc.getElementById("conv-proposal-request").textContent = p.request;
-      doc.getElementById("conv-proposal-meta").textContent = "Version " + p.version + " · cible " + p.target_id +
-        " · rien n'est lancé tant que vous ne validez pas.";
+      var media = isMedia(p);
+      doc.getElementById("conv-proposal-request").textContent = media ? mediaRequestText(p) : p.request;
+      doc.getElementById("conv-proposal-meta").textContent = media ? mediaMetaText(p) : "Version " + p.version +
+        " · cible " + p.target_id + " · rien n'est lancé tant que vous ne validez pas.";
+      doc.getElementById("conv-submit").textContent = media ? "Valider la demande" : "Valider et créer la mission";
       var s = st.submission;
       var sstate = doc.getElementById("conv-submission-state");
       sstate.textContent = !s ? LABELS.draft : s.status === "sent" ? "Validation envoyée…" :
         s.status === "uncertain" ? LABELS.uncertain + (s.error ? " (" + s.error + ")" : "") :
         s.status === "refused" ? (SUBMIT_ERRORS[s.error] || "Validation refusée (" + s.error + ").") : "Validation enregistrée.";
       doc.getElementById("conv-check").hidden = !(s && s.status === "uncertain");
-      var mv = missionView(s, missionStatus);
+      var mv = media ? ticketView(s) : missionView(s, missionStatus);
       var track = doc.getElementById("conv-mission");
       track.hidden = !mv;
       if (mv) {
@@ -2194,6 +2288,7 @@
     if (!c) return "";
     if (c.status === "loading") return "Préparation de la proposition d'arrêt…";
     if (c.status === "choose") return CANCEL_CODES.MISSION_AMBIGUOUS;
+    if (c.status === "restored") return "Demande d'arrêt envoyée avant le rechargement de la page : vérifiez son état, rien n'est renvoyé.";
     if (c.status === "review") return "Rien n'est envoyé tant que vous ne confirmez pas.";
     if (c.status === "sent") return "Demande d'arrêt envoyée…";
     if (c.status === "recorded") return CANCEL_STAGES[c.stage] || ("État reçu : " + c.stage);
@@ -2227,19 +2322,47 @@
     var line = doc.getElementById("conv-cancel-state");
     line.textContent = cancelStatusText(c);
     line.className = "conv-state" + (c && c.stage ? " cancel-" + c.stage : "");
-    doc.getElementById("conv-cancel-check").hidden = !(c && c.key &&
-      (c.status === "uncertain" || (c.status === "recorded" && FINAL_STAGES.indexOf(c.stage) < 0)));
+    doc.getElementById("conv-cancel-check").hidden = !(c && c.key && (c.status === "uncertain" ||
+      c.status === "restored" || (c.status === "recorded" && FINAL_STAGES.indexOf(c.stage) < 0)));
+    // G124: other requests still to follow (sent meanwhile, or restored after a reload). Never resent.
+    var pending = doc.getElementById("conv-cancel-pending");
+    pending.textContent = "";
+    var others = closed ? [] : (st.cancels || []).filter(function (r) {
+      return r.key && (!c || r.missionId !== c.missionId) && FINAL_STAGES.indexOf(r.stage) < 0;
+    });
+    pending.hidden = !others.length;
+    others.forEach(function (r) {
+      var li = doc.createElement("li"), b = el(doc, "button", "media-secondary",
+        "Suivre la demande d'arrêt de " + r.missionId + " — " + cancelStatusText(r));
+      b.type = "button"; b.dataset.cancelSelect = r.missionId;
+      li.appendChild(b); pending.appendChild(li);
+    });
   }
 
   function renderMedia(doc, st, closed) {
     var m = closed ? null : st.media;
     var line = doc.getElementById("conv-media-state"), list = doc.getElementById("conv-media-list");
     list.textContent = "";
+    var tickets = m && m.tickets ? m.tickets : [];
+    var count = m ? m.results.length + tickets.length : 0;
     line.textContent = !m ? "" : m.status === "loading" ? "Lecture des résultats…" :
       m.status === "error" ? "Résultats indisponibles (" + m.error + ")." :
-      !m.results.length ? "Aucun résultat image ou vidéo lié à cette conversation." :
-      m.results.length + " résultat(s) lu(s) maintenant sur le serveur.";
+      !count ? "Aucune demande ni résultat image ou vidéo pour cette conversation." :
+      count + " demande(s) ou résultat(s) lu(s) maintenant sur le serveur.";
     if (!m) return;
+    // G123: the queue's own tickets first (exact job id reserved before running), then operator links.
+    tickets.forEach(function (t) {
+      var box = el(doc, "div", "conv-media-result");
+      box.appendChild(el(doc, "p", "conv-kind", "Demande " + t.receipt.ticket_id));
+      box.appendChild(el(doc, "p", "conv-state", ticketText(t.receipt)));
+      box.appendChild(el(doc, "p", "help", OBSERVATIONS[t.observation] || ("Observation : " + t.observation)));
+      if (t.result) {
+        var body = el(doc, "div");
+        renderMediaResult(doc, body, t.result);
+        box.appendChild(body);
+      }
+      list.appendChild(box);
+    });
     m.results.forEach(function (view) {
       var box = el(doc, "div", "conv-media-result");
       box.appendChild(el(doc, "p", "conv-kind", (view.agent === "video" ? "Vidéo" : "Image") + " — " +
@@ -2252,7 +2375,7 @@
   }
 
   function mount(doc, deps) {
-    var conv = createConversation({ transport: deps.transport, onChange: function (st) { render(doc, st, deps.missionStatus(st)); } });
+    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) { render(doc, st, deps.missionStatus(st)); } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();
@@ -2290,6 +2413,10 @@
       conv.cancelSubmit(doc.getElementById("conv-cancel-reason").value);
     });
     doc.getElementById("conv-cancel-check").addEventListener("click", function () { conv.cancelCheck(); });
+    doc.getElementById("conv-cancel-pending").addEventListener("click", function (event) {
+      var b = event.target.closest("button[data-cancel-select]");
+      if (b && conv.cancelSelect(b.dataset.cancelSelect)) doc.getElementById("conv-cancel-check").focus();
+    });
     doc.getElementById("conv-media-load").addEventListener("click", function () { conv.loadMedia(); });
     doc.getElementById("conv-follow").addEventListener("click", function (event) {
       var id = event.currentTarget.dataset.missionId;
@@ -2300,7 +2427,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaRequestText: mediaRequestText, ticketView: ticketView, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);
@@ -2360,8 +2487,12 @@
       if (conversation) conversation.refresh();
     } });
     // G088: the conversation follows its mission through the read session (same capture, same rules).
+    // G124: unfinished cancellation requests (ids, key, digest; no secret) survive a reload in this tab only.
+    var cancelStorage = null;
+    try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
+      storage: cancelStorage,
       missionStatus: function (st) {
         var id = st.submission && st.submission.receipt && st.submission.receipt.mission_id;
         var sel = session.state().list.selection;

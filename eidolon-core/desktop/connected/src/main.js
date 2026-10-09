@@ -52,8 +52,12 @@
       if (conversation) conversation.refresh();
     } });
     // G088: the conversation follows its mission through the read session (same capture, same rules).
+    // G124: unfinished cancellation requests (ids, key, digest; no secret) survive a reload in this tab only.
+    var cancelStorage = null;
+    try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
+      storage: cancelStorage,
       missionStatus: function (st) {
         var id = st.submission && st.submission.receipt && st.submission.receipt.mission_id;
         var sel = session.state().list.selection;

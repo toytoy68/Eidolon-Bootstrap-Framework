@@ -117,7 +117,7 @@ def inspect(value):
             fail("REPLY_BINDING")
         if isinstance(reply, dict) and reply.get("proposal") is not None:
             try:
-                if cv.proposal_sha256(reply["proposal"]) != reply.get("proposal_sha256"):
+                if _proposal_sha(reply["proposal"]) != reply.get("proposal_sha256"):
                     fail("REPLY_PROPOSAL_DIGEST")
             except ContractError:
                 fail("REPLY_PROPOSAL_DIGEST")
@@ -145,6 +145,14 @@ def inspect(value):
                                  or link.get("mission_id") != sub["mission_id"]):
             fail("LINK")
     return _verdict(problems, value)
+
+
+def _proposal_sha(proposal):
+    """Mission or media proposal (G122): each is checked by its own contract before its digest."""
+    if isinstance(proposal, dict) and proposal.get("protocol") == "eidolon-media-proposal/1":
+        from .conversation_media import validate_proposal
+        return digest(validate_proposal(proposal))
+    return cv.proposal_sha256(proposal)
 
 
 def _verdict(problems, value):

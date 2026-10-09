@@ -28,7 +28,9 @@ from .contracts import ContractError, digest
 # Tables present in every supported version, and the order that defines their logical content.
 CORE_TABLES = {"conversations": "conversation_id", "turns": "conversation_id, sequence", "replies": "turn_id",
                "proposals": "proposal_id, version", "submissions": "client_id, command_key"}
-OPTIONAL_TABLES = {"attempts": "turn_id", "attachments": "conversation_id, artifact_id"}
+# G099-R1: every table added by a later version is part of the logical content (and of BACKUP_STALE).
+OPTIONAL_TABLES = {"attempts": "turn_id", "attachments": "conversation_id, artifact_id",
+                   "media_links": "conversation_id, proposal_sha256", "media_proposals": "proposal_id, version"}
 INSPECTION = "eidolon-conversation-store-inspection/1"
 
 

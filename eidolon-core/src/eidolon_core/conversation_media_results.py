@@ -117,9 +117,10 @@ def link_job(conversations, *, owner_client_id, conversation_id, proposal, job_d
                        viewer_client_id=owner_client_id)
     if view["binding"] != "MATCHED":
         raise ContractError("MEDIA_JOB_MISMATCH: this job does not serve this proposal")
+    # G123-R1: the link names the EXACT job id read now; another job with the same request is refused later.
     return conversations.link_media(owner_client_id=owner_client_id, conversation_id=conversation_id,
                                     proposal=proposal, job_dir=job_dir, artifact_root=artifact_root,
-                                    collection_dir=collection_dir)
+                                    collection_dir=collection_dir, job_id=job["id"])
 
 
 def views_for(conversations, *, owner_client_id, conversation_id):
@@ -133,6 +134,12 @@ def views_for(conversations, *, owner_client_id, conversation_id):
             job = inspect_job(link["job_dir"])
         except (MediaError, OSError, ValueError):
             job = None                                  # → binding UNREADABLE, nothing listed
+        if job is not None and (link["job_id"] is None or job.get("id") != link["job_id"]):
+            # G123-R1: an equal request is not the same job. A v4 link without job id must be redone.
+            view = result_view(link["proposal"], None, conversations=conversations, artifact_store=_UnavailableStore(),
+                               viewer_client_id=owner_client_id)
+            views.append({**view, "binding": "WRONG_JOB" if link["job_id"] else "UNVERIFIABLE"})
+            continue
         collection = None
         if link["collection_dir"] is not None:
             try:

@@ -207,7 +207,7 @@ test("G100: two active missions ask which one; the request names the exact missi
   const s = scripted([opened,
     ok({ kind: "CLARIFICATION", code: "MISSION_AMBIGUOUS", candidates: [MID, OTHER, "pas-un-id"] }),
     ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: sha, mission_status: "RUNNING" }),
-    ok({ status: "RECORDED", cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "RUNNING" }),
+    ok({ status: "RECORDED", mission_id: MID, cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "RUNNING" }),
     ok({ status: "FOUND", receipt: { cancel_outcome: "REQUESTED" }, stage: "effect_observed", mission_status: "CANCELLED" })]);
   const conv = C.createConversation({ transport: s.transport });
   await conv.open(KEY);
@@ -237,7 +237,7 @@ test("G100: a tampered proposal is never sent; a lost answer is checked, then re
   const sha = await C.digest(cancelProposal);
   const s = scripted([opened, ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: sha, mission_status: "NEW" }),
     new Error("network"), ok({ status: "NOT_FOUND", receipt: null, stage: "uncertain", mission_status: "NEW" }),
-    ok({ status: "RECORDED", cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "NEW" })]);
+    ok({ status: "RECORDED", mission_id: MID, cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "NEW" })]);
   const conv = C.createConversation({ transport: s.transport });
   await conv.open(KEY); await conv.cancelPropose(MID);
   assert.equal(await conv.cancelSubmit("plus utile"), false);
@@ -275,4 +275,82 @@ test("G101: media results are read on demand, errors are said, closing forgets t
   assert.deepEqual([conv.state().media.status, conv.state().media.error], ["error", "CONVERSATION_UNAVAILABLE"]);
   conv.close();
   assert.equal(conv.state().media, null);
+});
+
+function memoryStorage() {
+  const data = new Map();
+  return { getItem: (k) => (data.has(k) ? data.get(k) : null), setItem: (k, v) => data.set(k, String(v)),
+    removeItem: (k) => data.delete(k), data };
+}
+
+test("G124-R1: a late answer for A updates A's record only; B, selected meanwhile, stays under review", async () => {
+  const A = "m-" + "1".repeat(32), B = "m-" + "2".repeat(32);
+  let release;
+  const held = new Promise((r) => { release = r; });
+  const transport = async (method, p, body) => {
+    if (p.endsWith("/open")) return opened;
+    if (p.endsWith("/recent")) return ok({ conversations: [] });
+    if (p.endsWith("/cancel_proposal")) {
+      const proposal = { ...cancelProposal, mission_id: body.mission_id };
+      return ok({ kind: "PROPOSAL", proposal, proposal_sha256: await C.digest(proposal), mission_status: "RUNNING" });
+    }
+    if (p.endsWith("/cancel")) return held;
+    throw new Error(p);
+  };
+  const conv = C.createConversation({ transport });
+  await conv.open(KEY);
+  await conv.cancelPropose(A);
+  const pending = conv.cancelSubmit("Arrêter A");
+  await conv.cancelPropose(B);
+  release(ok({ mission_id: A, stage: "effect_observed", mission_status: "CANCELLED" }));
+  await pending;
+  const st = conv.state();
+  assert.deepEqual([st.cancel.missionId, st.cancel.status, st.cancel.receipt], [B, "review", null]);
+  assert.notEqual(C.cancelStatusText(st.cancel), "Arrêt confirmé : la mission est annulée.");
+  const a = st.cancels.find((r) => r.missionId === A);
+  assert.deepEqual([a.status, a.stage], ["recorded", "effect_observed"]);
+  // An answer naming another mission is never shown as this mission's confirmation.
+  const t = scripted([opened, ok({ kind: "PROPOSAL", proposal: { ...cancelProposal }, proposal_sha256: await C.digest(cancelProposal), mission_status: "NEW" }),
+    ok({ mission_id: OTHER, stage: "effect_observed", mission_status: "CANCELLED" })]);
+  const other = C.createConversation({ transport: t.transport });
+  await other.open(KEY); await other.cancelPropose(MID); await other.cancelSubmit("x");
+  assert.deepEqual([other.state().cancel.status, other.state().cancel.error], ["uncertain", "RECEIPT_MISMATCH"]);
+});
+
+test("G124: an uncertain cancellation survives a reload; it is CHECKED with its own key, never resent", async () => {
+  const storage = memoryStorage();
+  const sha = await C.digest(cancelProposal);
+  const first = scripted([opened, ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: sha, mission_status: "RUNNING" }),
+    new Error("network")]);
+  const before = C.createConversation({ transport: first.transport, storage });
+  await before.open(KEY); await before.cancelPropose(MID); await before.cancelSubmit("plus utile");
+  const key = first.calls[2].body.command_key;
+  assert.equal(before.state().cancel.status, "uncertain");
+  before.close();                                                    // reload: memory gone, storage kept
+  assert.ok(![...storage.data.values()].join("").includes(KEY), "the conversation key is never stored");
+  const reopened = { status: 200, json: { ...opened.json, conversation_id: "c-" + "7".repeat(32) } };
+  const second = scripted([reopened, ok({ status: "FOUND", receipt: { mission_id: MID }, stage: "request_received", mission_status: "RUNNING" })]);
+  const after = C.createConversation({ transport: second.transport, storage });
+  await after.open(KEY);
+  assert.deepEqual(after.state().cancels.map((r) => [r.missionId, r.status]), [[MID, "restored"]]);
+  assert.equal(await after.cancelSubmit("again"), false);           // nothing selected: nothing sent
+  assert.equal(after.cancelSelect(MID), true);
+  assert.equal(await after.cancelSubmit("again"), false);           // restored: check first, never resend
+  await after.cancelCheck();
+  const call = second.calls[1];
+  assert.deepEqual([call.path.split("/").pop(), call.body.command_key, call.body.conversation_id],
+    ["cancel_receipt", key, "c-" + "2".repeat(32)]);                 // its own key and conversation
+  assert.equal(C.cancelStatusText(after.state().cancel), "Demande d'arrêt enregistrée — arrêt non confirmé.");
+});
+
+test("G122/G123: media proposal and ticket wording; no state reads as a success", () => {
+  const p = { protocol: "eidolon-media-proposal/1", agent: "image", operation: "edit", prompt: "<b>ciel</b>",
+    artifact: { artifact_id: "ma-1" }, format: "square", duration_seconds: null, version: 2 };
+  assert.equal(C.mediaRequestText(p), "Image — retouche : « <b>ciel</b> »");
+  const v = C.ticketView({ receipt: { ticket_id: "mt-1", state: "ACCEPTED", failure_code: null } });
+  assert.equal(v.text, "Ticket mt-1 — Demande enregistrée — en attente du lancement par l'opérateur.");
+  assert.equal(v.missionId, null);
+  for (const state of ["ATTEMPTED", "RETURNED", "REVIEW_REQUIRED"]) {
+    assert.doesNotMatch(C.ticketView({ receipt: { ticket_id: "mt-1", state } }).text, /succès|réussi|terminé avec succès/i);
+  }
 });

@@ -27,18 +27,29 @@ function pair(state) {
   return JSON.parse(r.stdout).token;
 }
 
-async function withConversationPage(options, body) {
+// G122: a private media workspace (Codex C-067: queue + artifact store), no engine, no download.
+function mediaWorkspace(fx) {
+  const r = spawnSync(PYTHON, ["-c", "import json,sys; from eidolon_core.media_workspace import initialize; " +
+    "print(json.dumps(initialize(sys.argv[1], state=sys.argv[2])))", path.join(fx.dir, "media"), fx.state],
+    { cwd: CORE, env: ENV, encoding: "utf8" });
+  if (r.status !== 0) throw new Error("workspace failed: " + r.stdout + r.stderr);
+  return ["--media-workspace", path.join(fx.dir, "media"), "--media-workspace-id", JSON.parse(r.stdout).workspace_id];
+}
+
+async function withConversationPage(options, body, extra) {
   const fx = makeFixture();
   let server, browser;
   try {
     fx.key = pair(fx.state);
-    server = await startServer(fx, WEB_ROOT, { spawnServer: withConversations });
+    const more = extra && extra.media ? mediaWorkspace(fx) : [];
+    server = await startServer(fx, WEB_ROOT, { spawnServer: (cmd, args, opts) => withConversations(cmd, args.concat(more), opts) });
     browser = await chromium.launch();
     const context = await browser.newContext(Object.assign({ viewport: { width: 1280, height: 720 } }, options));
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(String(e)));
-    page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+    const ignored = extra && extra.ignoreConsole;              // only an error this very test injects
+    page.on("console", (m) => { if (m.type() === "error" && !(ignored && ignored.test(m.text()))) errors.push(m.text()); });
     await page.goto(server.base + "/");
     await body(page, fx, server, context);
     assert.deepEqual(errors, []);
@@ -245,7 +256,7 @@ test("G101: media results from the real server (none, then a real linked job), t
   await withConversationPage({}, async (page, fx) => {
     await openByKeyboard(page, fx.key);
     await page.click("#conv-media-load");
-    await page.waitForFunction(() => /Aucun résultat image ou vidéo/.test(document.getElementById("conv-media-state").textContent));
+    await page.waitForFunction(() => /Aucune demande ni résultat image ou vidéo/.test(document.getElementById("conv-media-state").textContent));
     await say(page, "Bonjour !");                         // the conversation now has a turn: "latest" finds it
     // A real job, collection and link prepared server side (synthetic, no engine), read by the page.
     const work = path.join(fx.dir, "media-work");
@@ -254,7 +265,7 @@ test("G101: media results from the real server (none, then a real linked job), t
       { cwd: CORE, env: ENV, encoding: "utf8" });
     assert.equal(made.status, 0, made.stdout + made.stderr);
     await page.click("#conv-media-load");
-    await page.waitForFunction(() => /1 résultat/.test(document.getElementById("conv-media-state").textContent));
+    await page.waitForFunction(() => /1 demande\(s\) ou résultat/.test(document.getElementById("conv-media-state").textContent));
     const real = await page.textContent("#conv-media-list");
     assert.match(real, /Image — retouche/);
     assert.match(real, /sortie-1\.png — image\/png — empreinte vérifiée ; contenu non vérifié/);
@@ -270,7 +281,7 @@ test("G101: media results from the real server (none, then a real linked job), t
         outputs: [{ artifact_id: "ma-1", display_name: "<b>sortie</b>.png", media_type: "image/png", verification: "modified",
           provenance: { job_id: "media-1", node_id: "9", output_index: 0, collection_id: "mc-2" } }] }] }) }));
     await page.click("#conv-media-load");
-    await page.waitForFunction(() => /1 résultat/.test(document.getElementById("conv-media-state").textContent));
+    await page.waitForFunction(() => /1 demande\(s\) ou résultat/.test(document.getElementById("conv-media-state").textContent));
     const list = page.locator("#conv-media-list");
     const text = await list.textContent();
     assert.ok(text.includes(hostile));
@@ -282,3 +293,69 @@ test("G101: media results from the real server (none, then a real linked job), t
     if (CAPTURES) await page.locator("#conv-media").screenshot({ path: path.join(CAPTURES, "page-resultats-media.png") });
   });
 });
+
+test("G122/G123: a media request from the real dialogue becomes a queue ticket; nothing is launched; reload keeps it",
+  { skip: SKIP }, async () => {
+    await withConversationPage({ viewport: { width: 360, height: 740 } }, async (page, fx) => {
+      await openByKeyboard(page, fx.key);
+      await say(page, "Crée une image : un phare au crépuscule");
+      await page.waitForSelector("#conv-proposal:not([hidden])");
+      assert.equal(await page.textContent("#conv-proposal-request"), "Image — création : « un phare au crépuscule »");
+      assert.match(await page.textContent("#conv-proposal-meta"), /rien n'est lancé : après votre accord, l'opérateur lance le travail/);
+      assert.equal(await page.textContent("#conv-submit"), "Valider la demande");
+      await page.fill("#conv-reason", "Pour la recette.");
+      await page.click("#conv-submit");
+      await page.waitForFunction(() => /Ticket mt-/.test(document.getElementById("conv-mission-state").textContent));
+      assert.match(await page.textContent("#conv-mission-state"), /en attente du lancement par l'opérateur/);
+      assert.equal(await page.locator("#conv-follow").isHidden(), true);
+      await page.click("#conv-media-load");
+      await page.waitForFunction(() => /Demande mt-/.test(document.getElementById("conv-media-list").textContent));
+      assert.match(await page.textContent("#conv-media-list"), /Pas encore lancé/);
+      assert.equal(await overflow(page), 0);
+      assert.ok(!(await page.content()).includes(fx.dir), "a private path reached the page");
+      if (CAPTURES) await page.locator("#conversation").screenshot({ path: path.join(CAPTURES, "page-demande-media-360.png") });
+      await page.reload();
+      await openByKeyboard(page, fx.key);
+      await page.waitForSelector("#conv-recent:not([hidden]) button[data-resume]");
+      await page.click("#conv-recent-list button[data-resume]");
+      await page.waitForFunction(() => /Image — création/.test(document.getElementById("conv-proposal-request").textContent));
+    }, { media: true });
+  });
+
+test("G124: an uncertain cancellation is checked after a reload with its own key, then confirmed once; keyboard only",
+  { skip: SKIP }, async () => {
+    await withConversationPage({}, async (page, fx) => {
+      await openByKeyboard(page, fx.key);
+      await say(page, "Diagnostique le nas.");
+      await validate(page, "Diagnostic.");
+      let first = true;
+      await page.route("**/v1/conversations/cancel", (route) => {
+        if (first) { first = false; return route.abort("connectionreset"); }   // lost before reaching Core
+        return route.continue();
+      });
+      await page.focus("#conv-cancel-start");
+      await page.keyboard.press("Enter");
+      await page.waitForSelector("#conv-cancel-review:not([hidden])");
+      await page.focus("#conv-cancel-reason");
+      await page.keyboard.type("Plus utile.");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => /Réponse perdue/.test(document.getElementById("conv-cancel-state").textContent));
+      await page.reload();
+      await openByKeyboard(page, fx.key);
+      await page.waitForSelector("#conv-cancel-pending:not([hidden]) button[data-cancel-select]");
+      await page.focus("#conv-cancel-pending button[data-cancel-select]");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => /rechargement/.test(document.getElementById("conv-cancel-state").textContent));
+      assert.equal(await page.evaluate(() => document.activeElement.id), "conv-cancel-check");
+      const sent = [];
+      page.on("request", (r) => { if (/\/v1\/conversations\/cancel$/.test(r.url())) sent.push(JSON.parse(r.postData())); });
+      await page.keyboard.press("Enter");                                  // check, never resend
+      await page.waitForFunction(() => /Aucune demande enregistrée/.test(document.getElementById("conv-cancel-state").textContent));
+      assert.deepEqual(sent, []);
+      await page.fill("#conv-cancel-reason", "Plus utile.");
+      await page.click("#conv-cancel-submit");
+      await page.waitForFunction(() => /arrêt non confirmé/.test(document.getElementById("conv-cancel-state").textContent));
+      assert.equal(sent.length, 1);
+      assert.equal(await page.locator("#conv-cancel-pending").isHidden(), true);
+    }, { ignoreConsole: /ERR_CONNECTION_RESET/ });
+  });

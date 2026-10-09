@@ -30,10 +30,11 @@ from .commands import validate_scope
 from .contracts import ContractError, digest, encode
 from .store import now
 
-SCHEMA = "eidolon-conversation-store/4"
+SCHEMA = "eidolon-conversation-store/5"
 SCHEMA_V1 = "eidolon-conversation-store/1"
-VERSION = 4
-SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: "eidolon-conversation-store/3", 4: SCHEMA}
+VERSION = 5
+SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: "eidolon-conversation-store/3",
+           4: "eidolon-conversation-store/4", 5: SCHEMA}
 # v2 adds one durable model attempt per turn (G090-R1). v1 is migrated only on explicit request.
 ATTEMPTS_TABLE = ("CREATE TABLE attempts (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, "
                   "started_at TEXT NOT NULL, deadline REAL NOT NULL)")
@@ -49,7 +50,14 @@ MEDIA_LINKS_TABLE = ("CREATE TABLE media_links (conversation_id TEXT NOT NULL, p
                      "owner_client_id TEXT NOT NULL, proposal TEXT NOT NULL, job_dir TEXT NOT NULL, "
                      "collection_dir TEXT, artifact_root TEXT NOT NULL, linked_at TEXT NOT NULL, "
                      "PRIMARY KEY(conversation_id, proposal_sha256))")
-MIGRATIONS = {1: ATTEMPTS_TABLE, 2: ATTACHMENTS_TABLE, 3: MEDIA_LINKS_TABLE}
+# v5 (G122/G123-R1): media proposals are persisted next to mission proposals, each kind with its own
+# version chain; "current" is the one frozen from the latest turn. A link now names the EXACT job id.
+MEDIA_PROPOSALS_TABLE = ("CREATE TABLE media_proposals (proposal_id TEXT NOT NULL, version INTEGER NOT NULL, "
+                         "conversation_id TEXT NOT NULL, source_sequence INTEGER NOT NULL, body TEXT NOT NULL, "
+                         "sha256 TEXT NOT NULL, PRIMARY KEY(proposal_id, version))")
+MEDIA_LINK_JOB_ID = "ALTER TABLE media_links ADD COLUMN job_id TEXT"
+MIGRATIONS = {1: (ATTEMPTS_TABLE,), 2: (ATTACHMENTS_TABLE,), 3: (MEDIA_LINKS_TABLE,),
+              4: (MEDIA_PROPOSALS_TABLE, MEDIA_LINK_JOB_ID)}
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
@@ -140,11 +148,14 @@ class ConversationStore:
                         %s;
                         %s;
                         %s;
+                        %s;
+                        %s;
                         INSERT INTO meta VALUES ('schema', '%s');
                         INSERT INTO meta VALUES ('store_id', '%s');
-                        PRAGMA user_version=4;
+                        PRAGMA user_version=5;
                         COMMIT;
-                    """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, MEDIA_LINKS_TABLE, SCHEMA, self.store_id))
+                    """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, MEDIA_LINKS_TABLE, MEDIA_LINK_JOB_ID, MEDIA_PROPOSALS_TABLE,
+                           SCHEMA, self.store_id))
                 elif migrate and version in MIGRATIONS:
                     self._migrate(db)
             finally:
@@ -208,7 +219,8 @@ class ConversationStore:
                     self.before_migration(db)
                 first = False
                 self.checkpoint("MIGRATION_STEP_%d" % version)        # fault injection in tests only
-                db.execute(MIGRATIONS[version])
+                for statement in MIGRATIONS[version]:
+                    db.execute(statement)
                 db.execute("UPDATE meta SET value=? WHERE key='schema'", (SCHEMAS[version + 1],))
                 db.execute("PRAGMA user_version=%d" % (version + 1))
                 db.execute("COMMIT")
@@ -338,7 +350,9 @@ class ConversationStore:
                 cv.same_request(self._load(existing[0]), reply, "REPLY_ALREADY_RECORDED")
                 return self._load(existing[0])
             proposal = reply.get("proposal")
-            if proposal is not None:
+            if isinstance(proposal, dict) and proposal.get("protocol") == "eidolon-media-proposal/1":
+                self._record_media_proposal(db, turn, reply, proposal)
+            elif proposal is not None:
                 proposal = cv.validate_proposal(proposal)
                 if (reply.get("proposal_sha256") != cv.proposal_sha256(proposal)
                         or proposal["source_turn_id"] != turn["turn_id"]
@@ -355,6 +369,57 @@ class ConversationStore:
             db.execute("INSERT INTO replies VALUES (?,?,?,?,?)",
                        (turn["turn_id"], turn["conversation_id"], encode(reply), digest(reply), now()))
             return reply
+
+    def _record_media_proposal(self, db, turn, reply, proposal):
+        """G122: a Core-frozen media proposal from THIS turn, extending the conversation's media chain."""
+        from .conversation_media import validate_proposal as validate_media
+        proposal = validate_media(proposal)
+        if (reply.get("proposal_sha256") != digest(proposal) or proposal["source_turn_id"] != turn["turn_id"]
+                or proposal["source_turn_sha256"] != digest(turn)
+                or proposal["conversation_id"] != turn["conversation_id"] or proposal["store_id"] != self.store_id
+                or proposal["owner_client_id"] != turn["client_id"]):
+            raise ConversationError("REPLY_INVALID: media proposal does not come from this turn")
+        latest = self._latest_media_proposal(db, turn["conversation_id"])
+        expected = (latest["version"] + 1, digest(latest)) if latest else (1, None)
+        if (proposal["version"], proposal["supersedes_sha256"]) != expected or (
+                latest and proposal["proposal_id"] != latest["proposal_id"]):
+            raise ContractError("PROPOSAL_STALE: media proposal does not supersede the latest version")
+        db.execute("INSERT INTO media_proposals VALUES (?,?,?,?,?,?)",
+                   (proposal["proposal_id"], proposal["version"], proposal["conversation_id"], turn["sequence"],
+                    encode(proposal), digest(proposal)))
+
+    def _latest_media_proposal(self, db, conversation_id):
+        row = db.execute("SELECT body FROM media_proposals WHERE conversation_id=? ORDER BY version DESC LIMIT 1",
+                         (conversation_id,)).fetchone()
+        return self._load(row[0]) if row else None
+
+    def _current(self, db, conversation_id):
+        """The proposal frozen from the LATEST turn that produced one, of either kind (G122)."""
+        mission = self._latest_proposal(db, conversation_id)
+        media = db.execute("SELECT body, source_sequence FROM media_proposals WHERE conversation_id=? "
+                           "ORDER BY version DESC LIMIT 1", (conversation_id,)).fetchone()
+        if media is None:
+            return mission
+        if mission is None:
+            return self._load(media[0])
+        row = db.execute("SELECT sequence FROM turns WHERE turn_id=?", (mission["source_turn_id"],)).fetchone()
+        return mission if row is not None and row[0] > media[1] else self._load(media[0])
+
+    def current_mission_proposal(self, conversation_id):
+        """Latest MISSION proposal: the one a new mission proposal must supersede (its own chain)."""
+        with self._db() as db:
+            return self._latest_proposal(db, conversation_id)
+
+    def current_media_proposal(self, conversation_id):
+        with self._db() as db:
+            return self._latest_media_proposal(db, conversation_id)
+
+    def media_proposals(self, conversation_id):
+        """Every media proposal of this conversation, oldest first (for results and the export)."""
+        with self._db() as db:
+            rows = db.execute("SELECT body FROM media_proposals WHERE conversation_id=? ORDER BY version",
+                              (conversation_id,)).fetchall()
+        return [self._load(r[0]) for r in rows]
 
     def _latest_proposal(self, db, conversation_id):
         row = db.execute("SELECT body FROM proposals WHERE conversation_id=? ORDER BY version DESC LIMIT 1",
@@ -384,8 +449,9 @@ class ConversationStore:
             return "busy" if time.time() < attempt[0] else "expired"
 
     def current_proposal(self, conversation_id):
+        """Latest proposal of either kind: only it may be submitted (missions or media, G122)."""
         with self._db() as db:
-            return self._latest_proposal(db, conversation_id)
+            return self._current(db, conversation_id)
 
     def last_turn(self, conversation_id):
         with self._db() as db:
@@ -449,7 +515,8 @@ class ConversationStore:
         return [attachment(store_id=self.store_id, owner_client_id=owner_client_id, conversation_id=conversation_id,
                            reference=json.loads(r[0])) for r in rows]
 
-    def link_media(self, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, collection_dir=None):
+    def link_media(self, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, collection_dir=None,
+                   job_id=None):
         """Record which media job serves a submitted media proposal (operator or media worker). Idempotent."""
         from .conversation_media import validate_proposal
         proposal = validate_proposal(proposal)
@@ -465,25 +532,26 @@ class ConversationStore:
                                (conversation_id,)).fetchone()
             if owner is None or owner[0] != owner_client_id:
                 raise ConversationError("CONVERSATION_UNKNOWN: no such conversation for this owner")
-            existing = db.execute("SELECT job_dir, collection_dir, artifact_root FROM media_links "
+            existing = db.execute("SELECT job_dir, collection_dir, artifact_root, job_id FROM media_links "
                                   "WHERE conversation_id=? AND proposal_sha256=?", (conversation_id, sha)).fetchone()
             if existing:
-                if tuple(existing) != (job_dir, collection_dir, artifact_root):
+                if tuple(existing) != (job_dir, collection_dir, artifact_root, job_id):
                     raise ConversationError("MEDIA_LINK_CONFLICT: this proposal is already linked to another job")
                 return sha
-            db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?)",
+            db.execute("INSERT INTO media_links (conversation_id, proposal_sha256, owner_client_id, proposal, job_dir, "
+                       "collection_dir, artifact_root, linked_at, job_id) VALUES (?,?,?,?,?,?,?,?,?)",
                        (conversation_id, sha, owner_client_id, encode(proposal), job_dir, collection_dir,
-                        artifact_root, now()))
+                        artifact_root, now(), job_id))
         return sha
 
     def media_links(self, *, owner_client_id, conversation_id):
         """Links of this owner's conversation, oldest first. Server-side use only (they hold paths)."""
         with self._db() as db:
-            rows = db.execute("SELECT proposal, job_dir, collection_dir, artifact_root FROM media_links "
+            rows = db.execute("SELECT proposal, job_dir, collection_dir, artifact_root, job_id FROM media_links "
                               "WHERE conversation_id=? AND owner_client_id=? ORDER BY linked_at, proposal_sha256",
                               (conversation_id, owner_client_id)).fetchall()
-        return [{"proposal": json.loads(r[0]), "job_dir": r[1], "collection_dir": r[2], "artifact_root": r[3]}
-                for r in rows]
+        return [{"proposal": json.loads(r[0]), "job_dir": r[1], "collection_dir": r[2], "artifact_root": r[3],
+                 "job_id": r[4]} for r in rows]
 
     def select_profile(self, name, *, actor):
         """Explicit operator choice of the dialogue profile (G098). Never made by a model or a fallback."""
@@ -599,6 +667,9 @@ class ConversationStore:
                 fresh = row is None
                 if row is None:
                     proposal = self._latest_proposal(db, submission["conversation_id"])
+                    current = self._current(db, submission["conversation_id"])
+                    if current is not None and current != proposal:
+                        raise ContractError("PROPOSAL_STALE: a newer media proposal exists; review it")
                     cv.check_submission(submission, proposal)
                     open_row = db.execute("SELECT command_key FROM submissions WHERE conversation_id=? AND "
                                           "status IN ('RESERVED','MISSION_CREATED','MISSION_CREATION_UNCERTAIN') "
