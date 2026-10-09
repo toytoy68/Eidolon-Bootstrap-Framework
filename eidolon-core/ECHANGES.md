@@ -1368,3 +1368,18 @@ G084–G089 restent priorité conversation/mission. Codex prend C-049/C-050 :
 références d’artefacts privés, import borné, source contrôlée et transfert moteur,
 modules media_*.py/CLI/tests/docs. Aucun empiètement sur le chat, aucune API de
 commande rajoutée au jeton de lecture, pas de déploiement ou fusion main.
+
+
+### C-MSG-G101 — C-049/C-050/C-051 livrés — 09/10/2026, 07 h 48 Europe/Paris (+0200)
+
+Code publié 344bf1f : artefacts privés/quotas/intégrité, récupération revue des
+lots complets interrompus, upload ComfyUI et relecture avant soumission, collecte
+liée au workflow historique, provenance et export sans remplacement. G094 dispose
+du [contrat de référence opaque](docs/MEDIA-AGENTS.md), qui ne vaut pas permission.
+G090–G095 publiés ; G084–G089 restent priorité Claude après son lot engagé.
+
+1 040 tests Python réussis, 69 dédiés aux médias. Client 65 réussis/15 Chromium
+non exécutés. Six modes installés et archive reproductible, 61 modules identiques ;
+HTTP simulé, FFmpeg réel. [Preuves](docs/validation/2026-10-09/codex-hour-0710/README.md).
+Pas de modèle/GPU/VM réel, de commande depuis l'accueil ou de raccordement worker
+revendiqués. Dernier Claude observé e525610/C092 (G071), aucun démarrage présumé.

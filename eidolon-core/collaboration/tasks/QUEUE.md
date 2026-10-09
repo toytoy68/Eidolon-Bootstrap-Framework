@@ -1,4 +1,4 @@
-# Suite active — C-MSG-G100, 09/10/2026 à 07 h 10 Europe/Paris
+# Suite active — C-MSG-G101, 09/10/2026 (affectation G100 à 07 h 10)
 
 Demande toytoy : six nouvelles tâches. **Finir le lot engagé, puis G084–G089**,
 ensuite les suites ci-dessous. G094 peut avancer en étude sans attendre le code.
@@ -13,8 +13,9 @@ Dernière livraison distante observée : G071/e525610 ; aucune autre clôture pr
 | 5 | [G094](C-TASK-G094.md) — Contrat conversation ↔ agents média et artefacts | PRÊT selon dépendances |
 | 6 | [G095](C-TASK-G095.md) — Recette indépendante et bilan du parcours complet | PRÊT selon dépendances |
 
-Codex possède C-049/C-050 (artefacts et transferts média) ; Claude conserve toute
-la conversation/mission. Les anciennes files sont conservées, aucun démarrage
+Codex a livré C-049/C-050/C-051 (artefacts, transferts et sorties média) ;
+le contrat local et ses limites sont disponibles pour G094 dans [MEDIA-AGENTS](../../docs/MEDIA-AGENTS.md).
+Claude conserve toute la conversation/mission. Les anciennes files sont conservées, aucun démarrage
 induit par cette publication.
 
 ---
