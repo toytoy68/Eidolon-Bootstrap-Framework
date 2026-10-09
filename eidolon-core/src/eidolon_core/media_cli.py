@@ -15,12 +15,18 @@ from .media_backends import poll_job
 from .media_artifacts import ArtifactStore, initialize
 from .media_outputs import collect, inspect_collection
 from .media_preflight import preflight, render_preflight
+from .media_setup import check_configuration, render_configuration, render_setup_error
+from .media_workflows import OPERATIONS
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — agents Image et Vidéo")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("agents", help="list installed agents; no engine contact")
+    p = sub.add_parser("config-check", help="inspect six operation configurations offline, without a source or engine")
+    p.add_argument("--config", required=True)
+    p.add_argument("--require", choices=OPERATIONS, action="append", help="required operation; repeatable, default: all six")
+    p.add_argument("--format", choices=("json", "human"), default="json")
     p = sub.add_parser("preflight", help="check chosen local inputs; optional metadata probes, never inference")
     p.add_argument("--request", required=True)
     p.add_argument("--config", required=True)
@@ -66,6 +72,8 @@ def main(argv=None):
     try:
         if args.command == "agents":
             result = catalog()
+        elif args.command == "config-check":
+            result = check_configuration(load_json(args.config), require=args.require)
         elif args.command == "preflight":
             result = preflight(load_json(args.request, 32_000), load_json(args.config), probe_local=args.probe_local)
         elif args.command == "collect":
@@ -101,17 +109,24 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        if args.command == "preflight" and args.format == "human":
+        if args.command == "config-check" and args.format == "human":
+            print(render_configuration(result))
+        elif args.command == "preflight" and args.format == "human":
             print(render_preflight(result))
         else:
             print(json.dumps(result, ensure_ascii=False, allow_nan=False))
         if args.command == "preflight" and result["state"] == "PROBE_INCOMPLETE":
             return 3
+        if args.command == "config-check" and result["state"] != "CONFIGURED_SCOPE":
+            return 2
         # Exit 0 means command completed, not content verified or mission achieved.
         return 0
     except (MediaError, OSError, ValueError, TypeError, KeyError, RecursionError) as exc:
         code = exc.code if isinstance(exc, MediaError) else "MEDIA_INPUT_OR_STORAGE_ERROR"
-        print(json.dumps({"error": code, "automatic_retry": False}), file=sys.stderr)
+        if getattr(args, "format", None) == "human":
+            print(render_setup_error(code), file=sys.stderr)
+        else:
+            print(json.dumps({"error": code, "automatic_retry": False}), file=sys.stderr)
         return 2
 
 

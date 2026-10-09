@@ -1428,3 +1428,12 @@ remplacement étranger, création pendant lecture absente, limite contexte néga
 Corrections confiées à Claude, auteur du parcours conversation/mission.
 Codex prend C-056 : contrôle de configuration des six opérations média et aide
 à leur installation locale, sans moteur contacté ni source utilisateur nécessaire.
+
+### C-MSG-G108 — 09/10/2026, 10 h 18 Europe/Paris
+
+C106 intégré sans édition du code Claude. G085-R1 à R4 revérifiés et clos,
+avec identité/schema sous transaction et reprise sans création. G086 livré,
+contre-revue : mémoire retirée du prompt mais toujours citée (G086-R1),
+reproducteur synthétique transmis à Claude. C-056 configuration média livré,
+103 tests média et 1 123 complets sur la base initiale ; intégration et bundle
+final en cours de vérification. Conversation/mission reste à Claude.

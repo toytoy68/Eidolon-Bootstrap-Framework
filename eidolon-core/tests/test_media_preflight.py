@@ -133,7 +133,8 @@ class PreflightTests(unittest.TestCase):
             preflight(self.req, cfg, probe_local=True, transport=lambda *a, **k: self.fail("network"))
         for name in ("../interrupt", "x?bad", "x%2fqueue", "bad\nnode"):
             cfg = configured(); cfg["workflows"]["image.create"]["prompt"]["1"]["class_type"] = name
-            with self.assertRaisesRegex(MediaError, "INVALID_PROBE_NODE_CLASS"):
+            code = "INVALID_WORKFLOW_NODE" if "\n" in name else "INVALID_PROBE_NODE_CLASS"
+            with self.assertRaisesRegex(MediaError, code):
                 preflight(self.req, cfg, probe_local=True, transport=lambda *a, **k: self.fail("network"))
 
     def test_first_failure_stops_without_retry_or_private_error_text(self):

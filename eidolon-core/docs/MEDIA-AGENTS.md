@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-054
+# Agents natifs Image et Vidéo — C-047 à C-056
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -80,6 +80,52 @@ Aucun polling automatique, renvoi ou annulation globale du moteur n'est effectu�
 `poll` ne télécharge rien : les sorties rapportées restent des références moteur.
 La commande distincte `collect`, décrite plus bas, les importe explicitement.
 
+## Contrôle de configuration après installation — C-056
+
+Avant de choisir une source ou de préparer une demande :
+
+```sh
+eidolon-media config-check --config moteurs.json --format human
+eidolon-media config-check --config moteurs.json --require image.analyze
+eidolon-media config-check --config moteurs.json --require image.analyze --require video.analyze
+```
+
+Le rapport présente les six opérations, les réglages manquants et une action
+pour chaque erreur. Par défaut les six opérations sont requises ; `--require`
+limite le périmètre attendu. Une opération non sélectionnée peut être absente,
+mais une configuration invalide, même non sélectionnée, reste signalée et fait
+échouer le contrôle. Les clés inconnues sont refusées.
+
+| État / code de sortie | Interprétation |
+| --- | --- |
+| `CONFIGURED_SCOPE` / 0 | Structure de configuration vérifiée pour les opérations demandées |
+| `INCOMPLETE` / 2 | Réglages requis encore absents |
+| `INVALID` / 2 | Au moins un réglage présent est refusé |
+
+Ces trois rapports sont écrits sur stdout, en JSON par défaut ou en présentation
+ECT avec `--format human`. Une erreur empêchant de lire/interpréter la configuration
+est écrite sur stderr, dans le format choisi, avec sortie 2 et stdout vide.
+Les erreurs du précontrôle ci-dessous respectent aussi le format choisi.
+
+Le contrôle ne contacte aucun moteur, ne lance pas FFmpeg, ne lit aucune image
+ou vidéo et ne crée aucun travail. Il vérifie les métadonnées du fichier FFmpeg
+configuré et, si un magasin d'artefacts est déclaré, son marqueur d'identité privé.
+Il ne parcourt ni inventaire, ni contenus, ni imports interrompus de ce magasin ;
+sa capacité n'est pas évaluée. Les alias `staged_sources` sont vérifiés seulement
+dans leur forme : leur contenu sera contrôlé pour la demande réelle.
+
+Pour ComfyUI, le graphe API et ses bindings utilisent le même validateur structurel
+que l'exécution. Le modèle de graphe brut est limité ici à 500 000 octets ; le
+graphe rempli sera de nouveau borné lors du précontrôle et de l'exécution.
+Un workflow de création qui déclare un binding `source` nécessitera une source
+réelle ; le diagnostic n'en fabrique pas. Aucun prompt, chemin local ou workflow
+complet n'est recopié dans le rapport ; noms de modèle et empreintes peuvent y figurer.
+
+`CONFIGURED_SCOPE` ne prouve ni la présence d'un moteur/modèle/nœud, ni sa
+compatibilité, ni les ressources matérielles. Aucun téléchargement, installation
+système, permission d'exécution, inscription au catalogue runtime ou lancement
+depuis l'accueil n'en découle. Continuer avec une demande explicite et `preflight`.
+
 ## Précontrôle avant un lancement — C-052
 
 Depuis le paquet installé :
@@ -149,6 +195,7 @@ Génération/modification : `comfy_endpoint` et `workflows` indexé par
 `image.create`, `image.edit`, `video.create`, `video.edit`. Chaque entrée comporte :
 
 - `prompt` : workflow exporté au format API, jusqu'à 128 nœuds / 500 ko.
+  Chaque `class_type` contient 1 à 160 caractères imprimables.
 - `bindings` : chaque champ pointe sur `["identifiant_noeud", "nom_entree"]`.
   Champs requis : prompt, width, height ; duration_seconds pour vidéo ; source
   lorsqu'une référence est fournie. Pas de cible dupliquée ou de champ inconnu.

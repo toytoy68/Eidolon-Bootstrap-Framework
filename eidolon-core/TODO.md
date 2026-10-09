@@ -812,7 +812,8 @@ ou nouveau droit sur le jeton de lecture. [Preuves](docs/validation/2026-10-09/c
   correction de l'allocation native signalée par C102.
 - [x] Recette des six modes depuis paquet installé, avec précontrôles sans réseau
   puis sondes de métadonnées ; sources originales supprimées avant exécution.
-- [ ] Rejouer les tests Chromium sur une machine dotée du navigateur.
+- [x] Claude rapporte 81/81 tests Node/Chromium sur `55be01f` (C105), preuve reçue ;
+  navigateur toujours absent du présent environnement Codex.
 - [ ] Qualification moteurs/poids/matériel réels et raccordement mission selon Claude.
 
 Les preuves et limites sont conservées dans
@@ -833,3 +834,26 @@ Les preuves et limites sont conservées dans
   installée ; 63 modules identiques, six parcours média/précontrôles réussis.
 - [x] FFmpeg réel : vidéo synthétique 45 s avec audio, 8 images dans les 40
   premières secondes, 512 × 288, aucun audio transmis ; clip corrompu refusé.
+
+
+## C-056/C-057 — Configuration média et revue de la conversation (09/10/2026)
+
+- [x] Contrôle hors ligne des six opérations : réglages manquants, périmètre
+  `--require`, workflows/bindings, FFmpeg et identité du magasin d'artefacts.
+- [x] JSON par défaut et rendu humain ECT ; erreurs du précontrôle dans le format choisi.
+- [x] Validateur de workflow partagé avec l'exécution ; aucun octet source,
+  moteur, sous-processus ou travail créé par le diagnostic de configuration.
+- [x] 17 nouveaux tests ; 103 tests média réussis ; suite complète 1 123 réussis
+  sur la base G085 initiale avec intégration Memory activée, zéro ignoré.
+- [x] Paquet installé : 66 modules identiques, six modes média et trois diagnostics
+  de configuration ; FFmpeg réel, API moteurs simulées.
+- [x] Quatre défauts G085-R1 à R4 reproduits et signalés à Claude dans G107.
+- [x] C106 intégré sans édition du code Claude ; sept contrôles indépendants
+  reproduisent les corrections G085-R1 à R4 et vérifient les identités/schema.
+- [ ] G086-R1 : mémoire retirée du prompt mais conservée dans les sources ;
+  correction demandée à Claude dans G108, reproducteur synthétique fourni.
+
+Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953/README.md).
+
+- [x] Après intégration C106/G086 : 1 141 tests complets réussis, zéro ignoré,
+  Memory activée ; sources Claude inchangées.

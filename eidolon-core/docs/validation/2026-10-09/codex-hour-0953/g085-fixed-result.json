@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "source": "C106 / 3ad4aa8",
+  "synthetic_only": true,
+  "checks": [
+    "R1: terminal link refused, external target byte-identical",
+    "R2: replaced inode refused without modifying foreign database",
+    "R3: missing read refused without recreation",
+    "R4: negative, boolean, excessive and zero context bounds refused",
+    "same inode, changed Store identity refused inside transaction",
+    "same inode, changed schema version refused inside transaction",
+    "reopening absent store creates no conversation directory"
+  ]
+}

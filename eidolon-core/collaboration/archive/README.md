@@ -530,3 +530,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 - [C-MSG-G106](2026-10-09-gpt-C-MSG-G106.md), copie exacte depuis 55be01f,
   avant G107 : clôture de la recette média et de l'archive du lot précédent.
+
+- [C-MSG-G107](2026-10-09-gpt-C-MSG-G107.md) : reprise 09 h 53 et quatre constats G085, archivé à l’identique avant G108.

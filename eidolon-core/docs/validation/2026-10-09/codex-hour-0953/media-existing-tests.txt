@@ -1,0 +1,17 @@
+======================================================================
+FAIL: test_class_count_and_unsafe_routes_fail_before_any_contact (tests.test_media_preflight.PreflightTests.test_class_count_and_unsafe_routes_fail_before_any_contact)
+----------------------------------------------------------------------
+eidolon_core.media_agents.MediaError: INVALID_WORKFLOW_NODE
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_media_preflight.py", line 136, in test_class_count_and_unsafe_routes_fail_before_any_contact
+    with self.assertRaisesRegex(MediaError, "INVALID_PROBE_NODE_CLASS"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "INVALID_PROBE_NODE_CLASS" does not match "INVALID_WORKFLOW_NODE"
+
+----------------------------------------------------------------------
+Ran 86 tests in 6.259s
+
+FAILED (failures=1)

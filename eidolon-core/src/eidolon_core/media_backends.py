@@ -29,6 +29,7 @@ import uuid
 
 from .media_agents import MediaError, identify, parse_json, read_regular
 from .model_http import read_body
+from .media_workflows import definition
 
 
 def endpoint(value):
@@ -49,6 +50,20 @@ def endpoint(value):
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
+
+
+def vision_model(value):
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_./:-]{1,160}", value):
+        raise MediaError("VISION_MODEL_NOT_CONFIGURED")
+    return value
+
+
+def ffmpeg_executable(value):
+    if not isinstance(value, str) or not Path(value).is_absolute() or not Path(value).is_file():
+        raise MediaError("FFMPEG_NOT_CONFIGURED")
+    if not os.access(value, os.X_OK):
+        raise MediaError("FFMPEG_NOT_EXECUTABLE")
+    return value
 
 
 def json_http(method, url, payload, timeout=90):
@@ -96,38 +111,13 @@ class LocalMediaBackend:
 
     def workflow(self, request, evidence):
         key = request["agent"] + "." + request["operation"]
-        configs = self.config.get("workflows", {})
-        if type(configs) is not dict or key not in configs:
-            raise MediaError("WORKFLOW_NOT_CONFIGURED")
-        config = configs[key]
-        if type(config) is not dict or set(config) != {"prompt", "bindings"}:
-            raise MediaError("INVALID_WORKFLOW_CONFIG")
-        prompt, bindings = copy.deepcopy(config["prompt"]), config["bindings"]
-        if type(prompt) is not dict or not 1 <= len(prompt) <= 128 or type(bindings) is not dict:
-            raise MediaError("INVALID_WORKFLOW_CONFIG")
-        for key_node, node in prompt.items():
-            if not isinstance(key_node, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", key_node):
-                raise MediaError("INVALID_WORKFLOW_NODE")
-            if type(node) is not dict or not isinstance(node.get("class_type"), str) or type(node.get("inputs")) is not dict:
-                raise MediaError("INVALID_WORKFLOW_NODE")
+        prompt, bindings = definition(self.config, key, has_source=bool(evidence))
         width, height = {"square": (1024, 1024), "landscape": (1024, 576), "portrait": (576, 1024)}[request["format"]]
         values = {"prompt": request["prompt"], "width": width, "height": height,
                   "duration_seconds": request["duration_seconds"]}
-        required = {"prompt", "width", "height"}
-        if request["agent"] == "video":
-            required.add("duration_seconds")
         if evidence:
             values["source"] = self.source_name(evidence)
-            required.add("source")
-        if set(bindings) != required:
-            raise MediaError("WORKFLOW_BINDINGS_MISMATCH")
-        used = set()
         for field, where in bindings.items():
-            if (type(where) is not list or len(where) != 2 or not all(isinstance(x, str) for x in where)
-                    or where[0] not in prompt or where[1] not in prompt[where[0]]["inputs"]
-                    or tuple(where) in used):
-                raise MediaError("INVALID_WORKFLOW_BINDING")
-            used.add(tuple(where))
             prompt[where[0]]["inputs"][where[1]] = values[field]
         raw = json.dumps(prompt, ensure_ascii=False, allow_nan=False).encode("utf-8")
         if len(raw) > 500_000:
@@ -137,15 +127,9 @@ class LocalMediaBackend:
     def plan(self, request, evidence):
         if request["operation"] == "analyze":
             url = endpoint(self.config.get("ollama_endpoint"))
-            model = self.config.get("vision_model")
-            if not isinstance(model, str) or not re.fullmatch(r"[A-Za-z0-9_./:-]{1,160}", model):
-                raise MediaError("VISION_MODEL_NOT_CONFIGURED")
+            model = vision_model(self.config.get("vision_model"))
             if request["agent"] == "video":
-                exe = self.config.get("ffmpeg")
-                if not isinstance(exe, str) or not Path(exe).is_absolute() or not Path(exe).is_file():
-                    raise MediaError("FFMPEG_NOT_CONFIGURED")
-                if not os.access(exe, os.X_OK):
-                    raise MediaError("FFMPEG_NOT_EXECUTABLE")
+                ffmpeg_executable(self.config.get("ffmpeg"))
             return {"adapter": "ollama-vision/1", "endpoint": url, "model": model,
                     "coverage": "single_image" if request["agent"] == "image" else "first_40s_up_to_8_frames_no_audio"}
         prompt = self.workflow(request, evidence)

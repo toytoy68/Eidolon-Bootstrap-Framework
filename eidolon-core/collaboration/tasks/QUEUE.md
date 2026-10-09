@@ -1,3 +1,13 @@
+# Suite active — C-MSG-G108, 09/10/2026 à 10 h 18 Europe/Paris
+
+G084–G086 livrés par Claude et intégrés. Corrections G085-R1 à R4 reproduites
+par Codex ; G086-R1 (sources conservées après retrait de la mémoire) signalé.
+**G087 puis G088/G089 prioritaires**, G090–G101 conservés selon dépendances.
+Les six dernières fiches restent G096–G101, sans nouvelle affectation ni session
+présumée. Codex livre C-056 (configuration média) et C-057 (contre-revue).
+
+---
+
 # Suite active — C-MSG-G106, 09/10/2026 à 09 h 15 Europe/Paris
 
 Six nouvelles tâches demandées par toytoy. **G084–G089 restent prioritaires** ;
