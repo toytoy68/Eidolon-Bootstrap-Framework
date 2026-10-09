@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "installed_modules_identical": 68,
+  "synthetic_journals_only": true,
+  "engine_or_source_required": false,
+  "checks": [
+    {
+      "agent": "video",
+      "frames_field": 8,
+      "json_unchanged": true,
+      "human_scope_checked": true
+    },
+    {
+      "agent": "image",
+      "frames_field": 1,
+      "json_unchanged": true,
+      "human_scope_checked": true
+    },
+    {
+      "agent": "video",
+      "frames_field": true,
+      "json_unchanged": true,
+      "human_scope_checked": true
+    }
+  ]
+}
