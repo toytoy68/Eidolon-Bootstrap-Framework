@@ -12,7 +12,7 @@ Contrat des objets : [CONVERSATION-CONTRACT.md](CONVERSATION-CONTRACT.md) (G084)
 - C'est une **base séparée** : `missions.sqlite3` n'est jamais migré ni écrit par
   ce module. Un test vérifie que son empreinte reste identique après des tours,
   des réponses et des lectures.
-- Le schéma est versionné (`eidolon-conversation-store/2`, `user_version` 2 ; v1 seulement par migration explicite).
+- Le schéma est versionné (`eidolon-conversation-store/3`, `user_version` 3 ; v1 et v2 seulement par migration explicite).
   Une autre version est refusée.
 - Le dépôt est **lié au Store des missions** par son `store_id`. Copié à côté
   d'un autre Store, il est refusé (`STORE_CHANGED`).
@@ -65,11 +65,25 @@ défendent pas contre un processus hostile qui tourne sous le même utilisateur.
   **jamais** un second appel au modèle. Le tour est clos en `UNAVAILABLE`,
   avec `MODEL_ATTEMPT_INTERRUPTED`, et l'utilisateur renvoie un nouveau
   message s'il le souhaite.
-- **Migration explicite v1 → v2** :
+- **Migration explicite** :
   `python -m eidolon_core.conversation_api --state <état> migrate`, ou
-  `ConversationStore(store, migrate=True)`. Elle s'exécute en une transaction,
-  sur le même Store, et ne réécrit rien d'autre. Sans migration, un dépôt v1
-  est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être modifié**.
+  `ConversationStore(store, migrate=True)`. Elle avance d'une version à la
+  fois (v1 → v2 → v3), **une transaction par étape**, sur le même Store, et ne
+  réécrit rien d'autre. Une migration interrompue laisse une version
+  intermédiaire valide, que la même commande reprend. Sans migration, un
+  dépôt ancien est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être
+  modifié** ; une version future est refusée (`CONVERSATION_STORE_UNAVAILABLE`).
+
+## Schéma v3 : pièces jointes liées à leur conversation (G097)
+
+- La table `attachments` lie une référence d'artefact opaque
+  (`media-artifact-ref/1`) à **un propriétaire et une conversation**.
+- `attach` n'enregistre rien tant que `verify(référence)` n'a pas prouvé que
+  l'artefact existe, inchangé, dans le magasin de Codex. La conversation doit
+  appartenir à ce propriétaire (`CONVERSATION_UNKNOWN`). Le même artefact
+  rattaché autrement donne `ATTACHMENT_CONFLICT`.
+- `attachments` ne rend que les rattachements de ce propriétaire **et** de
+  cette conversation. Voir [CONVERSATION-MEDIA.md](CONVERSATION-MEDIA.md).
 
 ## Ce qui est garanti
 

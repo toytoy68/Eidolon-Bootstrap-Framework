@@ -26,6 +26,7 @@ from . import conversation as cv
 from .client_credentials import ClientCredentials, CredentialError
 from .commands import CancelCommands
 from .contracts import ContractError
+from . import conversation_store
 from .conversation_store import ConversationStore
 from .dialogue import Dialogue
 
@@ -289,7 +290,12 @@ def main(argv=None):
     pair.add_argument("--actor", required=True)
     revoke = sub.add_parser("revoke")
     revoke.add_argument("--client-id", required=True)
-    sub.add_parser("migrate", help="Migration explicite du dépôt des conversations v1 → v2")
+    sub.add_parser("migrate", help="Migration explicite du dépôt des conversations vers la version courante")
+    attach = sub.add_parser("attach", help="Lier un artefact média à une conversation de son propriétaire")
+    attach.add_argument("--client-id", required=True)
+    attach.add_argument("--conversation-id", required=True)
+    attach.add_argument("--artifact-root", required=True)
+    attach.add_argument("--reference", required=True, help="fichier JSON media-artifact-ref/1")
     args = parser.parse_args(argv)
     store = Store(args.state)
     try:
@@ -298,7 +304,9 @@ def main(argv=None):
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
         elif args.command == "migrate":
             ConversationStore(store, migrate=True)
-            print(json.dumps({"status": "MIGRATED", "schema": "eidolon-conversation-store/2"}))
+            print(json.dumps({"status": "MIGRATED", "schema": conversation_store.SCHEMA}))
+        elif args.command == "attach":
+            print(json.dumps(_attach(store, args)))
         else:
             ClientCredentials(store).revoke(args.client_id)
             print(json.dumps({"client_id": args.client_id, "status": "REVOKED"}))
@@ -306,6 +314,23 @@ def main(argv=None):
         print(json.dumps({"error": str(exc).split(":")[0]}))
         return 2
     return 0
+
+
+def _attach(store, args):
+    """Operator attachment: the reference must name an artifact readable unchanged in this artifact store."""
+    from .conversation_media import check_artifact
+    from .media_agents import MediaError
+    from .media_artifacts import ArtifactStore
+    try:
+        with open(args.reference, "rb") as handle:
+            reference = json.loads(handle.read(4096).decode("utf-8"))
+        artifacts = ArtifactStore(args.artifact_root)
+    except (OSError, ValueError, MediaError):
+        raise ContractError("ARTIFACT_UNAVAILABLE: reference or artifact store unreadable") from None
+    record = ConversationStore(store).attach(owner_client_id=args.client_id, conversation_id=args.conversation_id,
+                                            reference=reference, verify=lambda ref: check_artifact(artifacts, ref))
+    return {"status": "ATTACHED", "conversation_id": record["conversation_id"],
+            "artifact_id": record["reference"]["artifact_id"]}
 
 
 if __name__ == "__main__":

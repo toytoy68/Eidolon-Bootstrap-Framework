@@ -56,12 +56,44 @@ moteurs).
 | `source`, format ou durée invalides, durée pour une image, artefact pour une création, texte absent | `CLARIFICATION` `MEDIA_PARAMETERS_INVALID` (validation `prepare` de Codex) |
 | Proposition retouchée : autorisation, succès revendiqué, exécutant, artefact, texte non normalisé | refus `INVALID_MEDIA` |
 
+## Liaison côté serveur, revérifiée (G097)
+
+Un identifiant opaque n'est **pas** une autorisation. Depuis G097 :
+
+- **Rattachement enregistré** dans le dépôt des conversations (schéma v3),
+  par l'opérateur :
+
+  ```
+  python -m eidolon_core.conversation_api --state <état> attach \
+    --client-id <client> --conversation-id <c-…> \
+    --artifact-root <magasin d'artefacts> --reference ref.json
+  ```
+
+  L'artefact est relu par `ArtifactStore.read` de Codex avant tout
+  enregistrement.
+- **À la proposition** (`propose`) : les rattachements sont relus **à chaque
+  fois** pour ce propriétaire et cette conversation. Une référence copiée
+  dans une autre conversation, ou utilisée par un autre client, donne
+  `MEDIA_ARTIFACT_NOT_ATTACHED` ou `CONVERSATION_UNKNOWN`.
+- **Avant l'exécution** (`verify_for_execution`) : le rattachement doit
+  toujours exister (`ATTACHMENT_MISSING`), et l'artefact être relu inchangé :
+
+  | Cas | Code |
+  | --- | --- |
+  | artefact supprimé, magasin remplacé ou illisible | `ARTIFACT_UNAVAILABLE` |
+  | contenu ou manifeste modifié | `ARTIFACT_MODIFIED` |
+  | magasin occupé | `ARTIFACT_BUSY` |
+
+- Les messages ne contiennent **ni chemin ni contenu** ; les tests le
+  vérifient sur les exceptions et sur la sortie de la commande.
+
+Tests : [test_conversation_media_binding.py](../tests/test_conversation_media_binding.py)
+(15 tests, avec un vrai magasin d'artefacts de Codex en dossier temporaire).
+
 ## Reste à raccorder (non livré ici)
 
 Ces étapes dépendent de choix à coordonner :
 
-- **Persistance des rattachements** : une table du dépôt des conversations
-  (schéma v3 avec migration explicite), ou le magasin de Codex.
 - **Le dialogue** : ajouter les gabarits média au catalogue de confiance du
   prompt et à `decide_reply`.
 - **Lancer** la demande après soumission : par le worker partagé de Codex, ou

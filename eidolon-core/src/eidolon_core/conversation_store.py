@@ -30,12 +30,20 @@ from .commands import validate_scope
 from .contracts import ContractError, digest, encode
 from .store import now
 
-SCHEMA = "eidolon-conversation-store/2"
+SCHEMA = "eidolon-conversation-store/3"
 SCHEMA_V1 = "eidolon-conversation-store/1"
-VERSION = 2
+VERSION = 3
+SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: SCHEMA}
 # v2 adds one durable model attempt per turn (G090-R1). v1 is migrated only on explicit request.
 ATTEMPTS_TABLE = ("CREATE TABLE attempts (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, "
                   "started_at TEXT NOT NULL, deadline REAL NOT NULL)")
+# v3 binds media artifact references to an owner and a conversation, server side (G097).
+ATTACHMENTS_TABLE = ("CREATE TABLE attachments (conversation_id TEXT NOT NULL, artifact_id TEXT NOT NULL, "
+                     "owner_client_id TEXT NOT NULL, reference TEXT NOT NULL, attached_at TEXT NOT NULL, "
+                     "PRIMARY KEY(conversation_id, artifact_id))")
+# One explicit step per version, each in its own transaction: an interrupted migration leaves a
+# valid intermediate version that the same explicit command resumes.
+MIGRATIONS = {1: ATTEMPTS_TABLE, 2: ATTACHMENTS_TABLE}
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
@@ -84,7 +92,7 @@ class ConversationStore:
             db = self._connect()
             try:
                 version = db.execute("PRAGMA user_version").fetchone()[0]
-                if version not in (0, 1, VERSION):
+                if version not in (0, *SCHEMAS):
                     raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unsupported schema version")
                 empty = db.execute("SELECT count(*) FROM sqlite_master").fetchone()[0] == 0
                 # Tables are only ever added to an EMPTY database on explicit creation; any existing
@@ -119,13 +127,14 @@ class ConversationStore:
                             reserved_at TEXT NOT NULL, mission_id TEXT, link TEXT, resolution TEXT,
                             PRIMARY KEY(client_id, command_key));
                         %s;
+                        %s;
                         INSERT INTO meta VALUES ('schema', '%s');
                         INSERT INTO meta VALUES ('store_id', '%s');
-                        PRAGMA user_version=2;
+                        PRAGMA user_version=3;
                         COMMIT;
-                    """ % (ATTEMPTS_TABLE, SCHEMA, self.store_id))
-                elif migrate and version == 1:
-                    self._migrate_v1(db)
+                    """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, SCHEMA, self.store_id))
+                elif migrate and version in MIGRATIONS:
+                    self._migrate(db)
             finally:
                 db.close()
         except sqlite3.OperationalError as exc:
@@ -167,28 +176,35 @@ class ConversationStore:
         return sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True,
                                timeout=BUSY_SECONDS, isolation_level=None)
 
-    def _migrate_v1(self, db):
-        """Explicit v1 → v2: same Store, one transaction, nothing else rewritten."""
-        db.execute("BEGIN IMMEDIATE")
-        try:
-            meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
-            if meta.get("schema") != SCHEMA_V1 or db.execute("PRAGMA user_version").fetchone()[0] != 1:
-                raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: not a v1 conversation store")
-            if meta.get("store_id") != self.store_id:
-                raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
-            db.execute(ATTEMPTS_TABLE)
-            db.execute("UPDATE meta SET value=? WHERE key='schema'", (SCHEMA,))
-            db.execute("PRAGMA user_version=2")
-            db.execute("COMMIT")
-        except BaseException:
-            db.execute("ROLLBACK")
-            raise
+    def _migrate(self, db):
+        """Explicit migration to the current version, one audited step per version."""
+        while True:
+            version = db.execute("PRAGMA user_version").fetchone()[0]
+            if version == VERSION:
+                return
+            if version not in MIGRATIONS:
+                raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: no migration from this version")
+            db.execute("BEGIN IMMEDIATE")
+            try:
+                meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
+                if meta.get("schema") != SCHEMAS[version]:
+                    raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: schema and version disagree")
+                if meta.get("store_id") != self.store_id:
+                    raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
+                self.checkpoint("MIGRATION_STEP_%d" % version)        # fault injection in tests only
+                db.execute(MIGRATIONS[version])
+                db.execute("UPDATE meta SET value=? WHERE key='schema'", (SCHEMAS[version + 1],))
+                db.execute("PRAGMA user_version=%d" % (version + 1))
+                db.execute("COMMIT")
+            except BaseException:
+                db.execute("ROLLBACK")
+                raise
 
     def _check_meta(self, db):
         meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if meta.get("schema") == SCHEMA_V1 and version == 1:
-            raise ConversationError("CONVERSATION_STORE_MIGRATION_REQUIRED: run the explicit v1 → v2 migration")
+        if version in MIGRATIONS and meta.get("schema") == SCHEMAS[version]:
+            raise ConversationError("CONVERSATION_STORE_MIGRATION_REQUIRED: run the explicit migration to v%d" % VERSION)
         if meta.get("schema") != SCHEMA or version != VERSION:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unknown schema")
         if meta.get("store_id") != self.store_id:
@@ -381,6 +397,41 @@ class ConversationStore:
                                  ORDER BY max(t.received_at) DESC, c.conversation_id LIMIT ?""",
                               (client_id, limit)).fetchall()
         return [{"conversation_id": r[0], "created_at": r[1], "turn_count": r[2], "last_turn_at": r[3]} for r in rows]
+
+    def attach(self, *, owner_client_id, conversation_id, reference, verify):
+        """Bind an artifact reference to ITS owner's conversation (operator or authenticated upload, G097).
+
+        verify(reference) must prove the artifact exists unchanged (Codex's ArtifactStore.read); nothing
+        is recorded otherwise. The same artifact may be attached again only to the same owner.
+        """
+        from .conversation_media import attachment
+        record = attachment(store_id=self.store_id, owner_client_id=owner_client_id,
+                            conversation_id=conversation_id, reference=reference)
+        verify(record["reference"])
+        with self._db(write=True) as db:
+            owner = db.execute("SELECT client_id FROM conversations WHERE conversation_id=?",
+                               (conversation_id,)).fetchone()
+            if owner is None or owner[0] != owner_client_id:
+                raise ConversationError("CONVERSATION_UNKNOWN: no such conversation for this owner")
+            existing = db.execute("SELECT owner_client_id, reference FROM attachments WHERE conversation_id=? "
+                                  "AND artifact_id=?", (conversation_id, record["reference"]["artifact_id"])).fetchone()
+            if existing:
+                if existing[0] != owner_client_id or json.loads(existing[1]) != record["reference"]:
+                    raise ConversationError("ATTACHMENT_CONFLICT: this artifact is attached differently")
+                return record
+            db.execute("INSERT INTO attachments VALUES (?,?,?,?,?)",
+                       (conversation_id, record["reference"]["artifact_id"], owner_client_id,
+                        encode(record["reference"]), now()))
+        return record
+
+    def attachments(self, *, owner_client_id, conversation_id):
+        """Attachments recorded for this owner AND this conversation only (fresh, for each proposal)."""
+        from .conversation_media import attachment
+        with self._db() as db:
+            rows = db.execute("SELECT reference FROM attachments WHERE conversation_id=? AND owner_client_id=? "
+                              "ORDER BY attached_at, artifact_id", (conversation_id, owner_client_id)).fetchall()
+        return [attachment(store_id=self.store_id, owner_client_id=owner_client_id, conversation_id=conversation_id,
+                           reference=json.loads(r[0])) for r in rows]
 
     def submitted_by(self, client_id, mission_id):
         """True only for a mission created from one of this client's submissions."""

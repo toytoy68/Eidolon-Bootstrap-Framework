@@ -180,6 +180,52 @@ def check_submission(submission, current):
     return submission
 
 
+def propose(conversations, turn, suggestion, *, owner_client_id, previous=None):
+    """freeze() over the attachments read FRESH from the store for this owner and conversation (G097)."""
+    turn = cv.validate_turn(turn)
+    if conversations.owner(turn["conversation_id"]) != owner_client_id:
+        raise ContractError("CONVERSATION_UNKNOWN: no such conversation for this owner")
+    current = conversations.attachments(owner_client_id=owner_client_id, conversation_id=turn["conversation_id"])
+    return freeze(turn, suggestion, current, owner_client_id=owner_client_id, previous=previous)
+
+
+# Codex's artifact errors → one conversation code each. The message never carries a path or content.
+ARTIFACT_CODES = {"ARTIFACT_CONTENT_MISMATCH": "ARTIFACT_MODIFIED", "ARTIFACT_REFERENCE_MISMATCH": "ARTIFACT_MODIFIED",
+                  "ARTIFACT_CHANGED": "ARTIFACT_MODIFIED", "ARTIFACT_STORE_MISMATCH": "ARTIFACT_UNAVAILABLE",
+                  "ARTIFACT_STORE_CHANGED": "ARTIFACT_UNAVAILABLE", "ARTIFACT_STORE_BUSY": "ARTIFACT_BUSY"}
+
+
+def check_artifact(artifact_store, reference):
+    """Prove the artifact still exists unchanged; returns nothing readable (no body, no manifest)."""
+    try:
+        artifact_store.read(reference)
+    except MediaError as exc:
+        raise ContractError(ARTIFACT_CODES.get(exc.code, "ARTIFACT_UNAVAILABLE")
+                            + ": the attached artifact cannot be used as recorded") from None
+    except OSError:
+        raise ContractError("ARTIFACT_UNAVAILABLE: the attached artifact cannot be used as recorded") from None
+
+
+def verify_for_execution(proposal, conversations, artifact_store):
+    """Last check before a submitted media proposal is handed to the media agents.
+
+    The opaque reference is not an authorization: the attachment must STILL be recorded for this owner
+    and conversation, and the artifact must still be readable with the recorded digest.
+    """
+    proposal = validate_proposal(proposal)
+    if proposal["store_id"] != conversations.store_id:
+        raise ContractError("STORE_CHANGED: proposal belongs to another store")
+    if conversations.owner(proposal["conversation_id"]) != proposal["owner_client_id"]:
+        raise ContractError("CONVERSATION_UNKNOWN: no such conversation for this owner")
+    if proposal["artifact"] is not None:
+        recorded = [a["reference"] for a in conversations.attachments(
+            owner_client_id=proposal["owner_client_id"], conversation_id=proposal["conversation_id"])]
+        if proposal["artifact"] not in recorded:
+            raise ContractError("ATTACHMENT_MISSING: the artifact is not attached to this conversation")
+        check_artifact(artifact_store, proposal["artifact"])
+    return media_request(proposal, _validated=True)
+
+
 def stage(state):
     """Conversation stage of a media job state; unknown states are shown as received, never as success."""
     return STAGES.get(state)
