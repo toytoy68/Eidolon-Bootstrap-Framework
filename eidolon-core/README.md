@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-![Logo officiel Eidolon Core Technologies](assets/branding/eidolon-logo.png)
+![Logo officiel Eidolon Core Technologies](desktop/connected/eidolon-logo.png)
 
 [Agents Image et Vidéo](docs/MEDIA-AGENTS.md) : accès depuis l'accueil, brouillons
 créer/modifier/analyser, modules installables et adaptateurs locaux optionnels.
@@ -20,6 +20,14 @@ opérateur après vérification du moteur. Voir `resource-init`, `resource-inspe
 et `resource-release` dans le [guide des agents média](docs/MEDIA-AGENTS.md).
 Six demandes à adapter et une [fiche de recette réelle](docs/MEDIA-REAL-RECIPE.md)
 sont fournies dans l’archive source pour préparer les essais Image/Vidéo.
+
+Le [worker média](docs/MEDIA-WORKER.md) installe la commande
+`eidolon-media-worker` : ticket durable lié à une proposition soumise, précontrôle
+hors ligne, un essai explicite, suivi et collecte sans répétition automatique.
+Il exige un groupe de ressources. Les échanges moteur ont une échéance murale
+par requête ; une coupure conserve l’effet incertain et la réservation.
+Le dialogue média et le raccordement complet à la page sont suivis dans G122/G123.
+[Preuves de la séance du 09/10, 15 h 55](docs/validation/2026-10-09/codex-hour-1555/README.md).
 
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 

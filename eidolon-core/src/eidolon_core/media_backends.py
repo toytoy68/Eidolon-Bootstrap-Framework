@@ -15,20 +15,16 @@ from __future__ import annotations
 import base64
 import copy
 import hashlib
-from http.client import HTTPException
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
 import tempfile
-import urllib.error
 import urllib.parse
-import urllib.request
 import uuid
 
 from .media_agents import MediaError, identify, parse_json, read_regular
-from .model_http import CompleteHeaderHandler, IncompleteHeaders, read_body
 from .media_workflows import definition
 
 
@@ -45,11 +41,6 @@ def endpoint(value):
             or "?" in value or "#" in value or port is None or not 1 <= port <= 65535):
         raise MediaError("LOCAL_ENDPOINT_REQUIRED")
     return value.rstrip("/")
-
-
-class NoRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, *args, **kwargs):
-        return None
 
 
 def vision_model(value):
@@ -70,18 +61,12 @@ def json_http(method, url, payload, timeout=90):
     data = None if payload is None else json.dumps(payload, ensure_ascii=False, allow_nan=False).encode("utf-8")
     if data is not None and len(data) > 32 * 1024 * 1024:
         raise MediaError("REQUEST_TOO_LARGE")
-    req = urllib.request.Request(url, data=data, method=method,
-                                 headers={"Content-Type": "application/json", "Accept": "application/json"})
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), NoRedirect())
-    try:
-        with opener.open(req, timeout=timeout) as response:
-            if response.status != 200 or response.headers.get_content_type() != "application/json":
-                raise MediaError("INVALID_BACKEND_RESPONSE")
-            result = parse_json(read_body(response, 1_000_000, MediaError))
-    except IncompleteHeaders:
-        raise MediaError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
-    except (OSError, urllib.error.URLError, HTTPException) as exc:
-        raise MediaError("BACKEND_UNAVAILABLE", type(exc).__name__) from None
+    from .media_http import exchange
+    content_type, body = exchange(method, url, data,
+        {"Content-Type": "application/json", "Accept": "application/json"}, 1_000_000, timeout=timeout)
+    if content_type != "application/json":
+        raise MediaError("INVALID_BACKEND_RESPONSE")
+    result = parse_json(body)
     if type(result) is not dict:
         raise MediaError("INVALID_BACKEND_RESPONSE")
     return result

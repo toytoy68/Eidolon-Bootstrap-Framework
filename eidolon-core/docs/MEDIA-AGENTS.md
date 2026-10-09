@@ -197,7 +197,7 @@ Aucun prompt, octet source, upload ou appel d'inférence n'est envoyé par ces
 sondes. Les noms des classes et du modèle sont transmis. Les métadonnées des
 extensions ComfyUI sont produites par le moteur de confiance : cette lecture
 n'isole pas les effets internes d'un nœud personnalisé. Le délai de 5 secondes
-est un timeout socket par sonde, **pas une échéance murale globale**. La réponse
+borne désormais chaque échange HTTP complet (C-066), pas l’ensemble des sondes. La réponse
 JSON reste bornée à 1 Mio ; aucun proxy, redirection ou renvoi automatique.
 
 | État / sortie | Interprétation |
@@ -492,14 +492,17 @@ de personnes. Les descriptions restent non vérifiées et ne déclenchent aucune
 
 Les travaux média ont leur propre journal de préfiguration : pas de réutilisation
 implicite de `SUCCEEDED`, des reçus d'approbation ou des identités de missions Core.
-Le délai HTTP est un timeout socket, pas une échéance murale globale. Les décodages
+Chaque échange HTTP média est borné à 90 secondes murales (C-066), y compris
+un envoi bloqué ou des en-têtes/octets reçus au compte-gouttes. Ce n’est pas une
+limite globale du travail : ses étapes ont des budgets distincts. Les décodages
 FFmpeg sont limités à 30 secondes ; les images transmises et réponses sont bornées.
 Les étapes de transfert/soumission sont journalisées avant chaque effet suivant.
 Après coupure avec `QUEUE_ACKNOWLEDGED` durable, `poll` et `collect` peuvent lire
 l'historique sans renvoyer le travail ni modifier son journal original. Sans reçu
 durable, l'effet reste incertain ; aucune déduction d'absence d'exécution.
 L'arbitrage GPU partagé avec le dialogue, les budgets globaux, la rétention,
-la validation sémantique des sorties et le raccordement au worker Core restent à faire.
+la validation sémantique des sorties et le lancement depuis l’accueil restent à faire.
+Le worker média explicite C-064/C-065 est livré séparément (voir MEDIA-WORKER.md).
 Aucun résultat ne qualifie la V100, Windows ou un vrai modèle de génération.
 
 ## Interface avec le chantier Claude

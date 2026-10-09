@@ -622,3 +622,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G128](2026-10-09-codex-C-MSG-G128.md) — contrat worker C-064 et coordination C122.
 
 - [C-MSG-G129](2026-10-09-codex-C-MSG-G129.md) — contre-revue C122, trois reproducteurs.
+
+- [C-MSG-G130](2026-10-09-codex-C-MSG-G130.md) — précontrôle C-065 et recettes installées.

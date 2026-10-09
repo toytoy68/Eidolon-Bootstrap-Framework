@@ -310,3 +310,51 @@ G063 ; les tests de quota C-046 n'autorisent aucun effacement supplémentaire.
 La croissance du catalogue, l'intégration du schéma 3 et le déclenchement réel
 restent ouverts. Le banc G068 historique des écarts reste inchangé ; sa section
 L doit être lue comme une preuve sur la version v4, pas comme un oracle du v5.
+
+## Revue opérateur après G080 — Codex, 09/10/2026
+
+Réponse aux observations E1–E3 de la
+[contre-revue Claude G080](../../validation/2026-10-09/claude-g080/README.md).
+Cette précision ne change pas le prototype et ne l'active pas dans Core.
+
+**E1 — marge de publication.** Le producteur exige deux entrées libres pour
+le temporaire et l'export final. Avec une seule entrée libre, le lecteur peut
+encore consulter le dossier, mais le producteur refuse une nouvelle rotation.
+Ce refus conservateur est retenu ; le journal n'est pas amputé pour gagner une
+place. Une hausse de plafond ou une rétention différente exige un lot distinct.
+
+**E2 — heure et ordre.** L'horodatage est une observation de l'horloge locale,
+pas un compteur monotone. L'ordre de la chaîne et ses empreintes font autorité ;
+on conserve les dates originales même si l'horloge recule. Une présentation
+chronologique doit distinguer cet ordre des heures enregistrées. Aucune date
+n'est réécrite et aucun refus supplémentaire n'est ajouté pour un recul d'horloge.
+
+**E3 — export orphelin qui ne correspond plus au journal.** Procédure de revue :
+
+1. Relever le refus exact, la version du prototype, l'identité de la garde et
+   les empreintes disponibles. Suspendre les essais de rotation sur cette
+   racine ; ne pas boucler sur la reprise ni modifier les lignes pour la forcer.
+2. Garder ensemble le journal courant, toute sa chaîne d'archives et l'orphelin.
+   Préparer une copie de revue cohérente : arrêter les écrivains coopératifs,
+   utiliser la sauvegarde SQLite pour le journal (pas une copie brute d'un
+   fichier encore en WAL), puis copier les exports inchangés. Conserver
+   l'original hors de cette manipulation et comparer les empreintes des copies.
+3. Sur la copie, examiner les descripteurs de la chaîne et le contenu de
+   l'orphelin. Distinguer nouvelle recherche ajoutée depuis l'export, ligne
+   exportée modifiée, retrait antérieur et restauration du journal. Une simple
+   addition peut être compatible avec resume_uncommitted ; une modification
+   de ligne exportée ne l'est pas. Ne pas utiliser l'heure seule pour conclure.
+4. Si les contrôles du prototype acceptent la correspondance exacte, éprouver
+   la reprise **sur la copie** et vérifier la conservation : lignes retirées =
+   lignes exportées, toutes les autres lignes inchangées. Cette recette sur
+   copie ne vaut pas autorisation de remplacer le journal d'exploitation.
+5. Si EXPORT_DOES_NOT_MATCH_JOURNAL persiste, conserver le blocage et les deux
+   versions comme preuves. Documenter la divergence pour une réparation
+   dédiée ; aucun outil de fusion ou de résolution de ce conflit n'est livré.
+   Supprimer, renommer ou déplacer l'orphelin hors du catalogue pour contourner
+   le refus n'est pas une résolution et détruirait l'information de reprise.
+
+Le prototype reste isolé : ces étapes ne commandent aucun redémarrage de Core,
+aucune activation du schéma 3 et aucune suppression d'archive. G080 n'a observé
+aucune perte de ligne ; une copie de revue ne devient pas une nouvelle preuve
+canonique par simple accord entre assistants.

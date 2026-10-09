@@ -957,3 +957,28 @@ C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confié
   demandes préparées depuis extraction, 72 modules identiques au paquet recetté.
 - [ ] Claude : G090-R1 (appels modèle doublés), G088-R1 (mentions de mode) et
   G088-R2 (budget mural/fermeture du serveur avec modèle actif) transmis dans G117.
+
+
+## C-064/C-065/C-066 — File média et transport borné (09/10/2026)
+
+- [x] File privée durable liée au magasin Core, proposition courante et identité
+  de conversation appairée ; une clé rejouée retrouve le même ticket.
+- [x] Un job_id préassigné et un essai explicite par ticket ; groupe C-061 requis,
+  aucune reprise automatique après coupure ; aucune réussite déduite du moteur.
+- [x] Précontrôle sans effet ; configuration incorrecte et groupe déjà occupé
+  laissent le ticket en attente. CLI eidolon-media-worker installée avec le paquet.
+- [x] Vue G101 du travail exact et collecte unique, partiels conservés ; aucun
+  chemin de travail choisi par le navigateur.
+- [x] Échéance murale HTTP média par échange (90 s par défaut, 5 s pour les sondes),
+  statut/en-têtes/corps/chunks/envoi couverts ; pas de thread abandonné ni de renvoi.
+- [x] Six modes depuis le paquet installé, HTTP moteur simulé et FFmpeg/FFprobe
+  réels ; sources installées comparées aux sources testées (voir bilan daté).
+- [ ] G122/G123 Claude : dialogue/soumission et page raccordés au worker ; ne pas
+  confondre les blocs de résultat déjà livrés C122 avec un lancement depuis l'accueil.
+- [ ] Retours C122 à Claude : G123-R1 identité du journal lié, G099-R1 media_links
+  dans le digest de sauvegarde, G124-R1 annulation tardive sur mauvaise sélection.
+- [ ] Qualification modèles/moteurs réels, V100, VM et Windows ; arbitrage des
+  ressources avec le dialogue, archivage des tickets et annulation moteur ciblée.
+
+[Contrat worker](docs/MEDIA-WORKER.md) et
+[preuves de la séance](docs/validation/2026-10-09/codex-hour-1555/README.md).

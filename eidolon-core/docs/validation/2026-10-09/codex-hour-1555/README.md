@@ -67,3 +67,28 @@ installed_complete_recipe.py : demande cancel_proposal, vérifie le digest, ajou
 conversation_id et proposal_sha256 à cancel. Aucun attendu affaibli.
 installed-complete.json : 13/13 et G089 adapté 18/18. Les originaux Claude ne sont
 pas modifiés, retour pour G127. Le stderr conserve la coupure réseau volontaire.
+
+
+## G080 E1–E3 — décisions de revue documentaire
+
+Complément signé dans docs/proposals/2026-10-07-research-retention/README.md :
+marge de deux entrées conservée, ordre de chaîne distinct de l’heure locale,
+procédure sur copie cohérente pour un orphelin divergent. Pas de changement
+de rotation.py, pas d’activation ni d’effacement ; aucune nouvelle recette
+de restauration physique prétendue. Les preuves G080 restent celles de Claude.
+
+
+## C-066 — Borne murale HTTP média
+
+media_http.py : requête locale sans proxy/redirection/renvoi, échéance monotone
+sur connexion, envoi, statut, en-têtes, chunks et corps. 90 s par échange, 5 s
+par sonde ; aucune limite globale du travail ni annulation moteur prétendues.
+HTTP modèle/planificateur inchangé. http-initial.txt : 39 tests existants réussis.
+http-deadline-tests.txt : 46 tests réussis, dont 7 nouveaux cas TCP avec flux
+progressif, envoi bloqué et véritable worker dont la réservation reste tenue
+après le délai (un seul appel moteur, pas de deuxième essai).
+
+c066-full-suite.txt : **1 326 tests Python réussis, zéro ignoré**, Memory activée,
+232,011 s. c122-client-all.txt : **77 Node réussis, 24 Chromium ignorés**.
+Le bundle JS est à jour. Le manifeste c066-source-manifest.json fige les sources
+finales testées pour les comparer au prochain paquet publié/installé.

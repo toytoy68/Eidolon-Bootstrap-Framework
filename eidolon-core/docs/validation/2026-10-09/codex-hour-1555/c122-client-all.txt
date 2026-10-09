@@ -1,0 +1,109 @@
+﹣ keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body (0.900414ms) # Chromium executable unavailable
+﹣ focus after a refused token goes back to the token field, with the status announced (0.142314ms) # Chromium executable unavailable
+﹣ visible focus indicator on every control reached by Tab (0.088373ms) # Chromium executable unavailable
+﹣ layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.327292ms) # Chromium executable unavailable
+﹣ layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.114612ms) # Chromium executable unavailable
+﹣ layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps (0.144267ms) # Chromium executable unavailable
+﹣ reduced motion: no animation or transition anywhere (0.090376ms) # Chromium executable unavailable
+﹣ dark color scheme keeps contrast (0.060651ms) # Chromium executable unavailable
+✔ G066 pages of one generation are appended in order; the list is complete only at the end (4.210683ms)
+✔ G066 refused pages never change what is shown and are never mixed (1.154867ms)
+✔ G066 RESET_REQUIRED freezes the previous list until an explicit reload of a new generation (0.603297ms)
+✔ G066 an answer to an older request is ignored after a reload (0.466662ms)
+✔ G066 archive refusals stay in their panel; connection failures freeze the list (11.209248ms)
+✔ G066 nothing is read without an explicit request, and a late answer after disconnect is dropped (1.420256ms)
+✔ G066 real Core C-030 pages: two pages, change between pages, unavailable folder (2096.534815ms)
+✔ G066 real Core without --research-archives: ARCHIVES_NOT_CONFIGURED, missions still readable (1775.332901ms)
+﹣ G066 Chromium: keyboard load, table of metadata only, small screen without page scroll (0.295074ms) # Chromium executable unavailable
+﹣ keyboard only: open, send, focus returns to the message, visible focus on every conversation control (1.059634ms) # Chromium executable unavailable
+﹣ 320x640: long sources and long texts never overflow (0.178198ms) # Chromium executable unavailable
+﹣ zoom 200 % (640x360): long sources and long texts never overflow (0.191407ms) # Chromium executable unavailable
+﹣ an answer arriving after the conversation was closed is ignored (0.120902ms) # Chromium executable unavailable
+﹣ an uncertain mission is shown as such, with no follow button and no automatic resubmission (0.164107ms) # Chromium executable unavailable
+﹣ reload then resume: earlier turns and proposal come back, nothing is resent (0.151608ms) # Chromium executable unavailable
+﹣ media drafts survive opening and closing a conversation (0.26598ms) # Chromium executable unavailable
+﹣ G096: hostile model text stays literal text, unsupported citations are flagged, nothing is submitted (0.123796ms) # Chromium executable unavailable
+﹣ G100: two missions, choose one, confirm by keyboard: a recorded request, never a confirmed stop; no overflow at 320 px (0.805101ms) # Chromium executable unavailable
+﹣ G101: media results from the real server (none, then a real linked job), then a hostile view stays plain text (0.204458ms) # Chromium executable unavailable
+✔ the canonical digest matches Core's published proposal digest (10.567644ms)
+✔ a malformed key is refused locally and the key never appears in the state (1.710272ms)
+✔ read token refused by the server keeps the conversation closed (0.789968ms)
+✔ a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal (1.266395ms)
+✔ submission sends the locally verified digest and identity; a tampered proposal is never sent (7.291506ms)
+✔ an uncertain submission is resolved by its receipt, never by a new key (3.041358ms)
+✔ answers that arrive after closing are ignored (1.017891ms)
+✔ mission stages: created, running, result, unknown effect, never invented (2.780602ms)
+✔ G091: a partial context is said in words; a complete one says nothing (0.287793ms)
+✔ G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing (4.154449ms)
+✔ G098: each reply names its profile and model; a change is said; nothing is invented (0.489706ms)
+✔ G101: media results are plain text lines; wrong job, partial, copied reference, HTML (1.161387ms)
+✔ G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early (9.551625ms)
+✔ G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key (6.648669ms)
+✔ G100: finished missions and media jobs are said, nothing is offered (0.994997ms)
+✔ G101: media results are read on demand, errors are said, closing forgets them (0.411108ms)
+✔ UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly (2.072367ms)
+✔ the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination (0.469156ms)
+✔ host key verification and system settings are never weakened (0.834485ms)
+✔ preview by default; connection only with -Connect; stop limited to its own recorded ssh process (0.422035ms)
+✔ no secret is read or printed; inputs are validated before reaching ssh or the remote shell (0.439782ms)
+✔ the optional remote diagnostic is C-009c --check, which starts nothing (0.247663ms)
+✔ remote relative paths keep their home anchor after cd; absolute paths remain literal (0.17293ms)
+✔ missing executable rejects without an unhandled spawn error (20.784229ms)
+✔ startup deadline waits for its silent owned child to exit (115.823114ms)
+✔ stderr is drained and a child ignoring TERM is killed, then stop is idempotent (139.19661ms)
+✔ all six operations prepare drafts, never submissions (1.959216ms)
+✔ editing and analysis require a compatible source (0.337016ms)
+✔ budgets and input bounds reject oversized, empty or unsupported files (0.368594ms)
+✔ preparation reads metadata only, never file content or paths (0.832843ms)
+✔ workspace navigation preserves separate drafts, edits invalidate summary, clear removes files (1.27646ms)
+✔ analysis hides generation settings and missing sources produce a useful message (1.07746ms)
+✔ read-only HTML has no execution command button, including disabled placeholders (C103) (1.485845ms)
+﹣ Chromium: media workspaces send nothing, preserve escaped text and reset on disconnect (0.082283ms) # Chromium executable unavailable
+✔ real server + beta fixture: the three receipt queries, an absent key and a wrong mission (1837.191848ms)
+✔ real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection (3299.340058ms)
+﹣ Chromium on the real server: receipt lookup shown next to the current capture, no command button (0.337958ms) # Chromium executable unavailable
+✔ G060 real Core projections of research missions: labels, notes, no query or page text (2360.700483ms)
+✔ G060 labels never claim truth; unknown objectives and outcomes stay as received (0.769978ms)
+﹣ G060 Chromium on the real server: research note shown, no command, no query (0.096696ms) # Chromium executable unavailable
+✔ served assets are the committed ones and app.js is the current bundle (1454.341729ms)
+✔ real server: list, snapshot, a cancellation written by another process seen by poll and relist (1438.428941ms)
+✔ real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes (1481.97357ms)
+✔ real server: another state behind the same address wipes the display (2757.520887ms)
+﹣ Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout (0.235575ms) # Chromium executable unavailable
+﹣ Chromium: a page opened through another Host is refused by the server, and the client says so (0.151869ms) # Chromium executable unavailable
+✔ token format is checked locally; nothing is sent for a malformed token (1.46292ms)
+✔ connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument (7.295532ms)
+✔ pagination sends next_cursor unchanged and stops at the end; never more than three pages (2.73278ms)
+✔ list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor (1.009228ms)
+✔ 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight (0.984161ms)
+✔ 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture (1.511904ms)
+✔ network failure: offline, data kept and dated; reconnect to the same store resumes (0.865051ms)
+✔ reconnection to another store wipes the previous display: no mixed identities (0.91062ms)
+✔ a list answering for another store than health is refused and nothing is shown (0.435285ms)
+✔ an answer for a previous selection never replaces the current one (0.853864ms)
+✔ disconnect forgets token and display; a late answer is dropped (0.457979ms)
+✔ poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload (1.645474ms)
+✔ an invalid or authority-claiming answer is rejected, never displayed (0.510367ms)
+✔ a malformed mission id is never turned into a request path (1.206595ms)
+✔ G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged (1.529671ms)
+✔ G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop (0.626843ms)
+✔ G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent (0.63197ms)
+✔ G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local (0.710338ms)
+✔ G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused (1.319775ms)
+✔ G036 a receipt answer arriving after another selection, or after disconnect, is dropped (0.993204ms)
+✔ G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused (3.135976ms)
+✔ G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported (0.421364ms)
+✔ G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness (0.787274ms)
+✔ G043 an answer for a previous list epoch does not advance freshness (0.51206ms)
+✔ G043 two concurrent connections: only the last one is applied, the first answer never counts (0.304308ms)
+✔ G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current (0.895277ms)
+✔ G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry (1.950042ms)
+✔ G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture (0.548265ms)
+ℹ tests 101
+ℹ suites 0
+ℹ pass 77
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 24
+ℹ todo 0
+ℹ duration_ms 8308.918987

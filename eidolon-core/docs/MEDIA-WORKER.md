@@ -157,3 +157,18 @@ ticket ACCEPTED. Après correction locale/revue de la réservation, l'opérateur
 peut lancer ce même ticket : aucun effet n'avait été admis. Une panne **après**
 admission garde les règles conservatrices de C-064. Les fichiers sont relus
 à l'exécution ; le précontrôle n'est ni un cache ni une permission.
+
+
+## Échanges moteur bornés — C-066
+
+HTTP média : 90 secondes murales par échange, de la connexion à la fin du corps
+de réponse ; les sondes de métadonnées conservent leur borne de 5 secondes par
+échange. Une réponse qui transmet régulièrement quelques octets ne renouvelle
+pas le budget. Envoi bloqué, ligne de statut, en-têtes, tailles de chunks et
+corps sont couverts. Pas de thread abandonné, proxy, redirection ni renvoi.
+
+MEDIA_HTTP_DEADLINE après une soumission reste un effet moteur inconnu : le
+worker conserve REVIEW_REQUIRED, la réservation et le journal. Le délai ne
+prouve pas l’arrêt du moteur. Ce budget HTTP ne remplace ni la limite FFmpeg
+ni une limite totale du travail (plusieurs échanges peuvent se suivre).
+Les transports de dialogue/planification ne sont pas modifiés par C-066.

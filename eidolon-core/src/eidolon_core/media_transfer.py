@@ -7,41 +7,27 @@
 # ==========================================================
 """One upload at most, then exact byte verification. Never submits a workflow.
 
-No proxy, redirect or retry. Socket inactivity limits are not a wall-clock SLA.
+No proxy, redirect or retry. Each HTTP exchange has a 90-second wall budget.
 The engine is trusted to preserve the checked input until its workflow reads it.
 """
 import hashlib
-from http.client import HTTPException
-import urllib.error
 import urllib.parse
-import urllib.request
 import uuid
 
 from .media_agents import MediaError, parse_json
-from .model_http import CompleteHeaderHandler, IncompleteHeaders, read_body
 
 EXTENSIONS = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp",
               "video/mp4": ".mp4", "video/webm": ".webm"}
 
 
-def raw_http(method, url, body, content_type, max_response):
-    from .media_backends import NoRedirect
+def raw_http(method, url, body, content_type, max_response, *, timeout=90):
+    from .media_http import exchange
     if body is not None and len(body) > 200 * 1024 * 1024 + 4096:
         raise MediaError("MEDIA_TRANSFER_TOO_LARGE")
     headers = {"Accept": "*/*"}
     if content_type is not None:
         headers["Content-Type"] = content_type
-    request = urllib.request.Request(url, data=body, method=method, headers=headers)
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), NoRedirect())
-    try:
-        with opener.open(request, timeout=90) as response:
-            if response.status != 200:
-                raise MediaError("MEDIA_TRANSFER_STATUS")
-            return response.headers.get_content_type(), read_body(response, max_response, MediaError)
-    except IncompleteHeaders:
-        raise MediaError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
-    except (OSError, urllib.error.URLError, HTTPException) as exc:
-        raise MediaError("MEDIA_TRANSFER_UNAVAILABLE", type(exc).__name__) from None
+    return exchange(method, url, body, headers, max_response, timeout=timeout, status_error="MEDIA_TRANSFER_STATUS")
 
 
 def multipart(source, filename, media_type):

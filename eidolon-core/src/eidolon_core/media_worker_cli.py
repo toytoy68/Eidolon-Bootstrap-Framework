@@ -25,7 +25,7 @@ def render(value):
     rows = value.get("tickets", [value.get("receipt", value)])
     for row in rows:
         lines.append(section("Ticket média"))
-        for key, label in (("ticket_id", "Ticket"), ("job_id", "Travail"), ("state", "État enregistré"),
+        for key, label in (("worker_id", "File"), ("store_id", "Magasin Core"), ("ticket_id", "Ticket"), ("job_id", "Travail"), ("state", "État enregistré"),
                            ("execution", "Exécution"), ("failure_code", "Diagnostic")):
             if row.get(key) is not None:
                 lines.append(message("INFO", f"{label} : {row[key]}"))

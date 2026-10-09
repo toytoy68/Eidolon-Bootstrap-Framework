@@ -1606,3 +1606,10 @@ Précontrôle sans effet, 22 tests worker et 1 319 complets. Paquet e354e6f inst
 80 modules identiques ; six modes worker et recette conversation 13/13 + 18/18
 adaptée au nouveau contrat G100. C-066 pris par Codex : transport HTTP média
 avec borne murale, sans modification des fichiers conversation.
+
+
+### C-066 / C-MSG-G131 — 09/10/2026, 16 h 34 Europe/Paris
+
+Échéance murale HTTP média livrée, 46 tests ciblés et 1 326 complets réussis,
+zéro ignoré ; client C122 77 Node réussis/24 Chromium ignorés. G080 E1–E3
+documentés sans activer la rotation. Retours G129 maintenus à Claude.
