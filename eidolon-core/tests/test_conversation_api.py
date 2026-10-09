@@ -6,6 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
+import hashlib
 import http.client
 import io
 import json
@@ -13,7 +14,9 @@ from contextlib import redirect_stdout
 import os
 from pathlib import Path
 import secrets
+import shutil
 import socket
+import sqlite3
 import tempfile
 import threading
 import unittest
@@ -211,6 +214,57 @@ class TransportTests(Base):
             with self.subTest(code=code):
                 self.assertEqual(self.post(route, data, **options), (status, {
                     "protocol": api.PROTOCOL, "error": code, "authorizes_execution": False}))
+
+
+class CredentialStoreTests(unittest.TestCase):
+    """G087-R1/R2 (Codex C-MSG-G113): pairings never travel with a copy, nothing is created through a link."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def paired(self, name):
+        store = Store(self.root / name)
+        credentials = ClientCredentials(store, create=True)
+        return store, credentials, credentials.pair(client_id="pc", actor="toytoy")
+
+    def test_g087_r1_a_pairing_store_copied_from_another_store_is_refused(self):
+        store_a, open_a, _ = self.paired("a")
+        _, _, b = self.paired("b")
+        target = Path(store_a.directory) / "conversations" / "clients.sqlite3"
+        target.unlink()
+        shutil.copyfile(Path(self.root / "b" / "conversations" / "clients.sqlite3"), target)
+        os.chmod(target, 0o600)
+        before = hashlib.sha256(target.read_bytes()).hexdigest()
+        with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):
+            open_a.authenticate(b["token"])                 # hot replacement, already open instance
+        with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):
+            ClientCredentials(store_a)                       # new instance: foreign Store identity
+        self.assertEqual(hashlib.sha256(target.read_bytes()).hexdigest(), before)
+
+    def test_g087_r2_a_linked_directory_gets_nothing_created(self):
+        store = Store(self.root / "linked")
+        external = self.root / "external"
+        os.mkdir(external, 0o700)
+        os.symlink(external, Path(store.directory) / "conversations")
+        with self.assertRaisesRegex(ContractError, "CREDENTIALS_UNAVAILABLE"):
+            ClientCredentials(store, create=True)
+        self.assertEqual(list(external.iterdir()), [])
+
+    def test_a_foreign_regular_database_is_never_completed(self):
+        store = Store(self.root / "foreign")
+        os.mkdir(Path(store.directory) / "conversations", 0o700)
+        path = Path(store.directory) / "conversations" / "clients.sqlite3"
+        with sqlite3.connect(path) as db:
+            db.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+        os.chmod(path, 0o600)
+        before = hashlib.sha256(path.read_bytes()).hexdigest()
+        with self.assertRaisesRegex(ContractError, "CREDENTIALS_UNAVAILABLE"):
+            ClientCredentials(store, create=True)
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)
 
 
 class PairingCliTests(unittest.TestCase):

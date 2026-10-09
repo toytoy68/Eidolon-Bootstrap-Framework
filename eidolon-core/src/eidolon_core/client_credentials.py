@@ -36,43 +36,89 @@ def _hash(token):
     return hashlib.sha256(token.encode("ascii")).hexdigest()
 
 
+SCHEMA = "eidolon-client-credentials/1"
+
+
 class ClientCredentials:
     def __init__(self, store, *, create=False):
         self.directory = Path(store.directory) / "conversations"
         self.path = self.directory / "clients.sqlite3"
+        self._identity = None
+        with store.connection() as db:
+            self.store_id = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()[0]
+        if re.fullmatch(r"s-[0-9a-f]{32}", self.store_id) is None:
+            raise CredentialError("CREDENTIALS_UNAVAILABLE: invalid Store identity")
         if create:
             try:
                 os.mkdir(self.directory, 0o700)
             except FileExistsError:
                 pass
+            self._check_directory()               # never create anything through a link (G087-R2)
             try:
                 os.close(os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
-                with self._db(write=True) as db:
-                    db.execute("CREATE TABLE clients (client_id TEXT PRIMARY KEY, actor TEXT NOT NULL, "
-                               "token_sha256 TEXT NOT NULL UNIQUE, created_at TEXT NOT NULL, revoked_at TEXT)")
             except FileExistsError:
                 pass
-        with self._db():
-            pass
-
-    def _check(self):
-        for path, kind in ((self.directory, stat.S_ISDIR), (self.path, stat.S_ISREG)):
+        self._check_directory()
+        self._identity = self._check_file()
+        if create:
+            db = self._connect()
             try:
-                info = os.lstat(path)
-            except FileNotFoundError:
-                raise CredentialError("CREDENTIALS_MISSING: pair a client first") from None
-            if stat.S_ISLNK(info.st_mode) or not kind(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
-                raise CredentialError("CREDENTIALS_UNAVAILABLE: not a private regular file or directory")
+                if db.execute("SELECT count(*) FROM sqlite_master").fetchone()[0] == 0:
+                    # Schema and Store identity in ONE transaction, only on an empty database (G087-R1).
+                    db.executescript("""
+                        BEGIN IMMEDIATE;
+                        CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+                        CREATE TABLE clients (client_id TEXT PRIMARY KEY, actor TEXT NOT NULL,
+                            token_sha256 TEXT NOT NULL UNIQUE, created_at TEXT NOT NULL, revoked_at TEXT);
+                        INSERT INTO meta VALUES ('schema', '%s');
+                        INSERT INTO meta VALUES ('store_id', '%s');
+                        COMMIT;
+                    """ % (SCHEMA, self.store_id))
+            except sqlite3.Error as exc:
+                raise CredentialError("CREDENTIALS_UNAVAILABLE: " + str(exc)[:60]) from None
+            finally:
+                db.close()
+        with self._db():
+            pass                                  # an existing store is checked, never completed
+
+    def _check_directory(self):
+        self._check_path(self.directory, stat.S_ISDIR)
+
+    def _check_file(self):
+        info = self._check_path(self.path, stat.S_ISREG)
+        identity = (info.st_dev, info.st_ino)
+        if self._identity is not None and identity != self._identity:
+            raise CredentialError("STORE_CHANGED: the pairing store was replaced")
+        return identity
+
+    @staticmethod
+    def _check_path(path, kind):
+        try:
+            info = os.lstat(path)
+        except FileNotFoundError:
+            raise CredentialError("CREDENTIALS_MISSING: pair a client first") from None
+        if stat.S_ISLNK(info.st_mode) or not kind(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise CredentialError("CREDENTIALS_UNAVAILABLE: not a private regular file or directory")
+        return info
+
+    def _connect(self):
+        try:
+            return sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True, timeout=2, isolation_level=None)
+        except sqlite3.Error:
+            raise CredentialError("CREDENTIALS_UNAVAILABLE: cannot open") from None
 
     @contextmanager
     def _db(self, *, write=False):
-        self._check()
-        try:
-            db = sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True, timeout=2, isolation_level=None)
-        except sqlite3.Error:
-            raise CredentialError("CREDENTIALS_UNAVAILABLE: cannot open") from None
+        self._check_directory()
+        self._check_file()
+        db = self._connect()
         try:
             db.execute("BEGIN IMMEDIATE" if write else "BEGIN")
+            meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
+            if meta.get("schema") != SCHEMA:
+                raise CredentialError("CREDENTIALS_UNAVAILABLE: unknown schema")
+            if meta.get("store_id") != self.store_id:
+                raise CredentialError("STORE_CHANGED: pairings belong to another mission Store")
             yield db
             db.execute("COMMIT")
         except sqlite3.Error as exc:
