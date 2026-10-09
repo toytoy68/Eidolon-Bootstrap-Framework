@@ -17,6 +17,7 @@ import copy
 import hashlib
 from http.client import HTTPException
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -143,6 +144,8 @@ class LocalMediaBackend:
                 exe = self.config.get("ffmpeg")
                 if not isinstance(exe, str) or not Path(exe).is_absolute() or not Path(exe).is_file():
                     raise MediaError("FFMPEG_NOT_CONFIGURED")
+                if not os.access(exe, os.X_OK):
+                    raise MediaError("FFMPEG_NOT_EXECUTABLE")
             return {"adapter": "ollama-vision/1", "endpoint": url, "model": model,
                     "coverage": "single_image" if request["agent"] == "image" else "first_40s_up_to_8_frames_no_audio"}
         prompt = self.workflow(request, evidence)

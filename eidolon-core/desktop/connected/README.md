@@ -83,8 +83,11 @@ avec un délai de 10 s.
 | `tests/archives.test.js` | 9 tests archives (G066) : 6 sur réponses scriptées, 2 sur le vrai serveur C-030, 1 Chromium clavier et 360 px |
 | `tests/helpers.js` | outils partagés des bancs réels (CLI, jeu bêta, serveur, nettoyage) |
 
-Le serveur ne sert que trois fichiers (`/`, `/app.js`, `/style.css`) : d'où le
-fichier unique `app.js`. Après toute modification d'une source :
+Le serveur sert trois fichiers obligatoires (`/`, `/app.js`, `/style.css`) et le
+logo facultatif `/eidolon-logo.png`. Les scripts restent réunis dans `app.js`.
+Le logo G078 est affiché après décodage ; le titre textuel reste disponible en
+cas d'absence ou d'échec. Aucun répertoire de fichiers arbitraires n'est exposé.
+Après toute modification d'une source :
 
 ```sh
 cd eidolon-core
@@ -146,9 +149,10 @@ servie par Core.
 Deux cartes à l'accueil ouvrent des formulaires créer/modifier/analyser.
 Brouillons limités à la mémoire de page, conservés entre les deux espaces,
 effacés au rechargement, pagehide ou clic Déconnexion. Aucun upload, lecture
-de contenu, stockage navigateur ou appel média. L'exécution reste désactivée.
+de contenu, stockage navigateur ou appel média. Un texte annonce l'exécution
+indisponible ; aucun bouton de commande, même désactivé, n'est présenté.
 Seules les métadonnées du fichier choisi sont utilisées ; validation serveur
 indispensable lors du futur raccordement. [Contrat](../../docs/MEDIA-AGENTS.md).
 
 Source : src/media-agents.js, ajoutée à build.js. G088 peut modifier l'accueil
-en conservant ce module et son montage. L'en-tête/logo G078 reste indépendant.
+en conservant ce module et son montage. L'en-tête/logo G078 est intégré (C-053).

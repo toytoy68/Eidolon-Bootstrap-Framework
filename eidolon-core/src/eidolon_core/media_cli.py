@@ -14,12 +14,18 @@ from .media_agents import MediaError, catalog, execute, inspect, load_json, prep
 from .media_backends import poll_job
 from .media_artifacts import ArtifactStore, initialize
 from .media_outputs import collect, inspect_collection
+from .media_preflight import preflight, render_preflight
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — agents Image et Vidéo")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("agents", help="list installed agents; no engine contact")
+    p = sub.add_parser("preflight", help="check chosen local inputs; optional metadata probes, never inference")
+    p.add_argument("--request", required=True)
+    p.add_argument("--config", required=True)
+    p.add_argument("--probe-local", action="store_true", help="explicitly query configured local node/model metadata")
+    p.add_argument("--format", choices=("json", "human"), default="json")
     p = sub.add_parser("collect", help="copy recorded ComfyUI outputs into a private store, without resubmission")
     p.add_argument("--job", required=True)
     p.add_argument("--root", required=True)
@@ -60,6 +66,8 @@ def main(argv=None):
     try:
         if args.command == "agents":
             result = catalog()
+        elif args.command == "preflight":
+            result = preflight(load_json(args.request, 32_000), load_json(args.config), probe_local=args.probe_local)
         elif args.command == "collect":
             result = collect(args.job, args.root, args.store_id, args.collection)
         elif args.command == "collection-inspect":
@@ -93,7 +101,12 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        print(json.dumps(result, ensure_ascii=False, allow_nan=False))
+        if args.command == "preflight" and args.format == "human":
+            print(render_preflight(result))
+        else:
+            print(json.dumps(result, ensure_ascii=False, allow_nan=False))
+        if args.command == "preflight" and result["state"] == "PROBE_INCOMPLETE":
+            return 3
         # Exit 0 means command completed, not content verified or mission achieved.
         return 0
     except (MediaError, OSError, ValueError, TypeError, KeyError, RecursionError) as exc:

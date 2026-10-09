@@ -37,7 +37,7 @@ TEXT = {
     "RECOVERY_REVIEW_ONLY": "État en revue de récupération ; terminer cette revue avant consultation.",
     "UNSUPPORTED_READ_SCHEMA": "Schéma non pris en charge ; aucune migration effectuée.",
     "INVALID_STORE_ID": "Identité de la base invalide.",
-    "ASSETS_READABLE": "Les trois fichiers du client sont lisibles et respectent la limite de taille.",
+    "ASSETS_READABLE": "Les fichiers requis du client et ses ressources optionnelles présentes sont lisibles et bornés.",
     "NO_WEB_ROOT": "Client non demandé : seules les routes API seront disponibles.",
     "INVALID_WEB_ROOT": "Client incomplet, inaccessible ou lien symbolique refusé.",
     "ASSET_TOO_LARGE": "Un fichier du client dépasse la limite du serveur.",

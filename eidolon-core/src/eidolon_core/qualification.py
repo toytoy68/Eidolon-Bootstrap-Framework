@@ -249,8 +249,8 @@ def validate(raw):
     rejected, incomplete = [], []
 
     # Criteria must be fixed before the run and match their recorded fingerprint.
-    if fixed > started:
-        rejected.append(("CRITERIA_AFTER_RUN", "criteria fixed after the run started"))
+    if fixed >= started:
+        rejected.append(("CRITERIA_AFTER_RUN", "criteria not fixed strictly before the run started"))
     if criteria_fingerprint(criteria["thresholds"]) != report["fingerprints"]["criteria_sha256"]:
         rejected.append(("CRITERIA_FINGERPRINT", "thresholds differ from the recorded fingerprint"))
 

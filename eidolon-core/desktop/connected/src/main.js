@@ -29,8 +29,20 @@
     }).finally(function () { clearTimeout(timer); });
   }
 
+  // The logo is an optional asset: a server that does not serve it keeps the text name (G078).
+  function showLogo() {
+    var logo = document.getElementById("brand-logo");
+    if (!logo || typeof logo.decode !== "function") return;
+    logo.decode().then(function () {
+      if (!logo.naturalWidth) return;
+      logo.hidden = false;
+      document.getElementById("brand-name").hidden = true;
+    }, function () { /* not served: the text name stays */ });
+  }
+
   function start() {
     var autoTimer = null;
+    showLogo();
     var media = root.EidolonMediaAgents.mount(document);
     window.addEventListener("pagehide", function () { media.clear(); });
     var session = C.createSession({ transport: transport, onChange: function (s) {

@@ -103,6 +103,11 @@ Sans web-root, `/` renvoie 404. Le prototype autonome existant ne doit pas être
 passé comme web-root. La consultation des reçus historiques G036 est intégrée ; elle ne modifie pas
 la capture courante et ne prouve pas l’exécution de la commande.
 
+C-053 : `/eidolon-logo.png` est un asset facultatif à nom fixe, avec les mêmes
+contrôles de racine, de taille et de liens que les autres fichiers. Son absence
+n'empêche pas le lancement et donne 404 ; un logo présent mais invalide est refusé.
+Aucun navigateur de fichiers ni chemin d'asset arbitraire n'est ajouté.
+
 Sur le PC, tunnel SSH (remplacer les deux valeurs entre chevrons) :
 
 ```text
@@ -140,6 +145,23 @@ occupée jusqu'à la fermeture du socket. La variante libérant la place avant
 fermeture hors de la table de comptage. Elle n'est pas adoptée dans ce lot :
 la borne des connexions suivies et la fermeture au `server_close` sont conservées.
 Le chiffre de refus G045 est une mesure du banc, pas une prévision de production.
+
+### Lecture des gros champs SQLite — C-054
+
+Les corps de mission et détails d'événement sont ouverts en lecture seule avec
+`sqlite3.Connection.blobopen`, dans la transaction de lecture qui a sélectionné
+leur ligne. Leur longueur en octets est contrôlée **avant** lecture et décodage,
+avec une limite inchangée de 16 Mio par champ. Le stockage doit rester de type
+TEXT ; un BLOB n'est pas implicitement accepté. Aucune lecture non bornée de
+remplacement si cette API est indisponible.
+
+Cela corrige l'allocation native observée par Claude C102 :
+`substr(CAST(TEXT AS BLOB), ...)` limitait le résultat Python tout en matérialisant
+le grand champ dans SQLite. Le banc Linux Python 3.12 / SQLite 3.53.1 sur un TEXT
+de 256 Mio mesure un pic de 300,6 Mio avant et de 12,5 Mio après.
+Ce contrôle porte sur ces deux champs, pas sur toute allocation de schéma,
+d'index ou de métadonnées de la base. Ce n'est pas une borne RSS globale ni une
+qualification Windows. [Banc reproductible](validation/2026-10-09/codex-hour-0833/README.md).
 
 
 ## Politique du client et saturation — C-023

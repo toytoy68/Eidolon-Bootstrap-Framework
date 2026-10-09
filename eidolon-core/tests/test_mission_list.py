@@ -142,6 +142,8 @@ class MissionListTests(unittest.TestCase):
         def interleaved():
             with connection() as db:
                 class Proxy:
+                    def blobopen(_, *args, **kwargs):
+                        return db.blobopen(*args, **kwargs)
                     def execute(_, sql, parameters=()):
                         result = db.execute(sql, parameters)
                         if "FROM sync_metadata WHERE key='store_id'" in sql:

@@ -70,6 +70,9 @@ PYTHONPATH=src python -m eidolon_core --state /chemin/etat-neuf \
 
 L'option --timeout borne chaque appel du worker, démarrage inclus ; elle doit être
 choisie avec le timeout_seconds HTTP du fichier (60 secondes dans cet exemple).
+Ce dernier est un délai socket : un serveur qui distille sa réponse peut le
+respecter tout en dépassant la durée totale souhaitée. C'est le budget du worker
+qui borne l'appel complet, comme reproduit dans la contre-revue G072.
 Aucun modèle n'est téléchargé ou choisi par Core. Pour reprendre une mission,
 utiliser les mêmes options et le même fichier puis run m-ID. Changer l'endpoint,
 le modèle, ses paramètres/budgets ou le timeout de mission modifie la configuration

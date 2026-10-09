@@ -88,7 +88,11 @@ input[type="password"] {
   background: var(--panel);
   border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; gap: .75rem; align-items: center; }
+.brand { display: flex; flex-wrap: wrap; gap: .5rem .75rem; align-items: center; min-width: 0; }
+.brand h1 { display: flex; align-items: center; }
+/* Official logo (G078): its own dark background, scaled by height only, never wider than the header. */
+.logo { display: block; height: 56px; width: auto; max-width: 100%; border-radius: 8px; }
+.logo[hidden] { display: none; }
 .badge {
   border: 1px solid var(--ok);
   color: var(--ok);
@@ -96,6 +100,7 @@ input[type="password"] {
   padding: .1rem .7rem;
   font-size: .9rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 .connect { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .connect label { font-weight: 600; }
@@ -217,6 +222,7 @@ input[type="password"] {
 
 @media (max-width: 760px) {
   .top, .connection, .layout, .foot { padding-left: 1rem; padding-right: 1rem; }
+  .logo { height: 40px; }
   .layout { grid-template-columns: 1fr; }
   .media-cards { grid-template-columns: 1fr; }
   input[type="password"] { min-width: 0; width: 100%; }

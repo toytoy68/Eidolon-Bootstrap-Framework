@@ -43,7 +43,8 @@ ses limites.
 - **Une violation n'est pas compensée** : une seule parmi mille succès donne
   `REJECTED` (testé).
 - **Les critères sont fixés avant l'essai** : `criteria.fixed_at` doit précéder
-  `run.started_at`, et `fingerprints.criteria_sha256` doit égaler l'empreinte
+  `run.started_at` strictement (égalité d'instant refusée, même sous un autre
+  fuseau), et `fingerprints.criteria_sha256` doit égaler l'empreinte
   canonique des seuils. Limite : si quelqu'un modifie les seuils **et** recalcule
   l'empreinte, le rapport reste cohérent. Seule une empreinte enregistrée
   ailleurs avant l'essai permet de le détecter (testé et documenté comme tel).

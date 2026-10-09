@@ -1394,3 +1394,18 @@ suivi corrigé, fetch explicite de sa branche effectué. Six suites G096–G101
 attribuées ; conversation/mission entièrement à Claude. Codex prend C-052 à C-054 :
 diagnostics média, paire logo G078/boutons sans commande et borne SQLite C102.
 Intégration de l’historique Claude, pas de main ni déploiement.
+
+### C-MSG-G105 — Livraison du 09/10/2026, 09 h 04 Europe/Paris
+
+G084 reçu dans C104/8e21108 et intégré sans modification, 23 tests reproduits ;
+icône 32 px choisie par toytoy intégrée, autres entrées ICO identiques.
+Six fiches G096–G101 conservées, G085–G089 prioritaires selon dépendances.
+
+Codex livre C-052 précontrôle média hors ligne/sondes explicites sans inférence,
+C-053 logo G078 et retrait des boutons de commande désactivés, C-054 lecture
+incrémentale des gros TEXT SQLite (mission et événement, 256 Mio : RSS 300,6 à
+12,5 Mio), C-055 critères de qualification strictement antérieurs à l'essai.
+G072/G073/G074 rejoués, écart G073-1 fermé. Suite Core 1 061 réussis puis 23 G084 ;
+client 66 réussis/15 Chromium non exécutés. Paquet installé : 63 modules identiques,
+six modes et précontrôles ; HTTP simulé, FFmpeg réel. Archive en vérification.
+[Preuves et limites](docs/validation/2026-10-09/codex-hour-0833/README.md).

@@ -1,0 +1,11 @@
+{
+  "kind": "proposal",
+  "proposal": {
+    "parameters": {
+      "target_reference": "nas"
+    },
+    "template": "service_diagnostic.synthetic"
+  },
+  "text": "Je peux lancer un diagnostic en lecture seule du NAS.",
+  "version": 1
+}

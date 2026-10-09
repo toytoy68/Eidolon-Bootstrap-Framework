@@ -796,3 +796,33 @@ Six suites Claude G090–G095 publiées, G084–G089 prioritaires pour le chat/m
 Les références d'artefacts ne sont pas des permissions et les états média ne
 deviennent pas des reçus `SUCCEEDED` du runtime. Aucun appel moteur depuis l'accueil
 ou nouveau droit sur le jeton de lecture. [Preuves](docs/validation/2026-10-09/codex-hour-0710/README.md).
+
+## C-052/C-053/C-054 — Précontrôle et intégration (09/10/2026, matin)
+
+- [x] Suivi Git Claude corrigé : vraie tête C103 `ccf9a9e` intégrée, G072–G079 reçus.
+- [x] C104 reçu en cours de séance : G084 intégré sans modification, 23 tests
+  reproduits ; icône simplifiée 32 px choisie par toytoy intégrée/reproduite.
+- [x] Six nouvelles tâches G096–G101 publiées ; G084–G089 restent prioritaires.
+- [x] Précontrôle média hors ligne et sondes de métadonnées locales explicites,
+  sans prompt/source envoyé ni inférence ; diagnostic sans autorité d'exécution.
+- [x] Logo G078 raccordé au serveur et au client ; asset facultatif dans le bundle.
+- [x] Retrait des boutons de commande média désactivés signalés par C103,
+  remplacés par une indication statique ; invariant de lecture conservé.
+- [x] Gros TEXT SQLite lus via API incrémentale après contrôle de longueur,
+  correction de l'allocation native signalée par C102.
+- [x] Recette des six modes depuis paquet installé, avec précontrôles sans réseau
+  puis sondes de métadonnées ; sources originales supprimées avant exécution.
+- [ ] Rejouer les tests Chromium sur une machine dotée du navigateur.
+- [ ] Qualification moteurs/poids/matériel réels et raccordement mission selon Claude.
+
+Les preuves et limites sont conservées dans
+[le bilan de cette session](docs/validation/2026-10-09/codex-hour-0833/README.md).
+
+## C-055 — Suites de contre-revue G072/G073 (09/10/2026)
+
+- [x] G072/G073/G074 rejoués sur la source courante, aucun échec de leurs attentes.
+- [x] Écart G073-1 corrigé : critères fixés au même instant que le début refusés,
+  y compris avec fuseaux différents ; antériorité d'une microseconde acceptée.
+- [x] Guide CLI précisé sur délai socket versus budget total du worker (G072-2).
+- [ ] G072-1 : diagnostic EOF d'en-tête tronqué ; refus déjà correct, libellé à améliorer.
+- [ ] Remarques G074 et diagnostic de sortie tronquée G075 conservés pour suivi.

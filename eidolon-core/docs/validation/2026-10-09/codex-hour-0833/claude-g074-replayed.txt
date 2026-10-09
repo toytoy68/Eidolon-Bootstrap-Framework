@@ -1,0 +1,73 @@
+Sources examinées : /workspace/scratch/16ec975b83e7/core-work/eidolon-core/src
+== adresses
+✓ Ollama IPv4 loopback → VALID_CONFIG
+✓ Ollama IPv6 loopback → VALID_CONFIG
+✓ Ollama https loopback → VALID_CONFIG
+✓ Ollama sans port → VALID_CONFIG
+✓ Ollama localhost (DNS) → INVALID_MODEL_CONFIG
+✓ Ollama 127.0.0.2 → INVALID_MODEL_CONFIG
+✓ Ollama 127.1 abrégé → INVALID_MODEL_CONFIG
+✓ Ollama 0x7f.0.0.1 → INVALID_MODEL_CONFIG
+✓ Ollama IPv4 mappée ::ffff:127.0.0.1 → INVALID_MODEL_CONFIG
+✓ Ollama point final 127.0.0.1. → INVALID_MODEL_CONFIG
+✓ Ollama chiffres pleine chasse → INVALID_MODEL_CONFIG
+✓ Ollama port 0 → INVALID_MODEL_CONFIG
+✓ Ollama port 65536 → INVALID_MODEL_CONFIG
+✓ Ollama chemin /api → INVALID_MODEL_CONFIG
+✓ Ollama barre finale → VALID_CONFIG
+✓ Ollama requête ?x → INVALID_MODEL_CONFIG
+✓ Ollama identifiant user@ → INVALID_MODEL_CONFIG
+✓ Ollama schéma ftp → INVALID_MODEL_CONFIG
+✓ Ollama espace insécable → INVALID_MODEL_CONFIG
+✓ Ollama espace de largeur nulle → INVALID_MODEL_CONFIG
+✓ Ollama DEL → INVALID_MODEL_CONFIG
+== types, clés et fournisseurs
+✓ Ollama clé inconnue → INVALID_MODEL_CONFIG
+✓ Ollama version true → INVALID_MODEL_CONFIG
+✓ Ollama num_predict true → INVALID_MODEL_CONFIG
+✓ Ollama num_predict 8193 → INVALID_MODEL_CONFIG
+✓ Ollama timeout_seconds true → INVALID_MODEL_CONFIG
+✓ Ollama timeout_seconds 0 → INVALID_MODEL_CONFIG
+✓ Ollama max_prompt_bytes 1.0 → INVALID_MODEL_CONFIG
+✓ Ollama option max_tokens (autre fournisseur) → INVALID_MODEL_CONFIG
+✓ Ollama api_key_env sur Ollama → INVALID_MODEL_CONFIG
+✓ Ollama allow_non_loopback → INVALID_MODEL_CONFIG
+✓ Ollama temperature NaN (texte) → INVALID_MODEL_CONFIG
+✓ Ollama modèle avec espace de largeur nulle → VALID_CONFIG
+ℹ Ollama modèle avec espace de largeur nulle accepté — identité 'ollama/synthetic\u200bg074:1b@c757a0aa084a613b' : caractère invisible conservé dans le nom envoyé au serveur et dans l'identité
+✓ Ollama modèle avec inversion bidi U+202E → VALID_CONFIG
+ℹ Ollama modèle avec inversion bidi U+202E accepté — identité 'ollama/synthetic\u202eb1:470g@f3e7ffad885a9ad0' : caractère invisible conservé dans le nom envoyé au serveur et dans l'identité
+✓ llama-server nominal avec api_key_env → VALID_CONFIG
+✓ llama-server option num_predict (autre fournisseur) → INVALID_MODEL_CONFIG
+✓ llama-server api_key_env en minuscules → INVALID_MODEL_CONFIG
+✓ llama-server api_key_env = HOME (nom valide quelconque) → VALID_CONFIG
+✓ llama-server context_tokens true → INVALID_MODEL_CONFIG
+✓ llama-server clé en ligne (champ api_key) → INVALID_MODEL_CONFIG
+ℹ api_key_env accepte tout nom de variable (HOME, AWS_…) — la valeur sera envoyée en Bearer au point configuré à l'exécution ; loopback seulement : choix de l'opérateur, à documenter
+== fichiers
+✓ permissions 0644 → MODEL_CONFIG_NOT_PRIVATE_OR_TOO_LARGE
+✓ permissions 0640 → MODEL_CONFIG_NOT_PRIVATE_OR_TOO_LARGE
+✓ lien symbolique final → MODEL_CONFIG_UNAVAILABLE
+✓ FIFO (sans blocage) → MODEL_CONFIG_NOT_PRIVATE_OR_TOO_LARGE
+✓ 17 Kio → MODEL_CONFIG_NOT_PRIVATE_OR_TOO_LARGE
+✓ clé dupliquée → INVALID_MODEL_CONFIG
+✓ réécriture de même taille pendant la lecture → refus — MODEL_CONFIG_CHANGED_OR_TOO_LARGE
+== identités
+✓ changer Ollama num_predict change l'identité
+✓ changer Ollama temperature change l'identité
+✓ changer Ollama timeout change l'identité
+✓ changer Ollama max_output_bytes change l'identité
+✓ changer Ollama port change l'identité
+✓ changer llama-server max_tokens change l'identité
+✓ changer llama-server context_tokens change l'identité
+✓ changer llama-server nom de variable de clé change l'identité
+✓ changer la VALEUR de la clé sans renommer la variable garde l'identité (limite documentée)
+✓ barre finale normalisée : même identité
+ℹ port écrit 011434 au lieu de 11434 — même destination, identité différente (texte brut dans le manifeste)
+== API Python et politique CLI (différences, pas forcément des défauts)
+ℹ API : Ollama localhost — accepté par l'adaptateur, refusé par la CLI
+ℹ API : Ollama sans num_predict — accepté par l'adaptateur, refusé par la CLI
+ℹ API : Ollama hors loopback avec allow_non_loopback — accepté par l'adaptateur, refusé par la CLI
+   API : OpenAI endpoint avec DEL → refusé (ContractError)
+Remarques : 7
+Échecs : aucun

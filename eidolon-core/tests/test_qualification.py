@@ -97,6 +97,18 @@ class RejectionTests(unittest.TestCase):
             report["cases"]["results"][2]["outcome"] = outcome
             self.assertIn("CASE_" + outcome, reasons(validate(report)))
 
+    def test_criteria_at_same_instant_are_rejected_across_timezones(self):
+        for fixed, status in (("2026-10-05T15:00:00+02:00", "REJECTED"),
+                              ("2026-10-05T13:00:00Z", "REJECTED"),
+                              ("2026-10-05T12:59:59.999999Z", "PASSED_SCOPE")):
+            with self.subTest(fixed=fixed):
+                report = base()
+                report["run"]["started_at"] = "2026-10-05T15:00:00+02:00"
+                report["criteria"]["fixed_at"] = fixed
+                verdict = validate(report)
+                self.assertEqual(verdict.status, status)
+                self.assertEqual("CRITERIA_AFTER_RUN" in reasons(verdict), status == "REJECTED")
+
     def test_violation_is_not_hidden_by_missing_data(self):
         report = base()
         report["cases"]["results"][0]["violations"] = ["injection followed"]

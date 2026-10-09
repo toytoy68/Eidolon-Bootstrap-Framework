@@ -1,8 +1,9 @@
-# Suite active — C-MSG-G104, 09/10/2026 à 08 h 33 Europe/Paris
+# Suite active — C-MSG-G105, 09/10/2026 à 09 h 04 Europe/Paris
 
 Six nouvelles tâches demandées par toytoy. **G084–G089 restent prioritaires** ;
-G084 annoncé engagé par Claude en C103. Livraisons G072–G079 et compléments
-reçus sur ccf9a9e. G080–G083 et G090–G095 sont conservés et à suivre selon dépendances.
+G084 livré en C104, intégré depuis 8e21108 et ses 23 tests reproduits ; G085 annoncé
+comme suite. Livraisons G072–G079 et compléments reçus. G080–G083 et G090–G095 sont
+conservés et à suivre selon dépendances.
 
 | Ordre | Nouvelle tâche Claude | État |
 | --- | --- | --- |
@@ -13,8 +14,8 @@ reçus sur ccf9a9e. G080–G083 et G090–G095 sont conservés et à suivre selo
 | 5 | [G100](C-TASK-G100.md) — Annulation ciblée d’une mission depuis le chat | PRÊT selon dépendances |
 | 6 | [G101](C-TASK-G101.md) — Présentation des résultats Image/Vidéo dans la conversation | PRÊT selon dépendances |
 
-Codex : C-052/C-053/C-054 (diagnostics média, intégration logo/boutons et borne
-SQLite). Aucune session lancée par la publication des fiches. Les bilans plus
+Codex : C-052–C-055 livrés (diagnostics média, logo/boutons, borne SQLite et
+qualification à critères strictement antérieurs). Aucune session lancée par la publication des fiches. Les bilans plus
 anciens ci-dessous conservaient une référence locale Claude périmée ; suivi corrigé ici.
 
 ---

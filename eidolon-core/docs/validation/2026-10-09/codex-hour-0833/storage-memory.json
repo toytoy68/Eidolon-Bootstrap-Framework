@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "fixture_bytes": 268435456,
+  "fresh_reader_processes": true,
+  "results": [
+    {
+      "returned_bytes": 16777217,
+      "mode": "legacy_substr",
+      "field": "mission",
+      "sqlite": "3.53.1",
+      "rss_peak_kib": 307840,
+      "rss_before_kib": 12544
+    },
+    {
+      "error": "MISSION_SIZE_LIMIT",
+      "mode": "incremental_read",
+      "field": "mission",
+      "sqlite": "3.53.1",
+      "rss_peak_kib": 12800,
+      "rss_before_kib": 12544
+    },
+    {
+      "returned_bytes": 16777217,
+      "mode": "legacy_substr",
+      "field": "event",
+      "sqlite": "3.53.1",
+      "rss_peak_kib": 307840,
+      "rss_before_kib": 12544
+    },
+    {
+      "error": "EVENT_SIZE_LIMIT",
+      "mode": "incremental_read",
+      "field": "event",
+      "sqlite": "3.53.1",
+      "rss_peak_kib": 12800,
+      "rss_before_kib": 12544
+    }
+  ]
+}

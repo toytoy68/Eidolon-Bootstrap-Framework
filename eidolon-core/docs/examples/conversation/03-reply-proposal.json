@@ -1,0 +1,32 @@
+{
+  "authorizes_execution": false,
+  "candidates": [],
+  "conversation_id": "c-22222222222222222222222222222222",
+  "core_note": null,
+  "in_reply_to": "t-00000000000000000000000000000001",
+  "kind": "PROPOSAL",
+  "model_text": "Je peux lancer un diagnostic en lecture seule du NAS.",
+  "model_text_is_evidence": false,
+  "proposal": {
+    "authorizes_execution": false,
+    "catalog_sha256": "51b297f4ff938662465659e3d0fe1cfab3d9ce1667167dfa6b28965e34ed569f",
+    "conversation_id": "c-22222222222222222222222222222222",
+    "proposal_id": "p-0b3577ad40946f3ee819ad463a7a197b",
+    "protocol": "eidolon-mission-proposal/1",
+    "request": "Diagnostiquer le service synthétique : nas",
+    "requires_human_submission": true,
+    "source_turn_id": "t-00000000000000000000000000000001",
+    "source_turn_sha256": "0b3577ad40946f3ee819ad463a7a197b12c8e683b1536075ac4372769bef1bd0",
+    "store_id": "s-11111111111111111111111111111111",
+    "supersedes_sha256": null,
+    "target_id": "sim-nas",
+    "target_reference": "nas",
+    "template": "service_diagnostic.synthetic",
+    "version": 1
+  },
+  "proposal_sha256": "586bb45e8c49591dfc0dfcffe8b4c5d4424a1fab9f1aeeb876d3f8cf545a5e98",
+  "protocol": "eidolon-conversation-reply/1",
+  "sources": [],
+  "store_id": "s-11111111111111111111111111111111",
+  "turn_sha256": "0b3577ad40946f3ee819ad463a7a197b12c8e683b1536075ac4372769bef1bd0"
+}

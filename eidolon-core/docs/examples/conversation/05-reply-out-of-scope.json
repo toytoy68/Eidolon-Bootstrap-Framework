@@ -1,0 +1,18 @@
+{
+  "authorizes_execution": false,
+  "candidates": [
+    "service_diagnostic.synthetic"
+  ],
+  "conversation_id": "c-22222222222222222222222222222222",
+  "core_note": "TEMPLATE_UNSUPPORTED",
+  "in_reply_to": "t-00000000000000000000000000000003",
+  "kind": "OUT_OF_SCOPE",
+  "model_text": "Je redémarre le NAS.",
+  "model_text_is_evidence": false,
+  "proposal": null,
+  "proposal_sha256": null,
+  "protocol": "eidolon-conversation-reply/1",
+  "sources": [],
+  "store_id": "s-11111111111111111111111111111111",
+  "turn_sha256": "a87b59052eaf381201e3abe1dc1e0e30a108a8c95c347f72681c0a2664630a17"
+}

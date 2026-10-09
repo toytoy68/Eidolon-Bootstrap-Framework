@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-051
+# Agents natifs Image et Vidéo — C-047 à C-054
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -23,7 +23,7 @@ chat/conversation/mission est confié à Claude ; Codex possède les agents méd
   [recette des six modes et preuves du 09/10](validation/2026-10-09/codex-hour-0710/README.md).
 
 Les moteurs, poids et workflows de production ne sont pas livrés par le paquet.
-Le bouton d'exécution de l'accueil reste désactivé : aucune route HTTP d'écriture
+L'accueil affiche « Exécution : indisponible », sans bouton de commande : aucune route HTTP d'écriture
 ni permission média n'est ajoutée au jeton de lecture. Les agents sont installés
 comme modules et commandes locales ; ils ne sont pas encore des outils enregistrés
 au catalogue de missions du runtime. Le raccordement de ces deux frontières reste
@@ -79,6 +79,57 @@ travail ComfyUI accepté : absence d'entrée ne signifie ni arrêt ni absence d'
 Aucun polling automatique, renvoi ou annulation globale du moteur n'est effectué.
 `poll` ne télécharge rien : les sorties rapportées restent des références moteur.
 La commande distincte `collect`, décrite plus bas, les importe explicitement.
+
+## Précontrôle avant un lancement — C-052
+
+Depuis le paquet installé :
+
+```sh
+eidolon-media preflight --request demande.json --config moteurs.json --format human
+eidolon-media preflight --request demande.json --config moteurs.json --probe-local --format human
+```
+
+Sans `--probe-local`, aucun moteur n'est contacté. La commande contrôle la
+demande, la configuration de l'opération choisie et les octets de la source
+éventuelle (empreinte, taille, type). Pour une analyse vidéo, elle vérifie que
+FFmpeg est un fichier exécutable au chemin absolu configuré, sans le lancer.
+Elle n'écrit ni travail, ni artefact et ne télécharge rien. Le JSON est le format
+par défaut ; le rendu humain suit le standard ECT.
+
+Avec `--probe-local`, seules les métadonnées du moteur configuré sont demandées :
+
+- ComfyUI : un `GET /object_info/{classe}` par classe distincte, au plus 32.
+  Vérification des classes, des entrées requises et des valeurs littérales
+  appartenant à une liste de choix (notamment les noms de checkpoints).
+  Les connexions entre nœuds et l'entrée source sont laissées au moteur ; une
+  source à uploader n'existe pas encore dans sa liste de fichiers.
+- Ollama : un `POST /api/show` contenant seulement le nom de modèle et
+  `verbose: false`. La capacité `vision` doit être annoncée. Un modèle déclaré
+  distant ou un nœud ComfyUI déclaré `api_node` est refusé.
+
+Aucun prompt, octet source, upload ou appel d'inférence n'est envoyé par ces
+sondes. Les noms des classes et du modèle sont transmis. Les métadonnées des
+extensions ComfyUI sont produites par le moteur de confiance : cette lecture
+n'isole pas les effets internes d'un nœud personnalisé. Le délai de 5 secondes
+est un timeout socket par sonde, **pas une échéance murale globale**. La réponse
+JSON reste bornée à 1 Mio ; aucun proxy, redirection ou renvoi automatique.
+
+| État / sortie | Interprétation |
+| --- | --- |
+| `LOCAL_INPUTS_VALID` / 0 | Contrôles locaux passés ; moteur non contacté |
+| `PREREQUISITES_OBSERVED` / 0 | Métadonnées attendues observées à cet instant |
+| erreur sur stderr / 2 | Demande, configuration, source ou cible de sonde refusée avant les sondes |
+| `PROBE_INCOMPLETE` / 3 | Sonde arrêtée au premier refus/échec ; observations précédentes conservées |
+
+La sonde ne valide ni graphe complet, compatibilité des types, qualité de modèle,
+GPU, mémoire disponible, codec ou résultat. Elle ne prouve pas qu'un moteur ou
+ses extensions sont dépourvus d'appels distants. Elle n'autorise aucune exécution :
+`execution_authorized`, `plan_reusable`, `hardware_qualified` et
+`semantic_content_verified` restent `false`. Les empreintes lient le diagnostic
+à la demande et à la configuration ; elles ne sont pas une permission. `run`
+revérifie les entrées et crée son propre plan, dont un nouveau nom d'upload.
+
+[Recette du paquet installé et limites](validation/2026-10-09/codex-hour-0833/README.md).
 
 ## Configuration des moteurs
 
@@ -253,7 +304,7 @@ Aucun résultat ne qualifie la V100, Windows ou un vrai modèle de génération.
 
 ## Interface avec le chantier Claude
 
-G084–G095 restent à Claude. Le brouillon navigateur `media-draft/1` contient
+G084–G101 restent à Claude, avec G084–G089 prioritaires. Le brouillon navigateur `media-draft/1` contient
 uniquement des métadonnées de sélection et n'est **jamais** accepté tel quel par
 une API d'exécution. Le serveur devra prendre en charge un upload authentifié,
 produire une référence d'artefact validée, présenter la proposition puis lancer
@@ -273,3 +324,6 @@ Transfert et collecte revus le 09/10/2026 sur le code officiel ComfyUI
 [`a4b5a045e56fc334903db8457b728b64e006119c`](https://github.com/Comfy-Org/ComfyUI/tree/a4b5a045e56fc334903db8457b728b64e006119c),
 `server.py` (upload/view) et `execution.py` (historique prompt/outputs).
 Ce repérage de contrat n'est pas un test du moteur, de ses nœuds ou de ses poids.
+
+Précontrôles revus le 09/10/2026 : route `object_info` du même commit ComfyUI et
+[API show Ollama](https://docs.ollama.com/api-reference/show-model-details).

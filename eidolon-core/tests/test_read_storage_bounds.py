@@ -41,21 +41,50 @@ class ReadStorageBoundsTests(unittest.TestCase):
         return (lambda: MissionList(self.reader).page(),
                 lambda: sync.ClientSync(self.reader).snapshot(self.mission['id']))
 
-    def test_mission_read_bound_is_enforced_by_sql_before_json_decode(self):
+    def test_mission_size_is_refused_before_materializing_or_decoding_text(self):
         self.update('UPDATE missions SET body=CAST(zeroblob(1000000) AS TEXT)')
         before = self.files()
         original = sync._stored_text
-        seen = []
-        def bounded(storage_type, raw, maximum, code):
-            seen.append((code, len(raw)))
-            self.assertLessEqual(len(raw), maximum + 1)
+        def decode(storage_type, raw, maximum, code):
+            if code == 'MISSION':
+                self.fail('oversized mission materialized before refusal')
             return original(storage_type, raw, maximum, code)
-        with patch.object(sync, 'MAX_MISSION_BYTES', 16384), patch.object(sync, '_stored_text', side_effect=bounded):
+        with patch.object(sync, 'MAX_MISSION_BYTES', 16384), patch.object(sync, '_stored_text', side_effect=decode):
             for consumer in self.consumers():
                 with self.assertRaisesRegex(sync.SyncError, '^MISSION_SIZE_LIMIT$'):
                     consumer()
-        self.assertEqual([n for code, n in seen if code == 'MISSION'], [16385, 16385])
         self.assertEqual(self.files(), before)
+
+    def test_cell_is_readonly_closed_and_never_read_when_oversized(self):
+        class Cell:
+            closed = False
+            def __enter__(self): return self
+            def __exit__(self, *args): self.closed = True
+            def __len__(self): return 10**9
+            def read(self, size): raise AssertionError('oversized cell read')
+        class Connection:
+            def blobopen(self, table, column, rowid, *, readonly):
+                self.args = (table, column, rowid, readonly)
+                self.cell = Cell(); return self.cell
+        db = Connection()
+        with self.assertRaisesRegex(sync.SyncError, '^MISSION_SIZE_LIMIT$'):
+            sync._cell_text(db, 'missions', 'body', 1, 'text', 1024, 'MISSION')
+        self.assertEqual(db.args, ('missions', 'body', 1, True))
+        self.assertTrue(db.cell.closed)
+
+    def test_unsupported_incremental_io_has_no_unbounded_fallback(self):
+        with self.assertRaisesRegex(sync.SyncError, '^BOUNDED_READ_UNAVAILABLE$'):
+            sync._cell_text(object(), 'missions', 'body', 1, 'text', 1024, 'MISSION')
+
+    def test_incremental_read_preserves_actual_row_identity_after_id_reordering(self):
+        second = self.runtime.create('second')
+        third = self.runtime.create('third')
+        with self.reader.connection() as db:
+            db.execute('BEGIN')
+            for expected in (third, self.mission, second):
+                row = sync.read_mission_row(db, expected['id'])
+                actual = sync.decode_mission(expected['id'], *row)
+                self.assertEqual(actual['id'], expected['id'])
 
     def test_event_anchor_read_is_bounded_and_error_does_not_expose_detail(self):
         self.update('UPDATE events SET detail=CAST(zeroblob(1000000) AS TEXT)')

@@ -56,9 +56,14 @@ Fichiers :
 
 - générateur :
   [docs/proposals/2026-10-08-claude-icon-variants/logo_e.js](../../docs/proposals/2026-10-08-claude-icon-variants/logo_e.js) ;
-- `icon.png` (512 px, RGBA), 32, 128 et 256 px : version complète ;
-- `icon.ico` (9 images) : de 16 à 24 px, le « e » seul, agrandi et éclairci sur
-  carré plat ; de 32 à 256 px, la version complète.
+- assembleur :
+  [build_ico.py](../../docs/proposals/2026-10-08-claude-icon-variants/build_ico.py)
+  (copie octet pour octet des rendus) ;
+- `icon.png` (512 px, RGBA), 128 et 256 px : version complète ;
+- `icon.ico` (9 images) et `32x32.png` : de 16 à **32 px**, le « e » seul,
+  agrandi et éclairci sur carré plat ; de 40 à 256 px, la version complète.
+  Le 32 px simplifié est un choix de toytoy du 09/10/2026 (indice e/fond 10,4
+  contre 5,5, [G079](../../docs/validation/2026-10-08/claude-g079/README.md)).
 
 Les fichiers sont déclarés dans `bundle.icon`. L'empaquetage reste désactivé et
 le rendu Windows n'a pas été vu.

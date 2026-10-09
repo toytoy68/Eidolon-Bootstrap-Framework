@@ -19,7 +19,9 @@
   <a class="skip" href="#missions">Aller à la liste des missions</a>
   <header class="top">
     <div class="brand">
-      <h1>Eidolon Core</h1>
+      <!-- Official logo (G078): shown only once actually loaded, the text name stays otherwise. -->
+      <h1><img id="brand-logo" class="logo" src="/eidolon-logo.png" alt="Eidolon Core Technologies"
+               width="206" height="56" hidden><span id="brand-name">Eidolon Core</span></h1>
       <span class="badge" title="Aucune commande : ni accord, ni lancement, ni annulation">Consultation seule</span>
     </div>
     <form id="connect-form" class="connect" autocomplete="off" novalidate>
@@ -79,7 +81,7 @@
           <div class="actions">
             <button id="image-prepare" type="submit">Préparer le brouillon</button>
             <button id="image-clear" class="media-secondary" type="button">Effacer</button>
-            <button id="image-run" type="button" disabled aria-describedby="image-engine">Exécution indisponible</button>
+            <p id="image-availability" class="media-availability" aria-describedby="image-engine">Exécution : indisponible</p>
           </div>
           <p id="image-status" class="status" role="status" aria-live="polite"></p>
           <div id="image-draft" class="media-draft" hidden>
@@ -113,7 +115,7 @@
           <div class="actions">
             <button id="video-prepare" type="submit">Préparer le brouillon</button>
             <button id="video-clear" class="media-secondary" type="button">Effacer</button>
-            <button id="video-run" type="button" disabled aria-describedby="video-engine">Exécution indisponible</button>
+            <p id="video-availability" class="media-availability" aria-describedby="video-engine">Exécution : indisponible</p>
           </div>
           <p id="video-status" class="status" role="status" aria-live="polite"></p>
           <div id="video-draft" class="media-draft" hidden>

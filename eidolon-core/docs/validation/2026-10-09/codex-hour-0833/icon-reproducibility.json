@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "entries": 9,
+  "changed_sizes_since_C103": [
+    32
+  ],
+  "reproducible_from_selected_sources": true,
+  "sha256": "7ecb2222e77397596bb05610fe7a3d6fd50c1999b70b484d140c82f6eb0398cf",
+  "windows_runtime_tested": false
+}

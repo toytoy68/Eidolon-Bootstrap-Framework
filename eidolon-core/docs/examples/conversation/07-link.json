@@ -1,0 +1,11 @@
+{
+  "conversation_id": "c-22222222222222222222222222222222",
+  "mission_id": "m-44444444444444444444444444444444",
+  "mission_request_sha256": "8c2e7a06b7ab75ff773cb18959053b3e964f70f771b8d8ac32d01cdf22477f51",
+  "proposal_id": "p-0b3577ad40946f3ee819ad463a7a197b",
+  "proposal_sha256": "586bb45e8c49591dfc0dfcffe8b4c5d4424a1fab9f1aeeb876d3f8cf545a5e98",
+  "proposal_version": 1,
+  "protocol": "eidolon-conversation-link/1",
+  "store_id": "s-11111111111111111111111111111111",
+  "submission_sha256": "5fdd523a69d79e534e75b34a412f57e8e4b560b42a86d08f13317f0f1ea6c2df"
+}

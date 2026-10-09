@@ -89,6 +89,14 @@ test("analysis hides generation settings and missing sources produce a useful me
   get("video-source").files = [video]; get("video-form").fire("submit");
   assert.equal(get("video-draft").hidden, false);
 });
+test("read-only HTML has no execution command button, including disabled placeholders (C103)", () => {
+  const html = fs.readFileSync(path.join(WEB_ROOT, "index.html"), "utf8");
+  const buttons = [...html.matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/gi)];
+  assert.equal(buttons.filter(m => /approuv|lancer|annuler|exécut/i.test(m[1])).length, 0);
+  for (const agent of ["image", "video"]) {
+    assert.match(html, new RegExp('<p id="' + agent + '-availability"[^>]*>Exécution : indisponible</p>'));
+  }
+});
 test("Chromium: media workspaces send nothing, preserve escaped text and reset on disconnect", { skip: noPython || chromiumUnavailable }, async () => {
   const fx = makeFixture(); let server, browser;
   try {
@@ -99,7 +107,8 @@ test("Chromium: media workspaces send nothing, preserve escaped text and reset o
     await page.click("#open-image"); await page.fill("#image-prompt", "<img src=x onerror=alert(1)>");
     await page.click("#image-prepare");
     assert.equal(await page.locator("#image-request img").count(), 0);
-    assert.equal(await page.locator("#image-run").isDisabled(), true);
+    assert.equal(await page.locator("#image-availability").textContent(), "Exécution : indisponible");
+    assert.equal(await page.locator("#image-run").count(), 0);
     await page.click("#open-video"); await page.selectOption("#video-mode", "analyze");
     await page.fill("#video-prompt", "Analyse"); await page.click("#video-prepare");
     assert.match(await page.locator("#video-status").textContent(), /Choisissez/);

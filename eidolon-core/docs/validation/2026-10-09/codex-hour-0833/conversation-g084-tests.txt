@@ -1,0 +1,28 @@
+test_published_examples_validate (tests.test_conversation.ExampleTests.test_published_examples_validate) ... ok
+test_forged_links_are_refused (tests.test_conversation.MissionLinkTests.test_forged_links_are_refused) ... ok
+test_link_to_a_stale_version_is_refused (tests.test_conversation.MissionLinkTests.test_link_to_a_stale_version_is_refused) ... ok
+test_submitted_proposal_creates_the_same_mission_and_its_result_is_linked (tests.test_conversation.MissionLinkTests.test_submitted_proposal_creates_the_same_mission_and_its_result_is_linked) ... ok
+test_brackets_inside_strings_do_not_count_as_depth (tests.test_conversation.ModelOutputTests.test_brackets_inside_strings_do_not_count_as_depth) ... ok
+test_strict_output_shapes (tests.test_conversation.ModelOutputTests.test_strict_output_shapes) ... ok
+test_only_the_latest_unchanged_proposal_can_be_submitted (tests.test_conversation.ProposalAndSubmissionTests.test_only_the_latest_unchanged_proposal_can_be_submitted) ... ok
+test_submission_needs_a_named_human_actor (tests.test_conversation.ProposalAndSubmissionTests.test_submission_needs_a_named_human_actor) ... ok
+test_submission_replay (tests.test_conversation.ProposalAndSubmissionTests.test_submission_replay) ... ok
+test_tampered_proposals_are_refused (tests.test_conversation.ProposalAndSubmissionTests.test_tampered_proposals_are_refused) ... ok
+test_versions_supersede_and_keep_the_identity (tests.test_conversation.ProposalAndSubmissionTests.test_versions_supersede_and_keep_the_identity) ... ok
+test_ambiguous_target_becomes_a_clarification_with_catalog_candidates (tests.test_conversation.ReplyTests.test_ambiguous_target_becomes_a_clarification_with_catalog_candidates) ... ok
+test_answer_and_clarification_never_carry_a_proposal (tests.test_conversation.ReplyTests.test_answer_and_clarification_never_carry_a_proposal) ... ok
+test_missing_capability_is_out_of_scope (tests.test_conversation.ReplyTests.test_missing_capability_is_out_of_scope) ... ok
+test_out_of_capability_requests_are_explained (tests.test_conversation.ReplyTests.test_out_of_capability_requests_are_explained) ... ok
+test_proposal_is_frozen_by_core_not_by_model_text (tests.test_conversation.ReplyTests.test_proposal_is_frozen_by_core_not_by_model_text) ... ok
+test_sources_are_bounded_references (tests.test_conversation.ReplyTests.test_sources_are_bounded_references) ... ok
+test_unknown_target_and_bad_parameters_ask_again (tests.test_conversation.ReplyTests.test_unknown_target_and_bad_parameters_ask_again) ... ok
+test_unusable_model_output_is_unavailable_not_guessed (tests.test_conversation.ReplyTests.test_unusable_model_output_is_unavailable_not_guessed) ... ok
+test_gap_fork_and_foreign_turns_are_out_of_order (tests.test_conversation.TurnTests.test_gap_fork_and_foreign_turns_are_out_of_order) ... ok
+test_malformed_turns_are_refused (tests.test_conversation.TurnTests.test_malformed_turns_are_refused) ... ok
+test_repetition_is_idempotent_and_reuse_is_refused (tests.test_conversation.TurnTests.test_repetition_is_idempotent_and_reuse_is_refused) ... ok
+test_valid_turns_chain_by_digest (tests.test_conversation.TurnTests.test_valid_turns_chain_by_digest) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.355s
+
+OK

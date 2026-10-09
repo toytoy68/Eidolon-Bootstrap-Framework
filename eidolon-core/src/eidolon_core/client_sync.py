@@ -119,31 +119,50 @@ def _stored_text(storage_type, raw, maximum, code):
         raise SyncError('INVALID_' + code + '_UTF8') from None
 
 
+def _cell_text(db, table, column, rowid, storage_type, maximum, code):
+    """Inspect byte length through incremental I/O BEFORE materializing TEXT.
+
+    substr(CAST(TEXT AS BLOB),...) can allocate the entire stored value in SQLite.
+    Callers keep the row lookup and this read in the same read-only transaction.
+    Table/column names are internal constants, not caller-supplied SQL.
+    """
+    if storage_type != 'text' or type(rowid) is not int:
+        raise SyncError('INVALID_' + code + '_STORAGE_TYPE')
+    if not callable(getattr(db, 'blobopen', None)):
+        raise SyncError('BOUNDED_READ_UNAVAILABLE')
+    with db.blobopen(table, column, rowid, readonly=True) as cell:
+        size = len(cell)
+        if size > maximum:
+            raise SyncError(code + '_SIZE_LIMIT')
+        raw = cell.read(size)
+        if len(raw) != size:
+            raise SyncError('INVALID_' + code + '_STORAGE_TYPE')
+    return _stored_text(storage_type, raw, maximum, code)
+
+
 def read_mission_row(db, identity):
-    row = db.execute('SELECT revision,cancel_requested,typeof(body),'
-                     'substr(CAST(body AS BLOB),1,?) FROM missions WHERE id=?',
-                     (MAX_MISSION_BYTES + 1, identity)).fetchone()
+    row = db.execute('SELECT rowid,revision,cancel_requested,typeof(body) FROM missions WHERE id=?',
+                     (identity,)).fetchone()
     if row is None:
         raise KeyError('mission not found')
-    return row[0], row[1], _stored_text(row[2], row[3], MAX_MISSION_BYTES, 'MISSION')
+    return row[1], row[2], _cell_text(db, 'missions', 'body', row[0], row[3], MAX_MISSION_BYTES, 'MISSION')
 
 
 def read_event_row(db, *, identity=None, sequence=None):
-    conditions, parameters = [], [MAX_EVENT_BYTES + 1]
+    conditions, parameters = [], []
     if identity is not None:
         conditions.append('mission_id=?'); parameters.append(identity)
     if sequence is not None:
         conditions.append('sequence=?'); parameters.append(sequence)
     where = ' WHERE ' + ' AND '.join(conditions) if conditions else ''
-    row = db.execute('SELECT sequence,substr(mission_id,1,35),substr(at,1,65),substr(kind,1,65),typeof(detail),'
-                     'substr(CAST(detail AS BLOB),1,?) FROM events' + where +
+    row = db.execute('SELECT sequence,substr(mission_id,1,35),substr(at,1,65),substr(kind,1,65),typeof(detail),rowid FROM events' + where +
                      ' ORDER BY sequence DESC LIMIT 1', parameters).fetchone()
     if row is None:
         return None
     _event_reference(row)
     if type(row[1]) is not str or re.fullmatch(r'm-[0-9a-f]{32}', row[1]) is None:
         raise SyncError('INVALID_EVENT_REFERENCE')
-    return (*row[:4], _stored_text(row[4], row[5], MAX_EVENT_BYTES, 'EVENT'))
+    return (*row[:4], _cell_text(db, 'events', 'detail', row[5], row[4], MAX_EVENT_BYTES, 'EVENT'))
 
 
 def _event_reference(row):
