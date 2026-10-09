@@ -1,0 +1,37 @@
+✓ paquet installé hors réseau depuis l'archive, importé du venv — Python 3.11.15 ; commit b1d0db9c2740 ; archive 5b7c8485c520812f… ; roue 1cafccc687f5ce45…
+== ollama
+✓ model-config-check : manifeste sans appel — adaptateur ollama-chat/4
+✓ plan valide : SUCCEEDED, 1 requête ; reprise terminée : 0 requête, mission identique — 1 appel(s) vérifié(s)
+✓ configuration changée : mission refusée sans requête
+✓ plan hors catalogue (shell.execute) : 1 requête, aucun outil exécuté, aucune relance — BLOCKED / PREFLIGHT_REFUSED
+✓ sortie tronquée (arrêt « length ») : 1 requête, aucun outil exécuté, aucune relance — BLOCKED / MODEL_UNAVAILABLE
+-- model-probe (ollama)
+✓ --plan-only : PLANNED, 4 cas, 3 tentatives max, 0 requête, sans clé
+✓ essai valide : COMPLETE / PASSED_CASES, 3 requêtes reçues (mémoire vide : aucune) — planner_attempts [1, 1, 1, 0]
+✓ inspection : CONSISTENT, verdict consigné PASSED_CASES
+✓ marqueur présent malgré un rapport PASSED_CASES → INCOMPLETE (2) — INCOMPLETE
+✓ bilan de cas modifié après coup → diagnostic constant (2) — ProbeInspectionError
+✓ dossier existant refusé avant tout appel
+✓ arrêt technique (503) : STOPPED, 1 requête, cas suivants non lancés — started 1 / recorded 1 / non lancés 3
+✓ plans refusés (FAIL) : COMPLETE / FAILED_CASES, les cas indépendants continuent
+✓ essai tué pendant le 1er cas : INCOMPLETE, cas commencés inconnus (null), bilans 0 — requêtes reçues 1
+== llama-server
+✓ model-config-check : manifeste sans appel — adaptateur openai-chat-llamacpp/4
+✓ plan valide : SUCCEEDED, 1 requête ; reprise terminée : 0 requête, mission identique — 1 appel(s) vérifié(s)
+✓ clé envoyée au faux serveur seulement en Bearer
+✓ configuration changée : mission refusée sans requête
+✓ clé absente : mission bloquée avant envoi (0 requête) — BLOCKED / MODEL_UNAVAILABLE
+✓ plan hors catalogue (shell.execute) : 1 requête, aucun outil exécuté, aucune relance — BLOCKED / PREFLIGHT_REFUSED
+✓ sortie tronquée (arrêt « length ») : 1 requête, aucun outil exécuté, aucune relance — BLOCKED / MODEL_UNAVAILABLE
+-- model-probe (llama-server)
+✓ --plan-only : PLANNED, 4 cas, 3 tentatives max, 0 requête, sans clé
+✓ essai valide : COMPLETE / PASSED_CASES, 3 requêtes reçues (mémoire vide : aucune) — planner_attempts [1, 1, 1, 0]
+✓ inspection : CONSISTENT, verdict consigné PASSED_CASES
+✓ marqueur présent malgré un rapport PASSED_CASES → INCOMPLETE (2) — INCOMPLETE
+✓ bilan de cas modifié après coup → diagnostic constant (2) — ProbeInspectionError
+✓ dossier existant refusé avant tout appel
+✓ arrêt technique (503) : STOPPED, 1 requête, cas suivants non lancés — started 1 / recorded 1 / non lancés 3
+✓ plans refusés (FAIL) : COMPLETE / FAILED_CASES, les cas indépendants continuent
+✓ essai tué pendant le 1er cas : INCOMPLETE, cas commencés inconnus (null), bilans 0 — requêtes reçues 1
+✓ inspection sans socket, sans SQLite (ni Store ni Runtime), sans lecture de clé — []
+{"status": "PASS", "checks": 32, "failed": [], "python": "3.11.15"}

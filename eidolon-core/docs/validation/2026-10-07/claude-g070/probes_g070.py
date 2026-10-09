@@ -120,15 +120,25 @@ class Case:
             p.unlink()
 
 
-def alive(pid):
+VIVANT, ARRETE, NON_OBSERVABLE = "VIVANT", "ARRÊTÉ", "NON_OBSERVABLE"
+NO_PROC = os.environ.get("G070_NO_PROC") == "1"   # simulate an environment without /proc (Codex G093)
+
+
+def liveness(pid):
+    """Three answers: an unreadable /proc is NOT proof of termination (Codex C-MSG-G093)."""
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
-        return False
-    try:   # a zombie is not alive
-        return Path(f"/proc/{pid}/stat").read_text().split()[2] != "Z"
+        return ARRETE
+    except PermissionError:
+        return NON_OBSERVABLE            # exists, but not ours to inspect
+    try:
+        if NO_PROC:
+            raise FileNotFoundError()
+        state = Path(f"/proc/{pid}/stat").read_text().split()[2]
     except OSError:
-        return False
+        return NON_OBSERVABLE            # signal 0 says it exists; zombie or running is unknown
+    return ARRETE if state == "Z" else VIVANT
 
 
 def main():
@@ -174,12 +184,13 @@ def main():
         c.store.request_cancel(c.mission)
         ra = c.finish(a)
         st = c.mission_state()
-        gone = not alive(worker)
+        state = liveness(worker)
+        gone = state != VIVANT
         check("C effet inconnu, jamais « annulée » : REVIEW_REQUIRED / CANCELLED",
               ra["status"] == "REVIEW_REQUIRED" and ra["code"] == "CANCELLED" and st["verified"] == 0,
               f"{ra} ; appels {st['calls']}")
         check("C l'exécutant a été arrêté dans l'outil (exec-end absent)", gone and c.calls()["exec-end"] == 0,
-              f"pid {worker} vivant={not gone}, journal {c.calls()}")
+              f"pid {worker} : {state}, journal {c.calls()}")
         c.hold(False)
         diag = inspect_runtime(c.state, c.mission)
         check("C diagnostic : revue requise et annulation non prouvée",
@@ -254,25 +265,32 @@ def main():
         worker = c.worker_pid()
         a.kill()
         a.wait(5)
-        orphan = alive(worker)
+        orphan_state = liveness(worker)
         diag = inspect_runtime(c.state, c.mission)
         leases = [x["lease"]["state"] for x in diag["calls"]]
+        # The held lease is the evidence; process liveness is only reported (may be non-observable).
         check("H l'exécutant orphelin continue ; le diagnostic voit son bail détenu",
-              orphan and "HELD_AT_SAMPLE" in leases and "LOCAL_LOCK_HELD" in diag["hints"], f"baux {leases}")
+              orphan_state != ARRETE and "HELD_AT_SAMPLE" in leases and "LOCAL_LOCK_HELD" in diag["hints"],
+              f"baux {leases} ; processus {orphan_state}")
         r = c.run()
         check("H reprise pendant que l'orphelin travaille : revue, aucune seconde exécution",
               r["status"] == "REVIEW_REQUIRED" and r["code"] == "UNKNOWN_EFFECT" and c.calls()["exec-start"] == 1, str(r))
         c.hold(False)
         finished = c.wait_log("exec-end")
         deadline = time.monotonic() + 10
-        while alive(worker) and time.monotonic() < deadline:
+        while time.monotonic() < deadline:
+            if liveness(worker) == ARRETE:
+                break
+            if liveness(worker) == NON_OBSERVABLE and inspect_runtime(c.state, c.mission)["calls"][0]["lease"]["state"] != "HELD_AT_SAMPLE":
+                break                    # without /proc, the released lease is the observable end
             time.sleep(0.05)
+        end_state = liveness(worker)
         diag = inspect_runtime(c.state, c.mission)
         receipts = [x["receipt"]["state"] for x in diag["calls"]]
         check("H l'orphelin a fini l'effet APRÈS la revue ; son reçu reste non adopté",
-              finished and not alive(worker) and "PRESENT_UNVERIFIED" in receipts
+              finished and end_state != VIVANT and "PRESENT_UNVERIFIED" in receipts
               and c.mission_state()["status"] == "REVIEW_REQUIRED" and c.mission_state()["verified"] == 0,
-              f"reçus {receipts}")
+              f"reçus {receipts} ; processus {end_state}")
 
     leftovers = [p.pid for p in STARTED if p.poll() is None]
     for p in STARTED:

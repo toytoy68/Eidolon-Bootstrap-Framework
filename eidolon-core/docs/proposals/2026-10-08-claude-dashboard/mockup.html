@@ -1,0 +1,230 @@
+<!doctype html>
+<!-- ==========================================================
+     Projet      : Eidolon Core
+     Organisation: Eidolon Core Technologies (ECT)
+     Fichier     : mockup.html
+     Description : MAQUETTE ISOLÉE G076 — deux compositions du client Windows, données simulées
+     Standard    : Eidolon Presentation Standard v1
+     ========================================================== -->
+<!--
+  Étude seulement. Aucune requête, aucun script externe, aucune donnée réelle.
+  Composition et état choisis par l'ancre : #a-connected, #a-offline, #a-stale, #b-connected, ...
+  Le bouton « Sources des données » montre, pour chaque indicateur, s'il vient de l'API actuelle
+  (eidolon-http-read/1, client-sync, mission-list, research-archive-page) ou s'il est FUTUR/SIMULÉ.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eidolon — maquette G076</title>
+<style>
+  :root {
+    --bg: #0a1220; --bg2: #0f1b2e; --panel: #13233a; --panel2: #182c48; --line: #2a4468;
+    --ink: #e8f0fb; --muted: #a9bdd6; --accent: #5aa9ff; --accent-strong: #1f63bd; --accent-ink: #04101f;
+    --ok: #63d69a; --warn: #f2c25b; --bad: #ff8a8a; --stale: #3a3320; --focus: #ffd866;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 15px/1.45 "Segoe UI", system-ui, sans-serif; color: var(--ink);
+    background: radial-gradient(1200px 600px at 75% -10%, #163a6b 0%, transparent 60%),
+                radial-gradient(900px 500px at -10% 110%, #0e2a52 0%, transparent 55%), var(--bg);
+  }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  button { font: inherit; color: var(--ink); background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 8px; padding: .45rem .8rem; min-height: 36px; cursor: pointer; }
+  button.primary { background: var(--accent-strong); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .45; cursor: not-allowed; background: var(--panel2); border-color: var(--line); color: var(--muted); }
+  details.state { background: rgba(19,35,58,.92); border: 1px solid var(--line); border-radius: 12px; padding: .5rem .8rem; }
+  details.state summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+  .layout-a .mission { grid-template-columns: auto 1fr; padding: .4rem .55rem; }
+  .layout-a .mission .meta, .layout-a .mission .progress, .layout-a .mission > .badge:nth-child(3) { display: none; }
+  .app { display: grid; grid-template-rows: auto auto 1fr; height: 100vh; }
+  header { display: flex; align-items: center; gap: .9rem; padding: .6rem 1rem; background: rgba(10,18,32,.85);
+    border-bottom: 1px solid var(--line); }
+  .logo { width: 34px; height: 34px; flex: none; }
+  .brand b { font-size: 1.05rem; letter-spacing: .02em; }
+  .brand small { display: block; color: var(--muted); font-size: .78rem; }
+  .conn { margin-left: auto; display: flex; align-items: center; gap: .5rem; font-size: .9rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
+  .state-offline .dot, .state-stale .dot { background: var(--warn); }
+  .mockflag { font-size: .75rem; color: var(--accent-ink); background: var(--warn); border-radius: 6px; padding: .1rem .45rem; font-weight: 700; }
+  .banner { display: none; padding: .45rem 1rem; background: var(--stale); color: var(--warn); border-bottom: 1px solid #6b5a22; font-weight: 600; }
+  .state-offline .banner, .state-stale .banner { display: block; }
+  main { display: grid; gap: .8rem; padding: .8rem 1rem; min-height: 0; }
+  .layout-a main { grid-template-columns: 1fr 360px; }
+  .layout-b main { grid-template-columns: 1fr 340px; }
+  .panel { background: rgba(19,35,58,.92); border: 1px solid var(--line); border-radius: 12px; padding: .8rem; min-height: 0; overflow: auto; }
+  h2 { font-size: .95rem; margin: 0 0 .55rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .attention { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin-bottom: .7rem; }
+  .tile { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: .5rem .6rem; }
+  .tile b { font-size: 1.4rem; display: block; }
+  .tile.alert { border-color: var(--warn); }
+  .mission { display: grid; grid-template-columns: auto 1fr auto; gap: .2rem .6rem; align-items: center; padding: .55rem .6rem;
+    border: 1px solid var(--line); border-radius: 10px; margin-bottom: .45rem; background: var(--panel); }
+  .mission .label { font-weight: 600; }
+  .mission .meta { grid-column: 2 / 4; color: var(--muted); font-size: .85rem; }
+  .badge { font-size: .78rem; border-radius: 999px; padding: .1rem .55rem; border: 1px solid var(--line); white-space: nowrap; }
+  .b-ok { color: var(--ok); border-color: #2f6a4c; } .b-warn { color: var(--warn); border-color: #6b5a22; }
+  .b-bad { color: var(--bad); border-color: #7a3a3a; } .b-run { color: var(--accent); border-color: #2b5a91; }
+  .progress { height: 6px; background: #0b1626; border-radius: 4px; overflow: hidden; grid-column: 2 / 4; }
+  .progress i { display: block; height: 100%; background: var(--accent); }
+  .state-offline .mission, .state-stale .mission { background: var(--stale); }
+  .chat { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+  .msgs { overflow: auto; display: grid; gap: .5rem; align-content: start; }
+  .msg { max-width: 85%; padding: .55rem .7rem; border-radius: 12px; background: var(--panel2); border: 1px solid var(--line); }
+  .msg.me { justify-self: end; background: #1d3f6b; }
+  .msg .ref { display: inline-block; margin-top: .3rem; font-size: .8rem; color: var(--accent); }
+  .composer { display: flex; gap: .5rem; margin-top: .6rem; }
+  .composer input { flex: 1; font: inherit; color: var(--ink); background: #0b1626; border: 1px solid var(--line); border-radius: 8px; padding: .5rem .7rem; }
+  .composer input:disabled { opacity: .6; }
+  .side .row { display: flex; justify-content: space-between; gap: .5rem; padding: .25rem 0; border-bottom: 1px dashed #24405f; font-size: .9rem; }
+  .side .row span:first-child { color: var(--muted); }
+  .empty { color: var(--muted); font-style: italic; }
+  .src { display: none; font-size: .68rem; font-weight: 700; border-radius: 4px; padding: 0 .3rem; margin-left: .35rem; vertical-align: middle; }
+  .show-sources .src { display: inline-block; }
+  .src.api { background: #1f5f3d; color: #d8ffe9; }
+  .src.futur { background: #6b4a12; color: #fff1cf; }
+  .orb { width: 54px; height: 54px; border-radius: 50%; margin: 0 auto .5rem;
+    background: radial-gradient(circle at 35% 35%, #9fd0ff, #2f7fe0 55%, #0d2a52 100%);
+    box-shadow: 0 0 18px #2f7fe0aa; animation: pulse 3.2s ease-in-out infinite; }
+  .state-offline .orb, .state-stale .orb { animation: none; filter: grayscale(.8); box-shadow: none; }
+  @keyframes pulse { 50% { box-shadow: 0 0 30px #5aa9ffcc; transform: scale(1.04); } }
+  @media (prefers-reduced-motion: reduce) { .orb { animation: none; } }
+  .tabs { display: flex; gap: .4rem; margin-left: 1rem; }
+  .tabs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  .tools li { margin-bottom: .2rem; }
+  ul { padding-left: 1.1rem; margin: .2rem 0; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="Eidolon">
+      <rect x="2" y="2" width="60" height="60" rx="14" fill="#123a6e"/>
+      <path d="M20 16h26v7H28v6h16v7H28v6h18v7H20z" fill="#5aa9ff"/>
+    </svg>
+    <div class="brand"><b>Eidolon</b><small>Eidolon Core Technologies (ECT)</small></div>
+    <span class="mockflag">MAQUETTE — données simulées</span>
+    <nav class="tabs" aria-label="Composition">
+      <button id="to-a" type="button">A · Conversation</button>
+      <button id="to-b" type="button">B · Missions</button>
+    </nav>
+    <div class="conn" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span><span id="conn-text">Connecté en lecture seule</span>
+      <span class="src api">API health</span>
+      <button id="sources" type="button" aria-pressed="false">Sources des données</button>
+    </div>
+  </header>
+  <div class="banner" id="banner" role="alert"></div>
+  <main id="main"></main>
+</div>
+<script>
+(function () {
+  "use strict";
+  // Synthetic data only. Field names mirror eidolon-mission-list/1 and client-sync projections.
+  var MISSIONS = [
+    { label: "Recherche synthétique — pages récupérées", status: "SUCCEEDED", phase: "DONE", done: 1, total: 1, kind: "research_retrieval.synthetic", badge: "b-ok", text: "Réussie" },
+    { label: "Redémarrage simulé du service « nas »", status: "BLOCKED", phase: "READY", done: 0, total: 1, kind: "service.restart", badge: "b-warn", text: "Décision attendue" },
+    { label: "Compter les mots du texte rappelé", status: "RUNNING", phase: "EXECUTING", done: 1, total: 2, kind: "text.stats", badge: "b-run", text: "En cours" },
+    { label: "Diagnostic « vm100 » interrompu", status: "REVIEW_REQUIRED", phase: "EXECUTING", done: 0, total: 1, kind: "service.diagnostic", badge: "b-bad", text: "Effet à vérifier" }
+  ];
+  var STATES = {
+    connected: { cls: "", conn: "Connecté en lecture seule", banner: "" },
+    offline: { cls: "state-offline", conn: "Hors connexion", banner: "Serveur injoignable : l'affichage est le dernier état reçu (10:42), périmé. Aucune mission n'est présentée comme vivante." },
+    stale: { cls: "state-stale", conn: "Connecté — capture figée", banner: "Rattrapage impossible (STATE_CHANGED) : la liste date de 10:42. Recharger explicitement pour l'état actuel." }
+  };
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function src(kind, text) { var s = el("span", "src " + kind, text); return s; }
+  function missionCard(m, live) {
+    var c = el("div", "mission");
+    c.setAttribute("tabindex", "0");
+    c.setAttribute("aria-label", m.label + ", " + m.text);
+    var icon = el("span", "badge " + m.badge, m.text);
+    var label = el("span", "label", m.label);
+    label.appendChild(src("api", "mission.status/phase"));
+    var rev = el("span", "badge", m.done + " / " + m.total);
+    rev.appendChild(src("api", "progress"));
+    c.appendChild(icon); c.appendChild(label); c.appendChild(rev);
+    var p = el("div", "progress"); var bar = el("i"); bar.style.width = (100 * m.done / m.total) + "%"; p.appendChild(bar); c.appendChild(p);
+    var meta = el("div", "meta", m.kind + " · capture reçue 10:42" + (live ? "" : " · périmée"));
+    meta.appendChild(src("api", "objective_kind, receivedAt"));
+    c.appendChild(meta);
+    return c;
+  }
+  function attention() {
+    var box = el("div", "attention");
+    [["Décisions attendues", 1, true, "action_view.decision"], ["Effets à vérifier", 1, true, "status REVIEW_REQUIRED"], ["Résultats vérifiés", 1, false, "status SUCCEEDED"]]
+      .forEach(function (t) {
+        var tile = el("div", "tile" + (t[2] ? " alert" : ""));
+        tile.appendChild(el("b", null, t[1]));
+        var s = el("span", null, t[0]); s.appendChild(src("api", t[3])); tile.appendChild(s); box.appendChild(tile);
+      });
+    return box;
+  }
+  function side(live) {
+    var p = el("section", "panel side"); p.setAttribute("aria-label", "État");
+    p.appendChild(el("div", "orb")).setAttribute("aria-hidden", "true");
+    p.appendChild(el("h2", null, "État"));
+    var rows = [["Base Core", "s-3f…a91", "api", "health.store_id"], ["Dernière lecture", live ? "il y a 4 s" : "10:42 (périmée)", "api", "receivedAt local"],
+      ["Archives", "3 · 3 recherches", "api", "research-archive-page"], ["Sources mémoire", "2 conservées", "api", "snapshot (références)"],
+      ["Outils disponibles", "text.stats", "futur", "pas d'API catalogue"], ["GPU / VRAM", "—", "futur", "aucune télémétrie"]];
+    rows.forEach(function (r) { var row = el("div", "row"); row.appendChild(el("span", null, r[0])); var v = el("span", null, r[1]); v.appendChild(src(r[2], r[3])); row.appendChild(v); p.appendChild(row); });
+    p.appendChild(el("h2", null, "Archives de recherche")).style.marginTop = ".8rem";
+    var ul = el("ul"); ["research-archive-000001.json · 1", "research-archive-000002.json · 1", "research-archive-000003.json · 1"].forEach(function (t) { ul.appendChild(el("li", null, t)); });
+    p.appendChild(ul);
+    p.appendChild(el("p", "empty", "Cohérence vérifiée par Core ; authenticité non établie."));
+    return p;
+  }
+  function chat(live, compact) {
+    var p = el("section", "panel chat"); p.setAttribute("aria-label", "Conversation");
+    var h = el("h2", null, compact ? "Conversation liée à la mission" : "Conversation"); h.appendChild(src("futur", "pas d'API de chat"));
+    var msgs = el("div", "msgs"); msgs.appendChild(h);
+    [["me", "Où en est le redémarrage du NAS ?"],
+     ["", "La mission attend ta décision : proposition enregistrée, aucun effet. Je ne peux que t'afficher la preuve — l'accord se donne dans la fiche.", "Voir la mission « Redémarrage simulé »"],
+     ["me", "Et le diagnostic de vm100 ?"],
+     ["", "Il a été interrompu pendant l'appel : effet inconnu. Je ne relance rien ; consulte les preuves avant de décider.", "Voir les preuves"]]
+      .forEach(function (m) { var d = el("div", "msg " + m[0], m[1]); if (m[2]) d.appendChild(el("span", "ref", "→ " + m[2])); msgs.appendChild(d); });
+    p.appendChild(msgs);
+    var f = el("div", "composer"); var i = el("input"); i.setAttribute("aria-label", "Message"); i.placeholder = live ? "Écrire à Eidolon (futur)" : "Hors connexion : rien ne sera envoyé";
+    i.disabled = !live;
+    if (!live && document.getElementById("app").className.indexOf("state-stale") >= 0) i.placeholder = "Capture figée : recharger avant d'écrire"; f.appendChild(i); var b = el("button", "primary", "Envoyer"); b.disabled = !live; f.appendChild(b); p.appendChild(f);
+    return p;
+  }
+  function missions(live, title) {
+    var p = el("section", "panel"); p.setAttribute("aria-label", "Missions");
+    p.appendChild(el("h2", null, title));
+    p.appendChild(attention());
+    MISSIONS.forEach(function (m) { p.appendChild(missionCard(m, live)); });
+    var empty = el("p", "empty", "Liste complète (4 missions). Aucune mission n'affiche d'animation : une capture n'est pas un processus vivant.");
+    p.appendChild(empty);
+    return p;
+  }
+  function render() {
+    var hash = (location.hash || "#a-connected").slice(1).split("-");
+    var layout = hash[0] === "b" ? "b" : "a", state = STATES[hash[1]] ? hash[1] : "connected";
+    var live = state === "connected";
+    var app = document.getElementById("app");
+    app.className = "app layout-" + layout + " " + STATES[state].cls + (document.getElementById("sources").getAttribute("aria-pressed") === "true" ? " show-sources" : "");
+    document.getElementById("conn-text").textContent = STATES[state].conn;
+    document.getElementById("banner").textContent = STATES[state].banner;
+    document.getElementById("to-a").setAttribute("aria-pressed", layout === "a");
+    document.getElementById("to-b").setAttribute("aria-pressed", layout === "b");
+    var main = document.getElementById("main"); while (main.firstChild) main.removeChild(main.firstChild);
+    if (layout === "a") { main.appendChild(chat(live, false)); var right = el("div"); right.style.display = "grid"; right.style.gap = ".8rem"; right.style.minHeight = "0";
+      right.style.gridTemplateRows = "minmax(0, 1fr) auto";
+      right.appendChild(missions(live, "Ce qui attend ton attention"));
+      var det = el("details", "state"); det.appendChild(el("summary", null, "État, archives et outils"));
+      det.appendChild(side(live)); right.appendChild(det); main.appendChild(right); }
+    else { main.appendChild(missions(live, "Missions")); var col = el("div"); col.style.display = "grid"; col.style.gridTemplateRows = "auto 1fr"; col.style.gap = ".8rem"; col.style.minHeight = "0";
+      col.appendChild(side(live)); col.appendChild(chat(live, true)); main.appendChild(col); }
+  }
+  document.getElementById("to-a").onclick = function () { location.hash = "a-" + ((location.hash.split("-")[1]) || "connected"); };
+  document.getElementById("to-b").onclick = function () { location.hash = "b-" + ((location.hash.split("-")[1]) || "connected"); };
+  document.getElementById("sources").onclick = function () { var b = this; b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); render(); };
+  window.addEventListener("hashchange", render);
+  render();
+})();
+</script>
+</body>
+</html>

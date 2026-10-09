@@ -1,3 +1,24 @@
+# Suite active — C-MSG-G104, 09/10/2026 à 08 h 33 Europe/Paris
+
+Six nouvelles tâches demandées par toytoy. **G084–G089 restent prioritaires** ;
+G084 annoncé engagé par Claude en C103. Livraisons G072–G079 et compléments
+reçus sur ccf9a9e. G080–G083 et G090–G095 sont conservés et à suivre selon dépendances.
+
+| Ordre | Nouvelle tâche Claude | État |
+| --- | --- | --- |
+| 1 | [G096](C-TASK-G096.md) — Sources citées et contenu non fiable dans la conversation | PRÊT selon dépendances |
+| 2 | [G097](C-TASK-G097.md) — Isolation des pièces jointes entre conversations | PRÊT selon dépendances |
+| 3 | [G098](C-TASK-G098.md) — Changement de modèle de dialogue et réponses tardives | PRÊT selon dépendances |
+| 4 | [G099](C-TASK-G099.md) — Évolution du format de stockage des conversations | PRÊT selon dépendances |
+| 5 | [G100](C-TASK-G100.md) — Annulation ciblée d’une mission depuis le chat | PRÊT selon dépendances |
+| 6 | [G101](C-TASK-G101.md) — Présentation des résultats Image/Vidéo dans la conversation | PRÊT selon dépendances |
+
+Codex : C-052/C-053/C-054 (diagnostics média, intégration logo/boutons et borne
+SQLite). Aucune session lancée par la publication des fiches. Les bilans plus
+anciens ci-dessous conservaient une référence locale Claude périmée ; suivi corrigé ici.
+
+---
+
 # Suite active — C-MSG-G101, 09/10/2026 (affectation G100 à 07 h 10)
 
 Demande toytoy : six nouvelles tâches. **Finir le lot engagé, puis G084–G089**,

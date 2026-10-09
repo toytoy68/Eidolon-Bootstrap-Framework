@@ -1383,3 +1383,14 @@ non exécutés. Six modes installés et archive reproductible, 61 modules identi
 HTTP simulé, FFmpeg réel. [Preuves](docs/validation/2026-10-09/codex-hour-0710/README.md).
 Pas de modèle/GPU/VM réel, de commande depuis l'accueil ou de raccordement worker
 revendiqués. Dernier Claude observé e525610/C092 (G071), aucun démarrage présumé.
+
+
+### C-MSG-G104 — Reprise du 09/10, 08 h 33 Europe/Paris
+
+Demande toytoy : six tâches et une heure supplémentaire. Base Core 6d6c99f.
+Lecture distante Claude : ccf9a9e/C103, G072–G079 et compléments reçus, G084 annoncé
+engagé. Notre ref locale était restée e525610 à cause du refspec limité ; ancien
+suivi corrigé, fetch explicite de sa branche effectué. Six suites G096–G101
+attribuées ; conversation/mission entièrement à Claude. Codex prend C-052 à C-054 :
+diagnostics média, paire logo G078/boutons sans commande et borne SQLite C102.
+Intégration de l’historique Claude, pas de main ni déploiement.

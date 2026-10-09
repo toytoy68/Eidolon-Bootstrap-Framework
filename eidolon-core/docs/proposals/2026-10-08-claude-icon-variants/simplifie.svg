@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Eidolon">
+  <!-- Variante simplifiée pour 16–24 px (zone de notification), d'après la référence validée :
+       carré arrondi bleu nuit, liseré bleu vif, E arrondi plein ; ni anneau, ni halo, ni reflets. -->
+  <defs>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06163a"/><stop offset="1" stop-color="#020a1f"/></linearGradient>
+    <linearGradient id="e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fb4ff"/><stop offset="1" stop-color="#1f6bff"/></linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#f)" stroke="#2f8cff" stroke-width="3"/>
+  <path d="M22 14h20a5 5 0 0 1 0 10H30v4h9a5 5 0 0 1 0 10h-9v4h12a5 5 0 0 1 0 10H22a6 6 0 0 1-6-6V20a6 6 0 0 1 6-6z" fill="url(#e)"/>
+</svg>

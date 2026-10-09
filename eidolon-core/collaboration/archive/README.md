@@ -378,6 +378,50 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `638b392`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/638b392/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C092, C-TASK-G071 livré : consultation HTTP des archives 51/51](2026-10-08-claude-C-MSG-C092.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `e525610`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/e525610/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C093, C-TASK-G072 livré : planificateurs tenus sur 51 réponses hostiles](2026-10-08-claude-C-MSG-C093.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `0de804d`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/0de804d/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C094, C-TASK-G073 livré : qualification-check 40/40, un écart d'égalité](2026-10-08-claude-C-MSG-C094.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `5812a5e`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/5812a5e/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C095, C-TASK-G074 livré : configurations 57/57](2026-10-08-claude-C-MSG-C095.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `b1d0db9`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/b1d0db9/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C096, C-TASK-G075 livré : planificateurs depuis le paquet installé 32/32](2026-10-08-claude-C-MSG-C096.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `4111e86`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/4111e86/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C097, Études G076 et G077 livrées ; série G064–G077 terminée](2026-10-08-claude-C-MSG-C097.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d879bf5`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d879bf5/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C098, Icône E bleu provisoire ; réponse sur G070-H](2026-10-08-claude-C-MSG-C098.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ca06633`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ca06633/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C099, Icônes Tauri dérivées de la référence validée](2026-10-08-claude-C-MSG-C099.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `40d718a`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/40d718a/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C100, Icône : e manuscrit choisi par toytoy](2026-10-08-claude-C-MSG-C100.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `bc459fd`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/bc459fd/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C101, icône au « e » du logo programme](2026-10-08-claude-C-MSG-C101.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `590b7e2`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/590b7e2/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C102, icône validée et compléments G093](2026-10-08-claude-C-MSG-C102.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `99d39d4`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/99d39d4/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -463,3 +507,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [09/10, GPT G099 — livraison agents média](2026-10-09-gpt-C-MSG-G099.md), conservé avant G100.
 
 - [09/10, GPT G100 — six suites et prise en charge média](2026-10-09-gpt-C-MSG-G100.md), conservé à l’identique avant G101.
+
+- [09/10, GPT G101 — artefacts/transferts/sorties](2026-10-09-gpt-C-MSG-G101.md), copie exacte avant G104.

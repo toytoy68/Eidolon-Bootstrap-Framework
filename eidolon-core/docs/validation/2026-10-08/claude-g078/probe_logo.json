@@ -1,0 +1,186 @@
+[
+ {
+  "cas": "actuel-360x740-light",
+  "avant_connexion": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [
+   "/eidolon-logo.png 401"
+  ],
+  "erreurs_console": [
+   "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ]
+ },
+ {
+  "cas": "actuel-360x740-dark",
+  "avant_connexion": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [
+   "/eidolon-logo.png 401"
+  ],
+  "erreurs_console": [
+   "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ]
+ },
+ {
+  "cas": "actuel-1280x720-light",
+  "avant_connexion": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [
+   "/eidolon-logo.png 401"
+  ],
+  "erreurs_console": [
+   "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ]
+ },
+ {
+  "cas": "actuel-1280x720-dark",
+  "avant_connexion": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "non affiché",
+   "nom_h1": "Eidolon Core",
+   "texte_visible": "visible",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [
+   "/eidolon-logo.png 401"
+  ],
+  "erreurs_console": [
+   "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ]
+ },
+ {
+  "cas": "propose-360x740-light",
+  "avant_connexion": {
+   "logo": "affiché 147×40 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "affiché 147×40 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [],
+  "erreurs_console": []
+ },
+ {
+  "cas": "propose-360x740-dark",
+  "avant_connexion": {
+   "logo": "affiché 147×40 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "affiché 147×40 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [],
+  "erreurs_console": []
+ },
+ {
+  "cas": "propose-1280x720-light",
+  "avant_connexion": {
+   "logo": "affiché 206×56 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "affiché 206×56 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [],
+  "erreurs_console": []
+ },
+ {
+  "cas": "propose-1280x720-dark",
+  "avant_connexion": {
+   "logo": "affiché 206×56 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "connecté": {
+   "logo": "affiché 206×56 px",
+   "nom_h1": "Eidolon Core Technologies",
+   "texte_visible": "masqué",
+   "image_cassée": 0,
+   "dans_en_tete": true,
+   "débordement_px": 0
+  },
+  "réponses_en_erreur": [],
+  "erreurs_console": []
+ }
+]

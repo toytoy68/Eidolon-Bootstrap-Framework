@@ -1,0 +1,5 @@
+SQLite 3.45.1, corps TEXT de 256 Mio
+substr(CAST(body AS BLOB),1,16777217) -> 16777217 ; pic 297 Mio
+length(body) -> 268435456 ; pic 265 Mio
+octet_length(body) -> 268435456 ; pic 12 Mio
+typeof(body) -> text ; pic 12 Mio
