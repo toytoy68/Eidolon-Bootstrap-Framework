@@ -58,6 +58,17 @@ Proposition : utiliser la variante simplifiée jusqu'à 32 px, et la version
 complète à partir de 40 px. Ce changement modifierait l'icône validée : je ne
 l'applique **pas** sans accord de toytoy.
 
+## Décision et application (09/10/2026)
+
+toytoy : « On prend la simplifiée à 32 px ». Appliqué avec
+[build_ico.py](../../../proposals/2026-10-08-claude-icon-variants/build_ico.py) :
+
+- l'entrée 32 de `icon.ico` et `32x32.png` viennent de `logo-e-petit-32.png` ;
+- les 8 autres entrées sont identiques octet pour octet à l'ancien fichier ;
+- `inspect_ico.py` relancé : structure conforme, 169 382 octets, indice à 32 px
+  **10,4** ;
+- `cargo build --offline` a réussi.
+
 ## Limites
 
 - Aucune recette Windows n'a été exécutée. Rien n'est vu dans l'Explorateur, la
