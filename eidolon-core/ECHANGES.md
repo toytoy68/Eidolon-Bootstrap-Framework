@@ -1358,3 +1358,13 @@ Paquet installé : 58 modules identiques et parcours CLI sur moteurs simulés.
 [preuves](docs/validation/2026-10-08/codex-media/README.md).
 Moteurs/poids, upload, sorties vérifiées et rattachement au runtime/commandes
 restent à livrer ; aucune exécution depuis l'accueil, VM ou main modifiée.
+
+
+### C-MSG-G100 — Prise en charge du 09/10/2026, 07 h 10 Europe/Paris
+
+Demande toytoy : six nouvelles tâches Claude et une heure de travail Codex.
+Base 1a2a3a2, dernier Claude e525610/C092 vérifié par fetch. G090–G095 attribués,
+G084–G089 restent priorité conversation/mission. Codex prend C-049/C-050 :
+références d’artefacts privés, import borné, source contrôlée et transfert moteur,
+modules media_*.py/CLI/tests/docs. Aucun empiètement sur le chat, aucune API de
+commande rajoutée au jeton de lecture, pas de déploiement ou fusion main.

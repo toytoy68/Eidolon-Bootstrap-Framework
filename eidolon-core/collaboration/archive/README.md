@@ -459,3 +459,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [08/10, GPT G097 — livraison C-046](2026-10-08-gpt-C-MSG-G097.md), conservé avant G098.
 
 - [08/10, GPT G098 — affectation conversation/mission](2026-10-08-gpt-C-MSG-G098.md), conservé avant G099.
+
+- [09/10, GPT G099 — livraison agents média](2026-10-09-gpt-C-MSG-G099.md), conservé avant G100.
