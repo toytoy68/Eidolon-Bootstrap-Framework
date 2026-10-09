@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-058
+# Agents natifs Image et Vidéo — C-047 à C-059
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -397,3 +397,10 @@ Ce repérage de contrat n'est pas un test du moteur, de ses nœuds ou de ses poi
 
 Précontrôles revus le 09/10/2026 : route `object_info` du même commit ComfyUI et
 [API show Ollama](https://docs.ollama.com/api-reference/show-model-details).
+
+
+C-059 : les transports HTTP des moteurs et transferts refusent une réponse dont
+les en-têtes sont interrompus avec `INCOMPLETE_HTTP`. Une coupure avant tout octet
+reste indisponible au niveau transport ; un JSON incomplet après des en-têtes
+complets reste refusé à la lecture du corps. Aucun nouvel appel automatique :
+consulter le journal et son reçu éventuel, car la requête peut déjà avoir eu un effet.

@@ -174,3 +174,18 @@ critères sans appel. `model-probe --config ... --output <nouveau-dossier>` les
 exécute explicitement sur le candidat choisi avec données synthétiques uniquement.
 [Commandes, preuves et limites](MODEL-PROBE.md). `PASSED_CASES` est un résultat
 restreint de recette, pas une qualification de modèle ou de GPU.
+
+
+## C-059 — Coupure pendant les en-têtes HTTP
+
+Les transports HTTP locaux distinguent maintenant un EOF après le début de la
+réponse, avant la fin complète des en-têtes : `INCOMPLETE_HTTP`, sans texte
+renvoyé par le serveur. Un EOF avant le premier octet reste une erreur
+`TRANSPORT`. Un corps JSON invalide après des en-têtes complets conserve son
+diagnostic JSON. Le même contrôle s'applique aux appels et transferts média.
+
+Cette correction de G072-1 ne modifie ni les modèles/adresses configurés, ni les
+budgets, ni le protocole des réponses valides. La lecture utilise un gestionnaire
+par requête, sans remplacement global de la bibliothèque HTTP. Pas de nouvelle
+tentative, de redirection ou de proxy ; le délai socket reste distinct du délai
+total du worker. Une coupure ne prouve pas que le moteur n'a reçu aucune demande.

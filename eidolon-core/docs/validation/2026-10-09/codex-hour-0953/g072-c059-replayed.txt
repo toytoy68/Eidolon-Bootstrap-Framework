@@ -1,0 +1,62 @@
+Original Claude probe SHA-256: 2e649cea6142519e39ce124ae0d19e93a6bfc86e4eaeaae1d8eab7864167183e
+Only adaptation: G072-1 expected INCOMPLETE_HTTP; original file unchanged.
+Sources examinées : /workspace/scratch/16ec975b83e7/core-work/eidolon-core/src
+== ollama
+✓ réponse nominale : OK ; appels 1
+✓ EOF avant tout octet : TRANSPORT: TRANSPORT: RemoteDisconnected ; appels 1
+✓ EOF au milieu des en-têtes : INCOMPLETE_HTTP: INCOMPLETE_HTTP: response ended inside HTTP headers ; appels 1
+✓ corps sans longueur tronqué puis EOF : BAD_RESPONSE: BAD_RESPONSE: body is not finite, unambiguous UTF-8 JSON ; appels 1
+✓ Content-Length plus grand que le corps puis EOF : INCOMPLETE_HTTP: INCOMPLETE_HTTP: response ended before its declared content length ; appels 1
+✓ Content-Length dupliqué identique : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Content-Length contradictoires : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Content-Length négatif : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: invalid content length ; appels 1
+✓ Content-Length + chunked : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Transfer-Encoding gzip : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: unsupported transfer encoding ; appels 1
+✓ chunked valide : OK ; appels 1
+✓ chunk incomplet puis EOF : TRANSPORT: TRANSPORT: IncompleteRead ; appels 1
+✓ taille de chunk invalide : TRANSPORT: TRANSPORT: IncompleteRead ; appels 1
+✓ corps absent (fermeture) : BAD_RESPONSE: BAD_RESPONSE: body is not finite, unambiguous UTF-8 JSON ; appels 1
+✓ corps trop grand déclaré : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: declared response exceeds configured budget ; appels 1
+✓ corps trop grand sans longueur : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: more than 4096 bytes ; appels 1
+✓ corps trop grand en chunked : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: more than 4096 bytes ; appels 1
+✓ statut 500 avec texte distant : HTTP_STATUS: HTTP_STATUS: status 500; remote error details omitted ; appels 1
+✓ statut 401 reflétant la clé : HTTP_STATUS: HTTP_STATUS: status 401; remote error details omitted ; appels 1
+✓ statut 200, enveloppe d'erreur distante : MODEL_ERROR: MODEL_ERROR: server returned an error envelope ; appels 1
+✓ ligne de statut invalide : TRANSPORT: TRANSPORT: BadStatusLine ; appels 1
+✓ en-tête de 70 000 octets : TRANSPORT: TRANSPORT: LineTooLong ; appels 1
+✓ redirection 302 vers un autre port : HTTP_STATUS: HTTP_STATUS: status 302 ; appels 1 ; cible de la redirection contactée 0 fois
+✓ variable HTTP_PROXY pointant ailleurs (ignorée) : OK ; appels 1 ; proxy contacté 0 fois
+== openai
+✓ réponse nominale : OK ; appels 1
+✓ EOF avant tout octet : TRANSPORT: TRANSPORT: RemoteDisconnected ; appels 1
+✓ EOF au milieu des en-têtes : INCOMPLETE_HTTP: INCOMPLETE_HTTP: response ended inside HTTP headers ; appels 1
+✓ corps sans longueur tronqué puis EOF : BAD_RESPONSE: BAD_RESPONSE: body is not JSON ; appels 1
+✓ Content-Length plus grand que le corps puis EOF : INCOMPLETE_HTTP: INCOMPLETE_HTTP: response ended before its declared content length ; appels 1
+✓ Content-Length dupliqué identique : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Content-Length contradictoires : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Content-Length négatif : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: invalid content length ; appels 1
+✓ Content-Length + chunked : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: ambiguous response framing ; appels 1
+✓ Transfer-Encoding gzip : BAD_HTTP_FRAMING: BAD_HTTP_FRAMING: unsupported transfer encoding ; appels 1
+✓ chunked valide : OK ; appels 1
+✓ chunk incomplet puis EOF : TRANSPORT: TRANSPORT: IncompleteRead ; appels 1
+✓ taille de chunk invalide : TRANSPORT: TRANSPORT: IncompleteRead ; appels 1
+✓ corps absent (fermeture) : BAD_RESPONSE: BAD_RESPONSE: body is not JSON ; appels 1
+✓ corps trop grand déclaré : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: declared response exceeds configured budget ; appels 1
+✓ corps trop grand sans longueur : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: more than 4096 bytes ; appels 1
+✓ corps trop grand en chunked : RESPONSE_TOO_LARGE: RESPONSE_TOO_LARGE: more than 4096 bytes ; appels 1
+✓ statut 500 avec texte distant : HTTP_STATUS: HTTP_STATUS: status 500; remote error details omitted ; appels 1
+✓ statut 401 reflétant la clé : AUTHENTICATION: AUTHENTICATION: status 401; remote error details omitted ; appels 1
+✓ statut 200, enveloppe d'erreur distante : BAD_RESPONSE: BAD_RESPONSE: answer is not a chat.completion object ; appels 1
+✓ ligne de statut invalide : TRANSPORT: TRANSPORT: BadStatusLine ; appels 1
+✓ en-tête de 70 000 octets : TRANSPORT: TRANSPORT: LineTooLong ; appels 1
+✓ redirection 302 vers un autre port : HTTP_STATUS: HTTP_STATUS: status 302 ; appels 1 ; cible de la redirection contactée 0 fois
+✓ variable HTTP_PROXY pointant ailleurs (ignorée) : OK ; appels 1 ; proxy contacté 0 fois
+   en-tête Authorization envoyé au point configuré seulement : True
+== durées : délai de socket ≠ durée totale (adaptateur seul, timeout_seconds = 1)
+   ollama : corps distillé (1 octet / 0,6 s) → OK en 7.8 s (> timeout_seconds=1 : aucune borne de durée totale dans l'adaptateur)
+✓ ollama : silence de 1,5 s → TRANSPORT: TRANSPORT: TimeoutError en 1.0 s (délai de socket)
+   openai : corps distillé (1 octet / 0,6 s) → OK en 7.8 s (> timeout_seconds=1 : aucune borne de durée totale dans l'adaptateur)
+✓ openai : silence de 1,5 s → TRANSPORT: TRANSPORT: TimeoutError en 1.0 s (délai de socket)
+== borne totale par le runtime (call_seconds = 3, timeout_seconds = 1, 1 octet / 0,6 s)
+✓ mission arrêtée par le délai de l'exécutant : {'status': 'BLOCKED', 'code': 'MODEL_UNAVAILABLE', 'message': 'call deadline exceeded', 'seconds': 3.1} ; appels 1
+Échecs : aucun

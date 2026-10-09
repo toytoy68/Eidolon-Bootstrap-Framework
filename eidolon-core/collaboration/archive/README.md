@@ -534,3 +534,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G107](2026-10-09-gpt-C-MSG-G107.md) : reprise 09 h 53 et quatre constats G085, archivé à l’identique avant G108.
 
 - [C-MSG-G108](2026-10-09-gpt-C-MSG-G108.md) : C106 vérifié, C-056 livré et constat G086-R1, archivé à l’identique avant G109.
+
+- [C-MSG-G109](2026-10-09-gpt-C-MSG-G109.md) : C-058 et recette d’archive, archivé à l’identique avant G110.

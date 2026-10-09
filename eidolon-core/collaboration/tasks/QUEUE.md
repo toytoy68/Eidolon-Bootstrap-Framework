@@ -1,3 +1,12 @@
+# Suite active — C-MSG-G110, 09/10/2026
+
+Corrections G085-R1 à R4 reproduites ; deux compléments à Claude : G085-R5
+(initialisation sur base étrangère avec meta vide) et G086-R1 (mémoire retirée
+mais encore citée). G087 puis G088/G089 restent prioritaires, G090–G101 conservés.
+Codex : C-056/C-058 publiés ; C-059 reprend le diagnostic transport G072-1.
+
+---
+
 # Suite active — C-MSG-G108, 09/10/2026 à 10 h 18 Europe/Paris
 
 G084–G086 livrés par Claude et intégrés. Corrections G085-R1 à R4 reproduites

@@ -28,7 +28,7 @@ import urllib.request
 import uuid
 
 from .media_agents import MediaError, identify, parse_json, read_regular
-from .model_http import read_body
+from .model_http import CompleteHeaderHandler, IncompleteHeaders, read_body
 from .media_workflows import definition
 
 
@@ -72,12 +72,14 @@ def json_http(method, url, payload, timeout=90):
         raise MediaError("REQUEST_TOO_LARGE")
     req = urllib.request.Request(url, data=data, method=method,
                                  headers={"Content-Type": "application/json", "Accept": "application/json"})
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), NoRedirect())
     try:
         with opener.open(req, timeout=timeout) as response:
             if response.status != 200 or response.headers.get_content_type() != "application/json":
                 raise MediaError("INVALID_BACKEND_RESPONSE")
             result = parse_json(read_body(response, 1_000_000, MediaError))
+    except IncompleteHeaders:
+        raise MediaError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
     except (OSError, urllib.error.URLError, HTTPException) as exc:
         raise MediaError("BACKEND_UNAVAILABLE", type(exc).__name__) from None
     if type(result) is not dict:

@@ -18,7 +18,7 @@ import urllib.request
 import uuid
 
 from .media_agents import MediaError, parse_json
-from .model_http import read_body
+from .model_http import CompleteHeaderHandler, IncompleteHeaders, read_body
 
 EXTENSIONS = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp",
               "video/mp4": ".mp4", "video/webm": ".webm"}
@@ -32,12 +32,14 @@ def raw_http(method, url, body, content_type, max_response):
     if content_type is not None:
         headers["Content-Type"] = content_type
     request = urllib.request.Request(url, data=body, method=method, headers=headers)
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), NoRedirect())
     try:
         with opener.open(request, timeout=90) as response:
             if response.status != 200:
                 raise MediaError("MEDIA_TRANSFER_STATUS")
             return response.headers.get_content_type(), read_body(response, max_response, MediaError)
+    except IncompleteHeaders:
+        raise MediaError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
     except (OSError, urllib.error.URLError, HTTPException) as exc:
         raise MediaError("MEDIA_TRANSFER_UNAVAILABLE", type(exc).__name__) from None
 

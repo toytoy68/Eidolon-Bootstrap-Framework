@@ -74,6 +74,41 @@ class ModelHTTPTests(unittest.TestCase):
                 self.assertNotIn(CANARY, "".join(traceback.format_exception(raised.exception)))
                 self.assertEqual(self.server.requests, before + 1, "transport retried unexpectedly")
 
+    def test_eof_inside_headers_is_incomplete_http_for_all_local_transports(self):
+        from eidolon_core.media_agents import MediaError
+        from eidolon_core.media_backends import json_http
+        from eidolon_core.media_transfer import raw_http
+        for response in (
+                b"HTTP/1.1 200 OK\r\nContent-Ty",
+                b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n",
+                b"HTTP/1.1 500 Synthetic\r\nX-Private: " + CANARY.encode(),
+                b"HTTP/1.1 100 Continue\r\n\r\n",
+                b"HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK\r\nContent-Ty",
+                b"HTTP/1.1 200 OK"):
+            self.server.response = response
+            self.assertRefused("INCOMPLETE_HTTP")
+            for call in (lambda: json_http("POST", self.url, {}),
+                         lambda: raw_http("GET", self.url, None, None, 1024)):
+                before = self.server.requests
+                with self.assertRaises(MediaError) as raised:
+                    call()
+                self.assertEqual(raised.exception.code, "INCOMPLETE_HTTP")
+                self.assertNotIn(CANARY, "".join(traceback.format_exception(raised.exception)))
+                self.assertEqual(self.server.requests, before + 1)
+
+    def test_interim_headers_and_close_delimited_body_keep_the_original_stream(self):
+        for prefix in (b"", b"HTTP/1.1 100 Continue\r\nX-Synthetic: yes\r\n\r\n"):
+            self.server.response = prefix + b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n{}"
+            for provider in ("ollama", "llama"):
+                status, content_type, body = self.post(provider)
+                self.assertEqual((status, content_type, body), (200, "application/json", b"{}"))
+        self.server.response = b"HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: 2\n\n{}"
+        self.assertEqual(self.post("ollama")[2], b"{}")  # Preserve stdlib's LF handling.
+
+    def test_eof_before_any_response_keeps_transport_failure(self):
+        self.server.response = b""
+        self.assertRefused("TRANSPORT")
+
     def test_complete_content_length_chunked_and_close_delimited(self):
         for status in (200, 500):
             for headers, raw in (("Content-Length: 2\r\n", b"{}"), ("", b"{}"),

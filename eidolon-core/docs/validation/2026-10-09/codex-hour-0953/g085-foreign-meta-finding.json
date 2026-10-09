@@ -1,0 +1,17 @@
+{
+  "status": "FINDING_REPRODUCED",
+  "source": "C106 / 3ad4aa8",
+  "id": "G085-R5",
+  "synthetic_only": true,
+  "existing_foreign_database_nonempty": true,
+  "explicit_create_accepted": true,
+  "foreign_database_modified": true,
+  "meta_keys_added": [
+    "schema",
+    "store_id"
+  ],
+  "tables_after": [
+    "meta",
+    "unrelated"
+  ]
+}

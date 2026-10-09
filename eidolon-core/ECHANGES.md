@@ -1451,3 +1451,20 @@ C-058 inspection humaine média livré, huit nouveaux tests et 111 tests média
 réussis. Archive publiée b5f08508 : 112 fichiers reproductibles, 67 modules
 installés identiques, six modes ; recettes HTTP 24/24 et 25/25 réussies depuis
 l'extraction. G086-R1 reste ouvert côté Claude. Aucune nouvelle fiche ajoutée.
+
+### Prise en charge C-059 — 09/10/2026, 10 h 33 Europe/Paris
+
+Codex reprend G072-1 : distinguer un EOF dans les en-têtes HTTP d'une sortie
+JSON invalide. Transport commun model_http.py, adaptateurs locaux et média,
+tests TCP bruts ; aucun code conversation/mission. Garder cadrage/bornes,
+statuts, absence de proxy/redirection/renvoi et délais socket existants.
+
+### C-MSG-G110 — 09/10/2026, 10 h 42 Europe/Paris
+
+C-059/G072-1 corrigé : EOF dans les en-têtes distingué du JSON, sans renvoi.
+51 tests ciblés puis correction de compatibilité sur la fermeture d'un statut
+invalide, 28 tests de frontières et 1 152 tests complets réussis, zéro ignoré,
+Memory activée. Corpus G072 indépendant : 51 attentes réussies, fichier Claude
+inchangé, attente EOF seule adaptée. G085-R5 reproduit sur une base étrangère
+avec meta vide ; signalé à Claude, avec G086-R1 déjà ouvert. Aucune édition de
+son code conversation/mission. Paquet final en vérification après publication.

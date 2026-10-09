@@ -105,3 +105,55 @@ L'archive b5f08508 précède C-058 ; elle n'est pas présentée comme preuve de 
 nouveau rendu. La publication suivante conservera cette distinction.
 
 `media-final-tests.txt` : **111 tests média réussis en 6,350 s** après C-058.
+
+## C-059 — Diagnostic de coupure HTTP
+
+Le constat G072-1 de Claude est corrigé dans le transport commun, les deux
+adaptateurs locaux, les appels JSON média et les transferts bruts. Un gestionnaire
+HTTP propre à chaque opener vérifie que les lignes d'en-tête et leur terminateur
+ont bien été reçus. La bibliothèque standard conserve son parsing, ses réponses
+intermédiaires et ses bornes ; le flux d'origine est restauré avant lecture du corps.
+Aucune modification globale, redirection, proxy ou nouvelle tentative.
+
+`http-c059-tests.txt` : **51 tests réussis**, incluant trois nouveaux tests
+multi-cas sur sockets loopback. Les EOF pendant les en-têtes produisent
+`INCOMPLETE_HTTP`, y compris après une réponse 100 ; la coupure avant tout octet
+reste `TRANSPORT`. Réponse intermédiaire complète, cadrage par fermeture et
+terminaison LF restent acceptés. Erreurs sans canari distant et un seul appel
+par tentative. Modèles/moteurs toujours simulés.
+
+`http-c059-initial-tests.txt` conserve une erreur de sélection de test : le nom
+`test_media_backends` n'existe pas. Aucun échec de scénario dans cette passe ;
+la sélection corrigée utilise `test_media_agents` et produit la preuve verte.
+
+`replay_g072_c059.py` rejoue le corpus indépendant Claude sans éditer son fichier.
+Une seule adaptation explicitement assertée : G072-1 attend désormais exactement
+`INCOMPLETE_HTTP`. Toutes les autres entrées et attentes sont conservées.
+
+Rejeu C-059 : `g072-c059-replayed.txt` se termine par **Échecs : aucun** ;
+51 attentes marquées réussies. Corps distillé : 7,8 s avec délai socket 1 s ;
+worker borné à 3 s : arrêt mesuré à 3,1 s, une seule requête.
+
+
+La première passe complète C-059 (`python-c059-initial.txt`) a révélé deux
+échecs sur les lignes de statut invalides : le wrapper des en-têtes devait
+exposer `close()` pour le chemin de fermeture de `http.client` et conserver
+`fp=None` si ce chemin avait déjà fermé le flux. Corrigé avant publication ;
+les preuves finales sont distinctes, sans remplacer ce constat initial.
+
+## Complément de contre-revue G085 — R5
+
+`probe_g085_foreign_meta.py` reproduit sur une base synthétique étrangère
+non vide (`unrelated`, `meta` vide, `user_version=1`) l'acceptation de
+`ConversationStore(..., create=True)`. Le code ajoute schema/store_id dans
+cette table étrangère bien que les tables de conversation n'existent pas.
+`g085-foreign-meta-finding.json` constate la modification. Les quatre corrections
+précédentes restent acquises ; ce cinquième cas est à corriger côté Claude.
+
+
+Après correction du chemin de fermeture : `http-c059-boundaries.txt` donne
+**28 tests réussis** ; `python-c059-final.txt` donne **1 152 tests réussis en
+193,503 s, zéro ignoré**, intégration Memory activée sur le dépôt inchangé.
+Le corpus G072 de 51 attentes ci-dessus précède cette correction de fermeture ;
+la suite finale couvre les statuts invalides qui l'ont motivée.
+Les empreintes du code final sont conservées dans `source-manifest-final.json`.

@@ -1,0 +1,53 @@
+======================================================================
+ERROR: test_malformed_http_status_is_a_sanitized_transport_error (tests.test_ollama_boundaries.OllamaBoundaryTests.test_malformed_http_status_is_a_sanitized_transport_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_ollama_boundaries.py", line 136, in test_malformed_http_status_is_a_sanitized_transport_error
+    model.propose(DEMO_REQUEST, {'items': []})
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/ollama_model.py", line 206, in propose
+    status, content_type, raw = self.transport.post(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/ollama_model.py", line 155, in post
+    response = opener.open(request, timeout=timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/model_http.py", line 59, in http_open
+    return self.do_open(_CompleteHeaderConnection, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/src/eidolon_core/model_http.py", line 47, in begin
+    super().begin()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 324, in _read_status
+    self._close_conn()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/client.py", line 443, in _close_conn
+    fp.close()
+    ^^^^^^^^
+AttributeError: '_HeaderLines' object has no attribute 'close'
+
+======================================================================
+FAIL: test_malformed_http_status_cannot_leak_credential_through_exception (tests.test_openai_chat_boundaries.ChatBoundaryTests.test_malformed_http_status_cannot_leak_credential_through_exception)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/tests/test_openai_chat_boundaries.py", line 65, in test_malformed_http_status_cannot_leak_credential_through_exception
+    self.assertIn("TRANSPORT", m["error"]["message"])
+AssertionError: 'TRANSPORT' not found in "'_HeaderLines' object has no attribute 'close'"
+
+----------------------------------------------------------------------
+Ran 1152 tests in 194.181s
+
+FAILED (failures=1, errors=1)

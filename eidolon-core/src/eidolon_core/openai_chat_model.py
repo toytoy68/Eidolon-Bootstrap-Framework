@@ -20,6 +20,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 import json
 from http.client import HTTPException
+from .model_http import CompleteHeaderHandler, IncompleteHeaders
 import math
 import os
 import re
@@ -152,7 +153,7 @@ class UrllibChatTransport:
     def post(self, url, body, *, headers, timeout, max_bytes):
         request = urllib.request.Request(url, data=body, method="POST", headers=dict(headers))
         # No proxy and no redirect: the configured endpoint is the only destination.
-        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), _NoRedirect())
         try:
             try:
                 response = opener.open(request, timeout=timeout)
@@ -160,6 +161,8 @@ class UrllibChatTransport:
                 response = exc
             with response:
                 return response.status, (response.headers or {}).get("Content-Type", ""), _bounded(response, max_bytes)
+        except IncompleteHeaders:
+            raise OpenAIChatError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
         except (urllib.error.URLError, OSError, ValueError, HTTPException) as exc:
             reason = getattr(exc, "reason", exc)
             raise OpenAIChatError("TRANSPORT", type(reason).__name__) from None

@@ -19,6 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from collections.abc import Mapping
 from http.client import HTTPException
+from .model_http import CompleteHeaderHandler, IncompleteHeaders
 import json
 import urllib.error
 import urllib.parse
@@ -148,7 +149,7 @@ class UrllibTransport:
         request = urllib.request.Request(url, data=body, method="POST",
                                          headers={"Content-Type": "application/json"})
         # No proxy and no redirect: the configured endpoint is the only destination.
-        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), CompleteHeaderHandler(), _NoRedirect())
         try:
             try:
                 response = opener.open(request, timeout=timeout)
@@ -156,6 +157,8 @@ class UrllibTransport:
                 response = exc
             with response:
                 return response.status, (response.headers or {}).get("Content-Type", ""), _bounded(response, max_bytes)
+        except IncompleteHeaders:
+            raise OllamaError("INCOMPLETE_HTTP", "response ended inside HTTP headers") from None
         except (urllib.error.URLError, OSError, ValueError, HTTPException) as exc:
             reason = getattr(exc, "reason", exc)
             raise OllamaError("TRANSPORT", type(reason).__name__) from None

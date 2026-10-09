@@ -825,7 +825,8 @@ Les preuves et limites sont conservées dans
 - [x] Écart G073-1 corrigé : critères fixés au même instant que le début refusés,
   y compris avec fuseaux différents ; antériorité d'une microseconde acceptée.
 - [x] Guide CLI précisé sur délai socket versus budget total du worker (G072-2).
-- [ ] G072-1 : diagnostic EOF d'en-tête tronqué ; refus déjà correct, libellé à améliorer.
+- [x] G072-1 corrigé en C-059 : EOF pendant les en-têtes → INCOMPLETE_HTTP ;
+  transports HTTP des deux modèles et média, sans renvoi ni détail distant.
 - [ ] Remarques G074 et diagnostic de sortie tronquée G075 conservés pour suivi.
 
 - [x] G075 : 32 contrôles du paquet publié reproduits, adaptation environnement
@@ -867,3 +868,19 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
   libellés fixes et identifiants bornés, journal JSON inchangé.
 - [x] Huit tests, dont vraie coupure synthétique après reçu durable : inspection
   sans source, socket, processus, écriture ou modification du journal.
+
+
+## C-059 — EOF des en-têtes HTTP locaux (09/10/2026)
+
+- [x] Gestionnaire HTTP par opener, sans état global : fin des en-têtes exigée,
+  parsing/bornes stdlib conservés, flux d'origine rendu pour la lecture du corps.
+- [x] Diagnostic INCOMPLETE_HTTP pour les modèles, appels et transferts média ;
+  coupure avant tout octet inchangée, aucune nouvelle tentative.
+- [x] 51 tests ciblés modèles/dialogue/média réussis, dont trois nouveaux tests
+  multi-cas TCP (coupures, réponse intermédiaire 100, corps clos et LF).
+
+- [ ] G085-R5 : création explicite sur base étrangère non vide avec `meta` vide
+  et user_version=1 ajoute les identifiants Core ; contre-exemple transmis à Claude.
+
+- [x] C-059 final : fermeture stdlib sur statut invalide conservée ; 28 tests de
+  frontières et **1 152 tests complets réussis**, zéro ignoré, Memory activée.
