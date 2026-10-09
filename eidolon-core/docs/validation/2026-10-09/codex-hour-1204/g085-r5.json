@@ -1,0 +1,14 @@
+{
+  "status": "FIX_VERIFIED",
+  "source": "C107 / b654a3b",
+  "id": "G085-R5",
+  "synthetic_only": true,
+  "existing_foreign_database_nonempty": true,
+  "explicit_create_accepted": false,
+  "foreign_database_modified": false,
+  "meta_keys_added": [],
+  "tables_after": [
+    "meta",
+    "unrelated"
+  ]
+}
