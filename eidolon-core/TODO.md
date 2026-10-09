@@ -888,3 +888,15 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
 - [x] Archive finale du code `2b24d8cf` : 113 fichiers reproductibles, extraite
   puis installée ; 68 modules identiques, six modes, diagnostics et six inspections
   humaines vérifiés. Moteurs simulés, FFmpeg réel, aucune qualification VM/PC/GPU.
+
+
+## C-060 — Couverture explicite des analyses média (09/10/2026)
+
+- [x] Inspection humaine : image unique ou échantillon vidéo borné, nombre
+  d'images rapporté, limite des 40 premières secondes et audio non analysé.
+- [x] Métadonnées absentes/contradictoires et nombres booléens/hors limites
+  signalés sans affirmation de couverture ; aucun texte non fiable affiché.
+- [x] Huit tests ciblés réussis, cas enrichis ; trois inspections CLI depuis
+  installation distincte, 68 modules identiques et journal/JSON inchangés.
+
+[Preuves C-060](docs/validation/2026-10-09/codex-c060/README.md).

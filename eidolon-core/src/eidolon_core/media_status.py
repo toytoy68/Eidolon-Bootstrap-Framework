@@ -29,6 +29,31 @@ STATES = {
 }
 
 
+def _analysis_coverage(record, key):
+    """Interpret only recognized, consistent scope metadata; never infer duration."""
+    result, backend = record.get("result"), record.get("backend")
+    expected = {"image.analyze": "single_image",
+                "video.analyze": "first_40s_up_to_8_frames_no_audio"}.get(key)
+    lines = [section("Couverture rapportée")]
+    if (expected is None or type(result) is not dict or type(backend) is not dict
+            or backend.get("adapter") != "ollama-vision/1"
+            or result.get("state") != "RESULT_UNVERIFIED"
+            or backend.get("coverage") != expected or result.get("coverage") != expected
+            or result.get("audio_analyzed") is not False
+            or type(result.get("frames_analyzed")) is not int
+            or not 1 <= result["frames_analyzed"] <= (1 if key == "image.analyze" else 8)):
+        lines.append(message("ATTENTION", "Couverture absente, non reconnue ou incohérente ; consulter le journal avant d'interpréter l'analyse."))
+        return lines
+    if key == "video.analyze":
+        lines.extend([message("INFO", "Images analysées selon le journal : " + str(result["frames_analyzed"]) + " (maximum 8)."),
+                      message("ATTENTION", "Échantillon limité aux 40 premières secondes ; ni vidéo entière ni continuité entre les images garanties."),
+                      message("INFO", "Audio non analysé ; aucune transcription sonore.")])
+    else:
+        lines.append(message("INFO", "Une image fournie au modèle ; aucune séquence vidéo ni analyse audio."))
+    lines.append(message("ATTENTION", "Ces métadonnées ne vérifient ni les observations du modèle, ni la durée totale du fichier."))
+    return lines
+
+
 def render_job(record):
     if type(record) is not dict or record.get("schema") != "media-job/1":
         raise MediaError("INVALID_JOB")
@@ -50,6 +75,8 @@ def render_job(record):
              message("INFO", "Opération : " + (key or "opération non reconnue")),
              message("ATTENTION", STATES[state] if state else "état non reconnu ; revue manuelle nécessaire"),
              message("INFO", "Dernière étape enregistrée : " + (PHASES[phase] if phase else "non renseignée ou non reconnue"))]
+    if state == "RESULT_UNVERIFIED":
+        lines.extend(_analysis_coverage(record, key))
     backend = record.get("backend")
     receipt = record.get("result") if state == "QUEUED" else (
         record.get("phase_evidence") if state in {"INTENT", "REVIEW_REQUIRED"} and phase == "QUEUE_ACKNOWLEDGED" else None)

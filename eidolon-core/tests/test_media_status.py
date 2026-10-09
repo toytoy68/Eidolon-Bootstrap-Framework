@@ -55,13 +55,38 @@ class JobStatusTests(unittest.TestCase):
 
     def test_analysis_is_unverified_and_its_model_text_is_not_terminal_output(self):
         record=self.record('RESULT_UNVERIFIED');record.update(agent='video',operation='analyze',phase='ANALYSIS_SUBMITTING')
-        record['result']={'state':'RESULT_UNVERIFIED','text':'\x1b[2J<private model text>','frames_analyzed':8}
+        record['backend']={'adapter':'ollama-vision/1','coverage':'first_40s_up_to_8_frames_no_audio'}
+        record['result']={'state':'RESULT_UNVERIFIED','text':'\x1b[2J<private model text>','frames_analyzed':8,
+                          'coverage':'first_40s_up_to_8_frames_no_audio','audio_analyzed':False}
+        before=copy.deepcopy(record)
         rendered=render_job(record)
         self.assertIn("réponse d'analyse enregistrée ; contenu non vérifié",rendered)
         self.assertNotIn('eidolon-media poll',rendered)
         self.assertNotIn('private model text',rendered)
         self.assertNotIn('\x1b',rendered)
         self.assertIn('aucune collecte ComfyUI',rendered)
+        self.assertIn('selon le journal : 8',rendered)
+        self.assertIn('40 premières secondes',rendered)
+        self.assertIn('Audio non analysé',rendered)
+        self.assertEqual(record,before)
+        image=copy.deepcopy(record);image['agent']='image'
+        image['backend']['coverage']=image['result']['coverage']='single_image'
+        image['result']['frames_analyzed']=1
+        rendered=render_job(image)
+        self.assertIn('Une image fournie au modèle',rendered)
+        self.assertNotIn('40 premières secondes',rendered)
+        for field,value in (('frames_analyzed',True),('frames_analyzed',0),('frames_analyzed',9),
+                            ('frames_analyzed','8'),('audio_analyzed',True),('audio_analyzed',None),
+                            ('coverage','PRIVATE\x1b[2J'),('state','QUEUED')):
+            invalid=copy.deepcopy(record);invalid['result'][field]=value
+            rendered=render_job(invalid)
+            self.assertIn('Couverture absente, non reconnue ou incohérente',rendered)
+            self.assertNotIn('40 premières secondes',rendered)
+            self.assertNotIn('Audio non analysé',rendered)
+            self.assertNotIn('PRIVATE',rendered)
+        for value in (None,{}, {'adapter':'ollama-vision/1','coverage':'single_image'}):
+            invalid=copy.deepcopy(record);invalid['backend']=value
+            self.assertIn('Couverture absente, non reconnue ou incohérente',render_job(invalid))
 
     def test_bad_receipt_backend_or_endpoint_never_suggests_poll(self):
         for key,value in (('result',{}),('result',{'prompt_id':'../bad'}),('backend',None),

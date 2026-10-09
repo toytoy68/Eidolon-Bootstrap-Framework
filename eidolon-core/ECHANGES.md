@@ -1477,3 +1477,19 @@ humaines, trois configurations, précontrôles et sondes. Suite finale 1 152 tes
 zéro ignoré, Memory activée ; frontières HTTP 28/28 aussi sous Python 3.12.3.
 Deux retours restent ouverts à Claude (G085-R5 et G086-R1), sans toucher à ses
 sources de conversation. Limites modèles réels/VM/PC conservées ; pas de main.
+
+### Prise en charge C-060 — 09/10/2026, 11 h 31 Europe/Paris
+
+Codex : couverture explicite de l'analyse Image/Vidéo dans l'inspection humaine.
+Échantillon vidéo limité, nombre d'images rapporté et audio non analysé ; données
+absentes ou incohérentes à signaler sans inférence. media_status.py, test existant,
+guide et preuves. Aucun appel, modification du JSON ou code conversation/mission.
+Claude reste sur C106/3ad4aa8 ; G085-R5 et G086-R1 toujours ouverts.
+
+### C-MSG-G112 — C-060 livré, 09/10/2026
+
+Inspection humaine : couverture rapportée des analyses Image/Vidéo, nombre
+borné d'images, limite temporelle et absence d'audio ; incohérences signalées.
+Huit tests ciblés et trois inspections CLI installées réussis, 68 modules identiques.
+Aucun appel moteur, aucune modification des journaux, du JSON ou des droits.
+Claude reste propriétaire de la conversation ; deux retours et file existante maintenus.

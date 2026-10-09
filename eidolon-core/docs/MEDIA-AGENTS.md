@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-059
+# Agents natifs Image et Vidéo — C-047 à C-060
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -99,6 +99,16 @@ aucune modification du travail. Prompts, chemins, erreurs du moteur et textes
 d'analyse ne sont pas affichés en mode humain ; des libellés fixes empêchent leur
 interprétation comme commandes de terminal. Les identifiants affichés sont bornés.
 Le JSON par défaut reste identique, et contient le journal complet pour la revue.
+
+C-060 : une analyse présente aussi sa **couverture rapportée**. Pour une vidéo,
+le bilan indique le nombre d'images enregistré (1 à 8), la limite aux 40 premières
+secondes et l'absence d'analyse audio. Cela ne garantit ni la couverture intégrale
+d'une vidéo courte, ni la continuité entre les images, ni la durée totale du fichier.
+Une image est présentée comme une image unique. Les champs du plan et du résultat
+doivent être cohérents : sinon, le bilan signale une couverture absente ou
+incohérente sans fabriquer de nombre d'images ou de durée. Ces informations viennent
+du journal ; elles ne valident pas les observations du modèle.
+
 Sortie 0 signifie lecture réussie, même si le travail exige une revue ; sortie 2
 avec erreur sur stderr si le journal ne peut pas être lu. Ce rendu ne donne ni
 permission, ni validation métier, ni état actuel du moteur.
