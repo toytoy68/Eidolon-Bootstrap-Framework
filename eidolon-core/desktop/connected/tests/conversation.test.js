@@ -14,9 +14,10 @@ const KEY = "ecc_" + "A".repeat(43);
 const EXAMPLES = path.resolve(__dirname, "..", "..", "..", "docs", "examples", "conversation");
 const reply = JSON.parse(fs.readFileSync(path.join(EXAMPLES, "03-reply-proposal.json"), "utf8"));
 
-function scripted(answers) {
+function scripted(answers, recent) {
   const calls = [];
   const transport = async (method, p, body, token) => {
+    if (p.endsWith("/recent")) return { status: 200, json: { conversations: recent || [] } };   // G092, not scripted
     calls.push({ method, path: p, body, token });
     const next = answers.shift();
     if (next instanceof Error) throw next;
@@ -134,4 +135,25 @@ test("G091: a partial context is said in words; a complete one says nothing", ()
     "Contexte partiel : 1 extrait(s) de mémoire déjà tronqué(s).");
   assert.equal(C.contextNote({ ...base, memory: "unavailable", memory_items: 0, partial: true }),
     "Contexte partiel : mémoire indisponible.");
+});
+
+test("G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing", async () => {
+  const id = "c-" + "9".repeat(32);
+  const items = [
+    { turn: { client_turn_key: "turn-a", text: "Bonjour" }, reply: { kind: "ANSWER", model_text: "Salut" } },
+    { turn: { client_turn_key: "turn-b", text: "Diagnostique le nas." }, reply },
+    { turn: { client_turn_key: "turn-c", text: "Et après ?" }, reply: null }];
+  const s = scripted([opened, ok({ items, has_more: false, next_after: 3 })],
+    [{ conversation_id: id, turn_count: 3, last_turn_at: "2026-10-09T10:00:00" }]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY);
+  assert.deepEqual(conv.state().recent.map((c) => c.conversation_id), [id]);
+  assert.equal(await conv.resume("c-" + "0".repeat(32)), false);       // not offered: not resumed
+  assert.equal(await conv.resume(id), true);
+  const st = conv.state();
+  assert.deepEqual(st.items.map((i) => i.status), ["received", "received", "pending"]);
+  assert.equal(st.proposal.request, reply.proposal.request);
+  assert.equal(st.submission, null);
+  assert.deepEqual(s.calls.map((c) => c.path.split("/").pop()), ["open", "page"]);   // read only
+  assert.equal(s.calls[1].body.conversation_id, id);
 });

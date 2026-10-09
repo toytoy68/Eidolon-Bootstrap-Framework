@@ -36,6 +36,13 @@
     MODEL_TIMEOUT: "Le modèle n'a pas répondu dans le délai : une réponse tardive est ignorée.",
     MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin."
   };
+  // Submission refusals worth explaining in words (others are shown with their code).
+  var SUBMIT_ERRORS = {
+    PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
+    PROPOSAL_STALE: "Une version plus récente de la proposition existe : relisez-la avant de valider.",
+    PROPOSAL_CHANGED: "La proposition a changé : relisez-la avant de valider.",
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé."
+  };
   var REPLY_KINDS = { ANSWER: "Réponse", CLARIFICATION: "Question en retour", PROPOSAL: "Proposition de mission",
     OUT_OF_SCOPE: "Hors capacités", UNAVAILABLE: "Indisponible" };
 
@@ -82,7 +89,7 @@
     var transport = options.transport, onChange = options.onChange || function () {};
     var token = null, epoch = 0;
     var state = { phase: "closed", error: null, conversationId: null, identity: null, items: [],
-      proposal: null, proposalSha: null, submission: null };
+      proposal: null, proposalSha: null, submission: null, recent: [] };
 
     function emit() { onChange(JSON.parse(JSON.stringify(state))); }
     function errorOf(res) { return res && res.json && typeof res.json.error === "string" ? res.json.error : "NETWORK"; }
@@ -102,7 +109,7 @@
         state.phase = "closed"; state.error = "KEY_FORMAT"; emit(); return false;
       }
       epoch += 1; token = key;
-      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null };
+      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [] };
       emit();
       var r = await call("open", { client_key: randomKey("page") });
       if (r.stale) return false;
@@ -110,13 +117,47 @@
       state.phase = "open";
       state.conversationId = r.json.conversation_id;
       state.identity = { clientId: r.json.client_id, actor: r.json.actor, storeId: r.json.store_id };
+      state.recent = [];
+      emit();
+      var rec = await call("recent", { limit: 5 });
+      if (!rec.stale && rec.ok && Array.isArray(rec.json.conversations)) {
+        state.recent = rec.json.conversations.filter(function (c) { return c.conversation_id !== state.conversationId; });
+        emit();
+      }
+      return true;
+    }
+
+    // G092: resume a previous conversation after a reload. Only reads; nothing is resent. A turn
+    // without a reply becomes "pending": checking it reuses ITS key, so Core replays, never duplicates.
+    async function resume(conversationId) {
+      if (state.phase !== "open" || !state.recent.some(function (c) { return c.conversation_id === conversationId; })) return false;
+      var items = [], after = 0;
+      for (var i = 0; i < 20; i++) {
+        var r = await call("page", { conversation_id: conversationId, after: after, limit: 50 });
+        if (r.stale) return false;
+        if (!r.ok) { state.error = r.code; emit(); return false; }
+        r.json.items.forEach(function (it) {
+          items.push({ key: it.turn.client_turn_key, text: it.turn.text, reply: it.reply, error: null,
+            status: it.reply ? "received" : "pending" });
+        });
+        after = r.json.next_after;
+        if (!r.json.has_more) break;
+      }
+      var last = items.filter(function (it) { return it.reply && it.reply.kind === "PROPOSAL"; }).pop();
+      state.conversationId = conversationId;
+      state.items = items;
+      state.proposal = last ? last.reply.proposal : null;
+      state.proposalSha = last ? last.reply.proposal_sha256 : null;
+      state.submission = null;                            // unknown after a reload: never assumed, never resent
+      state.recent = state.recent.filter(function (c) { return c.conversation_id !== conversationId; });
+      state.resumed = true;
       emit();
       return true;
     }
 
     function close() {
       epoch += 1; token = null;
-      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null };
+      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [] };
       emit();
     }
 
@@ -190,7 +231,7 @@
       return true;
     }
 
-    return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt,
+    return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt, resume: resume,
       state: function () { return JSON.parse(JSON.stringify(state)); } };
   }
 
@@ -232,6 +273,17 @@
       st.error === "READ_TOKEN_NOT_ALLOWED" ? "Le jeton de lecture ne permet pas de converser : utilisez une clé de conversation." :
       st.error ? "Conversation refusée ou indisponible (" + st.error + ")." :
       "Sans clé de conversation, cette page reste en lecture seule.";
+    var recentBox = doc.getElementById("conv-recent"), recentList = doc.getElementById("conv-recent-list");
+    recentList.textContent = "";
+    var recent = closed ? [] : (st.recent || []);
+    recentBox.hidden = recent.length === 0;
+    recent.forEach(function (c) {
+      var li = el(doc, "li");
+      var b = el(doc, "button", "media-secondary", "Reprendre (" + c.turn_count + " échange" + (c.turn_count > 1 ? "s" : "") +
+        ", dernier le " + String(c.last_turn_at || "").slice(0, 16).replace("T", " à ") + " UTC)");
+      b.type = "button"; b.dataset.resume = c.conversation_id;
+      li.appendChild(b); recentList.appendChild(li);
+    });
     var log = doc.getElementById("conv-log");
     log.textContent = "";
     st.items.forEach(function (item) {
@@ -274,7 +326,7 @@
       var sstate = doc.getElementById("conv-submission-state");
       sstate.textContent = !s ? LABELS.draft : s.status === "sent" ? "Validation envoyée…" :
         s.status === "uncertain" ? LABELS.uncertain + (s.error ? " (" + s.error + ")" : "") :
-        s.status === "refused" ? "Validation refusée (" + s.error + ")." : "Validation enregistrée.";
+        s.status === "refused" ? (SUBMIT_ERRORS[s.error] || "Validation refusée (" + s.error + ").") : "Validation enregistrée.";
       doc.getElementById("conv-check").hidden = !(s && s.status === "uncertain");
       var mv = missionView(s, missionStatus);
       var track = doc.getElementById("conv-mission");
@@ -314,6 +366,10 @@
       conv.submit(doc.getElementById("conv-reason").value);
     });
     doc.getElementById("conv-check").addEventListener("click", function () { conv.checkReceipt(); });
+    doc.getElementById("conv-recent-list").addEventListener("click", function (event) {
+      var b = event.target.closest("button[data-resume]");
+      if (b) conv.resume(b.dataset.resume).then(function (ok) { if (ok) doc.getElementById("conv-text").focus(); });
+    });
     doc.getElementById("conv-follow").addEventListener("click", function (event) {
       var id = event.currentTarget.dataset.missionId;
       if (MISSION.test(id)) deps.follow(id);

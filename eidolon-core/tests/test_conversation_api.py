@@ -102,6 +102,19 @@ class FlowTests(Base):
         self.assertEqual([i["reply"]["kind"] for i in page["items"]], ["PROPOSAL"])
 
 
+class RecentTests(Base):
+    def test_recent_lists_only_this_clients_non_empty_conversations_newest_first(self):
+        first, second, empty = self.conversation(), self.conversation(), self.conversation()
+        self.proposal_for(first, "Bonjour")
+        self.proposal_for(second, "Bonjour")
+        other = self.conversation(self.other["token"])
+        self.proposal_for(other, "Bonjour", token=self.other["token"])
+        status, value = self.post("recent", {})
+        self.assertEqual([c["conversation_id"] for c in value["conversations"]], [second, first])
+        self.assertEqual(self.post("recent", {"limit": 0})[0], 400)
+        self.assertEqual(self.post("recent", {}, self.read_token)[0], 403)
+
+
 class AuthorizationTests(Base):
     def test_the_read_token_never_writes(self):
         cid = self.conversation()

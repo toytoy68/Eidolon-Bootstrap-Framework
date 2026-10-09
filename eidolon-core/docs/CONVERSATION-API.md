@@ -34,6 +34,7 @@ S'appuie sur G084 (contrat), G085 (dépôt) et G086 (dialogue).
 | Route | Corps | Effet |
 | --- | --- | --- |
 | `open` | `client_key` | ouvre la conversation (même clé, même conversation) |
+| `recent` | `limit` (1 à 50, 10 par défaut) | conversations **non vides de ce client**, la plus récente d'abord, pour reprendre après un rechargement (G092) ; lecture seule |
 | `turn` | `conversation_id`, `client_turn_key`, `text` | un tour, puis la réponse décidée par Core (G086) ; un tour rejoué n'appelle pas le modèle |
 | `page` | `conversation_id`, `after`, `limit` | lecture paginée, reprise après une reconnexion |
 | `submit` | soumission `eidolon-proposal-submission/1` complète | **crée** la mission de la proposition figée, puis rend un reçu ; elle **ne la lance pas** (`execution: NOT_STARTED_BY_SUBMISSION`) |

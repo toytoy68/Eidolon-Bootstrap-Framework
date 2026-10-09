@@ -370,6 +370,18 @@ class ConversationStore:
                              (conversation_id,)).fetchone()
         return row[0] if row else None
 
+    def recent(self, client_id, *, limit=10):
+        """This client's non-empty conversations, newest first, to resume after a reload (G092)."""
+        if type(limit) is not int or not 1 <= limit <= 50:
+            raise ConversationError("INVALID_CONVERSATION: invalid limit")
+        with self._db() as db:
+            rows = db.execute("""SELECT c.conversation_id, c.created_at, c.turn_count, max(t.received_at)
+                                 FROM conversations c JOIN turns t ON t.conversation_id = c.conversation_id
+                                 WHERE c.client_id=? GROUP BY c.conversation_id
+                                 ORDER BY max(t.received_at) DESC, c.conversation_id LIMIT ?""",
+                              (client_id, limit)).fetchall()
+        return [{"conversation_id": r[0], "created_at": r[1], "turn_count": r[2], "last_turn_at": r[3]} for r in rows]
+
     def submitted_by(self, client_id, mission_id):
         """True only for a mission created from one of this client's submissions."""
         with self._db() as db:

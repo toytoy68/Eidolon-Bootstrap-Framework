@@ -56,6 +56,10 @@
         <p id="conv-key-help" class="help">Distincte du jeton de lecture, délivrée par l'opérateur. Gardée en mémoire de cette page uniquement.</p>
       </form>
       <div id="conv-body" hidden>
+        <div id="conv-recent" class="conv-recent" hidden>
+          <p class="help">Reprendre une conversation précédente (rien n'est renvoyé automatiquement) :</p>
+          <ul id="conv-recent-list" class="conv-recent-list"></ul>
+        </div>
         <ol id="conv-log" class="conv-log"></ol>
         <form id="conv-form" class="conv-form" autocomplete="off" novalidate>
           <label for="conv-text">Votre message</label>

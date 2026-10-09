@@ -34,7 +34,7 @@ PREFIX = "/v1/conversations/"
 # An 8000-character turn in ANY valid JSON encoding: \uXXXX escapes of surrogate pairs take 12 bytes
 # per character (96 000), plus the envelope.
 MAX_BODY = 100_000
-ROUTES = {"open", "turn", "page", "submit", "receipt", "resolve", "cancel"}
+ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -176,6 +176,11 @@ class ConversationAPI:
         # The client needs its own identity to build a submission; it is the credential's, never chosen.
         return {"protocol": PROTOCOL, **opened, "client_id": client["client_id"], "actor": client["actor"],
                 "store_id": self.conversations.store_id}
+
+    def _recent(self, client, data):
+        _fields(data, set(), {"limit"})
+        return {"protocol": PROTOCOL, "conversations": self.conversations.recent(client["client_id"],
+                                                                                 limit=data.get("limit", 10))}
 
     def _turn(self, client, data):
         _fields(data, {"conversation_id", "client_turn_key", "text"})
