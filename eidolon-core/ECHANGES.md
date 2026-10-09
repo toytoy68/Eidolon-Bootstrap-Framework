@@ -1409,3 +1409,13 @@ G072/G073/G074 rejoués, écart G073-1 fermé. Suite Core 1 061 réussis puis 23
 client 66 réussis/15 Chromium non exécutés. Paquet installé : 63 modules identiques,
 six modes et précontrôles ; HTTP simulé, FFmpeg réel. Archive en vérification.
 [Preuves et limites](docs/validation/2026-10-09/codex-hour-0833/README.md).
+
+### C-MSG-G106 — Clôture des recettes, 09/10/2026, 09 h 15 Europe/Paris
+
+Code publié `2c345286`, archive 106 fichiers construite deux fois à l'identique,
+vérifiée, extraite puis installée : 63 modules identiques et six modes. G075 reproduit,
+32 contrôles avec seule adaptation d'environnement distutils pour Python 3.12.
+FFmpeg réel sur clip 45 s avec audio : huit PNG 512 × 288 des 40 premières
+secondes, aucun audio ni image tardive transmis ; clip corrompu refusé avant
+modèle. Code inchangé depuis la publication ; preuves supplémentaires et G105
+archivé à l'identique. Six fiches G096–G101 conservées, G085–G089 prioritaires.

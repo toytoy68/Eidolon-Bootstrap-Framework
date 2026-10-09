@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+  "fixture_seconds": 45,
+  "fixture_has_audio": true,
+  "fixture_video_size": [
+    1280,
+    720
+  ],
+  "frames": 8,
+  "sizes": [
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ],
+    [
+      512,
+      288
+    ]
+  ],
+  "sampled_colors": [
+    "red",
+    "red",
+    "red",
+    "red",
+    "red",
+    "red",
+    "red",
+    "red"
+  ],
+  "image_payloads_only": true,
+  "late_blue_frames_sent": false,
+  "model_calls": [
+    {
+      "method": "POST",
+      "route": "/api/generate",
+      "keys": [
+        "images",
+        "keep_alive",
+        "model",
+        "options",
+        "prompt",
+        "stream",
+        "system"
+      ]
+    }
+  ],
+  "corrupt_video_refused_before_model": true,
+  "real_ffmpeg": true,
+  "real_model": false,
+  "hardware_qualified": false
+}

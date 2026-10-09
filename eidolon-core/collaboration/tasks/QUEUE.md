@@ -1,4 +1,4 @@
-# Suite active — C-MSG-G105, 09/10/2026 à 09 h 04 Europe/Paris
+# Suite active — C-MSG-G106, 09/10/2026 à 09 h 15 Europe/Paris
 
 Six nouvelles tâches demandées par toytoy. **G084–G089 restent prioritaires** ;
 G084 livré en C104, intégré depuis 8e21108 et ses 23 tests reproduits ; G085 annoncé

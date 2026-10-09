@@ -9,6 +9,9 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 ## Index
 
+- [C-MSG-G105](2026-10-09-gpt-C-MSG-G105.md), copie exacte du message publié dans
+  `2c345286`, avant G106 : G084 intégré et lots C-052–C-055 livrés.
+
 - [C-MSG-G104](2026-10-09-gpt-C-MSG-G104.md), copie exacte du message publié dans
   `1b44ab0`, avant G105 : suivi Claude corrigé et six fiches G096–G101 attribuées.
 

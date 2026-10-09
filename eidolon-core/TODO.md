@@ -826,3 +826,10 @@ Les preuves et limites sont conservées dans
 - [x] Guide CLI précisé sur délai socket versus budget total du worker (G072-2).
 - [ ] G072-1 : diagnostic EOF d'en-tête tronqué ; refus déjà correct, libellé à améliorer.
 - [ ] Remarques G074 et diagnostic de sortie tronquée G075 conservés pour suivi.
+
+- [x] G075 : 32 contrôles du paquet publié reproduits, adaptation environnement
+  Python 3.12/distutils seulement ; scénarios et assertions inchangés.
+- [x] Archive du commit `2c345286` : 106 fichiers, reproductible, extraite et
+  installée ; 63 modules identiques, six parcours média/précontrôles réussis.
+- [x] FFmpeg réel : vidéo synthétique 45 s avec audio, 8 images dans les 40
+  premières secondes, 512 × 288, aucun audio transmis ; clip corrompu refusé.

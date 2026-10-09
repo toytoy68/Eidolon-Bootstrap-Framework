@@ -3,6 +3,10 @@
 Auteur : Codex/GPT. Demande toytoy : six nouvelles tâches pour Claude et une
 heure de poursuite du dépôt. Branche : `feat/eidolon-core-v0.1`.
 
+Code publié : [`2c345286fab5578a3cecb7c452128af186d98d9d`](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/commit/2c345286fab5578a3cecb7c452128af186d98d9d),
+arbre `eeb6555e26ef875b7697cace0793c86b8b9bfa21`. Les compléments ci-dessous
+ajoutent des preuves et du suivi, sans modifier le code exécuté.
+
 ## Coordination et livraisons reçues
 
 Les six fiches **G096–G101** sont publiées dans
@@ -59,6 +63,11 @@ son échange avec Claude est intégrée ; les huit autres entrées ICO sont inch
 | G072 / G073 / G074 | Bancs Claude rejoués sans échec ; [G072](claude-g072-replayed.txt), [G073 avant correction](claude-g073-replayed.txt), [G073 après correction](claude-g073-after-fix.txt), [G074](claude-g074-replayed.txt) |
 | Sources testées | Empreintes de 63 modules et des tests concernés ; [manifest](source-hashes.json) |
 | Installation finale, après G084/C-055 | 63 modules identiques et six modes réussis ; [installation](install-final.txt), [recette](installed-final-result.json) |
+| Archive depuis le commit publié | 106 fichiers vérifiés, deux constructions identiques ; [construction](bundle-build.json), [vérification](bundle-verify.json), [reproductibilité](bundle-reproducibility.json) |
+| Installation depuis l'archive | 63 modules identiques, six modes et précontrôles ; [installation](bundle-install.txt), [recette](bundle-installed-result.json) |
+| Tests de l'archive | 10 réussis ; [journal](bundle-tests.txt) |
+| G075 sur paquet publié | 32 contrôles réussis, adaptation Python 3.12 décrite ci-dessous ; [journal](claude-g075-python312.txt) |
+| FFmpeg réel, clip de 45 s avec audio | 8 PNG de 512 × 288, aucune image après 40 s ni audio transmis, vidéo corrompue refusée avant modèle ; [mesures](video-sampling.json) |
 
 Les 15 tests Chromium sont **non exécutés** : bibliothèque Playwright disponible,
 exécutable Chromium absent. Le contrôle statique des boutons ne remplace pas leur
@@ -112,6 +121,35 @@ Setuptools déjà présent et `/usr/bin/ffmpeg` nécessaires à cette recette. A
 téléchargement de moteur/poids. Une réexécution de la suite complète après G084
 inclura ses 23 tests supplémentaires ; les chiffres ci-dessus décrivent les
 exécutions effectivement conservées.
+
+Archive de développement de **395 056 octets**, SHA-256
+`52919c2fae2f6eabc993a8e6e16b59fcd2207e6208a153af56d3b777d11fb5f1`.
+Elle contient maintenant le logo facultatif, le précontrôle média et le contrat
+conversation G084. Construire depuis le commit complet ci-dessus avec
+`python tools/build_beta_bundle.py --commit COMMIT --output /chemin/neuf.tar.gz`,
+puis `--verify /chemin/neuf.tar.gz`. Les empreintes vérifient la cohérence de
+l'archive, pas l'authenticité de son auteur. Les archives temporaires du banc ne
+sont pas une publication de release.
+
+**G075** : le script original de Claude fixe `SETUPTOOLS_USE_DISTUTILS=stdlib`,
+adapté à son Python 3.11. Ici Python 3.12 a supprimé ce module standard : sa
+construction initiale échoue avant installation ([journal](claude-g075-installed.txt)).
+La [copie adaptée](recipe_g075_python312.py) change uniquement ce choix en `local`
+(copie fournie par setuptools), avec un commentaire d'attribution. Tous les
+scénarios et assertions sont conservés ; le script original reste inchangé.
+32 contrôles passent depuis une archive du commit publié : deux planificateurs
+simulés, missions, absence de clé, configuration modifiée, limites du catalogue,
+sortie tronquée, sondes et interruption réelle d'un processus.
+
+**Échantillonnage vidéo** : la [recette complémentaire](probe_video_sampling.py)
+tourne avec le paquet installé depuis l'archive, sans `PYTHONPATH`. FFmpeg 6.1.1
+construit 40 secondes rouges puis 5 bleues en 1280 × 720, avec une piste audio.
+Les huit images transmises au double de modèle sont rouges, PNG, 512 × 288 ;
+aucune piste audio n'est envoyée. Une seconde vidéo à en-tête MP4 mais corrompue
+produit `REVIEW_REQUIRED / VIDEO_DECODE_FAILED`, avec zéro appel modèle
+supplémentaire. Ce banc qualifie ces limites de décodage sur ce corpus et cette
+version, pas la compréhension temporelle, un modèle réel ou tous les codecs.
+Il nécessite aussi `/usr/bin/ffprobe` et Pillow, utilisés par la recette seulement.
 
 ## Limites et suites
 

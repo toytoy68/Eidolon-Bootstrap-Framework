@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/claude-g075/recipe_g075.py", line 309, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/claude-g075/recipe_g075.py", line 121, in main
+    run([sys.executable, "-m", "pip", "wheel", "--no-deps", "--no-build-isolation", "--no-index",
+  File "/workspace/scratch/16ec975b83e7/core-work/eidolon-core/docs/validation/2026-10-08/claude-g075/recipe_g075.py", line 112, in run
+    raise RuntimeError(f"{' '.join(map(str, args[1:5]))} → {p.returncode}: {p.stderr[-300:]}")
+RuntimeError: -m pip wheel --no-deps → 2: ^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py", line 402, in _call_hook
+    raise BackendUnavailable(
+pip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'
+
