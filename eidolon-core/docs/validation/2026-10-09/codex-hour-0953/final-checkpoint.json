@@ -1,0 +1,20 @@
+{
+  "code_commit": "2b24d8cf50b8742dee44b05fe68fa6a424db1de4",
+  "archive_sha256": "03d412e4230f3d22f590d9d18fe4373020e3e364058e1e37b2af55ccacf2eaa3",
+  "archive_files": 113,
+  "installed_modules": 68,
+  "full_python_tests": 1152,
+  "skipped": 0,
+  "media_modes": 6,
+  "offline_human_job_inspections": 6,
+  "real_ffmpeg": true,
+  "real_model": false,
+  "vm_tested": false,
+  "windows_tested": false,
+  "claude_base": "3ad4aa889e96a5ae8a796f106162b516db34e893",
+  "claude_open_findings": [
+    "G085-R5",
+    "G086-R1"
+  ],
+  "memory_commit": "a2a1910d8e93bde2ef6a32280a7abf5324854510"
+}

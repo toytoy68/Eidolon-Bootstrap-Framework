@@ -884,3 +884,7 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
 
 - [x] C-059 final : fermeture stdlib sur statut invalide conservée ; 28 tests de
   frontières et **1 152 tests complets réussis**, zéro ignoré, Memory activée.
+
+- [x] Archive finale du code `2b24d8cf` : 113 fichiers reproductibles, extraite
+  puis installée ; 68 modules identiques, six modes, diagnostics et six inspections
+  humaines vérifiés. Moteurs simulés, FFmpeg réel, aucune qualification VM/PC/GPU.

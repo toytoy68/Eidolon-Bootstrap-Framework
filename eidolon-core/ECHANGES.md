@@ -1468,3 +1468,12 @@ Memory activée. Corpus G072 indépendant : 51 attentes réussies, fichier Claud
 inchangé, attente EOF seule adaptée. G085-R5 reproduit sur une base étrangère
 avec meta vide ; signalé à Claude, avec G086-R1 déjà ouvert. Aucune édition de
 son code conversation/mission. Paquet final en vérification après publication.
+
+### C-MSG-G111 — Recette finale, 09/10/2026, 10 h 47 Europe/Paris
+
+Code 2b24d8cf publié : C-056/C-058/C-059. Archive 113 fichiers reproductible,
+extraite/installée : 68 modules identiques, six modes média et six inspections
+humaines, trois configurations, précontrôles et sondes. Suite finale 1 152 tests,
+zéro ignoré, Memory activée ; frontières HTTP 28/28 aussi sous Python 3.12.3.
+Deux retours restent ouverts à Claude (G085-R5 et G086-R1), sans toucher à ses
+sources de conversation. Limites modèles réels/VM/PC conservées ; pas de main.

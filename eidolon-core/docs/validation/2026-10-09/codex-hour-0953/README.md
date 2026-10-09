@@ -157,3 +157,39 @@ Après correction du chemin de fermeture : `http-c059-boundaries.txt` donne
 Le corpus G072 de 51 attentes ci-dessus précède cette correction de fermeture ;
 la suite finale couvre les statuts invalides qui l'ont motivée.
 Les empreintes du code final sont conservées dans `source-manifest-final.json`.
+
+## Paquet final C-056/C-058/C-059 — 2b24d8cf
+
+Code publié : `2b24d8cf50b8742dee44b05fe68fa6a424db1de4`.
+Archive de développement : **113 fichiers, 416 469 octets**, SHA-256
+`03d412e4230f3d22f590d9d18fe4373020e3e364058e1e37b2af55ccacf2eaa3`.
+`final-bundle-build*.json`, `final-bundle-reproducibility.json` et
+`final-bundle-verify.json` prouvent les deux constructions identiques et la
+cohérence du manifeste. Extraction neuve puis installation distincte depuis
+l'archive (`final-bundle-install.txt`), sans index réseau ni dépendance téléchargée.
+
+`installed_check_final.py` / `final-bundle-installed-result.json` : **68 modules
+installés identiques**, six parcours create/edit/analyze Image/Vidéo, trois
+contrôles de configuration, six précontrôles hors ligne, six sondes de métadonnées,
+six inspections humaines des journaux. Les inspections ne changent aucun octet
+ni le nombre d'appels moteur ; les textes de demande ne sont pas imprimés.
+Deux uploads comparés à leur source, quatre soumissions, deux analyses, quatre
+exports ; les doublons sont refusés sans nouvelle requête. FFmpeg réel, moteurs
+HTTP simulés, médias synthétiques ; aucun modèle/GPU réel ou VM/PC qualifié.
+
+Le manifeste final de 79 fichiers est inchangé après validation. Les trois
+modules de conversation Claude sont identiques à C106 ; Memory Engine reste
+propre à `a2a1910d8e93bde2ef6a32280a7abf5324854510`. Les fichiers de bilan ajoutés
+après publication ne changent pas le code exécuté de l'archive.
+
+Les deux retours encore ouverts sont **G085-R5** (base étrangère avec meta vide)
+et **G086-R1** (sources de mémoire retirée). Ils sont affectés à Claude avec leurs
+reproducteurs ; ni fermeture présumée ni nouvelle session présumée. Les six fiches
+G096–G101 restent celles de la précédente affectation. Aucun main ou déploiement.
+
+
+Vérification complémentaire de compatibilité du nouveau gestionnaire avec une
+autre bibliothèque standard disponible : Python système **3.12.3**, 28 tests
+HTTP/frontières réussis (`http-system-python-3123.txt`). La suite complète et
+l'installation finale utilisent **3.12.14**. Python 3.11 et 3.13 non disponibles
+ici et non déclarés testés. Aucun code modifié après la validation finale.

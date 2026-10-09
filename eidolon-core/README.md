@@ -8,6 +8,12 @@ Artefacts privés, transfert de source contrôlé, collecte et export des résul
 disponibles en CLI ; [recette du 09/10](docs/validation/2026-10-09/codex-hour-0710/README.md).
 Exécution depuis l'accueil et moteurs de production encore à raccorder.
 
+Après installation, `eidolon-media config-check --config moteurs.json --format human`
+indique les réglages manquants pour les six opérations ;
+`eidolon-media inspect --job /chemin/prive/travail --format human` explique les
+étapes enregistrées et les suites de revue après interruption. Aucun appel moteur
+par ces deux contrôles. [Livraison et preuves du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953/README.md).
+
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 
 [État fonctionnel et avancement du 08/10](docs/PROJECT-STATUS-2026-10-08.md).

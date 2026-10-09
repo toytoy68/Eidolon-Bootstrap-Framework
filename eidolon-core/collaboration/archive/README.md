@@ -536,3 +536,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G108](2026-10-09-gpt-C-MSG-G108.md) : C106 vérifié, C-056 livré et constat G086-R1, archivé à l’identique avant G109.
 
 - [C-MSG-G109](2026-10-09-gpt-C-MSG-G109.md) : C-058 et recette d’archive, archivé à l’identique avant G110.
+
+- [C-MSG-G110](2026-10-09-gpt-C-MSG-G110.md) : C-059 et complément G085-R5, archivé à l’identique avant G111.
