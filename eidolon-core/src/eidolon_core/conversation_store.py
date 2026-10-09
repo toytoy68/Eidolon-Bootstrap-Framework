@@ -64,12 +64,17 @@ def _key(value, name):
 
 
 class ConversationStore:
-    def __init__(self, store, *, create=False, migrate=False, checkpoint=None):
-        """create=True creates a missing store; otherwise an existing one is reopened, never created."""
+    def __init__(self, store, *, create=False, migrate=False, checkpoint=None, before_migration=None):
+        """create=True creates a missing store; otherwise an existing one is reopened, never created.
+
+        before_migration(db), if given, runs inside the FIRST migration transaction, under the write lock
+        (G099: the verified backup must still match the database being migrated).
+        """
         self.store = store
         self.directory = Path(store.directory) / "conversations"
         self.path = self.directory / "conversations.sqlite3"
         self.checkpoint = checkpoint or (lambda name: None)   # fault injection in tests only
+        self.before_migration = before_migration
         self._identity = None
         with store.connection() as db:
             row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
@@ -178,6 +183,7 @@ class ConversationStore:
 
     def _migrate(self, db):
         """Explicit migration to the current version, one audited step per version."""
+        first = True
         while True:
             version = db.execute("PRAGMA user_version").fetchone()[0]
             if version == VERSION:
@@ -191,6 +197,9 @@ class ConversationStore:
                     raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: schema and version disagree")
                 if meta.get("store_id") != self.store_id:
                     raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
+                if first and self.before_migration is not None:
+                    self.before_migration(db)
+                first = False
                 self.checkpoint("MIGRATION_STEP_%d" % version)        # fault injection in tests only
                 db.execute(MIGRATIONS[version])
                 db.execute("UPDATE meta SET value=? WHERE key='schema'", (SCHEMAS[version + 1],))

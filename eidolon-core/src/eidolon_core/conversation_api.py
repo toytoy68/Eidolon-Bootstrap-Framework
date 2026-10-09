@@ -18,6 +18,7 @@ import argparse
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+from pathlib import Path
 import re
 import sqlite3
 import sys
@@ -26,7 +27,7 @@ from . import conversation as cv
 from .client_credentials import ClientCredentials, CredentialError
 from .commands import CancelCommands
 from .contracts import ContractError
-from . import conversation_store
+from . import conversation_storage
 from .conversation_store import ConversationStore
 from .dialogue import Dialogue
 
@@ -287,7 +288,11 @@ def main(argv=None):
     pair.add_argument("--actor", required=True)
     revoke = sub.add_parser("revoke")
     revoke.add_argument("--client-id", required=True)
-    sub.add_parser("migrate", help="Migration explicite du dépôt des conversations vers la version courante")
+    migrate = sub.add_parser("migrate", help="Sauvegarde vérifiée puis migration explicite vers la version courante")
+    migrate.add_argument("--backup", required=True, help="nouveau fichier de sauvegarde (jamais écrasé)")
+    sub.add_parser("inspect-store", help="Inspection hors ligne en lecture seule ; ne migre jamais")
+    save = sub.add_parser("backup", help="Sauvegarde vérifiable du dépôt des conversations")
+    save.add_argument("--output", required=True)
     profile = sub.add_parser("profile", help="Choix explicite du profil de dialogue (aucun repli automatique)")
     profile.add_argument("action", choices=("select", "show"))
     profile.add_argument("--name")
@@ -300,13 +305,21 @@ def main(argv=None):
     attach.add_argument("--reference", required=True, help="fichier JSON media-artifact-ref/1")
     args = parser.parse_args(argv)
     store = Store(args.state)
+    database = Path(store.directory) / "conversations" / "conversations.sqlite3"
     try:
         if args.command == "pair":
             ConversationStore(store, create=True)
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
         elif args.command == "migrate":
-            ConversationStore(store, migrate=True)
-            print(json.dumps({"status": "MIGRATED", "schema": conversation_store.SCHEMA}))
+            print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup)))
+        elif args.command == "inspect-store":
+            report = conversation_storage.inspect(database)
+            print(json.dumps(report))
+            return 0 if report["integrity"] == "ok" and report["state"] == "CURRENT" else 3
+        elif args.command == "backup":
+            saved = conversation_storage.backup(database, args.output)
+            print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
+                                                           "bytes", "rows")}))
         elif args.command == "profile":
             print(json.dumps(_profile(store, args)))
         elif args.command == "attach":

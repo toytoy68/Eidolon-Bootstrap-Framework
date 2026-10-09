@@ -66,13 +66,57 @@ défendent pas contre un processus hostile qui tourne sous le même utilisateur.
   avec `MODEL_ATTEMPT_INTERRUPTED`, et l'utilisateur renvoie un nouveau
   message s'il le souhaite.
 - **Migration explicite** :
-  `python -m eidolon_core.conversation_api --state <état> migrate`, ou
+  `python -m eidolon_core.conversation_api --state <état> migrate --backup <nouveau fichier>`
+  (sauvegarde vérifiée d'abord, voir G099 ci-dessous), ou, dans le code,
   `ConversationStore(store, migrate=True)`. Elle avance d'une version à la
   fois (v1 → v2 → v3), **une transaction par étape**, sur le même Store, et ne
   réécrit rien d'autre. Une migration interrompue laisse une version
   intermédiaire valide, que la même commande reprend. Sans migration, un
   dépôt ancien est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être
   modifié** ; une version future est refusée (`CONVERSATION_STORE_UNAVAILABLE`).
+
+## Évolution du stockage : inspection, sauvegarde, migration, retour arrière (G099)
+
+Code : [conversation_storage.py](../src/eidolon_core/conversation_storage.py).
+Tests : [test_conversation_storage.py](../tests/test_conversation_storage.py) (10).
+
+| Commande (`python -m eidolon_core.conversation_api --state <état> …`) | Effet |
+| --- | --- |
+| `inspect-store` | rapport hors ligne en **lecture seule** (SQLite `mode=ro`) : version, état, intégrité, nombre de lignes, empreinte logique. Ne migre jamais ; code 3 si la base n'est pas à jour |
+| `backup --output <fichier>` | copie cohérente (sauvegarde en ligne SQLite) vers un **nouveau** fichier 0600, jamais écrasé, puis vérifiée : intégrité, même version, même dépôt, même empreinte logique |
+| `migrate --backup <fichier>` | sauvegarde vérifiée, **puis** migration par étapes ; la sauvegarde est obligatoire |
+
+États rapportés : `CURRENT`, `MIGRATION_REQUIRED` (v1 ou v2), `FUTURE_VERSION`
+(refusée partout, rien n'est écrit), `UNKNOWN`.
+
+Garanties testées :
+
+- lire n'est jamais migrer : l'inspection et l'ouverture sans `migrate`
+  laissent le fichier identique octet pour octet ;
+- identifiants, ordre et références conservés : les lignes des tables
+  `conversations`, `turns`, `replies`, `proposals` et `submissions` sont
+  identiques avant et après ;
+- aucune mission rejouée : la base des missions est identique octet pour
+  octet ;
+- la migration ne commence que si la base contient **encore** exactement le
+  contenu sauvegardé, vérifié sous le verrou d'écriture
+  (`BACKUP_STALE` sinon) ;
+- coupure entre deux étapes : version intermédiaire valide, reprise par la
+  même commande ;
+- erreur disque pendant une étape : l'étape est annulée ;
+- échec de la sauvegarde (disque plein simulé, dossier absent, fichier déjà
+  présent) : rien n'est migré, aucun fichier partiel ne reste ;
+- sauvegarde endommagée : détectée par `verify_backup`.
+
+**Retour arrière** : arrêter le serveur, puis remettre le fichier de
+sauvegarde à la place de `<état>/conversations/conversations.sqlite3` (droits
+0600). Les conversations écrites **après** la sauvegarde sont perdues. Il n'y
+a pas de migration descendante : un ancien code refuse une base plus récente.
+
+**Limites** : arrêter le serveur avant de migrer (un serveur ancien encore
+ouvert est détecté seulement s'il écrit après la sauvegarde) ; la sauvegarde
+n'est ni chiffrée ni signée, son empreinte prouve l'intégrité, pas
+l'authenticité ; aucun test sur un vrai disque plein.
 
 ## Schéma v3 : pièces jointes liées à leur conversation (G097)
 
