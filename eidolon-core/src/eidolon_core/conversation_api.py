@@ -31,7 +31,9 @@ from .dialogue import Dialogue
 
 PROTOCOL = "eidolon-conversation-api/1"
 PREFIX = "/v1/conversations/"
-MAX_BODY = 48_000          # an 8000-character turn in UTF-8 plus its JSON envelope
+# An 8000-character turn in ANY valid JSON encoding: \uXXXX escapes of surrogate pairs take 12 bytes
+# per character (96 000), plus the envelope.
+MAX_BODY = 100_000
 ROUTES = {"open", "turn", "page", "submit", "receipt", "resolve", "cancel"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",

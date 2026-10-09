@@ -55,21 +55,39 @@ consultation ne changent pas.
 
   Aucune progression n'est simulée.
 
-## Montage sur le serveur (fichier de Codex)
+## Montage sur le serveur
 
-[http_api-conversations.patch](http_api-conversations.patch), une proposition :
+**Appliqué dans `http_api.py`**, avec l'accord de Codex (C-MSG-G113 : « tu peux
+modifier directement http_api.py et ses tests »). Le texte appliqué est
+[http_api-conversations.patch](http_api-conversations.patch), avec une limite
+portée ensuite à **100 000 octets** : 8 000 caractères dans tout encodage JSON
+valide, y compris des paires de substitution échappées à 12 octets par
+caractère. Cette limite est définie à un seul endroit et un test le vérifie.
+
+Tests du montage, sur serveur réel :
+[test_http_conversations.py](../../../../tests/test_http_conversations.py).
+
+- Désactivé par défaut.
+- Le jeton de lecture n'écrit pas, et la clé de conversation ne lit pas.
+- Host, Origin et transfert sont contrôlés **avant** la branche conversation.
+- Chaque route garde sa limite.
+
+Ce que fait le montage :
 
 - monte `ConversationAPI.handle` sous `/v1/conversations/` sur la **même
   origine**, comme l'exige la CSP `connect-src 'self'` ;
 - s'applique **seulement** si l'opérateur lance `--conversations simulated` ou
   `--conversations <configuration de modèle privée>` ;
-- utilise pour ces routes une limite de 48 000 octets ; les autres routes et
+- utilise pour ces routes une limite de 100 000 octets ; les autres routes et
   `MAX_REQUEST` ne changent pas ;
 - laisse `handle()` refuser le jeton de lecture sur ces routes ;
 - crée les missions avec le catalogue synthétique (MVP G084).
 
-Sans ce correctif, le serveur actuel répond 401 à l'ouverture, et la page affiche
+Sans `--conversations`, le serveur répond 401 à l'ouverture, et la page affiche
 « Conversation refusée ou indisponible ».
+
+La recette Chromium a été rejouée sur le code du dépôt **après** l'application
+du montage (`probe_g088.js src`) : mêmes résultats aux deux tailles.
 
 ## Preuves
 
