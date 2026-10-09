@@ -1,0 +1,9 @@
+{
+ "output": "<scratchpad>/g095/bundle.tar.gz",
+ "sha256": "f0fd2fa42847b1636966de1ba6552d9dfc753c7dd251950839dff1310b39ce5a",
+ "bytes": 456425,
+ "files": 127,
+ "commit": "27510e8a5dbc0d706f09e878feaba04dc1c8411a",
+ "root": "eidolon-beta-27510e8a5dbc",
+ "status": "OK"
+}
