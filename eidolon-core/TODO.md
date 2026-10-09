@@ -768,10 +768,31 @@ Décision directe toytoy : créer, modifier ET analyser depuis l'accueil.
 - [x] Intention durable avant appel, retour incertain sans renvoi automatique.
 - [x] Installation isolée et recette CLI sur API loopback simulées.
 - [ ] Moteurs/poids/workflows réels et qualification sur le serveur.
-- [ ] Upload authentifié et artefacts contrôlés, import vérifié des résultats.
+- [x] Artefacts locaux contrôlés et collecte explicite des octets de résultats (C-049/C-051).
+- [ ] Upload navigateur authentifié et validation métier des résultats.
 - [ ] Outils média raccordés au worker/catalogue de missions, budgets GPU partagés.
 - [ ] Exécution depuis l'accueil avec identité/droits de commande distincts.
 - [ ] Analyse vidéo longue/son, rétention et galerie persistante.
 
 **Chat/conversation/mission entièrement confié à Claude : G084–G089**, priorité
 après son lot engagé. Codex conserve agents média ; aucune session présumée lancée.
+
+## C-049/C-050/C-051 — Fichiers et résultats des agents média (09/10/2026)
+
+Six suites Claude G090–G095 publiées, G084–G089 prioritaires pour le chat/mission.
+[Contrat média et référence G094](docs/MEDIA-AGENTS.md).
+
+- [x] Magasin privé, références opaques, quotas, empreintes à la lecture, verrou écrivain.
+- [x] Import atomique et inspection des lots interrompus ; publication explicite des seuls lots complets revérifiés.
+- [x] Upload local ComfyUI facultatif, reçu strict et comparaison de la source distante avant soumission.
+- [x] Étapes durables, coupures sans renvoi et consultation du reçu accepté avant interruption.
+- [x] Collecte bornée des sorties, historique lié au workflow, provenance et imports partiels inspectables.
+- [x] Export local complet vers un nouveau fichier privé, sans remplacement ni lien au contenu interne.
+- [x] Six modes exercés depuis le paquet installé, transport HTTP réel et moteurs simulés.
+- [ ] Qualification de ComfyUI/Ollama réels, poids et nœuds sur matériel cible.
+- [ ] Contrat d'autorisation conversation/mission et upload navigateur : coordination G094.
+- [ ] Budgets GPU communs, rétention, galerie, validation sémantique et lecture vidéo longue/son.
+
+Les références d'artefacts ne sont pas des permissions et les états média ne
+deviennent pas des reçus `SUCCEEDED` du runtime. Aucun appel moteur depuis l'accueil
+ou nouveau droit sur le jeton de lecture. [Preuves](docs/validation/2026-10-09/codex-hour-0710/README.md).

@@ -4,6 +4,8 @@
 
 [Agents Image et Vidéo](docs/MEDIA-AGENTS.md) : accès depuis l'accueil, brouillons
 créer/modifier/analyser, modules installables et adaptateurs locaux optionnels.
+Artefacts privés, transfert de source contrôlé, collecte et export des résultats
+disponibles en CLI ; [recette du 09/10](docs/validation/2026-10-09/codex-hour-0710/README.md).
 Exécution depuis l'accueil et moteurs de production encore à raccorder.
 
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.

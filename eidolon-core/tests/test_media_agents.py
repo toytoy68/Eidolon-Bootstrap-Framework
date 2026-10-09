@@ -162,7 +162,8 @@ class MediaTests(unittest.TestCase):
             execute(req, cfg, self.root / "no-stage")
         cfg["staged_sources"] = {hashlib.sha256(PNG).hexdigest(): "fixture.png"}
         calls = []
-        engine = LocalMediaBackend(cfg, transport=lambda *a: calls.append(a) or {"prompt_id": "edit"})
+        engine = LocalMediaBackend(cfg, transport=lambda *a: calls.append(a) or {"prompt_id": "edit"},
+                                   raw_transport=lambda *a: ("image/png", PNG))
         execute(req, cfg, self.root / "staged", backend=engine)
         self.assertEqual(calls[0][2]["prompt"]["1"]["inputs"]["source"], "fixture.png")
 

@@ -73,7 +73,7 @@ def catalog():
 
 def prepare(request):
     """Pure validation; a draft is neither permission nor a submitted job."""
-    keys = {"agent", "operation", "prompt", "source", "format", "duration_seconds"}
+    keys = {"agent", "operation", "prompt", "source", "artifact", "format", "duration_seconds"}
     if type(request) is not dict or set(request) - keys:
         raise MediaError("INVALID_REQUEST")
     agent, op, prompt = (request.get(k) for k in ("agent", "operation", "prompt"))
@@ -86,10 +86,16 @@ def prepare(request):
     except UnicodeError:
         raise MediaError("INVALID_PROMPT") from None
     source = request.get("source")
+    artifact = request.get("artifact")
+    if artifact is not None:
+        from .media_artifacts import validate_reference
+        artifact = validate_reference(artifact)
+        if source is not None:
+            raise MediaError("SOURCE_AND_ARTIFACT_CONFLICT")
     if source is not None and (not isinstance(source, str) or not source or len(source) > 4096
                                or any(ord(c) < 32 for c in source)):
         raise MediaError("INVALID_SOURCE")
-    if op != "create" and not source:
+    if op != "create" and not source and artifact is None:
         raise MediaError("SOURCE_REQUIRED")
     fmt, duration = request.get("format"), request.get("duration_seconds")
     if op == "analyze":
@@ -103,8 +109,11 @@ def prepare(request):
                 raise MediaError("INVALID_DURATION")
         elif duration is not None:
             raise MediaError("IMAGE_HAS_NO_DURATION")
-    return {"agent": agent, "operation": op, "prompt": prompt.strip(), "source": source,
-            "format": fmt, "duration_seconds": duration}
+    result = {"agent": agent, "operation": op, "prompt": prompt.strip(), "source": source,
+              "format": fmt, "duration_seconds": duration}
+    if artifact is not None:
+        result["artifact"] = artifact
+    return result
 
 
 def identify(body):
@@ -121,10 +130,21 @@ def identify(body):
     raise MediaError("UNSUPPORTED_MEDIA_HEADER")
 
 
-def read_source(request):
-    if not request["source"]:
+def read_source(request, config=None):
+    artifact = request.get("artifact")
+    if artifact is not None:
+        from .media_artifacts import ArtifactStore
+        storage = config.get("artifact_store") if type(config) is dict else None
+        if (type(storage) is not dict or set(storage) != {"root", "store_id"}
+                or not isinstance(storage["root"], str) or not storage["root"]
+                or not isinstance(storage["store_id"], str)):
+            raise MediaError("ARTIFACT_STORE_NOT_CONFIGURED")
+        store = ArtifactStore(storage["root"], expected_store_id=storage["store_id"])
+        body, manifest = store.read(artifact)
+    elif request["source"]:
+        body = read_regular(request["source"], 200 * 1024 * 1024)
+    else:
         return None, None
-    body = read_regular(request["source"], 200 * 1024 * 1024)
     kind = identify(body)
     image = kind.startswith("image/")
     if image and len(body) > 20 * 1024 * 1024:
@@ -132,7 +152,10 @@ def read_source(request):
     if request["agent"] == "image" and not image or (
             request["agent"] == "video" and request["operation"] != "create" and image):
         raise MediaError("SOURCE_TYPE_MISMATCH")
-    return body, {"sha256": hashlib.sha256(body).hexdigest(), "size": len(body), "type": kind}
+    evidence = {"sha256": hashlib.sha256(body).hexdigest(), "size": len(body), "type": kind}
+    if artifact is not None:
+        evidence["artifact"] = artifact
+    return body, evidence
 
 
 def write_record(directory, record):
@@ -158,7 +181,7 @@ def execute(request, config, directory, *, backend=None):
     from .media_backends import LocalMediaBackend
     req = prepare(request)
     runner = backend or LocalMediaBackend(config)
-    source, evidence = read_source(req)
+    source, evidence = read_source(req, config)
     plan = runner.plan(req, evidence)  # reject missing models/workflows BEFORE any job/network
     target = Path(directory)
     target.mkdir(mode=0o700, parents=False, exist_ok=False)
@@ -167,16 +190,29 @@ def execute(request, config, directory, *, backend=None):
               "request": req, "source_evidence": evidence, "backend": plan,
               "core_mission": None, "verified": False, "automatic_retry": False}
     write_record(target, record)
+    def progress(stage, info):
+        if stage not in {"SOURCE_UPLOAD_STARTED", "SOURCE_UPLOAD_ACKNOWLEDGED", "SOURCE_VERIFYING", "SOURCE_VERIFIED",
+                         "QUEUE_SUBMITTING", "QUEUE_ACKNOWLEDGED", "ANALYSIS_SUBMITTING"}:
+            raise MediaError("INVALID_MEDIA_PHASE")
+        if type(info) is not dict or len(json.dumps(info, ensure_ascii=False, allow_nan=False).encode("utf-8")) > 4096:
+            raise MediaError("INVALID_MEDIA_PHASE")
+        if len(record.setdefault("stages", [])) >= 16:
+            raise MediaError("MEDIA_PHASE_LIMIT")
+        record["stages"].append({"phase": stage, "evidence": info})
+        record["phase"] = stage
+        record["phase_evidence"] = info
+        write_record(target, record)
     try:
-        result = runner.run(req, source, evidence, plan)
+        result = runner.run(req, source, evidence, plan, progress=progress)
         record["result"] = result
         record["state"] = result["state"]
         write_record(target, record)
         return record
-    except Exception:
+    except Exception as exc:
         # May already have queued work remotely. Preserve uncertainty, never claim no effect.
         record["state"] = "REVIEW_REQUIRED"
         record["error"] = "BACKEND_OR_RESULT_UNCERTAIN"
+        record["failure_code"] = exc.code if isinstance(exc, MediaError) else "BACKEND_FAILURE"
         write_record(target, record)
         raise MediaError("REVIEW_REQUIRED", "inspect the existing job; do not resubmit automatically") from None
 
