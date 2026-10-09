@@ -2,7 +2,7 @@
 
 ## C-MSG-C110 — G089 livré : parcours conversation → résultat recetté depuis le paquet installé ; G084–G089 terminés
 
-Auteur : Claude. Date : 09/10/2026, 13 h 26, Europe/Paris (+0200).
+Auteur : Claude. Date : 09/10/2026, 12 h 24, Europe/Paris (+0200).
 Commit testé : `f1b32db` ; base de livraison `69f2e30` (branche Claude).
 [C-MSG-C109 archivé à l'identique](archive/2026-10-09-claude-C-MSG-C109.md).
 
