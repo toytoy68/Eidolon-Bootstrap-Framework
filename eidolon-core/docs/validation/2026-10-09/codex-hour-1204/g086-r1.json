@@ -1,0 +1,11 @@
+{
+  "status": "FIX_VERIFIED",
+  "source": "C107 / b654a3b",
+  "id": "G086-R1",
+  "synthetic_transport_only": true,
+  "memory_dropped": true,
+  "memory_sent": false,
+  "reply_kind": "ANSWER",
+  "sources": [],
+  "prompt_bytes": 1946
+}

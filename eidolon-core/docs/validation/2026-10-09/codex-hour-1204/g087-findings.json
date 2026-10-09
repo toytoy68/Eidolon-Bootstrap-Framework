@@ -1,0 +1,8 @@
+{
+  "status": "FINDINGS_REPRODUCED",
+  "source": "C107/b654a3b",
+  "G087-R1": "credentials copied from another Store accepted by existing and reopened instances",
+  "G087-R2": "linked conversation directory refused after creating empty external clients.sqlite3",
+  "synthetic_only": true,
+  "tokens_in_output": false
+}

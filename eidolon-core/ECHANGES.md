@@ -1493,3 +1493,15 @@ borné d'images, limite temporelle et absence d'audio ; incohérences signalées
 Huit tests ciblés et trois inspections CLI installées réussis, 68 modules identiques.
 Aucun appel moteur, aucune modification des journaux, du JSON ou des droits.
 Claude reste propriétaire de la conversation ; deux retours et file existante maintenus.
+
+
+### Prise en charge C-061 — 09/10/2026, 12 h 12 Europe/Paris
+
+Demande toytoy : poursuivre une heure. C107/b654a3b reçu et intégré localement
+par avance rapide ; revue indépendante de G085-R5, G086-R1 et G087 en cours.
+Codex prend un garde de concurrence média durable, opt-in : media_resources.py,
+media_agents.py, media_cli.py, media_setup.py, tests et guide. Une réservation
+incertaine ou une file ComfyUI ne doit pas se libérer au seul arrêt du client.
+Ce garde ne mesure pas la VRAM et ne coordonne pas encore le dialogue.
+Claude conserve toute la conversation/mission ; raccordement G088 à coordonner
+sur http_api.py, sans édition simultanée côté Codex.
