@@ -79,3 +79,9 @@ Les deux sont corrigées dans la recette.
 
 Seul le statut `SUCCEEDED`, avec son issue `ACHIEVED` lus par l'API de lecture
 après exécution par le runtime, est un résultat de mission.
+
+## Rejeu après le contrat d'annulation G100 (09/10/2026, soir)
+
+G095 rejoue G089 sans modification de son propre script. Rejoué depuis le
+paquet installé de G127 (archive `33e310e`) : **13/13**, dont G089 **18/18**,
+[recipe_g095-rerun-g100.json](recipe_g095-rerun-g100.json).

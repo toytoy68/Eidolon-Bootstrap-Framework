@@ -81,3 +81,14 @@ l'appairage et l'exécution utilisent le paquet installé.
 - Recette bêta mise à jour :
   [BETA-ACCEPTANCE.md](../../../BETA-ACCEPTANCE.md), section G089, avec les
   colonnes VM et Windows **à exécuter** par toytoy.
+
+## Rejeu après le contrat d'annulation G100 (09/10/2026, soir)
+
+Le script a été adapté au contrat G100. L'annulation passe d'abord par
+`cancel_proposal`, puis `cancel` avec `conversation_id` et l'empreinte exacte
+de la proposition. Les attentes d'origine sont gardées, aucune n'est
+affaiblie ; s'y ajoutent l'empreinte vérifiée et l'étape `request_received`.
+
+Rejoué depuis le paquet installé de G127 (archive `33e310e`, code identique
+à la tête) : **18/18**, [recipe_g089-rerun-g100.json](recipe_g089-rerun-g100.json).
+Le résultat d'origine reste dans les fichiers précédents.

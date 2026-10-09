@@ -137,9 +137,16 @@ def main():
             prop2 = say("t5", "Diagnostique la mémoire.")["reply"]["proposal"]
             p = prop2
             second = conv("submit", submission("s3"))[1]["mission_id"]
-            s, cancel = conv("cancel", {"command_key": "c1", "mission_id": second, "reason": "plus utile"})
-            check("annulation demandée, non confirmée", cancel["meaning"] == "CANCELLATION_REQUESTED_NOT_CONFIRMED"
-                  and runtime.store.get(second)["status"] == "NEW")
+            # Adapted 09/10/2026 to the G100 contract (Core-frozen proposal, exact digest, conversation id);
+            # same expectations as the original run, nothing weakened.
+            cp_status, cp = conv("cancel_proposal", {"conversation_id": cid, "mission_id": second})
+            proposed = (cp_status == 200 and cp["kind"] == "PROPOSAL" and cp["proposal"]["mission_id"] == second
+                        and digest(cp["proposal"]) == cp["proposal_sha256"])
+            s, cancel = conv("cancel", {"command_key": "c1", "conversation_id": cid, "mission_id": second,
+                                        "proposal_sha256": cp.get("proposal_sha256"), "reason": "plus utile"})
+            check("annulation demandée, non confirmée", proposed and s == 200
+                  and cancel["meaning"] == "CANCELLATION_REQUESTED_NOT_CONFIRMED"
+                  and cancel["stage"] == "request_received" and runtime.store.get(second)["status"] == "NEW")
             check("arrêt confirmé par le runtime", runtime.run(second)["status"] == "CANCELLED")
         finally:
             server.terminate(); server.wait(timeout=10)
