@@ -83,6 +83,11 @@ Depuis G091, une réponse porte aussi `context` : ce que le modèle a reçu
 `partial`. Il vaut `null` quand le modèle n'a rien produit d'utilisable.
 Voir [DIALOGUE.md](DIALOGUE.md).
 
+Depuis G096, une réponse avec texte du modèle porte aussi `citations` :
+`claimed`, les références trouvées dans le texte, et `unsupported`, celles qui
+ne figurent pas dans `sources`. Une citation non transmise n'est jamais
+présentée comme une source.
+
 Les `sources` contiennent au plus 5 références mémoire (`information_id@revision`),
 triées et sans doublon. Le contenu rappelé n'est pas une instruction.
 

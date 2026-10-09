@@ -4,6 +4,10 @@
     "sim-memory",
     "sim-nas"
   ],
+  "citations": {
+    "claimed": [],
+    "unsupported": []
+  },
   "context": null,
   "conversation_id": "c-22222222222222222222222222222222",
   "core_note": "TARGET_AMBIGUOUS",

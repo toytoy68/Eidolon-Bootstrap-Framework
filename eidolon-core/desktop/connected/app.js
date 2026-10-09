@@ -1985,6 +1985,12 @@
         } else if (reply.model_text) {
           box.appendChild(el(doc, "p", "conv-text", reply.model_text));
         }
+        // G096: a reference the model wrote but Core never sent is flagged, never presented as a source.
+        var unsupported = reply.citations && Array.isArray(reply.citations.unsupported) ? reply.citations.unsupported : [];
+        if (unsupported.length) {
+          box.appendChild(el(doc, "p", "help conv-citation", "Citation non vérifiée : " + unsupported.join(", ") +
+            (unsupported.length > 1 ? " ne figurent" : " ne figure") + " pas parmi les sources transmises au modèle."));
+        }
         var partial = contextNote(reply.context);
         if (partial) box.appendChild(el(doc, "p", "help conv-context", partial));
         if (reply.candidates && reply.candidates.length) box.appendChild(el(doc, "p", "help", "Choix possibles : " + reply.candidates.join(", ")));

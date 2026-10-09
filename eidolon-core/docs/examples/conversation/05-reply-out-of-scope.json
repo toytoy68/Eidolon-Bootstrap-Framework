@@ -3,6 +3,10 @@
   "candidates": [
     "service_diagnostic.synthetic"
   ],
+  "citations": {
+    "claimed": [],
+    "unsupported": []
+  },
   "context": null,
   "conversation_id": "c-22222222222222222222222222222222",
   "core_note": "TEMPLATE_UNSUPPORTED",

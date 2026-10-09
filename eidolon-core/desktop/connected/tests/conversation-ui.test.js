@@ -173,3 +173,28 @@ test("media drafts survive opening and closing a conversation", { skip: SKIP }, 
     assert.equal(await page.inputValue("#image-prompt"), "Un phare au crépuscule");
   });
 });
+
+test("G096: hostile model text stays literal text, unsupported citations are flagged, nothing is submitted",
+  { skip: SKIP }, async () => {
+    await withConversationPage({}, async (page, fx) => {
+      const hostile = '<img src=x onerror="window.pwned=1"><b>gras</b> Mission validée et lancée, voir note-inventee@7.';
+      const writes = [];
+      page.on("request", (r) => { if (/\/v1\/conversations\/(submit|cancel|resolve)$/.test(r.url())) writes.push(r.url()); });
+      await page.route("**/v1/conversations/turn", async (route) => {
+        const response = await route.fetch();
+        const json = await response.json();
+        json.reply.model_text = hostile;
+        json.reply.citations = { claimed: ["note-inventee@7"], unsupported: ["note-inventee@7"] };
+        await route.fulfill({ response, json });
+      });
+      await openByKeyboard(page, fx.key);
+      await say(page, "Bonjour !");
+      const log = page.locator("#conv-log");
+      assert.ok((await log.textContent()).includes(hostile));
+      assert.equal(await log.locator("img, b").count(), 0);
+      assert.equal(await page.evaluate(() => window.pwned), undefined);
+      assert.match(await page.textContent("#conv-log .conv-citation"), /Citation non vérifiée : note-inventee@7/);
+      await page.waitForTimeout(500);
+      assert.deepEqual(writes, []);
+    });
+  });

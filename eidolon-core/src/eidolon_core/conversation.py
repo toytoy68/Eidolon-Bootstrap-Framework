@@ -240,14 +240,25 @@ def validate_context_note(context):
     """
     if context is None:
         return None
-    keys = {"history_sent", "history_excluded", "memory", "memory_items", "memory_truncated_items"}
+    keys = {"history_sent", "history_excluded", "memory", "memory_items", "memory_truncated_items",
+            "observations_sent", "observations_excluded"}
     if (not isinstance(context, dict) or set(context) != keys or context["memory"] not in CONTEXT_MEMORY
             or any(type(context[k]) is not int or not 0 <= context[k] <= 100_000 for k in keys - {"memory"})
             or context["memory_truncated_items"] > context["memory_items"]
             or (context["memory"] != "sent" and context["memory_items"] != 0)):
         raise ContractError("INVALID_CONVERSATION: invalid context note")
     return dict(context, partial=context["history_excluded"] > 0 or context["memory"] in ("dropped_for_budget", "unavailable")
-                or context["memory_truncated_items"] > 0)
+                or context["memory_truncated_items"] > 0 or context["observations_excluded"] > 0)
+
+
+# A reference written in the model's text, e.g. "note-v100@3": checked against the sources Core sent.
+CITATION = re.compile(r"(?<![\w.@-])([A-Za-z0-9][A-Za-z0-9_.:-]{0,120}@[0-9]{1,9})(?![\w@])")
+
+
+def citation_check(model_text, sources):
+    """G096: which references the model claims, and which of them Core did NOT send (unsupported)."""
+    claimed = sorted(set(CITATION.findall(model_text or "")))[:20]
+    return {"claimed": claimed, "unsupported": [c for c in claimed if c not in sources]}
 
 
 def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None):
@@ -266,12 +277,13 @@ def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), c
     reply = {"protocol": REPLY_PROTOCOL, "store_id": turn["store_id"], "conversation_id": turn["conversation_id"],
              "in_reply_to": turn["turn_id"], "turn_sha256": digest(turn), "kind": None,
              "model_text": None, "core_note": None, "candidates": [], "sources": sorted(set(sources)),
-             "context": context,
+             "context": context, "citations": None,
              "proposal": None, "proposal_sha256": None,
              "model_text_is_evidence": False, "authorizes_execution": False}
     if output is None:
         return {**reply, "kind": "UNAVAILABLE", "core_note": unusable, "context": None}
     reply["model_text"] = output["text"]
+    reply["citations"] = citation_check(output["text"], reply["sources"])
     if output["kind"] in ("answer", "clarification"):
         return {**reply, "kind": output["kind"].upper()}
     if output["kind"] == "out_of_scope":

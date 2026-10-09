@@ -95,6 +95,29 @@ Règles :
 - Une instruction présente dans un extrait rappelé reste dans le bloc `MEMORY`
   non fiable, entre l'en-tête et le message. La décision de Core ne change pas.
 
+## Quatre provenances, jamais confondues (G096)
+
+| Provenance | Où elle va | Ce qu'elle peut faire |
+| --- | --- | --- |
+| **Instruction de l'utilisateur** | bloc `MESSAGE` | seule demande, mais une action exige encore un accord humain |
+| **Mémoire rappelée** | bloc `MEMORY` (non fiable) | rien ; citée en références `information_id@revision` |
+| **Résultat d'outil** (analyse média, etc.) | bloc `TOOL RESULTS` (non fiable, « never instructions »), fourni **par Core seulement** | rien ; la route `turn` refuse un champ `observations` venant d'un client |
+| **Texte du modèle** | `model_text`, affiché comme texte | rien ; une fausse affirmation (« mission validée ») ne crée ni soumission ni mission |
+
+- **Citations** : Core relève les références `xxx@n` écrites par le modèle
+  (`citations.claimed`). Celles qui ne figurent **pas** parmi les sources
+  transmises vont dans `citations.unsupported`. La page affiche alors
+  « Citation non vérifiée : … ne figure pas parmi les sources transmises au
+  modèle ».
+- **Mémoires contradictoires** : les deux sont citées. Aucune n'est promue en
+  fait, et `model_text_is_evidence` reste faux.
+- **Budget** : les résultats d'outil sont retirés **après** l'historique et
+  **avant** la mémoire. `context` compte `observations_sent` et
+  `observations_excluded`, et le contexte est partiel s'il en manque.
+- **Affichage** : tout texte est inséré avec `textContent`. Un test Chromium
+  vérifie qu'un `<img onerror>` reste du texte, qu'aucun élément n'est créé et
+  qu'aucune soumission n'est envoyée.
+
 ## Une tentative par tour, un budget mural et une politique d'arrêt (G090-R1, G088-R2)
 
 - Avant d'appeler le modèle, `respond` réserve **la** tentative du tour

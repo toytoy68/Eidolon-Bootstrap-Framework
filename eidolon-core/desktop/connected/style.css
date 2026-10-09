@@ -238,6 +238,7 @@ input[type="password"] {
 .conv-kind { margin: 0; font-weight: 700; }
 .conv-note { margin: .25rem 0; font-weight: 600; }
 .conv-model { margin: .25rem 0; color: var(--muted); font-size: .9rem; white-space: pre-wrap; }
+.conv-citation { color: var(--bad); font-weight: 600; }
 .conv-text { margin: .25rem 0; white-space: pre-wrap; }
 .conv-proposal { margin-top: 1rem; padding: .75rem; border: 2px solid var(--accent); border-radius: 8px; overflow-wrap: anywhere; }
 .conv-request { font-weight: 700; margin: .25rem 0; }
