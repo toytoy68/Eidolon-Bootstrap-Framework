@@ -22,6 +22,7 @@ import os
 from pathlib import Path
 import re
 import sqlite3
+import stat
 import uuid
 
 from . import conversation as cv
@@ -34,6 +35,8 @@ RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
 MAX_CANDIDATES = 10
+MAX_CONTEXT_TURNS = 200
+MAX_CONTEXT_CHARS = 200_000
 BUSY_SECONDS = 2.0
 
 
@@ -48,50 +51,67 @@ def _key(value, name):
 
 
 class ConversationStore:
-    def __init__(self, store, *, checkpoint=None):
+    def __init__(self, store, *, create=False, checkpoint=None):
+        """create=True creates a missing store; otherwise an existing one is reopened, never created."""
         self.store = store
         self.directory = Path(store.directory) / "conversations"
         self.path = self.directory / "conversations.sqlite3"
         self.checkpoint = checkpoint or (lambda name: None)   # fault injection in tests only
+        self._identity = None
         with store.connection() as db:
             row = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()
         self.store_id = row[0]
-        self.directory.mkdir(mode=0o700, exist_ok=True)
-        if self.directory.is_symlink() or not self.directory.is_dir():
-            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: invalid directory")
+        if create:
+            try:
+                os.mkdir(self.directory, 0o700)
+            except FileExistsError:
+                pass
+            self._check_directory()
+            try:
+                os.close(os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
+            except FileExistsError:
+                pass                       # an existing file is checked below like any reopening
+            except OSError:
+                raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: cannot create") from None
+        self._check_directory()
+        self._identity = self._check_file()
         try:
-            db = sqlite3.connect(self.path, timeout=BUSY_SECONDS, isolation_level=None)
+            db = self._connect()
             try:
                 version = db.execute("PRAGMA user_version").fetchone()[0]
                 if version not in (0, 1):
                     raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unsupported schema version")
-                # executescript commits by itself: the schema carries its own explicit transaction.
-                db.executescript("""
-                    BEGIN IMMEDIATE;
-                    CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
-                    CREATE TABLE IF NOT EXISTS conversations (
-                        conversation_id TEXT PRIMARY KEY, client_id TEXT NOT NULL, client_key TEXT NOT NULL,
-                        created_at TEXT NOT NULL, turn_count INTEGER NOT NULL DEFAULT 0,
-                        last_turn_sha256 TEXT, UNIQUE(client_id, client_key));
-                    CREATE TABLE IF NOT EXISTS turns (
-                        conversation_id TEXT NOT NULL, sequence INTEGER NOT NULL, turn_id TEXT NOT NULL UNIQUE,
-                        client_id TEXT NOT NULL, client_turn_key TEXT NOT NULL, body TEXT NOT NULL,
-                        sha256 TEXT NOT NULL, received_at TEXT NOT NULL,
-                        PRIMARY KEY(conversation_id, sequence), UNIQUE(client_id, client_turn_key));
-                    CREATE TABLE IF NOT EXISTS replies (
-                        turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, body TEXT NOT NULL,
-                        sha256 TEXT NOT NULL, recorded_at TEXT NOT NULL);
-                    CREATE TABLE IF NOT EXISTS proposals (
-                        proposal_id TEXT NOT NULL, version INTEGER NOT NULL, conversation_id TEXT NOT NULL,
-                        body TEXT NOT NULL, sha256 TEXT NOT NULL, PRIMARY KEY(proposal_id, version));
-                    CREATE TABLE IF NOT EXISTS submissions (
-                        client_id TEXT NOT NULL, command_key TEXT NOT NULL, body TEXT NOT NULL,
-                        sha256 TEXT NOT NULL, conversation_id TEXT NOT NULL, status TEXT NOT NULL,
-                        reserved_at TEXT NOT NULL, mission_id TEXT, link TEXT, resolution TEXT,
-                        PRIMARY KEY(client_id, command_key));
-                    PRAGMA user_version=1;
-                    COMMIT;
-                """)
+                empty = db.execute("SELECT count(*) FROM sqlite_master").fetchone()[0] == 0
+                # Tables are only ever added to an EMPTY database on explicit creation; any existing
+                # database must already be ours (meta check below). executescript commits by itself:
+                # the schema carries its own explicit transaction.
+                if create and empty:
+                    db.executescript("""
+                        BEGIN IMMEDIATE;
+                        CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+                        CREATE TABLE IF NOT EXISTS conversations (
+                            conversation_id TEXT PRIMARY KEY, client_id TEXT NOT NULL, client_key TEXT NOT NULL,
+                            created_at TEXT NOT NULL, turn_count INTEGER NOT NULL DEFAULT 0,
+                            last_turn_sha256 TEXT, UNIQUE(client_id, client_key));
+                        CREATE TABLE IF NOT EXISTS turns (
+                            conversation_id TEXT NOT NULL, sequence INTEGER NOT NULL, turn_id TEXT NOT NULL UNIQUE,
+                            client_id TEXT NOT NULL, client_turn_key TEXT NOT NULL, body TEXT NOT NULL,
+                            sha256 TEXT NOT NULL, received_at TEXT NOT NULL,
+                            PRIMARY KEY(conversation_id, sequence), UNIQUE(client_id, client_turn_key));
+                        CREATE TABLE IF NOT EXISTS replies (
+                            turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, body TEXT NOT NULL,
+                            sha256 TEXT NOT NULL, recorded_at TEXT NOT NULL);
+                        CREATE TABLE IF NOT EXISTS proposals (
+                            proposal_id TEXT NOT NULL, version INTEGER NOT NULL, conversation_id TEXT NOT NULL,
+                            body TEXT NOT NULL, sha256 TEXT NOT NULL, PRIMARY KEY(proposal_id, version));
+                        CREATE TABLE IF NOT EXISTS submissions (
+                            client_id TEXT NOT NULL, command_key TEXT NOT NULL, body TEXT NOT NULL,
+                            sha256 TEXT NOT NULL, conversation_id TEXT NOT NULL, status TEXT NOT NULL,
+                            reserved_at TEXT NOT NULL, mission_id TEXT, link TEXT, resolution TEXT,
+                            PRIMARY KEY(client_id, command_key));
+                        PRAGMA user_version=1;
+                        COMMIT;
+                    """)
             finally:
                 db.close()
         except sqlite3.OperationalError as exc:
@@ -99,25 +119,64 @@ class ConversationStore:
             raise ConversationError(code + ": " + str(exc)[:80]) from None
         except sqlite3.DatabaseError as exc:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: " + str(exc)[:80]) from None
-        with self._db(write=True) as db:
-            db.execute("INSERT OR IGNORE INTO meta VALUES ('schema', ?)", (SCHEMA,))
-            db.execute("INSERT OR IGNORE INTO meta VALUES ('store_id', ?)", (self.store_id,))
-            meta = dict(db.execute("SELECT key, value FROM meta"))
-        if meta.get("schema") != SCHEMA:
+        with self._db(write=True, check_meta=False) as db:
+            if db.execute("SELECT count(*) FROM meta").fetchone()[0] == 0:
+                if not create:
+                    raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: store was never initialized")
+                db.execute("INSERT INTO meta VALUES ('schema', ?)", (SCHEMA,))
+                db.execute("INSERT INTO meta VALUES ('store_id', ?)", (self.store_id,))
+            self._check_meta(db)
+
+    def _check_directory(self):
+        try:
+            info = os.lstat(self.directory)
+        except FileNotFoundError:
+            raise ConversationError("CONVERSATION_STORE_MISSING: create it explicitly") from None
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: directory is a link or not a directory")
+        if info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: directory is not private")
+
+    def _check_file(self):
+        """Regular private file, never a link, and still the file opened first (device, inode)."""
+        try:
+            info = os.lstat(self.path)
+        except FileNotFoundError:
+            raise ConversationError("CONVERSATION_STORE_MISSING: create it explicitly") from None
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: database is a link or not a regular file")
+        if info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: database is not private")
+        identity = (info.st_dev, info.st_ino)
+        if self._identity is not None and identity != self._identity:
+            raise ConversationError("STORE_CHANGED: the conversation database was replaced")
+        return identity
+
+    def _connect(self):
+        # mode=rw: SQLite never creates the file, even for a read of a deleted database.
+        return sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True,
+                               timeout=BUSY_SECONDS, isolation_level=None)
+
+    def _check_meta(self, db):
+        meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
+        if meta.get("schema") != SCHEMA or db.execute("PRAGMA user_version").fetchone()[0] != 1:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unknown schema")
         if meta.get("store_id") != self.store_id:
             raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
-        os.chmod(self.path, 0o600)
 
     @contextmanager
-    def _db(self, *, write=False):
+    def _db(self, *, write=False, check_meta=True):
+        self._check_directory()
+        self._check_file()
         try:
-            db = sqlite3.connect(self.path, timeout=BUSY_SECONDS, isolation_level=None)
+            db = self._connect()
         except sqlite3.Error:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: cannot open") from None
         try:
             db.execute("PRAGMA synchronous=FULL")
             db.execute("BEGIN IMMEDIATE" if write else "BEGIN")
+            if check_meta:
+                self._check_meta(db)       # identity and schema, inside the transaction, every time
             yield db
             db.execute("COMMIT")
         except sqlite3.OperationalError as exc:
@@ -271,6 +330,9 @@ class ConversationStore:
 
     def context(self, conversation_id, *, max_turns=20, max_chars=16000):
         """Most recent turns and reply texts within a budget, oldest first (for the dialogue)."""
+        if (type(max_turns) is not int or not 1 <= max_turns <= MAX_CONTEXT_TURNS
+                or type(max_chars) is not int or not 1 <= max_chars <= MAX_CONTEXT_CHARS):
+            raise ConversationError("INVALID_CONVERSATION: invalid context bounds")
         with self._db() as db:
             rows = db.execute("""SELECT t.body, r.body FROM turns t LEFT JOIN replies r ON r.turn_id = t.turn_id
                                  WHERE t.conversation_id=? ORDER BY t.sequence DESC LIMIT ?""",

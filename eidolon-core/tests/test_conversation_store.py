@@ -42,7 +42,7 @@ class Base(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.state = Path(self.tmp.name) / "state"
         self.runtime = synthetic_runtime(Store(self.state))
-        self.conv = cs.ConversationStore(self.runtime.store)
+        self.conv = cs.ConversationStore(self.runtime.store, create=True)
         self.cid = self.conv.open(client_id="pc", client_key="k1")["conversation_id"]
 
     def tearDown(self):
@@ -329,6 +329,69 @@ class StorageTests(Base):
         shutil.copytree(self.state / "conversations", other / "conversations")
         with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):
             cs.ConversationStore(Store(other))
+
+    def test_g085_r1_a_link_in_place_of_the_database_is_refused_untouched(self):
+        other = Store(Path(self.tmp.name) / "linked")
+        os.mkdir(other.directory / "conversations", 0o700)
+        external = Path(self.tmp.name) / "external.sqlite3"
+        with sqlite3.connect(external) as db:
+            db.execute("CREATE TABLE unrelated (value TEXT)")
+        before = hashlib.sha256(external.read_bytes()).hexdigest()
+        (other.directory / "conversations" / "conversations.sqlite3").symlink_to(external)
+        for create in (False, True):
+            with self.subTest(create=create), self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_UNAVAILABLE"):
+                cs.ConversationStore(other, create=create)
+        self.assertEqual(hashlib.sha256(external.read_bytes()).hexdigest(), before)
+
+    def test_an_unrelated_regular_database_never_gets_our_tables(self):
+        other = Store(Path(self.tmp.name) / "foreign")
+        os.mkdir(other.directory / "conversations", 0o700)
+        path = other.directory / "conversations" / "conversations.sqlite3"
+        with sqlite3.connect(path) as db:
+            db.execute("CREATE TABLE unrelated (value TEXT)")
+        os.chmod(path, 0o600)
+        before = hashlib.sha256(path.read_bytes()).hexdigest()
+        with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_UNAVAILABLE"):
+            cs.ConversationStore(other, create=True)
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)
+
+    def test_g085_r2_a_replaced_database_is_refused_by_an_open_instance(self):
+        other = cs.ConversationStore(Store(Path(self.tmp.name) / "b"), create=True)
+        self.conv.path.unlink()
+        shutil.copyfile(other.path, self.conv.path)
+        os.chmod(self.conv.path, 0o600)
+        with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):
+            self.conv.open(client_id="pc", client_key="after-replacement")
+        with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):          # reopening: foreign identity
+            cs.ConversationStore(self.runtime.store)
+        with sqlite3.connect(self.conv.path) as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM conversations").fetchone()[0], 0)
+
+    def test_g085_r3_reads_never_create_a_missing_file(self):
+        self.conv.path.unlink()
+        with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_MISSING"):
+            self.conv.page(self.cid)
+        self.assertFalse(self.conv.path.exists())
+        with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_MISSING"):
+            cs.ConversationStore(self.runtime.store)                          # reopening never creates
+        self.assertFalse(self.conv.path.exists())
+
+    def test_g085_r4_context_bounds_are_checked(self):
+        for bad in ({"max_turns": -1}, {"max_turns": 0}, {"max_turns": 201}, {"max_turns": True},
+                    {"max_chars": -5}, {"max_chars": 200_001}, {"max_chars": 1.5}):
+            with self.subTest(bad=bad), self.assertRaisesRegex(ContractError, "INVALID_CONVERSATION"):
+                self.conv.context(self.cid, **bad)
+
+    def test_open_permissions_are_refused(self):
+        os.chmod(self.conv.path, 0o644)
+        with self.assertRaisesRegex(ContractError, "not private"):
+            self.conv.page(self.cid)
+        os.chmod(self.conv.path, 0o600)
+        os.chmod(self.conv.directory, 0o755)
+        with self.assertRaisesRegex(ContractError, "not private"):
+            self.conv.page(self.cid)
+        os.chmod(self.conv.directory, 0o700)
+        self.conv.page(self.cid)
 
     def test_files_are_private(self):
         self.assertEqual(os.stat(self.conv.directory).st_mode & 0o777, 0o700)

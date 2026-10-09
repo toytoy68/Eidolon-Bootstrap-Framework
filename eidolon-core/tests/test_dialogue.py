@@ -29,7 +29,7 @@ class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.runtime = synthetic_runtime(Store(Path(self.tmp.name) / "state"))
-        self.conversations = ConversationStore(self.runtime.store)
+        self.conversations = ConversationStore(self.runtime.store, create=True)
         self.cid = self.conversations.open(client_id="pc", client_key="k")["conversation_id"]
         self.keys = iter(f"t{n}" for n in range(1000))
 
@@ -194,11 +194,14 @@ class FakeServer:
                 if outer.mode == "slow":
                     time.sleep(1.5)
                 raw = json.dumps(payload).encode()
-                self.send_response(status)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(raw)))
-                self.end_headers()
-                self.wfile.write(raw)
+                try:
+                    self.send_response(status)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(raw)))
+                    self.end_headers()
+                    self.wfile.write(raw)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass                     # "slow" mode: the client already gave up, as intended
 
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
         threading.Thread(target=self.server.serve_forever, daemon=True).start()

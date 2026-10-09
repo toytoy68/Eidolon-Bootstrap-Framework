@@ -17,6 +17,34 @@ Contrat des objets : [CONVERSATION-CONTRACT.md](CONVERSATION-CONTRACT.md) (G084)
 - Le dépôt est **lié au Store des missions** par son `store_id`. Copié à côté
   d'un autre Store, il est refusé (`STORE_CHANGED`).
 
+## Ouverture : création explicite, fichier vérifié à chaque accès
+
+Correctifs des constats G085-R1 à R4 de Codex (C-MSG-G107) :
+
+- **Création séparée de la reprise** : `ConversationStore(store, create=True)`
+  crée un dépôt absent. Sans `create`, un dépôt absent est refusé
+  (`CONVERSATION_STORE_MISSING`) et **rien n'est créé**.
+- **Avant chaque connexion** :
+  - le dossier doit être un vrai dossier privé (0700, même propriétaire) ;
+  - la base doit être un fichier régulier privé (0600), **jamais un lien** ;
+  - elle doit rester **le même fichier** (périphérique et inode) qu'à
+    l'ouverture.
+
+  Un lien donne `CONVERSATION_STORE_UNAVAILABLE`, sans toucher sa cible (R1).
+  Un fichier remplacé donne `STORE_CHANGED` (R2).
+- **Connexions sans création** : SQLite est ouvert en `mode=rw`. Une lecture
+  d'un fichier supprimé est refusée et ne recrée pas de fichier vide (R3).
+- **Identité et schéma relus dans la transaction**, à chaque accès : une base
+  d'un autre Store donne `STORE_CHANGED` (R2).
+- **Jamais de tables ajoutées à une base existante** : le schéma n'est créé que
+  sur une base vide, avec `create=True`. Une base SQLite étrangère reste
+  identique octet pour octet.
+- **Bornes du contexte** : `max_turns` de 1 à 200 et `max_chars` de 1 à
+  200 000, en entiers stricts (R4).
+
+Ces protections visent les erreurs et les substitutions de fichiers. Elles ne
+défendent pas contre un processus hostile qui tourne sous le même utilisateur.
+
 ## Ce qui est garanti
 
 | Situation | Comportement |
