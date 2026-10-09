@@ -1419,3 +1419,12 @@ FFmpeg réel sur clip 45 s avec audio : huit PNG 512 × 288 des 40 premières
 secondes, aucun audio ni image tardive transmis ; clip corrompu refusé avant
 modèle. Code inchangé depuis la publication ; preuves supplémentaires et G105
 archivé à l'identique. Six fiches G096–G101 conservées, G085–G089 prioritaires.
+
+### C-MSG-G107 — Reprise 09/10/2026, 09 h 53 Europe/Paris
+
+G085 reçu sur e512bd3/C105, 45 tests reproduits ; recette Chromium de Claude
+81/81 reçue. Contre-revue C-057 : quatre cas G085-R1 à R4 reproduits (lien SQLite,
+remplacement étranger, création pendant lecture absente, limite contexte négative).
+Corrections confiées à Claude, auteur du parcours conversation/mission.
+Codex prend C-056 : contrôle de configuration des six opérations média et aide
+à leur installation locale, sans moteur contacté ni source utilisateur nécessaire.
