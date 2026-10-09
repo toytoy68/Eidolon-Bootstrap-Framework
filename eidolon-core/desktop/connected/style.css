@@ -220,6 +220,28 @@ input[type="password"] {
 .media-form .status { margin: .2rem 0; }
 .media-home [hidden] { display: none; }
 
+/* G088: conversation home. States use text plus a left rule; colour is never the only signal. */
+.conversation { grid-column: 1 / -1; }
+.conversation [hidden] { display: none !important; }   /* flex/grid rules must never reveal a hidden control */
+.conv-connect, .conv-form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .5rem 0; }
+.conv-form label { flex-basis: 100%; font-weight: 600; }
+.conv-form textarea, .conv-form input[type="text"] { flex: 1 1 18rem; min-width: 0; font: inherit; padding: .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); }
+.conv-log { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .75rem; max-height: 28rem; overflow-y: auto; }
+.conv-turn { border: 1px solid var(--line); border-radius: 8px; padding: .5rem .75rem; overflow-wrap: anywhere; }
+.conv-user { margin: 0 0 .25rem; font-weight: 600; white-space: pre-wrap; }
+.conv-state { margin: .25rem 0; padding-left: .5rem; border-left: 4px solid var(--line); font-size: .9rem; }
+.state-uncertain, .state-refused, .stage-unknown_effect { border-left-color: var(--bad); color: var(--bad); font-weight: 600; }
+.state-received, .stage-result { border-left-color: var(--ok); }
+.state-sent, .stage-running, .stage-created { border-left-color: var(--warn); }
+.conv-reply { margin-top: .5rem; padding: .5rem; border-radius: 6px; background: var(--bg); }
+.conv-kind { margin: 0; font-weight: 700; }
+.conv-note { margin: .25rem 0; font-weight: 600; }
+.conv-model { margin: .25rem 0; color: var(--muted); font-size: .9rem; white-space: pre-wrap; }
+.conv-text { margin: .25rem 0; white-space: pre-wrap; }
+.conv-proposal { margin-top: 1rem; padding: .75rem; border: 2px solid var(--accent); border-radius: 8px; overflow-wrap: anywhere; }
+.conv-request { font-weight: 700; margin: .25rem 0; }
+
 @media (max-width: 760px) {
   .top, .connection, .layout, .foot { padding-left: 1rem; padding-right: 1rem; }
   .logo { height: 40px; }

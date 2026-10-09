@@ -162,7 +162,9 @@ class ConversationAPI:
     def _open(self, client, data):
         _fields(data, {"client_key"})
         opened = self.conversations.open(client_id=client["client_id"], client_key=data["client_key"])
-        return {"protocol": PROTOCOL, **opened}
+        # The client needs its own identity to build a submission; it is the credential's, never chosen.
+        return {"protocol": PROTOCOL, **opened, "client_id": client["client_id"], "actor": client["actor"],
+                "store_id": self.conversations.store_id}
 
     def _turn(self, client, data):
         _fields(data, {"conversation_id", "client_turn_key", "text"})

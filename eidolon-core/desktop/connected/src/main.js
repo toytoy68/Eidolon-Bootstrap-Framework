@@ -45,10 +45,28 @@
     showLogo();
     var media = root.EidolonMediaAgents.mount(document);
     window.addEventListener("pagehide", function () { media.clear(); });
+    var conversation = null;
     var session = C.createSession({ transport: transport, onChange: function (s) {
       V.render(document, s);
       if (s.phase !== "connected" || !s.list.selection) stopAuto();
+      if (conversation) conversation.refresh();
     } });
+    // G088: the conversation follows its mission through the read session (same capture, same rules).
+    conversation = root.EidolonConversation.mount(document, {
+      transport: transport,
+      missionStatus: function (st) {
+        var id = st.submission && st.submission.receipt && st.submission.receipt.mission_id;
+        var sel = session.state().list.selection;
+        var view = sel && sel.missionId === id && sel.sync && sel.sync.view;
+        return view && view.mission ? view.mission.status : null;
+      },
+      follow: function (id) {
+        session.relist().then(function () { return session.selectMission(id); }).then(function () {
+          document.getElementById("details").scrollIntoView({ block: "start" });
+        });
+      }
+    });
+    window.addEventListener("pagehide", function () { conversation.clear(); });
 
     function stopAuto() {
       if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }

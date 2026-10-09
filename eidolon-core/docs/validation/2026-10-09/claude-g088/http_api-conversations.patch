@@ -1,0 +1,83 @@
+--- a/eidolon-core/src/eidolon_core/http_api.py
++++ b/eidolon-core/src/eidolon_core/http_api.py
+@@ -37,6 +37,7 @@
+ 
+ PROTOCOL = "eidolon-http-read/1"
+ MAX_REQUEST = 8192
++CONVERSATION_MAX_BODY = 48_000      # conversation_api.MAX_BODY: one 8000-character turn in UTF-8
+ MAX_RESPONSE = 262144
+ MAX_ASSET = 524288
+ MAX_CONNECTIONS = 4
+@@ -250,8 +251,21 @@
+         if length is not None and not re.fullmatch(r"[0-9]{1,9}", length):
+             raise APIError(400, "INVALID_CONTENT_LENGTH")
+         size = int(length) if length is not None else 0
+-        if size > MAX_REQUEST:
++        # G088: conversation routes are mounted on this origin when an operator enabled them.
++        conversation = self.server.conversation_api is not None and self.path.startswith("/v1/conversations/")
++        if size > (CONVERSATION_MAX_BODY if conversation else MAX_REQUEST):
+             raise APIError(413, "REQUEST_TOO_LARGE")
++        if conversation:
++            # Paired conversation credential only; the read token is refused inside handle().
++            raw = self.rfile.read(size)
++            if len(raw) != size:
++                raise APIError(400, "INCOMPLETE_BODY")
++            headers = {}
++            for name, value in self.headers.items():
++                headers.setdefault(name, []).append(value)
++            status, value = self.server.conversation_api.handle(self.command, self.path, headers, raw)
++            self._json(status, value)
++            return
+         asset = ASSETS.get(self.path)
+         if not (asset and self.command == "GET"):
+             values = self.headers.get_all("Authorization", [])
+@@ -361,7 +375,7 @@
+ 
+ class ReadServer(HTTPServer):
+     """Local server with four slots, no unbounded thread/connection queue."""
+-    def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None):
++    def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None):
+         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
+             raise ValueError("INVALID_TOKEN")
+         if type(port) is not int or not 0 <= port <= 65535:
+@@ -373,6 +387,14 @@
+         if research_archives is not None:
+             read_catalog(research_archives, time_budget_seconds=2.0)
+             self.archive_pages = ArchivePages(self.store, research_archives)
++        self.conversation_api = None
++        if conversations is not None:
++            # conversations: a dialogue model (G086). Missions use the synthetic catalogue (MVP, G084).
++            from .conversation_api import ConversationAPI
++            from .diagnostics import synthetic_runtime
++            from .store import Store
++            self.conversation_api = ConversationAPI(synthetic_runtime(Store(state)), dialogue_model=conversations(),
++                                                    read_token=token)
+         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
+         self.read_deadline_seconds = READ_DEADLINE_SECONDS
+         self._worker_lock = threading.Lock()
+@@ -449,6 +471,8 @@
+     parser.add_argument("--web-root")
+     parser.add_argument("--research-archives", help="Catalogue privé existant à consulter, sans export des contenus")
+     parser.add_argument("--check", action="store_true", help="Diagnostic local, sans ouvrir de port")
++    parser.add_argument("--conversations", metavar="MODELE",
++                        help="Active /v1/conversations/ : 'simulated' (recette synthétique) ou configuration de modèle privée")
+     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
+     args = parser.parse_args(argv)
+     if args.format and not args.check:
+@@ -461,8 +485,15 @@
+         return 0 if report["status"] == "PASS" else 2
+     try:
+         token = read_token(args.token_file)
++        conversations = None
++        if args.conversations is not None:
++            from .diagnostics import demo_catalog
++            from .dialogue import ChatDialogueModel, SimulatedDialogueModel
++            from .model_config import load_model
++            conversations = ((lambda: SimulatedDialogueModel(demo_catalog())) if args.conversations == "simulated"
++                             else (lambda: ChatDialogueModel(load_model(args.conversations), demo_catalog())))
+         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
+-                        research_archives=args.research_archives) as server:
++                        research_archives=args.research_archives, conversations=conversations) as server:
+             print(header(title="API de consultation locale"), flush=True)
+             print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — lecture seule."), flush=True)
+             server.serve_forever()
