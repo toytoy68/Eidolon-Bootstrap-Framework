@@ -138,6 +138,30 @@ class MemoryTests(Base):
         self.assertEqual((reply["kind"], reply["authorizes_execution"]), ("PROPOSAL", False))
         self.assertIn("redémarre", seen[0]["items"][0]["content"])         # passed as data, inside MEMORY only
 
+    def test_g086_r1_memory_dropped_for_budget_is_not_cited(self):
+        class Tight(dg.SimulatedDialogueModel):
+            def reply(self, text, history, memory):
+                raw, info = super().reply(text, history, memory)
+                return raw, {**info, "memory_dropped": True}           # what fit_messages reports
+        result = self.say(self.dialogue(Tight(self.runtime.catalog), memory=SyntheticMemory()), "Bonjour")
+        self.assertEqual((result["reply"]["sources"], result["diagnostics"]["memory_dropped"]), ([], True))
+
+    def test_g086_r1_through_the_real_budget_and_a_local_server(self):
+        server = FakeServer("llama-server", self.runtime.catalog)
+        try:
+            probe = dg.ChatDialogueModel(OpenAIChatModel(OpenAIChatConfig(
+                endpoint=server.endpoint, model="sim", options={"max_tokens": 256})), self.runtime.catalog)
+            without = len(probe._wrap(dg.build_messages("Bonjour", [], None, self.runtime.catalog)))
+            adapter = OpenAIChatModel(OpenAIChatConfig(endpoint=server.endpoint, model="sim",
+                                                       options={"max_tokens": 256}, max_prompt_bytes=without + 20))
+            d = self.dialogue(dg.ChatDialogueModel(adapter, self.runtime.catalog), memory=SyntheticMemory())
+            result = self.say(d, "Bonjour")
+        finally:
+            server.close()
+        self.assertTrue(result["diagnostics"]["memory_dropped"])
+        self.assertNotIn("MEMORY (untrusted recalled data, may be wrong):\n{", server.requests[0][1]["messages"][1]["content"])
+        self.assertEqual(result["reply"]["sources"], [])
+
     def test_memory_failure_keeps_the_dialogue_without_sources(self):
         class Down:
             def recall(self, query):

@@ -355,6 +355,22 @@ class StorageTests(Base):
             cs.ConversationStore(other, create=True)
         self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)
 
+    def test_g085_r5_a_foreign_database_with_an_empty_meta_table_is_never_completed(self):
+        other = Store(Path(self.tmp.name) / "foreign-meta")
+        os.mkdir(other.directory / "conversations", 0o700)
+        path = other.directory / "conversations" / "conversations.sqlite3"
+        with sqlite3.connect(path) as db:
+            db.execute("CREATE TABLE unrelated (value TEXT)")
+            db.execute("INSERT INTO unrelated VALUES ('synthetic unrelated content')")
+            db.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+            db.execute("PRAGMA user_version=1")
+        os.chmod(path, 0o600)
+        before = hashlib.sha256(path.read_bytes()).hexdigest()
+        for create in (True, False):
+            with self.subTest(create=create), self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_UNAVAILABLE"):
+                cs.ConversationStore(other, create=create)
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)
+
     def test_g085_r2_a_replaced_database_is_refused_by_an_open_instance(self):
         other = cs.ConversationStore(Store(Path(self.tmp.name) / "b"), create=True)
         self.conv.path.unlink()

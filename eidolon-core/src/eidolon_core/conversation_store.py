@@ -86,6 +86,10 @@ class ConversationStore:
                 # database must already be ours (meta check below). executescript commits by itself:
                 # the schema carries its own explicit transaction.
                 if create and empty:
+                    # Both values are inlined in the script (executescript takes no parameters):
+                    # SCHEMA is a constant and the Store id is checked against its strict pattern.
+                    if re.fullmatch(r"s-[0-9a-f]{32}", self.store_id) is None:
+                        raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: invalid Store identity")
                     db.executescript("""
                         BEGIN IMMEDIATE;
                         CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -109,9 +113,11 @@ class ConversationStore:
                             sha256 TEXT NOT NULL, conversation_id TEXT NOT NULL, status TEXT NOT NULL,
                             reserved_at TEXT NOT NULL, mission_id TEXT, link TEXT, resolution TEXT,
                             PRIMARY KEY(client_id, command_key));
+                        INSERT INTO meta VALUES ('schema', '%s');
+                        INSERT INTO meta VALUES ('store_id', '%s');
                         PRAGMA user_version=1;
                         COMMIT;
-                    """)
+                    """ % (SCHEMA, self.store_id))
             finally:
                 db.close()
         except sqlite3.OperationalError as exc:
@@ -119,13 +125,9 @@ class ConversationStore:
             raise ConversationError(code + ": " + str(exc)[:80]) from None
         except sqlite3.DatabaseError as exc:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: " + str(exc)[:80]) from None
-        with self._db(write=True, check_meta=False) as db:
-            if db.execute("SELECT count(*) FROM meta").fetchone()[0] == 0:
-                if not create:
-                    raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: store was never initialized")
-                db.execute("INSERT INTO meta VALUES ('schema', ?)", (SCHEMA,))
-                db.execute("INSERT INTO meta VALUES ('store_id', ?)", (self.store_id,))
-            self._check_meta(db)
+        # Read-only check: an existing database is never completed or repaired here (G085-R5).
+        with self._db():
+            pass
 
     def _check_directory(self):
         try:

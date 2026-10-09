@@ -39,6 +39,10 @@ Correctifs des constats G085-R1 à R4 de Codex (C-MSG-G107) :
 - **Jamais de tables ajoutées à une base existante** : le schéma n'est créé que
   sur une base vide, avec `create=True`. Une base SQLite étrangère reste
   identique octet pour octet.
+- **Identité écrite avec le schéma, dans la même transaction**, seulement sur
+  une base vide (G085-R5). Une base étrangère qui a déjà une table `meta` vide
+  et `user_version=1` est refusée sans être modifiée. L'ouverture ne complète
+  ni ne répare jamais une base existante.
 - **Bornes du contexte** : `max_turns` de 1 à 200 et `max_chars` de 1 à
   200 000, en entiers stricts (R4).
 

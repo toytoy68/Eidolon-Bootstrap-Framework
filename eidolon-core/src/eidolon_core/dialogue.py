@@ -188,8 +188,8 @@ class Dialogue:
         except Exception as exc:  # noqa: BLE001 - any adapter failure becomes UNAVAILABLE, never a guess
             raw = None
             diagnostics["model_error"] = getattr(exc, "code", None) or str(exc).split(":")[0][:60] or type(exc).__name__
-        if raw is None:
-            sources = []
+        if raw is None or diagnostics.get("memory_dropped"):
+            sources = []        # only cite what the model actually received (G086-R1)
         reply = cv.decide_reply(turn, raw, self.catalog, sources=sources,
                                 previous_proposal=self.conversations.current_proposal(conversation_id))
         try:

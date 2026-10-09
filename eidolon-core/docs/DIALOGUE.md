@@ -57,6 +57,9 @@ soumission humaine (G085), puis la commande (G087).
 3. si le message seul dépasse encore, il refuse (`PROMPT_TOO_LARGE`) et la
    réponse devient `UNAVAILABLE`.
 
+Une mémoire retirée pour le budget n'est **pas citée** : les `sources` de la
+réponse restent vides, car on ne cite que ce que le modèle a reçu (G086-R1).
+
 Les diagnostics (`history_used`, `history_dropped`, `memory_dropped`,
 `prompt_bytes`) sont rendus à l'appelant. Ils ne sont pas enregistrés dans la
 réponse. Les budgets fins viendront en G091.
