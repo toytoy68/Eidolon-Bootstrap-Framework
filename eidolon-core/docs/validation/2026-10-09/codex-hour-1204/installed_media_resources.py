@@ -2,7 +2,7 @@
 # Projet      : Eidolon Core
 # Organisation: Eidolon Core Technologies (ECT)
 # Fichier     : installed_media_resources.py
-# Description : Recette des six opérations installées avec réservation durable et moteurs simulés
+# Description : Recette installée : six modes, réservation et métadonnées techniques réelles
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 """Execute with installed venv Python. Real CLI/HTTP/FFmpeg; no model or GPU."""
@@ -107,6 +107,12 @@ def main():
                 manifest = cli("artifact-import", *store_args, "--source", root / ("fixture." + suffix))
                 refs[kind] = manifest["reference"]
                 (root / ("fixture." + suffix)).unlink()
+                reference_file = root / (kind + "-reference.json")
+                reference_file.write_text(json.dumps(refs[kind]))
+                metadata = cli("artifact-probe", *store_args, "--reference", reference_file, "--ffprobe", "/usr/bin/ffprobe")
+                assert metadata["state"] == "METADATA_OBSERVED"
+                assert (metadata["observed"]["width"], metadata["observed"]["height"]) == (64, 64)
+                assert metadata["full_file_decoded"] is False and metadata["semantic_content_verified"] is False
             cfg = {"comfy_endpoint": "http://127.0.0.1:" + str(server.server_port),
                    "ollama_endpoint": "http://127.0.0.1:" + str(server.server_port),
                    "vision_model": "fixture:local", "ffmpeg": "/usr/bin/ffmpeg",
@@ -207,6 +213,11 @@ def main():
                     before = len(calls); cli(*args, code=2); assert len(calls) == before
                     reference = root / "reference.json"; reference.write_text(json.dumps(collected["artifacts"][0]["reference"]))
                     assert cli("artifact-inspect", *store_args, "--reference", reference)["content_hash_checked"] is True
+                    metadata = cli("artifact-probe", *store_args, "--reference", reference, "--ffprobe", "/usr/bin/ffprobe")
+                    assert metadata["state"] == "METADATA_OBSERVED"
+                    assert metadata["observed"]["width"] == 64 and metadata["observed"]["height"] == 64
+                    assert metadata["content_hash_checked"] is True and metadata["semantic_content_verified"] is False
+                    if kind == "video": assert abs(metadata["observed"]["duration_seconds"] - 2) < 0.01
                     exported = root / (job.name + (".png" if kind == "image" else ".mp4"))
                     export_args = ("artifact-export", *store_args, "--reference", reference, "--destination", exported)
                     assert cli(*export_args)["exported"] is True
@@ -224,7 +235,7 @@ def main():
                               "offline_configuration_checks": 3, "incomplete_configuration_exit": 2,
                               "offline_human_job_inspections": 6, "offline_human_resource_inspections": 6,
                               "blocked_second_jobs_without_engine_call": 6, "explicit_resource_releases": 6,
-                              "pool_held_after_analysis_and_collection": True,
+                              "pool_held_after_analysis_and_collection": True, "real_ffprobe_artifact_checks": 6,
                               "original_sources_deleted_before_runs": True, "real_ffmpeg": True,
                               "real_model": False, "engine_calls": calls}, indent=2))
     finally:

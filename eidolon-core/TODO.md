@@ -919,3 +919,19 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
 
 C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confiés
 à Claude avec reproducteur. Raccordement G088 dans http_api.py confié à Claude.
+
+
+## C-062 — Métadonnées techniques des artefacts média (09/10/2026)
+
+- [x] artifact-probe sur référence privée revérifiée, FFprobe choisi explicitement,
+  copie temporaire privée ; dimensions encodées, codec, durée et cadence rapportées.
+- [x] Démultiplexeurs fixés, pas de protocole réseau/playlist, références externes
+  MOV désactivées ; sortie incrémentale 16 Kio, délai 10 s, CPU 5 s et mémoire
+  virtuelle 512 Mio dans un processus séparé. Aucun preexec_fn dans le parent.
+- [x] Rendu JSON/humain, erreurs bornées sans stderr décodeur ; artefact, journal,
+  statut métier et réservation inchangés. Aucun décodage intégral revendiqué.
+- [x] 9 tests dédiés, cinq formats réels PNG/JPEG/WebP/MP4/WebM, limites de sortie,
+  délai et mémoire, empreinte, en-tête corrompu ; 131 tests média réussis.
+- [x] Après intégration C110/G088/G089 : 1 194 tests Python réussis, zéro ignoré,
+  Memory activée. Client : 69 Node réussis, 14 Chromium ignorés ici ; build à jour.
+- [ ] Modèles réels, sémantique des sorties et essais VM/PC restent à qualifier.

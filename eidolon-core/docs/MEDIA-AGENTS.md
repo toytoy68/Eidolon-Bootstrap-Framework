@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-061
+# Agents natifs Image et Vidéo — C-047 à C-062
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -350,6 +350,48 @@ l'export. Le résultat est une copie indépendante en mode 0600. Une coupure peu
 laisser un temporaire d'export dans ce répertoire, ou un résultat complet sans
 accusé final ; inspecter les fichiers et leurs empreintes avant toute nouvelle
 demande. Aucun nettoyage ou écrasement automatique n'est effectué.
+
+## Examiner les dimensions, le codec et la durée — C-062
+
+Après import ou collecte, `artifact-probe` relit un artefact privé et compare
+son empreinte à sa référence avant de lancer **FFprobe choisi explicitement** :
+
+```sh
+eidolon-media artifact-probe --root /chemin/prive/medias --store-id mas-IDENTIFIANT --reference reference.json --ffprobe /usr/bin/ffprobe --format human
+```
+
+Le chemin `/usr/bin/ffprobe` est un exemple à adapter à l'installation. Aucun
+programme n'est téléchargé ou recherché automatiquement. La référence accepte
+le format opaque habituel ou le manifeste d'import contenant `reference`.
+Le résultat JSON par défaut est `media-artifact-metadata/1`, état
+`METADATA_OBSERVED`, avec dimensions, codec, conteneur et, pour une vidéo,
+durée et cadence **rapportées**. Les dimensions sont celles du flux encodé,
+sans correction de rotation/EXIF. La durée vient du conteneur si disponible,
+sinon du premier flux visuel ; la cadence est la moyenne rapportée.
+Une durée/cadence absente reste `null` ; aucune
+valeur n'est fabriquée. Une image fixe n'est pas présentée comme une vidéo.
+
+La sonde travaille sur une copie temporaire privée, supprimée à la fin ; le
+magasin et les journaux restent inchangés. Elle ne contacte ni Ollama ni ComfyUI
+et ne libère aucune réservation. L'empreinte assure l'identité des octets, pas
+la validité complète du fichier. **Seuls le conteneur et le premier flux visuel
+sont inspectés** : le fichier n'est pas décodé intégralement, l'audio n'est pas
+vérifié, et les pixels/le contenu métier ne sont pas comparés à la demande.
+Un fichier partiellement endommagé peut encore exposer des métadonnées lisibles.
+
+Le processus a une échéance de 10 secondes, 5 secondes CPU, 512 Mio d'espace
+virtuel, 64 Mio par allocation FFprobe et une sortie lue progressivement limitée
+à 16 Kio. Les sondes internes FFprobe sont bornées à 1 Mo et 3 secondes d'analyse.
+Les démultiplexeurs sont fixés selon l'en-tête reconnu ; les protocoles autorisés
+sont `file,pipe`, sans playlist ou URL distante. Ces limites peuvent refuser un
+fichier pourtant valide : un échec ne constitue pas un diagnostic de corruption.
+L'exécutable sélectionné reste une configuration de confiance de l'opérateur,
+pas un greffon hostile que Core prétend isoler entièrement.
+
+Sortie 0 : métadonnées lisibles dans ce périmètre. Sortie 2 : erreur bornée sur
+stderr, sans réémettre les messages bruts du décodeur. Aucun statut d'artefact ou
+mission n'est promu à « vérifié »/`SUCCEEDED`. Le rendu humain distingue la
+comparaison d'empreinte réussie des métadonnées simplement observées.
 
 ## Réservation durable entre travaux média — C-061
 

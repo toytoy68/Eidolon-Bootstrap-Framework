@@ -1,0 +1,14 @@
+test_memory_exhaustion_is_confined_to_worker (tests.test_media_metadata.Boundaries.test_memory_exhaustion_is_confined_to_worker) ... ok
+test_metadata_has_strict_types_bounds_and_printable_labels (tests.test_media_metadata.Boundaries.test_metadata_has_strict_types_bounds_and_printable_labels) ... ok
+test_output_bound_and_deadline_reap_the_worker (tests.test_media_metadata.Boundaries.test_output_bound_and_deadline_reap_the_worker) ... ok
+test_stderr_and_failed_process_are_not_reflected (tests.test_media_metadata.Boundaries.test_stderr_and_failed_process_are_not_reflected) ... ok
+test_unknown_duration_is_not_fabricated_and_still_images_have_no_duration (tests.test_media_metadata.Boundaries.test_unknown_duration_is_not_fabricated_and_still_images_have_no_duration) ... ok
+test_cli_json_human_and_sanitized_failure (tests.test_media_metadata.RealProbe.test_cli_json_human_and_sanitized_failure) ... ok
+test_five_formats_real_probe_originals_removed_store_unchanged (tests.test_media_metadata.RealProbe.test_five_formats_real_probe_originals_removed_store_unchanged) ... ok
+test_hash_mismatch_refuses_before_any_process (tests.test_media_metadata.RealProbe.test_hash_mismatch_refuses_before_any_process) ... ok
+test_truncated_header_is_not_promoted_to_a_valid_output (tests.test_media_metadata.RealProbe.test_truncated_header_is_not_promoted_to_a_valid_output) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.412s
+
+OK

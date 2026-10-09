@@ -1532,3 +1532,12 @@ clos. 59 tests Python ciblés et 69 Node réussis, 14 Chromium ignorés ici.
 Revue complémentaire transmise : deux appels modèle pour un tour concurrent
 (G090-R1), badge/bannière lecture seule devenus inexacts en conversation active
 (G088-R1). Aucun doublon de mission prétendu. Recette installée indépendante à suivre.
+
+
+### C-062 livré — 09/10/2026, 12 h 37 Europe/Paris
+
+Métadonnées d'artefact par FFprobe explicitement choisi : dimensions/codec/durée,
+empreinte revérifiée, copie privée et processus borné. Cinq formats réels éprouvés ;
+9 tests dédiés, 131 média et 1 194 complets réussis, zéro ignoré, Memory activée,
+sur l'ensemble C-061/C-062 et Claude C110 intégré. Build client à jour, 69 Node
+réussis/14 Chromium ignorés dans cet environnement. Recettes installées à suivre.

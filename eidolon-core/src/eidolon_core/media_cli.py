@@ -19,6 +19,7 @@ from .media_setup import check_configuration, render_configuration, render_setup
 from .media_status import render_job
 from .media_workflows import OPERATIONS
 from .media_resources import ResourcePool, initialize as initialize_pool, render_pool
+from .media_metadata import probe as probe_artifact, render_metadata
 
 
 def main(argv=None):
@@ -58,6 +59,12 @@ def main(argv=None):
     p.add_argument("--root", required=True)
     p.add_argument("--max-artifacts", type=int, default=128)
     p.add_argument("--max-bytes", type=int, default=1024 * 1024 * 1024)
+    p = sub.add_parser("artifact-probe", help="run chosen local FFprobe on a verified private copy; metadata only")
+    p.add_argument("--root", required=True)
+    p.add_argument("--store-id", required=True)
+    p.add_argument("--reference", required=True)
+    p.add_argument("--ffprobe", required=True, help="absolute path of the operator-chosen FFprobe executable")
+    p.add_argument("--format", choices=("json", "human"), default="json")
     for name in ("artifact-import", "artifact-inspect", "artifacts", "artifact-recovery-inspect", "artifact-publish", "artifact-export"):
         p = sub.add_parser(name, help="import explicitly or inspect local media artifacts")
         p.add_argument("--root", required=True)
@@ -105,6 +112,11 @@ def main(argv=None):
             result = inspect_collection(args.collection)
         elif args.command == "artifact-init":
             result = initialize(args.root, max_artifacts=args.max_artifacts, max_bytes=args.max_bytes)
+        elif args.command == "artifact-probe":
+            ref = load_json(args.reference, 4096)
+            if type(ref) is dict and "reference" in ref:
+                ref = ref["reference"]
+            result = probe_artifact(args.root, args.store_id, ref, ffprobe=args.ffprobe)
         elif args.command in {"artifact-import", "artifact-inspect", "artifacts", "artifact-recovery-inspect", "artifact-publish", "artifact-export"}:
             store = ArtifactStore(args.root, expected_store_id=args.store_id)
             if args.command == "artifact-import":
@@ -132,7 +144,9 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        if args.command == "resource-inspect" and args.format == "human":
+        if args.command == "artifact-probe" and args.format == "human":
+            print(render_metadata(result))
+        elif args.command == "resource-inspect" and args.format == "human":
             print(render_pool(result))
         elif args.command == "inspect" and args.format == "human":
             print(render_job(result))

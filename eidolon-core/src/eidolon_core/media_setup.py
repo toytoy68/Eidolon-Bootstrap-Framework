@@ -24,6 +24,12 @@ from .media_resources import configured
 from .presentation import header, message, section
 
 HINTS = {
+    "FFPROBE_NOT_CONFIGURED": "Choisir explicitement le chemin absolu d'un exécutable FFprobe local.",
+    "FFPROBE_NOT_EXECUTABLE": "Vérifier le fichier et les droits d'exécution de FFprobe.",
+    "MEDIA_PROBE_TIMEOUT": "La sonde a dépassé son délai ; aucun résultat ni fichier valide n'est déduit de cet arrêt.",
+    "MEDIA_PROBE_FAILED": "La sonde locale a échoué ; vérifier l'artefact et l'exécutable, sans relance automatique.",
+    "MEDIA_PROBE_OUTPUT_TOO_LARGE": "La réponse du programme dépasse la borne prévue ; vérifier l'exécutable choisi.",
+    "INVALID_MEDIA_METADATA": "Métadonnées absentes ou incohérentes ; ne pas considérer l'artefact comme validé.",
     "MISSING_COMFY_ENDPOINT": "Renseigner comfy_endpoint avec l'adresse loopback du moteur ComfyUI choisi.",
     "MISSING_OLLAMA_ENDPOINT": "Renseigner ollama_endpoint avec l'adresse loopback du moteur Ollama choisi.",
     "MISSING_VISION_MODEL": "Renseigner vision_model avec le nom exact d'un modèle Vision installé localement.",
