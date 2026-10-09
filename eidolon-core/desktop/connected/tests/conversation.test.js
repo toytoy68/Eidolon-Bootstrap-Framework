@@ -157,3 +157,16 @@ test("G092: resuming reads the conversation back, marks unanswered turns pending
   assert.deepEqual(s.calls.map((c) => c.path.split("/").pop()), ["open", "page"]);   // read only
   assert.equal(s.calls[1].body.conversation_id, id);
 });
+
+test("G098: each reply names its profile and model; a change is said; nothing is invented", () => {
+  const a = { model: { profile: "local-a", model_id: "dialogue/m-a@0123" } };
+  const b = { model: { profile: "local-b", model_id: "dialogue/m-b@4567" } };
+  assert.equal(C.modelLabel(a, null), "Modèle : profil « local-a », dialogue/m-a@0123");
+  assert.equal(C.modelLabel(b, a), "Modèle : profil « local-b », dialogue/m-b@4567 — profil changé depuis la réponse précédente");
+  assert.equal(C.modelLabel(a, a), "Modèle : profil « local-a », dialogue/m-a@0123");
+  assert.equal(C.modelLabel({ model: { profile: "local-b", model_id: null } }, null), "Modèle : profil « local-b » (non chargé)");
+  assert.equal(C.modelLabel({ model: { profile: null, model_id: null } }, null), "Modèle : aucun");
+  assert.equal(C.modelLabel({ model: { profile: null, model_id: "simulated" } }, null), "Modèle : simulated");
+  assert.equal(C.modelLabel({}, null), null);                         // older replies: nothing guessed
+  assert.match(C.NOTES.DIALOGUE_PROFILE_UNAVAILABLE, /aucun autre n'est pris à sa place/);
+});

@@ -183,6 +183,11 @@ class SimulatedDialogueModel:
                                                   "observations_dropped": 0}
 
 
+def _model_id(model):
+    value = getattr(model, "model_id", None)
+    return value if isinstance(value, str) and 1 <= len(value) <= 300 else None
+
+
 class Dialogue:
     """Turn → (history, optional memory) → model → Core decision → recorded reply.
 
@@ -193,7 +198,12 @@ class Dialogue:
 
     def __init__(self, conversations, model, catalog, *, memory=None, history_turns=20, history_chars=16000,
                  attempt_seconds=120.0):
-        if type(attempt_seconds) not in (int, float) or not 0 < attempt_seconds <= 3600:
+        """model: one dialogue model, or DialogueProfiles whose explicitly selected profile is used (G098).
+
+        attempt_seconds=None derives the wall budget from the model's adapter timeout (+5 s, else 120 s).
+        """
+        if attempt_seconds is not None and (type(attempt_seconds) not in (int, float)
+                                            or not 0 < attempt_seconds <= 3600):
             raise ContractError("INVALID_CONVERSATION: attempt budget must be within (0, 3600] seconds")
         self.conversations, self.model, self.catalog, self.memory = conversations, model, catalog, memory
         self.history_turns, self.history_chars = history_turns, history_chars
@@ -213,20 +223,44 @@ class Dialogue:
             return None, [], type(exc).__name__
         return context, [reference(item) for item in context["items"]], None
 
-    def _bounded_reply(self, text, history, memory, observations=None):
+    def _resolve(self):
+        """(identity, model or None, unavailability code), read ONCE per turn (G098).
+
+        A profile changed while this turn's model is answering does not change this turn's identity;
+        an absent or unloadable profile is never replaced by another one.
+        """
+        from .dialogue_profiles import DialogueProfiles
+        if not isinstance(self.model, DialogueProfiles):
+            return {"profile": None, "model_id": _model_id(self.model)}, self.model, None
+        selected = self.conversations.selected_profile()
+        if selected is None:
+            return {"profile": None, "model_id": None}, None, "DIALOGUE_PROFILE_NOT_SELECTED"
+        try:
+            model = self.model.model(selected["name"])
+        except ContractError:
+            return {"profile": selected["name"], "model_id": None}, None, "DIALOGUE_PROFILE_UNAVAILABLE"
+        return {"profile": selected["name"], "model_id": _model_id(model)}, model, None
+
+    def _budget(self, model):
+        if self.attempt_seconds is not None:
+            return self.attempt_seconds
+        timeout = getattr(getattr(getattr(model, "adapter", None), "config", None), "timeout_seconds", None)
+        return min(3600, timeout + 5) if isinstance(timeout, (int, float)) and timeout > 0 else 120.0
+
+    def _bounded_reply(self, model, budget, text, history, memory, observations=None):
         """The model call in a daemon thread, waited for at most the attempt budget."""
         outcome = {}
 
         def attempt():
             try:
                 # Observations only reach models that accept them; others keep their 3-argument interface.
-                outcome["value"] = (self.model.reply(text, history, memory, observations) if observations
-                                    else self.model.reply(text, history, memory))
+                outcome["value"] = (model.reply(text, history, memory, observations) if observations
+                                    else model.reply(text, history, memory))
             except BaseException as exc:  # noqa: BLE001 - reported to the waiting caller
                 outcome["error"] = exc
 
         worker = threading.Thread(target=attempt, name="eidolon-dialogue-attempt", daemon=True)
-        deadline = time.monotonic() + self.attempt_seconds
+        deadline = time.monotonic() + budget
         worker.start()
         while worker.is_alive() and not self._closing.is_set() and time.monotonic() < deadline:
             worker.join(0.05)
@@ -285,7 +319,9 @@ class Dialogue:
         turn = recorded["turn"]
         if recorded["reply"] is not None:
             return {"turn": turn, "reply": recorded["reply"], "replayed": True, "model_called": False}
-        admission = self.conversations.claim_attempt(turn["turn_id"], seconds=self.attempt_seconds + 5)
+        identity, model, unavailable = self._resolve()
+        budget = self._budget(model)
+        admission = self.conversations.claim_attempt(turn["turn_id"], seconds=budget + 5)
         if admission == "answered":
             reply = self.conversations.append_turn(conversation_id, client_id=client_id,
                                                    client_turn_key=client_turn_key, text=text)["reply"]
@@ -296,13 +332,19 @@ class Dialogue:
             # An attempt started and never answered (cut, crash, timeout): never a second model call.
             reply = self._close_interrupted(conversation_id, turn, client_id, client_turn_key, text)
             return {"turn": turn, "reply": reply, "replayed": True, "model_called": False}
+        if model is None:
+            # No selected or loadable profile: answered as unavailable, no model called, none chosen instead.
+            reply = cv.decide_reply(turn, None, self.catalog, model=identity)
+            reply["core_note"] = unavailable
+            reply = self._record(conversation_id, reply, client_id, client_turn_key, text)
+            return {"turn": turn, "reply": reply, "replayed": False, "model_called": False}
         window = self.conversations.context(conversation_id, max_turns=self.history_turns + 1,
                                             max_chars=self.history_chars)
         history = [t for t in window["turns"] if t["sequence"] < turn["sequence"]]
         memory, sources, memory_error = self._recall(text)
         diagnostics = {"memory_error": memory_error, "model_error": None}
         try:
-            raw, info = self._bounded_reply(text, history, memory, observations)
+            raw, info = self._bounded_reply(model, budget, text, history, memory, observations)
             diagnostics.update(info)
         except ContractError as exc:
             if str(exc).startswith("SERVER_STOPPING"):
@@ -317,7 +359,8 @@ class Dialogue:
         reply = cv.decide_reply(turn, raw, self.catalog, sources=sources,
                                 previous_proposal=self.conversations.current_proposal(conversation_id),
                                 context=self._context_note(turn, history, memory, memory_error, diagnostics,
-                                                           observations))
+                                                           observations),
+                                model=identity)
         if diagnostics["model_error"] == "MODEL_TIMEOUT":
             reply["core_note"] = "MODEL_TIMEOUT"
         reply = self._record(conversation_id, reply, client_id, client_turn_key, text)

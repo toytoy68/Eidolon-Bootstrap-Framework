@@ -69,6 +69,7 @@ test("keyboard only: open, send, focus returns to the message, visible focus on 
       assert.equal(await page.evaluate(() => document.activeElement.id), "conv-text");
       await say(page, "Diagnostique le nas.");
       assert.equal(await page.evaluate(() => document.activeElement.id), "conv-text");
+      assert.match(await page.textContent("#conv-log .conv-model-id"), /^Modèle : simulated/);   // G098
       for (const id of ["conv-text", "conv-send", "conv-reason", "conv-submit", "conv-close"]) {
         await page.focus("#" + id);
         const outline = await page.evaluate((i) => parseFloat(getComputedStyle(document.getElementById(i)).outlineWidth), id);

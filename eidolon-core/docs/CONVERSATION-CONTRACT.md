@@ -88,6 +88,10 @@ Depuis G096, une réponse avec texte du modèle porte aussi `citations` :
 ne figurent pas dans `sources`. Une citation non transmise n'est jamais
 présentée comme une source.
 
+Depuis G098, une réponse porte aussi `model` : le profil de dialogue et
+l'identifiant du modèle qui l'ont produite, ou à qui elle a été demandée
+(`null` si inconnu). Il nomme le modèle ; ce n'est pas une preuve.
+
 Les `sources` contiennent au plus 5 références mémoire (`information_id@revision`),
 triées et sans doublon. Le contenu rappelé n'est pas une instruction.
 

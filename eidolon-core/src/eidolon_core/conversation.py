@@ -251,6 +251,25 @@ def validate_context_note(context):
                 or context["memory_truncated_items"] > 0 or context["observations_excluded"] > 0)
 
 
+PROFILE_NAME = re.compile(r"[a-z0-9][a-z0-9_.-]{0,39}")
+
+
+def validate_model_identity(value):
+    """G098: which dialogue profile and model produced (or were asked for) this reply. None if unknown.
+
+    It names the model; it is not evidence that the model's text is true, and never chosen by the model.
+    """
+    if value is None:
+        return None
+    if (not isinstance(value, dict) or set(value) != {"profile", "model_id"}
+            or not (value["profile"] is None or (isinstance(value["profile"], str)
+                                                 and PROFILE_NAME.fullmatch(value["profile"])))
+            or not (value["model_id"] is None or (isinstance(value["model_id"], str)
+                                                  and 1 <= len(value["model_id"]) <= 300))):
+        raise ContractError("INVALID_CONVERSATION: invalid model identity")
+    return dict(value)
+
+
 # A reference written in the model's text, e.g. "note-v100@3": checked against the sources Core sent.
 CITATION = re.compile(r"(?<![\w.@-])([A-Za-z0-9][A-Za-z0-9_.:-]{0,120}@[0-9]{1,9})(?![\w@])")
 
@@ -261,10 +280,11 @@ def citation_check(model_text, sources):
     return {"claimed": claimed, "unsupported": [c for c in claimed if c not in sources]}
 
 
-def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None):
+def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None, model=None):
     """Core's reply to one user turn. The model text is quoted; Core decides the kind."""
     turn = validate_turn(turn)
     context = validate_context_note(context)
+    model = validate_model_identity(model)
     unusable = "MODEL_UNAVAILABLE" if output is None else None
     if output is not None:
         try:
@@ -277,7 +297,7 @@ def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), c
     reply = {"protocol": REPLY_PROTOCOL, "store_id": turn["store_id"], "conversation_id": turn["conversation_id"],
              "in_reply_to": turn["turn_id"], "turn_sha256": digest(turn), "kind": None,
              "model_text": None, "core_note": None, "candidates": [], "sources": sorted(set(sources)),
-             "context": context, "citations": None,
+             "context": context, "citations": None, "model": model,
              "proposal": None, "proposal_sha256": None,
              "model_text_is_evidence": False, "authorizes_execution": False}
     if output is None:

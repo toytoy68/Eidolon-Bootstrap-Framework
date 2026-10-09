@@ -478,7 +478,10 @@ def main(argv=None):
     parser.add_argument("--research-archives", help="Catalogue privé existant à consulter, sans export des contenus")
     parser.add_argument("--check", action="store_true", help="Diagnostic local, sans ouvrir de port")
     parser.add_argument("--conversations", metavar="MODELE",
-                        help="Active /v1/conversations/ : 'simulated' (recette synthétique) ou configuration de modèle privée")
+                        help="Active /v1/conversations/ : 'simulated' (recette synthétique), 'profiles' "
+                             "(profils nommés, choix explicite) ou configuration de modèle privée")
+    parser.add_argument("--dialogue-profiles", metavar="FICHIER",
+                        help="Fichier privé des profils de dialogue (avec --conversations profiles)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
     if args.format and not args.check:
@@ -496,8 +499,16 @@ def main(argv=None):
             from .diagnostics import demo_catalog
             from .dialogue import ChatDialogueModel, SimulatedDialogueModel
             from .model_config import load_model
-            conversations = ((lambda: SimulatedDialogueModel(demo_catalog())) if args.conversations == "simulated"
-                             else (lambda: ChatDialogueModel(load_model(args.conversations), demo_catalog())))
+            if args.conversations == "profiles":
+                # G098: named profiles; the one used is the operator's explicit selection, never a fallback.
+                from .dialogue_profiles import DialogueProfiles
+                if args.dialogue_profiles is None:
+                    parser.error("--conversations profiles requires --dialogue-profiles")
+                profiles = DialogueProfiles.load(args.dialogue_profiles, demo_catalog())
+                conversations = lambda: profiles
+            else:
+                conversations = ((lambda: SimulatedDialogueModel(demo_catalog())) if args.conversations == "simulated"
+                                 else (lambda: ChatDialogueModel(load_model(args.conversations), demo_catalog())))
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations) as server:
             print(header(title="API de consultation locale"), flush=True)

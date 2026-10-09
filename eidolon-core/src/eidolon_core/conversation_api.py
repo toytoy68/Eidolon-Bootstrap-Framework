@@ -84,11 +84,8 @@ class ConversationAPI:
         self.runtime = runtime
         self.conversations = ConversationStore(runtime.store)
         self.credentials = ClientCredentials(runtime.store)
-        if attempt_seconds is None:
-            # Wall budget per model attempt: the adapter's own timeout plus a margin, 120 s otherwise.
-            adapter = getattr(dialogue_model, "adapter", None)
-            timeout = getattr(getattr(adapter, "config", None), "timeout_seconds", None)
-            attempt_seconds = min(3600, timeout + 5) if isinstance(timeout, (int, float)) else 120.0
+        # attempt_seconds=None: wall budget per attempt = the adapter's own timeout + 5 s, 120 s otherwise,
+        # derived per turn from the model actually used (a profile may change between turns, G098).
         self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
@@ -291,6 +288,11 @@ def main(argv=None):
     revoke = sub.add_parser("revoke")
     revoke.add_argument("--client-id", required=True)
     sub.add_parser("migrate", help="Migration explicite du dépôt des conversations vers la version courante")
+    profile = sub.add_parser("profile", help="Choix explicite du profil de dialogue (aucun repli automatique)")
+    profile.add_argument("action", choices=("select", "show"))
+    profile.add_argument("--name")
+    profile.add_argument("--actor")
+    profile.add_argument("--profiles", help="fichier privé des profils : le nom doit y figurer")
     attach = sub.add_parser("attach", help="Lier un artefact média à une conversation de son propriétaire")
     attach.add_argument("--client-id", required=True)
     attach.add_argument("--conversation-id", required=True)
@@ -305,6 +307,8 @@ def main(argv=None):
         elif args.command == "migrate":
             ConversationStore(store, migrate=True)
             print(json.dumps({"status": "MIGRATED", "schema": conversation_store.SCHEMA}))
+        elif args.command == "profile":
+            print(json.dumps(_profile(store, args)))
         elif args.command == "attach":
             print(json.dumps(_attach(store, args)))
         else:
@@ -314,6 +318,22 @@ def main(argv=None):
         print(json.dumps({"error": str(exc).split(":")[0]}))
         return 2
     return 0
+
+
+def _profile(store, args):
+    """Record or show the explicit profile selection. No model is contacted, nothing is downloaded."""
+    conversations = ConversationStore(store)
+    if args.action == "show":
+        return {"selected": conversations.selected_profile()}
+    if not args.name or not args.actor:
+        raise ContractError("INVALID_CONVERSATION: --name and --actor are required")
+    if args.profiles is not None:
+        from .dialogue_profiles import DialogueProfiles
+        from .diagnostics import demo_catalog
+        if args.name not in DialogueProfiles.load(args.profiles, demo_catalog()).names():
+            raise ContractError("DIALOGUE_PROFILE_UNAVAILABLE: profile not configured")
+    return {"status": "SELECTED", "selected": conversations.select_profile(args.name, actor=args.actor),
+            "applies_to": "turns whose model attempt starts after this selection"}
 
 
 def _attach(store, args):

@@ -433,6 +433,30 @@ class ConversationStore:
         return [attachment(store_id=self.store_id, owner_client_id=owner_client_id, conversation_id=conversation_id,
                            reference=json.loads(r[0])) for r in rows]
 
+    def select_profile(self, name, *, actor):
+        """Explicit operator choice of the dialogue profile (G098). Never made by a model or a fallback."""
+        if not isinstance(name, str) or not cv.PROFILE_NAME.fullmatch(name):
+            raise ConversationError("INVALID_CONVERSATION: invalid profile name")
+        if not isinstance(actor, str) or not 1 <= len(actor) <= 200:
+            raise ConversationError("INVALID_CONVERSATION: an actor is required")
+        value = {"name": name, "actor": actor, "selected_at": now()}
+        with self._db(write=True) as db:
+            db.execute("INSERT INTO meta VALUES ('dialogue_profile', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                       (encode(value),))
+        return value
+
+    def selected_profile(self):
+        """The profile last selected explicitly, or None. Its availability is checked by the caller."""
+        with self._db() as db:
+            row = db.execute("SELECT value FROM meta WHERE key='dialogue_profile'").fetchone()
+        if row is None:
+            return None
+        value = json.loads(row[0])
+        if not isinstance(value, dict) or set(value) != {"name", "actor", "selected_at"} \
+                or not isinstance(value["name"], str) or not cv.PROFILE_NAME.fullmatch(value["name"]):
+            raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: invalid profile selection")
+        return value
+
     def submitted_by(self, client_id, mission_id):
         """True only for a mission created from one of this client's submissions."""
         with self._db() as db:

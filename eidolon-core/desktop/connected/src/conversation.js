@@ -34,8 +34,21 @@
     MODEL_UNAVAILABLE: "Le modèle n'a pas répondu : rien n'a été deviné.",
     MODEL_OUTPUT_INVALID: "La réponse du modèle était illisible : rien n'a été deviné.",
     MODEL_TIMEOUT: "Le modèle n'a pas répondu dans le délai : une réponse tardive est ignorée.",
-    MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin."
+    MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin.",
+    DIALOGUE_PROFILE_NOT_SELECTED: "Aucun modèle de dialogue n'est choisi sur le serveur : aucun autre n'est pris à sa place.",
+    DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place."
   };
+  // G098: which profile and model produced this reply; a change from the previous reply is said in words.
+  function modelLabel(reply, previous) {
+    var m = reply && reply.model;
+    if (!m || typeof m !== "object") return null;
+    var name = m.profile ? "profil « " + m.profile + " »" : null;
+    var text = "Modèle : " + [name, m.model_id].filter(Boolean).join(", ") + (m.model_id ? "" : " (non chargé)");
+    if (!name && !m.model_id) text = "Modèle : aucun";
+    var before = previous && previous.model;
+    if (before && typeof before === "object" && before.profile !== m.profile && m.profile) text += " — profil changé depuis la réponse précédente";
+    return text;
+  }
   // Submission refusals worth explaining in words (others are shown with their code).
   var SUBMIT_ERRORS = {
     PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
@@ -286,6 +299,7 @@
     });
     var log = doc.getElementById("conv-log");
     log.textContent = "";
+    var previousReply = null;
     st.items.forEach(function (item) {
       var li = el(doc, "li", "conv-turn");
       li.appendChild(el(doc, "p", "conv-user", item.text));
@@ -316,6 +330,9 @@
         if (partial) box.appendChild(el(doc, "p", "help conv-context", partial));
         if (reply.candidates && reply.candidates.length) box.appendChild(el(doc, "p", "help", "Choix possibles : " + reply.candidates.join(", ")));
         if (reply.sources && reply.sources.length) box.appendChild(el(doc, "p", "help", "Sources : " + reply.sources.join(", ")));
+        var label = modelLabel(reply, previousReply);
+        if (label) box.appendChild(el(doc, "p", "help conv-model-id", label));
+        previousReply = reply;
         li.appendChild(box);
       }
       log.appendChild(li);
@@ -385,7 +402,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

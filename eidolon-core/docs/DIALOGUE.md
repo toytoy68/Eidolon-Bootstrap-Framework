@@ -135,6 +135,49 @@ Règles :
   immédiatement (`SERVER_STOPPING`, 503), **rien n'est enregistré** après le
   début de l'arrêt, et le tour reste à clore comme interrompu.
 
+## Profils de dialogue : changement explicite, modèle nommé par réponse (G098)
+
+- **Profils nommés** dans un fichier privé (0600, 16 Kio au plus) de
+  l'opérateur, hors Git :
+
+  ```json
+  {"schema": "eidolon-dialogue-profiles/1",
+   "profiles": {"local-a": {"kind": "model_config", "path": "/chemin/privé/modele.json"},
+                "recette": {"kind": "simulated"}}}
+  ```
+
+  Serveur : `--conversations profiles --dialogue-profiles <fichier>`. Le
+  fichier n'est lu qu'au démarrage ; aucun modèle n'est contacté ni téléchargé
+  à sa lecture.
+- **Choix explicite** de l'opérateur, enregistré dans le dépôt des
+  conversations avec l'acteur et l'heure :
+  `python -m eidolon_core.conversation_api --state <état> profile select --name local-a --actor toytoy --profiles <fichier>`
+  (`profile show` pour le relire). Le choix vaut pour les tours dont l'appel
+  au modèle commence **après** lui.
+- **Chaque réponse porte `model`** : `{"profile", "model_id"}`. L'identité est
+  lue **une seule fois** par tour : un changement pendant une réponse ne la
+  réattribue pas au nouveau profil. Une réponse tardive de l'ancien profil,
+  après le délai, reste écartée ; elle n'écrase aucun tour récent.
+- **Aucun repli silencieux** :
+
+  | Situation | Réponse |
+  | --- | --- |
+  | aucun profil choisi | `UNAVAILABLE` `DIALOGUE_PROFILE_NOT_SELECTED`, aucun modèle appelé |
+  | profil choisi absent du fichier au redémarrage, ou impossible à charger | `UNAVAILABLE` `DIALOGUE_PROFILE_UNAVAILABLE`, aucun autre profil essayé |
+  | sortie tronquée | `UNAVAILABLE` `MODEL_OUTPUT_INVALID`, avec l'identité du modèle |
+  | moteur injoignable | `UNAVAILABLE` `MODEL_UNAVAILABLE`, avec l'identité du modèle |
+
+  Les messages ne contiennent ni chemin de configuration ni secret.
+- Le budget mural suit le modèle réellement utilisé : délai de son
+  adaptateur + 5 s, sinon 120 s.
+- La page affiche « Modèle : profil « … », … » sous chaque réponse et signale
+  un changement de profil d'une réponse à la suivante. Une réponse ancienne,
+  enregistrée sans `model`, n'affiche rien : rien n'est deviné.
+- Un mode à modèle unique (`simulated` ou une configuration) reste possible :
+  `model` vaut alors `{"profile": null, "model_id": …}`.
+
+Tests : [test_dialogue_profiles.py](../tests/test_dialogue_profiles.py) (13).
+
 ## Pannes : jamais de réponse devinée
 
 | Cas | Réponse | Diagnostic |

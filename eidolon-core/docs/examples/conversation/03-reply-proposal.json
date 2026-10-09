@@ -10,6 +10,7 @@
   "core_note": null,
   "in_reply_to": "t-00000000000000000000000000000001",
   "kind": "PROPOSAL",
+  "model": null,
   "model_text": "Je peux lancer un diagnostic en lecture seule du NAS.",
   "model_text_is_evidence": false,
   "proposal": {
