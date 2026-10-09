@@ -78,12 +78,17 @@ def _fields(data, required, optional=()):
 
 
 class ConversationAPI:
-    def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None):
+    def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None):
         """runtime: the mission Runtime whose Store, catalogue and configuration missions use."""
         self.runtime = runtime
         self.conversations = ConversationStore(runtime.store)
         self.credentials = ClientCredentials(runtime.store)
-        self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog)
+        if attempt_seconds is None:
+            # Wall budget per model attempt: the adapter's own timeout plus a margin, 120 s otherwise.
+            adapter = getattr(dialogue_model, "adapter", None)
+            timeout = getattr(getattr(adapter, "config", None), "timeout_seconds", None)
+            attempt_seconds = min(3600, timeout + 5) if isinstance(timeout, (int, float)) else 120.0
+        self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
 
@@ -105,11 +110,15 @@ class ConversationAPI:
                 return 409, self._error(code)
             if code.startswith("INVALID_"):
                 return 400, self._error(code)
-            if code == "CONVERSATION_STORE_BUSY":
+            if code in ("CONVERSATION_STORE_BUSY", "SERVER_STOPPING", "CONVERSATION_STORE_MIGRATION_REQUIRED"):
                 return 503, self._error(code)
             return 503, self._error("CONVERSATION_UNAVAILABLE")
         except (KeyError, sqlite3.Error, OSError, ValueError, TypeError):
             return 503, self._error("CONVERSATION_UNAVAILABLE")
+
+    def close(self):
+        """Shutdown policy (G088-R2): in-flight model attempts are abandoned, nothing more is recorded."""
+        self.dialogue.close()
 
     @staticmethod
     def _error(code):
@@ -173,8 +182,10 @@ class ConversationAPI:
         self._own(client, data["conversation_id"])
         result = self.dialogue.respond(data["conversation_id"], client_id=client["client_id"],
                                        client_turn_key=data["client_turn_key"], text=data["text"])
+        # pending: another attempt for this very turn is still within its budget (G090-R1); ask again later.
         return {"protocol": PROTOCOL, "turn": result["turn"], "reply": result["reply"],
-                "replayed": result["replayed"], "model_called": result["model_called"]}
+                "pending": bool(result.get("pending")), "replayed": result["replayed"],
+                "model_called": result["model_called"]}
 
     def _page(self, client, data):
         _fields(data, {"conversation_id"}, {"after", "limit"})
@@ -273,12 +284,16 @@ def main(argv=None):
     pair.add_argument("--actor", required=True)
     revoke = sub.add_parser("revoke")
     revoke.add_argument("--client-id", required=True)
+    sub.add_parser("migrate", help="Migration explicite du dépôt des conversations v1 → v2")
     args = parser.parse_args(argv)
     store = Store(args.state)
     try:
         if args.command == "pair":
             ConversationStore(store, create=True)
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
+        elif args.command == "migrate":
+            ConversationStore(store, migrate=True)
+            print(json.dumps({"status": "MIGRATED", "schema": "eidolon-conversation-store/2"}))
         else:
             ClientCredentials(store).revoke(args.client_id)
             print(json.dumps({"client_id": args.client_id, "status": "REVOKED"}))

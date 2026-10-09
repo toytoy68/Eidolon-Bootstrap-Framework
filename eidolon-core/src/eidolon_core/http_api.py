@@ -7,8 +7,11 @@
 # ==========================================================
 """Development reader for a same-origin client over an SSH tunnel.
 
-No Runtime, commands, model, migration, or remote bind. The bearer grants read
-access only; it is not a human identity. See docs/HTTP-READ-API.md.
+By default: no Runtime, commands, model, migration, or remote bind. The bearer grants read access
+only; it is not a human identity. See docs/HTTP-READ-API.md. With the explicit --conversations
+option only, /v1/conversations/ is mounted (conversation_api, G087/G088): a separately paired
+conversation key may talk and submit frozen proposals, which creates missions; the read token
+keeps no write right there. See docs/CONVERSATION-API.md.
 """
 import argparse
 from contextlib import contextmanager
@@ -446,6 +449,9 @@ class ReadServer(HTTPServer):
                     self._workers.pop(request, None)
 
     def server_close(self):
+        if self.conversation_api is not None:
+            # G088-R2: stop waiting for models FIRST; workers then finish within their join below.
+            self.conversation_api.close()
         with self._worker_lock:
             self._closing = True
             active = list(self._workers.items())
@@ -495,7 +501,9 @@ def main(argv=None):
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations) as server:
             print(header(title="API de consultation locale"), flush=True)
-            print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — lecture seule."), flush=True)
+            mode = ("lecture seule ; conversations ACTIVES sur /v1/conversations/ (clé appairée, création de missions)"
+                    if conversations is not None else "lecture seule")
+            print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — {mode}."), flush=True)
             server.serve_forever()
     except KeyboardInterrupt:
         return 0

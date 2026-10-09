@@ -12,6 +12,7 @@ from pathlib import Path
 import secrets
 import tempfile
 import threading
+import time
 import unittest
 
 from eidolon_core import http_api
@@ -114,3 +115,30 @@ class MountTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ShutdownTests(MountTests):
+    def test_g088_r2_server_close_does_not_wait_for_a_blocked_model(self):
+        release, started = threading.Event(), threading.Event()
+
+        class Blocked(SimulatedDialogueModel):
+            def reply(self, text, history, memory):
+                started.set()
+                release.wait(20)
+                return super().reply(text, history, memory)
+
+        server = http_api.ReadServer(self.state, self.read, port=0, conversations=lambda: Blocked(demo_catalog()))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        status, opened = self.request(server, "POST", "/v1/conversations/open", {"client_key": "k"}, self.key)
+        threading.Thread(target=lambda: self.request(server, "POST", "/v1/conversations/turn",
+                                                     {"conversation_id": opened["conversation_id"],
+                                                      "client_turn_key": "t", "text": "Diagnostique le nas."},
+                                                     self.key), daemon=True).start()
+        self.assertTrue(started.wait(5))
+        began = time.monotonic()
+        server.shutdown()
+        server.server_close()
+        self.assertLess(time.monotonic() - began, 2)
+        release.set()
+        page = ConversationStore(Store(self.state)).page(opened["conversation_id"])
+        self.assertIsNone(page["items"][0]["reply"])          # nothing recorded after shutdown began

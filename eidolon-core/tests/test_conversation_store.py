@@ -416,3 +416,44 @@ class StorageTests(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MigrationTests(unittest.TestCase):
+    """Schema v2 (attempts) is never applied implicitly to a v1 store."""
+
+    V1 = """
+        CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+        CREATE TABLE conversations (conversation_id TEXT PRIMARY KEY, client_id TEXT NOT NULL, client_key TEXT NOT NULL,
+            created_at TEXT NOT NULL, turn_count INTEGER NOT NULL DEFAULT 0, last_turn_sha256 TEXT, UNIQUE(client_id, client_key));
+        CREATE TABLE turns (conversation_id TEXT NOT NULL, sequence INTEGER NOT NULL, turn_id TEXT NOT NULL UNIQUE,
+            client_id TEXT NOT NULL, client_turn_key TEXT NOT NULL, body TEXT NOT NULL, sha256 TEXT NOT NULL,
+            received_at TEXT NOT NULL, PRIMARY KEY(conversation_id, sequence), UNIQUE(client_id, client_turn_key));
+        CREATE TABLE replies (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, body TEXT NOT NULL,
+            sha256 TEXT NOT NULL, recorded_at TEXT NOT NULL);
+        CREATE TABLE proposals (proposal_id TEXT NOT NULL, version INTEGER NOT NULL, conversation_id TEXT NOT NULL,
+            body TEXT NOT NULL, sha256 TEXT NOT NULL, PRIMARY KEY(proposal_id, version));
+        CREATE TABLE submissions (client_id TEXT NOT NULL, command_key TEXT NOT NULL, body TEXT NOT NULL,
+            sha256 TEXT NOT NULL, conversation_id TEXT NOT NULL, status TEXT NOT NULL, reserved_at TEXT NOT NULL,
+            mission_id TEXT, link TEXT, resolution TEXT, PRIMARY KEY(client_id, command_key));
+        INSERT INTO conversations VALUES ('c-00000000000000000000000000000001', 'pc', 'k', 'x', 0, NULL);
+        PRAGMA user_version=1;
+    """
+
+    def test_v1_requires_an_explicit_migration_that_keeps_the_data(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Store(Path(tmp) / "state")
+            with store.connection() as db:
+                store_id = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()[0]
+            folder = Path(store.directory) / "conversations"
+            os.mkdir(folder, 0o700)
+            path = folder / "conversations.sqlite3"
+            with sqlite3.connect(path) as db:
+                db.executescript(self.V1 + f"INSERT INTO meta VALUES ('schema','{cs.SCHEMA_V1}'),('store_id','{store_id}');")
+            os.chmod(path, 0o600)
+            before = hashlib.sha256(path.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_MIGRATION_REQUIRED"):
+                cs.ConversationStore(store)
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)     # refusal changes nothing
+            migrated = cs.ConversationStore(store, migrate=True)
+            self.assertEqual(migrated.owner("c-00000000000000000000000000000001"), "pc")
+            cs.ConversationStore(store)                                                 # v2 opens normally

@@ -297,3 +297,77 @@ class HttpServerTests(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AttemptTests(Base):
+    """G090-R1 / G088-R2 (Codex G115/G117): one model attempt per turn, bounded, abandoned at shutdown."""
+
+    class Gate(dg.SimulatedDialogueModel):
+        def __init__(self, catalog, release=None):
+            super().__init__(catalog)
+            self.calls, self.started, self.release = 0, threading.Event(), release or threading.Event()
+
+        def reply(self, text, history, memory):
+            self.calls += 1
+            self.started.set()
+            self.release.wait(10)
+            return super().reply(text, history, memory)
+
+    def test_g090_r1_two_concurrent_attempts_call_the_model_once(self):
+        gate = self.Gate(self.runtime.catalog)
+        d = self.dialogue(gate)
+        first = {}
+        worker = threading.Thread(target=lambda: first.update(self.say(d, "Diagnostique le nas.", key="same")))
+        worker.start()
+        self.assertTrue(gate.started.wait(5))
+        second = self.say(d, "Diagnostique le nas.", key="same")              # same turn, same key, meanwhile
+        self.assertEqual((second["reply"], second.get("pending"), second["model_called"]), (None, True, False))
+        gate.release.set()
+        worker.join(10)
+        third = self.say(d, "Diagnostique le nas.", key="same")
+        self.assertEqual((gate.calls, third["reply"], third["model_called"]), (1, first["reply"], False))
+
+    def test_an_interrupted_attempt_is_closed_never_retried(self):
+        gate = self.Gate(self.runtime.catalog)
+        turn = self.conversations.append_turn(self.cid, client_id="pc", client_turn_key="cut", text="Diagnostique le nas.")
+        self.assertEqual(self.conversations.claim_attempt(turn["turn"]["turn_id"], seconds=0.05), "claimed")
+        time.sleep(0.1)                                     # the claiming process died without a reply
+        result = self.say(self.dialogue(gate), "Diagnostique le nas.", key="cut")
+        self.assertEqual((result["reply"]["kind"], result["reply"]["core_note"], gate.calls),
+                         ("UNAVAILABLE", "MODEL_ATTEMPT_INTERRUPTED", 0))
+        self.assertIsNone(self.conversations.current_proposal(self.cid))
+
+    def test_g088_r2_a_slow_model_is_cut_by_the_wall_budget_and_its_late_answer_discarded(self):
+        gate = self.Gate(self.runtime.catalog)
+        d = self.dialogue(gate, attempt_seconds=0.3)
+        started = time.monotonic()
+        result = self.say(d, "Diagnostique le nas.", key="slow")
+        self.assertLess(time.monotonic() - started, 2)
+        self.assertEqual((result["reply"]["kind"], result["reply"]["core_note"], result["diagnostics"]["model_error"]),
+                         ("UNAVAILABLE", "MODEL_TIMEOUT", "MODEL_TIMEOUT"))
+        gate.release.set()
+        time.sleep(0.1)                                     # the late answer arrives and is ignored
+        self.assertEqual(self.say(d, "Diagnostique le nas.", key="slow")["reply"], result["reply"])
+        self.assertIsNone(self.conversations.current_proposal(self.cid))
+
+    def test_g088_r2_close_abandons_waits_and_records_nothing(self):
+        gate = self.Gate(self.runtime.catalog)
+        d = self.dialogue(gate, attempt_seconds=30)
+        outcome = {}
+        def run():
+            try:
+                self.say(d, "Diagnostique le nas.", key="stop")
+            except ContractError as exc:
+                outcome["error"] = str(exc).split(":")[0]
+        worker = threading.Thread(target=run)
+        worker.start()
+        self.assertTrue(gate.started.wait(5))
+        started = time.monotonic()
+        d.close()
+        worker.join(5)
+        self.assertLess(time.monotonic() - started, 1)
+        self.assertEqual(outcome["error"], "SERVER_STOPPING")
+        self.assertIsNone(self.conversations.page(self.cid)["items"][0]["reply"])     # nothing recorded
+        with self.assertRaisesRegex(ContractError, "SERVER_STOPPING"):
+            self.say(d, "autre message")
+        gate.release.set()

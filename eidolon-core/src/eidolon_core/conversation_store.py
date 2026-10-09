@@ -30,7 +30,12 @@ from .commands import validate_scope
 from .contracts import ContractError, digest, encode
 from .store import now
 
-SCHEMA = "eidolon-conversation-store/1"
+SCHEMA = "eidolon-conversation-store/2"
+SCHEMA_V1 = "eidolon-conversation-store/1"
+VERSION = 2
+# v2 adds one durable model attempt per turn (G090-R1). v1 is migrated only on explicit request.
+ATTEMPTS_TABLE = ("CREATE TABLE attempts (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, "
+                  "started_at TEXT NOT NULL, deadline REAL NOT NULL)")
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
@@ -51,7 +56,7 @@ def _key(value, name):
 
 
 class ConversationStore:
-    def __init__(self, store, *, create=False, checkpoint=None):
+    def __init__(self, store, *, create=False, migrate=False, checkpoint=None):
         """create=True creates a missing store; otherwise an existing one is reopened, never created."""
         self.store = store
         self.directory = Path(store.directory) / "conversations"
@@ -79,7 +84,7 @@ class ConversationStore:
             db = self._connect()
             try:
                 version = db.execute("PRAGMA user_version").fetchone()[0]
-                if version not in (0, 1):
+                if version not in (0, 1, VERSION):
                     raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unsupported schema version")
                 empty = db.execute("SELECT count(*) FROM sqlite_master").fetchone()[0] == 0
                 # Tables are only ever added to an EMPTY database on explicit creation; any existing
@@ -113,11 +118,14 @@ class ConversationStore:
                             sha256 TEXT NOT NULL, conversation_id TEXT NOT NULL, status TEXT NOT NULL,
                             reserved_at TEXT NOT NULL, mission_id TEXT, link TEXT, resolution TEXT,
                             PRIMARY KEY(client_id, command_key));
+                        %s;
                         INSERT INTO meta VALUES ('schema', '%s');
                         INSERT INTO meta VALUES ('store_id', '%s');
-                        PRAGMA user_version=1;
+                        PRAGMA user_version=2;
                         COMMIT;
-                    """ % (SCHEMA, self.store_id))
+                    """ % (ATTEMPTS_TABLE, SCHEMA, self.store_id))
+                elif migrate and version == 1:
+                    self._migrate_v1(db)
             finally:
                 db.close()
         except sqlite3.OperationalError as exc:
@@ -159,9 +167,29 @@ class ConversationStore:
         return sqlite3.connect(self.path.resolve().as_uri() + "?mode=rw", uri=True,
                                timeout=BUSY_SECONDS, isolation_level=None)
 
+    def _migrate_v1(self, db):
+        """Explicit v1 → v2: same Store, one transaction, nothing else rewritten."""
+        db.execute("BEGIN IMMEDIATE")
+        try:
+            meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
+            if meta.get("schema") != SCHEMA_V1 or db.execute("PRAGMA user_version").fetchone()[0] != 1:
+                raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: not a v1 conversation store")
+            if meta.get("store_id") != self.store_id:
+                raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
+            db.execute(ATTEMPTS_TABLE)
+            db.execute("UPDATE meta SET value=? WHERE key='schema'", (SCHEMA,))
+            db.execute("PRAGMA user_version=2")
+            db.execute("COMMIT")
+        except BaseException:
+            db.execute("ROLLBACK")
+            raise
+
     def _check_meta(self, db):
         meta = dict(db.execute("SELECT key, value FROM meta WHERE key IN ('schema','store_id')"))
-        if meta.get("schema") != SCHEMA or db.execute("PRAGMA user_version").fetchone()[0] != 1:
+        version = db.execute("PRAGMA user_version").fetchone()[0]
+        if meta.get("schema") == SCHEMA_V1 and version == 1:
+            raise ConversationError("CONVERSATION_STORE_MIGRATION_REQUIRED: run the explicit v1 → v2 migration")
+        if meta.get("schema") != SCHEMA or version != VERSION:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: unknown schema")
         if meta.get("store_id") != self.store_id:
             raise ConversationError("STORE_CHANGED: conversations belong to another mission Store")
@@ -300,6 +328,28 @@ class ConversationStore:
         row = db.execute("SELECT body FROM proposals WHERE conversation_id=? ORDER BY version DESC LIMIT 1",
                          (conversation_id,)).fetchone()
         return self._load(row[0]) if row else None
+
+    def claim_attempt(self, turn_id, *, seconds):
+        """Admit at most ONE model attempt per turn, durably, before any model call (G090-R1).
+
+        Returns "answered" (a reply exists), "claimed" (this caller may call the model once), "busy"
+        (another attempt is within its deadline) or "expired" (an attempt started and never recorded a
+        reply: interrupted). Expired never grants a second model call; the caller closes the turn.
+        """
+        import time
+        if type(seconds) not in (int, float) or not 0 < seconds <= 3600:
+            raise ConversationError("INVALID_CONVERSATION: invalid attempt budget")
+        with self._db(write=True) as db:
+            row = db.execute("SELECT conversation_id FROM turns WHERE turn_id=?", (turn_id,)).fetchone()
+            if row is None:
+                raise ConversationError("TURN_UNKNOWN")
+            if db.execute("SELECT 1 FROM replies WHERE turn_id=?", (turn_id,)).fetchone():
+                return "answered"
+            attempt = db.execute("SELECT deadline FROM attempts WHERE turn_id=?", (turn_id,)).fetchone()
+            if attempt is None:
+                db.execute("INSERT INTO attempts VALUES (?,?,?,?)", (turn_id, row[0], now(), time.time() + seconds))
+                return "claimed"
+            return "busy" if time.time() < attempt[0] else "expired"
 
     def current_proposal(self, conversation_id):
         with self._db() as db:

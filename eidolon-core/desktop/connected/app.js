@@ -1698,6 +1698,7 @@
   var LABELS = {
     draft: "Brouillon", sent: "Envoyé — en attente de la réponse", received: "Reçu",
     uncertain: "Envoi incertain — renvoyer ne crée pas de doublon", refused: "Refusé",
+    pending: "Réponse en préparation par une autre tentative — vérifier à nouveau",
     created: "Mission créée — pas encore lancée", running: "En cours", result: "Résultat disponible",
     unknown_effect: "Effet inconnu — voir les preuves, ne pas relancer"
   };
@@ -1710,7 +1711,9 @@
     CAPABILITY_ABSENT: "Ce service ne permet pas cette action.",
     MODEL_DECLINED: "Le modèle indique que la demande sort de ses capacités.",
     MODEL_UNAVAILABLE: "Le modèle n'a pas répondu : rien n'a été deviné.",
-    MODEL_OUTPUT_INVALID: "La réponse du modèle était illisible : rien n'a été deviné."
+    MODEL_OUTPUT_INVALID: "La réponse du modèle était illisible : rien n'a été deviné.",
+    MODEL_TIMEOUT: "Le modèle n'a pas répondu dans le délai : une réponse tardive est ignorée.",
+    MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin."
   };
   var REPLY_KINDS = { ANSWER: "Réponse", CLARIFICATION: "Question en retour", PROPOSAL: "Proposition de mission",
     OUT_OF_SCOPE: "Hors capacités", UNAVAILABLE: "Indisponible" };
@@ -1787,7 +1790,7 @@
       var item;
       if (retryKey) {
         item = state.items.filter(function (i) { return i.key === retryKey; })[0];
-        if (!item || item.status !== "uncertain") return false;
+        if (!item || (item.status !== "uncertain" && item.status !== "pending")) return false;
       } else {
         if (typeof text !== "string" || !text.trim() || text.length > 8000) return false;
         item = { key: randomKey("turn"), text: text, status: "draft", reply: null, error: null };
@@ -1797,7 +1800,9 @@
       var r = await call("turn", { conversation_id: state.conversationId, client_turn_key: item.key, text: item.text });
       if (r.stale) return false;
       item = state.items.filter(function (i) { return i.key === item.key; })[0];
-      if (r.ok) {
+      if (r.ok && r.json.pending) {
+        item.status = "pending";                          // another attempt owns this turn (G090-R1)
+      } else if (r.ok) {
         item.status = "received"; item.reply = r.json.reply;
         if (r.json.reply && r.json.reply.kind === "PROPOSAL") {
           state.proposal = r.json.reply.proposal; state.proposalSha = r.json.reply.proposal_sha256; state.submission = null;
@@ -1875,6 +1880,13 @@
 
   function render(doc, st, missionStatus) {
     var closed = st.phase !== "open";
+    // G088-R1: the header states the actual mode; the read token itself never gains a right.
+    var badge = doc.getElementById("mode-badge");
+    if (badge) {
+      badge.textContent = closed ? "Consultation seule" : "Conversation active";
+      badge.title = closed ? "Aucune commande : ni accord, ni lancement, ni annulation"
+        : "Une proposition que vous validez crée une mission ; le jeton de lecture reste en lecture seule.";
+    }
     doc.getElementById("conv-connect").hidden = !closed;
     doc.getElementById("conv-body").hidden = closed;
     doc.getElementById("conv-close").hidden = closed;
@@ -1891,8 +1903,8 @@
       var li = el(doc, "li", "conv-turn");
       li.appendChild(el(doc, "p", "conv-user", item.text));
       li.appendChild(el(doc, "p", "conv-state state-" + item.status, LABELS[item.status] + (item.error ? " (" + item.error + ")" : "")));
-      if (item.status === "uncertain") {
-        var retry = el(doc, "button", "media-secondary", "Renvoyer le même message");
+      if (item.status === "uncertain" || item.status === "pending") {
+        var retry = el(doc, "button", "media-secondary", item.status === "pending" ? "Vérifier la réponse" : "Renvoyer le même message");
         retry.type = "button"; retry.dataset.retry = item.key;
         li.appendChild(retry);
       }

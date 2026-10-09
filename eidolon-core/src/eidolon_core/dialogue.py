@@ -16,6 +16,8 @@ decides the reply kind, and a proposal still needs a separate human submission.
 """
 import json
 import re
+import threading
+import time
 
 from . import conversation as cv
 from .contracts import ContractError, digest, encode, reference, validate_context
@@ -156,11 +158,25 @@ class SimulatedDialogueModel:
 
 
 class Dialogue:
-    """Turn → (history, optional memory) → model → Core decision → recorded reply."""
+    """Turn → (history, optional memory) → model → Core decision → recorded reply.
 
-    def __init__(self, conversations, model, catalog, *, memory=None, history_turns=20, history_chars=16000):
+    One durable model attempt per turn (G090-R1), bounded by a wall-clock budget independent of the
+    adapter's socket timeouts (G088-R2). close() abandons in-flight attempts at once: no reply is
+    recorded during shutdown and the turn stays "interrupted"; a late model answer is discarded.
+    """
+
+    def __init__(self, conversations, model, catalog, *, memory=None, history_turns=20, history_chars=16000,
+                 attempt_seconds=120.0):
+        if type(attempt_seconds) not in (int, float) or not 0 < attempt_seconds <= 3600:
+            raise ContractError("INVALID_CONVERSATION: attempt budget must be within (0, 3600] seconds")
         self.conversations, self.model, self.catalog, self.memory = conversations, model, catalog, memory
         self.history_turns, self.history_chars = history_turns, history_chars
+        self.attempt_seconds = attempt_seconds
+        self._closing = threading.Event()
+
+    def close(self):
+        """Shutdown policy: stop waiting for models now; never record a reply after this point."""
+        self._closing.set()
 
     def _recall(self, text):
         if self.memory is None:
@@ -171,20 +187,78 @@ class Dialogue:
             return None, [], type(exc).__name__
         return context, [reference(item) for item in context["items"]], None
 
+    def _bounded_reply(self, text, history, memory):
+        """The model call in a daemon thread, waited for at most the attempt budget."""
+        outcome = {}
+
+        def attempt():
+            try:
+                outcome["value"] = self.model.reply(text, history, memory)
+            except BaseException as exc:  # noqa: BLE001 - reported to the waiting caller
+                outcome["error"] = exc
+
+        worker = threading.Thread(target=attempt, name="eidolon-dialogue-attempt", daemon=True)
+        deadline = time.monotonic() + self.attempt_seconds
+        worker.start()
+        while worker.is_alive() and not self._closing.is_set() and time.monotonic() < deadline:
+            worker.join(0.05)
+        if self._closing.is_set():
+            raise ContractError("SERVER_STOPPING: the attempt was abandoned; nothing was recorded")
+        if worker.is_alive():
+            raise ContractError("MODEL_TIMEOUT: no answer within the attempt budget; a late answer is discarded")
+        if "error" in outcome:
+            raise outcome["error"]
+        return outcome["value"]
+
+    def _close_interrupted(self, conversation_id, turn, client_id, client_turn_key, text):
+        reply = cv.decide_reply(turn, None, self.catalog)
+        reply["core_note"] = "MODEL_ATTEMPT_INTERRUPTED"
+        return self._record(conversation_id, reply, client_id, client_turn_key, text)
+
+    def _record(self, conversation_id, reply, client_id, client_turn_key, text):
+        if self._closing.is_set():
+            raise ContractError("SERVER_STOPPING: nothing is recorded during shutdown")
+        try:
+            return self.conversations.record_reply(reply)
+        except ContractError as exc:
+            if not str(exc).startswith("REPLY_ALREADY_RECORDED"):
+                raise
+            # Another attempt closed this turn first: its reply is the recorded one.
+            return self.conversations.append_turn(conversation_id, client_id=client_id,
+                                                  client_turn_key=client_turn_key, text=text)["reply"]
+
     def respond(self, conversation_id, *, client_id, client_turn_key, text):
+        if self._closing.is_set():
+            raise ContractError("SERVER_STOPPING: no new turn during shutdown")
         recorded = self.conversations.append_turn(conversation_id, client_id=client_id,
                                                   client_turn_key=client_turn_key, text=text)
         turn = recorded["turn"]
         if recorded["reply"] is not None:
             return {"turn": turn, "reply": recorded["reply"], "replayed": True, "model_called": False}
+        admission = self.conversations.claim_attempt(turn["turn_id"], seconds=self.attempt_seconds + 5)
+        if admission == "answered":
+            reply = self.conversations.append_turn(conversation_id, client_id=client_id,
+                                                   client_turn_key=client_turn_key, text=text)["reply"]
+            return {"turn": turn, "reply": reply, "replayed": True, "model_called": False}
+        if admission == "busy":
+            return {"turn": turn, "reply": None, "pending": True, "replayed": True, "model_called": False}
+        if admission == "expired":
+            # An attempt started and never answered (cut, crash, timeout): never a second model call.
+            reply = self._close_interrupted(conversation_id, turn, client_id, client_turn_key, text)
+            return {"turn": turn, "reply": reply, "replayed": True, "model_called": False}
         window = self.conversations.context(conversation_id, max_turns=self.history_turns + 1,
                                             max_chars=self.history_chars)
         history = [t for t in window["turns"] if t["sequence"] < turn["sequence"]]
         memory, sources, memory_error = self._recall(text)
         diagnostics = {"memory_error": memory_error, "model_error": None}
         try:
-            raw, info = self.model.reply(text, history, memory)
+            raw, info = self._bounded_reply(text, history, memory)
             diagnostics.update(info)
+        except ContractError as exc:
+            if str(exc).startswith("SERVER_STOPPING"):
+                raise
+            raw = None
+            diagnostics["model_error"] = getattr(exc, "code", None) or str(exc).split(":")[0][:60]
         except Exception as exc:  # noqa: BLE001 - any adapter failure becomes UNAVAILABLE, never a guess
             raw = None
             diagnostics["model_error"] = getattr(exc, "code", None) or str(exc).split(":")[0][:60] or type(exc).__name__
@@ -192,12 +266,7 @@ class Dialogue:
             sources = []        # only cite what the model actually received (G086-R1)
         reply = cv.decide_reply(turn, raw, self.catalog, sources=sources,
                                 previous_proposal=self.conversations.current_proposal(conversation_id))
-        try:
-            reply = self.conversations.record_reply(reply)
-        except ContractError as exc:
-            if not str(exc).startswith("REPLY_ALREADY_RECORDED"):
-                raise
-            # A concurrent attempt answered first: its reply is the recorded one.
-            reply = self.conversations.append_turn(conversation_id, client_id=client_id,
-                                                   client_turn_key=client_turn_key, text=text)["reply"]
+        if diagnostics["model_error"] == "MODEL_TIMEOUT":
+            reply["core_note"] = "MODEL_TIMEOUT"
+        reply = self._record(conversation_id, reply, client_id, client_turn_key, text)
         return {"turn": turn, "reply": reply, "replayed": False, "model_called": True, "diagnostics": diagnostics}
