@@ -1,0 +1,7 @@
+{
+  "agent": "video",
+  "operation": "create",
+  "prompt": "Un cube bleu se déplace lentement de gauche à droite sur un fond blanc.",
+  "format": "landscape",
+  "duration_seconds": 5
+}

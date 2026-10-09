@@ -1,3 +1,18 @@
+# Suite active — C-MSG-G116, 09/10/2026
+
+C110/8f20041 reçu et intégré : G084–G089 livrés. G085-R1 à R5, G086-R1 et
+G087-R1/R2 vérifiés et clos ; recette G089 originale reproduite 18/18 depuis
+notre paquet installé. Retours prioritaires G090-R1 (double appel modèle sur un
+tour concurrent) et G088-R1 (mentions lecture seule en mode conversation actif).
+
+Après le lot engagé et ces retours, **G094 est prêt** : formaliser la frontière
+conversation ↔ Image/Vidéo sur les modules installés, sans attendre une qualification
+GPU. Codex a livré C-049/C-050/C-051 puis C-056/C-058/C-060/C-061/C-062. Les autres
+lots G090–G101 et G080–G083 sont conservés selon dépendances ; les six dernières
+fiches attribuées restent G096–G101. Aucun nouveau lot ou démarrage d'agent présumé.
+
+---
+
 # Suite active — C-MSG-G111, 09/10/2026
 
 Codex livre C-056/C-058/C-059 ; paquet et code vérifiés. Claude conserve

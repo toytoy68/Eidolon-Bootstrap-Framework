@@ -18,6 +18,8 @@ Un groupe de réservation facultatif empêche les travaux média configurés ens
 de démarrer en concurrence. Il persiste après une coupure et réclame une libération
 opérateur après vérification du moteur. Voir `resource-init`, `resource-inspect`
 et `resource-release` dans le [guide des agents média](docs/MEDIA-AGENTS.md).
+Six demandes à adapter et une [fiche de recette réelle](docs/MEDIA-REAL-RECIPE.md)
+sont fournies dans l’archive source pour préparer les essais Image/Vidéo.
 
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 

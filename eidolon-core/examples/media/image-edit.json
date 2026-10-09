@@ -1,0 +1,7 @@
+{
+  "agent": "image",
+  "operation": "edit",
+  "prompt": "Rends le fond blanc et conserve la forme et la couleur de l'objet principal.",
+  "source": "/REMPLACER/image.png",
+  "format": "square"
+}

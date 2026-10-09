@@ -1,0 +1,106 @@
+{
+ "recipe": "G089",
+ "installed_module": "/eidolon_core/__init__.py",
+ "web_root_files": [
+  "README.md",
+  "app.js",
+  "eidolon-logo.png",
+  "index.html",
+  "launchers",
+  "style.css"
+ ],
+ "passed": 18,
+ "total": 18,
+ "checks": [
+  {
+   "check": "ouverture avec la clé de conversation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "réponse",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "clarification avec candidats du catalogue",
+   "ok": true,
+   "detail": "TARGET_AMBIGUOUS"
+  },
+  {
+   "check": "proposition figée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "hors capacités expliqué",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "lecteur refusé en écriture",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "proposition modifiée refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "réponse perdue : reçu retrouvé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "doublon : même reçu",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "autre clé pour la même proposition refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "une seule mission créée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "soumission ne lance rien",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "résultat lu par l'API de lecture",
+   "ok": true,
+   "detail": "service_diagnostic.synthetic"
+  },
+  {
+   "check": "références du résultat : lien vérifié",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "la clé de conversation ne lit pas",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "annulation demandée, non confirmée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "arrêt confirmé par le runtime",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "modèle indisponible : rien de deviné",
+   "ok": true,
+   "detail": "MODEL_UNAVAILABLE"
+  }
+ ]
+}

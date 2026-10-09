@@ -1541,3 +1541,20 @@ empreinte revérifiée, copie privée et processus borné. Cinq formats réels �
 9 tests dédiés, 131 média et 1 194 complets réussis, zéro ignoré, Memory activée,
 sur l'ensemble C-061/C-062 et Claude C110 intégré. Build client à jour, 69 Node
 réussis/14 Chromium ignorés dans cet environnement. Recettes installées à suivre.
+
+
+### Prise en charge C-063 — 09/10/2026, 12 h 44 Europe/Paris
+
+Codex : kit de reprise des essais média réels, six demandes JSON à adapter,
+fiche de recette opérateur et inclusion explicite dans le paquet source. Aucun
+moteur/modèle présélectionné, aucun appel réel dans cet environnement, aucune
+modification du code conversation ni des adaptateurs déjà figés et testés.
+
+
+### C-MSG-G116 — Recettes installées et suite média, 09/10/2026
+
+Code f021878 : archive 118 fichiers reproductible, 72 modules installés identiques,
+six modes média avec réservations et six sondes FFprobe ; recette G089 originale
+18/18 depuis le paquet. C-063 prépare les demandes et la fiche de recette matérielle,
+aucune qualification réelle supposée. G090-R1/G088-R1 ouverts ; G094 prêt après
+ces retours, file active actualisée sans supprimer les fiches précédentes.

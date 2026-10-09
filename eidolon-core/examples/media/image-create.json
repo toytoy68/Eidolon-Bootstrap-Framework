@@ -1,0 +1,6 @@
+{
+  "agent": "image",
+  "operation": "create",
+  "prompt": "Un cube bleu posé au centre sur un fond blanc.",
+  "format": "square"
+}

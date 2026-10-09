@@ -18,3 +18,13 @@ G084–G089 restent prioritaires après le lot déjà engagé. Préserver les t�
 antérieures et livrer par commit avec résultats exécutés et limites. Vérifier
 la tête actuelle avant travail. Pas de main, déploiement ou modification du
 Memory Engine. Une fiche ne démarre aucune session Claude.
+
+
+Complément Codex C-061/C-062, 09/10/2026 : `resource_pool` ajoute une admission
+coopérative durable avant l'effet média, sans expiration ou libération implicite.
+Groupe occupé/refus de réserve ne lance aucun second travail ; une réservation
+peut exister sans journal après panne disque. Ne pas en déduire le droit de
+recommencer. `artifact-probe` rapporte dimensions/codec/durée depuis FFprobe borné,
+sans modifier la référence ou promouvoir le contenu à vérifié. Guide et six modes
+éprouvés depuis le paquet f021878, 72 modules installés identiques. Après les
+retours G090-R1/G088-R1, cette frontière est prête à avancer dans la file.

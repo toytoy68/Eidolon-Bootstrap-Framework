@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-062
+# Agents natifs Image et Vidéo — C-047 à C-063
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -44,6 +44,13 @@ Elle ne configure ni service système, ni modèle, ni moteur graphique, ni GPU.
 FFmpeg est nécessaire uniquement pour l'analyse vidéo ; son chemin absolu doit
 être fourni explicitement dans la configuration. Aucun installateur Bootstrap
 ou gestionnaire de paquets système n'est exécuté par les agents.
+
+## Demandes prêtes à adapter — C-063
+
+L’archive source fournit six fichiers dans `examples/media/`, un par opération,
+et une [fiche de recette sur moteurs réels](MEDIA-REAL-RECIPE.md). Ils passent
+la préparation hors ligne ; les sources `/REMPLACER/…` et la configuration moteur
+restent à choisir. Aucun modèle ou workflow de production n’est présélectionné.
 
 ## Demande et usage
 
@@ -142,7 +149,7 @@ Les erreurs du précontrôle ci-dessous respectent aussi le format choisi.
 
 Le contrôle ne contacte aucun moteur, ne lance pas FFmpeg, ne lit aucune image
 ou vidéo et ne crée aucun travail. Il vérifie les métadonnées du fichier FFmpeg
-configuré et, si un magasin d'artefacts est déclaré, son marqueur d'identité privé.
+configuré, le registre de réservation éventuel et, si un magasin d'artefacts est déclaré, son marqueur d'identité privé.
 Il ne parcourt ni inventaire, ni contenus, ni imports interrompus de ce magasin ;
 sa capacité n'est pas évaluée. Les alias `staged_sources` sont vérifiés seulement
 dans leur forme : leur contenu sera contrôlé pour la demande réelle.
@@ -213,7 +220,8 @@ revérifie les entrées et crée son propre plan, dont un nouveau nom d'upload.
 ## Configuration des moteurs
 
 Clés acceptées uniquement : `ollama_endpoint`, `vision_model`, `comfy_endpoint`,
-`workflows`, `staged_sources`, `ffmpeg`, `artifact_store`, `source_transfer`.
+`workflows`, `staged_sources`, `ffmpeg`, `artifact_store`, `source_transfer`,
+`resource_pool`.
 Adresses HTTP à IP loopback littérale avec
 port explicite ; aucun proxy, redirection, découverte LAN ou service cloud.
 

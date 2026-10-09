@@ -1,0 +1,6 @@
+{
+  "agent": "video",
+  "operation": "analyze",
+  "prompt": "Décris uniquement les images fournies et leurs différences observables. N'invente pas le son ni les événements entre les images.",
+  "source": "/REMPLACER/video.mp4"
+}

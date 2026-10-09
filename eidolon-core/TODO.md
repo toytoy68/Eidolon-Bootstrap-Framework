@@ -851,8 +851,8 @@ Les preuves et limites sont conservées dans
 - [x] Quatre défauts G085-R1 à R4 reproduits et signalés à Claude dans G107.
 - [x] C106 intégré sans édition du code Claude ; sept contrôles indépendants
   reproduisent les corrections G085-R1 à R4 et vérifient les identités/schema.
-- [ ] G086-R1 : mémoire retirée du prompt mais conservée dans les sources ;
-  correction demandée à Claude dans G108, reproducteur synthétique fourni.
+- [x] G086-R1 : mémoire retirée du prompt mais conservée dans les sources ;
+  correction C107 revérifiée indépendamment le 09/10, sonde et preuve conservées.
 
 Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953/README.md).
 
@@ -879,8 +879,8 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
 - [x] 51 tests ciblés modèles/dialogue/média réussis, dont trois nouveaux tests
   multi-cas TCP (coupures, réponse intermédiaire 100, corps clos et LF).
 
-- [ ] G085-R5 : création explicite sur base étrangère non vide avec `meta` vide
-  et user_version=1 ajoute les identifiants Core ; contre-exemple transmis à Claude.
+- [x] G085-R5 : base étrangère non vide avec `meta` vide : correction C107
+  revérifiée le 09/10, refus sans modification ; contre-exemple original conservé.
 
 - [x] C-059 final : fermeture stdlib sur statut invalide conservée ; 28 tests de
   frontières et **1 152 tests complets réussis**, zéro ignoré, Memory activée.
@@ -935,3 +935,19 @@ C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confié
 - [x] Après intégration C110/G088/G089 : 1 194 tests Python réussis, zéro ignoré,
   Memory activée. Client : 69 Node réussis, 14 Chromium ignorés ici ; build à jour.
 - [ ] Modèles réels, sémantique des sorties et essais VM/PC restent à qualifier.
+
+
+- [x] Recette de f021878 : archive 118 fichiers reproductible, 72 modules installés
+  identiques ; six modes média, six réservations/libérations et six sondes FFprobe.
+  Recette conversation G089 originale : 18/18 depuis le paquet installé.
+
+
+## C-063 — Kit de recette média réel (09/10/2026)
+
+- [x] Six demandes JSON prêtes à adapter, sans moteur/modèle/workflow par défaut ;
+  préparation vérifiée depuis le paquet installé, aucun dossier de travail créé.
+- [x] Fiche opérateur : contexte figé, sources/critères, six modes, métadonnées,
+  revue métier, réservation et limites de l'accueil. Table matérielle vierge,
+  aucun essai VM/GPU/PC déclaré réussi.
+- [x] Inclusion explicite des sept fichiers dans l'archive source ; aucun nouveau
+  préfixe large ou fichier de configuration privé ajouté à la liste.

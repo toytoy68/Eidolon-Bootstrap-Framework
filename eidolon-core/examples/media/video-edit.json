@@ -1,0 +1,8 @@
+{
+  "agent": "video",
+  "operation": "edit",
+  "prompt": "Rends le fond blanc en conservant l'objet principal et son déplacement.",
+  "source": "/REMPLACER/video.mp4",
+  "format": "landscape",
+  "duration_seconds": 5
+}

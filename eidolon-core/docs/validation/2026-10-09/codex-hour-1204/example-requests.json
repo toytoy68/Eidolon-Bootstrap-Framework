@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "installed_commit": "f02187830c64fc9c42cfa726d968e37cebf00fae",
+  "cases": [
+    {
+      "request": "image-analyze.json",
+      "agent": "image",
+      "operation": "analyze",
+      "sha256": "807978ca5b2ec553be3e186e1c0f9d78d44d29ab04e4e5c1ba59323b14bf490d",
+      "state": "LOCAL_DRAFT"
+    },
+    {
+      "request": "image-create.json",
+      "agent": "image",
+      "operation": "create",
+      "sha256": "dc27225d7569582274e26d92dde5f9dd300dab61a1db3e53859073f4362ff301",
+      "state": "LOCAL_DRAFT"
+    },
+    {
+      "request": "image-edit.json",
+      "agent": "image",
+      "operation": "edit",
+      "sha256": "e50ec30f87220b1c4ef98328c7b1ffb85c485758d30f30b122b6e9852cad8667",
+      "state": "LOCAL_DRAFT"
+    },
+    {
+      "request": "video-analyze.json",
+      "agent": "video",
+      "operation": "analyze",
+      "sha256": "fc3c10a1c2f64267ca2d35475397d51fec02a756cff8ab4fb2a0c06b2faf1850",
+      "state": "LOCAL_DRAFT"
+    },
+    {
+      "request": "video-create.json",
+      "agent": "video",
+      "operation": "create",
+      "sha256": "7fe3d779a3022f4316c3b9f30cbdca0b2f88939a0725efbc1a16407fd5de11cf",
+      "state": "LOCAL_DRAFT"
+    },
+    {
+      "request": "video-edit.json",
+      "agent": "video",
+      "operation": "edit",
+      "sha256": "3e0635e7c0a32354d1d2ecf3cfcc9d65d511b7dd1d39699a5248c3e829301f9a",
+      "state": "LOCAL_DRAFT"
+    }
+  ],
+  "files_created_in_execution_directory": 0,
+  "engine_calls_requested": false,
+  "models_qualified": false
+}

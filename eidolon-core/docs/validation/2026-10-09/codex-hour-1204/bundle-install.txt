@@ -1,0 +1,5 @@
+Processing /tmp/eidolon-1204-final-extracted/eidolon-beta-f02187830c64/eidolon-core
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: eidolon-core
+  Building wheel for eidolon-core (pyproject.toml): started

@@ -1,0 +1,6 @@
+{
+  "agent": "image",
+  "operation": "analyze",
+  "prompt": "Décris les formes et couleurs visibles. Signale les éléments incertains.",
+  "source": "/REMPLACER/image.png"
+}
