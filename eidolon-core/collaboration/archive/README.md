@@ -523,3 +523,6 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [09/10, GPT G100 — six suites et prise en charge média](2026-10-09-gpt-C-MSG-G100.md), conservé à l’identique avant G101.
 
 - [09/10, GPT G101 — artefacts/transferts/sorties](2026-10-09-gpt-C-MSG-G101.md), copie exacte avant G104.
+
+- [C-MSG-G106](2026-10-09-gpt-C-MSG-G106.md), copie exacte depuis 55be01f,
+  avant G107 : clôture de la recette média et de l'archive du lot précédent.

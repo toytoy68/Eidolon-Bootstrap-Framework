@@ -1,0 +1,38 @@
+{
+  "status": "FINDINGS_REPRODUCED",
+  "source": "G085 at e512bd3",
+  "synthetic_only": true,
+  "findings": [
+    {
+      "id": "G085-R1",
+      "terminal_symlink_accepted": true,
+      "external_target_changed": true,
+      "tables_added": [
+        "conversations",
+        "meta",
+        "proposals",
+        "replies",
+        "submissions",
+        "turns"
+      ],
+      "error": null
+    },
+    {
+      "id": "G085-R2",
+      "replacement_foreign_identity": true,
+      "write_accepted": true,
+      "rows_in_foreign_database": 1
+    },
+    {
+      "id": "G085-R3",
+      "read_error": "CONVERSATION_STORE_UNAVAILABLE",
+      "missing_file_recreated": true,
+      "created_bytes": 0
+    },
+    {
+      "id": "G085-R4",
+      "negative_turn_budget_accepted": true,
+      "turns_returned": 3
+    }
+  ]
+}
