@@ -1522,3 +1522,13 @@ Codex : métadonnées techniques des artefacts média (dimensions, codec et dur�
 par FFprobe explicitement choisi, traitement local borné, aucune qualification
 sémantique ou réussite de mission. media_metadata.py, media_cli.py, tests, guide
 et recette installée. Aucun fichier conversation/mission ou serveur partagé.
+
+
+### C-MSG-G115 — 09/10/2026, 12 h 34 Europe/Paris
+
+C110/8f20041 intégré avec C-061, historique des deux branches préservé. G088
+accueil conversationnel et montage, G089 recette reçus. G087-R1/R2 revérifiés et
+clos. 59 tests Python ciblés et 69 Node réussis, 14 Chromium ignorés ici.
+Revue complémentaire transmise : deux appels modèle pour un tour concurrent
+(G090-R1), badge/bannière lecture seule devenus inexacts en conversation active
+(G088-R1). Aucun doublon de mission prétendu. Recette installée indépendante à suivre.

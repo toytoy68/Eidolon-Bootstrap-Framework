@@ -1,0 +1,11 @@
+{
+  "status": "FINDING_REPRODUCED",
+  "source": "C110/8f20041",
+  "id": "G090-R1",
+  "same_client_turn_key": true,
+  "model_calls": 2,
+  "stored_turns": 1,
+  "same_recorded_reply": true,
+  "duplicate_mission_claimed": false,
+  "synthetic_model_only": true
+}

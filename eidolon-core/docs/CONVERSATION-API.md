@@ -50,7 +50,7 @@ Codes HTTP :
 | 404 | inconnu ou étranger |
 | 405 | méthode autre que POST |
 | 409 | conflit : proposition périmée ou changée, déjà soumise, clé réutilisée, Store changé |
-| 413 | requête trop grande (48 000 octets au plus) |
+| 413 | requête trop grande (100 000 octets au plus : 8 000 caractères dans tout encodage JSON valide) |
 | 415 | corps qui n'est pas du JSON |
 | 503 | stockage occupé ou indisponible |
 

@@ -231,3 +231,39 @@ Le [parcours de diagnostic local](DIAGNOSTIC-WORKFLOW.md) relie l’inventaire,
 les codes de sortie, l’interprétation des verrous et budgets et les preuves à
 conserver. Ces diagnostics restent locaux au serveur ; aucune nouvelle route
 HTTP ni commande distante n’est ajoutée à cette recette.
+
+## Complément Claude G089 — parcours conversation → mission → résultat (09/10/2026)
+
+Ce parcours est **optionnel** : sans `--conversations`, le serveur reste en
+lecture seule, comme dans les étapes ci-dessus.
+Recette exécutée en conteneur : [rapport G089](validation/2026-10-09/claude-g089/README.md).
+
+Côté serveur, dans la session SSH 1, après S3 :
+
+```text
+# Appairer le PC : la clé ecc_… s'affiche une seule fois, la garder hors du dépôt
+python3 -m eidolon_core.conversation_api --state <état> pair --client-id pc-toytoy --actor toytoy
+# S4 avec les conversations (modèle simulé pour la recette ; un vrai modèle se qualifie à part)
+python3 -m eidolon_core.http_api --state <état> --token-file <jeton de lecture> --port 8765 \
+    --web-root <archive>/eidolon-core/desktop/connected --conversations simulated
+```
+
+Côté PC, dans la page connectée :
+
+1. connexion de lecture (W3) ;
+2. « Clé de conversation » → « Ouvrir la conversation » ;
+3. « Bonjour », puis « Peux-tu vérifier l'état du service ? » : une question
+   en retour, avec deux choix ;
+4. « Diagnostique le nas. » : une proposition ; saisir un motif, puis
+   « Valider et créer la mission » ;
+5. côté serveur, l'opérateur exécute la mission ; la page n'exécute rien ;
+6. « Suivre la mission dans Détails » : « Résultat disponible », `SUCCEEDED`.
+
+| # | Point | Conteneur Claude, 09/10 | VM / Windows |
+| --- | --- | --- | --- |
+| C1 | Sans clé : aucune commande dans la page ; jeton de lecture refusé sur les routes de conversation | PASS (paquet installé) | À EXÉCUTER |
+| C2 | Réponse, question en retour, proposition, hors capacités | PASS (modèle simulé) | À EXÉCUTER |
+| C3 | Validation : une mission créée **non lancée** ; doublon = même reçu ; réponse perdue = reçu retrouvé | PASS | À EXÉCUTER |
+| C4 | Exécution opérateur, puis résultat lu dans la page | PASS (Chromium 1280 et 360) | À EXÉCUTER SUR WINDOWS |
+| C5 | Annulation demandée, distincte de l'arrêt confirmé | PASS (API ; pas d'écran) | À EXÉCUTER |
+| C6 | Modèle indisponible : `UNAVAILABLE`, rien de deviné | PASS (port fermé) | À EXÉCUTER avec le vrai modèle |

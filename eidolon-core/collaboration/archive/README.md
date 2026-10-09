@@ -444,6 +444,18 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `3ad4aa8`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3ad4aa8/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C107, G085-R5 et G086-R1 corrigés, API de conversation G087](2026-10-09-claude-C-MSG-C107.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `55101b6`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/55101b6/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C108, accueil conversationnel G088 et montage proposé](2026-10-09-claude-C-MSG-C108.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a73719f`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a73719f/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C109, G087-R1/R2 corrigés et montage http_api appliqué](2026-10-09-claude-C-MSG-C109.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `f1b32db`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/f1b32db/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -548,3 +560,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G112 — couverture des analyses](2026-10-09-gpt-C-MSG-G112.md)
 
 - [C-MSG-G113 — C107, raccordement G088 et revue appairage](2026-10-09-gpt-C-MSG-G113.md)
+
+- [C-MSG-G114 — réservation média C-061](2026-10-09-gpt-C-MSG-G114.md)

@@ -41,6 +41,46 @@
   </section>
 
   <main class="layout">
+    <!-- G088: conversation home. No command control exists before a conversation key is accepted. -->
+    <section id="conversation" class="panel conversation" aria-labelledby="conv-title">
+      <div class="panel-head">
+        <h2 id="conv-title">Conversation</h2>
+        <button id="conv-close" class="media-secondary" type="button" hidden>Fermer la conversation</button>
+      </div>
+      <p id="conv-status" class="status" role="status" aria-live="polite"></p>
+      <form id="conv-connect" class="conv-connect" autocomplete="off" novalidate>
+        <label for="conv-key">Clé de conversation</label>
+        <input id="conv-key" name="conv-key" type="password" autocomplete="off" spellcheck="false"
+               maxlength="64" aria-describedby="conv-key-help">
+        <button id="conv-open" type="submit">Ouvrir la conversation</button>
+        <p id="conv-key-help" class="help">Distincte du jeton de lecture, délivrée par l'opérateur. Gardée en mémoire de cette page uniquement.</p>
+      </form>
+      <div id="conv-body" hidden>
+        <ol id="conv-log" class="conv-log"></ol>
+        <form id="conv-form" class="conv-form" autocomplete="off" novalidate>
+          <label for="conv-text">Votre message</label>
+          <textarea id="conv-text" rows="3" maxlength="8000"></textarea>
+          <button id="conv-send" type="submit">Envoyer</button>
+        </form>
+        <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>
+          <h3 id="conv-proposal-title">Proposition à valider</h3>
+          <p id="conv-proposal-request" class="conv-request"></p>
+          <p id="conv-proposal-meta" class="help"></p>
+          <form id="conv-submit-form" class="conv-form" autocomplete="off" novalidate>
+            <label for="conv-reason">Motif de la validation</label>
+            <input id="conv-reason" type="text" maxlength="4000">
+            <button id="conv-submit" type="submit">Valider et créer la mission</button>
+          </form>
+          <p id="conv-submission-state" class="conv-state" role="status"></p>
+          <button id="conv-check" class="media-secondary" type="button" hidden>Vérifier le reçu</button>
+          <div id="conv-mission" hidden>
+            <p id="conv-mission-state" class="conv-state"></p>
+            <button id="conv-follow" type="button" hidden>Suivre la mission dans Détails</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
     <section id="media-agents" class="panel media-home" aria-labelledby="media-title">
       <div class="panel-head">
         <div><p class="media-eyebrow">Vos espaces créatifs</p><h2 id="media-title">Image &amp; Vidéo</h2></div>
@@ -180,7 +220,7 @@
   </main>
 
   <footer class="foot">
-    <p>Lecture seule : rien ici n'approuve, ne lance ni n'annule. Une capture datée n'est pas une preuve qu'un processus vit encore.</p>
+    <p>Sans clé de conversation, lecture seule : rien ici n'approuve, ne lance ni n'annule. Avec une clé, seule une proposition figée que vous validez crée une mission. Une capture datée n'est pas une preuve qu'un processus vit encore.</p>
   </footer>
 </body>
 </html>

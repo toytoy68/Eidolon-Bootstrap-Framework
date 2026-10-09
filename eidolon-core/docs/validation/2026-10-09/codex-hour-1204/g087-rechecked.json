@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "source": "C109/C110 8f20041",
+  "synthetic_only": true,
+  "checks": [
+    "R1 live replacement refused",
+    "R1 reopen/create refuse foreign identity without write",
+    "R2 linked parent target unchanged",
+    "same-inode identity checked under transaction",
+    "missing authentication database not recreated"
+  ],
+  "tokens_in_output": false
+}
