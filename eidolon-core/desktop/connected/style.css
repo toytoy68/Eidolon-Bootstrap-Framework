@@ -241,6 +241,8 @@ input[type="password"] {
 .conv-citation { color: var(--bad); font-weight: 600; }
 .conv-text { margin: .25rem 0; white-space: pre-wrap; }
 .conv-proposal { margin-top: 1rem; padding: .75rem; border: 2px solid var(--accent); border-radius: 8px; overflow-wrap: anywhere; }
+.conv-media-result { margin-top: .5rem; padding: .5rem .75rem; border: 1px solid var(--line); border-radius: 8px; overflow-wrap: anywhere; }
+.conv-media-result p { margin: .25rem 0; white-space: pre-wrap; }
 .conv-request { font-weight: 700; margin: .25rem 0; }
 .conv-recent-list { list-style: none; margin: .25rem 0 .75rem; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
 

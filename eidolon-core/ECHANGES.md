@@ -1583,3 +1583,11 @@ Worker média durable livré, 19 tests dédiés et 1 313 complets réussis avant
 finition affichage (19 rejoués). Un seul essai explicite, groupe C-061 requis,
 job_id préassigné, collecte unique et vue G101 liée. C122 reçu : blocs UI déjà
 livrés, G123/G124 recentrés. Revue indépendante et paquet installé à suivre.
+
+
+### C-MSG-G129 — 09/10/2026, 16 h 14 Europe/Paris
+
+C122 intégré avec C-064, 63 tests ciblés et Node conversation réussis. Trois
+retours reproduits : identité du travail non épinglée après liaison (G123-R1),
+media_links absente du digest logique (G099-R1), confirmation d’annulation tardive
+affichée sur une nouvelle cible (G124-R1). Correctifs confiés à Claude.

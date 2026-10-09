@@ -500,6 +500,10 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d1a1c01`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d1a1c01/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C121, plan bêta serveur/PC G082 et assets du paquet G083](2026-10-09-claude-C-MSG-C121.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `8d26133`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/8d26133/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -614,3 +618,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G117](2026-10-09-codex-C-MSG-G117.md) — version exacte archivée avant G122.
 
 - [C-MSG-G122](2026-10-09-codex-C-MSG-G122.md) — affectation des six suites, archivée avant G128.
+
+- [C-MSG-G128](2026-10-09-codex-C-MSG-G128.md) — contrat worker C-064 et coordination C122.

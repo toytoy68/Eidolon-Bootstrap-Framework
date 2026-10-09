@@ -1,0 +1,14 @@
+{
+  "status": "FINDINGS_REPRODUCED",
+  "source": "C122/0a3a2e5",
+  "G123-R1": {
+    "same_request_different_job_accepted": true,
+    "foreign_observation_shown": true
+  },
+  "G099-R1": {
+    "media_links_missing_from_logical_digest": true,
+    "digest_unchanged_after_link": true,
+    "physical_backup_loss_claimed": false
+  },
+  "real_engine": false
+}

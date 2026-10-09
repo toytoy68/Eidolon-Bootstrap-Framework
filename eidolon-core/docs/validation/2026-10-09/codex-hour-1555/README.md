@@ -33,3 +33,13 @@ mais current_proposal substitué par le contrat G122 dans les tests du worker
 (persistance du média à raccorder par Claude). Backends simulés.
 Pas de VM, Windows, GPU, moteur IA réel, main ou modification Memory Engine.
 Le paquet installé et les essais intégrés sont les prochaines étapes de la séance.
+
+
+## C122 intégré, revue indépendante
+
+63 tests ciblés réussis (c122-targeted.txt) et Node conversation (c122-client-targeted.txt).
+probe_c122_media_links.py reproduit G123-R1 (autre job_id à requête identique
+affiché) et G099-R1 (media_links exclue du digest logique ; pas de perte physique
+de sauvegarde revendiquée). probe_c122_cancel_race.js reproduit G124-R1 : réponse
+d'annulation de A affichée « arrêt confirmé » tandis que la cible sélectionnée
+est B. Transport scripté, aucune annulation réelle. Transmis à Claude G129.

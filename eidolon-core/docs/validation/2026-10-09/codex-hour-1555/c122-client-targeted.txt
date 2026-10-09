@@ -1,0 +1,24 @@
+✔ the canonical digest matches Core's published proposal digest (10.588345ms)
+✔ a malformed key is refused locally and the key never appears in the state (1.5477ms)
+✔ read token refused by the server keeps the conversation closed (0.270857ms)
+✔ a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal (0.921356ms)
+✔ submission sends the locally verified digest and identity; a tampered proposal is never sent (4.502375ms)
+✔ an uncertain submission is resolved by its receipt, never by a new key (1.171262ms)
+✔ answers that arrive after closing are ignored (0.772423ms)
+✔ mission stages: created, running, result, unknown effect, never invented (0.332731ms)
+✔ G091: a partial context is said in words; a complete one says nothing (1.244103ms)
+✔ G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing (0.674705ms)
+✔ G098: each reply names its profile and model; a change is said; nothing is invented (0.308705ms)
+✔ G101: media results are plain text lines; wrong job, partial, copied reference, HTML (0.609908ms)
+✔ G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early (2.888067ms)
+✔ G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key (1.346937ms)
+✔ G100: finished missions and media jobs are said, nothing is offered (0.397929ms)
+✔ G101: media results are read on demand, errors are said, closing forgets them (0.598241ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.407685

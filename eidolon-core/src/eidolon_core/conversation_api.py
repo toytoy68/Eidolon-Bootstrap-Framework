@@ -18,6 +18,7 @@ import argparse
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+import os
 from pathlib import Path
 import re
 import sqlite3
@@ -38,7 +39,7 @@ PREFIX = "/v1/conversations/"
 # per character (96 000), plus the envelope.
 MAX_BODY = 100_000
 ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel_proposal", "cancel",
-          "cancel_receipt"}
+          "cancel_receipt", "media_results"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -258,6 +259,15 @@ class ConversationAPI:
         return {**receipt, "meaning": "CANCELLATION_REQUESTED_NOT_CONFIRMED",
                 "stage": conversation_cancel.view(receipt, mission), "mission_status": mission["status"]}
 
+    def _media_results(self, client, data):
+        """G101: views of the media jobs linked to this conversation, read now. Never a path."""
+        _fields(data, {"conversation_id"})
+        self._own(client, data["conversation_id"])
+        from .conversation_media_results import views_for
+        return {"protocol": PROTOCOL, "results": views_for(self.conversations, owner_client_id=client["client_id"],
+                                                           conversation_id=data["conversation_id"]),
+                "authorizes_execution": False}
+
     def _cancel_receipt(self, client, data):
         """After a lost answer: the recorded receipt (if any) and the stage NOW. Never a resend."""
         _fields(data, {"command_key", "conversation_id", "mission_id"})
@@ -338,6 +348,13 @@ def main(argv=None):
     profile.add_argument("--name")
     profile.add_argument("--actor")
     profile.add_argument("--profiles", help="fichier privé des profils : le nom doit y figurer")
+    link = sub.add_parser("media-link", help="Lier une proposition média soumise au travail qui la sert")
+    link.add_argument("--client-id", required=True)
+    link.add_argument("--conversation-id", required=True)
+    link.add_argument("--proposal", required=True, help="fichier JSON eidolon-media-proposal/1")
+    link.add_argument("--job", required=True, help="dossier du travail média (media-job/1)")
+    link.add_argument("--collection", help="dossier de collecte (media-collection/1), facultatif")
+    link.add_argument("--artifact-root", required=True)
     attach = sub.add_parser("attach", help="Lier un artefact média à une conversation de son propriétaire")
     attach.add_argument("--client-id", required=True)
     attach.add_argument("--conversation-id", required=True)
@@ -362,6 +379,8 @@ def main(argv=None):
                                                            "bytes", "rows")}))
         elif args.command == "profile":
             print(json.dumps(_profile(store, args)))
+        elif args.command == "media-link":
+            print(json.dumps(_media_link(store, args)))
         elif args.command == "attach":
             print(json.dumps(_attach(store, args)))
         else:
@@ -387,6 +406,20 @@ def _profile(store, args):
             raise ContractError("DIALOGUE_PROFILE_UNAVAILABLE: profile not configured")
     return {"status": "SELECTED", "selected": conversations.select_profile(args.name, actor=args.actor),
             "applies_to": "turns whose model attempt starts after this selection"}
+
+
+def _media_link(store, args):
+    from .conversation_media_results import link_job
+    try:
+        with open(args.proposal, "rb") as handle:
+            proposal = json.loads(handle.read(65536).decode("utf-8"))
+    except (OSError, ValueError):
+        raise ContractError("INVALID_MEDIA: proposal file unreadable") from None
+    absolute = lambda p: None if p is None else os.path.abspath(p)
+    sha = link_job(ConversationStore(store), owner_client_id=args.client_id, conversation_id=args.conversation_id,
+                   proposal=proposal, job_dir=absolute(args.job), artifact_root=absolute(args.artifact_root),
+                   collection_dir=absolute(args.collection))
+    return {"status": "LINKED", "conversation_id": args.conversation_id, "proposal_sha256": sha}
 
 
 def _attach(store, args):

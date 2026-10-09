@@ -82,6 +82,29 @@
             <button id="conv-follow" type="button" hidden>Suivre la mission dans Détails</button>
           </div>
         </section>
+        <section id="conv-cancel" class="conv-proposal" aria-labelledby="conv-cancel-title">
+          <h3 id="conv-cancel-title">Arrêter une mission</h3>
+          <p class="help">Une demande d'arrêt est enregistrée par Core ; seule la mission elle-même confirme l'arrêt.</p>
+          <button id="conv-cancel-start" class="media-secondary" type="button">Demander l'arrêt d'une mission</button>
+          <ul id="conv-cancel-choices" class="conv-recent-list" hidden></ul>
+          <div id="conv-cancel-review" hidden>
+            <p id="conv-cancel-target" class="conv-request"></p>
+            <form id="conv-cancel-form" class="conv-form" autocomplete="off" novalidate>
+              <label for="conv-cancel-reason">Motif de l'arrêt</label>
+              <input id="conv-cancel-reason" type="text" maxlength="4000">
+              <button id="conv-cancel-submit" type="submit">Confirmer la demande d'arrêt</button>
+            </form>
+          </div>
+          <p id="conv-cancel-state" class="conv-state" role="status" aria-live="polite"></p>
+          <button id="conv-cancel-check" class="media-secondary" type="button" hidden>Vérifier l'état de l'arrêt</button>
+        </section>
+        <section id="conv-media" class="conv-proposal" aria-labelledby="conv-media-title">
+          <h3 id="conv-media-title">Résultats image et vidéo</h3>
+          <p class="help">Fichiers produits par les travaux liés à cette conversation, vérifiés sur le serveur. Leur contenu n'est pas vérifié.</p>
+          <button id="conv-media-load" class="media-secondary" type="button">Afficher les résultats</button>
+          <p id="conv-media-state" class="conv-state" role="status" aria-live="polite"></p>
+          <div id="conv-media-list" class="conv-media-list"></div>
+        </section>
       </div>
     </section>
 

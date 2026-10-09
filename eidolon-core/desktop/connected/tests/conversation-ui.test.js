@@ -199,3 +199,86 @@ test("G096: hostile model text stays literal text, unsupported citations are fla
       assert.deepEqual(writes, []);
     });
   });
+
+async function validate(page, reason) {
+  await page.fill("#conv-reason", reason);
+  await page.click("#conv-submit");
+  await page.waitForFunction(() => /Validation enregistrée/.test(document.getElementById("conv-submission-state").textContent));
+}
+
+test("G100: two missions, choose one, confirm by keyboard: a recorded request, never a confirmed stop; no overflow at 320 px",
+  { skip: SKIP }, async () => {
+    await withConversationPage({}, async (page, fx) => {
+      await openByKeyboard(page, fx.key);
+      await say(page, "Diagnostique le nas.");
+      await validate(page, "Premier diagnostic.");
+      await say(page, "Diagnostique le nas.");
+      await validate(page, "Second diagnostic.");
+      await page.focus("#conv-cancel-start");
+      await page.keyboard.press("Enter");
+      await page.waitForSelector("#conv-cancel-choices:not([hidden]) button[data-cancel-mission]");
+      const ids = await page.$$eval("#conv-cancel-choices button", (bs) => bs.map((b) => b.dataset.cancelMission));
+      assert.equal(ids.length, 2);
+      await page.click(`#conv-cancel-choices button[data-cancel-mission="${ids[1]}"]`);
+      await page.waitForSelector("#conv-cancel-review:not([hidden])");
+      assert.match(await page.textContent("#conv-cancel-target"), new RegExp(ids[1]));
+      assert.equal(await page.evaluate(() => document.activeElement.id), "conv-cancel-reason");
+      await page.keyboard.type("Plus utile.");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => /arrêt non confirmé/.test(document.getElementById("conv-cancel-state").textContent));
+      assert.equal(await page.locator("#conv-cancel-check").isHidden(), false);
+      assert.equal(await page.locator("#conv-cancel-submit").isDisabled(), true);
+      for (const id of ["conv-cancel-start", "conv-cancel-reason", "conv-cancel-check", "conv-media-load"]) {
+        await page.focus("#" + id);
+        const outline = await page.evaluate((i) => parseFloat(getComputedStyle(document.getElementById(i)).outlineWidth), id);
+        assert.ok(outline >= 2, id + " has no visible focus indicator");
+      }
+      await page.click("#conv-cancel-check");
+      await page.waitForFunction(() => /arrêt non confirmé/.test(document.getElementById("conv-cancel-state").textContent));
+      await page.setViewportSize({ width: 320, height: 640 });
+      assert.equal(await overflow(page), 0);
+      if (CAPTURES) await page.locator("#conv-cancel").screenshot({ path: path.join(CAPTURES, "page-annulation-320.png") });
+    });
+  });
+
+test("G101: media results from the real server (none, then a real linked job), then a hostile view stays plain text", { skip: SKIP }, async () => {
+  await withConversationPage({}, async (page, fx) => {
+    await openByKeyboard(page, fx.key);
+    await page.click("#conv-media-load");
+    await page.waitForFunction(() => /Aucun résultat image ou vidéo/.test(document.getElementById("conv-media-state").textContent));
+    await say(page, "Bonjour !");                         // the conversation now has a turn: "latest" finds it
+    // A real job, collection and link prepared server side (synthetic, no engine), read by the page.
+    const work = path.join(fx.dir, "media-work");
+    require("node:fs").mkdirSync(work, { mode: 0o700 });
+    const made = spawnSync(PYTHON, [path.join(__dirname, "media_fixture.py"), fx.state, "pc-ui", "latest", work],
+      { cwd: CORE, env: ENV, encoding: "utf8" });
+    assert.equal(made.status, 0, made.stdout + made.stderr);
+    await page.click("#conv-media-load");
+    await page.waitForFunction(() => /1 résultat/.test(document.getElementById("conv-media-state").textContent));
+    const real = await page.textContent("#conv-media-list");
+    assert.match(real, /Image — retouche/);
+    assert.match(real, /sortie-1\.png — image\/png — empreinte vérifiée ; contenu non vérifié/);
+    assert.match(real, /Fichier source ma-[0-9a-f]{32} : empreinte vérifiée/);
+    assert.ok(!real.includes(work), "a private path reached the page");
+    if (CAPTURES) await page.locator("#conv-media").screenshot({ path: path.join(CAPTURES, "page-resultats-media-reel.png") });
+    const hostile = '<img src=x onerror="window.pwned=1"> Un phare <b>rouge</b>.';
+    await page.route("**/v1/conversations/media_results", (route) => route.fulfill({ status: 200, contentType: "application/json",
+      body: JSON.stringify({ results: [{ agent: "image", operation: "analyze", stage: "unknown_effect",
+        state_received: "COLLECTION_INCOMPLETE", binding: "MATCHED", source: null,
+        observation: { text: hostile, verified: false }, excluded_outputs: 1,
+        collection: { state: "COLLECTION_INCOMPLETE", expected: 3, imported: 1, partial: true },
+        outputs: [{ artifact_id: "ma-1", display_name: "<b>sortie</b>.png", media_type: "image/png", verification: "modified",
+          provenance: { job_id: "media-1", node_id: "9", output_index: 0, collection_id: "mc-2" } }] }] }) }));
+    await page.click("#conv-media-load");
+    await page.waitForFunction(() => /1 résultat/.test(document.getElementById("conv-media-state").textContent));
+    const list = page.locator("#conv-media-list");
+    const text = await list.textContent();
+    assert.ok(text.includes(hostile));
+    assert.match(text, /Collecte partielle : 1 sur 3/);
+    assert.match(text, /modifié depuis l'import : ne pas utiliser/);
+    assert.match(text, /Ouverture depuis la page : non disponible/);
+    assert.equal(await list.locator("img, b, button, a, input").count(), 0);
+    assert.equal(await page.evaluate(() => window.pwned), undefined);
+    if (CAPTURES) await page.locator("#conv-media").screenshot({ path: path.join(CAPTURES, "page-resultats-media.png") });
+  });
+});

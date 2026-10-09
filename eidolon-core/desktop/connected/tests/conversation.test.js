@@ -195,3 +195,84 @@ test("G101: media results are plain text lines; wrong job, partial, copied refer
   assert.ok(made.every((e) => e.tag === "p" && !("innerHTML" in e)));           // text only, never a button
   assert.equal(box.children[5].textContent, text[5]);
 });
+
+const MID = "m-" + "4".repeat(32), OTHER = "m-" + "5".repeat(32);
+const cancelProposal = { protocol: "eidolon-cancel-proposal/1", store_id: reply.store_id, conversation_id: "c-" + "2".repeat(32),
+  client_id: "pc-exemple", mission_id: MID, mission_request_sha256: "a".repeat(64), link_sha256: "b".repeat(64),
+  action: "REQUEST_MISSION_STOP", engine_interrupt: "NEVER", requires_human_submission: true,
+  authorizes_execution: false, success_claim: "ONLY_FROM_MISSION_STATUS_CANCELLED" };
+
+test("G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early", async () => {
+  const sha = await C.digest(cancelProposal);
+  const s = scripted([opened,
+    ok({ kind: "CLARIFICATION", code: "MISSION_AMBIGUOUS", candidates: [MID, OTHER, "pas-un-id"] }),
+    ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: sha, mission_status: "RUNNING" }),
+    ok({ status: "RECORDED", cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "RUNNING" }),
+    ok({ status: "FOUND", receipt: { cancel_outcome: "REQUESTED" }, stage: "effect_observed", mission_status: "CANCELLED" })]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY);
+  await conv.cancelPropose();
+  assert.deepEqual([conv.state().cancel.status, conv.state().cancel.candidates], ["choose", [MID, OTHER]]);
+  assert.equal(await conv.cancelPropose("pas-un-id"), false);              // only ids offered by Core
+  await conv.cancelPropose(MID);
+  assert.equal(conv.state().cancel.status, "review");
+  assert.equal(await conv.cancelSubmit(" "), false);                       // a reason is required
+  assert.equal(await conv.cancelSubmit("plus utile"), true);
+  const body = s.calls[3].body;
+  assert.deepEqual([body.mission_id, body.proposal_sha256, body.conversation_id], [MID, sha, "c-" + "2".repeat(32)]);
+  assert.equal(C.cancelStatusText(conv.state().cancel), "Demande d'arrêt enregistrée — arrêt non confirmé.");
+  await conv.cancelCheck();
+  assert.equal(s.calls[4].body.command_key, body.command_key);
+  assert.equal(C.cancelStatusText(conv.state().cancel), "Arrêt confirmé : la mission est annulée.");
+});
+
+test("G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key", async () => {
+  const t = scripted([opened, ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: "0".repeat(64), mission_status: "NEW" })]);
+  const bad = C.createConversation({ transport: t.transport });
+  await bad.open(KEY); await bad.cancelPropose(MID);
+  assert.deepEqual([bad.state().cancel.status, bad.state().cancel.error], ["error", "DIGEST_MISMATCH"]);
+  assert.equal(await bad.cancelSubmit("x"), false);
+  assert.equal(t.calls.length, 2);
+
+  const sha = await C.digest(cancelProposal);
+  const s = scripted([opened, ok({ kind: "PROPOSAL", proposal: cancelProposal, proposal_sha256: sha, mission_status: "NEW" }),
+    new Error("network"), ok({ status: "NOT_FOUND", receipt: null, stage: "uncertain", mission_status: "NEW" }),
+    ok({ status: "RECORDED", cancel_outcome: "REQUESTED", stage: "request_received", mission_status: "NEW" })]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY); await conv.cancelPropose(MID);
+  assert.equal(await conv.cancelSubmit("plus utile"), false);
+  assert.equal(conv.state().cancel.status, "uncertain");
+  assert.equal(await conv.cancelSubmit("plus utile"), false);              // no blind resend while uncertain
+  await conv.cancelCheck();
+  assert.equal(conv.state().cancel.status, "not_recorded");
+  assert.equal(await conv.cancelSubmit("plus utile"), true);
+  assert.equal(s.calls[4].body.command_key, s.calls[2].body.command_key);
+});
+
+test("G100: finished missions and media jobs are said, nothing is offered", async () => {
+  const s = scripted([opened, ok({ kind: "REFUSED", code: "MISSION_ALREADY_FINISHED" }),
+    ok({ kind: "CLARIFICATION", code: "NO_ACTIVE_MISSION", candidates: [] })]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY);
+  await conv.cancelPropose(MID);
+  assert.equal(C.cancelStatusText(conv.state().cancel), "Cette mission est déjà terminée : rien à arrêter.");
+  await conv.cancelPropose();
+  assert.equal(C.cancelStatusText(conv.state().cancel), "Aucune mission en cours créée depuis cette conversation.");
+  assert.equal(conv.state().cancel.proposal, null);
+});
+
+test("G101: media results are read on demand, errors are said, closing forgets them", async () => {
+  const view = { agent: "image", operation: "edit", stage: "result_unverified", state_received: "OUTPUTS_IMPORTED_UNVERIFIED",
+    binding: "MATCHED", outputs: [], excluded_outputs: 0 };
+  const s = scripted([opened, ok({ results: [view] }), { status: 503, json: { error: "CONVERSATION_UNAVAILABLE" } }]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY);
+  assert.equal(conv.state().media, null);                                     // nothing read before asked
+  await conv.loadMedia();
+  assert.deepEqual([conv.state().media.status, conv.state().media.results.length], ["ready", 1]);
+  assert.equal(s.calls[1].path.split("/").pop(), "media_results");
+  await conv.loadMedia();
+  assert.deepEqual([conv.state().media.status, conv.state().media.error], ["error", "CONVERSATION_UNAVAILABLE"]);
+  conv.close();
+  assert.equal(conv.state().media, null);
+});

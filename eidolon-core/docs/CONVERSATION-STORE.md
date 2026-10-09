@@ -12,7 +12,7 @@ Contrat des objets : [CONVERSATION-CONTRACT.md](CONVERSATION-CONTRACT.md) (G084)
 - C'est une **base séparée** : `missions.sqlite3` n'est jamais migré ni écrit par
   ce module. Un test vérifie que son empreinte reste identique après des tours,
   des réponses et des lectures.
-- Le schéma est versionné (`eidolon-conversation-store/3`, `user_version` 3 ; v1 et v2 seulement par migration explicite).
+- Le schéma est versionné (`eidolon-conversation-store/4`, `user_version` 4 ; v1 à v3 seulement par migration explicite).
   Une autre version est refusée.
 - Le dépôt est **lié au Store des missions** par son `store_id`. Copié à côté
   d'un autre Store, il est refusé (`STORE_CHANGED`).
@@ -69,7 +69,7 @@ défendent pas contre un processus hostile qui tourne sous le même utilisateur.
   `python -m eidolon_core.conversation_api --state <état> migrate --backup <nouveau fichier>`
   (sauvegarde vérifiée d'abord, voir G099 ci-dessous), ou, dans le code,
   `ConversationStore(store, migrate=True)`. Elle avance d'une version à la
-  fois (v1 → v2 → v3), **une transaction par étape**, sur le même Store, et ne
+  fois (v1 → v2 → v3 → v4), **une transaction par étape**, sur le même Store, et ne
   réécrit rien d'autre. Une migration interrompue laisse une version
   intermédiaire valide, que la même commande reprend. Sans migration, un
   dépôt ancien est refusé (`CONVERSATION_STORE_MIGRATION_REQUIRED`) **sans être
@@ -117,6 +117,12 @@ a pas de migration descendante : un ancien code refuse une base plus récente.
 ouvert est détecté seulement s'il écrit après la sauvegarde) ; la sauvegarde
 n'est ni chiffrée ni signée, son empreinte prouve l'intégrité, pas
 l'authenticité ; aucun test sur un vrai disque plein.
+
+## Schéma v4 : liens proposition média → travail
+
+La table `media_links` relie une proposition média soumise au travail (et à
+la collecte) qui la sert. Elle conserve des chemins privés qui ne sont jamais
+rendus à un client. Voir [CONVERSATION-MEDIA.md](CONVERSATION-MEDIA.md).
 
 ## Schéma v3 : pièces jointes liées à leur conversation (G097)
 

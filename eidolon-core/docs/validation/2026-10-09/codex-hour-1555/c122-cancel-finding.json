@@ -1,0 +1,10 @@
+{
+  "status": "FINDING_REPRODUCED",
+  "source": "C122/0a3a2e5",
+  "id": "G124-R1",
+  "displayed_target": "m-22222222222222222222222222222222",
+  "receipt_target": "m-11111111111111111111111111111111",
+  "displayed_status": "Arrêt confirmé : la mission est annulée.",
+  "real_server": false,
+  "mission_changed": false
+}

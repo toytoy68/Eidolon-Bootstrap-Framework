@@ -265,5 +265,5 @@ Côté PC, dans la page connectée :
 | C2 | Réponse, question en retour, proposition, hors capacités | PASS (modèle simulé) | À EXÉCUTER |
 | C3 | Validation : une mission créée **non lancée** ; doublon = même reçu ; réponse perdue = reçu retrouvé | PASS | À EXÉCUTER |
 | C4 | Exécution opérateur, puis résultat lu dans la page | PASS (Chromium 1280 et 360) | À EXÉCUTER SUR WINDOWS |
-| C5 | Annulation demandée, distincte de l'arrêt confirmé | PASS (API ; pas d'écran) | À EXÉCUTER |
+| C5 | Annulation demandée, distincte de l'arrêt confirmé | PASS (API et page, Chromium) | À EXÉCUTER |
 | C6 | Modèle indisponible : `UNAVAILABLE`, rien de deviné | PASS (port fermé) | À EXÉCUTER avec le vrai modèle |
