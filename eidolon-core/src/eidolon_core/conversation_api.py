@@ -25,7 +25,8 @@ import sys
 
 from . import conversation as cv
 from .client_credentials import ClientCredentials, CredentialError
-from .commands import CancelCommands
+from . import conversation_cancel
+from .commands import lookup_receipt
 from .contracts import ContractError
 from . import conversation_storage
 from .conversation_store import ConversationStore
@@ -36,7 +37,8 @@ PREFIX = "/v1/conversations/"
 # An 8000-character turn in ANY valid JSON encoding: \uXXXX escapes of surrogate pairs take 12 bytes
 # per character (96 000), plus the envelope.
 MAX_BODY = 100_000
-ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel"}
+ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel_proposal", "cancel",
+          "cancel_receipt"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -163,6 +165,11 @@ class ConversationAPI:
         data = _decode(body)
         return getattr(self, "_" + path[len(PREFIX):])(client, data)
 
+    def _mission_of(self, client, data):
+        self._own(client, data["conversation_id"])
+        if data["mission_id"] not in self.conversations.missions_of(client["client_id"], data["conversation_id"]):
+            raise APIError(404, "MISSION_UNKNOWN")             # only missions this client created here
+
     def _own(self, client, conversation_id):
         if not isinstance(conversation_id, str) or self.conversations.owner(conversation_id) != client["client_id"]:
             raise APIError(404, "CONVERSATION_UNKNOWN")       # same answer for absent and foreign
@@ -221,16 +228,49 @@ class ConversationAPI:
                                                     mission_id=data["mission_id"], actor=client["actor"],
                                                     reason=data["reason"])
 
+    def _cancel_proposal(self, client, data):
+        """G100: Core freezes a cancellation naming ONE mission of this conversation; nothing is recorded."""
+        _fields(data, {"conversation_id"}, {"mission_id", "target"})
+        self._own(client, data["conversation_id"])
+        if data.get("mission_id") is not None:
+            self._mission_of(client, data)
+        result = conversation_cancel.propose(
+            self.conversations, self.runtime.store, client_id=client["client_id"],
+            conversation_id=data["conversation_id"], mission_id=data.get("mission_id"),
+            target=data.get("target", "mission"))
+        kind = result[0]
+        answer = {"protocol": PROTOCOL, "kind": kind, "authorizes_execution": False}
+        if kind == "PROPOSAL":
+            return {**answer, "proposal": result[1], "proposal_sha256": result[2], "mission_status": result[3]}
+        if kind == "CLARIFICATION":
+            return {**answer, "code": result[1], "candidates": result[2]}
+        return {**answer, "code": result[1]}
+
     def _cancel(self, client, data):
-        _fields(data, {"command_key", "mission_id", "reason"})
-        if not isinstance(data["mission_id"], str) or not self.conversations.submitted_by(client["client_id"],
-                                                                                        data["mission_id"]):
-            raise APIError(404, "MISSION_UNKNOWN")             # only missions this client submitted
-        receipt = CancelCommands(self.runtime.store).submit({
-            "protocol": "eidolon-cancel-command/1", "store_id": self.conversations.store_id,
-            "client_id": client["client_id"], "command_key": data["command_key"],
-            "mission_id": data["mission_id"], "actor": client["actor"], "reason": data["reason"]})
-        return {**receipt, "meaning": "CANCELLATION_REQUESTED_NOT_CONFIRMED"}
+        """Submission of the exact frozen cancellation proposal: a stop REQUEST, never a confirmed stop."""
+        _fields(data, {"command_key", "conversation_id", "mission_id", "proposal_sha256", "reason"})
+        self._mission_of(client, data)
+        receipt = conversation_cancel.submit(
+            self.conversations, self.runtime.store, client=client, conversation_id=data["conversation_id"],
+            mission_id=data["mission_id"], proposal_sha256=data["proposal_sha256"],
+            command_key=data["command_key"], reason=data["reason"])
+        mission = self.runtime.store.get(data["mission_id"])
+        return {**receipt, "meaning": "CANCELLATION_REQUESTED_NOT_CONFIRMED",
+                "stage": conversation_cancel.view(receipt, mission), "mission_status": mission["status"]}
+
+    def _cancel_receipt(self, client, data):
+        """After a lost answer: the recorded receipt (if any) and the stage NOW. Never a resend."""
+        _fields(data, {"command_key", "conversation_id", "mission_id"})
+        self._mission_of(client, data)
+        found = lookup_receipt(self.runtime.store, store_id=self.conversations.store_id,
+                               client_id=client["client_id"], command_key=data["command_key"])
+        receipt = found["receipt"]
+        if receipt is not None and receipt.get("mission_id") != data["mission_id"]:
+            raise APIError(409, "COMMAND_KEY_REUSED")
+        mission = self.runtime.store.get(data["mission_id"])
+        return {"protocol": PROTOCOL, "status": found["status"], "receipt": receipt,
+                "stage": conversation_cancel.view(receipt, mission), "mission_status": mission["status"],
+                "authorizes_resend": False}
 
 
 class _Handler(BaseHTTPRequestHandler):

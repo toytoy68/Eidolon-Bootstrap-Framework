@@ -466,6 +466,14 @@ class ConversationStore:
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: invalid profile selection")
         return value
 
+    def missions_of(self, client_id, conversation_id):
+        """Missions created from THIS client's submissions in THIS conversation: {mission_id: link} (G100)."""
+        with self._db() as db:
+            rows = db.execute("SELECT mission_id, link FROM submissions WHERE client_id=? AND conversation_id=? "
+                              "AND status='MISSION_CREATED' ORDER BY reserved_at, command_key",
+                              (client_id, conversation_id)).fetchall()
+        return {mission_id: json.loads(link) for mission_id, link in rows}
+
     def submitted_by(self, client_id, mission_id):
         """True only for a mission created from one of this client's submissions."""
         with self._db() as db:

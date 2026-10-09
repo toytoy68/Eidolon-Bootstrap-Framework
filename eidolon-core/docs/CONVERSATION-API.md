@@ -40,7 +40,9 @@ S'appuie sur G084 (contrat), G085 (dépôt) et G086 (dialogue).
 | `submit` | soumission `eidolon-proposal-submission/1` complète | **crée** la mission de la proposition figée, puis rend un reçu ; elle **ne la lance pas** (`execution: NOT_STARTED_BY_SUBMISSION`) |
 | `receipt` | `command_key` | retrouve un reçu après une réponse perdue (`authorizes_resend: false`) |
 | `resolve` | `command_key`, `mission_id` ou `null`, `reason` | décision humaine sur une soumission `UNCERTAIN` (G085) |
-| `cancel` | `command_key`, `mission_id`, `reason` | **demande** d'annulation (`CANCELLATION_REQUESTED_NOT_CONFIRMED`) ; seul le runtime confirme l'arrêt |
+| `cancel_proposal` | `conversation_id`, option `mission_id`, `target` | G100 : proposition d'annulation **figée** par Core pour **une** mission créée par ce client dans cette conversation ; sans `mission_id`, plusieurs missions actives donnent `CLARIFICATION` `MISSION_AMBIGUOUS` ; mission terminée : `REFUSED` `MISSION_ALREADY_FINISHED` ; `target: media_job` : `NOT_AVAILABLE` |
+| `cancel` | `command_key`, `conversation_id`, `mission_id`, `proposal_sha256`, `reason` | soumission humaine de l'empreinte exacte : **demande** d'arrêt (`CANCELLATION_REQUESTED_NOT_CONFIRMED`), avec `stage` ; seul le runtime confirme l'arrêt |
+| `cancel_receipt` | `command_key`, `conversation_id`, `mission_id` | après une réponse perdue : reçu enregistré ou non, et `stage` actuel ; jamais un renvoi |
 
 Codes HTTP :
 
@@ -92,3 +94,31 @@ Toute erreur porte `authorizes_execution: false`.
   sera raccordé dans la recette G089.
 - Pas de limite de débit par client. Les budgets et les quotas viendront en
   G091.
+
+## Annulation ciblée (G100)
+
+Code : [conversation_cancel.py](../src/eidolon_core/conversation_cancel.py).
+Tests : [test_conversation_cancel.py](../tests/test_conversation_cancel.py) (9)
+et `test_conversation_api.py`.
+
+- La proposition nomme la mission, l'empreinte de sa requête et celle du lien
+  conversation → mission. Son empreinte ne change pas pendant que la mission
+  avance. L'empreinte d'une mission n'annule jamais une autre mission.
+- `stage`, ce que la conversation peut dire :
+
+  | `stage` | Sens |
+  | --- | --- |
+  | `request_received` | demande enregistrée ; arrêt **non confirmé** |
+  | `effect_observed` | la mission elle-même est `CANCELLED` |
+  | `finished_without_cancellation` | le résultat est arrivé avant l'arrêt ; il est conservé |
+  | `already_finished` | la mission était déjà terminée à l'enregistrement |
+  | `uncertain` | réponse perdue ou mission `ABANDONED` : lire `cancel_receipt`, ne pas renvoyer à l'aveugle |
+
+- Demande doublée : même clé, même reçu ; nouvelle clé,
+  `ALREADY_REQUESTED`, sans second drapeau.
+- **Agents média** : `NOT_AVAILABLE` (`MEDIA_CANCEL_NOT_AVAILABLE`). Une
+  interruption globale du moteur (`/interrupt` de ComfyUI) arrêterait le
+  travail des autres : elle n'est jamais utilisée pour annuler une seule
+  tâche, tant qu'aucun contrat par tâche sûr n'existe.
+- Limite : pas encore de bouton d'annulation dans la page ; l'API et ses
+  tests sont prêts.

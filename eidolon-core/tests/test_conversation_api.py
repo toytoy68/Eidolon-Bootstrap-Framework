@@ -149,7 +149,9 @@ class AuthorizationTests(Base):
         intruder = self.other["token"]
         for route, data in (("page", {"conversation_id": cid}),
                             ("turn", {"conversation_id": cid, "client_turn_key": "x", "text": "salut"}),
-                            ("cancel", {"command_key": "c", "mission_id": receipt["mission_id"], "reason": "x"})):
+                            ("cancel_proposal", {"conversation_id": cid, "mission_id": receipt["mission_id"]}),
+                            ("cancel", {"command_key": "c", "conversation_id": cid, "mission_id": receipt["mission_id"],
+                                        "proposal_sha256": "0" * 64, "reason": "x"})):
             with self.subTest(route=route):
                 status, value = self.post(route, data, intruder)
                 self.assertEqual(status, 404)
@@ -210,15 +212,23 @@ class CancellationTests(Base):
         cid = self.conversation()
         _, receipt = self.post("submit", self.submission(self.proposal_for(cid)))
         mission = receipt["mission_id"]
-        status, cancel = self.post("cancel", {"command_key": "c1", "mission_id": mission, "reason": "plus utile"})
-        self.assertEqual((status, cancel["meaning"], cancel["cancel_outcome"], cancel["execution_evidence"],
+        status, frozen = self.post("cancel_proposal", {"conversation_id": cid})      # the single active mission
+        self.assertEqual((status, frozen["kind"], frozen["proposal"]["mission_id"], frozen["proposal"]["engine_interrupt"]),
+                         (200, "PROPOSAL", mission, "NEVER"))
+        request = {"command_key": "c1", "conversation_id": cid, "mission_id": mission,
+                   "proposal_sha256": frozen["proposal_sha256"], "reason": "plus utile"}
+        status, cancel = self.post("cancel", request)
+        self.assertEqual((status, cancel["meaning"], cancel["cancel_outcome"], cancel["stage"], cancel["execution_evidence"],
                           cancel["effect_absence_evidence"]),
-                         (200, "CANCELLATION_REQUESTED_NOT_CONFIRMED", "REQUESTED", False, False))
+                         (200, "CANCELLATION_REQUESTED_NOT_CONFIRMED", "REQUESTED", "request_received", False, False))
         self.assertEqual(self.runtime.store.get(mission)["status"], "NEW")       # requested, not yet stopped
-        self.assertEqual(self.post("cancel", {"command_key": "c1", "mission_id": mission, "reason": "plus utile"})[1],
-                         cancel)
+        self.assertEqual(self.post("cancel", request)[1], cancel)
         self.assertEqual(self.runtime.run(mission)["status"], "CANCELLED")       # the runtime confirms the stop
-        self.assertEqual(self.post("cancel", {"command_key": "x", "mission_id": "m-" + "0" * 32, "reason": "x"})[0], 404)
+        looked = self.post("cancel_receipt", {"command_key": "c1", "conversation_id": cid, "mission_id": mission})[1]
+        self.assertEqual((looked["status"], looked["stage"], looked["authorizes_resend"]), ("FOUND", "effect_observed", False))
+        self.assertEqual(self.post("cancel", dict(request, mission_id="m-" + "0" * 32))[0], 404)
+        self.assertEqual(self.post("cancel", dict(request, command_key="c2", proposal_sha256="0" * 64))[1]["error"],
+                         "PROPOSAL_CHANGED")
 
 
 class TransportTests(Base):
