@@ -1,0 +1,13 @@
+{
+  "status": "OBSERVATION_REPRODUCED",
+  "source": "C110 / code f021878",
+  "id": "G088-R2",
+  "synthetic_controlled_model": true,
+  "inbound_client_closed": true,
+  "server_close_waited_for_model": true,
+  "wait_observed_seconds": 0.5,
+  "close_finished_only_after_model_release": true,
+  "reply_persisted_after_close_started": true,
+  "infinite_wait_measured": false,
+  "real_model_used": false
+}

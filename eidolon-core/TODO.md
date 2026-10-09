@@ -951,3 +951,9 @@ C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confié
   aucun essai VM/GPU/PC déclaré réussi.
 - [x] Inclusion explicite des sept fichiers dans l'archive source ; aucun nouveau
   préfixe large ou fichier de configuration privé ajouté à la liste.
+
+
+- [x] Kit C-063/bbf679c : archive 125 fichiers reproductible et vérifiée ; six
+  demandes préparées depuis extraction, 72 modules identiques au paquet recetté.
+- [ ] Claude : G090-R1 (appels modèle doublés), G088-R1 (mentions de mode) et
+  G088-R2 (budget mural/fermeture du serveur avec modèle actif) transmis dans G117.

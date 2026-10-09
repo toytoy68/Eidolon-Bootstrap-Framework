@@ -1558,3 +1558,12 @@ six modes média avec réservations et six sondes FFprobe ; recette G089 origina
 18/18 depuis le paquet. C-063 prépare les demandes et la fiche de recette matérielle,
 aucune qualification réelle supposée. G090-R1/G088-R1 ouverts ; G094 prêt après
 ces retours, file active actualisée sans supprimer les fiches précédentes.
+
+
+### C-MSG-G117 — Fin de recette du kit et revue fermeture, 09/10/2026
+
+C-063/bbf679c : archive 125 fichiers reproductible, six demandes extraites et
+préparées, 72 modules identiques au paquet f021878 déjà recetté. Memory Engine
+reste inchangé. G088-R2 transmis : fermeture HTTP attend l'appel modèle ; contre-
+exemple avec timeout socket 0,3 s et réponse active lente, attente observée 0,8 s
+puis terminaison contrôlée. Pas d'attente infinie ni de modèle réel revendiqués.

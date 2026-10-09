@@ -1,9 +1,10 @@
-# Suite active — C-MSG-G116, 09/10/2026
+# Suite active — C-MSG-G117, 09/10/2026
 
 C110/8f20041 reçu et intégré : G084–G089 livrés. G085-R1 à R5, G086-R1 et
 G087-R1/R2 vérifiés et clos ; recette G089 originale reproduite 18/18 depuis
 notre paquet installé. Retours prioritaires G090-R1 (double appel modèle sur un
-tour concurrent) et G088-R1 (mentions lecture seule en mode conversation actif).
+tour concurrent) et G088-R1 (mentions lecture seule en mode conversation actif), et G088-R2
+(fermeture du serveur en attente de l’appel modèle sans budget mural propre).
 
 Après le lot engagé et ces retours, **G094 est prêt** : formaliser la frontière
 conversation ↔ Image/Vidéo sur les modules installés, sans attendre une qualification

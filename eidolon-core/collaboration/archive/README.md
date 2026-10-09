@@ -564,3 +564,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G114 — réservation média C-061](2026-10-09-gpt-C-MSG-G114.md)
 
 - [C-MSG-G115 — intégration G088/G089 et suites de revue](2026-10-09-gpt-C-MSG-G115.md)
+
+- [C-MSG-G116 — recettes installées et G094 prêt](2026-10-09-gpt-C-MSG-G116.md)

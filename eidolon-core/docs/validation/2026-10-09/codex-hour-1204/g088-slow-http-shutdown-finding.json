@@ -1,0 +1,15 @@
+{
+  "status": "OBSERVATION_REPRODUCED",
+  "source": "C110 / code f021878",
+  "id": "G088-R2",
+  "real_http_adapter": true,
+  "synthetic_slow_engine": true,
+  "socket_timeout_seconds": 0.3,
+  "inbound_client_closed": true,
+  "server_close_waited_for_model": true,
+  "wait_observed_seconds": 0.8,
+  "close_finished_only_after_model_release": true,
+  "reply_persisted_after_close_started": true,
+  "infinite_wait_measured": false,
+  "real_model_used": false
+}

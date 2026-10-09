@@ -132,3 +132,33 @@ incorrect au nom de module de test `tests.test_beta_bundle` conservé dans
 La recette d'archive C-063 est exécutée après publication de ce lot documentaire.
 
 `bundle-allowlist-final.txt` : 10 tests du builder réussis avec la liste étendue.
+
+
+### Archive avec le kit C-063
+
+Commit `bbf679c8b99b9170c7912600a11fee1f671ca912` : **125 fichiers**, 444537 octets,
+SHA-256 `0b42ca530f59df6fe9dde0c478b18fe7145f302f44de4260fe5d24c171c3842d`. Deux constructions identiques, manifeste vérifié,
+extraction temporaire et six demandes préparées depuis cette extraction.
+`kit-installed-check.json` compare les **72 modules** au paquet f021878 déjà
+installé/testé et à la source : tous identiques, bundle conversation identique.
+Les recettes complètes f021878 restent donc attribuées à leur exécution réelle ;
+aucune réinstallation ou recette moteur supplémentaire n'est inventée ici.
+La fiche matérielle et le guide conversation sont présents dans l'archive.
+
+## Revue complémentaire de l'arrêt du serveur conversationnel
+
+Deux sondes indépendantes ne modifiant aucun code de Claude :
+
+- `probe_g088_shutdown.py` : un modèle synthétique tenu par événement ; la
+  connexion entrante est fermée mais `server_close()` attend la fin de l'appel.
+- `probe_g088_slow_http_shutdown.py` : vrai adaptateur ChatDialogueModel/OpenAI,
+  HTTP loopback simulé envoyant un octet toutes les 50 ms. Timeout socket déclaré
+  0,3 s, fermeture toujours en attente après 0,8 s ; libération du serveur moteur
+  → réponse enregistrée puis fermeture terminée. Modèle réel absent.
+
+Le code utilise `worker.join()` sans borne lors de la fermeture. Le timeout socket
+reste un délai d'inactivité et n'est pas une échéance de conversation/fermeture.
+**Aucune attente infinie n'a été mesurée** : la sonde libère toujours le moteur.
+G088-R2 transmis à Claude pour définir une fermeture et une tentative de dialogue
+bornées sans transformer fermeture du client ou fin du worker en annulation du
+moteur. Les retours G090-R1 et G088-R1 restent ouverts à la dernière ref C110 observée.

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "kit_commit": "bbf679c8b99b9170c7912600a11fee1f671ca912",
+  "installed_code_commit": "f02187830c64fc9c42cfa726d968e37cebf00fae",
+  "identical_archives": true,
+  "sha256": "0b42ca530f59df6fe9dde0c478b18fe7145f302f44de4260fe5d24c171c3842d",
+  "bytes": 444537,
+  "identical_installed_source_modules": 72,
+  "same_conversation_bundle": true,
+  "prepared_from_extracted_archive": [
+    "image.analyze",
+    "image.create",
+    "image.edit",
+    "video.analyze",
+    "video.create",
+    "video.edit"
+  ],
+  "engine_calls_requested": false,
+  "hardware_tests_run": false
+}
