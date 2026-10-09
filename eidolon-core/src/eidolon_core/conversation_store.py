@@ -313,6 +313,19 @@ class ConversationStore:
 
     # -- reading ----------------------------------------------------------------------------
 
+    def owner(self, conversation_id):
+        """client_id that opened the conversation, or None (an API never reveals which)."""
+        with self._db() as db:
+            row = db.execute("SELECT client_id FROM conversations WHERE conversation_id=?",
+                             (conversation_id,)).fetchone()
+        return row[0] if row else None
+
+    def submitted_by(self, client_id, mission_id):
+        """True only for a mission created from one of this client's submissions."""
+        with self._db() as db:
+            return db.execute("SELECT 1 FROM submissions WHERE client_id=? AND mission_id=? "
+                              "AND status='MISSION_CREATED'", (client_id, mission_id)).fetchone() is not None
+
     def page(self, conversation_id, *, after=0, limit=20):
         """Turns with their reply, in order; resume after reconnection with the last sequence."""
         if type(after) is not int or after < 0 or type(limit) is not int or not 1 <= limit <= MAX_PAGE:
