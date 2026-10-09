@@ -116,14 +116,38 @@ Aucun état n'est un succès (`success_claim: false`). L'ouverture d'un fichier
 depuis la page est **non disponible** et dite comme telle : il n'y a aucun
 bouton. L'opérateur passe par `eidolon-media artifact-export`.
 
+### Raccordement à la page
+
+- **Lien proposition → travail** : dépôt des conversations, schéma v4, table
+  `media_links`. Les chemins restent sur le serveur.
+  - Commande opérateur, en attendant le worker de Codex :
+
+    ```
+    python -m eidolon_core.conversation_api --state <état> media-link --client-id <client> \
+      --conversation-id <c-…> --proposal proposition.json --job <dossier du travail> \
+      [--collection <dossier de collecte>] --artifact-root <magasin d'artefacts>
+    ```
+
+  - Le lien est refusé si le travail ne sert pas exactement cette proposition
+    (`MEDIA_JOB_MISMATCH`), s'il est illisible (`MEDIA_JOB_UNAVAILABLE`) ou
+    déjà lié à un autre travail (`MEDIA_LINK_CONFLICT`).
+- **Route** `media_results`. Les enregistrements sont relus à chaque appel :
+  - un fichier modifié depuis apparaît « modifié » ;
+  - un travail disparu apparaît « illisible ».
+- **Page** : bloc « Résultats image et vidéo », bouton « Afficher les
+  résultats ». Le contenu est en texte seulement, sans bouton d'ouverture.
+- **Tests** :
+  - `test_conversation_media_results.py` (10, dont la route et la commande) ;
+  - `conversation.test.js` ;
+  - Chromium sur le vrai serveur : aucun résultat, puis un vrai travail lié
+    par `media_fixture.py`, puis une vue hostile qui reste du texte.
+
 ## Reste à raccorder (non livré ici)
 
 Ces étapes dépendent de choix à coordonner :
 
 - **Le dialogue** : ajouter les gabarits média au catalogue de confiance du
   prompt et à `decide_reply`.
-- **Route et affichage dans la page** de `result_view` : ils attendent le
-  lancement par le worker, qui enregistrera le lien proposition → travail.
 - **Lancer** la demande après soumission : par le worker partagé de Codex, ou
   par l'opérateur avec `eidolon-media run`. Le reçu ne doit jamais devenir
   `SUCCEEDED`.

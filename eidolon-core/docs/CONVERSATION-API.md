@@ -43,6 +43,7 @@ S'appuie sur G084 (contrat), G085 (dépôt) et G086 (dialogue).
 | `cancel_proposal` | `conversation_id`, option `mission_id`, `target` | G100 : proposition d'annulation **figée** par Core pour **une** mission créée par ce client dans cette conversation ; sans `mission_id`, plusieurs missions actives donnent `CLARIFICATION` `MISSION_AMBIGUOUS` ; mission terminée : `REFUSED` `MISSION_ALREADY_FINISHED` ; `target: media_job` : `NOT_AVAILABLE` |
 | `cancel` | `command_key`, `conversation_id`, `mission_id`, `proposal_sha256`, `reason` | soumission humaine de l'empreinte exacte : **demande** d'arrêt (`CANCELLATION_REQUESTED_NOT_CONFIRMED`), avec `stage` ; seul le runtime confirme l'arrêt |
 | `cancel_receipt` | `command_key`, `conversation_id`, `mission_id` | après une réponse perdue : reçu enregistré ou non, et `stage` actuel ; jamais un renvoi |
+| `media_results` | `conversation_id` | G101 : vues `eidolon-media-result-view/1` des travaux média liés à cette conversation, relues à chaque appel ; jamais un chemin |
 
 Codes HTTP :
 
@@ -120,5 +121,14 @@ et `test_conversation_api.py`.
   interruption globale du moteur (`/interrupt` de ComfyUI) arrêterait le
   travail des autres : elle n'est jamais utilisée pour annuler une seule
   tâche, tant qu'aucun contrat par tâche sûr n'existe.
-- Limite : pas encore de bouton d'annulation dans la page ; l'API et ses
-  tests sont prêts.
+- **Dans la page** : bloc « Arrêter une mission ».
+  1. « Demander l'arrêt d'une mission » demande la proposition à Core. Si
+     plusieurs missions sont en cours, la page propose de choisir laquelle.
+  2. La page vérifie l'empreinte de la proposition, puis on saisit un motif
+     et on confirme.
+  3. Une réponse perdue se vérifie avec la même clé, jamais par un renvoi à
+     l'aveugle. « Arrêt confirmé » ne s'affiche que si la mission est
+     `CANCELLED`.
+
+  Tests : `conversation.test.js` (3 tests) et Chromium sur le vrai serveur
+  (deux missions, clavier, 320 px).

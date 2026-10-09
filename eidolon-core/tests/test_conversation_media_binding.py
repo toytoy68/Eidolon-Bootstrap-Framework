@@ -180,7 +180,7 @@ class ExecutionTests(Base):
 class MigrationTests(Base):
     def downgrade(self):
         with sqlite3.connect(self.conv.path) as db:
-            db.executescript("DROP TABLE attachments; UPDATE meta SET value='eidolon-conversation-store/2' "
+            db.executescript("DROP TABLE media_links; DROP TABLE attachments; UPDATE meta SET value='eidolon-conversation-store/2' "
                              "WHERE key='schema'; PRAGMA user_version=2;")
 
     def test_v2_requires_explicit_migration_and_an_interrupted_one_resumes(self):
@@ -201,7 +201,7 @@ class MigrationTests(Base):
 
     def test_future_version_is_refused(self):
         with sqlite3.connect(self.conv.path) as db:
-            db.execute("PRAGMA user_version=4")
+            db.execute("PRAGMA user_version=9")
         with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_UNAVAILABLE"):
             cs.ConversationStore(self.store, migrate=True)
 

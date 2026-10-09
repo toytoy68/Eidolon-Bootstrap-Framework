@@ -93,3 +93,56 @@ def _collection(collection, job, artifact_store):
     return {"outputs": outputs, "excluded_outputs": excluded, "stage": cm.stage(state) or "received_as_is",
             "collection": {"state": state if isinstance(state, str) else None, "expected": total, "imported": imported,
                            "partial": state != "OUTPUTS_IMPORTED_UNVERIFIED" or (total is not None and imported < total)}}
+
+
+class _UnavailableStore:
+    """Stands for an artifact store that cannot be opened: every file reads as unavailable."""
+    store_id = None
+
+    def read(self, reference):
+        raise MediaError("ARTIFACT_STORE_CHANGED")
+
+
+def link_job(conversations, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, collection_dir=None):
+    """Operator (or media worker) records which job serves this submitted proposal; refused unless the
+    job's structured request is exactly the proposal's (binding MATCHED). Paths stay on the server."""
+    from .media_agents import inspect as inspect_job
+    from .media_artifacts import ArtifactStore
+    try:
+        job = inspect_job(job_dir)
+        store = ArtifactStore(artifact_root)
+    except (MediaError, OSError, ValueError):
+        raise ContractError("MEDIA_JOB_UNAVAILABLE: job record or artifact store unreadable") from None
+    view = result_view(proposal, job, conversations=conversations, artifact_store=store,
+                       viewer_client_id=owner_client_id)
+    if view["binding"] != "MATCHED":
+        raise ContractError("MEDIA_JOB_MISMATCH: this job does not serve this proposal")
+    return conversations.link_media(owner_client_id=owner_client_id, conversation_id=conversation_id,
+                                    proposal=proposal, job_dir=job_dir, artifact_root=artifact_root,
+                                    collection_dir=collection_dir)
+
+
+def views_for(conversations, *, owner_client_id, conversation_id):
+    """Fresh views of every job linked to this owner's conversation, read from the records now."""
+    from .media_agents import inspect as inspect_job
+    from .media_artifacts import ArtifactStore
+    from .media_outputs import inspect_collection
+    views = []
+    for link in conversations.media_links(owner_client_id=owner_client_id, conversation_id=conversation_id):
+        try:
+            job = inspect_job(link["job_dir"])
+        except (MediaError, OSError, ValueError):
+            job = None                                  # → binding UNREADABLE, nothing listed
+        collection = None
+        if link["collection_dir"] is not None:
+            try:
+                collection = inspect_collection(link["collection_dir"])
+            except (MediaError, OSError, ValueError):
+                collection = {"schema": "unreadable"}   # → shown as a collection of another job: ignored
+        try:
+            store = ArtifactStore(link["artifact_root"])
+        except (MediaError, OSError, ValueError):
+            store = _UnavailableStore()
+        views.append(result_view(link["proposal"], job, conversations=conversations, artifact_store=store,
+                                 viewer_client_id=owner_client_id, collection=collection))
+    return views

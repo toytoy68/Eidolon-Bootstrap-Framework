@@ -30,10 +30,10 @@ from .commands import validate_scope
 from .contracts import ContractError, digest, encode
 from .store import now
 
-SCHEMA = "eidolon-conversation-store/3"
+SCHEMA = "eidolon-conversation-store/4"
 SCHEMA_V1 = "eidolon-conversation-store/1"
-VERSION = 3
-SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: SCHEMA}
+VERSION = 4
+SCHEMAS = {1: SCHEMA_V1, 2: "eidolon-conversation-store/2", 3: "eidolon-conversation-store/3", 4: SCHEMA}
 # v2 adds one durable model attempt per turn (G090-R1). v1 is migrated only on explicit request.
 ATTEMPTS_TABLE = ("CREATE TABLE attempts (turn_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, "
                   "started_at TEXT NOT NULL, deadline REAL NOT NULL)")
@@ -43,7 +43,13 @@ ATTACHMENTS_TABLE = ("CREATE TABLE attachments (conversation_id TEXT NOT NULL, a
                      "PRIMARY KEY(conversation_id, artifact_id))")
 # One explicit step per version, each in its own transaction: an interrupted migration leaves a
 # valid intermediate version that the same explicit command resumes.
-MIGRATIONS = {1: ATTEMPTS_TABLE, 2: ATTACHMENTS_TABLE}
+# v4 links a submitted media proposal to the media job (and collection) that serves it. The private
+# paths stay server side; they are never returned to a client.
+MEDIA_LINKS_TABLE = ("CREATE TABLE media_links (conversation_id TEXT NOT NULL, proposal_sha256 TEXT NOT NULL, "
+                     "owner_client_id TEXT NOT NULL, proposal TEXT NOT NULL, job_dir TEXT NOT NULL, "
+                     "collection_dir TEXT, artifact_root TEXT NOT NULL, linked_at TEXT NOT NULL, "
+                     "PRIMARY KEY(conversation_id, proposal_sha256))")
+MIGRATIONS = {1: ATTEMPTS_TABLE, 2: ATTACHMENTS_TABLE, 3: MEDIA_LINKS_TABLE}
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
 MAX_TURNS = 1000
 MAX_PAGE = 50
@@ -133,11 +139,12 @@ class ConversationStore:
                             PRIMARY KEY(client_id, command_key));
                         %s;
                         %s;
+                        %s;
                         INSERT INTO meta VALUES ('schema', '%s');
                         INSERT INTO meta VALUES ('store_id', '%s');
-                        PRAGMA user_version=3;
+                        PRAGMA user_version=4;
                         COMMIT;
-                    """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, SCHEMA, self.store_id))
+                    """ % (ATTEMPTS_TABLE, ATTACHMENTS_TABLE, MEDIA_LINKS_TABLE, SCHEMA, self.store_id))
                 elif migrate and version in MIGRATIONS:
                     self._migrate(db)
             finally:
@@ -441,6 +448,42 @@ class ConversationStore:
                               "ORDER BY attached_at, artifact_id", (conversation_id, owner_client_id)).fetchall()
         return [attachment(store_id=self.store_id, owner_client_id=owner_client_id, conversation_id=conversation_id,
                            reference=json.loads(r[0])) for r in rows]
+
+    def link_media(self, *, owner_client_id, conversation_id, proposal, job_dir, artifact_root, collection_dir=None):
+        """Record which media job serves a submitted media proposal (operator or media worker). Idempotent."""
+        from .conversation_media import validate_proposal
+        proposal = validate_proposal(proposal)
+        if (proposal["owner_client_id"] != owner_client_id or proposal["conversation_id"] != conversation_id
+                or proposal["store_id"] != self.store_id):
+            raise ConversationError("CONVERSATION_UNKNOWN: proposal of another owner or conversation")
+        paths = [job_dir, artifact_root] + ([collection_dir] if collection_dir is not None else [])
+        if any(not isinstance(p, str) or not os.path.isabs(p) or len(p) > 1024 for p in paths):
+            raise ConversationError("INVALID_CONVERSATION: absolute server paths required")
+        sha = digest(proposal)
+        with self._db(write=True) as db:
+            owner = db.execute("SELECT client_id FROM conversations WHERE conversation_id=?",
+                               (conversation_id,)).fetchone()
+            if owner is None or owner[0] != owner_client_id:
+                raise ConversationError("CONVERSATION_UNKNOWN: no such conversation for this owner")
+            existing = db.execute("SELECT job_dir, collection_dir, artifact_root FROM media_links "
+                                  "WHERE conversation_id=? AND proposal_sha256=?", (conversation_id, sha)).fetchone()
+            if existing:
+                if tuple(existing) != (job_dir, collection_dir, artifact_root):
+                    raise ConversationError("MEDIA_LINK_CONFLICT: this proposal is already linked to another job")
+                return sha
+            db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?)",
+                       (conversation_id, sha, owner_client_id, encode(proposal), job_dir, collection_dir,
+                        artifact_root, now()))
+        return sha
+
+    def media_links(self, *, owner_client_id, conversation_id):
+        """Links of this owner's conversation, oldest first. Server-side use only (they hold paths)."""
+        with self._db() as db:
+            rows = db.execute("SELECT proposal, job_dir, collection_dir, artifact_root FROM media_links "
+                              "WHERE conversation_id=? AND owner_client_id=? ORDER BY linked_at, proposal_sha256",
+                              (conversation_id, owner_client_id)).fetchall()
+        return [{"proposal": json.loads(r[0]), "job_dir": r[1], "collection_dir": r[2], "artifact_root": r[3]}
+                for r in rows]
 
     def select_profile(self, name, *, actor):
         """Explicit operator choice of the dialogue profile (G098). Never made by a model or a fallback."""

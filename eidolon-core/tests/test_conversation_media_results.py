@@ -14,7 +14,7 @@ import unittest
 
 from eidolon_core import conversation_media as cm
 from eidolon_core import conversation_store as cs
-from eidolon_core.contracts import ContractError
+from eidolon_core.contracts import ContractError, digest
 from eidolon_core.conversation_media_results import result_view
 from eidolon_core.media_agents import prepare
 from eidolon_core.media_artifacts import ArtifactStore, initialize
@@ -136,6 +136,101 @@ class ResultViewTests(Base):
         unknown = {"schema": "media-job/1", "id": "media-" + "4" * 32, "state": "ETAT_FUTUR", "request": {}}
         self.assertEqual(self.view(p, unknown)["stage"], "received_as_is")
         self.assertEqual(self.view(p, {"schema": "autre"})["binding"], "UNREADABLE")
+
+
+
+class LinkAndRouteTests(Base):
+    """The page path: operator links a job, the route reads it fresh, never returns a path."""
+
+    def write_job(self, job, name="job"):
+        from eidolon_core.media_agents import write_record
+        folder = Path(self.tmp.name) / name
+        folder.mkdir(mode=0o700)
+        write_record(folder, job)
+        return folder
+
+    def write_collection(self, collection, name="collecte"):
+        from eidolon_core.media_agents import write_record
+        folder = Path(self.tmp.name) / name
+        folder.mkdir(mode=0o700)
+        write_record(folder, collection)
+        return folder
+
+    def test_link_then_route_shows_fresh_views_without_paths(self):
+        from eidolon_core.conversation_media_results import link_job, views_for
+        p = self.proposal(); job = self.job(p)
+        out = self.output(job["id"], "mc-" + "2" * 32)
+        job_dir = self.write_job(job)
+        coll_dir = self.write_collection(self.collection(job, [out]))
+        link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(job_dir),
+                 artifact_root=str(self.root), collection_dir=str(coll_dir))
+        self.assertEqual(link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                                  job_dir=str(job_dir), artifact_root=str(self.root), collection_dir=str(coll_dir)),
+                         digest(p))                                                      # idempotent
+        views = views_for(self.conv, owner_client_id="pc", conversation_id=self.cid)
+        self.assertEqual([(v["binding"], v["outputs"][0]["verification"]) for v in views], [("MATCHED", "hash_verified")])
+        text = json.dumps(views)
+        for private in (str(job_dir), str(coll_dir), str(self.root), self.tmp.name):
+            self.assertNotIn(private, text)
+        # Read fresh: the output modified afterwards is seen as modified on the next call.
+        payload = self.root / out["reference"]["artifact_id"] / "payload"
+        body = bytearray(payload.read_bytes()); body[-1] ^= 1; payload.write_bytes(bytes(body))
+        self.assertEqual(views_for(self.conv, owner_client_id="pc", conversation_id=self.cid)[0]["outputs"][0]
+                         ["verification"], "modified")
+        # Job record gone: still listed, honestly unreadable.
+        (job_dir / "job.json").unlink()
+        self.assertEqual(views_for(self.conv, owner_client_id="pc", conversation_id=self.cid)[0]["binding"], "UNREADABLE")
+        self.assertEqual(views_for(self.conv, owner_client_id="intrus", conversation_id=self.cid), [])
+
+    def test_link_refuses_another_job_another_owner_and_relinking(self):
+        from eidolon_core.conversation_media_results import link_job
+        p = self.proposal(); other = self.proposal("edit", "Rends-le en noir et blanc")
+        wrong = self.write_job(self.job(other), "autre")
+        with self.assertRaisesRegex(ContractError, "MEDIA_JOB_MISMATCH"):
+            link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(wrong),
+                     artifact_root=str(self.root))
+        right = self.write_job(self.job(p))
+        with self.assertRaisesRegex(ContractError, "MEDIA_RESULT_UNKNOWN|CONVERSATION_UNKNOWN"):
+            link_job(self.conv, owner_client_id="intrus", conversation_id=self.cid, proposal=p, job_dir=str(right),
+                     artifact_root=str(self.root))
+        link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(right),
+                 artifact_root=str(self.root))
+        with self.assertRaisesRegex(ContractError, "MEDIA_LINK_CONFLICT"):
+            self.conv.link_media(owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(wrong),
+                                 artifact_root=str(self.root))
+        with self.assertRaisesRegex(ContractError, "MEDIA_JOB_UNAVAILABLE"):
+            link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
+                     job_dir=str(Path(self.tmp.name) / "absent"), artifact_root=str(self.root))
+
+    def test_api_route_and_operator_command(self):
+        import os, subprocess, sys
+        from eidolon_core.client_credentials import ClientCredentials
+        from eidolon_core.conversation_api import ConversationAPI
+        from eidolon_core.diagnostics import synthetic_runtime
+        from eidolon_core.dialogue import SimulatedDialogueModel
+        runtime = synthetic_runtime(self.conv.store)
+        key = ClientCredentials(self.conv.store, create=True).pair(client_id="pc", actor="toytoy")["token"]
+        api = ConversationAPI(runtime, dialogue_model=SimulatedDialogueModel(runtime.catalog))
+        headers = {"Authorization": ["Bearer " + key], "Content-Type": ["application/json"]}
+        post = lambda body: api.handle("POST", "/v1/conversations/media_results", headers, json.dumps(body).encode())
+        self.assertEqual(post({"conversation_id": self.cid})[1]["results"], [])
+        p = self.proposal(); job_dir = self.write_job(self.job(p))
+        proposal_file = Path(self.tmp.name) / "proposition.json"; proposal_file.write_text(json.dumps(p))
+        src = str(Path(__file__).resolve().parents[1] / "src")
+        done = subprocess.run([sys.executable, "-m", "eidolon_core.conversation_api", "--state",
+                               str(self.conv.store.directory), "media-link", "--client-id", "pc", "--conversation-id",
+                               self.cid, "--proposal", str(proposal_file), "--job", str(job_dir),
+                               "--artifact-root", str(self.root)], capture_output=True, text=True, timeout=60,
+                              env=dict(os.environ, PYTHONPATH=src, PYTHONDONTWRITEBYTECODE="1"))
+        self.assertEqual(json.loads(done.stdout)["status"], "LINKED", done.stdout + done.stderr)
+        status, body = post({"conversation_id": self.cid})
+        self.assertEqual((status, [r["binding"] for r in body["results"]]), (200, ["MATCHED"]))
+        self.assertNotIn(self.tmp.name, json.dumps(body))
+        other = ClientCredentials(self.conv.store).pair(client_id="intrus", actor="x")["token"]
+        status, refused = api.handle("POST", "/v1/conversations/media_results",
+                                     {**headers, "Authorization": ["Bearer " + other]},
+                                     json.dumps({"conversation_id": self.cid}).encode())
+        self.assertEqual((status, refused["error"]), (404, "CONVERSATION_UNKNOWN"))
 
 
 if __name__ == "__main__":

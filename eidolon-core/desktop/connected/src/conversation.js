@@ -49,6 +49,22 @@
     if (before && typeof before === "object" && before.profile !== m.profile && m.profile) text += " — profil changé depuis la réponse précédente";
     return text;
   }
+  // G100: what a cancellation may say. Only the mission itself confirms a stop.
+  var CANCEL_STAGES = {
+    request_received: "Demande d'arrêt enregistrée — arrêt non confirmé.",
+    effect_observed: "Arrêt confirmé : la mission est annulée.",
+    finished_without_cancellation: "La mission s'est terminée avant l'arrêt : son résultat est conservé.",
+    already_finished: "La mission était déjà terminée : rien n'a été arrêté.",
+    uncertain: "État incertain — vérifier, ne pas renvoyer à l'aveugle." };
+  var CANCEL_CODES = {
+    NO_ACTIVE_MISSION: "Aucune mission en cours créée depuis cette conversation.",
+    MISSION_AMBIGUOUS: "Plusieurs missions sont en cours : choisissez celle à arrêter.",
+    MISSION_ALREADY_FINISHED: "Cette mission est déjà terminée : rien à arrêter.",
+    MEDIA_CANCEL_NOT_AVAILABLE: "L'arrêt d'une tâche image ou vidéo n'est pas disponible.",
+    MISSION_UNKNOWN: "Mission inconnue pour cette conversation.",
+    PROPOSAL_CHANGED: "La proposition d'arrêt a changé : redemandez-la avant de confirmer.",
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé." };
+  var FINAL_STAGES = ["effect_observed", "finished_without_cancellation", "already_finished"];
   // Submission refusals worth explaining in words (others are shown with their code).
   var SUBMIT_ERRORS = {
     PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
@@ -102,7 +118,7 @@
     var transport = options.transport, onChange = options.onChange || function () {};
     var token = null, epoch = 0;
     var state = { phase: "closed", error: null, conversationId: null, identity: null, items: [],
-      proposal: null, proposalSha: null, submission: null, recent: [] };
+      proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
 
     function emit() { onChange(JSON.parse(JSON.stringify(state))); }
     function errorOf(res) { return res && res.json && typeof res.json.error === "string" ? res.json.error : "NETWORK"; }
@@ -122,7 +138,7 @@
         state.phase = "closed"; state.error = "KEY_FORMAT"; emit(); return false;
       }
       epoch += 1; token = key;
-      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [] };
+      state = { phase: "opening", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
       emit();
       var r = await call("open", { client_key: randomKey("page") });
       if (r.stale) return false;
@@ -162,6 +178,7 @@
       state.proposal = last ? last.reply.proposal : null;
       state.proposalSha = last ? last.reply.proposal_sha256 : null;
       state.submission = null;                            // unknown after a reload: never assumed, never resent
+      state.cancel = null; state.media = null;
       state.recent = state.recent.filter(function (c) { return c.conversation_id !== conversationId; });
       state.resumed = true;
       emit();
@@ -170,7 +187,7 @@
 
     function close() {
       epoch += 1; token = null;
-      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [] };
+      state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, media: null };
       emit();
     }
 
@@ -234,6 +251,86 @@
       return r.ok;
     }
 
+    // ---- G100: targeted cancellation (proposal → human confirmation → request, never a confirmed stop)
+    async function cancelPropose(missionId) {
+      if (state.phase !== "open") return false;
+      var body = { conversation_id: state.conversationId };
+      if (missionId !== undefined && missionId !== null) {
+        if (!MISSION.test(missionId)) return false;
+        body.mission_id = missionId;
+      }
+      var mine = epoch;
+      state.cancel = { status: "loading", proposal: null, sha: null, missionStatus: null, candidates: [], code: null,
+        key: null, receipt: null, stage: null, error: null };
+      emit();
+      var r = await call("cancel_proposal", body);
+      if (r.stale) return false;
+      var c = state.cancel;
+      if (!r.ok) { c.status = "error"; c.error = r.code; emit(); return false; }
+      if (r.json.kind === "PROPOSAL") {
+        var local = await digest(r.json.proposal);
+        if (mine !== epoch) return false;
+        if (local !== r.json.proposal_sha256 || !MISSION.test(r.json.proposal.mission_id)) {
+          c.status = "error"; c.error = "DIGEST_MISMATCH"; emit(); return false;
+        }
+        c.status = "review"; c.proposal = r.json.proposal; c.sha = local; c.missionStatus = r.json.mission_status;
+      } else if (r.json.kind === "CLARIFICATION") {
+        c.code = r.json.code;
+        c.candidates = (r.json.candidates || []).filter(function (m) { return MISSION.test(m); });
+        c.status = c.candidates.length ? "choose" : "unavailable";
+      } else {
+        c.status = "unavailable"; c.code = r.json.code || null;
+      }
+      emit();
+      return true;
+    }
+
+    async function cancelSubmit(reason) {
+      var c = state.cancel;
+      if (state.phase !== "open" || !c || !c.proposal || (c.status !== "review" && c.status !== "not_recorded")) return false;
+      if (typeof reason !== "string" || !reason.trim() || reason.length > 4000) return false;
+      if (!c.key) c.key = randomKey("cancel");            // the same key on a resend: Core replays, never doubles
+      c.status = "sent"; c.error = null; emit();
+      var r = await call("cancel", { command_key: c.key, conversation_id: state.conversationId,
+        mission_id: c.proposal.mission_id, proposal_sha256: c.sha, reason: reason.trim() });
+      if (r.stale) return false;
+      c = state.cancel;
+      if (r.ok) { c.status = "recorded"; c.receipt = r.json; c.stage = r.json.stage; c.missionStatus = r.json.mission_status; }
+      else { c.status = r.network || r.status >= 500 ? "uncertain" : "refused"; c.error = r.code; }
+      emit();
+      return r.ok;
+    }
+
+    async function cancelCheck() {
+      var c = state.cancel;
+      if (state.phase !== "open" || !c || !c.key || !c.proposal) return false;
+      var r = await call("cancel_receipt", { command_key: c.key, conversation_id: state.conversationId,
+        mission_id: c.proposal.mission_id });
+      if (r.stale) return false;
+      c = state.cancel;
+      if (!r.ok) { c.error = r.code; emit(); return false; }
+      c.missionStatus = r.json.mission_status;
+      if (r.json.status === "FOUND") { c.status = "recorded"; c.receipt = r.json.receipt; c.stage = r.json.stage; c.error = null; }
+      else { c.status = "not_recorded"; c.stage = null; }   // nothing recorded: confirming again is safe
+      emit();
+      return true;
+    }
+
+    // ---- G101: media results linked to this conversation, read fresh from the server
+    async function loadMedia() {
+      if (state.phase !== "open") return false;
+      var previous = state.media && state.media.results ? state.media.results : [];
+      state.media = { status: "loading", results: previous, error: null };
+      emit();
+      var r = await call("media_results", { conversation_id: state.conversationId });
+      if (r.stale) return false;
+      state.media = r.ok && Array.isArray(r.json.results)
+        ? { status: "ready", results: r.json.results, error: null }
+        : { status: "error", results: [], error: r.code || "INVALID_RESPONSE" };
+      emit();
+      return r.ok;
+    }
+
     async function checkReceipt() {
       if (state.phase !== "open" || !state.submission) return false;
       var r = await call("receipt", { command_key: state.submission.key });
@@ -245,6 +342,7 @@
     }
 
     return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt, resume: resume,
+      cancelPropose: cancelPropose, cancelSubmit: cancelSubmit, cancelCheck: cancelCheck, loadMedia: loadMedia,
       state: function () { return JSON.parse(JSON.stringify(state)); } };
   }
 
@@ -404,6 +502,69 @@
       }
       doc.getElementById("conv-submit").disabled = !!(s && (s.status === "sent" || s.status === "recorded"));
     }
+    renderCancel(doc, st, closed);
+    renderMedia(doc, st, closed);
+  }
+
+  function cancelStatusText(c) {
+    if (!c) return "";
+    if (c.status === "loading") return "Préparation de la proposition d'arrêt…";
+    if (c.status === "choose") return CANCEL_CODES.MISSION_AMBIGUOUS;
+    if (c.status === "review") return "Rien n'est envoyé tant que vous ne confirmez pas.";
+    if (c.status === "sent") return "Demande d'arrêt envoyée…";
+    if (c.status === "recorded") return CANCEL_STAGES[c.stage] || ("État reçu : " + c.stage);
+    if (c.status === "uncertain") return "Réponse perdue : la demande a peut-être été enregistrée. Vérifiez avant tout renvoi." +
+      (c.error ? " (" + c.error + ")" : "");
+    if (c.status === "not_recorded") return "Aucune demande enregistrée : vous pouvez confirmer à nouveau, sans risque de doublon.";
+    if (c.status === "refused") return CANCEL_CODES[c.error] || ("Demande refusée (" + c.error + ").");
+    if (c.status === "unavailable") return CANCEL_CODES[c.code] || ("Arrêt non disponible (" + c.code + ").");
+    return CANCEL_CODES[c.error] || ("Impossible de préparer l'arrêt (" + c.error + ").");
+  }
+
+  function renderCancel(doc, st, closed) {
+    var c = closed ? null : st.cancel;
+    var choices = doc.getElementById("conv-cancel-choices");
+    choices.textContent = "";
+    choices.hidden = !(c && c.status === "choose");
+    if (c && c.status === "choose") {
+      c.candidates.forEach(function (id) {
+        var li = doc.createElement("li"), b = el(doc, "button", "media-secondary", "Arrêter la mission " + id);
+        b.type = "button"; b.dataset.cancelMission = id;
+        li.appendChild(b); choices.appendChild(li);
+      });
+    }
+    var review = doc.getElementById("conv-cancel-review");
+    review.hidden = !(c && c.proposal);
+    if (c && c.proposal) {
+      doc.getElementById("conv-cancel-target").textContent = "Mission " + c.proposal.mission_id +
+        (c.missionStatus ? " — statut actuel : " + c.missionStatus : "");
+      doc.getElementById("conv-cancel-submit").disabled = !(c.status === "review" || c.status === "not_recorded");
+    }
+    var line = doc.getElementById("conv-cancel-state");
+    line.textContent = cancelStatusText(c);
+    line.className = "conv-state" + (c && c.stage ? " cancel-" + c.stage : "");
+    doc.getElementById("conv-cancel-check").hidden = !(c && c.key &&
+      (c.status === "uncertain" || (c.status === "recorded" && FINAL_STAGES.indexOf(c.stage) < 0)));
+  }
+
+  function renderMedia(doc, st, closed) {
+    var m = closed ? null : st.media;
+    var line = doc.getElementById("conv-media-state"), list = doc.getElementById("conv-media-list");
+    list.textContent = "";
+    line.textContent = !m ? "" : m.status === "loading" ? "Lecture des résultats…" :
+      m.status === "error" ? "Résultats indisponibles (" + m.error + ")." :
+      !m.results.length ? "Aucun résultat image ou vidéo lié à cette conversation." :
+      m.results.length + " résultat(s) lu(s) maintenant sur le serveur.";
+    if (!m) return;
+    m.results.forEach(function (view) {
+      var box = el(doc, "div", "conv-media-result");
+      box.appendChild(el(doc, "p", "conv-kind", (view.agent === "video" ? "Vidéo" : "Image") + " — " +
+        ({ create: "création", edit: "retouche", analyze: "analyse" }[view.operation] || view.operation)));
+      var body = el(doc, "div");
+      renderMediaResult(doc, body, view);
+      box.appendChild(body);
+      list.appendChild(box);
+    });
   }
 
   function mount(doc, deps) {
@@ -435,6 +596,17 @@
       var b = event.target.closest("button[data-resume]");
       if (b) conv.resume(b.dataset.resume).then(function (ok) { if (ok) doc.getElementById("conv-text").focus(); });
     });
+    doc.getElementById("conv-cancel-start").addEventListener("click", function () { conv.cancelPropose(); });
+    doc.getElementById("conv-cancel-choices").addEventListener("click", function (event) {
+      var b = event.target.closest("button[data-cancel-mission]");
+      if (b) conv.cancelPropose(b.dataset.cancelMission).then(function () { doc.getElementById("conv-cancel-reason").focus(); });
+    });
+    doc.getElementById("conv-cancel-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      conv.cancelSubmit(doc.getElementById("conv-cancel-reason").value);
+    });
+    doc.getElementById("conv-cancel-check").addEventListener("click", function () { conv.cancelCheck(); });
+    doc.getElementById("conv-media-load").addEventListener("click", function () { conv.loadMedia(); });
     doc.getElementById("conv-follow").addEventListener("click", function (event) {
       var id = event.currentTarget.dataset.missionId;
       if (MISSION.test(id)) deps.follow(id);
@@ -444,7 +616,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

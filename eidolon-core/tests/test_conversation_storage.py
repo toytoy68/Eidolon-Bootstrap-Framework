@@ -61,7 +61,7 @@ class Base(unittest.TestCase):
         self.path = conv.path
         self.missions_db = Path(self.runtime.store.directory) / "missions.sqlite3"
         with sqlite3.connect(self.path) as db:
-            db.executescript("DROP TABLE attempts; DROP TABLE attachments; UPDATE meta SET value='%s' "
+            db.executescript("DROP TABLE media_links; DROP TABLE attempts; DROP TABLE attachments; UPDATE meta SET value='%s' "
                              "WHERE key='schema'; PRAGMA user_version=1;" % cs.SCHEMA_V1)
         self.core_before = self.core()
 
@@ -107,7 +107,7 @@ class MigrationTests(Base):
     def test_backup_then_migration_keeps_ids_order_references_and_replays_no_mission(self):
         missions, missions_sha = self.missions(), sha(self.missions_db)
         result = st.migrate_with_backup(self.runtime.store, self.base / "backup.sqlite3")
-        self.assertEqual((result["status"], result["from_version"], result["version"]), ("MIGRATED", 1, 3))
+        self.assertEqual((result["status"], result["from_version"], result["version"]), ("MIGRATED", 1, cs.VERSION))
         self.assertEqual(self.core(), self.core_before)                            # same rows, same order
         self.assertEqual((self.missions(), sha(self.missions_db)), (missions, missions_sha))
         backup = self.base / "backup.sqlite3"
@@ -134,7 +134,7 @@ class MigrationTests(Base):
         self.assertEqual((self.version(), st.inspect(self.path)["state"]), (2, "MIGRATION_REQUIRED"))
         self.assertEqual(self.core(), self.core_before)
         result = st.migrate_with_backup(self.runtime.store, self.base / "b2.sqlite3")
-        self.assertEqual((result["from_version"], result["version"]), (2, 3))
+        self.assertEqual((result["from_version"], result["version"]), (2, cs.VERSION))
         self.assertEqual(self.core(), self.core_before)
 
     def test_disk_error_during_a_step_rolls_it_back(self):
