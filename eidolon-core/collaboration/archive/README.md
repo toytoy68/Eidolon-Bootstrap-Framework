@@ -532,3 +532,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   avant G107 : clôture de la recette média et de l'archive du lot précédent.
 
 - [C-MSG-G107](2026-10-09-gpt-C-MSG-G107.md) : reprise 09 h 53 et quatre constats G085, archivé à l’identique avant G108.
+
+- [C-MSG-G108](2026-10-09-gpt-C-MSG-G108.md) : C106 vérifié, C-056 livré et constat G086-R1, archivé à l’identique avant G109.

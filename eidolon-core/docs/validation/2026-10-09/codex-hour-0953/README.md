@@ -69,3 +69,39 @@ avec `PYTHONPATH=src:.:/workspace/scratch/16ec975b83e7/memory-reference` et
 `EIDOLON_MEMORY_INTEGRATION=1 python -m unittest discover -s tests -t . -q`.
 Le constructeur de bundle inclut désormais aussi les guides stockage/dialogue.
 L'empreinte des sources validées figure dans `source-manifest.json`.
+
+## Archive publiée C-056/G086 — b5f08508
+
+Archive de développement depuis `b5f08508b557e42da6947b4dc724966733323c8e` :
+**112 fichiers, 413 328 octets** ; SHA-256
+`322ec23c091fe7fb29e5e5afa30cd3c20b78e49faa1710353f062f2bfbf67da7`.
+Deux constructions identiques (`bundle-build*.json`, `bundle-reproducibility.json`),
+contrôle du manifeste (`bundle-verify.json`), extraction puis installation depuis
+cette extraction en venv distinct (`bundle-install.txt`). Le vérificateur confirme
+la cohérence du manifeste, pas l'authenticité d'une archive quelconque.
+
+`bundle-installed-result.json` : **67 modules installés identiques**, six modes,
+six précontrôles hors ligne, six sondes de métadonnées et trois contrôles de
+configuration. FFmpeg réel ; moteurs et médias synthétiques, aucun vrai modèle.
+
+Depuis `/tmp`, sans PYTHONPATH, `eidolon_core.beta_check` sur les assets extraits :
+**24/24 contrôles missions et 25/25 contrôles archives de recherche**
+(`bundle-beta-missions.json`, `bundle-beta-research-archives.json`). Serveur HTTP
+réel sur loopback et données temporaires synthétiques ; navigateur, SSH, VM et
+Windows non essayés. Le logo est empreinté, mais les trois requêtes d'assets de
+cette recette concernent HTML/JS/CSS. Pas d'extension implicite de cette preuve.
+
+## C-058 — Inspection humaine d'un travail
+
+`inspect --format human` donne les étapes durables et les indications opérateur
+sans exposer les textes non fiables au terminal, ni modifier le JSON par défaut.
+`media-status-tests.txt` : huit tests réussis. Le test de coupure utilise réellement
+`execute` et une interruption synthétique après `QUEUE_ACKNOWLEDGED`, puis vérifie
+le rendu humain, les octets et mtime du journal inchangés, et l'absence de socket,
+sous-processus ou lecture source. Le reçu permet de suggérer la consultation ;
+il ne prouve aucune réussite. Aucun renvoi ou nettoyage automatique.
+
+L'archive b5f08508 précède C-058 ; elle n'est pas présentée comme preuve de ce
+nouveau rendu. La publication suivante conservera cette distinction.
+
+`media-final-tests.txt` : **111 tests média réussis en 6,350 s** après C-058.

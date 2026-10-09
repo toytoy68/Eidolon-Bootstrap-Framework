@@ -857,3 +857,13 @@ Preuves : [session du 09/10, 09 h 53](docs/validation/2026-10-09/codex-hour-0953
 
 - [x] Après intégration C106/G086 : 1 141 tests complets réussis, zéro ignoré,
   Memory activée ; sources Claude inchangées.
+
+
+## C-058 — Inspection opérateur des travaux média (09/10/2026)
+
+- [x] `inspect --format human` : état/phase enregistrés, revue après interruption,
+  consultation explicite d'un reçu durable quand il existe, sans relance.
+- [x] Textes du modèle, prompts, chemins et erreurs non rendus au terminal ;
+  libellés fixes et identifiants bornés, journal JSON inchangé.
+- [x] Huit tests, dont vraie coupure synthétique après reçu durable : inspection
+  sans source, socket, processus, écriture ou modification du journal.

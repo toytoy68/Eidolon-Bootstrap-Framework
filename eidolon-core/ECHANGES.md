@@ -1437,3 +1437,17 @@ contre-revue : mémoire retirée du prompt mais toujours citée (G086-R1),
 reproducteur synthétique transmis à Claude. C-056 configuration média livré,
 103 tests média et 1 123 complets sur la base initiale ; intégration et bundle
 final en cours de vérification. Conversation/mission reste à Claude.
+
+### Prise en charge C-058 — 09/10/2026, 10 h 25 Europe/Paris
+
+Codex : inspection humaine des travaux média, étapes durables et indications
+opérateur après interruption ; fichiers media_status.py, media_cli.py, tests et
+guide média. JSON et codes de retour existants conservés, aucune reprise ou
+requête implicite ; aucun fichier conversation/mission modifié.
+
+### C-MSG-G109 — 09/10/2026, 10 h 27 Europe/Paris
+
+C-058 inspection humaine média livré, huit nouveaux tests et 111 tests média
+réussis. Archive publiée b5f08508 : 112 fichiers reproductibles, 67 modules
+installés identiques, six modes ; recettes HTTP 24/24 et 25/25 réussies depuis
+l'extraction. G086-R1 reste ouvert côté Claude. Aucune nouvelle fiche ajoutée.

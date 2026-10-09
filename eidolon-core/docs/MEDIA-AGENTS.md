@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-056
+# Agents natifs Image et Vidéo — C-047 à C-058
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -79,6 +79,29 @@ travail ComfyUI accepté : absence d'entrée ne signifie ni arrêt ni absence d'
 Aucun polling automatique, renvoi ou annulation globale du moteur n'est effectué.
 `poll` ne télécharge rien : les sorties rapportées restent des références moteur.
 La commande distincte `collect`, décrite plus bas, les importe explicitement.
+
+### Lire un travail après interruption — C-058
+
+```sh
+eidolon-media inspect --job /chemin/prive/travail --format human
+```
+
+Le rendu humain ECT présente l'opération, l'état et la dernière étape enregistrée,
+puis une indication de revue. Un reçu de file durable peut encore être consulté
+après une coupure entre son enregistrement et l'état final `QUEUED` : le rapport
+suggère alors `poll`, sans l'exécuter. Sans reçu exploitable, vérifier manuellement
+le moteur et le journal. La phase `QUEUE_SUBMITTING` ne prouve pas qu'aucune
+soumission n'a eu lieu. Un transfert interrompu peut avoir laissé une source
+côté moteur ; aucun effacement, nouveau transfert ou renvoi n'est réalisé.
+
+L'inspection lit uniquement `job.json` : aucun octet source, moteur ou sous-processus,
+aucune modification du travail. Prompts, chemins, erreurs du moteur et textes
+d'analyse ne sont pas affichés en mode humain ; des libellés fixes empêchent leur
+interprétation comme commandes de terminal. Les identifiants affichés sont bornés.
+Le JSON par défaut reste identique, et contient le journal complet pour la revue.
+Sortie 0 signifie lecture réussie, même si le travail exige une revue ; sortie 2
+avec erreur sur stderr si le journal ne peut pas être lu. Ce rendu ne donne ni
+permission, ni validation métier, ni état actuel du moteur.
 
 ## Contrôle de configuration après installation — C-056
 

@@ -16,6 +16,7 @@ from .media_artifacts import ArtifactStore, initialize
 from .media_outputs import collect, inspect_collection
 from .media_preflight import preflight, render_preflight
 from .media_setup import check_configuration, render_configuration, render_setup_error
+from .media_status import render_job
 from .media_workflows import OPERATIONS
 
 
@@ -68,6 +69,8 @@ def main(argv=None):
     for name in ("inspect", "poll"):
         p = sub.add_parser(name, help="inspect local record" if name == "inspect" else "read ComfyUI history once, no resubmit")
         p.add_argument("--job", required=True)
+        if name == "inspect":
+            p.add_argument("--format", choices=("json", "human"), default="json")
     args = parser.parse_args(argv)
     try:
         if args.command == "agents":
@@ -109,7 +112,9 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        if args.command == "config-check" and args.format == "human":
+        if args.command == "inspect" and args.format == "human":
+            print(render_job(result))
+        elif args.command == "config-check" and args.format == "human":
             print(render_configuration(result))
         elif args.command == "preflight" and args.format == "human":
             print(render_preflight(result))
