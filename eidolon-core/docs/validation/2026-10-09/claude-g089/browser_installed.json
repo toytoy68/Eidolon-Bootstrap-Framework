@@ -1,0 +1,214 @@
+[
+ {
+  "viewport": "1280x720",
+  "steps": [
+   {
+    "step": "lecture seule, avant toute clé",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Ouvrir la conversation"
+    ],
+    "key_in_dom": false,
+    "status": "Sans clé de conversation, cette page reste en lecture seule."
+   },
+   {
+    "step": "conversation ouverte",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "focus_after_open": "conv-text",
+    "status": "Conversation ouverte (toytoy)."
+   },
+   {
+    "step": "réponse",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "kind": "Réponse",
+    "state": "Reçu"
+   },
+   {
+    "step": "question en retour",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "kind": "Question en retour",
+    "state": "Reçu"
+   },
+   {
+    "step": "proposition",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission"
+    ],
+    "key_in_dom": false,
+    "kind": "Proposition de mission",
+    "state": "Reçu",
+    "proposal": "Diagnostiquer le service synthétique : nas",
+    "meta": "Version 1 · cible sim-nas · rien n'est lancé tant que vous ne validez pas."
+   },
+   {
+    "step": "validation enregistrée",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission",
+     "Suivre la mission dans Détails"
+    ],
+    "key_in_dom": false,
+    "submission": "Validation enregistrée.",
+    "mission": "Mission créée — pas encore lancée"
+   },
+   {
+    "step": "mission suivie",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission",
+     "Suivre la mission dans Détails"
+    ],
+    "key_in_dom": false,
+    "mission": "Résultat disponible",
+    "details": true
+   },
+   {
+    "step": "après rechargement",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Ouvrir la conversation"
+    ],
+    "key_in_dom": false,
+    "status": "Sans clé de conversation, cette page reste en lecture seule.",
+    "body_hidden": true
+   }
+  ],
+  "errors": []
+ },
+ {
+  "viewport": "360x740",
+  "steps": [
+   {
+    "step": "lecture seule, avant toute clé",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Ouvrir la conversation"
+    ],
+    "key_in_dom": false,
+    "status": "Sans clé de conversation, cette page reste en lecture seule."
+   },
+   {
+    "step": "conversation ouverte",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "focus_after_open": "conv-text",
+    "status": "Conversation ouverte (toytoy)."
+   },
+   {
+    "step": "réponse",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "kind": "Réponse",
+    "state": "Reçu"
+   },
+   {
+    "step": "question en retour",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer"
+    ],
+    "key_in_dom": false,
+    "kind": "Question en retour",
+    "state": "Reçu"
+   },
+   {
+    "step": "proposition",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission"
+    ],
+    "key_in_dom": false,
+    "kind": "Proposition de mission",
+    "state": "Reçu",
+    "proposal": "Diagnostiquer le service synthétique : nas",
+    "meta": "Version 1 · cible sim-nas · rien n'est lancé tant que vous ne validez pas."
+   },
+   {
+    "step": "validation enregistrée",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission",
+     "Suivre la mission dans Détails"
+    ],
+    "key_in_dom": false,
+    "submission": "Validation enregistrée.",
+    "mission": "Mission créée — pas encore lancée"
+   },
+   {
+    "step": "mission suivie",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Fermer la conversation",
+     "Envoyer",
+     "Valider et créer la mission",
+     "Suivre la mission dans Détails"
+    ],
+    "key_in_dom": false,
+    "mission": "Résultat disponible",
+    "details": true
+   },
+   {
+    "step": "après rechargement",
+    "overflow_px": 0,
+    "command_buttons": [],
+    "conversation_buttons": [
+     "Ouvrir la conversation"
+    ],
+    "key_in_dom": false,
+    "status": "Sans clé de conversation, cette page reste en lecture seule.",
+    "body_hidden": true
+   }
+  ],
+  "errors": []
+ }
+]
