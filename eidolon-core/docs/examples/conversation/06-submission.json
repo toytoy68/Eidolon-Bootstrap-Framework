@@ -1,0 +1,12 @@
+{
+  "actor": "toytoy",
+  "client_id": "pc-exemple",
+  "command_key": "soumission-1",
+  "conversation_id": "c-22222222222222222222222222222222",
+  "proposal_id": "p-0b3577ad40946f3ee819ad463a7a197b",
+  "proposal_sha256": "586bb45e8c49591dfc0dfcffe8b4c5d4424a1fab9f1aeeb876d3f8cf545a5e98",
+  "proposal_version": 1,
+  "protocol": "eidolon-proposal-submission/1",
+  "reason": "Diagnostic demandé dans la conversation.",
+  "store_id": "s-11111111111111111111111111111111"
+}

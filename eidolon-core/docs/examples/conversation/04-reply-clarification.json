@@ -1,0 +1,19 @@
+{
+  "authorizes_execution": false,
+  "candidates": [
+    "sim-memory",
+    "sim-nas"
+  ],
+  "conversation_id": "c-22222222222222222222222222222222",
+  "core_note": "TARGET_AMBIGUOUS",
+  "in_reply_to": "t-00000000000000000000000000000002",
+  "kind": "CLARIFICATION",
+  "model_text": "Je diagnostique le service.",
+  "model_text_is_evidence": false,
+  "proposal": null,
+  "proposal_sha256": null,
+  "protocol": "eidolon-conversation-reply/1",
+  "sources": [],
+  "store_id": "s-11111111111111111111111111111111",
+  "turn_sha256": "28c0e2095a38e2b91867fd8769d2243dcfb95aaac54ebbe922588a34f7cab16f"
+}
