@@ -85,3 +85,26 @@ six intégrations mémoire sur corpus temporaire passent. 49 tests du client
 passent ; les 12 cas Chromium restent ignorés dans cet environnement.
 [Preuves actuelles](validation/2026-10-07/codex-research-runtime/README.md).
 La qualification Debian/Windows/SSH sur les machines utilisateur reste ouverte.
+
+## Actualisation du 09/10, G082 (Claude)
+
+Recette opérateur synthétique rejouée depuis le **paquet installé** (commit
+`aa245e1`) : **28/28** dans le conteneur. Elle couvre :
+
+- démarrage et diagnostic ;
+- tunnel (relais local à la place de SSH) ;
+- conversation avec un profil simulé choisi explicitement ;
+- rappel mémoire simulé ;
+- coupure et retour ;
+- reçus anciens après redémarrage ;
+- arrêt.
+
+[Rapport et commandes VM100/Windows préparées](validation/2026-10-09/claude-g082/README.md).
+
+Consigne nouvelle : le tunnel SSH doit garder **le même port** des deux côtés
+(`-L 127.0.0.1:8765:127.0.0.1:8765`). Sinon, la conversation est refusée
+(`HOST_REFUSED`), alors que la lecture fonctionne.
+
+Restent à faire sur les machines de toytoy : le vrai `ssh -L`, le navigateur
+ou la WebView Windows, la coupure réseau réelle, le vrai modèle et le vrai
+Memory Engine.

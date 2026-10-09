@@ -1,0 +1,94 @@
+# G082 — Plan de bêta serveur et PC actualisé (recette opérateur synthétique)
+
+Auteur : Claude. Date : 09/10/2026, Europe/Paris. Fiche : C-TASK-G082.
+Commit du paquet : `aa245e11692e5e974d98c7d5445766bbcdbed776`. Archive de 131
+fichiers, `--verify` OK ([construction](bundle-build.json),
+[vérification](bundle-verify.json)). Installée dans un environnement neuf
+(`--no-index`, sans `PYTHONPATH`), recette lancée depuis `/`.
+**Conteneur seulement : ni VM100, ni Windows, ni vrai SSH.**
+
+## Résultat exécuté
+
+[recipe_g082.py](recipe_g082.py) → [recipe_g082.json](recipe_g082.json) : **28/28**.
+
+| Étape | Vérifié dans le conteneur |
+| --- | --- |
+| S2 état et jeton | mission de démonstration `SUCCEEDED` avec rappel mémoire **simulé** (`synthetic-note@1`, non vérifié) ; jeton 0600 jamais affiché |
+| S2 conversation | appairage ; profil de dialogue `recette` choisi explicitement (G098) ; dépôt `CURRENT` (G099) ; sauvegarde vérifiée |
+| S3 | diagnostic sans démarrage : code 0 |
+| W tunnel | page, santé en lecture seule, 401 sans jeton, missions listées, mission lue ; jeton de lecture refusé sur la conversation |
+| C conversation | proposition avec le modèle nommé ; mission créée **non lancée** ; annulation **demandée**, pas confirmée |
+| L coupure | tunnel fermé : plus de réponse côté PC ; aucune mission changée ; l'opérateur crée une mission pendant la coupure ; au retour, état neuf, seule cette mission s'ajoute |
+| S7 redémarrage | arrêt sur SIGTERM ; après redémarrage, **reçus anciens** retrouvés (validation, annulation, aussi par l'API de lecture) ; même validation renvoyée = même reçu, aucune 2ᵉ mission |
+| S8 arrêt | port fermé ; bases intactes (`integrity_check`, dépôt `CURRENT`) ; ni clé ni jeton dans les sorties |
+
+## Deux constats pour la vraie bêta
+
+1. **Le tunnel doit garder le même numéro de port des deux côtés.** Les routes
+   de conversation vérifient l'en-tête `Host` (protection contre le DNS
+   rebinding). Un PC qui ouvre le tunnel sur un **autre** port local (par
+   exemple `-L 127.0.0.1:9000:127.0.0.1:8765`) lit les missions, mais la
+   conversation répond `HOST_REFUSED`. La recette le vérifie. Consigne : `ssh
+   -N -L 127.0.0.1:8765:127.0.0.1:8765 …`. Si le port 8765 est pris sur le PC,
+   changer **les deux** (`--port` du serveur et le tunnel).
+2. **Le contenu rappelé de la mémoire n'est pas exposé par l'API de lecture.**
+   À distance, on voit l'objectif `recalled_text_statistics` et le statut,
+   pas le texte. C'est un constat ; je ne dis pas si c'est voulu.
+
+## Ce qui est testé ici et ce qui reste à faire
+
+| Point | Conteneur (09/10) | VM100 Debian | PC Windows |
+| --- | --- | --- | --- |
+| Paquet construit, vérifié, installé sans réseau | PASS | À EXÉCUTER | — |
+| Démarrage, diagnostic, arrêt | PASS | À EXÉCUTER | — |
+| Tunnel | **relais TCP local** à la place de `ssh -L` | à exécuter avec le vrai `sshd` | **`ssh -L` OpenSSH Windows** |
+| Page et client | appels HTTP (Chromium déjà couvert en G095) | — | **navigateur et WebView réels**, échelle 125/150 % |
+| Coupure et retour | PASS (relais fermé puis rouvert) | — | fermer puis rouvrir la fenêtre SSH, veille du PC, Wi-Fi coupé |
+| Reçus anciens après redémarrage | PASS | À EXÉCUTER | lecture dans la page |
+| Rappel mémoire | **simulé** (note synthétique) | vrai Memory Engine : hors de cette recette | — |
+| Modèle de dialogue | **simulé** (profil `recette`) | vrai modèle : qualification séparée | — |
+
+## Commandes reproductibles (préparées, NON exécutées sur VM100 ni Windows)
+
+Serveur, session SSH 1. Les chemins sont temporaires, rien n'est installé en
+dehors d'eux :
+
+```sh
+BETA="$(mktemp -d "$HOME/eidolon-beta-XXXXXX")"
+# Archive vérifiée du commit choisi, puis environnement isolé
+python3 tools/build_beta_bundle.py --verify <archive>.tar.gz
+tar -xzf <archive>.tar.gz -C "$BETA"
+python3 -m venv --system-site-packages "$BETA/venv"
+(cd "$BETA"/eidolon-beta-*/eidolon-core && SETUPTOOLS_USE_DISTUTILS=stdlib "$BETA/venv/bin/pip" install --no-deps --no-build-isolation --no-index .)
+PY="$BETA/venv/bin/python"; WEB="$(echo "$BETA"/eidolon-beta-*/eidolon-core/desktop/connected)"
+"$PY" -m eidolon_core --state "$BETA/state" demo > "$BETA/demo.json"
+"$PY" -m eidolon_core.access_token --output "$BETA/read-token" --format human
+"$PY" -m eidolon_core.conversation_api --state "$BETA/state" pair --client-id pc-toytoy --actor toytoy   # clé affichée une fois
+printf '%s' '{"schema":"eidolon-dialogue-profiles/1","profiles":{"recette":{"kind":"simulated"}}}' > "$BETA/profiles.json"; chmod 600 "$BETA/profiles.json"
+"$PY" -m eidolon_core.conversation_api --state "$BETA/state" profile select --name recette --actor toytoy --profiles "$BETA/profiles.json"
+"$PY" -m eidolon_core.conversation_api --state "$BETA/state" inspect-store
+"$PY" -m eidolon_core.http_api --state "$BETA/state" --token-file "$BETA/read-token" --web-root "$WEB" --port 8765 --check --format human
+"$PY" -m eidolon_core.http_api --state "$BETA/state" --token-file "$BETA/read-token" --web-root "$WEB" --port 8765 \
+  --conversations profiles --dialogue-profiles "$BETA/profiles.json"
+```
+
+PC Windows, PowerShell (fenêtre à laisser ouverte) :
+
+```powershell
+ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 <utilisateur>@<serveur>   # MÊME port des deux côtés
+# Navigateur : http://127.0.0.1:8765/  — jeton de lecture, puis clé de conversation
+```
+
+Coupure : fermer la fenêtre SSH, attendre, la rouvrir. La page doit
+retrouver un état neuf sans rien renvoyer. Pendant la coupure, sur le
+serveur : `"$PY" -m eidolon_core --state "$BETA/state" create "mission de recette synthétique"`.
+Arrêt : Ctrl+C dans la session 1. Retrait : comme S9 de
+[BETA-ACCEPTANCE.md](../../../BETA-ACCEPTANCE.md).
+
+## Limites
+
+- Le relais TCP n'est pas SSH : pas de chiffrement, pas d'empreinte d'hôte,
+  pas de reconnexion automatique d'OpenSSH.
+- Aucune commande n'a été lancée sur VM100 ni sur le PC. Aucun accès
+  personnel.
+- Modèle et mémoire simulés.
