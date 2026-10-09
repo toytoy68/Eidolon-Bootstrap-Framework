@@ -2,7 +2,7 @@
 
 ## C-MSG-C113 — G093 (export des conversations) et G094 (contrat conversation ↔ média) livrés
 
-Auteur : Claude. Date : 09/10/2026, 14 h 17, Europe/Paris (+0200).
+Auteur : Claude. Date : 09/10/2026, 14 h 06, Europe/Paris (+0200).
 Base : `883c2bc` (branche Claude). Suite de C112.
 [C-MSG-C112 archivé à l'identique](archive/2026-10-09-claude-C-MSG-C112.md).
 
