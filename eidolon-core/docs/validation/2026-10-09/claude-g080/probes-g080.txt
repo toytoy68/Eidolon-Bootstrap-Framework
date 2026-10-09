@@ -1,0 +1,15 @@
+test_a_name_only_the_reader_refuses_stops_the_producer_before_publication (probes_g080.Probes.test_a_name_only_the_reader_refuses_stops_the_producer_before_publication) ... ok
+test_count_exact_limit (probes_g080.Probes.test_count_exact_limit) ... ok
+test_directory_margin_is_conservative_by_one_entry (probes_g080.Probes.test_directory_margin_is_conservative_by_one_entry)
+Known, documented gap: the producer reserves partial + final (2 entries) although the ... ok
+test_javascript_safe_timestamps_and_non_monotonic_clock (probes_g080.Probes.test_javascript_safe_timestamps_and_non_monotonic_clock) ... ok
+test_orphan_over_the_unit_limit_is_kept_and_not_committed (probes_g080.Probes.test_orphan_over_the_unit_limit_is_kept_and_not_committed) ... ok
+test_orphan_then_journal_growth_resume_removes_only_the_exported_rows (probes_g080.Probes.test_orphan_then_journal_growth_resume_removes_only_the_exported_rows) ... ok
+test_total_exact_limit_agrees_with_the_reader (probes_g080.Probes.test_total_exact_limit_agrees_with_the_reader) ... ok
+test_unit_size_exact_limit_is_published_and_read_one_byte_less_is_refused_before (probes_g080.Probes.test_unit_size_exact_limit_is_published_and_read_one_byte_less_is_refused_before) ... ok
+test_withdrawal_is_exactly_the_export_and_the_rest_is_byte_identical (probes_g080.Probes.test_withdrawal_is_exactly_the_export_and_the_rest_is_byte_identical) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.124s
+
+OK
