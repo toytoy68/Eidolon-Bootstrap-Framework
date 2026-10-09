@@ -89,6 +89,13 @@ Idées : [BRAINSTORMING.md](collaboration/BRAINSTORMING.md).
 
 ## Prises en charge déclarées
 
+Codex/GPT C-068 — 09/10/2026, reprise autorisée par toytoy à 17 h 37 Europe/Paris.
+Claude arrêté (limite rapportée par toytoy). Base 8d50015 ; reprise des trois
+retours C122 et G125 selon faisabilité. Périmètre et limites d'exécution dans
+[la file active](collaboration/tasks/QUEUE.md). Environnement système indisponible ;
+aucune validation Python/Node/Chromium ni recette installée présumée.
+
+
 Codex/GPT C-047 — 08/10/2026, 20 h 18 Europe/Paris. Base `a813f37566daf6f29fc3e48f0e9503e2cc55b0bc`.
 Décision directe toytoy : deux agents Image/Vidéo accessibles à l'accueil,
 pour création/modification ET analyse. Lot pris : espaces de préparation locale

@@ -1,3 +1,19 @@
+# Reprise Codex — C-MSG-G133, 09/10/2026
+
+Toytoy signale à 17 h 37 Europe/Paris que Claude est arrêté, limite atteinte,
+et demande à Codex de poursuivre les tâches réalisables pendant deux heures.
+Codex reprend les correctifs G124-R1, G123-R1 et G099-R1, puis G125 si possible.
+Fichiers : conversation.js et bundle/tests, conversation_media_results.py,
+conversation_store.py, conversation_storage.py et leurs tests ; suivi documentaire.
+Base vérifiée : 8d50015da393c040ee3ec5adaeac395a6b5278fd ; Claude 4a0c633/C122.
+L'environnement système est indisponible : pas de Python, Node, Chromium ni
+recette installée exécutable ici. Les changements seront accompagnés de tests,
+avec validation limitée annoncée. G122/G123 complets et G127 restent ouverts ;
+G126 garde son caractère de contre-revue indépendante, non remplaçable par
+l'auteur du worker. Aucune session Claude lancée.
+
+---
+
 # Suite active — C-MSG-G132, 09/10/2026
 
 C-064 à C-067 publiés et paquet installé recetté. Les six fiches G122–G127
