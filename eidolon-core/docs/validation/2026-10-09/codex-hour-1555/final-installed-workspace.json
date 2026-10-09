@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "process_exit_77_interruption_points": [
+    "intent",
+    "artifacts",
+    "resources",
+    "worker",
+    "configuration"
+  ],
+  "installed_package": "/tmp/eidolon-1555-final-venv/lib/python3.12/site-packages/eidolon_core/__init__.py",
+  "cli_initialization": true,
+  "inspection": "LOCAL_WORKSPACE_READY",
+  "configuration": "INCOMPLETE",
+  "overwrite_refused": true,
+  "engines_installed_or_started": false,
+  "hardware_qualified": false
+}

@@ -1,4 +1,4 @@
-# Agents natifs Image et Vidéo — C-047 à C-063
+# Agents natifs Image et Vidéo — C-047 à C-067
 
 Décision toytoy, 08/10/2026 à 20 h 18 Europe/Paris : deux accès directs depuis
 l'accueil, chacun pour **créer, modifier et analyser**. À 20 h 21, tout le parcours
@@ -512,15 +512,16 @@ Aucun résultat ne qualifie la V100, Windows ou un vrai modèle de génération.
 
 ## Interface avec le chantier Claude
 
-G084–G101 restent à Claude, avec G084–G089 prioritaires. Le brouillon navigateur `media-draft/1` contient
-uniquement des métadonnées de sélection et n'est **jamais** accepté tel quel par
-une API d'exécution. Le serveur devra prendre en charge un upload authentifié,
-produire une référence d'artefact validée, présenter la proposition puis lancer
-l'agent sous le contrat de mission et ses droits. Ne pas envoyer un chemin fourni
-par un navigateur à `run`. Une référence opaque ne vaut **jamais permission** : G094 doit lier propriétaire,
-conversation, proposition et autorisation de mission côté serveur. Ne pas accepter
-la provenance du navigateur comme preuve. Codex conserve les modules `media_*.py` et
-`desktop/connected/src/media-agents.js` pour ce raccordement.
+G122–G127 restent à Claude : dialogue/soumission, résultats liés au worker,
+annulation, stockage occupé, contre-revue et recette globale. Les contrats
+conversation_media, pièces jointes et blocs de résultats C122 existent ;
+le raccordement complet doit utiliser les identités serveur et la file C-064.
+Le brouillon navigateur `media-draft/1` contient uniquement des métadonnées et
+n'est jamais accepté comme proposition ou autorisation d'exécution. Le jeton
+appairé fournit propriétaire/acteur ; Core relit proposition, version et empreinte.
+Ne pas accepter un chemin navigateur ni sa provenance comme preuve. Une référence
+opaque ne donne aucun droit. Codex conserve `media_*.py` et `media-agents.js`.
+Voir [MEDIA-WORKER](MEDIA-WORKER.md) et le message de collaboration courant.
 
 Sources primaires consultées le 08/10/2026 pour les adaptateurs :
 [API ComfyUI](https://docs.comfy.org/development/comfyui-server/comms_routes),

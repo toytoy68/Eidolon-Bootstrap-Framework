@@ -31,7 +31,23 @@ with tempfile.TemporaryDirectory() as temporary:
     assert observed['store_id'] == conv.store_id
     repeat = call('workspace-init', '--root', root / 'media', '--state', root / 'state', code=2)
     assert repeat['automatic_retry'] is False
-    print(json.dumps({'passed': True, 'installed_package': eidolon_core.__file__,
+    interruptions = []
+    for stage in ('intent', 'artifacts', 'resources', 'worker', 'configuration'):
+        target = root / stage
+        child = subprocess.run([sys.executable, '-c',
+            "import os,sys; from eidolon_core.media_workspace import initialize; "
+            "initialize(sys.argv[1], state=sys.argv[2], checkpoint=lambda stage: "
+            "os._exit(77) if stage == sys.argv[3] else None)", str(target), str(root / 'state'), stage],
+            capture_output=True, text=True)
+        assert child.returncode == 77, child.stderr
+        marker = json.loads((target / 'workspace.json').read_bytes())
+        observation = subprocess.run([cli, 'workspace-inspect', '--root', str(target),
+            '--workspace-id', marker['workspace_id']], capture_output=True, text=True)
+        assert observation.returncode == 2, observation.stderr
+        assert json.loads(observation.stdout)['state'] == 'REVIEW_REQUIRED'
+        call('workspace-init', '--root', target, '--state', root / 'state', code=2)
+        interruptions.append(stage)
+    print(json.dumps({'passed': True, 'process_exit_77_interruption_points': interruptions, 'installed_package': eidolon_core.__file__,
                       'cli_initialization': True, 'inspection': observed['state'],
                       'configuration': observed['configuration_state'], 'overwrite_refused': True,
                       'engines_installed_or_started': False, 'hardware_qualified': False}, indent=2))

@@ -1,3 +1,15 @@
+# Suite active — C-MSG-G132, 09/10/2026
+
+C-064 à C-067 publiés et paquet installé recetté. Les six fiches G122–G127
+restent actives ; C122 intégré, pas de nouvelle livraison Claude observée.
+Priorité : G122/G123 raccordement worker ; G123-R1 identité exacte du travail,
+G099-R1 digest media_links, G124-R1 réponse d'annulation tardive. G126 inclut
+précontrôle, délais et espace média privé ; G127 adapte les anciennes recettes
+au contrat d'annulation G100 puis vérifie le flux média complet dans Chromium.
+Les blocs C122 existent déjà. [Relève et preuves](../GPT-TO-CLAUDE.md).
+
+---
+
 # Suite active — C-MSG-G128, 09/10/2026
 
 C-064 worker publié ; G122 et G126 peuvent se raccorder à son contrat exact.

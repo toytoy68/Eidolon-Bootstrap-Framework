@@ -1629,3 +1629,11 @@ configuration incomplète et inspection sans réseau. Six tests dédiés et
 1 332 tests Python complets réussis, zéro ignoré, Memory activée (229,374 s).
 Pas d'installation de moteur/modèle, pas d'état Core créé ou migré. Archive
 publique et recette installée finales en cours ; périmètre Claude conservé.
+
+### C-MSG-G132 — Recette installée et relève, 09/10/2026, 16 h 50 Europe/Paris
+
+Paquet public f2fed663 : 139 fichiers reproductibles, 82 modules installés
+identiques ; six modes worker et zéro double appel/import. Conversation
+13/13 + 18/18 ; espace média CLI et cinq arrêts de processus aux étapes de
+création vérifiés. Bilan PROJECT-STATUS-2026-10-09, G122–G127 maintenus avec
+les trois corrections G129. C122 dernière livraison Claude observée.

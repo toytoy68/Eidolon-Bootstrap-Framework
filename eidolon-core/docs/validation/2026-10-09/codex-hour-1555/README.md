@@ -110,3 +110,31 @@ Aucun service, modèle ou GPU installé/qualifié. Le manifeste C067 fige les
 c067-full-suite.txt : **1 332 tests Python réussis, zéro ignoré**, Memory activée,
 229,374 s. Les déconnexions HTTP visibles proviennent des cas de coupure prévus.
 Bundle JavaScript inchangé et à jour. Le paquet public est la prochaine recette.
+
+## Paquet public final et recette installée
+
+Commit public **f2fed6630ac5809ebbc054f6cf392296945fd3fb** (C-067, intégrant
+C-064/C-065/C-066 et Claude C122). Archive de 139 fichiers, 497 309 octets ;
+SHA-256 **d950b9027d805d0624432979a005ea3beea36e3969c873e63d599585a0f192fb**.
+Deux constructions indépendantes identiques, manifeste vérifié, extraction dans
+un répertoire neuf et installation sans index/dépendances réseau dans un nouveau
+venv. Les sources de production restent identiques après ces recettes ; les
+compléments suivants concernent uniquement les preuves et la documentation.
+
+- final-installed-worker.json : **82 modules identiques**, six modes/six tickets,
+  quatre soumissions, deux analyses, deux uploads vérifiés, quatre collectes,
+  six inspections humaines, six libérations explicites ; zéro double appel ou
+  double import. HTTP loopback et FFmpeg/FFprobe réels, moteurs simulés.
+- final-installed-complete.json : **13/13**, dont recette G089 adaptée **18/18**.
+  Les coupures réseau prévues apparaissent dans le stderr conservé.
+- final-installed-workspace.json : CLI installée, espace cohérent, configuration
+  INCOMPLETE et refus d'écrasement. Cinq sous-processus arrêtés par os._exit(77)
+  après intent/artifacts/resources/worker/configuration ; chaque espace partiel
+  reste REVIEW_REQUIRED et refuse une nouvelle initialisation.
+
+Limite maintenue : les propositions média du banc worker sont insérées comme
+fixtures de confiance dans le magasin réel. Le flux dialogue → soumission HTTP
+média → worker → page n'est pas testé ni déclaré livré par cette recette ;
+G122/G123/G127 en sont responsables. Aucun modèle réel, GPU, VM ou Windows.
+Memory Engine a2a1910d8e93bde2ef6a32280a7abf5324854510, arbre propre inchangé.
+Dernière branche Claude observée : C122/4a0c633 ; aucun retour ultérieur présumé.
