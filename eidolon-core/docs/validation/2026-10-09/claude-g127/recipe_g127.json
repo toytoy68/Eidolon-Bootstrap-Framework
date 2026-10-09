@@ -1,0 +1,207 @@
+{
+ "passed": 33,
+ "total": 33,
+ "engine": "SIMULATED_HTTP",
+ "ffmpeg": "REAL",
+ "model": "SIMULATED_DIALOGUE",
+ "checks": [
+  {
+   "step": "S",
+   "check": "espace média cohérent après configuration",
+   "ok": true,
+   "detail": "CONFIGURED_SCOPE"
+  },
+  {
+   "step": "S",
+   "check": "jeton de lecture refusé sur la conversation",
+   "ok": true,
+   "detail": "READ_TOKEN_NOT_ALLOWED"
+  },
+  {
+   "step": "M",
+   "check": "image.create : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "image.create : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "image.create : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "image.create : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "M",
+   "check": "image.edit : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "image.edit : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "image.edit : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "image.edit : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "M",
+   "check": "image.analyze : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "image.analyze : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "image.analyze : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "image.analyze : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "M",
+   "check": "video.create : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "video.create : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "video.create : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "video.create : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "M",
+   "check": "video.edit : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "video.edit : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "video.edit : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "video.edit : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "M",
+   "check": "video.analyze : proposition figée par Core",
+   "ok": true,
+   "detail": "PROPOSAL"
+  },
+  {
+   "step": "M",
+   "check": "video.analyze : accord → ticket, aucun appel moteur",
+   "ok": true,
+   "detail": "ACCEPTED"
+  },
+  {
+   "step": "M",
+   "check": "video.analyze : lancement explicite, un seul appel",
+   "ok": true,
+   "detail": "RETURNED"
+  },
+  {
+   "step": "M",
+   "check": "video.analyze : résultat lu par la route, non vérifié",
+   "ok": true,
+   "detail": "result_unverified"
+  },
+  {
+   "step": "C",
+   "check": "coupure : tentative durable, aucun second appel moteur",
+   "ok": true,
+   "detail": "ATTEMPTED"
+  },
+  {
+   "step": "C",
+   "check": "coupure : effet inconnu affiché, rien de relancé",
+   "ok": true,
+   "detail": "RECORDED_UNVERIFIED"
+  },
+  {
+   "step": "C",
+   "check": "coupure : réservation conservée pour revue",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "P",
+   "check": "collecte partielle annoncée, import conservé",
+   "ok": true,
+   "detail": "{'state': 'COLLECTION_INCOMPLETE', 'expected': 2, 'imported': 1, 'partial': True}"
+  },
+  {
+   "step": "P",
+   "check": "aucun chemin privé ni secret dans la route",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "B",
+   "check": "Chromium 1280 et 360 : demandes et résultats lus, sans chemin ni débordement",
+   "ok": true,
+   "detail": "{'ok': True, 'widths': {'360': {'tickets': 8, 'overflow': 0, 'errors': [], 'partial': True, 'uncertain': True, 'unverified': True, 'privatePath': False, 'keyShown': False, 'buttons': 0}, '1280': {'tickets': 8, 'overflow': 0, 'errors': [], 'partial': True, 'uncertain': True, 'unverified': True, 'priv"
+  },
+  {
+   "step": "Z",
+   "check": "huit tickets durables, six modes",
+   "ok": true,
+   "detail": "{'image.create': 'result_unverified', 'image.edit': 'result_unverified', 'image.analyze': 'result_unverified', 'video.create': 'result_unverified', 'video.edit': 'result_unverified', 'video.analyze': 'result_unverified'}"
+  }
+ ]
+}
