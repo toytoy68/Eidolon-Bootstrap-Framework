@@ -1,0 +1,11 @@
+test_cli_human_review_exit_and_malformed_manifest (tests.test_media_workspace.WorkspaceTests.test_cli_human_review_exit_and_malformed_manifest) ... ok
+test_config_mismatch_and_component_replacement_detected (tests.test_media_workspace.WorkspaceTests.test_config_mismatch_and_component_replacement_detected) ... ok
+test_each_interruption_retained_and_requires_review (tests.test_media_workspace.WorkspaceTests.test_each_interruption_retained_and_requires_review) ... ok
+test_existing_root_never_overwritten (tests.test_media_workspace.WorkspaceTests.test_existing_root_never_overwritten) ... ok
+test_init_coherent_private_offline_and_state_unchanged (tests.test_media_workspace.WorkspaceTests.test_init_coherent_private_offline_and_state_unchanged) ... ok
+test_missing_core_does_not_create_workspace (tests.test_media_workspace.WorkspaceTests.test_missing_core_does_not_create_workspace) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.048s
+
+OK

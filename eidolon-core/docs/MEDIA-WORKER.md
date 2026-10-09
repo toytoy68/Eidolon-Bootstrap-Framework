@@ -172,3 +172,36 @@ worker conserve REVIEW_REQUIRED, la réservation et le journal. Le délai ne
 prouve pas l’arrêt du moteur. Ce budget HTTP ne remplace ni la limite FFmpeg
 ni une limite totale du travail (plusieurs échanges peuvent se suivre).
 Les transports de dialogue/planification ne sont pas modifiés par C-066.
+
+## Espace local en une commande — C-067
+
+À partir d'un état Core/conversation **déjà initialisé**, choisir un nouveau
+répertoire sous un parent privé appartenant à l'opérateur :
+
+```sh
+eidolon-media workspace-init --root /chemin/prive/media --state /chemin/etat --format human
+eidolon-media workspace-inspect --root /chemin/prive/media --workspace-id mws_IDENTIFIANT_RETOURNE --format human
+```
+
+Remplacer la valeur illustrative `mws_IDENTIFIANT_RETOURNE` par l'identifiant
+exact retourné. L'initialisation crée `artifacts/`, `resources/`, `worker/`,
+`workspace.json` et `media.json` : dossiers 0700, fichiers 0600. Le worker est lié
+au magasin Core existant, les identités et chemins des deux autres composants
+sont renseignés dans la configuration. Aucun état Core créé ou migré.
+
+`LOCAL_WORKSPACE_READY` signifie uniquement que ces composants locaux ont été
+créés et liés. `media.json` reste **INCOMPLETE** : compléter les moteurs, modèles
+et workflows selon [MEDIA-AGENTS](MEDIA-AGENTS.md), puis utiliser config-check et
+les sondes explicites. Aucun téléchargement, installation de ComfyUI/Ollama,
+démarrage de service, inférence ou qualification GPU n'est effectué ici.
+
+L'inspection est locale, sans réseau ; elle compare les identités enregistrées
+et la configuration. Elle ne vérifie pas que le Core actuel est toujours le
+même, ni que les modèles existent. Les commandes worker vérifient l'état Core.
+Code retour 0 : espace local cohérent ; 2 : erreur ou REVIEW_REQUIRED.
+
+Une coupure laisse le manifeste INITIALIZING et les composants déjà créés.
+L'inspection signale REVIEW_REQUIRED ; relancer workspace-init sur ce dossier
+est refusé. Conserver le dossier pour revue, sans suppression ni reprise
+implicite. Une coupure avant le premier manifeste peut laisser un dossier vide
+non inspectable : le refus de réutilisation reste identique.

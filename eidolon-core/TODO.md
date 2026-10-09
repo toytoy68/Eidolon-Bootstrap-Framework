@@ -982,3 +982,5 @@ C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confié
 
 [Contrat worker](docs/MEDIA-WORKER.md) et
 [preuves de la séance](docs/validation/2026-10-09/codex-hour-1555/README.md).
+
+- [x] C-067 : espace média privé cohérent en une commande ; moteur et modèles à configurer séparément.

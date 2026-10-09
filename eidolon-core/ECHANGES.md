@@ -1613,3 +1613,19 @@ avec borne murale, sans modification des fichiers conversation.
 Échéance murale HTTP média livrée, 46 tests ciblés et 1 326 complets réussis,
 zéro ignoré ; client C122 77 Node réussis/24 Chromium ignorés. G080 E1–E3
 documentés sans activer la rotation. Retours G129 maintenus à Claude.
+
+### Prise en charge C-067 — 09/10/2026, 16 h 36 Europe/Paris
+
+Codex : initialisation cohérente d'un nouvel espace média local (artefacts,
+groupe de ressources, worker lié à l'état Core et configuration privée à compléter).
+media_workspace.py, CLI média, tests et guide. Aucune installation de moteur,
+aucun téléchargement ni inférence, aucune migration ou création d'état Core.
+Une initialisation interrompue reste inspectable et n'est pas relancée implicitement.
+
+### C-067 livré — 09/10/2026, 16 h 45 Europe/Paris
+
+Initialisation locale explicite avec manifeste par étape, composants liés,
+configuration incomplète et inspection sans réseau. Six tests dédiés et
+1 332 tests Python complets réussis, zéro ignoré, Memory activée (229,374 s).
+Pas d'installation de moteur/modèle, pas d'état Core créé ou migré. Archive
+publique et recette installée finales en cours ; périmètre Claude conservé.

@@ -21,6 +21,10 @@ et `resource-release` dans le [guide des agents média](docs/MEDIA-AGENTS.md).
 Six demandes à adapter et une [fiche de recette réelle](docs/MEDIA-REAL-RECIPE.md)
 sont fournies dans l’archive source pour préparer les essais Image/Vidéo.
 
+La commande `eidolon-media workspace-init` prépare ensemble les dossiers privés
+des agents Image/Vidéo et leur configuration à compléter, sans installer ni lancer
+un moteur. [Initialisation locale](docs/MEDIA-WORKER.md#espace-local-en-une-commande--c-067).
+
 Le [worker média](docs/MEDIA-WORKER.md) installe la commande
 `eidolon-media-worker` : ticket durable lié à une proposition soumise, précontrôle
 hors ligne, un essai explicite, suivi et collecte sans répétition automatique.

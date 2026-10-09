@@ -26,6 +26,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — agents Image et Vidéo")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("agents", help="list installed agents; no engine contact")
+    for name in ("workspace-init", "workspace-inspect"):
+        p = sub.add_parser(name, help="create a NEW coherent local media workspace or inspect it offline")
+        p.add_argument("--root", required=True)
+        if name == "workspace-init":
+            p.add_argument("--state", required=True, help="existing Core/conversation state; never created or migrated")
+        else:
+            p.add_argument("--workspace-id", required=True)
+        p.add_argument("--format", choices=("json", "human"), default="json")
     p = sub.add_parser("resource-init", help="create a NEW private group with one durable media slot")
     p.add_argument("--root", required=True)
     for name in ("resource-inspect", "resource-release"):
@@ -96,6 +104,15 @@ def main(argv=None):
     try:
         if args.command == "agents":
             result = catalog()
+        elif args.command in {"workspace-init", "workspace-inspect"}:
+            from . import media_workspace
+            from .contracts import ContractError
+            import sqlite3
+            try:
+                result = (media_workspace.initialize(args.root, state=args.state) if args.command == "workspace-init" else
+                          media_workspace.inspect(args.root, workspace_id=args.workspace_id))
+            except (ContractError, sqlite3.Error):
+                raise MediaError("MEDIA_WORKSPACE_STATE_UNAVAILABLE") from None
         elif args.command == "resource-init":
             result = initialize_pool(args.root)
         elif args.command in {"resource-inspect", "resource-release"}:
@@ -144,7 +161,9 @@ def main(argv=None):
             result = inspect(args.job)
         else:
             result = poll_job(inspect(args.job))
-        if args.command == "artifact-probe" and args.format == "human":
+        if args.command in {"workspace-init", "workspace-inspect"} and args.format == "human":
+            print(media_workspace.render(result))
+        elif args.command == "artifact-probe" and args.format == "human":
             print(render_metadata(result))
         elif args.command == "resource-inspect" and args.format == "human":
             print(render_pool(result))
@@ -159,6 +178,8 @@ def main(argv=None):
         if args.command == "preflight" and result["state"] == "PROBE_INCOMPLETE":
             return 3
         if args.command == "config-check" and result["state"] != "CONFIGURED_SCOPE":
+            return 2
+        if args.command == "workspace-inspect" and result["state"] != "LOCAL_WORKSPACE_READY":
             return 2
         # Exit 0 means command completed, not content verified or mission achieved.
         return 0

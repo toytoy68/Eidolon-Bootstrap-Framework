@@ -45,6 +45,11 @@ FFmpeg est nécessaire uniquement pour l'analyse vidéo ; son chemin absolu doit
 être fourni explicitement dans la configuration. Aucun installateur Bootstrap
 ou gestionnaire de paquets système n'est exécuté par les agents.
 
+Pour préparer les trois magasins privés ensemble à partir d’un état Core
+existant, utiliser `eidolon-media workspace-init` puis `workspace-inspect`
+([guide C-067](MEDIA-WORKER.md#espace-local-en-une-commande--c-067)).
+Le fichier media.json créé reste à compléter avec les moteurs et workflows.
+
 ## Demandes prêtes à adapter — C-063
 
 L’archive source fournit six fichiers dans `examples/media/`, un par opération,

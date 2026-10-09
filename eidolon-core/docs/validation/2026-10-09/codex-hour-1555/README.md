@@ -92,3 +92,21 @@ c066-full-suite.txt : **1 326 tests Python réussis, zéro ignoré**, Memory act
 232,011 s. c122-client-all.txt : **77 Node réussis, 24 Chromium ignorés**.
 Le bundle JS est à jour. Le manifeste c066-source-manifest.json fige les sources
 finales testées pour les comparer au prochain paquet publié/installé.
+
+
+## C-067 — Initialisation locale cohérente
+
+workspace-init crée un nouvel espace privé lié à un Core existant : artefacts,
+réservations, worker et configuration incomplète. Manifestes fsyncés par étape ;
+aucune reprise ou suppression implicite après interruption. workspace-inspect
+compare les identités et chemins de configuration sans contacter un moteur.
+
+workspace-tests.txt : six tests réussis, dont cinq points de coupure, état Core
+inchangé, permissions, remplacement par lien, configuration divergente, état
+malformé et codes CLI. final-builder-tests.txt : dix tests réussis.
+Aucun service, modèle ou GPU installé/qualifié. Le manifeste C067 fige les
+82 modules Python et les fichiers de paquetage/client effectivement testés.
+
+c067-full-suite.txt : **1 332 tests Python réussis, zéro ignoré**, Memory activée,
+229,374 s. Les déconnexions HTTP visibles proviennent des cas de coupure prévus.
+Bundle JavaScript inchangé et à jour. Le paquet public est la prochaine recette.
