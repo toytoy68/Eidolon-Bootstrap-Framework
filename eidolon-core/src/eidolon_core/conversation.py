@@ -281,9 +281,22 @@ def citation_check(model_text, sources):
     return {"claimed": claimed, "unsupported": [c for c in claimed if c not in sources]}
 
 
-def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None, model=None, media=None):
+def validate_personality_identity(value):
+    """C-070: the personality version and sha256 used for this reply; None = no personality took part."""
+    if value is None:
+        return None
+    if (not isinstance(value, dict) or set(value) != {"version", "sha256"}
+            or not isinstance(value["version"], str) or not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z._-]{0,39}", value["version"])
+            or not isinstance(value["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", value["sha256"])):
+        raise ContractError("INVALID_CONVERSATION: invalid personality identity")
+    return dict(value)
+
+
+def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None, model=None, media=None,
+                 personality=None):
     """Core's reply to one user turn. The model text is quoted; Core decides the kind."""
     turn = validate_turn(turn)
+    personality = validate_personality_identity(personality)
     context = validate_context_note(context)
     model = validate_model_identity(model)
     unusable = "MODEL_UNAVAILABLE" if output is None else None
@@ -298,7 +311,7 @@ def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), c
     reply = {"protocol": REPLY_PROTOCOL, "store_id": turn["store_id"], "conversation_id": turn["conversation_id"],
              "in_reply_to": turn["turn_id"], "turn_sha256": digest(turn), "kind": None,
              "model_text": None, "core_note": None, "candidates": [], "sources": sorted(set(sources)),
-             "context": context, "citations": None, "model": model,
+             "context": context, "citations": None, "model": model, "personality": personality,
              "proposal": None, "proposal_sha256": None,
              "model_text_is_evidence": False, "authorizes_execution": False}
     if output is None:

@@ -13,6 +13,7 @@
   "model": null,
   "model_text": "Je peux lancer un diagnostic en lecture seule du NAS.",
   "model_text_is_evidence": false,
+  "personality": null,
   "proposal": {
     "authorizes_execution": false,
     "catalog_sha256": "51b297f4ff938662465659e3d0fe1cfab3d9ce1667167dfa6b28965e34ed569f",

@@ -16,6 +16,7 @@
   "model": null,
   "model_text": "Je diagnostique le service.",
   "model_text_is_evidence": false,
+  "personality": null,
   "proposal": null,
   "proposal_sha256": null,
   "protocol": "eidolon-conversation-reply/1",

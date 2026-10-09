@@ -1720,7 +1720,8 @@
     MODEL_TIMEOUT: "Le modèle n'a pas répondu dans le délai : une réponse tardive est ignorée.",
     MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin.",
     DIALOGUE_PROFILE_NOT_SELECTED: "Aucun modèle de dialogue n'est choisi sur le serveur : aucun autre n'est pris à sa place.",
-    DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place."
+    DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place.",
+    PERSONALITY_REQUIRED_UNAVAILABLE: "La personnalité exigée par le serveur n'est pas disponible : la conversation est suspendue, les missions ne le sont pas."
   };
   // G098: which profile and model produced this reply; a change from the previous reply is said in words.
   function modelLabel(reply, previous) {
@@ -1731,6 +1732,17 @@
     if (!name && !m.model_id) text = "Modèle : aucun";
     var before = previous && previous.model;
     if (before && typeof before === "object" && before.profile !== m.profile && m.profile) text += " — profil changé depuis la réponse précédente";
+    return text;
+  }
+  // C-070: which personality version took part in this reply. null = none; absent (older replies) = nothing said.
+  function personalityLabel(reply, previous) {
+    if (!reply || !Object.prototype.hasOwnProperty.call(reply, "personality")) return null;
+    var p = reply.personality;
+    if (p === null) return "Personnalité : aucune chargée";
+    if (typeof p !== "object" || typeof p.version !== "string" || typeof p.sha256 !== "string") return null;
+    var text = "Personnalité : version " + p.version + " (" + p.sha256.slice(0, 12) + ")";
+    var before = previous && previous.personality;
+    if (before && typeof before === "object" && before.sha256 !== p.sha256) text += " — changée depuis la réponse précédente";
     return text;
   }
   // G100: what a cancellation may say. Only the mission itself confirms a stop.
@@ -2280,6 +2292,8 @@
         if (reply.sources && reply.sources.length) box.appendChild(el(doc, "p", "help", "Sources : " + reply.sources.join(", ")));
         var label = modelLabel(reply, previousReply);
         if (label) box.appendChild(el(doc, "p", "help conv-model-id", label));
+        var persona = personalityLabel(reply, previousReply);
+        if (persona) box.appendChild(el(doc, "p", "help conv-personality", persona));
         previousReply = reply;
         li.appendChild(box);
       }
@@ -2463,7 +2477,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { busyNote: busyNote, createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, mediaRequestText: mediaRequestText, ticketView: ticketView, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { busyNote: busyNote, createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, modelLabel: modelLabel, personalityLabel: personalityLabel, mediaRequestText: mediaRequestText, ticketView: ticketView, CANCEL_STAGES: CANCEL_STAGES, CANCEL_CODES: CANCEL_CODES, cancelStatusText: cancelStatusText, mediaResultLines: mediaResultLines, renderMediaResult: renderMediaResult, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

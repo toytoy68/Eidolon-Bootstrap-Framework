@@ -178,6 +178,65 @@ Règles :
 
 Tests : [test_dialogue_profiles.py](../tests/test_dialogue_profiles.py) (13).
 
+## Personnalité du dialogue (SOUL, C-070)
+
+Décisions de GPT transmises par toytoy (C-MSG-C127), mises en œuvre ici.
+
+- **Dialogue seulement.** La personnalité entre dans le prompt du dialogue,
+  **après** le contrat de Core et **avant** les capacités de confiance. Le
+  planificateur de missions ne la reçoit jamais ; le catalogue de confiance
+  reste identique avec ou sans elle.
+- **Cadre de Core**, placé devant le texte : style et posture seulement ; ni
+  le contrat JSON, ni les capacités, ni les permissions ne changent. Il porte
+  les trois reformulations acceptées :
+  - ne décrire que les capacités listées ;
+  - ne parler de la machine que d'après `TOOL RESULTS`, sinon dire qu'on ne
+    sait pas ;
+  - une initiative est une proposition ; aucune écriture mémoire, seulement
+    une suggestion.
+- **Fichier privé de l'opérateur**, hors Git, lu **une seule fois au
+  démarrage**. Il doit être un fichier régulier, sans lien symbolique,
+  appartenant au compte du serveur, en 0600, de 32 Kio au plus, en UTF-8,
+  sans clé en double :
+
+  ```json
+  {"schema": "eidolon-personality/1", "version": "0.2",
+   "soul": "<texte du socle>", "evolving": ["<évolution validée>", "..."]}
+  ```
+
+  `soul` fait 16 000 caractères au plus. `evolving` compte 20 entrées au
+  plus, d'une ligne de 500 caractères chacune. Aucun caractère de contrôle
+  n'est accepté, sauf la tabulation, et le saut de ligne dans `soul`. Rien
+  n'est réparé.
+- **Un ensemble cohérent.** Une seule valeur validée donne à la fois le texte
+  envoyé au modèle et l'empreinte SHA-256. Chaque réponse porte
+  `personality` :
+  - `{"version", "sha256"}` de cette valeur ;
+  - `null` si aucune personnalité n'a pris part à la réponse.
+- **Dernière version valide conservée** : Core en garde une copie,
+  `<état>/conversations/personality-last-valid.json` (0600, écriture
+  atomique, empreinte revérifiée à la relecture). Elle est remplacée
+  seulement par un fichier valide.
+
+Serveur : `--conversations … --personality <fichier>
+[--personality-mode last-valid|required]`, ou `--personality-mode none`
+(défaut sans fichier). Le démarrage affiche la décision.
+
+| Situation au démarrage | `none` | `last-valid` | `required` |
+| --- | --- | --- | --- |
+| fichier valide | — | utilisé, copie mise à jour | utilisé, copie mise à jour |
+| fichier absent ou invalide, copie valide | — | copie utilisée (`PERSONALITY_FILE_REFUSED+LAST_VALID_KEPT`) | copie utilisée |
+| fichier absent ou invalide, aucune copie valide | consignes standard, `personality: null` | consignes standard, `personality: null` | **conversation bloquée** : `UNAVAILABLE` `PERSONALITY_REQUIRED_UNAVAILABLE`, aucun modèle appelé |
+
+Dans tous les cas, les missions continuent : soumission, reçu, exécution et
+annulation. Un fichier modifié après le démarrage ne change rien avant le
+redémarrage suivant.
+
+La page affiche « Personnalité : version … (empreinte) », « Personnalité :
+aucune chargée », ou rien pour une réponse plus ancienne que ce champ.
+
+Tests : [test_personality.py](../tests/test_personality.py) (19).
+
 ## Pannes : jamais de réponse devinée
 
 | Cas | Réponse | Diagnostic |
@@ -220,3 +279,13 @@ Le parcours simulé, en un test :
   en G087.
 - Deux tentatives concurrentes sur le même tour peuvent appeler deux fois le
   modèle ; une seule réponse est enregistrée.
+- Personnalité :
+  - l'effet réel d'une personnalité sur un petit modèle local (format JSON,
+    aveu d'ignorance) n'est pas qualifié ; il faut le mesurer sur le banc
+    avant activation ;
+  - la sauvegarde du dépôt des conversations (G099) ne copie pas
+    `personality-last-valid.json` : après une restauration, la copie revient
+    du fichier de l'opérateur au démarrage suivant ;
+  - exiger une version **précise** (empreinte attendue) n'est pas
+    implémenté : `required` exige une personnalité valide, quelle qu'elle
+    soit.

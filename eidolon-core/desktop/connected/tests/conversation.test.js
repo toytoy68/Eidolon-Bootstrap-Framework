@@ -168,6 +168,15 @@ test("G098: each reply names its profile and model; a change is said; nothing is
   assert.equal(C.modelLabel({ model: { profile: null, model_id: null } }, null), "Modèle : aucun");
   assert.equal(C.modelLabel({ model: { profile: null, model_id: "simulated" } }, null), "Modèle : simulated");
   assert.equal(C.modelLabel({}, null), null);                         // older replies: nothing guessed
+  // C-070: the personality version of each reply; "none" is said, an older reply says nothing.
+  var sa = "a".repeat(64), sb = "b".repeat(64);
+  assert.equal(C.personalityLabel({ personality: { version: "0.2", sha256: sa } }, null), "Personnalité : version 0.2 (aaaaaaaaaaaa)");
+  assert.equal(C.personalityLabel({ personality: { version: "0.3", sha256: sb } }, { personality: { version: "0.2", sha256: sa } }),
+    "Personnalité : version 0.3 (bbbbbbbbbbbb) — changée depuis la réponse précédente");
+  assert.equal(C.personalityLabel({ personality: null }, null), "Personnalité : aucune chargée");
+  assert.equal(C.personalityLabel({}, null), null);
+  assert.equal(C.personalityLabel({ personality: { version: "<b>" } }, null), null);
+  assert.match(C.NOTES.PERSONALITY_REQUIRED_UNAVAILABLE, /missions ne le sont pas/);
   assert.match(C.NOTES.DIALOGUE_PROFILE_UNAVAILABLE, /aucun autre n'est pris à sa place/);
 });
 

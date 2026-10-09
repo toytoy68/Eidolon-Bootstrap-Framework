@@ -92,11 +92,13 @@ def _fields(data, required, optional=()):
 
 class ConversationAPI:
     def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None,
-                 media_worker=None, media_artifacts=None):
+                 media_worker=None, media_artifacts=None, personality_mode="none", personality_file=None):
         """runtime: the mission Runtime whose Store, catalogue and configuration missions use.
 
         media_worker / media_artifacts (G122/G123): Codex's durable queue and artifact store, fixed by the
         server configuration. Without them no media proposal is offered and nothing media is submitted.
+
+        personality_mode / personality_file (C-070): decided once here, at start (see personality.load).
         """
         self.runtime = runtime
         self.conversations = ConversationStore(runtime.store)
@@ -106,8 +108,10 @@ class ConversationAPI:
         self.media_worker, self.media_artifacts = media_worker, media_artifacts
         # attempt_seconds=None: wall budget per attempt = the adapter's own timeout + 5 s, 120 s otherwise,
         # derived per turn from the model actually used (a profile may change between turns, G098).
+        from .personality import load as load_personality
+        self.personality = load_personality(personality_mode, personality_file, str(self.conversations.directory))
         self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds,
-                                 media_proposals=media_worker is not None)
+                                 media_proposals=media_worker is not None, personality=self.personality)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
 
