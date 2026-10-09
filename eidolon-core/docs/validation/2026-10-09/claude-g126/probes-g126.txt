@@ -1,0 +1,19 @@
+test_p1_a_newer_proposal_makes_the_older_one_unsubmittable (probes_g126.ConsentAndOwnership.test_p1_a_newer_proposal_makes_the_older_one_unsubmittable) ... ok
+test_p2_consent_given_then_superseded_before_the_operator_runs (probes_g126.ConsentAndOwnership.test_p2_consent_given_then_superseded_before_the_operator_runs)
+FINDING CANDIDATE: a ticket accepted for v1 still runs after the human froze v2. ... P2_OBSERVED {"state": "RETURNED", "engine_calls": 1}
+ok
+test_p3_ticket_id_is_not_a_right (probes_g126.ConsentAndOwnership.test_p3_ticket_id_is_not_a_right) ... ok
+test_p4_replayed_key_with_changed_content_is_refused (probes_g126.ConsentAndOwnership.test_p4_replayed_key_with_changed_content_is_refused) ... ok
+test_p10_no_state_claims_success_and_analysis_text_stays_unverified (probes_g126.InputsAndReservation.test_p10_no_state_claims_success_and_analysis_text_stays_unverified) ... ok
+test_p8_missing_or_modified_source_consumes_no_attempt (probes_g126.InputsAndReservation.test_p8_missing_or_modified_source_consumes_no_attempt) ... ok
+test_p9_a_held_gpu_reservation_refuses_before_any_attempt (probes_g126.InputsAndReservation.test_p9_a_held_gpu_reservation_refuses_before_any_attempt) ... ok
+test_p5_four_concurrent_processes_call_the_engine_once (probes_g126.OneAttemptOnly.test_p5_four_concurrent_processes_call_the_engine_once) ... ok
+test_p6_crash_between_reservation_and_engine_return (probes_g126.OneAttemptOnly.test_p6_crash_between_reservation_and_engine_return) ... ok
+test_p7_engine_deadline_after_submission_is_review_required_and_never_resent (probes_g126.OneAttemptOnly.test_p7_engine_deadline_after_submission_is_review_required_and_never_resent) ... ok
+test_p11_interrupted_workspace_init_is_never_reused (probes_g126.Workspace.test_p11_interrupted_workspace_init_is_never_reused) ... ok
+test_p12_replaced_configuration_or_identity_is_refused_at_server_start (probes_g126.Workspace.test_p12_replaced_configuration_or_identity_is_refused_at_server_start) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.104s
+
+OK
