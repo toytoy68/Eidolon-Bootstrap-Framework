@@ -3,6 +3,7 @@
   "candidates": [
     "service_diagnostic.synthetic"
   ],
+  "context": null,
   "conversation_id": "c-22222222222222222222222222222222",
   "core_note": "TEMPLATE_UNSUPPORTED",
   "in_reply_to": "t-00000000000000000000000000000003",

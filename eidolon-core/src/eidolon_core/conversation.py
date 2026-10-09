@@ -228,9 +228,32 @@ def proposal_sha256(proposal):
     return digest(validate_proposal(proposal))
 
 
-def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=()):
+CONTEXT_MEMORY = ("none", "sent", "dropped_for_budget", "unavailable")
+
+
+def validate_context_note(context):
+    """What the model actually received (G091): whole earlier turns sent/excluded and the memory state.
+
+    Turns are never cut inside: a turn is sent whole or excluded whole, so a negation, a date or a
+    unit is never silently removed from a message. Memory extracts may already be truncated by the
+    memory engine; their count is reported, never hidden.
+    """
+    if context is None:
+        return None
+    keys = {"history_sent", "history_excluded", "memory", "memory_items", "memory_truncated_items"}
+    if (not isinstance(context, dict) or set(context) != keys or context["memory"] not in CONTEXT_MEMORY
+            or any(type(context[k]) is not int or not 0 <= context[k] <= 100_000 for k in keys - {"memory"})
+            or context["memory_truncated_items"] > context["memory_items"]
+            or (context["memory"] != "sent" and context["memory_items"] != 0)):
+        raise ContractError("INVALID_CONVERSATION: invalid context note")
+    return dict(context, partial=context["history_excluded"] > 0 or context["memory"] in ("dropped_for_budget", "unavailable")
+                or context["memory_truncated_items"] > 0)
+
+
+def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=(), context=None):
     """Core's reply to one user turn. The model text is quoted; Core decides the kind."""
     turn = validate_turn(turn)
+    context = validate_context_note(context)
     unusable = "MODEL_UNAVAILABLE" if output is None else None
     if output is not None:
         try:
@@ -243,10 +266,11 @@ def decide_reply(turn, output, catalog, *, previous_proposal=None, sources=()):
     reply = {"protocol": REPLY_PROTOCOL, "store_id": turn["store_id"], "conversation_id": turn["conversation_id"],
              "in_reply_to": turn["turn_id"], "turn_sha256": digest(turn), "kind": None,
              "model_text": None, "core_note": None, "candidates": [], "sources": sorted(set(sources)),
+             "context": context,
              "proposal": None, "proposal_sha256": None,
              "model_text_is_evidence": False, "authorizes_execution": False}
     if output is None:
-        return {**reply, "kind": "UNAVAILABLE", "core_note": unusable}
+        return {**reply, "kind": "UNAVAILABLE", "core_note": unusable, "context": None}
     reply["model_text"] = output["text"]
     if output["kind"] in ("answer", "clarification"):
         return {**reply, "kind": output["kind"].upper()}

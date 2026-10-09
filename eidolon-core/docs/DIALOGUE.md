@@ -64,6 +64,37 @@ Les diagnostics (`history_used`, `history_dropped`, `memory_dropped`,
 `prompt_bytes`) sont rendus à l'appelant. Ils ne sont pas enregistrés dans la
 réponse. Les budgets fins viendront en G091.
 
+## Contexte partiel : toujours annoncé (G091)
+
+Chaque réponse obtenue du modèle porte `context`, ce que le modèle a
+**réellement** reçu :
+
+| Champ | Sens |
+| --- | --- |
+| `history_sent` / `history_excluded` | tours antérieurs **entiers** transmis / non transmis : limite de 20 tours et 16 000 caractères, puis budget de requête |
+| `memory` | `none` (pas de mémoire configurée), `sent`, `dropped_for_budget` ou `unavailable` |
+| `memory_items` / `memory_truncated_items` | extraits transmis, et ceux **déjà tronqués par la mémoire** (`truncated`) |
+| `partial` | vrai dès qu'un tour est exclu, que la mémoire manque ou qu'un extrait est tronqué |
+
+Règles :
+
+- **Jamais de coupe à l'intérieur d'un tour.** Un message est transmis entier
+  ou exclu entier : une négation, une date ou une unité ne disparaît jamais
+  d'une phrase transmise. C'est testé avec « Ne pas acheter la V100 avant le
+  12/10/2026 ; prévoir 3 unités de 32 Go » sous trois budgets.
+- **Présentation** : si `partial` est vrai, la page affiche, avant les sources,
+  « Contexte partiel : 10 échanges plus anciens non transmis au modèle ;
+  mémoire non transmise (taille) ». Si le contexte est complet, rien n'est
+  ajouté.
+- Une mémoire non transmise n'est jamais citée (G086-R1). Les sources restent
+  des références `information_id@revision` fournies par Core, jamais par le
+  modèle. Aucun résumé n'est produit, ni promu en source vérifiée.
+- Une réponse tronquée par le moteur (`finish_reason: length` → `INCOMPLETE`)
+  ou un JSON coupé (`MODEL_OUTPUT_INVALID`) donne `UNAVAILABLE`, avec
+  `context: null` : le modèle n'a rien produit d'utilisable.
+- Une instruction présente dans un extrait rappelé reste dans le bloc `MEMORY`
+  non fiable, entre l'en-tête et le message. La décision de Core ne change pas.
+
 ## Une tentative par tour, un budget mural et une politique d'arrêt (G090-R1, G088-R2)
 
 - Avant d'appeler le modèle, `respond` réserve **la** tentative du tour

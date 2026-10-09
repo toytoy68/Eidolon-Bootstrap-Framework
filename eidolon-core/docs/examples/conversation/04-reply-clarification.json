@@ -4,6 +4,7 @@
     "sim-memory",
     "sim-nas"
   ],
+  "context": null,
   "conversation_id": "c-22222222222222222222222222222222",
   "core_note": "TARGET_AMBIGUOUS",
   "in_reply_to": "t-00000000000000000000000000000002",

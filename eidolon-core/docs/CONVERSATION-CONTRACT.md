@@ -78,6 +78,11 @@ devient `UNAVAILABLE`, avec `MODEL_OUTPUT_INVALID` ou `MODEL_UNAVAILABLE`.
 
 Toute réponse porte `model_text_is_evidence: false` et `authorizes_execution: false`.
 
+Depuis G091, une réponse porte aussi `context` : ce que le modèle a reçu
+(tours entiers transmis ou exclus, état de la mémoire, extraits tronqués), avec
+`partial`. Il vaut `null` quand le modèle n'a rien produit d'utilisable.
+Voir [DIALOGUE.md](DIALOGUE.md).
+
 Les `sources` contiennent au plus 5 références mémoire (`information_id@revision`),
 triées et sans doublon. Le contenu rappelé n'est pas une instruction.
 

@@ -121,3 +121,17 @@ test("mission stages: created, running, result, unknown effect, never invented",
   assert.equal(C.missionView(sub({ status: "MISSION_CREATION_UNCERTAIN", mission_id: null }), null).stage, "unknown_effect");
   assert.equal(C.missionView({ receipt: null }, null), null);
 });
+
+test("G091: a partial context is said in words; a complete one says nothing", () => {
+  const base = { history_sent: 20, history_excluded: 0, memory: "sent", memory_items: 1, memory_truncated_items: 0, partial: false };
+  assert.equal(C.contextNote(base), null);
+  assert.equal(C.contextNote(null), null);
+  assert.equal(C.contextNote({ ...base, history_excluded: 10, partial: true }),
+    "Contexte partiel : 10 échanges plus anciens non transmis au modèle.");
+  assert.equal(C.contextNote({ ...base, history_excluded: 1, memory: "dropped_for_budget", memory_items: 0, partial: true }),
+    "Contexte partiel : 1 échange plus ancien non transmis au modèle ; mémoire non transmise (taille).");
+  assert.equal(C.contextNote({ ...base, memory_truncated_items: 1, partial: true }),
+    "Contexte partiel : 1 extrait(s) de mémoire déjà tronqué(s).");
+  assert.equal(C.contextNote({ ...base, memory: "unavailable", memory_items: 0, partial: true }),
+    "Contexte partiel : mémoire indisponible.");
+});

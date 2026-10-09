@@ -62,6 +62,20 @@
     });
   }
 
+  // G091 presentation rule: a partial context is always said, in words, before the sources.
+  function contextNote(context) {
+    if (!context || !context.partial) return null;
+    var parts = [];
+    if (context.history_excluded > 0) {
+      parts.push(context.history_excluded + (context.history_excluded > 1 ? " échanges plus anciens non transmis au modèle"
+        : " échange plus ancien non transmis au modèle"));
+    }
+    if (context.memory === "dropped_for_budget") parts.push("mémoire non transmise (taille)");
+    if (context.memory === "unavailable") parts.push("mémoire indisponible");
+    if (context.memory_truncated_items > 0) parts.push(context.memory_truncated_items + " extrait(s) de mémoire déjà tronqué(s)");
+    return parts.length ? "Contexte partiel : " + parts.join(" ; ") + "." : null;
+  }
+
   function stageOf(status) { return Object.prototype.hasOwnProperty.call(STAGES, status) ? STAGES[status] : null; }
 
   function createConversation(options) {
@@ -240,6 +254,8 @@
         } else if (reply.model_text) {
           box.appendChild(el(doc, "p", "conv-text", reply.model_text));
         }
+        var partial = contextNote(reply.context);
+        if (partial) box.appendChild(el(doc, "p", "help conv-context", partial));
         if (reply.candidates && reply.candidates.length) box.appendChild(el(doc, "p", "help", "Choix possibles : " + reply.candidates.join(", ")));
         if (reply.sources && reply.sources.length) box.appendChild(el(doc, "p", "help", "Sources : " + reply.sources.join(", ")));
         li.appendChild(box);
@@ -307,7 +323,7 @@
       clear: function () { conv.close(); } };
   }
 
-  var api = { createConversation: createConversation, NOTES: NOTES, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
+  var api = { createConversation: createConversation, NOTES: NOTES, contextNote: contextNote, canonical: canonical, digest: digest, stageOf: stageOf, missionView: missionView, LABELS: LABELS, mount: mount };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);

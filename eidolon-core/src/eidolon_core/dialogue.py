@@ -210,6 +210,23 @@ class Dialogue:
             raise outcome["error"]
         return outcome["value"]
 
+    def _context_note(self, turn, history, memory, memory_error, diagnostics):
+        """G091: announce what the model did NOT receive. Whole turns only; nothing cut inside a turn."""
+        sent = diagnostics.get("history_used", len(history))
+        if not isinstance(sent, int):
+            sent = len(history)
+        if self.memory is None:
+            state = "none"
+        elif memory_error is not None:
+            state = "unavailable"
+        elif diagnostics.get("memory_dropped"):
+            state = "dropped_for_budget"
+        else:
+            state = "sent"
+        items = memory["items"] if state == "sent" and memory else []
+        return {"history_sent": sent, "history_excluded": turn["sequence"] - 1 - sent, "memory": state,
+                "memory_items": len(items), "memory_truncated_items": sum(1 for i in items if i.get("truncated"))}
+
     def _close_interrupted(self, conversation_id, turn, client_id, client_turn_key, text):
         reply = cv.decide_reply(turn, None, self.catalog)
         reply["core_note"] = "MODEL_ATTEMPT_INTERRUPTED"
@@ -265,7 +282,8 @@ class Dialogue:
         if raw is None or diagnostics.get("memory_dropped"):
             sources = []        # only cite what the model actually received (G086-R1)
         reply = cv.decide_reply(turn, raw, self.catalog, sources=sources,
-                                previous_proposal=self.conversations.current_proposal(conversation_id))
+                                previous_proposal=self.conversations.current_proposal(conversation_id),
+                                context=self._context_note(turn, history, memory, memory_error, diagnostics))
         if diagnostics["model_error"] == "MODEL_TIMEOUT":
             reply["core_note"] = "MODEL_TIMEOUT"
         reply = self._record(conversation_id, reply, client_id, client_turn_key, text)
