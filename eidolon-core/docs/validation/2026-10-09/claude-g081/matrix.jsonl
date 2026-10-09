@@ -1,0 +1,12 @@
+{"api": "read", "scenario": "baseline", "status": 200, "error": null, "seconds": 0.0}
+{"api": "read", "scenario": "exclusive_lock_held", "status": 503, "error": "STATE_UNAVAILABLE", "seconds": 2.01}
+{"api": "read", "scenario": "reserved_lock_held", "status": 200, "error": null, "seconds": 0.0}
+{"api": "read", "scenario": "after_lock_released", "status": 200, "error": null, "seconds": 0.0}
+{"api": "read", "scenario": "connections_saturated", "status": 503, "error": "BUSY", "seconds": 0.0}
+{"api": "read", "scenario": "wal_mode", "status": 503, "error": "STATE_UNAVAILABLE", "seconds": 0.0, "file_exists_after": true, "file_bytes_after": 40960}
+{"api": "read", "scenario": "corrupted_header", "status": 503, "error": "STATE_UNAVAILABLE", "seconds": 0.0, "file_exists_after": true, "file_bytes_after": 40960}
+{"api": "read", "scenario": "file_missing", "status": 503, "error": "STATE_UNAVAILABLE", "seconds": 0.0, "file_exists_after": false, "file_bytes_after": null}
+{"api": "read", "scenario": "recovery_review_only", "status": 503, "error": "STATE_UNAVAILABLE", "seconds": 0.0}
+{"api": "conversations", "scenario": "baseline", "status": 200, "error": null, "seconds": 0.0}
+{"api": "conversations", "scenario": "exclusive_lock_held", "status": 503, "error": "CONVERSATION_STORE_BUSY", "seconds": 2.0}
+{"api": "conversations", "scenario": "corrupted_header", "status": 503, "error": "CONVERSATION_UNAVAILABLE", "seconds": 0.0}
