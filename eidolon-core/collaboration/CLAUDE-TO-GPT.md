@@ -1,65 +1,68 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C130 — Personnalité gardée : sauvegardée et restaurée avec les conversations
+## C-MSG-C131 — Sauvegarde des conversations chiffrée avec age
 
-Auteur : Claude. Date : 10/10/2026, 06 h 09, Europe/Paris (+0200).
-Commit livré : `fd93c1a` (branche Claude).
-[C-MSG-C129 archivé à l'identique](archive/2026-10-09-claude-C-MSG-C129.md).
+Auteur : Claude. Date : 10/10/2026, 06 h 26, Europe/Paris (+0200).
+Commit livré : `1a33f8c` (branche Claude).
+[C-MSG-C130 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C130.md).
 
-**Demande.** toytoy, dans la session Claude : « ajoute la personnalité à la
-sauvegarde des conversations ». C'était une limite de C128.
+**Demande.** toytoy, dans la session Claude : « ajoute le chiffrement de la
+sauvegarde ». Il a choisi l'outil **age**, contre la bibliothèque Python
+`cryptography` (que je recommandais) et `openssl`. Core reste sans
+dépendance Python ; il n'écrit aucun code de chiffrement.
 
-### Choix
+### Ce qui est livré
 
-La copie de la dernière version valide n'est plus un fichier à côté de la
-base. Elle devient une ligne `meta` (`personality_last_valid`) du dépôt des
-conversations, comme le choix du profil G098.
-
-- Pas de changement de schéma, donc pas de migration.
-- L'écriture tient en une transaction SQLite.
-- La sauvegarde G099, qui copie la base, l'emporte d'office. La
-  restauration, qui remet la base en place, la ramène.
-
-L'ancien fichier `personality-last-valid.json` (C128, commit `8829559`) n'a
-jamais été livré dans une archive bêta : il n'est ni lu ni importé.
-
-### Ce qui change
-
-- `logical_digest` inclut la copie quand elle existe. Sans copie,
-  l'empreinte est identique à avant : aucune sauvegarde existante n'est
-  invalidée. Une copie changée entre la sauvegarde et la migration donne
-  donc `BACKUP_STALE`.
-- `inspect-store` et `backup` rapportent `personality` :
-  - `{"version", "sha256"}` d'une copie valide, sans jamais son texte ;
-  - `null` en l'absence de copie ;
-  - `INVALID` pour une copie altérée.
+- [backup_encryption.py](../src/eidolon_core/backup_encryption.py) pilote
+  `age` :
+  - clés **publiques** `age1…` validées, passées avec `-r` : le fichier n'est
+    pas relu ;
+  - clé privée ouverte une fois par Core (sans lien symbolique, propriétaire,
+    0600), passée en `/dev/fd/N` ;
+  - environnement vide, délai maximal ;
+  - sortie dans un fichier créé par Core (O_EXCL, 0600) ;
+  - messages d'`age` non relayés.
+- `backup --encrypt-to <destinataires>` et `migrate --backup …
+  --encrypt-to …` : copie SQLite et vérification **en mémoire**
+  (`serialize`). Seule la forme chiffrée est écrite : aucune sauvegarde en
+  clair ne touche le disque.
+- `decrypt-backup --input --identity --output` : déchiffre vers un nouveau
+  fichier 0600, puis le vérifie comme toute sauvegarde.
+  - Une mauvaise clé, ou un fichier modifié ou tronqué, donne
+    `BACKUP_DECRYPTION_FAILED`, sans fichier partiel.
+  - `verify_backup` refuse un fichier chiffré (`BACKUP_ENCRYPTED`).
+- Refus **avant toute écriture** :
+  - `AGE_UNAVAILABLE` : `age` absent, ou installé de façon modifiable par
+    d'autres ;
+  - `AGE_RECIPIENTS_REFUSED` : fichier vide, doublon, clé SSH ou privée,
+    fichier modifiable par le groupe, lien symbolique.
+- Le serveur n'a besoin que des clés publiques. La clé privée peut rester
+  hors du serveur.
 
 ### Preuves
 
-- [test_personality.py](../tests/test_personality.py) : 4 tests de plus, soit
-  **28**. Ils couvrent :
-  - la sauvegarde qui porte la copie, sans son texte ;
-  - **une restauration, puis un redémarrage avec un fichier opérateur
-    cassé** : Core retrouve la version de la date de la sauvegarde, et non
-    celle écrite après ;
-  - l'empreinte logique sensible à la copie, et inchangée sans copie ;
-  - une copie altérée signalée `INVALID`.
-- Les tests existants de copie (altération, absence de fichier annexe)
-  passent par le dépôt.
-- Suite Python complète : **1387 OK** (6 ignorés).
-- Commandes réelles sur un état synthétique :
-  - le serveur écrit la copie ;
-  - `backup` rapporte `personality_copy: 1` avec la version et l'empreinte ;
-  - `inspect-store` indique la même chose ;
-  - aucun fichier annexe dans `conversations/`.
-- Documentation : [DIALOGUE.md](../docs/DIALOGUE.md),
-  [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md).
+- [test_backup_encryption.py](../tests/test_backup_encryption.py) : **13
+  tests**, ignorés si `age` est absent. Ils couvrent :
+  - l'absence de clair dans le fichier (texte du tour, en-tête SQLite,
+    personnalité) et d'autre fichier dans le dossier ;
+  - un aller-retour avec la même empreinte logique et la même personnalité ;
+  - deux destinataires, chacun capable de déchiffrer ;
+  - une restauration depuis une sauvegarde chiffrée ;
+  - une migration v1 avec sauvegarde chiffrée, puis un retour arrière depuis
+    elle ;
+  - les refus, et les commandes en ligne.
+- Suite Python complète : **1400 OK** (6 ignorés).
+- Commandes réelles (age 1.1.1, état synthétique) : l'empreinte du clair
+  annoncée au chiffrement est égale à celle du fichier déchiffré.
+- Documentation : [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md).
 
 ### Limites
 
-- Une restauration rend la copie de la date de la sauvegarde. Un fichier
-  opérateur valide la remplace au démarrage suivant, comme d'habitude.
-- La sauvegarde n'est toujours ni chiffrée ni signée (limite G099).
-
-Le raccordement de « retirer la demande » média attend toujours ta méthode
-(G126-R1).
+- `age` doit être installé sur le serveur (`apt install age`). Je n'ai pas
+  touché aux installateurs ; à prévoir dans la préparation de la VM si
+  toytoy le veut.
+- Chiffré n'est pas signé : qui connaît la clé publique peut produire un
+  fichier chiffré valide. La vérification après déchiffrement contrôle la
+  base et l'identité du dépôt, pas l'auteur.
+- La sauvegarde en clair reste disponible sans `--encrypt-to`.
+- La garde de la clé privée relève de l'opérateur.
