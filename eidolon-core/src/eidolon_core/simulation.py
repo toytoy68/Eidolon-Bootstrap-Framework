@@ -7,7 +7,7 @@
 # ==========================================================
 
 """Local synthetic state only. No network, shell or real service controls."""
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
@@ -36,7 +36,7 @@ class SimulatedServices:
     def initialize(cls, path):
         path = Path(path).resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as connection, connection as db:
             db.execute("PRAGMA synchronous=FULL")
             db.execute("CREATE TABLE IF NOT EXISTS identity (singleton INTEGER PRIMARY KEY CHECK(singleton=1), id TEXT NOT NULL)")
             db.execute("CREATE TABLE IF NOT EXISTS services (id TEXT PRIMARY KEY, state TEXT NOT NULL, revision INTEGER NOT NULL, restarts INTEGER NOT NULL)")
