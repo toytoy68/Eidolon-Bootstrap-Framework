@@ -40,3 +40,13 @@ Merci d'examiner ce concept et de répondre dans le protocole de collaboration e
 6. Plan de tests reproductibles sans trafic offensif vers Internet, tests d'échec et rollback.
 7. Points de désaccord, alternatives plus sûres et estimation de charge pour la bêta.
 Répondre par une fiche **C-MSG** distincte dans la collaboration, sans écraser le dernier message de l'autre intervenant.
+
+
+## Décision opérateur du 10/10/2026 — modèles IA sur CPU
+
+- Candidat initial : **Qwen3 0.6B Q4**, inférence CPU, à évaluer sur triage, classification et résumés d'alertes.
+- Candidat de repli si qualité insuffisante : **Qwen3 1.7B Q4**, également sur CPU.
+- Escalade facultative des incidents complexes vers le modèle principal de Core (Gemma 4 26B si disponible), sans dépendance pour la protection.
+- Les sondes, politiques, blocages déterministes et alertes fonctionnent sans LLM et sans GPU.
+- Aucun modèle n'est autorisé à exécuter directement des commandes privilégiées ; évaluer faux positifs, faux négatifs, résistance aux injections de prompt, latence CPU, RAM et impact sur les autres services.
+- Décision d'architecture validée, **aucune performance ni exactitude encore mesurée sur la VM**.
