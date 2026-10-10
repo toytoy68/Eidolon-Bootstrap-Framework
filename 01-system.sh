@@ -124,6 +124,9 @@ readonly REQUIRED_PACKAGES=(
     # Chiffrement des sauvegardes Eidolon Core (age, age-keygen)
     age
 
+    # Signature des sauvegardes Eidolon Core (Ed25519)
+    openssl
+
     # Outils système
     lsof
     pciutils
@@ -389,6 +392,9 @@ run "Validation de age (chiffrement des sauvegardes)" \
 
 run "Validation de age-keygen" \
     command -v age-keygen
+
+run "Validation de OpenSSL (signature des sauvegardes)" \
+    openssl version
 
 [[ -d "$EIDOLON_HOME" ]] || \
     error "L'environnement Eidolon est introuvable."

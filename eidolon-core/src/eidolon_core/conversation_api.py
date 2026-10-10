@@ -399,15 +399,21 @@ def main(argv=None):
     migrate.add_argument("--backup", required=True, help="nouveau fichier de sauvegarde (jamais écrasé)")
     migrate.add_argument("--encrypt-to", metavar="DESTINATAIRES",
                          help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
+    migrate.add_argument("--sign-with", metavar="CLÉ", help="clé privée Ed25519 (PEM, 0600) : écrit <sauvegarde>.sig")
     sub.add_parser("inspect-store", help="Inspection hors ligne en lecture seule ; ne migre jamais")
     save = sub.add_parser("backup", help="Sauvegarde vérifiable du dépôt des conversations")
     save.add_argument("--output", required=True)
     save.add_argument("--encrypt-to", metavar="DESTINATAIRES",
                       help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
+    save.add_argument("--sign-with", metavar="CLÉ", help="clé privée Ed25519 (PEM, 0600) : écrit <sauvegarde>.sig")
+    check = sub.add_parser("verify-backup", help="Vérifier la signature d'une sauvegarde (et son contenu si elle est en clair)")
+    check.add_argument("--input", required=True)
+    check.add_argument("--signer", required=True, help="clé publique Ed25519 attendue (PEM)")
     unlock = sub.add_parser("decrypt-backup", help="Déchiffrer une sauvegarde age vers un nouveau fichier, puis la vérifier")
     unlock.add_argument("--input", required=True)
     unlock.add_argument("--identity", required=True, help="clé privée age (0600), à garder hors du serveur")
     unlock.add_argument("--output", required=True, help="nouveau fichier déchiffré (jamais écrasé)")
+    unlock.add_argument("--signer", help="clé publique Ed25519 attendue : signature vérifiée AVANT de déchiffrer")
     profile = sub.add_parser("profile", help="Choix explicite du profil de dialogue (aucun repli automatique)")
     profile.add_argument("action", choices=("select", "show"))
     profile.add_argument("--name")
@@ -433,21 +439,28 @@ def main(argv=None):
             ConversationStore(store, create=True)
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
         elif args.command == "migrate":
-            print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup, encrypt_to=args.encrypt_to)))
+            print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup, encrypt_to=args.encrypt_to,
+                                                                    sign_with=args.sign_with)))
         elif args.command == "inspect-store":
             report = conversation_storage.inspect(database)
             print(json.dumps(report))
             return 0 if report["integrity"] == "ok" and report["state"] == "CURRENT" else 3
         elif args.command == "backup":
-            saved = conversation_storage.backup(database, args.output, encrypt_to=args.encrypt_to)
+            saved = conversation_storage.backup(database, args.output, encrypt_to=args.encrypt_to,
+                                                sign_with=args.sign_with)
             keys = ("version", "state", "logical_sha256", "file_sha256", "bytes", "rows", "personality")
             if args.encrypt_to:
                 keys += ("encrypted", "format", "recipients", "plaintext_sha256")
+            if args.sign_with:
+                keys += ("signed", "signer", "signed_at")
             print(json.dumps({key: saved[key] for key in keys}))
         elif args.command == "decrypt-backup":
-            saved = conversation_storage.decrypt_backup(args.input, args.identity, args.output)
+            saved = conversation_storage.decrypt_backup(args.input, args.identity, args.output, signer=args.signer)
             print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
-                                                           "bytes", "rows", "personality", "decrypted_from_sha256")}))
+                                                           "bytes", "rows", "personality", "decrypted_from_sha256",
+                                                           "signature")}))
+        elif args.command == "verify-backup":
+            print(json.dumps(conversation_storage.verify_signed_backup(args.input, args.signer)))
         elif args.command == "profile":
             print(json.dumps(_profile(store, args)))
         elif args.command == "media-link":

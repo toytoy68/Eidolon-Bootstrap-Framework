@@ -37,20 +37,24 @@ class EncryptionError(ContractError):
     pass
 
 
-def find_age():
-    """The age executable found on PATH, if it is a regular file that only root or this user can change."""
-    found = shutil.which("age")
+def find_tool(name, code):
+    """An executable found on PATH, if it is a regular file that only root or this user can change."""
+    found = shutil.which(name)
     if found is None:
-        raise EncryptionError("AGE_UNAVAILABLE: the age tool is not installed")
+        raise EncryptionError(f"{code}: the {name} tool is not installed")
     path = os.path.realpath(found)
     try:
         info = os.stat(path)
     except OSError:
-        raise EncryptionError("AGE_UNAVAILABLE: the age tool is unreadable") from None
+        raise EncryptionError(f"{code}: the {name} tool is unreadable") from None
     if (not stat.S_ISREG(info.st_mode) or info.st_mode & 0o022 or info.st_uid not in (0, os.getuid())
             or not os.access(path, os.X_OK)):
-        raise EncryptionError("AGE_UNAVAILABLE: the age tool is not safely installed")
+        raise EncryptionError(f"{code}: the {name} tool is not safely installed")
     return path
+
+
+def find_age():
+    return find_tool("age", "AGE_UNAVAILABLE")
 
 
 def _open_owned(path, error, *, private):

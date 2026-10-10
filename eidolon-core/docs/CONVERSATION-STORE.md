@@ -150,6 +150,50 @@ contrôle ce qui revient.
 Tests : [test_backup_encryption.py](../tests/test_backup_encryption.py) (13,
 ignorés si `age` n'est pas installé).
 
+**Sauvegarde signée (Ed25519)** : demande de toytoy du 10/10/2026. La
+signature passe par l'outil `openssl` (Ed25519), que la préparation de la VM
+([01-system.sh](../../01-system.sh)) installe et vérifie. Elle
+répond à la limite du chiffrement seul : avec la clé publique age, n'importe
+qui peut fabriquer un fichier chiffré, mais pas le signer.
+
+| Commande | Effet |
+| --- | --- |
+| `backup … --sign-with <clé privée>` (avec ou sans `--encrypt-to`) | écrit aussi `<sauvegarde>.sig` (0600). En cas d'échec, ni sauvegarde ni signature ne restent |
+| `migrate … --sign-with <clé privée>` | même chose avant une migration |
+| `verify-backup --input <sauvegarde> --signer <clé publique>` | vérifie la signature, puis, pour une sauvegarde en clair, son contenu |
+| `decrypt-backup … --signer <clé publique>` | vérifie la signature **avant** de déchiffrer (rien n'est écrit sinon), puis compare le contenu déchiffré au manifeste signé |
+
+- **Clés** :
+  - créer la clé privée : `openssl genpkey -algorithm ed25519 -out
+    signature.pem`, puis `chmod 600 signature.pem` ;
+  - en tirer la clé publique : `openssl pkey -in signature.pem -pubout -out
+    signature.pub.pem`.
+
+  La clé privée reste **sur le serveur** : elle signe sans intervention. La
+  clé publique accompagne les copies des sauvegardes.
+- **Ce qui est signé** : un manifeste JSON canonique qui contient :
+  - l'objet (`eidolon-conversation-backup`) ;
+  - l'empreinte et la taille du fichier écrit ;
+  - chiffré ou non ;
+  - le dépôt, la version et l'empreinte logique ;
+  - l'empreinte du clair ;
+  - la date.
+- **La vérification exige tout**, sans rien deviner :
+  - la clé attendue (`BACKUP_SIGNATURE_WRONG_SIGNER`) ;
+  - une signature valide ;
+  - le même fichier (`BACKUP_SIGNATURE_INVALID`) ;
+  - une signature présente (`BACKUP_SIGNATURE_MISSING`).
+- **Clés refusées** :
+  - clé privée non privée ou non Ed25519 : `SIGNING_KEY_REFUSED`, avant
+    toute écriture ;
+  - clé publique non Ed25519 ou modifiable par d'autres :
+    `SIGNER_KEY_REFUSED`.
+- **Limite** : la signature prouve que la sauvegarde vient d'un détenteur de
+  la clé du serveur. Si le serveur est compromis, sa clé l'est aussi.
+
+Tests : [test_backup_signature.py](../tests/test_backup_signature.py) (13,
+ignorés sans `openssl` ou `age`).
+
 **Personnalité du dialogue (C-070)** : la dernière version valide gardée par
 Core est une ligne `meta` (`personality_last_valid`) de cette base.
 
@@ -171,10 +215,10 @@ a pas de migration descendante : un ancien code refuse une base plus récente.
 **Limites** : arrêter le serveur avant de migrer (un serveur ancien encore
 ouvert est détecté seulement s'il écrit après la sauvegarde) ; une sauvegarde
 **en clair** n'est ni chiffrée ni signée, son empreinte prouve l'intégrité,
-pas l'authenticité. Une sauvegarde **chiffrée** est authentifiée par `age`,
-mais pas signée : qui connaît la clé publique peut produire un fichier
-chiffré valide. La vérification après déchiffrement contrôle la base et le
-dépôt, pas l'auteur. Aucun test sur un vrai disque plein.
+pas l'authenticité. Une sauvegarde **chiffrée** sans
+`--sign-with` n'est pas signée : qui connaît la clé publique age peut produire
+un fichier chiffré valide. Avec `--sign-with`, l'auteur est vérifié par
+`--signer`. Aucun test sur un vrai disque plein.
 
 ## Schéma v5 : identité exacte du travail média (C-068)
 

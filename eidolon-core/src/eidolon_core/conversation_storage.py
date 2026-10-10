@@ -23,7 +23,7 @@ import sqlite3
 import stat
 
 from . import conversation_store as cs
-from .contracts import ContractError, digest
+from .contracts import ContractError, digest, encode
 from .sqlite_errors import is_busy
 
 # Tables present in every supported version, and the order that defines their logical content.
@@ -139,15 +139,84 @@ def _new_private_file(output):
         raise StorageError("BACKUP_FAILED: cannot create the backup file") from None
 
 
-def backup(source, output, *, encrypt_to=None):
+def backup(source, output, *, encrypt_to=None, sign_with=None):
     """Consistent copy to a new private file, then verified against the source snapshot.
 
     encrypt_to: an operator file of public age recipients. The copy is then made and verified IN
     MEMORY, and only its encrypted form is written: no plaintext backup ever touches the disk.
+    sign_with: an Ed25519 private key (PEM, 0600): <output>.sig signs the file actually written.
+    Any failure leaves neither the backup nor its signature.
     """
     _regular(source)
-    if encrypt_to is not None:
-        return _encrypted_backup(source, output, encrypt_to)
+    signature_path = Path(str(output) + ".sig")
+    if sign_with is not None:
+        from .backup_encryption import _open_owned
+        if os.path.lexists(signature_path):
+            raise StorageError("BACKUP_PATH_REFUSED: the signature file already exists")
+        os.close(_open_owned(sign_with, "SIGNING_KEY_REFUSED", private=True))   # refused before writing
+    report = (_encrypted_backup(source, output, encrypt_to) if encrypt_to is not None
+              else _plain_backup(source, output))
+    if sign_with is None:
+        return report
+    try:
+        return _sign(report, Path(output), signature_path, sign_with)
+    except BaseException:
+        _discard(output)
+        raise
+
+
+def _sign(report, output, signature_path, key):
+    from . import backup_signature as bs
+    from .store import now
+    manifest = {"purpose": bs.PURPOSE, "file_sha256": report["file_sha256"], "bytes": report["bytes"],
+                "encrypted": bool(report.get("encrypted")), "store_id": report["store_id"],
+                "version": report["version"], "logical_sha256": report["logical_sha256"],
+                "plaintext_sha256": report.get("plaintext_sha256", report["file_sha256"]), "signed_at": now()}
+    document = bs.sign(manifest, key)
+    if _file_sha(output) != manifest["file_sha256"]:
+        raise StorageError("BACKUP_FAILED: the backup changed while it was being signed")
+    written, fd = _new_private_file(signature_path)
+    try:
+        os.write(fd, encode(document).encode("utf-8"))
+        os.fsync(fd)
+    except OSError:
+        os.close(fd)
+        _discard(written)
+        raise StorageError("BACKUP_SIGNING_FAILED: the signature could not be written") from None
+    os.close(fd)
+    return {**report, "signed": True, "signer": document["signer"], "signed_at": manifest["signed_at"]}
+
+
+def verify_signature(path, signer):
+    """The signed manifest of this backup, if the EXPECTED key signed exactly this file.
+
+    signer: the expected Ed25519 public key (PEM). Checked: signer, signature, then file sha256 and size.
+    """
+    from . import backup_signature as bs
+    _regular(path)
+    public = bs.read_public_key(signer)
+    manifest = bs.verify(bs.read_document(str(path) + ".sig"), public)
+    if (_file_sha(path), os.path.getsize(path)) != (manifest["file_sha256"], manifest["bytes"]):
+        raise StorageError("BACKUP_SIGNATURE_INVALID: the file is not the one that was signed")
+    from .backup_encryption import is_encrypted
+    if is_encrypted(path) != manifest["encrypted"]:
+        raise StorageError("BACKUP_SIGNATURE_INVALID: the file is not the one that was signed")
+    return {**manifest, "signer": bs.fingerprint(public), "signature": "VERIFIED"}
+
+
+def verify_signed_backup(path, signer):
+    """Signature first; then, for a plain backup, the usual checks against the signed manifest."""
+    manifest = verify_signature(path, signer)
+    if manifest["encrypted"]:
+        return {"signature": manifest, "backup": None}
+    report = verify_backup(path)
+    if (report["logical_sha256"], report["store_id"], report["version"]) != (
+            manifest["logical_sha256"], manifest["store_id"], manifest["version"]):
+        raise StorageError("BACKUP_SIGNATURE_INVALID: the content differs from the signed manifest")
+    return {"signature": manifest, "backup": report}
+
+
+def _plain_backup(source, output):
     out, fd = _new_private_file(output)
     os.close(fd)
     try:
@@ -240,9 +309,18 @@ def _encrypted_backup(source, output, recipients_path):
             "bytes": os.path.getsize(out)}
 
 
-def decrypt_backup(source, identity, output):
-    """Decrypt an encrypted backup into a NEW private file, then verify it like any backup."""
+def decrypt_backup(source, identity, output, *, signer=None):
+    """Decrypt an encrypted backup into a NEW private file, then verify it like any backup.
+
+    signer: the expected Ed25519 public key; the signature is then checked BEFORE decrypting (nothing is
+    written otherwise), and the decrypted content must match the signed manifest.
+    """
     from . import backup_encryption as be
+    manifest = None
+    if signer is not None:
+        manifest = verify_signature(source, signer)
+        if not manifest["encrypted"]:
+            raise StorageError("BACKUP_SIGNATURE_INVALID: the signed backup is not encrypted")
     out, fd = _new_private_file(output)
     try:
         be.decrypt(source, identity, fd)
@@ -253,10 +331,14 @@ def decrypt_backup(source, identity, output):
     os.close(fd)
     try:
         report = verify_backup(out)
+        if manifest is not None and (report["file_sha256"], report["logical_sha256"], report["store_id"]) != (
+                manifest["plaintext_sha256"], manifest["logical_sha256"], manifest["store_id"]):
+            raise StorageError("BACKUP_SIGNATURE_INVALID: the content differs from the signed manifest")
     except ContractError:
         _discard(out)
         raise
-    return {**report, "decrypted_from_sha256": _file_sha(source)}
+    return {**report, "decrypted_from_sha256": _file_sha(source),
+            "signature": "VERIFIED" if manifest is not None else "NOT_CHECKED"}
 
 
 def _file_sha(path):
@@ -286,7 +368,7 @@ def _discard(path):
         pass
 
 
-def migrate_with_backup(store, output, *, checkpoint=None, encrypt_to=None):
+def migrate_with_backup(store, output, *, checkpoint=None, encrypt_to=None, sign_with=None):
     """Explicit migration, only after a verified backup of exactly the content being migrated."""
     path = Path(store.directory) / "conversations" / "conversations.sqlite3"
     before = inspect(path)
@@ -294,7 +376,8 @@ def migrate_with_backup(store, output, *, checkpoint=None, encrypt_to=None):
         return {"status": "ALREADY_CURRENT", "version": before["version"], "backup": None}
     if before["state"] != "MIGRATION_REQUIRED":
         raise StorageError("CONVERSATION_STORE_UNAVAILABLE: no supported migration from this database")
-    saved = backup(path, output) if encrypt_to is None else backup(path, output, encrypt_to=encrypt_to)
+    options = {k: v for k, v in (("encrypt_to", encrypt_to), ("sign_with", sign_with)) if v is not None}
+    saved = backup(path, output, **options)
 
     def unchanged(db):
         if logical_digest(db)[0] != saved["logical_sha256"]:
