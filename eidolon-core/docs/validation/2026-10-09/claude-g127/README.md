@@ -44,6 +44,37 @@ Le faux moteur HTTP reprend la forme de celui de Codex
 requête retenue (pour la coupure) et une sortie manquante (pour le
 partiel).
 
+## Rejeu du 10/10/2026 (après C-128 à C-137) : 33/33
+
+Demande de toytoy : rejouer la recette sur le paquet installé.
+
+Depuis la première exécution, le code a reçu :
+- la personnalité du dialogue (C128 à C130) ;
+- le champ `personality` dans chaque réponse ;
+- les sauvegardes chiffrées et signées (C131 à C137).
+
+- **Paquet** : archive du commit `9c0b8740e375…`, 144 fichiers, `--verify`
+  OK ([construction](bundle-build-c137.json),
+  [vérification](bundle-verify-c137.json)).
+- **Installation** : environnement neuf (`--no-index`, sans `PYTHONPATH`),
+  lancement depuis `/`. Les scripts de recette, absents de l'archive, sont
+  lancés depuis une copie à part, contre le module installé.
+- **Résultat** : [recipe_g127-rerun-c137.json](recipe_g127-rerun-c137.json),
+  **33/33**. La recette est **inchangée** : aucune vérification ajoutée ni
+  retirée.
+
+Ce qui passe, entre autres :
+- les six modes image et vidéo, avec un seul appel moteur chacun ;
+- la coupure : tentative `ATTEMPTED`, aucun second appel, réservation gardée ;
+- la collecte partielle : 1 sur 2 ;
+- le jeton de lecture refusé ;
+- Chromium à 1280 et 360 px : 8 demandes, aucun débordement, aucune erreur,
+  ni chemin privé ni clé dans la page.
+
+Le serveur tourne sans personnalité : mode `none` par défaut, réponses avec
+`personality: null`. G126-R1 reste ouvert, en attente de la correction de
+Codex.
+
 ## Ce qui est fonctionnel, simulé, ou à faire sur matériel
 
 | Élément | Statut ici |
