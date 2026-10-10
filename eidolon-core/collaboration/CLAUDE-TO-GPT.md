@@ -1,41 +1,77 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C132 — age ajouté à la préparation de la VM (01-system.sh)
+## C-MSG-C133 — Sauvegardes signées (Ed25519), vérifiées avant restauration
 
-Auteur : Claude. Date : 10/10/2026, 06 h 28, Europe/Paris (+0200).
-Commit livré : `d7f9341` (branche Claude).
-[C-MSG-C131 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C131.md).
+Auteur : Claude. Date : 10/10/2026, 06 h 38, Europe/Paris (+0200).
+Commit livré : `3625fb9` (branche Claude).
+[C-MSG-C132 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C132.md).
 
-**Demande.** toytoy, dans la session Claude : « ajoute age à la préparation
-de la VM ». C'était une limite de C131.
+**Demande.** toytoy, dans la session Claude : « ajoute la signature des
+sauvegardes ». Cela répond à la limite de C131 : avec la clé publique age, on
+peut forger un fichier chiffré valide.
 
-### Ce qui change
+### Choix de l'outil (le mien, à revoir si besoin)
 
-Le changement porte sur [01-system.sh](../../01-system.sh), l'installateur
-Bootstrap à la racine, et non sur `eidolon-core/`.
+`openssl`, en **Ed25519** (`pkeyutl -rawin`). Ed25519 n'a aucun paramètre à
+régler, contrairement au chiffrement openssl écarté par toytoy hier.
+`ssh-keygen -Y sign` aurait aussi convenu, mais il est absent de mon
+environnement : je n'aurais pas pu le tester. Core reste sans dépendance
+Python.
 
-- `age` est ajouté à `REQUIRED_PACKAGES`, dans un groupe « Chiffrement des
-  sauvegardes Eidolon Core ». Le paquet Debian fournit `age` et `age-keygen`.
-- L'étape « Validation de l'environnement » vérifie `age --version` et la
-  présence de `age-keygen`. Si l'un manque, le bootstrap s'arrête, comme pour
-  les autres outils (fonction `run`).
-- [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md) le signale.
+### Ce qui est livré
+
+- [backup_signature.py](../src/eidolon_core/backup_signature.py) signe un
+  **manifeste** JSON canonique : objet, empreinte et taille du fichier écrit,
+  chiffré ou non, dépôt, version, empreinte logique, empreinte du clair et
+  date.
+  - Clés et messages sont passés à `openssl` en `/dev/fd/N` (memfd ou
+    fichier ouvert par Core).
+  - `openssl` tourne sans variable d'environnement et avec un délai maximal.
+  - Chaque signature est revérifiée avec la moitié publique de la clé.
+- `backup` et `migrate` prennent `--sign-with <clé privée Ed25519 PEM 0600>`
+  et écrivent `<sauvegarde>.sig` (O_EXCL, 0600). En cas d'échec, il ne reste
+  ni sauvegarde ni signature.
+- `verify-backup --signer` et `decrypt-backup --signer` vérifient dans
+  l'ordre :
+  1. la clé attendue ;
+  2. la signature ;
+  3. le fichier lui-même (empreinte, taille, chiffré ou non) ;
+  4. le contenu déchiffré, comparé au manifeste.
+
+  La signature est vérifiée **avant** de déchiffrer : rien n'est écrit si
+  elle échoue.
+- [01-system.sh](../../01-system.sh) : `openssl` est listé et validé. Le
+  script n'a pas été exécuté : `bash -n` passe, `shellcheck` reste à 15
+  constats.
 
 ### Preuves
 
-Le script n'a **pas été exécuté** : consigne AGENTS.md, effets système.
-
-- `bash -n` : syntaxe correcte.
-- `shellcheck` : 15 constats avant, 15 après, aucun nouveau.
-- Fins de ligne LF conservées.
-- Le motif `run "…" command -v age-keygen` a été essayé dans un script isolé
-  avec la même fonction `run` : succès si l'outil est présent, arrêt s'il est
-  absent.
+- [test_backup_signature.py](../tests/test_backup_signature.py) : **13
+  tests**. Ils couvrent :
+  - une sauvegarde en clair signée et une sauvegarde chiffrée signée ;
+  - un fichier modifié ;
+  - un fichier forgé avec la clé publique age, sans signature ou signé par une
+    autre clé ;
+  - un manifeste modifié ;
+  - la signature d'une autre sauvegarde ;
+  - une signature absente ou illisible ;
+  - des clés refusées (RSA, droits trop larges) ;
+  - une signature existante jamais écrasée ;
+  - `openssl` absent ;
+  - une migration signée et chiffrée, puis un retour arrière vérifié ;
+  - les commandes en ligne.
+- Suite Python complète : **1413 OK** (6 ignorés).
+- Commandes réelles (OpenSSL 3.0.13, age 1.1.1, état synthétique) :
+  `backup`, puis `verify-backup` → `VERIFIED`, puis `decrypt-backup
+  --signer` → `VERIFIED`.
+- Documentation : [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md).
 
 ### Limites
 
-- Pas d'essai sur une Debian 13 réelle. Que le paquet `age` existe dans
-  Trixie est une connaissance, pas une vérification faite ici ; l'image locale
-  est une Ubuntu 24.04, où `age` 1.1.1 est installé.
-- La création de la clé privée reste une action de toytoy, hors de la VM de
-  préférence. Le script ne crée ni clé ni fichier de destinataires.
+- La clé de signature est sur le serveur, pour signer sans intervention. Si
+  le serveur est compromis, sa clé l'est aussi. La signature protège les
+  copies **hors** du serveur.
+- La signature reste facultative (`--sign-with`). Rien n'impose encore
+  `--signer` à la restauration : c'est à l'opérateur de l'utiliser.
+- Pas d'essai sur Debian 13 réelle ni de qualification de la version
+  d'OpenSSL de Trixie. Ed25519 « oneshot » demande OpenSSL 3.
