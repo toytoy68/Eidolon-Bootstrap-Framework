@@ -1,77 +1,75 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C133 — Sauvegardes signées (Ed25519), vérifiées avant restauration
+## C-MSG-C134 — Signature obligatoire à la restauration ; commande restore-backup
 
-Auteur : Claude. Date : 10/10/2026, 06 h 38, Europe/Paris (+0200).
-Commit livré : `3625fb9` (branche Claude).
-[C-MSG-C132 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C132.md).
+Auteur : Claude. Date : 10/10/2026, 06 h 48, Europe/Paris (+0200).
+Commit livré : `f8c8b83` (branche Claude).
+[C-MSG-C133 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C133.md).
 
-**Demande.** toytoy, dans la session Claude : « ajoute la signature des
-sauvegardes ». Cela répond à la limite de C131 : avec la clé publique age, on
-peut forger un fichier chiffré valide.
+**Demande.** toytoy, dans la session Claude : « rends la vérification de
+signature obligatoire à la restauration ».
 
-### Choix de l'outil (le mien, à revoir si besoin)
+### Constat
 
-`openssl`, en **Ed25519** (`pkeyutl -rawin`). Ed25519 n'a aucun paramètre à
-régler, contrairement au chiffrement openssl écarté par toytoy hier.
-`ssh-keygen -Y sign` aurait aussi convenu, mais il est absent de mon
-environnement : je n'aurais pas pu le tester. Core reste sans dépendance
-Python.
+Jusqu'ici, restaurer voulait dire remettre le fichier **à la main**, comme le
+prévoyait G099. Core ne pouvait rien imposer à cette étape. Rendre la
+vérification obligatoire exigeait donc que Core fasse la restauration
+lui-même.
 
 ### Ce qui est livré
 
-- [backup_signature.py](../src/eidolon_core/backup_signature.py) signe un
-  **manifeste** JSON canonique : objet, empreinte et taille du fichier écrit,
-  chiffré ou non, dépôt, version, empreinte logique, empreinte du clair et
-  date.
-  - Clés et messages sont passés à `openssl` en `/dev/fd/N` (memfd ou
-    fichier ouvert par Core).
-  - `openssl` tourne sans variable d'environnement et avec un délai maximal.
-  - Chaque signature est revérifiée avec la moitié publique de la clé.
-- `backup` et `migrate` prennent `--sign-with <clé privée Ed25519 PEM 0600>`
-  et écrivent `<sauvegarde>.sig` (O_EXCL, 0600). En cas d'échec, il ne reste
-  ni sauvegarde ni signature.
-- `verify-backup --signer` et `decrypt-backup --signer` vérifient dans
-  l'ordre :
-  1. la clé attendue ;
-  2. la signature ;
-  3. le fichier lui-même (empreinte, taille, chiffré ou non) ;
-  4. le contenu déchiffré, comparé au manifeste.
-
-  La signature est vérifiée **avant** de déchiffrer : rien n'est écrit si
-  elle échoue.
-- [01-system.sh](../../01-system.sh) : `openssl` est listé et validé. Le
-  script n'a pas été exécuté : `bash -n` passe, `shellcheck` reste à 15
-  constats.
+- `decrypt_backup` : `signer` devient un argument **requis**, et
+  `--signer` est obligatoire en ligne de commande. Sans clé :
+  `BACKUP_SIGNER_REQUIRED`.
+- **`restore-backup --input --signer [--identity]`** (`restore_backup`), à
+  lancer serveur arrêté. Étapes :
+  1. signature vérifiée : clé attendue, fichier exact ;
+  2. même Store (`RESTORE_REFUSED` sinon) ;
+  3. contenu déchiffré si besoin dans un fichier privé à côté de la base,
+     vérifié, puis comparé au manifeste signé ;
+  4. remplacement sous `BEGIN EXCLUSIVE`, qui annule aussi un journal en
+     attente ;
+  5. ancienne base gardée sous
+     `conversations.sqlite3.before-restore-<date>` (lien dur, 0600).
+- Cas particuliers :
+  - base tenue par un autre processus : `CONVERSATION_STORE_BUSY` ;
+  - serveur resté ouvert : `STORE_CHANGED` grâce au contrôle d'inode
+    existant, il n'écrit jamais dans l'ancien fichier ;
+  - tout refus : base intacte, aucun fichier temporaire.
+- Une sauvegarde **non signée ne se restaure plus** par Core. Les tests de
+  chiffrement signent désormais leurs sauvegardes.
+- [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md) : la procédure de
+  retour arrière passe par `restore-backup`.
 
 ### Preuves
 
-- [test_backup_signature.py](../tests/test_backup_signature.py) : **13
-  tests**. Ils couvrent :
-  - une sauvegarde en clair signée et une sauvegarde chiffrée signée ;
-  - un fichier modifié ;
-  - un fichier forgé avec la clé publique age, sans signature ou signé par une
-    autre clé ;
-  - un manifeste modifié ;
-  - la signature d'une autre sauvegarde ;
-  - une signature absente ou illisible ;
-  - des clés refusées (RSA, droits trop larges) ;
-  - une signature existante jamais écrasée ;
-  - `openssl` absent ;
-  - une migration signée et chiffrée, puis un retour arrière vérifié ;
-  - les commandes en ligne.
-- Suite Python complète : **1413 OK** (6 ignorés).
-- Commandes réelles (OpenSSL 3.0.13, age 1.1.1, état synthétique) :
-  `backup`, puis `verify-backup` → `VERIFIED`, puis `decrypt-backup
-  --signer` → `VERIFIED`.
-- Documentation : [CONVERSATION-STORE.md](../docs/CONVERSATION-STORE.md).
+- [test_backup_restore.py](../tests/test_backup_restore.py) : **10 tests**.
+  Ils couvrent :
+  - une sauvegarde en clair puis une chiffrée, restaurées, avec la base
+    remplacée gardée et la personnalité revenue ;
+  - une sauvegarde non signée et l'absence de clé ;
+  - un autre signataire et un fichier modifié ;
+  - un autre Store ;
+  - une sauvegarde chiffrée sans identité ;
+  - une base tenue par un autre processus ;
+  - un serveur resté ouvert ;
+  - une base absente ;
+  - la commande sans `--signer`.
+- Tests de chiffrement et de signature adaptés : 27 OK. Un fichier modifié
+  est arrêté par la signature, et `age` reste testé seul comme seconde
+  barrière.
+- Suite Python complète : **1424 OK** (6 ignorés).
+- Commandes réelles (état synthétique) :
+  - sauvegarde non signée → `BACKUP_SIGNATURE_MISSING` ;
+  - sauvegarde signée et chiffrée → `RESTORED`, ancienne base gardée.
 
 ### Limites
 
-- La clé de signature est sur le serveur, pour signer sans intervention. Si
-  le serveur est compromis, sa clé l'est aussi. La signature protège les
-  copies **hors** du serveur.
-- La signature reste facultative (`--sign-with`). Rien n'impose encore
-  `--signer` à la restauration : c'est à l'opérateur de l'utiliser.
-- Pas d'essai sur Debian 13 réelle ni de qualification de la version
-  d'OpenSSL de Trixie. Ed25519 « oneshot » demande OpenSSL 3.
+- Remettre un fichier à la main contourne Core. Cette voie n'est plus
+  documentée, mais rien ne peut l'empêcher.
+- « Serveur arrêté » n'est pas vérifiable en soi. Le verrou exclusif et le
+  contrôle d'inode empêchent qu'un serveur actif écrive dans le mauvais
+  fichier, mais un serveur resté ouvert doit être redémarré.
+- Proposition, non faite : rendre `--sign-with` obligatoire avec
+  `--encrypt-to`, puisqu'une sauvegarde non signée n'est plus restaurable par
+  Core. J'attends l'avis de toytoy.
