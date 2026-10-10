@@ -407,7 +407,7 @@ def _swap(target, staged, stamp):
         _sync_directory(target.parent)
         return None
     _regular(target)
-    kept = target.with_name(target.name + ".before-restore-" + re.sub(r"[^0-9]", "", stamp)[:14])
+    kept = target.with_name(target.name + ".before-restore-" + re.sub(r"[^0-9]", "", stamp)[:20])
     if os.path.lexists(kept):
         raise StorageError("RESTORE_REFUSED: a kept copy with this name already exists")
     db = sqlite3.connect(target.resolve().as_uri() + "?mode=rw", uri=True, timeout=2, isolation_level=None)

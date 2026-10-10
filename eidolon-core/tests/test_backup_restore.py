@@ -111,6 +111,13 @@ class RestoreTests(Base):
         with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):
             self.add_conversation()                    # self.conversations was opened before the restore
 
+    def test_two_restores_in_the_same_second_keep_both_replaced_databases(self):
+        st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
+        first = st.restore_backup(self.store, self.out / "b.sqlite3", signer=self.signer)["replaced_kept_as"]
+        second = st.restore_backup(self.store, self.out / "b.sqlite3", signer=self.signer)["replaced_kept_as"]
+        self.assertNotEqual(first, second)
+        self.assertTrue((self.folder / first).exists() and (self.folder / second).exists())
+
     def test_a_missing_database_is_restored(self):
         st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
         os.unlink(self.database)
