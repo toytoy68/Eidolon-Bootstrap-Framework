@@ -177,6 +177,34 @@ class CompositionTests(Base):
         self.assertEqual(pe.build(value(evolving=[])), base)
 
 
+class TemplateTests(Base):
+    """G140: the published TEMPLATE of the operator file is valid, loadable, and never loaded by itself."""
+    TEMPLATE = Path(__file__).resolve().parents[1] / "docs" / "examples" / "personality" / "eidolon-personality-template.json"
+
+    def test_the_template_is_valid_loadable_and_composed_after_core(self):
+        value = json.loads(self.TEMPLATE.read_text(encoding="utf-8"))
+        self.assertEqual(pe.validate(value), value)
+        self.write(value)
+        state = self.load("required")
+        self.assertEqual((state.event, state.current.version), ("PERSONALITY_LOADED", "0.3-brouillon"))
+        model = Recording(self.runtime.catalog)
+        reply = self.say(dg.Dialogue(self.conversations, model, self.runtime.catalog, personality=state), "t1")["reply"]
+        self.assertEqual(reply["personality"], state.current.identity())
+        self.assertLess(model.prompts[0].index(dg.SYSTEM_PROMPT), model.prompts[0].index("Tu es Eidolon"))
+
+    def test_the_template_carries_the_operator_decisions(self):
+        soul = json.loads(self.TEMPLATE.read_text(encoding="utf-8"))["soul"]
+        for decision in ("sans infantiliser", "attachement exclusif", "au plus une suggestion spontanée",
+                         "aucune insistance après un refus", "alerte de sécurité importante",
+                         "ne change jamais les autorisations", "Tu ne peux pas écrire dans la mémoire"):
+            self.assertIn(decision, soul)
+
+    def test_no_code_loads_the_template(self):
+        source = Path(pe.__file__).resolve().parent
+        for module in source.glob("*.py"):
+            self.assertNotIn("eidolon-personality-template", module.read_text(encoding="utf-8"), module.name)
+
+
 class FileTests(Base):
     def test_6_unsafe_or_invalid_files_are_refused_and_never_repaired(self):
         cases = {
