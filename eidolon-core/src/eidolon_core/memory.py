@@ -55,3 +55,30 @@ class EngineMemory:
             query, mode="operational", max_items=5, max_chars=4000, max_item_chars=1000)
         # Preserve all fields, including future extension metadata and uncertainty.
         return snapshot(asdict(bundle))
+
+
+@dataclass(frozen=True)
+class BridgeMemory:
+    """Opt-in remote memory port for Dialogue via SSH loopback forwarding.
+
+    No ambient credentials, no direct filesystem access and no silent fallback.
+    Dialogue._recall already validates context and degrades on recall failures.
+    """
+    token_file: str
+    port: int = 18765
+    timeout: float = 10.0
+    provider_id: str = "memory-bridge/1"
+
+    def recall(self, query):
+        from .memory_bridge_client import recall as remote_recall
+        token_path = Path(self.token_file).expanduser()
+        if token_path.is_symlink() or not token_path.is_file():
+            raise ValueError("invalid memory bridge credential path")
+        import os
+        import stat
+        info = token_path.stat()
+        if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600:
+            raise ValueError("memory bridge credential must be owner-only")
+        token = token_path.read_text(encoding="ascii").strip()
+        result = remote_recall(query, token=token, port=self.port, timeout=self.timeout)
+        return snapshot(result)
