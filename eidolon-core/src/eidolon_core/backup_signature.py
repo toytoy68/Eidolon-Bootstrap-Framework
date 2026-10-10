@@ -161,3 +161,50 @@ def verify(document, public_der):
     if len(signature) != 64 or not _verify(encode(document["manifest"]).encode("utf-8"), signature, public_der):
         raise SignatureError("BACKUP_SIGNATURE_INVALID: the signature does not match")
     return document["manifest"]
+
+
+SERVER_KEY = "backup-signing.pem"
+SERVER_PUBLIC_KEY = "backup-signing.pub.pem"
+
+
+def server_key(directory, *, create=True):
+    """The server's own signing key (every backup is signed): (private path, "EXISTING" | "CREATED").
+
+    Created ONCE, at the first backup, next to the conversation store: private 0600, public 0644 to copy
+    off the server. If the private key later disappears while its public half is still there, nothing
+    is regenerated silently: SIGNING_KEY_LOST, the operator restores the key or removes the public file.
+    """
+    directory = os.fspath(directory)
+    private, public = os.path.join(directory, SERVER_KEY), os.path.join(directory, SERVER_PUBLIC_KEY)
+    if os.path.lexists(private):
+        return private, "EXISTING"
+    if os.path.lexists(public):
+        raise SignatureError("SIGNING_KEY_LOST: the server signing key is missing; restore it, or remove "
+                             "its public file explicitly to create a new one")
+    if not create:
+        return None, "TO_CREATE"                # checked before a backup; created only once it succeeded
+    generated = _openssl(["genpkey", "-algorithm", "ed25519"], [])
+    if generated.returncode != 0 or not generated.stdout.startswith(b"-----BEGIN PRIVATE KEY-----"):
+        raise SignatureError("BACKUP_SIGNING_FAILED: openssl could not create the signing key")
+    pem = _memory(generated.stdout)
+    try:
+        derived = _openssl(["pkey", "-in", f"/dev/fd/{pem}", "-pubout"], [pem])
+    finally:
+        os.close(pem)
+    if derived.returncode != 0 or not derived.stdout.startswith(b"-----BEGIN PUBLIC KEY-----"):
+        raise SignatureError("BACKUP_SIGNING_FAILED: openssl could not derive the public key")
+    written = []
+    try:
+        for path, data, mode in ((private, generated.stdout, 0o600), (public, derived.stdout, 0o644)):
+            fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
+            written.append(path)
+            try:
+                os.write(fd, data)
+                os.fsync(fd)
+            finally:
+                os.close(fd)
+    except OSError:
+        for path in written:
+            os.unlink(path)
+        raise SignatureError("BACKUP_SIGNING_FAILED: the signing key could not be written") from None
+    return private, "CREATED"

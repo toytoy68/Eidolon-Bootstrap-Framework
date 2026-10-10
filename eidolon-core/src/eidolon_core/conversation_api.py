@@ -399,13 +399,16 @@ def main(argv=None):
     migrate.add_argument("--backup", required=True, help="nouveau fichier de sauvegarde (jamais écrasé)")
     migrate.add_argument("--encrypt-to", metavar="DESTINATAIRES",
                          help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
-    migrate.add_argument("--sign-with", metavar="CLÉ", help="clé privée Ed25519 (PEM, 0600) : écrit <sauvegarde>.sig")
+    migrate.add_argument("--sign-with", metavar="CLÉ",
+                         help="clé privée Ed25519 (PEM, 0600) ; sans elle, la clé du serveur (toujours signée)")
     sub.add_parser("inspect-store", help="Inspection hors ligne en lecture seule ; ne migre jamais")
     save = sub.add_parser("backup", help="Sauvegarde vérifiable du dépôt des conversations")
     save.add_argument("--output", required=True)
     save.add_argument("--encrypt-to", metavar="DESTINATAIRES",
                       help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
-    save.add_argument("--sign-with", metavar="CLÉ", help="clé privée Ed25519 (PEM, 0600) : écrit <sauvegarde>.sig")
+    save.add_argument("--sign-with", metavar="CLÉ",
+                      help="clé privée Ed25519 (PEM, 0600) ; sans elle, la clé du serveur (toujours signée)")
+    sub.add_parser("backup-key", help="Clé publique de signature des sauvegardes du serveur, à copier hors du serveur")
     check = sub.add_parser("verify-backup", help="Vérifier la signature d'une sauvegarde (et son contenu si elle est en clair)")
     check.add_argument("--input", required=True)
     check.add_argument("--signer", required=True, help="clé publique Ed25519 attendue (PEM)")
@@ -456,14 +459,21 @@ def main(argv=None):
             keys = ("version", "state", "logical_sha256", "file_sha256", "bytes", "rows", "personality")
             if args.encrypt_to:
                 keys += ("encrypted", "format", "recipients", "plaintext_sha256")
-            if args.sign_with:
-                keys += ("signed", "signer", "signed_at")
+            keys += ("signed", "signer", "signed_at", "signing_key")
             print(json.dumps({key: saved[key] for key in keys}))
         elif args.command == "decrypt-backup":
             saved = conversation_storage.decrypt_backup(args.input, args.identity, args.output, signer=args.signer)
             print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
                                                            "bytes", "rows", "personality", "decrypted_from_sha256",
                                                            "signature")}))
+        elif args.command == "backup-key":
+            from . import backup_signature as bs
+            public = Path(store.directory) / "conversations" / bs.SERVER_PUBLIC_KEY
+            if not public.exists():
+                raise ContractError("SIGNING_KEY_MISSING: created by the first backup")
+            print(json.dumps({"public_key_file": bs.SERVER_PUBLIC_KEY,
+                              "signer": bs.fingerprint(bs.read_public_key(public)),
+                              "public_key_pem": public.read_text(encoding="ascii")}))
         elif args.command == "restore-backup":
             print(json.dumps(conversation_storage.restore_backup(store, args.input, signer=args.signer,
                                                                  identity=args.identity)))

@@ -69,8 +69,9 @@ class RefusalTests(Base):
         self.assert_no_restore("BACKUP_SIGNATURE_INVALID")
 
     def test_a_backup_forged_with_the_public_recipient_is_refused(self):
-        os.unlink(self.out / "b.age")
-        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)   # valid age file, not signed by us
+        # Made outside Core with only public material: a valid age file next to the old signature.
+        subprocess.run(["age", "-r", self.public, "-o", str(self.out / "forged.age"), str(self.database)], check=True)
+        os.replace(self.out / "forged.age", self.out / "b.age")
         self.assert_no_restore("BACKUP_SIGNATURE_INVALID")
         forger_key, forger_public = signing_key(self.keys, "intrus")
         os.unlink(self.out / "b.age"); os.unlink(self.out / "b.age.sig")
@@ -127,6 +128,52 @@ class SigningRefusalTests(Base):
             self.assertEqual(self.assert_nothing_written("OPENSSL_UNAVAILABLE", sign_with=self.sign_key), [])
 
 
+class MandatorySigningTests(Base):
+    """toytoy, 10/10/2026: every backup is signed; without --sign-with, by the server's own key."""
+
+    def server_public(self):
+        return self.conversations.directory / bs.SERVER_PUBLIC_KEY
+
+    def test_without_a_key_the_server_key_is_created_once_and_used(self):
+        first = st.backup(self.database, self.out / "a.sqlite3")
+        second = st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)
+        self.assertEqual((first["signed"], first["signing_key"], second["signing_key"]), (True, "CREATED", "EXISTING"))
+        private = self.conversations.directory / bs.SERVER_KEY
+        self.assertEqual((os.stat(private).st_mode & 0o777, os.stat(self.server_public()).st_mode & 0o777),
+                         (0o600, 0o644))
+        self.assertEqual(first["signer"], second["signer"])
+        self.assertEqual(st.verify_signed_backup(self.out / "a.sqlite3", self.server_public())["signature"]["signer"],
+                         first["signer"])
+        st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=self.server_public())
+
+    def test_a_lost_server_key_is_never_regenerated_silently(self):
+        st.backup(self.database, self.out / "a.sqlite3")
+        os.unlink(self.conversations.directory / bs.SERVER_KEY)
+        with self.assertRaisesRegex(ContractError, "SIGNING_KEY_LOST"):
+            st.backup(self.database, self.out / "b.sqlite3")
+        self.assertFalse((self.conversations.directory / bs.SERVER_KEY).exists())
+        self.assertEqual(sorted(p.name for p in self.out.iterdir()), ["a.sqlite3", "a.sqlite3.sig"])
+
+    def test_no_backup_without_a_signature(self):
+        real = shutil.which
+        with patch("eidolon_core.backup_encryption.shutil.which",
+                   side_effect=lambda name: None if name == "openssl" else real(name)):
+            with self.assertRaisesRegex(ContractError, "OPENSSL_UNAVAILABLE"):
+                st.backup(self.database, self.out / "a.sqlite3")
+        self.assertEqual(list(self.out.iterdir()), [])
+        self.assertFalse((self.conversations.directory / bs.SERVER_KEY).exists())
+
+    def test_backup_key_command_shows_the_public_key(self):
+        saved = st.backup(self.database, self.out / "a.sqlite3")
+        done = subprocess.run([sys.executable, "-m", "eidolon_core.conversation_api", "--state",
+                               str(self.root / "state"), "backup-key"], env=ENV, capture_output=True, text=True,
+                              timeout=60)
+        shown = json.loads(done.stdout)
+        self.assertEqual((done.returncode, shown["signer"]), (0, saved["signer"]))
+        self.assertIn("BEGIN PUBLIC KEY", shown["public_key_pem"])
+        self.assertNotIn("PRIVATE", done.stdout)
+
+
 @unittest.skipUnless(HAVE_OPENSSL and HAVE_AGE, "openssl and age are required")
 class SignedMigrationTests(V1Base):
     def test_signed_encrypted_migration_backup_and_verified_rollback(self):
@@ -136,9 +183,18 @@ class SignedMigrationTests(V1Base):
         result = st.migrate_with_backup(self.runtime.store, self.base / "pre.age",
                                         encrypt_to=self.base / "recipients.txt", sign_with=key)
         self.assertEqual(result["status"], "MIGRATED")
+        self.assertTrue((self.base / "pre.age.sig").exists())
         st.decrypt_backup(self.base / "pre.age", identity, self.base / "pre.sqlite3", signer=signer)
         os.replace(self.base / "pre.sqlite3", self.path)
         self.assertEqual((self.version(), self.core()), (1, self.core_before))
+
+
+@unittest.skipUnless(HAVE_OPENSSL, "openssl is required")
+class DefaultMigrationTests(V1Base):
+    def test_a_migration_without_options_is_still_signed(self):
+        st.migrate_with_backup(self.runtime.store, self.base / "pre.sqlite3")
+        public = Path(self.path).parent / bs.SERVER_PUBLIC_KEY
+        self.assertEqual(st.verify_signed_backup(self.base / "pre.sqlite3", public)["backup"]["version"], 1)
 
 
 @unittest.skipUnless(HAVE_OPENSSL and HAVE_AGE, "openssl and age are required")

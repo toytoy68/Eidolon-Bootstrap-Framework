@@ -145,22 +145,29 @@ def backup(source, output, *, encrypt_to=None, sign_with=None):
 
     encrypt_to: an operator file of public age recipients. The copy is then made and verified IN
     MEMORY, and only its encrypted form is written: no plaintext backup ever touches the disk.
-    sign_with: an Ed25519 private key (PEM, 0600): <output>.sig signs the file actually written.
-    Any failure leaves neither the backup nor its signature.
+    Every backup is SIGNED (toytoy, 10/10/2026): <output>.sig signs the file actually written, with
+    sign_with (an Ed25519 private key, PEM, 0600) or else the server's own key, created once at the
+    first backup next to the database (backup_signature.server_key). Any failure leaves neither the
+    backup nor its signature.
     """
+    from . import backup_signature as bs
+    from .backup_encryption import _open_owned
     _regular(source)
     signature_path = Path(str(output) + ".sig")
-    if sign_with is not None:
-        from .backup_encryption import _open_owned
-        if os.path.lexists(signature_path):
-            raise StorageError("BACKUP_PATH_REFUSED: the signature file already exists")
-        os.close(_open_owned(sign_with, "SIGNING_KEY_REFUSED", private=True))   # refused before writing
+    if os.path.lexists(signature_path):
+        raise StorageError("BACKUP_PATH_REFUSED: the signature file already exists")
+    if sign_with is None:
+        key, key_state = bs.server_key(Path(source).parent, create=False)    # SIGNING_KEY_LOST before writing
+    else:
+        key, key_state = sign_with, "OPERATOR"
+    if key is not None:
+        os.close(_open_owned(key, "SIGNING_KEY_REFUSED", private=True))     # refused before writing
     report = (_encrypted_backup(source, output, encrypt_to) if encrypt_to is not None
               else _plain_backup(source, output))
-    if sign_with is None:
-        return report
     try:
-        return _sign(report, Path(output), signature_path, sign_with)
+        if key is None:
+            key, key_state = bs.server_key(Path(source).parent)
+        return {**_sign(report, Path(output), signature_path, key), "signing_key": key_state}
     except BaseException:
         _discard(output)
         raise

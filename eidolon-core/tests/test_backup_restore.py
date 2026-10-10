@@ -70,7 +70,8 @@ class RestoreTests(Base):
         self.assertEqual(st.inspect(self.database)["logical_sha256"], saved["logical_sha256"])
 
     def test_an_unsigned_backup_is_never_restored(self):
-        st.backup(self.database, self.out / "b.sqlite3")
+        st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
+        os.unlink(self.out / "b.sqlite3.sig")                                     # Core no longer makes one
         self.assert_refused("BACKUP_SIGNATURE_MISSING", self.out / "b.sqlite3")
         with self.assertRaisesRegex(ContractError, "BACKUP_SIGNER_REQUIRED"):
             st.restore_backup(self.store, self.out / "b.sqlite3", signer=None)

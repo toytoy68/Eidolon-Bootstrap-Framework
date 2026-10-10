@@ -158,20 +158,31 @@ qui peut fabriquer un fichier chiffré, mais pas le signer.
 
 | Commande | Effet |
 | --- | --- |
-| `backup … --sign-with <clé privée>` (avec ou sans `--encrypt-to`) | écrit aussi `<sauvegarde>.sig` (0600). En cas d'échec, ni sauvegarde ni signature ne restent |
-| `migrate … --sign-with <clé privée>` | même chose avant une migration |
+| `backup …` (avec ou sans `--encrypt-to`) | **toujours signée** : écrit aussi `<sauvegarde>.sig` (0600), avec la clé du serveur, ou avec `--sign-with <clé privée>`. En cas d'échec, ni sauvegarde ni signature ne restent |
+| `migrate …` | même chose avant une migration |
+| `backup-key` | affiche la clé publique du serveur (PEM) et son empreinte, à copier **hors** du serveur |
 | `verify-backup --input <sauvegarde> --signer <clé publique>` | vérifie la signature, puis, pour une sauvegarde en clair, son contenu |
 | `decrypt-backup … --signer <clé publique>` | `--signer` est **obligatoire** : la signature est vérifiée **avant** de déchiffrer (rien n'est écrit sinon), puis le contenu déchiffré est comparé au manifeste signé |
 | `restore-backup --input <sauvegarde> --signer <clé publique> [--identity <clé age>]` | **restauration**, signature obligatoire (voir « Retour arrière ») |
 
-- **Clés** :
-  - créer la clé privée : `openssl genpkey -algorithm ed25519 -out
-    signature.pem`, puis `chmod 600 signature.pem` ;
-  - en tirer la clé publique : `openssl pkey -in signature.pem -pubout -out
-    signature.pub.pem`.
-
-  La clé privée reste **sur le serveur** : elle signe sans intervention. La
-  clé publique accompagne les copies des sauvegardes.
+- **Signature obligatoire** (demande de toytoy du 10/10/2026) : aucune
+  sauvegarde n'est écrite sans signature. Sans `openssl`, aucune sauvegarde
+  n'est possible.
+- **Clé du serveur** :
+  - Core la crée **une fois**, à la première sauvegarde réussie, à côté de la
+    base : `backup-signing.pem` (0600) et `backup-signing.pub.pem` (0644).
+  - Le résultat de la sauvegarde l'indique : `signing_key: CREATED`, puis
+    `EXISTING`.
+  - Copier la clé publique hors du serveur (`backup-key`) : c'est elle qu'on
+    passe à `--signer`.
+  - Si la clé privée disparaît alors que la clé publique est encore là :
+    `SIGNING_KEY_LOST`, et rien n'est recréé en silence. L'opérateur restaure
+    la clé, ou supprime explicitement la clé publique pour en créer une
+    nouvelle.
+- **Autre clé** (facultatif, `--sign-with`) : `openssl genpkey -algorithm
+  ed25519 -out signature.pem`, puis `chmod 600 signature.pem` ; la clé
+  publique s'obtient avec `openssl pkey -in signature.pem -pubout -out
+  signature.pub.pem`.
 - **Ce qui est signé** : un manifeste JSON canonique qui contient :
   - l'objet (`eidolon-conversation-backup`) ;
   - l'empreinte et la taille du fichier écrit ;
@@ -192,7 +203,7 @@ qui peut fabriquer un fichier chiffré, mais pas le signer.
 - **Limite** : la signature prouve que la sauvegarde vient d'un détenteur de
   la clé du serveur. Si le serveur est compromis, sa clé l'est aussi.
 
-Tests : [test_backup_signature.py](../tests/test_backup_signature.py) (13,
+Tests : [test_backup_signature.py](../tests/test_backup_signature.py) (18,
 ignorés sans `openssl` ou `age`).
 
 **Personnalité du dialogue (C-070)** : la dernière version valide gardée par
@@ -211,8 +222,8 @@ Core est une ligne `meta` (`personality_last_valid`) de cette base.
 **Retour arrière** (demande de toytoy du 10/10/2026 : vérification de
 signature **obligatoire**) : arrêter le serveur, puis lancer `restore-backup
 --input <sauvegarde> --signer <clé publique> [--identity <clé privée age>]`.
-Une sauvegarde **non signée ne se restaure plus** par Core. Il faut donc
-signer les sauvegardes (`--sign-with`).
+Une sauvegarde **non signée ne se restaure pas** par Core ; Core n'en
+produit d'ailleurs plus.
 
 La commande vérifie dans l'ordre :
 
@@ -239,11 +250,9 @@ Tests : [test_backup_restore.py](../tests/test_backup_restore.py) (10).
 
 **Limites** : arrêter le serveur avant de migrer (un serveur ancien encore
 ouvert est détecté seulement s'il écrit après la sauvegarde) ; une sauvegarde
-**en clair** n'est ni chiffrée ni signée, son empreinte prouve l'intégrité,
-pas l'authenticité. Une sauvegarde **chiffrée** sans
-`--sign-with` n'est pas signée : qui connaît la clé publique age peut produire
-un fichier chiffré valide. Avec `--sign-with`, l'auteur est vérifié par
-`--signer`, désormais obligatoire. Remettre un fichier à la main contourne
+**en clair** n'est pas chiffrée. Chaque sauvegarde est désormais **signée**, et la
+restauration exige `--signer` : un fichier chiffré fabriqué avec la seule
+clé publique age est refusé. Remettre un fichier à la main contourne
 Core : cette voie n'est plus documentée, mais rien ne peut l'empêcher. Aucun
 test sur un vrai disque plein.
 
