@@ -121,6 +121,9 @@ readonly REQUIRED_PACKAGES=(
     # Synchronisation
     rsync
 
+    # Chiffrement des sauvegardes Eidolon Core (age, age-keygen)
+    age
+
     # Outils système
     lsof
     pciutils
@@ -380,6 +383,12 @@ run "Validation de jq" \
 
 run "Validation de ShellCheck" \
     shellcheck --version
+
+run "Validation de age (chiffrement des sauvegardes)" \
+    age --version
+
+run "Validation de age-keygen" \
+    command -v age-keygen
 
 [[ -d "$EIDOLON_HOME" ]] || \
     error "L'environnement Eidolon est introuvable."

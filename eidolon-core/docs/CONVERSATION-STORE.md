@@ -109,7 +109,9 @@ Garanties testées :
 - sauvegarde endommagée : détectée par `verify_backup`.
 
 **Sauvegarde chiffrée (age)** : demande de toytoy du 10/10/2026. Outil
-choisi par toytoy : [age](https://age-encryption.org) (`apt install age`).
+choisi par toytoy : [age](https://age-encryption.org). La préparation de la
+VM ([01-system.sh](../../01-system.sh)) l'installe, avec `age-keygen`, et
+vérifie leur présence. Ailleurs : `apt install age`.
 Core n'écrit aucun code de chiffrement : il confie les octets à `age` et
 contrôle ce qui revient.
 
