@@ -317,8 +317,18 @@ class LoopbackTLSTests(unittest.TestCase):
     def setUpClass(cls):
         cls.dir = tempfile.mkdtemp(prefix="eidolon-tls-")
         run = lambda *args: subprocess.run(["openssl", *args], cwd=cls.dir, check=True, capture_output=True)  # noqa: E731
+        Path(cls.dir, "ca.cnf").write_text(
+            "[req]\n"
+            "distinguished_name=dn\n"
+            "x509_extensions=v3_ca\n"
+            "[dn]\n"
+            "[v3_ca]\n"
+            "basicConstraints=critical,CA:TRUE\n"
+            "keyUsage=critical,keyCertSign,cRLSign\n"
+            "subjectKeyIdentifier=hash\n"
+        )
         run("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "2", "-subj", "/CN=Eidolon Test CA",
-            "-keyout", "ca.key", "-out", "ca.pem")
+            "-keyout", "ca.key", "-out", "ca.pem", "-config", "ca.cnf")
         for name in ("docs.example.com", "wrong.example.com"):
             Path(cls.dir, f"{name}.ext").write_text(f"subjectAltName=DNS:{name}\n")
             run("req", "-newkey", "rsa:2048", "-nodes", "-subj", f"/CN={name}", "-keyout", f"{name}.key",
