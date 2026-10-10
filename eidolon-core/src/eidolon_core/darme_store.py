@@ -53,8 +53,16 @@ class DarmeJournal:
         with self.db:
             if not self.db.execute("SELECT 1 FROM events WHERE id=?", (event_id,)).fetchone():
                 raise ValueError("unknown event")
+            previous = self.db.execute(
+                "SELECT actor, reason FROM acknowledgements WHERE id=?", (event_id,)
+            ).fetchone()
+            if previous is not None:
+                if previous != (actor, reason):
+                    raise ValueError("acknowledgement already recorded with different details")
+                return False
             self.db.execute("INSERT INTO acknowledgements VALUES (?,?,?)",
                             (event_id, actor, reason))
+        return True
 
     def replay(self, monitor):
         for (raw,) in self.db.execute("SELECT payload FROM events ORDER BY rowid"):
