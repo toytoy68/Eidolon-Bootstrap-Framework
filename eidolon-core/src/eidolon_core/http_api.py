@@ -406,7 +406,7 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None, None)):
+                 media_workspace=None, personality=("none", None, None), memory=None):
         """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -429,7 +429,8 @@ class ReadServer(HTTPServer):
             self.conversation_api = ConversationAPI(synthetic_runtime(Store(state)), dialogue_model=conversations(),
                                                     read_token=token, media_worker=worker, media_artifacts=artifacts,
                                                     personality_mode=personality[0], personality_file=personality[1],
-                                                    personality_sha256=personality[2] if len(personality) > 2 else None)
+                                                    personality_sha256=personality[2] if len(personality) > 2 else None,
+                                                     memory=memory)
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -523,8 +524,16 @@ def main(argv=None):
                         help="none (défaut sans fichier), last-valid (défaut avec fichier) ou required")
     parser.add_argument("--personality-sha256", metavar="EMPREINTE",
                         help="Version exacte exigée (64 caractères hexadécimaux), avec --personality-mode required")
+    parser.add_argument("--memory-bridge-token-file", metavar="FICHIER",
+                        help="Active explicitement le rappel mémoire via tunnel SSH localhost")
+    parser.add_argument("--memory-bridge-port", type=int, default=18765,
+                        help="Port local du tunnel SSH Memory Bridge (défaut 18765)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
+    if args.memory_bridge_token_file and not args.conversations:
+        parser.error("--memory-bridge-token-file exige --conversations")
+    if not 1024 <= args.memory_bridge_port <= 65535:
+        parser.error("--memory-bridge-port hors plage")
     if args.format and not args.check:
         parser.error("--format exige --check")
     if (args.media_workspace is None) != (args.media_workspace_id is None) or (
@@ -562,9 +571,13 @@ def main(argv=None):
                 conversations = ((lambda: SimulatedDialogueModel(demo_catalog())) if args.conversations == "simulated"
                                  else (lambda: ChatDialogueModel(load_model(args.conversations), demo_catalog())))
         media = (args.media_workspace, args.media_workspace_id) if args.media_workspace else None
+        from .memory import BridgeMemory
+        memory = (BridgeMemory(args.memory_bridge_token_file, port=args.memory_bridge_port)
+                  if args.memory_bridge_token_file else None)
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
-                        media_workspace=media, personality=(mode, args.personality, args.personality_sha256)) as server:
+                        media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
+                        memory=memory) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality
