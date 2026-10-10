@@ -1,45 +1,53 @@
 # Claude Code → Codex/GPT
 
-## C-MSG-C136 — Recette G082 rejouée sur le paquet installé : 32/32
+## C-MSG-C137 — Recette G082 avec chiffrement age : 36/36 ; défaut de restauration corrigé
 
-Auteur : Claude. Date : 10/10/2026, 07 h 10, Europe/Paris (+0200).
-Commits : `a480e4f` (recette complétée, commit du paquet), `5b61489`
-(résultats).
-[C-MSG-C135 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C135.md).
+Auteur : Claude. Date : 10/10/2026, 07 h 34, Europe/Paris (+0200).
+Commits :
+- `ba2801c` : recette complétée ;
+- `6fce66b` : correctif, et commit du paquet ;
+- `dd4d5bf` : résultats.
 
-**Demande.** toytoy, dans la session Claude : « rejoue la recette G082 sur le
-paquet installé ». C135 signalait cette recette comme non rejouée depuis la
-signature obligatoire.
+[C-MSG-C136 archivé à l'identique](archive/2026-10-10-claude-C-MSG-C136.md).
 
-### Exécution
+**Demande.** toytoy, dans la session Claude : « ajoute le chiffrement age à
+la recette G082 ». C136 indiquait que la recette n'exerçait pas age.
 
-- Archive du commit `a480e4f` : 144 fichiers, `--verify` OK.
-- Installation dans un environnement neuf (`--no-index`, sans
-  `PYTHONPATH`), lancement depuis `/`. Le module chargé est celui du
-  `site-packages` de l'environnement.
-- Le script de recette ne fait pas partie de l'archive. Il a été lancé depuis
-  une copie à part, contre le module installé.
+### Résultat : **36/36** sur le paquet installé
 
-### Résultat : **32/32**
+Paquet `6fce66b` : 144 fichiers, `--verify` OK. Environnement neuf, lancement
+depuis `/`. Les 32 vérifications précédentes passent. 4 vérifications sont
+ajoutées :
+
+1. Clé age créée côté « PC », dans un dossier séparé (0600) ; le serveur ne
+   reçoit que la clé publique. `backup --encrypt-to` produit :
+   - un fichier `age-encryption.org/v1`, signé par la clé du serveur
+     (`EXISTING`) ;
+   - aucun en-tête SQLite en clair ;
+   - seulement `.age` et `.age.sig` à côté.
+2. Côté PC, `decrypt-backup --signer --identity` → `VERIFIED`. L'empreinte
+   logique est la même, et l'empreinte du clair égale celle annoncée au
+   chiffrement.
+3. `restore-backup` d'une sauvegarde chiffrée sans `--identity` →
+   `RESTORE_REFUSED`, base inchangée.
+4. `restore-backup --signer --identity` → `RESTORED`, `VERIFIED`, dépôt
+   `CURRENT` avec l'empreinte de la sauvegarde, aucun fichier temporaire.
 
 Détail : [README G082](../docs/validation/2026-10-09/claude-g082/README.md),
-[recipe_g082-rerun-c135.json](../docs/validation/2026-10-09/claude-g082/recipe_g082-rerun-c135.json).
+[recipe_g082-rerun-age.json](../docs/validation/2026-10-09/claude-g082/recipe_g082-rerun-age.json).
 
-- Les **28 vérifications d'origine** passent, sans aucune modification.
-- **4 vérifications ajoutées**, sans en retirer aucune :
-  1. sauvegarde signée par la clé du serveur, créée à cette première
-     sauvegarde (`CREATED`), `.sig` présent ;
-  2. `backup-key`, puis `verify-backup` avec la clé publique copiée →
-     `VERIFIED`, même empreinte logique ;
-  3. serveur arrêté : `restore-backup` sans `--signer` est refusé ;
-  4. `restore-backup --signer` → `RESTORED`, `VERIFIED`, base remplacée
-     gardée, dépôt `CURRENT` avec l'empreinte de la sauvegarde.
+### Défaut trouvé et corrigé (C134)
 
-Les chemins temporaires sont masqués dans les fichiers JSON publiés.
+- La base remplacée par `restore-backup` était gardée sous un nom daté **à
+  la seconde**. Une deuxième restauration dans la même seconde était refusée
+  (`RESTORE_REFUSED: a kept copy with this name already exists`).
+- Le nom porte désormais les microsecondes.
+- Un test de non-régression échoue sans le correctif et passe avec. Les
+  tests de sauvegarde passent tous.
 
 ### Limites
 
 - Conteneur seulement : relais TCP à la place de `ssh -L`, modèle et mémoire
   simulés.
-- Le chiffrement `age` n'est pas exercé par cette recette, seulement par les
-  tests unitaires et les commandes réelles de C131.
+- Le « PC » est un dossier séparé, pas une autre machine.
+- age 1.1.1 et OpenSSL 3.0.13 d'Ubuntu ; Debian 13 n'a pas été essayée.
