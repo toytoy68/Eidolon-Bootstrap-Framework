@@ -93,7 +93,7 @@ def _fields(data, required, optional=()):
 class ConversationAPI:
     def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None,
                  media_worker=None, media_artifacts=None, personality_mode="none", personality_file=None,
-                 personality_sha256=None):
+                 personality_sha256=None, memory=None):
         """runtime: the mission Runtime whose Store, catalogue and configuration missions use.
 
         media_worker / media_artifacts (G122/G123): Codex's durable queue and artifact store, fixed by the
@@ -114,7 +114,8 @@ class ConversationAPI:
         self.personality = load_personality(personality_mode, personality_file, self.conversations,
                                              personality_sha256)
         self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds,
-                                 media_proposals=media_worker is not None, personality=self.personality)
+                                 media_proposals=media_worker is not None, personality=self.personality,
+                                 memory=memory)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
 
