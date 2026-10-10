@@ -5,7 +5,7 @@
 # Description : Contrats d'archive, lectures bornées et publication de liste.md
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
-from contextlib import redirect_stdout, redirect_stderr
+from contextlib import closing, redirect_stdout, redirect_stderr
 from copy import deepcopy
 import fcntl
 import io
@@ -46,7 +46,7 @@ class ArchiveTests(unittest.TestCase):
 
     def export(self, records, index=1, previous='0' * 64):
         rows = []
-        with sqlite3.connect(self.guard.path) as db:
+        with closing(sqlite3.connect(self.guard.path)) as db:
             for record in records:
                 identity = record['id']
                 body = db.execute('SELECT body FROM runs WHERE id=?', (identity,)).fetchone()[0]
