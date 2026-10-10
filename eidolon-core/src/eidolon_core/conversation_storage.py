@@ -125,19 +125,31 @@ def inspect(path):
             "migrated": False, "authorizes_execution": False}
 
 
-def backup(source, output):
-    """Consistent copy to a new private file, then verified against the source snapshot."""
-    _regular(source)
+def _new_private_file(output):
+    """A NEW 0600 file in a real directory, never an existing one; returns (path, open write fd)."""
     out = Path(output)
     parent = os.lstat(out.parent) if out.parent.exists() else None
     if parent is None or stat.S_ISLNK(parent.st_mode) or not stat.S_ISDIR(parent.st_mode):
         raise StorageError("BACKUP_PATH_REFUSED: the output folder must be a real directory")
     try:
-        os.close(os.open(out, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
+        return out, os.open(out, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
     except FileExistsError:
         raise StorageError("BACKUP_PATH_REFUSED: the output file already exists") from None
     except OSError:
         raise StorageError("BACKUP_FAILED: cannot create the backup file") from None
+
+
+def backup(source, output, *, encrypt_to=None):
+    """Consistent copy to a new private file, then verified against the source snapshot.
+
+    encrypt_to: an operator file of public age recipients. The copy is then made and verified IN
+    MEMORY, and only its encrypted form is written: no plaintext backup ever touches the disk.
+    """
+    _regular(source)
+    if encrypt_to is not None:
+        return _encrypted_backup(source, output, encrypt_to)
+    out, fd = _new_private_file(output)
+    os.close(fd)
     try:
         src = _read_only(source)
         try:
@@ -164,16 +176,107 @@ def backup(source, output):
     return report
 
 
-def verify_backup(path):
-    """A backup is usable when it is intact and of a supported version; its file digest is reported."""
-    report = inspect(path)
-    if report["integrity"] != "ok" or report["state"] not in ("CURRENT", "MIGRATION_REQUIRED"):
+def _snapshot(source):
+    """(description, logical digest, serialized bytes) of one read snapshot of the source."""
+    src = _read_only(source)
+    try:
+        src.execute("BEGIN")
+        expected = _describe(src), logical_digest(src)[0]
+        memory = sqlite3.connect(":memory:", isolation_level=None)
+        try:
+            src.backup(memory)
+            data = memory.serialize()
+        finally:
+            memory.close()
+        src.execute("COMMIT")
+    finally:
+        src.close()
+    return expected, data
+
+
+def _verify_bytes(data):
+    """The same checks as verify_backup, on a database held in memory."""
+    db = sqlite3.connect(":memory:", isolation_level=None)
+    try:
+        db.deserialize(data)
+        db.execute("BEGIN")
+        report = _describe(db)
+        integrity = db.execute("PRAGMA integrity_check").fetchone()[0]
+        sha, counts = logical_digest(db) if report["state"] != "UNKNOWN" else (None, None)
+        personality = _personality(db) if report["state"] != "UNKNOWN" else None
+        db.execute("COMMIT")
+    finally:
+        db.close()
+    if integrity != "ok" or report["state"] not in ("CURRENT", "MIGRATION_REQUIRED"):
         raise StorageError("BACKUP_INVALID: integrity or version check failed")
+    return {"protocol": INSPECTION, **report, "integrity": "ok", "logical_sha256": sha, "rows": counts,
+            "personality": personality, "supported_versions": sorted(cs.SCHEMAS), "migrated": False,
+            "authorizes_execution": False}
+
+
+def _encrypted_backup(source, output, recipients_path):
+    from . import backup_encryption as be
+    recipients = be.read_recipients(recipients_path)
+    be.find_age()                                   # refused before any file is created
+    try:
+        expected, data = _snapshot(source)
+        report = _verify_bytes(data)
+    except sqlite3.DatabaseError as exc:
+        code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "BACKUP_FAILED"
+        raise StorageError(code + ": the copy could not be made") from None
+    if (report["version"], report["schema"], report["store_id"], report["logical_sha256"]) != (
+            expected[0]["version"], expected[0]["schema"], expected[0]["store_id"], expected[1]):
+        raise StorageError("BACKUP_FAILED: the copy differs from the source")
+    out, fd = _new_private_file(output)
+    try:
+        stanzas = be.encrypt(data, recipients, fd)
+    except BaseException:
+        os.close(fd)
+        _discard(out)
+        raise
+    os.close(fd)
+    return {**report, "encrypted": True, "format": "age-encryption.org/v1", "recipients": stanzas,
+            "plaintext_sha256": hashlib.sha256(data).hexdigest(), "file_sha256": _file_sha(out),
+            "bytes": os.path.getsize(out)}
+
+
+def decrypt_backup(source, identity, output):
+    """Decrypt an encrypted backup into a NEW private file, then verify it like any backup."""
+    from . import backup_encryption as be
+    out, fd = _new_private_file(output)
+    try:
+        be.decrypt(source, identity, fd)
+    except BaseException:
+        os.close(fd)
+        _discard(out)
+        raise
+    os.close(fd)
+    try:
+        report = verify_backup(out)
+    except ContractError:
+        _discard(out)
+        raise
+    return {**report, "decrypted_from_sha256": _file_sha(source)}
+
+
+def _file_sha(path):
     sha = hashlib.sha256()
     with open(path, "rb") as handle:
         for block in iter(lambda: handle.read(1 << 20), b""):
             sha.update(block)
-    return {**report, "file_sha256": sha.hexdigest(), "bytes": os.path.getsize(path)}
+    return sha.hexdigest()
+
+
+def verify_backup(path):
+    """A backup is usable when it is intact and of a supported version; its file digest is reported."""
+    from .backup_encryption import is_encrypted
+    _regular(path)
+    if is_encrypted(path):
+        raise StorageError("BACKUP_ENCRYPTED: decrypt it first (decrypt-backup), with the private identity")
+    report = inspect(path)
+    if report["integrity"] != "ok" or report["state"] not in ("CURRENT", "MIGRATION_REQUIRED"):
+        raise StorageError("BACKUP_INVALID: integrity or version check failed")
+    return {**report, "file_sha256": _file_sha(path), "bytes": os.path.getsize(path)}
 
 
 def _discard(path):
@@ -183,7 +286,7 @@ def _discard(path):
         pass
 
 
-def migrate_with_backup(store, output, *, checkpoint=None):
+def migrate_with_backup(store, output, *, checkpoint=None, encrypt_to=None):
     """Explicit migration, only after a verified backup of exactly the content being migrated."""
     path = Path(store.directory) / "conversations" / "conversations.sqlite3"
     before = inspect(path)
@@ -191,7 +294,7 @@ def migrate_with_backup(store, output, *, checkpoint=None):
         return {"status": "ALREADY_CURRENT", "version": before["version"], "backup": None}
     if before["state"] != "MIGRATION_REQUIRED":
         raise StorageError("CONVERSATION_STORE_UNAVAILABLE: no supported migration from this database")
-    saved = backup(path, output)
+    saved = backup(path, output) if encrypt_to is None else backup(path, output, encrypt_to=encrypt_to)
 
     def unchanged(db):
         if logical_digest(db)[0] != saved["logical_sha256"]:

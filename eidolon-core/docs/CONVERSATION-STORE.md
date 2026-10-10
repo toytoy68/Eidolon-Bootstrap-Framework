@@ -108,6 +108,46 @@ Garanties testées :
   présent) : rien n'est migré, aucun fichier partiel ne reste ;
 - sauvegarde endommagée : détectée par `verify_backup`.
 
+**Sauvegarde chiffrée (age)** : demande de toytoy du 10/10/2026. Outil
+choisi par toytoy : [age](https://age-encryption.org) (`apt install age`).
+Core n'écrit aucun code de chiffrement : il confie les octets à `age` et
+contrôle ce qui revient.
+
+| Commande | Effet |
+| --- | --- |
+| `backup --output <fichier.age> --encrypt-to <destinataires>` | copie et vérification **en mémoire**, puis seule la forme chiffrée est écrite (nouveau fichier 0600) : aucune sauvegarde en clair sur le disque |
+| `migrate --backup <fichier.age> --encrypt-to <destinataires>` | même chose avant une migration |
+| `decrypt-backup --input <fichier.age> --identity <clé privée> --output <fichier>` | déchiffre vers un **nouveau** fichier 0600, puis le vérifie comme toute sauvegarde ; on le remet ensuite en place comme ci-dessous |
+
+- **Destinataires** : clés **publiques** `age1…`, une par ligne, de 1 à 20,
+  sans doublon ; les commentaires `#` sont permis. Le fichier appartient au
+  compte du serveur et n'est modifiable que par lui. Pour chiffrer, le serveur
+  n'a besoin que de ces clés publiques.
+- **Clé privée** : créée avec `age-keygen -o toytoy.key`. La clé publique
+  s'obtient avec `age-keygen -y toytoy.key`. Il faut la garder **hors du
+  serveur**, ou au moins hors du dossier des sauvegardes, en 0600. Elle ne
+  sert qu'au déchiffrement. Deux destinataires (par exemple une clé de
+  secours) permettent chacun de déchiffrer.
+- **Contrôles** :
+  - les clés publiques validées sont passées à `age` sur la ligne de
+    commande ;
+  - la clé privée est ouverte une seule fois par Core (sans lien symbolique,
+    propriétaire, 0600) ;
+  - `age` tourne sans variable d'environnement et avec un délai maximal ; ses
+    messages ne sont pas relayés.
+- **Fichier modifié, tronqué ou mauvaise clé** :
+  `BACKUP_DECRYPTION_FAILED`, et aucun fichier partiel ne reste. `age`
+  authentifie le contenu.
+- `verify_backup` refuse un fichier chiffré (`BACKUP_ENCRYPTED`) : il faut le
+  déchiffrer d'abord.
+- **Refus avant toute écriture** :
+  - `age` absent ou mal installé : `AGE_UNAVAILABLE` ;
+  - destinataires invalides : `AGE_RECIPIENTS_REFUSED`.
+- La sauvegarde **en clair** reste possible sans `--encrypt-to`.
+
+Tests : [test_backup_encryption.py](../tests/test_backup_encryption.py) (13,
+ignorés si `age` n'est pas installé).
+
 **Personnalité du dialogue (C-070)** : la dernière version valide gardée par
 Core est une ligne `meta` (`personality_last_valid`) de cette base.
 
@@ -127,9 +167,12 @@ sauvegarde à la place de `<état>/conversations/conversations.sqlite3` (droits
 a pas de migration descendante : un ancien code refuse une base plus récente.
 
 **Limites** : arrêter le serveur avant de migrer (un serveur ancien encore
-ouvert est détecté seulement s'il écrit après la sauvegarde) ; la sauvegarde
-n'est ni chiffrée ni signée, son empreinte prouve l'intégrité, pas
-l'authenticité ; aucun test sur un vrai disque plein.
+ouvert est détecté seulement s'il écrit après la sauvegarde) ; une sauvegarde
+**en clair** n'est ni chiffrée ni signée, son empreinte prouve l'intégrité,
+pas l'authenticité. Une sauvegarde **chiffrée** est authentifiée par `age`,
+mais pas signée : qui connaît la clé publique peut produire un fichier
+chiffré valide. La vérification après déchiffrement contrôle la base et le
+dépôt, pas l'auteur. Aucun test sur un vrai disque plein.
 
 ## Schéma v5 : identité exacte du travail média (C-068)
 

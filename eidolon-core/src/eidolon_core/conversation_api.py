@@ -397,9 +397,17 @@ def main(argv=None):
     revoke.add_argument("--client-id", required=True)
     migrate = sub.add_parser("migrate", help="Sauvegarde vérifiée puis migration explicite vers la version courante")
     migrate.add_argument("--backup", required=True, help="nouveau fichier de sauvegarde (jamais écrasé)")
+    migrate.add_argument("--encrypt-to", metavar="DESTINATAIRES",
+                         help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
     sub.add_parser("inspect-store", help="Inspection hors ligne en lecture seule ; ne migre jamais")
     save = sub.add_parser("backup", help="Sauvegarde vérifiable du dépôt des conversations")
     save.add_argument("--output", required=True)
+    save.add_argument("--encrypt-to", metavar="DESTINATAIRES",
+                      help="fichier des clés publiques age (age1…) : sauvegarde chiffrée, jamais en clair")
+    unlock = sub.add_parser("decrypt-backup", help="Déchiffrer une sauvegarde age vers un nouveau fichier, puis la vérifier")
+    unlock.add_argument("--input", required=True)
+    unlock.add_argument("--identity", required=True, help="clé privée age (0600), à garder hors du serveur")
+    unlock.add_argument("--output", required=True, help="nouveau fichier déchiffré (jamais écrasé)")
     profile = sub.add_parser("profile", help="Choix explicite du profil de dialogue (aucun repli automatique)")
     profile.add_argument("action", choices=("select", "show"))
     profile.add_argument("--name")
@@ -425,15 +433,21 @@ def main(argv=None):
             ConversationStore(store, create=True)
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
         elif args.command == "migrate":
-            print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup)))
+            print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup, encrypt_to=args.encrypt_to)))
         elif args.command == "inspect-store":
             report = conversation_storage.inspect(database)
             print(json.dumps(report))
             return 0 if report["integrity"] == "ok" and report["state"] == "CURRENT" else 3
         elif args.command == "backup":
-            saved = conversation_storage.backup(database, args.output)
+            saved = conversation_storage.backup(database, args.output, encrypt_to=args.encrypt_to)
+            keys = ("version", "state", "logical_sha256", "file_sha256", "bytes", "rows", "personality")
+            if args.encrypt_to:
+                keys += ("encrypted", "format", "recipients", "plaintext_sha256")
+            print(json.dumps({key: saved[key] for key in keys}))
+        elif args.command == "decrypt-backup":
+            saved = conversation_storage.decrypt_backup(args.input, args.identity, args.output)
             print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
-                                                           "bytes", "rows", "personality")}))
+                                                           "bytes", "rows", "personality", "decrypted_from_sha256")}))
         elif args.command == "profile":
             print(json.dumps(_profile(store, args)))
         elif args.command == "media-link":
