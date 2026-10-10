@@ -413,7 +413,12 @@ def main(argv=None):
     unlock.add_argument("--input", required=True)
     unlock.add_argument("--identity", required=True, help="clé privée age (0600), à garder hors du serveur")
     unlock.add_argument("--output", required=True, help="nouveau fichier déchiffré (jamais écrasé)")
-    unlock.add_argument("--signer", help="clé publique Ed25519 attendue : signature vérifiée AVANT de déchiffrer")
+    unlock.add_argument("--signer", required=True,
+                        help="clé publique Ed25519 attendue (obligatoire) : signature vérifiée AVANT de déchiffrer")
+    restore = sub.add_parser("restore-backup", help="Remettre en place une sauvegarde SIGNÉE (serveur arrêté)")
+    restore.add_argument("--input", required=True)
+    restore.add_argument("--signer", required=True, help="clé publique Ed25519 attendue (obligatoire)")
+    restore.add_argument("--identity", help="clé privée age (0600), pour une sauvegarde chiffrée")
     profile = sub.add_parser("profile", help="Choix explicite du profil de dialogue (aucun repli automatique)")
     profile.add_argument("action", choices=("select", "show"))
     profile.add_argument("--name")
@@ -459,6 +464,9 @@ def main(argv=None):
             print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
                                                            "bytes", "rows", "personality", "decrypted_from_sha256",
                                                            "signature")}))
+        elif args.command == "restore-backup":
+            print(json.dumps(conversation_storage.restore_backup(store, args.input, signer=args.signer,
+                                                                 identity=args.identity)))
         elif args.command == "verify-backup":
             print(json.dumps(conversation_storage.verify_signed_backup(args.input, args.signer)))
         elif args.command == "profile":

@@ -28,7 +28,8 @@ from tests.test_conversation_storage import Base as V1Base
 
 SRC = str(Path(__file__).resolve().parents[1] / "src")
 ENV = dict(os.environ, PYTHONPATH=SRC, PYTHONDONTWRITEBYTECODE="1")
-HAVE_AGE = shutil.which("age") is not None and shutil.which("age-keygen") is not None
+HAVE_AGE = (shutil.which("age") is not None and shutil.which("age-keygen") is not None
+            and shutil.which("openssl") is not None)        # restoring now always checks a signature
 SECRET_TEXT = "Diagnostique le serveur-secret-42."
 
 
@@ -40,7 +41,18 @@ def keypair(folder, name):
     return identity, public
 
 
-@unittest.skipUnless(HAVE_AGE, "age is not installed")
+def signing_key(folder, name, algorithm="ed25519"):
+    private, public = Path(folder) / f"{name}.pem", Path(folder) / f"{name}.pub.pem"
+    options = ["-pkeyopt", "rsa_keygen_bits:1024"] if algorithm == "RSA" else []
+    subprocess.run(["openssl", "genpkey", "-algorithm", algorithm, *options, "-out", str(private)],
+                   check=True, capture_output=True)
+    os.chmod(private, 0o600)
+    subprocess.run(["openssl", "pkey", "-in", str(private), "-pubout", "-out", str(public)], check=True,
+                   capture_output=True)
+    return private, public
+
+
+@unittest.skipUnless(HAVE_AGE, "age and openssl are not installed")
 class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
@@ -58,6 +70,7 @@ class Base(unittest.TestCase):
         self.identity, self.public = keypair(self.keys, "toytoy")
         self.recipients = self.write_recipients(f"# clé publique de toytoy\n{self.public}\n")
         self.out = self.root / "out"; self.out.mkdir()
+        self.sign_key, self.signer = signing_key(self.keys, "serveur")
 
     def write_recipients(self, text, mode=0o644, name="recipients.txt"):
         path = self.keys / name
@@ -68,25 +81,25 @@ class Base(unittest.TestCase):
 
 class EncryptedBackupTests(Base):
     def test_only_the_encrypted_form_is_written_and_it_decrypts_to_the_verified_copy(self):
-        saved = st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)
+        saved = st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients, sign_with=self.sign_key)
         raw = (self.out / "b.age").read_bytes()
         self.assertTrue(raw.startswith(be.HEADER))
         for clear in (SECRET_TEXT.encode(), b"SQLite format 3", b"Sois curieux"):
             self.assertNotIn(clear, raw)
-        self.assertEqual(sorted(p.name for p in self.out.iterdir()), ["b.age"])      # no plaintext, no temp
+        self.assertEqual(sorted(p.name for p in self.out.iterdir()), ["b.age", "b.age.sig"])   # no plaintext
         self.assertEqual(os.stat(self.out / "b.age").st_mode & 0o777, 0o600)
         self.assertEqual((saved["encrypted"], saved["recipients"], saved["personality"]),
                          (True, 1, self.personality.identity()))
         self.assertEqual(saved["logical_sha256"], st.inspect(self.database)["logical_sha256"])
-        plain = st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3")
+        plain = st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=self.signer)
         self.assertEqual((plain["logical_sha256"], plain["personality"], plain["file_sha256"]),
                          (saved["logical_sha256"], saved["personality"], saved["plaintext_sha256"]))
         self.assertEqual(os.stat(self.out / "plain.sqlite3").st_mode & 0o777, 0o600)
 
     def test_restore_from_an_encrypted_backup(self):
-        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)
+        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients, sign_with=self.sign_key)
         cid = self.conversations.open(client_id="pc", client_key="after")["conversation_id"]   # lost by restore
-        st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3")
+        st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=self.signer)
         os.replace(self.out / "plain.sqlite3", self.database)                               # server stopped
         for extra in ("-wal", "-shm"):
             Path(str(self.database) + extra).unlink(missing_ok=True)
@@ -98,14 +111,14 @@ class EncryptedBackupTests(Base):
     def test_several_recipients_each_can_decrypt(self):
         other_identity, other_public = keypair(self.keys, "secours")
         recipients = self.write_recipients(f"{self.public}\n\n{other_public}\n", name="two.txt")
-        saved = st.backup(self.database, self.out / "b.age", encrypt_to=recipients)
+        saved = st.backup(self.database, self.out / "b.age", encrypt_to=recipients, sign_with=self.sign_key)
         self.assertEqual(saved["recipients"], 2)
         for n, identity in enumerate((self.identity, other_identity)):
-            plain = st.decrypt_backup(self.out / "b.age", identity, self.out / f"p{n}.sqlite3")
+            plain = st.decrypt_backup(self.out / "b.age", identity, self.out / f"p{n}.sqlite3", signer=self.signer)
             self.assertEqual(plain["logical_sha256"], saved["logical_sha256"])
 
     def test_an_encrypted_backup_is_never_read_as_a_plain_one(self):
-        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)
+        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients, sign_with=self.sign_key)
         with self.assertRaisesRegex(ContractError, "BACKUP_ENCRYPTED"):
             st.verify_backup(self.out / "b.age")
 
@@ -113,11 +126,12 @@ class EncryptedBackupTests(Base):
 class DecryptionRefusalTests(Base):
     def setUp(self):
         super().setUp()
-        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients)
+        st.backup(self.database, self.out / "b.age", encrypt_to=self.recipients, sign_with=self.sign_key)
 
     def assert_refused(self, code, source=None, identity=None):
         with self.assertRaisesRegex(ContractError, code):
-            st.decrypt_backup(source or self.out / "b.age", identity or self.identity, self.out / "plain.sqlite3")
+            st.decrypt_backup(source or self.out / "b.age", identity or self.identity, self.out / "plain.sqlite3",
+                              signer=self.signer)
         self.assertFalse((self.out / "plain.sqlite3").exists())                     # nothing partial kept
 
     def test_wrong_identity(self):
@@ -127,10 +141,26 @@ class DecryptionRefusalTests(Base):
     def test_modified_or_truncated_backup(self):
         raw = bytearray((self.out / "b.age").read_bytes())
         raw[-5] ^= 0x01
-        (self.out / "modified.age").write_bytes(bytes(raw))
-        self.assert_refused("BACKUP_DECRYPTION_FAILED", source=self.out / "modified.age")
-        (self.out / "short.age").write_bytes(bytes(raw[: len(raw) // 2]))
-        self.assert_refused("BACKUP_DECRYPTION_FAILED", source=self.out / "short.age")
+        modified, short = self.out / "modified.age", self.out / "short.age"
+        modified.write_bytes(bytes(raw))
+        short.write_bytes(bytes(raw[: len(raw) // 2]))
+        for source in (modified, short):
+            shutil.copy(self.out / "b.age.sig", str(source) + ".sig")
+            self.assert_refused("BACKUP_SIGNATURE_INVALID", source=source)      # the signature stops it first
+            # and age itself authenticates the content, should a file ever reach it:
+            fd = os.memfd_create("plain")
+            try:
+                with self.assertRaisesRegex(ContractError, "BACKUP_DECRYPTION_FAILED"):
+                    be.decrypt(source, self.identity, fd)
+            finally:
+                os.close(fd)
+
+    def test_the_signer_is_mandatory(self):
+        with self.assertRaisesRegex(ContractError, "BACKUP_SIGNER_REQUIRED"):
+            st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=None)
+        with self.assertRaises(TypeError):
+            st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3")
+        self.assertFalse((self.out / "plain.sqlite3").exists())
 
     def test_identity_must_be_private(self):
         os.chmod(self.identity, 0o644)
@@ -143,7 +173,7 @@ class DecryptionRefusalTests(Base):
     def test_existing_output_is_never_overwritten(self):
         (self.out / "plain.sqlite3").write_bytes(b"garder")
         with self.assertRaisesRegex(ContractError, "BACKUP_PATH_REFUSED"):
-            st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3")
+            st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=self.signer)
         self.assertEqual((self.out / "plain.sqlite3").read_bytes(), b"garder")
 
 
@@ -174,38 +204,45 @@ class RecipientRefusalTests(Base):
             self.assert_refused("BACKUP_ENCRYPTION_FAILED", self.recipients)
 
 
-@unittest.skipUnless(HAVE_AGE, "age is not installed")
+@unittest.skipUnless(HAVE_AGE, "age and openssl are not installed")
 class EncryptedMigrationTests(V1Base):
     def test_migration_after_an_encrypted_backup_and_rollback_from_it(self):
         identity, public = keypair(self.base, "toytoy")
         recipients = self.base / "recipients.txt"
         recipients.write_text(public + "\n")
-        result = st.migrate_with_backup(self.runtime.store, self.base / "pre.age", encrypt_to=recipients)
+        key, signer = signing_key(self.base, "serveur")
+        result = st.migrate_with_backup(self.runtime.store, self.base / "pre.age", encrypt_to=recipients,
+                                        sign_with=key)
         self.assertEqual((result["status"], result["from_version"]), ("MIGRATED", 1))
         self.assertTrue((self.base / "pre.age").read_bytes().startswith(be.HEADER))
-        plain = st.decrypt_backup(self.base / "pre.age", identity, self.base / "pre.sqlite3")
+        plain = st.decrypt_backup(self.base / "pre.age", identity, self.base / "pre.sqlite3", signer=signer)
         self.assertEqual((plain["version"], plain["logical_sha256"]), (1, result["backup"]["logical_sha256"]))
         os.replace(self.base / "pre.sqlite3", self.path)                              # rollback
         self.assertEqual((self.version(), self.core()), (1, self.core_before))
 
 
-@unittest.skipUnless(HAVE_AGE, "age is not installed")
+@unittest.skipUnless(HAVE_AGE, "age and openssl are not installed")
 class CommandTests(Base):
     def run_cli(self, *args):
         return subprocess.run([sys.executable, "-m", "eidolon_core.conversation_api", "--state",
                                str(self.root / "state"), *args], env=ENV, capture_output=True, text=True, timeout=120)
 
     def test_backup_and_decrypt_commands(self):
-        done = self.run_cli("backup", "--output", str(self.out / "b.age"), "--encrypt-to", str(self.recipients))
+        done = self.run_cli("backup", "--output", str(self.out / "b.age"), "--encrypt-to", str(self.recipients),
+                            "--sign-with", str(self.sign_key))
         saved = json.loads(done.stdout)
         self.assertEqual((done.returncode, saved["encrypted"], saved["recipients"]), (0, True, 1), done.stderr)
         done = self.run_cli("decrypt-backup", "--input", str(self.out / "b.age"), "--identity", str(self.identity),
                             "--output", str(self.out / "plain.sqlite3"))
+        self.assertEqual(done.returncode, 2)                                  # --signer is mandatory
+        self.assertIn("--signer", done.stderr)
+        done = self.run_cli("decrypt-backup", "--input", str(self.out / "b.age"), "--identity", str(self.identity),
+                            "--output", str(self.out / "plain.sqlite3"), "--signer", str(self.signer))
         plain = json.loads(done.stdout)
         self.assertEqual((done.returncode, plain["logical_sha256"]), (0, saved["logical_sha256"]))
         self.assertNotIn(str(self.identity), done.stdout + done.stderr)
         done = self.run_cli("decrypt-backup", "--input", str(self.out / "b.age"), "--identity", str(self.recipients),
-                            "--output", str(self.out / "again.sqlite3"))
+                            "--output", str(self.out / "again.sqlite3"), "--signer", str(self.signer))
         self.assertEqual((done.returncode, json.loads(done.stdout)["error"]), (2, "AGE_IDENTITY_REFUSED"))
 
 

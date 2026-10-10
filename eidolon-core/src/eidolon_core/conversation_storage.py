@@ -14,11 +14,12 @@
 - migrate_with_backup(): backup first, then the explicit stepwise migration, which starts only if the
   database still has the backed-up content (checked under the write lock). Missions are never touched:
   the mission Store is only read for its identity, and nothing is replayed.
-Rollback: stop the server and put the backup file back in place (see docs/CONVERSATION-STORE.md).
+Rollback: stop the server, then restore_backup() (restore-backup): a SIGNED backup only, signature checked first.
 """
 import hashlib
 import os
 from pathlib import Path
+import re
 import sqlite3
 import stat
 
@@ -309,18 +310,18 @@ def _encrypted_backup(source, output, recipients_path):
             "bytes": os.path.getsize(out)}
 
 
-def decrypt_backup(source, identity, output, *, signer=None):
+def decrypt_backup(source, identity, output, *, signer):
     """Decrypt an encrypted backup into a NEW private file, then verify it like any backup.
 
-    signer: the expected Ed25519 public key; the signature is then checked BEFORE decrypting (nothing is
-    written otherwise), and the decrypted content must match the signed manifest.
+    signer (mandatory): the expected Ed25519 public key; the signature is checked BEFORE decrypting
+    (nothing is written otherwise), and the decrypted content must match the signed manifest.
     """
     from . import backup_encryption as be
-    manifest = None
-    if signer is not None:
-        manifest = verify_signature(source, signer)
-        if not manifest["encrypted"]:
-            raise StorageError("BACKUP_SIGNATURE_INVALID: the signed backup is not encrypted")
+    if signer is None:
+        raise StorageError("BACKUP_SIGNER_REQUIRED: a backup is only restored after its signature is verified")
+    manifest = verify_signature(source, signer)
+    if not manifest["encrypted"]:
+        raise StorageError("BACKUP_SIGNATURE_INVALID: the signed backup is not encrypted")
     out, fd = _new_private_file(output)
     try:
         be.decrypt(source, identity, fd)
@@ -331,14 +332,100 @@ def decrypt_backup(source, identity, output, *, signer=None):
     os.close(fd)
     try:
         report = verify_backup(out)
-        if manifest is not None and (report["file_sha256"], report["logical_sha256"], report["store_id"]) != (
+        if (report["file_sha256"], report["logical_sha256"], report["store_id"]) != (
                 manifest["plaintext_sha256"], manifest["logical_sha256"], manifest["store_id"]):
             raise StorageError("BACKUP_SIGNATURE_INVALID: the content differs from the signed manifest")
     except ContractError:
         _discard(out)
         raise
-    return {**report, "decrypted_from_sha256": _file_sha(source),
-            "signature": "VERIFIED" if manifest is not None else "NOT_CHECKED"}
+    return {**report, "decrypted_from_sha256": _file_sha(source), "signature": "VERIFIED"}
+
+
+def restore_backup(store, source, *, signer, identity=None):
+    """Put a SIGNED backup back in place of the conversation store (server stopped).
+
+    Order: signature (expected key, exact file), same Store identity, then the content is decrypted if
+    needed into a private file NEXT TO the database, verified against the signed manifest, and only then
+    swapped in. The replaced database is kept as conversations.sqlite3.before-restore-<time> (0600).
+    Refused while another process holds the database (STORE_BUSY), or if a journal is pending.
+    """
+    from . import backup_encryption as be
+    from .store import now
+    if signer is None:
+        raise StorageError("BACKUP_SIGNER_REQUIRED: a backup is only restored after its signature is verified")
+    manifest = verify_signature(source, signer)
+    with store.connection() as db:
+        store_id = db.execute("SELECT value FROM sync_metadata WHERE key='store_id'").fetchone()[0]
+    if manifest["store_id"] != store_id:
+        raise StorageError("RESTORE_REFUSED: the backup belongs to another Store")
+    if manifest["encrypted"] and identity is None:
+        raise StorageError("RESTORE_REFUSED: an encrypted backup needs the private age identity")
+    directory = Path(store.directory) / "conversations"
+    info = os.lstat(directory) if directory.exists() else None
+    if info is None or stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        raise StorageError("RESTORE_REFUSED: the conversations folder is missing")
+    target = directory / "conversations.sqlite3"
+    staged, fd = _new_private_file(directory / (".restore-" + os.urandom(8).hex() + ".sqlite3"))
+    try:
+        try:
+            if manifest["encrypted"]:
+                be.decrypt(source, identity, fd)
+            else:
+                with open(source, "rb") as handle:
+                    for block in iter(lambda: handle.read(1 << 20), b""):
+                        os.write(fd, block)
+                os.fsync(fd)
+        finally:
+            os.close(fd)
+        report = verify_backup(staged)
+        if (report["file_sha256"], report["logical_sha256"], report["store_id"]) != (
+                manifest["plaintext_sha256"], manifest["logical_sha256"], manifest["store_id"]):
+            raise StorageError("BACKUP_SIGNATURE_INVALID: the content differs from the signed manifest")
+        kept = _swap(target, staged, now())
+    except BaseException:
+        _discard(staged)
+        raise
+    return {"status": "RESTORED", "version": report["version"], "logical_sha256": report["logical_sha256"],
+            "rows": report["rows"], "personality": report["personality"], "signature": "VERIFIED",
+            "signer": manifest["signer"], "signed_at": manifest["signed_at"], "replaced_kept_as": kept}
+
+
+def _swap(target, staged, stamp):
+    """Swap under an EXCLUSIVE lock on the current database; keep it under a dated name."""
+    pending = any(os.path.lexists(str(target) + suffix) for suffix in ("-journal", "-wal"))
+    if not os.path.lexists(target):
+        if pending:
+            raise StorageError("RESTORE_REFUSED: a journal is pending next to a missing database")
+        os.rename(staged, target)
+        _sync_directory(target.parent)
+        return None
+    _regular(target)
+    kept = target.with_name(target.name + ".before-restore-" + re.sub(r"[^0-9]", "", stamp)[:14])
+    if os.path.lexists(kept):
+        raise StorageError("RESTORE_REFUSED: a kept copy with this name already exists")
+    db = sqlite3.connect(target.resolve().as_uri() + "?mode=rw", uri=True, timeout=2, isolation_level=None)
+    try:
+        try:
+            db.execute("BEGIN EXCLUSIVE")         # also rolls back a hot journal of the current database
+        except sqlite3.DatabaseError as exc:
+            if is_busy(exc):
+                raise StorageError("CONVERSATION_STORE_BUSY: stop the server before restoring") from None
+            if pending:
+                raise StorageError("RESTORE_REFUSED: a journal is pending on an unreadable database") from None
+        os.link(target, kept)
+        os.replace(staged, target)
+        _sync_directory(target.parent)
+    finally:
+        db.close()
+    return kept.name
+
+
+def _sync_directory(path):
+    fd = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def _file_sha(path):

@@ -18,29 +18,14 @@ from unittest.mock import patch
 from eidolon_core import backup_signature as bs
 from eidolon_core import conversation_storage as st
 from eidolon_core.contracts import ContractError, encode
-from tests.test_backup_encryption import ENV, HAVE_AGE, Base as EncryptionBase, keypair
+from tests.test_backup_encryption import ENV, HAVE_AGE, Base as EncryptionBase, keypair, signing_key
 from tests.test_conversation_storage import Base as V1Base
 
 HAVE_OPENSSL = shutil.which("openssl") is not None
 
 
-def signing_key(folder, name, algorithm="ed25519"):
-    private, public = Path(folder) / f"{name}.pem", Path(folder) / f"{name}.pub.pem"
-    options = ["-pkeyopt", "rsa_keygen_bits:1024"] if algorithm == "RSA" else []
-    subprocess.run(["openssl", "genpkey", "-algorithm", algorithm, *options, "-out", str(private)],
-                   check=True, capture_output=True)
-    os.chmod(private, 0o600)
-    subprocess.run(["openssl", "pkey", "-in", str(private), "-pubout", "-out", str(public)], check=True,
-                   capture_output=True)
-    return private, public
-
-
 @unittest.skipUnless(HAVE_OPENSSL and HAVE_AGE, "openssl and age are required")
 class Base(EncryptionBase):
-    def setUp(self):
-        super().setUp()
-        self.sign_key, self.signer = signing_key(self.keys, "serveur")
-
     def signed(self, name="b.age", encrypted=True):
         options = {"encrypt_to": self.recipients} if encrypted else {}
         return st.backup(self.database, self.out / name, sign_with=self.sign_key, **options)

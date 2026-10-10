@@ -119,7 +119,7 @@ contrôle ce qui revient.
 | --- | --- |
 | `backup --output <fichier.age> --encrypt-to <destinataires>` | copie et vérification **en mémoire**, puis seule la forme chiffrée est écrite (nouveau fichier 0600) : aucune sauvegarde en clair sur le disque |
 | `migrate --backup <fichier.age> --encrypt-to <destinataires>` | même chose avant une migration |
-| `decrypt-backup --input <fichier.age> --identity <clé privée> --output <fichier>` | déchiffre vers un **nouveau** fichier 0600, puis le vérifie comme toute sauvegarde ; on le remet ensuite en place comme ci-dessous |
+| `decrypt-backup --input <fichier.age> --identity <clé privée> --signer <clé publique de signature> --output <fichier>` | vérifie la signature (**obligatoire**), déchiffre vers un **nouveau** fichier 0600, puis le vérifie ; pour examiner une sauvegarde, la restauration passe par `restore-backup` |
 
 - **Destinataires** : clés **publiques** `age1…`, une par ligne, de 1 à 20,
   sans doublon ; les commentaires `#` sont permis. Le fichier appartient au
@@ -161,7 +161,8 @@ qui peut fabriquer un fichier chiffré, mais pas le signer.
 | `backup … --sign-with <clé privée>` (avec ou sans `--encrypt-to`) | écrit aussi `<sauvegarde>.sig` (0600). En cas d'échec, ni sauvegarde ni signature ne restent |
 | `migrate … --sign-with <clé privée>` | même chose avant une migration |
 | `verify-backup --input <sauvegarde> --signer <clé publique>` | vérifie la signature, puis, pour une sauvegarde en clair, son contenu |
-| `decrypt-backup … --signer <clé publique>` | vérifie la signature **avant** de déchiffrer (rien n'est écrit sinon), puis compare le contenu déchiffré au manifeste signé |
+| `decrypt-backup … --signer <clé publique>` | `--signer` est **obligatoire** : la signature est vérifiée **avant** de déchiffrer (rien n'est écrit sinon), puis le contenu déchiffré est comparé au manifeste signé |
+| `restore-backup --input <sauvegarde> --signer <clé publique> [--identity <clé age>]` | **restauration**, signature obligatoire (voir « Retour arrière ») |
 
 - **Clés** :
   - créer la clé privée : `openssl genpkey -algorithm ed25519 -out
@@ -207,10 +208,34 @@ Core est une ligne `meta` (`personality_last_valid`) de cette base.
 - Une restauration la ramène. Testé dans
   [test_personality.py](../tests/test_personality.py) (`BackupTests`).
 
-**Retour arrière** : arrêter le serveur, puis remettre le fichier de
-sauvegarde à la place de `<état>/conversations/conversations.sqlite3` (droits
-0600). Les conversations écrites **après** la sauvegarde sont perdues. Il n'y
-a pas de migration descendante : un ancien code refuse une base plus récente.
+**Retour arrière** (demande de toytoy du 10/10/2026 : vérification de
+signature **obligatoire**) : arrêter le serveur, puis lancer `restore-backup
+--input <sauvegarde> --signer <clé publique> [--identity <clé privée age>]`.
+Une sauvegarde **non signée ne se restaure plus** par Core. Il faut donc
+signer les sauvegardes (`--sign-with`).
+
+La commande vérifie dans l'ordre :
+
+1. la signature : clé attendue et fichier exact (`BACKUP_SIGNATURE_*`,
+   `BACKUP_SIGNER_REQUIRED` sans clé) ;
+2. le même Store (`RESTORE_REFUSED` sinon) ;
+3. le contenu, déchiffré si besoin, dans un fichier privé **à côté** de la
+   base, vérifié et comparé au manifeste signé.
+
+Ensuite seulement, elle remplace la base sous un verrou exclusif. La base
+remplacée est gardée sous `conversations.sqlite3.before-restore-<date>`
+(0600).
+
+- Si une autre connexion tient la base : `CONVERSATION_STORE_BUSY`.
+- Un serveur resté ouvert ne peut pas écrire dans l'ancien fichier : il
+  obtient `STORE_CHANGED`.
+- En cas de refus, la base est intacte et aucun fichier temporaire ne reste.
+
+Les conversations écrites **après** la sauvegarde ne sont plus dans la base
+restaurée ; elles restent dans la copie gardée. Il n'y a pas de migration
+descendante : un ancien code refuse une base plus récente.
+
+Tests : [test_backup_restore.py](../tests/test_backup_restore.py) (10).
 
 **Limites** : arrêter le serveur avant de migrer (un serveur ancien encore
 ouvert est détecté seulement s'il écrit après la sauvegarde) ; une sauvegarde
@@ -218,7 +243,9 @@ ouvert est détecté seulement s'il écrit après la sauvegarde) ; une sauvegard
 pas l'authenticité. Une sauvegarde **chiffrée** sans
 `--sign-with` n'est pas signée : qui connaît la clé publique age peut produire
 un fichier chiffré valide. Avec `--sign-with`, l'auteur est vérifié par
-`--signer`. Aucun test sur un vrai disque plein.
+`--signer`, désormais obligatoire. Remettre un fichier à la main contourne
+Core : cette voie n'est plus documentée, mais rien ne peut l'empêcher. Aucun
+test sur un vrai disque plein.
 
 ## Schéma v5 : identité exacte du travail média (C-068)
 
