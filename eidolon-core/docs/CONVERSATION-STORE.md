@@ -206,6 +206,73 @@ qui peut fabriquer un fichier chiffré, mais pas le signer.
 Tests : [test_backup_signature.py](../tests/test_backup_signature.py) (18,
 ignorés sans `openssl` ou `age`).
 
+**Réponses à la revue préliminaire de GPT (G140)**
+
+*Clé de signature : export, continuité, incident.*
+
+- **Export, juste après la première sauvegarde** : `backup-key` affiche la
+  clé publique (PEM) et son empreinte `ed25519:…`. La copier **hors du
+  serveur**, sur le PC et sur un support de secours, avec la date : c'est
+  elle, et non le serveur, qui fait foi à la restauration.
+- **Continuité** : tant que `backup-signing.pem` est là, toutes les
+  sauvegardes portent la même empreinte. Le résultat de chaque `backup`
+  l'affiche (`signer`), ce qui permet de la comparer à la copie gardée.
+- **Clé privée perdue** (disque, réinstallation) :
+  - Core refuse de sauvegarder (`SIGNING_KEY_LOST`) au lieu de recréer une
+    clé en silence ;
+  - pour repartir, supprimer **explicitement** `backup-signing.pub.pem` : la
+    sauvegarde suivante crée une nouvelle clé (`CREATED`) ;
+  - exporter aussitôt la nouvelle clé publique, et garder l'ancienne pour
+    vérifier les anciennes sauvegardes.
+- **Clé privée compromise** (serveur piraté) :
+  - la signature ne protège plus rien de ce qui est signé après la
+    compromission ;
+  - créer une nouvelle clé comme ci-dessus ;
+  - ne restaurer que des sauvegardes **antérieures** à l'incident, vérifiées
+    avec l'ancienne clé publique gardée hors du serveur ;
+  - Core ne gère ni liste de révocation ni horodatage de confiance : c'est
+    une limite.
+
+*Concurrence pendant la restauration.*
+- `restore-backup` prend un verrou SQLite **exclusif** sur la base.
+- Une fois le verrou obtenu, la base doit être **le même fichier**
+  (périphérique, inode) que celui verrouillé. Sinon, une autre restauration
+  l'a remplacée entre-temps : `RESTORE_REFUSED: … concurrent restore`, et
+  rien n'est changé. Ce contrôle a été ajouté pendant cette revue. Son test
+  échoue sans lui et passe avec.
+- Une base absente est remise par lien (`link`), jamais par-dessus une base
+  apparue entre-temps.
+- Un serveur resté ouvert obtient `STORE_CHANGED` et n'écrit pas dans
+  l'ancien fichier.
+
+*Résistance aux échecs (processus réellement tué, `os._exit`) :*
+
+| Coupure | Base | Reste |
+| --- | --- | --- |
+| après la préparation de la copie | ancienne, intacte | un fichier `.restore-*.sqlite3` (0600) à côté de la base : c'est la sauvegarde vérifiée, déchiffrée si elle l'était, à supprimer à la main |
+| sous le verrou, avant le lien | ancienne, intacte | idem |
+| après le lien de garde, avant le remplacement | ancienne, intacte | idem, plus `conversations.sqlite3.before-restore-…` (lien vers l'ancienne) |
+| après le remplacement | restaurée | la copie gardée de l'ancienne |
+
+Dans tous les cas, la base reste lisible et `CURRENT`, et relancer la
+commande réussit. Le fichier `.restore-*` n'est jamais supprimé
+automatiquement : une autre restauration pourrait l'utiliser. Comme la base
+elle-même, il est en clair, en 0600.
+
+*Mémoire de la sauvegarde chiffrée* (mesurée sur des bases de 50 et 200 Mo,
+processus neuf) :
+- en clair : environ 5 Mo de plus, quelle que soit la taille ;
+- chiffrée : environ **3,1 fois la taille de la base**, à cause de la copie
+  en mémoire puis de sa sérialisation par Python ;
+- au-delà de **512 Mio**, une sauvegarde chiffrée est refusée
+  (`BACKUP_TOO_LARGE_FOR_MEMORY`) avant toute écriture ;
+- la vérification se fait désormais sur la copie en mémoire elle-même, sans
+  en faire une seconde.
+
+Une piste écartée : un fichier anonyme en mémoire (`memfd`) ouvert par
+SQLite via `/proc/self/fd`. Lors de l'essai, SQLite a résolu le lien et
+**écrit la base en clair sur le disque**, sous un autre nom.
+
 **Personnalité du dialogue (C-070)** : la dernière version valide gardée par
 Core est une ligne `meta` (`personality_last_valid`) de cette base.
 

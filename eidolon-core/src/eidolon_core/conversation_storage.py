@@ -253,8 +253,21 @@ def _plain_backup(source, output):
     return report
 
 
+# An encrypted backup is made in memory (no plaintext file). Measured peak (G140 review, 50 and 200 MB
+# databases): about 3.1 times the database size in the Python process, because serialize() copies the
+# in-memory database once more. Above 512 MiB (about 1.6 GiB of RAM) it is refused.
+# Not used on purpose: a memfd opened by SQLite through /proc/self/fd/N, since SQLite resolves that
+# link and wrote a plaintext file under "/memfd:… (deleted)" on disk during the trial.
+MAX_IN_MEMORY_BACKUP = 512 << 20
+
+
 def _snapshot(source):
-    """(description, logical digest, serialized bytes) of one read snapshot of the source."""
+    """(report, serialized bytes) of one read snapshot, checked IN MEMORY before it is serialized.
+
+    The checks of verify_backup (integrity, version, store, logical digest, kept personality) run on the
+    in-memory copy itself, which must match the digest of the source snapshot taken in the same
+    transaction; only then is it serialized. No second in-memory copy is made.
+    """
     src = _read_only(source)
     try:
         src.execute("BEGIN")
@@ -262,48 +275,40 @@ def _snapshot(source):
         memory = sqlite3.connect(":memory:", isolation_level=None)
         try:
             src.backup(memory)
+            src.execute("COMMIT")
+            memory.execute("BEGIN")
+            report = _describe(memory)
+            integrity = memory.execute("PRAGMA integrity_check").fetchone()[0]
+            if integrity != "ok" or report["state"] not in ("CURRENT", "MIGRATION_REQUIRED"):
+                raise StorageError("BACKUP_INVALID: integrity or version check failed")
+            sha, counts = logical_digest(memory)
+            personality = _personality(memory)
+            memory.execute("COMMIT")
             data = memory.serialize()
         finally:
             memory.close()
-        src.execute("COMMIT")
     finally:
         src.close()
-    return expected, data
-
-
-def _verify_bytes(data):
-    """The same checks as verify_backup, on a database held in memory."""
-    db = sqlite3.connect(":memory:", isolation_level=None)
-    try:
-        db.deserialize(data)
-        db.execute("BEGIN")
-        report = _describe(db)
-        integrity = db.execute("PRAGMA integrity_check").fetchone()[0]
-        sha, counts = logical_digest(db) if report["state"] != "UNKNOWN" else (None, None)
-        personality = _personality(db) if report["state"] != "UNKNOWN" else None
-        db.execute("COMMIT")
-    finally:
-        db.close()
-    if integrity != "ok" or report["state"] not in ("CURRENT", "MIGRATION_REQUIRED"):
-        raise StorageError("BACKUP_INVALID: integrity or version check failed")
+    if (report["version"], report["schema"], report["store_id"], sha) != (
+            expected[0]["version"], expected[0]["schema"], expected[0]["store_id"], expected[1]):
+        raise StorageError("BACKUP_FAILED: the copy differs from the source")
     return {"protocol": INSPECTION, **report, "integrity": "ok", "logical_sha256": sha, "rows": counts,
             "personality": personality, "supported_versions": sorted(cs.SCHEMAS), "migrated": False,
-            "authorizes_execution": False}
+            "authorizes_execution": False}, data
 
 
 def _encrypted_backup(source, output, recipients_path):
     from . import backup_encryption as be
     recipients = be.read_recipients(recipients_path)
     be.find_age()                                   # refused before any file is created
+    if os.path.getsize(source) > MAX_IN_MEMORY_BACKUP:
+        raise StorageError("BACKUP_TOO_LARGE_FOR_MEMORY: an encrypted backup is made in memory (about twice "
+                           "the database size); above 512 MiB it is refused")
     try:
-        expected, data = _snapshot(source)
-        report = _verify_bytes(data)
+        report, data = _snapshot(source)
     except sqlite3.DatabaseError as exc:
         code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "BACKUP_FAILED"
         raise StorageError(code + ": the copy could not be made") from None
-    if (report["version"], report["schema"], report["store_id"], report["logical_sha256"]) != (
-            expected[0]["version"], expected[0]["schema"], expected[0]["store_id"], expected[1]):
-        raise StorageError("BACKUP_FAILED: the copy differs from the source")
     out, fd = _new_private_file(output)
     try:
         stanzas = be.encrypt(data, recipients, fd)
@@ -348,13 +353,15 @@ def decrypt_backup(source, identity, output, *, signer):
     return {**report, "decrypted_from_sha256": _file_sha(source), "signature": "VERIFIED"}
 
 
-def restore_backup(store, source, *, signer, identity=None):
+def restore_backup(store, source, *, signer, identity=None, checkpoint=None):
     """Put a SIGNED backup back in place of the conversation store (server stopped).
 
     Order: signature (expected key, exact file), same Store identity, then the content is decrypted if
     needed into a private file NEXT TO the database, verified against the signed manifest, and only then
     swapped in. The replaced database is kept as conversations.sqlite3.before-restore-<time> (0600).
-    Refused while another process holds the database (STORE_BUSY), or if a journal is pending.
+    Refused while another process holds the database (STORE_BUSY), if a journal is pending, or if the
+    database file was replaced by a concurrent restore (checked under the lock).
+    checkpoint(name), tests only: "staged", "locked", "linked" (fault injection).
     """
     from . import backup_encryption as be
     from .store import now
@@ -388,7 +395,9 @@ def restore_backup(store, source, *, signer, identity=None):
         if (report["file_sha256"], report["logical_sha256"], report["store_id"]) != (
                 manifest["plaintext_sha256"], manifest["logical_sha256"], manifest["store_id"]):
             raise StorageError("BACKUP_SIGNATURE_INVALID: the content differs from the signed manifest")
-        kept = _swap(target, staged, now())
+        checkpoint = checkpoint or (lambda name: None)
+        checkpoint("staged")
+        kept = _swap(target, staged, now(), checkpoint)
     except BaseException:
         _discard(staged)
         raise
@@ -397,16 +406,25 @@ def restore_backup(store, source, *, signer, identity=None):
             "signer": manifest["signer"], "signed_at": manifest["signed_at"], "replaced_kept_as": kept}
 
 
-def _swap(target, staged, stamp):
-    """Swap under an EXCLUSIVE lock on the current database; keep it under a dated name."""
+def _swap(target, staged, stamp, checkpoint):
+    """Swap under an EXCLUSIVE lock on the current database; keep it under a dated name.
+
+    The lock is taken on the file found BEFORE connecting; once held, that file must still be the
+    database (device, inode): otherwise a concurrent restore replaced it and this one is refused.
+    """
     pending = any(os.path.lexists(str(target) + suffix) for suffix in ("-journal", "-wal"))
     if not os.path.lexists(target):
         if pending:
             raise StorageError("RESTORE_REFUSED: a journal is pending next to a missing database")
-        os.rename(staged, target)
+        try:
+            os.link(staged, target)               # never over a database created meanwhile
+        except FileExistsError:
+            raise StorageError("RESTORE_REFUSED: a database appeared during the restore") from None
+        os.unlink(staged)
         _sync_directory(target.parent)
         return None
-    _regular(target)
+    info = _regular(target)
+    locked_file = (info.st_dev, info.st_ino)
     kept = target.with_name(target.name + ".before-restore-" + re.sub(r"[^0-9]", "", stamp)[:20])
     if os.path.lexists(kept):
         raise StorageError("RESTORE_REFUSED: a kept copy with this name already exists")
@@ -419,7 +437,12 @@ def _swap(target, staged, stamp):
                 raise StorageError("CONVERSATION_STORE_BUSY: stop the server before restoring") from None
             if pending:
                 raise StorageError("RESTORE_REFUSED: a journal is pending on an unreadable database") from None
+        checkpoint("locked")
+        now_info = os.lstat(target)
+        if (now_info.st_dev, now_info.st_ino) != locked_file:
+            raise StorageError("RESTORE_REFUSED: the database was replaced by a concurrent restore")
         os.link(target, kept)
+        checkpoint("linked")
         os.replace(staged, target)
         _sync_directory(target.parent)
     finally:

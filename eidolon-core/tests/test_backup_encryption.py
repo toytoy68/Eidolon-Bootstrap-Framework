@@ -194,6 +194,10 @@ class RecipientRefusalTests(Base):
         link.symlink_to(self.recipients)
         self.assert_refused("AGE_RECIPIENTS_REFUSED", link)
 
+    def test_too_large_for_an_in_memory_copy_is_refused_before_writing(self):
+        with patch.object(st, "MAX_IN_MEMORY_BACKUP", 1024):
+            self.assert_refused("BACKUP_TOO_LARGE_FOR_MEMORY", self.recipients)
+
     def test_age_missing_writes_nothing(self):
         with patch("eidolon_core.backup_encryption.shutil.which", return_value=None):
             self.assert_refused("AGE_UNAVAILABLE", self.recipients)

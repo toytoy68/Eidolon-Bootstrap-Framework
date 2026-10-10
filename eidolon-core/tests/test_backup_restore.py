@@ -9,6 +9,7 @@
 import hashlib
 import json
 import os
+import shutil
 from pathlib import Path
 import sqlite3
 import subprocess
@@ -117,6 +118,49 @@ class RestoreTests(Base):
         second = st.restore_backup(self.store, self.out / "b.sqlite3", signer=self.signer)["replaced_kept_as"]
         self.assertNotEqual(first, second)
         self.assertTrue((self.folder / first).exists() and (self.folder / second).exists())
+
+    def test_a_concurrent_restore_that_replaced_the_file_is_detected_under_the_lock(self):
+        st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
+        other = self.folder / "other.sqlite3"
+        shutil.copy(self.database, other)
+        os.chmod(other, 0o600)
+
+        def concurrent(name):
+            if name == "locked":                    # another restore swapped the file meanwhile
+                os.replace(other, self.database)
+        before = sha(other)
+        with self.assertRaisesRegex(ContractError, "concurrent restore"):
+            st.restore_backup(self.store, self.out / "b.sqlite3", signer=self.signer, checkpoint=concurrent)
+        self.assertEqual((sha(self.database), self.leftovers()), (before, []))
+
+    def test_a_process_killed_at_each_step_leaves_a_usable_database(self):
+        st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
+        backup_sha = st.inspect(self.out / "b.sqlite3")["logical_sha256"]
+        for step in ("staged", "locked", "linked"):
+            with self.subTest(step=step):
+                self.add_conversation()
+                current = st.inspect(self.database)["logical_sha256"]
+                script = ("import os, sys; from pathlib import Path; from eidolon_core.store import Store; "
+                          "from eidolon_core import conversation_storage as st; "
+                          "st.restore_backup(Store(sys.argv[1]), sys.argv[2], signer=sys.argv[3], "
+                          "checkpoint=lambda n: os._exit(9) if n == sys.argv[4] else None)")
+                done = subprocess.run([sys.executable, "-c", script, str(self.root / "state"),
+                                       str(self.out / "b.sqlite3"), str(self.signer), step],
+                                      env=ENV, capture_output=True, timeout=60)
+                self.assertEqual(done.returncode, 9)                              # really killed, no cleanup
+                report = st.inspect(self.database)
+                self.assertEqual((report["integrity"], report["state"]), ("ok", "CURRENT"))
+                self.assertEqual(report["logical_sha256"], current)              # swap never reached
+                self.assertEqual(len(self.leftovers()), 1)                        # staged copy left (0600)
+                staged = self.folder / self.leftovers()[0]
+                self.assertEqual((os.stat(staged).st_mode & 0o777, st.inspect(staged)["logical_sha256"]),
+                                 (0o600, backup_sha))
+                staged.unlink()
+                for kept in self.folder.glob("conversations.sqlite3.before-restore-*"):
+                    self.assertEqual(st.inspect(kept)["logical_sha256"], current)  # a link to the old one
+                    kept.unlink()
+        result = st.restore_backup(self.store, self.out / "b.sqlite3", signer=self.signer)  # rerun works
+        self.assertEqual(result["status"], "RESTORED")
 
     def test_a_missing_database_is_restored(self):
         st.backup(self.database, self.out / "b.sqlite3", sign_with=self.sign_key)
