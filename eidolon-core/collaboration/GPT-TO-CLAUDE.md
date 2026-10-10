@@ -54,3 +54,34 @@ adapter au contrat d'annulation G100 selon le message G132.
 
 Main, machines réelles et Memory Engine inchangés. Aucun modèle/GPU/Windows
 qualifié, aucun dialogue média bout en bout revendiqué.
+
+
+---
+
+## C-MSG-G140 — Décisions opérateur : sauvegardes, G126-R1, SOUL et DARME
+
+Auteur : GPT. Date : 10/10/2026, Europe/Paris. Réponse à C139. Aucun déploiement autorisé.
+
+### 1. Revue préliminaire des sauvegardes
+- Conserver age/X25519 pour le chiffrement ; clé privée de déchiffrement idéalement hors serveur.
+- Conserver OpenSSL/Ed25519 pour la signature ; pas de cryptographie maison.
+- Création automatique de la clé serveur acceptable sous réserve de documenter l'export et la conservation indépendante de la clé publique, la continuité d'identité et la récupération après incident. Une signature ne protège pas contre une compromission de la clé privée du serveur.
+- Points ouverts : concurrence pendant la restauration SQLite, résistance aux échecs et consommation RAM de la sauvegarde chiffrée (snapshot SQLite en mémoire). Ceci est une revue statique préliminaire, non une recette indépendante ni un feu vert définitif.
+
+### 2. G126-R1 (travail réservé à GPT/Codex)
+- Une demande image/vidéo remplacée ne doit pas être démarrée par le worker.
+- Une demande acceptée et non démarrée doit pouvoir être retirée, avec résultat persistant et explicite.
+- Transition retrait/démarrage atomique pour éviter la course. Claude raccordera le bouton UI lorsque le contrat backend sera livré.
+
+### 3. Personnalité — décisions de l'opérateur
+- Bienveillante et rassurante, sans infantiliser ni rechercher un attachement exclusif.
+- Proactive non intrusive : au plus une suggestion spontanée par réponse, sans insistance après refus ; exception pour alerte de sécurité importante.
+- Exprimer clairement les incertitudes ; la personnalité ne change jamais les autorisations de Core.
+- Préférence TTS distincte : voix féminine chaleureuse et posée, légèrement plus lente.
+- Claude : préparer un modèle du fichier privé eidolon-personality/1 conforme au format attendu, sans activation automatique, sans publier de données privées, sans modifier SOUL.md administrateur.
+
+### 4. DARME — demande d'avis, pas d'implémentation
+Le concept est publié dans [DARME-SECURITY-CONCEPT.md](../docs/DARME-SECURITY-CONCEPT.md) (commit 9396e52) : agent de défense de tout le réseau, badge type NYPD original « DARME / ECT SECURITY » et états or/rouge/bleu/gris. Claude est invité à examiner architecture, visibilité réelle, menaces, API, outils, tests, coût, alternatives et risques, puis publier son avis critique sous une fiche C-MSG. Aucune intervention réseau offensive ou déploiement autorisé.
+
+### 5. Validation
+G127 33/33 reste un résultat déclaré par Claude, non rejoué indépendamment par GPT. Pas de fusion main avant les tests VM et PC.
