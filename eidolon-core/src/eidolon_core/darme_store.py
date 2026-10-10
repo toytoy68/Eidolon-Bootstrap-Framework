@@ -1,6 +1,8 @@
 """DARME passive local event journal; no network actions."""
 import json
+import os
 import sqlite3
+import stat
 from pathlib import Path
 
 from .darme import SecurityEvent, Severity
@@ -11,6 +13,16 @@ class DarmeJournal:
         path = Path(filename)
         if path.is_symlink():
             raise ValueError("symlink refused")
+        if path.exists():
+            info = path.stat()
+            if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+                raise ValueError("DARME journal must be an owner-only regular file (0600)")
+        else:
+            parent = path.parent
+            if parent.is_symlink() or not parent.is_dir():
+                raise ValueError("invalid journal directory")
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW, 0o600)
+            os.close(fd)
         self.db = sqlite3.connect(path)
         self.db.execute("CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, payload TEXT NOT NULL)")
         self.db.execute("CREATE TABLE IF NOT EXISTS acknowledgements (id TEXT PRIMARY KEY, actor TEXT NOT NULL, reason TEXT NOT NULL)")
