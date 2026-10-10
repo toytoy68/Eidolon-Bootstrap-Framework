@@ -188,6 +188,33 @@ def main():
               shown["signer"] == saved["signer"] and "PRIVATE" not in json.dumps(shown)
               and verified["signature"]["signature"] == "VERIFIED"
               and verified["backup"]["logical_sha256"] == saved["logical_sha256"])
+        # C131 + 10/10: age encryption. The private identity is made on the "PC" side; the server
+        # only receives the PUBLIC recipient.
+        pc_side = os.path.join(beta, "pc"); os.mkdir(pc_side, 0o700)
+        identity = os.path.join(pc_side, "toytoy.key")
+        subprocess.run(["age-keygen", "-o", identity], check=True, capture_output=True)
+        os.chmod(identity, 0o600)
+        recipients = os.path.join(beta, "age-recipients.txt")
+        with open(recipients, "w", encoding="ascii") as handle:
+            handle.write(subprocess.run(["age-keygen", "-y", identity], check=True, capture_output=True,
+                                        text=True).stdout)
+        encrypted_file = os.path.join(beta, "conversations-backup.age")
+        encrypted = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "backup", "--output",
+                                   encrypted_file, "--encrypt-to", recipients).stdout)
+        with open(encrypted_file, "rb") as handle:
+            raw = handle.read()
+        check("S2", "sauvegarde chiffrée (age) et signée ; aucun clair dans le fichier ni à côté",
+              encrypted.get("encrypted") is True and encrypted.get("signed") is True
+              and encrypted.get("signing_key") == "EXISTING" and raw.startswith(b"age-encryption.org/v1\n")
+              and b"SQLite format 3" not in raw and "Diagnostique" not in raw.decode("latin-1")
+              and sorted(n for n in os.listdir(beta) if n.startswith("conversations-backup.age"))
+              == ["conversations-backup.age", "conversations-backup.age.sig"], encrypted.get("recipients"))
+        opened = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "decrypt-backup",
+                                "--input", encrypted_file, "--identity", identity, "--signer", signer,
+                                "--output", os.path.join(pc_side, "opened.sqlite3")).stdout)
+        check("S2", "côté PC : signature vérifiée puis déchiffrement, contenu conforme",
+              opened["signature"] == "VERIFIED" and opened["logical_sha256"] == encrypted["logical_sha256"]
+              and opened["file_sha256"] == encrypted["plaintext_sha256"])
         # S3: diagnostic without starting.
         diag = cli("-m", "eidolon_core.http_api", "--state", state, "--token-file", token_file, "--web-root", WEB,
                    "--port", "8765", "--check", "--format", "human", ok=False)
@@ -319,6 +346,20 @@ def main():
               restored["status"] == "RESTORED" and restored["signature"] == "VERIFIED"
               and os.path.exists(os.path.join(state, "conversations", kept)) and after["state"] == "CURRENT"
               and after["logical_sha256"] == saved["logical_sha256"], kept)
+        refused = cli("-m", "eidolon_core.conversation_api", "--state", state, "restore-backup", "--input",
+                      encrypted_file, "--signer", signer, ok=False)
+        check("R", "sauvegarde chiffrée sans la clé age : refusée, base inchangée",
+              refused.returncode == 2 and json.loads(refused.stdout)["error"] == "RESTORE_REFUSED"
+              and json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "inspect-store",
+                                 ok=False).stdout)["logical_sha256"] == after["logical_sha256"])
+        restored = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "restore-backup",
+                                  "--input", encrypted_file, "--signer", signer, "--identity", identity).stdout)
+        after = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "inspect-store",
+                               ok=False).stdout)
+        check("R", "sauvegarde chiffrée et signée restaurée avec la clé age",
+              restored["status"] == "RESTORED" and restored["signature"] == "VERIFIED"
+              and after["state"] == "CURRENT" and after["logical_sha256"] == encrypted["logical_sha256"]
+              and not any(n.startswith(".restore-") for n in os.listdir(os.path.join(state, "conversations"))))
 
     passed = sum(c["ok"] for c in CHECKS)
     print(json.dumps({"passed": passed, "total": len(CHECKS), "checks": CHECKS}, ensure_ascii=False, indent=1))
