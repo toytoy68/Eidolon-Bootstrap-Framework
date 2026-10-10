@@ -173,6 +173,21 @@ def main():
         saved = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "backup", "--output",
                                os.path.join(beta, "conversations-backup.sqlite3")).stdout)
         check("S2", "sauvegarde vérifiée avant ouverture", len(saved["file_sha256"]) == 64)
+        # C135 (10/10): every backup is signed, by the server key created at the first backup.
+        backup_file = os.path.join(beta, "conversations-backup.sqlite3")
+        check("S2", "sauvegarde signée par la clé du serveur, créée à la 1re sauvegarde",
+              saved.get("signed") is True and saved.get("signing_key") == "CREATED"
+              and os.path.exists(backup_file + ".sig"), saved.get("signing_key"))
+        shown = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "backup-key").stdout)
+        signer = os.path.join(beta, "backup-signing.pub.pem")      # the copy kept OFF the server
+        with open(signer, "w", encoding="ascii") as handle:
+            handle.write(shown["public_key_pem"])
+        verified = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "verify-backup",
+                                  "--input", backup_file, "--signer", signer).stdout)
+        check("S2", "signature vérifiée avec la clé publique copiée (backup-key)",
+              shown["signer"] == saved["signer"] and "PRIVATE" not in json.dumps(shown)
+              and verified["signature"]["signature"] == "VERIFIED"
+              and verified["backup"]["logical_sha256"] == saved["logical_sha256"])
         # S3: diagnostic without starting.
         diag = cli("-m", "eidolon_core.http_api", "--state", state, "--token-file", token_file, "--web-root", WEB,
                    "--port", "8765", "--check", "--format", "human", ok=False)
@@ -290,6 +305,20 @@ def main():
         check("S8", "bases intactes après arrêt", integrity == "ok" and store_state["integrity"] == "ok"
               and store_state["state"] == "CURRENT")
         check("S8", "aucune clé ni jeton dans les sorties", key not in json.dumps(CHECKS) and token not in json.dumps(CHECKS))
+
+        # R (C134/C135): restore, server stopped; the signature is mandatory.
+        refused = cli("-m", "eidolon_core.conversation_api", "--state", state, "restore-backup", "--input",
+                      backup_file, ok=False)
+        check("R", "restauration sans --signer refusée", refused.returncode == 2 and "--signer" in refused.stderr)
+        restored = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "restore-backup",
+                                  "--input", backup_file, "--signer", signer).stdout)
+        after = json.loads(cli("-m", "eidolon_core.conversation_api", "--state", state, "inspect-store",
+                               ok=False).stdout)
+        kept = restored.get("replaced_kept_as") or ""
+        check("R", "sauvegarde signée restaurée ; base remplacée gardée ; dépôt à jour",
+              restored["status"] == "RESTORED" and restored["signature"] == "VERIFIED"
+              and os.path.exists(os.path.join(state, "conversations", kept)) and after["state"] == "CURRENT"
+              and after["logical_sha256"] == saved["logical_sha256"], kept)
 
     passed = sum(c["ok"] for c in CHECKS)
     print(json.dumps({"passed": passed, "total": len(CHECKS), "checks": CHECKS}, ensure_ascii=False, indent=1))
