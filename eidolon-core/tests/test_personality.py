@@ -15,6 +15,7 @@ import unittest
 from eidolon_core import conversation as cv
 from eidolon_core import dialogue as dg
 from eidolon_core import personality as pe
+from eidolon_core import conversation_storage as st
 from eidolon_core import planner_prompt
 from eidolon_core.client_credentials import ClientCredentials
 from eidolon_core.contracts import ContractError, encode
@@ -54,7 +55,6 @@ class Base(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.runtime = synthetic_runtime(Store(self.root / "state"))
         self.conversations = ConversationStore(self.runtime.store, create=True)
-        self.directory = str(self.conversations.directory)
         self.file = self.root / "soul.json"
 
     def write(self, content, mode=0o600):
@@ -63,7 +63,7 @@ class Base(unittest.TestCase):
         os.chmod(self.file, mode)
 
     def load(self, mode="last-valid"):
-        return pe.load(mode, str(self.file), self.directory)
+        return pe.load(mode, str(self.file), self.conversations)
 
     def say(self, dialogue, key, text="Diagnostique le nas.", cid=None):
         cid = cid or self.conversations.open(client_id="pc", client_key="k-" + key)["conversation_id"]
@@ -198,7 +198,7 @@ class FileTests(Base):
                 state = self.load()
                 self.assertIsNone(state.current)
                 self.assertTrue(state.event.startswith("PERSONALITY_FILE_REFUSED"), state.event)
-                self.assertFalse(os.path.lexists(os.path.join(self.directory, pe.COPY_NAME)))
+                self.assertIsNone(self.conversations.personality_copy())
 
     def test_6_a_file_replaced_after_start_changes_nothing_until_restart(self):
         self.write(value())
@@ -210,12 +210,12 @@ class FileTests(Base):
         self.assertEqual(self.say(d, "t2")["reply"]["personality"], first)
         self.assertNotIn("Autre personnalité.", model.prompts[1])
 
-    def test_the_copy_is_private_and_matches_the_loaded_value(self):
+    def test_the_copy_lives_in_the_conversation_store_and_matches_the_loaded_value(self):
         self.write(value())
         state = self.load()
-        copy = Path(self.directory) / pe.COPY_NAME
-        self.assertEqual(os.stat(copy).st_mode & 0o777, 0o600)
-        self.assertEqual(pe.build(pe.read_copy(self.directory)), state.current)
+        self.assertEqual(pe.build(pe.read_copy(self.conversations)), state.current)
+        self.assertEqual(sorted(p.name for p in self.conversations.directory.iterdir()
+                                if not p.name.startswith("conversations.sqlite3")), [])   # no side file
 
 
 class RestartTests(Base):
@@ -226,14 +226,14 @@ class RestartTests(Base):
         first = self.load().current
         self.write(b"{ pas du json", 0o600)                                # the operator breaks the file
         conversations = ConversationStore(self.runtime.store)                # restart: everything reopened
-        state = pe.load("last-valid", str(self.file), str(conversations.directory))
+        state = pe.load("last-valid", str(self.file), conversations)
         self.assertEqual(state.event, "PERSONALITY_FILE_REFUSED+LAST_VALID_KEPT")
         self.assertEqual(state.current, first)                               # same text AND same sha256
         model = Recording(self.runtime.catalog)
         reply = self.say(dg.Dialogue(conversations, model, self.runtime.catalog, personality=state), "t1")["reply"]
         self.assertEqual(reply["personality"], first.identity())
         self.assertIn(first.block, model.prompts[0])
-        self.assertEqual(pe.read_copy(self.directory), value(evolving=["Préfère les explications courtes."]))
+        self.assertEqual(pe.read_copy(self.conversations), value(evolving=["Préfère les explications courtes."]))
 
     def test_a_valid_update_replaces_the_copy_and_a_later_invalid_one_keeps_it(self):
         self.write(value()); self.load()
@@ -243,15 +243,14 @@ class RestartTests(Base):
 
     def test_a_tampered_copy_is_refused_and_never_used(self):
         self.write(value()); self.load()
-        copy = Path(self.directory) / pe.COPY_NAME
-        data = json.loads(copy.read_text())
+        data = json.loads(self.conversations.personality_copy())
         data["personality"]["soul"] = "Texte modifié hors de Core."
-        copy.write_text(encode(data)); os.chmod(copy, 0o600)
+        self.conversations.keep_personality_copy(encode(data))
         self.file.unlink()
         state = self.load()
         self.assertEqual((state.current, state.event), (None, "PERSONALITY_FILE_REFUSED+PERSONALITY_COPY_INVALID"))
         self.write(value()); self.assertIsNotNone(self.load().current)      # a valid file replaces the bad copy
-        self.assertEqual(pe.read_copy(self.directory), value())
+        self.assertEqual(pe.read_copy(self.conversations), value())
 
     def test_first_start_without_a_personality_says_none_is_loaded(self):
         state = self.load()                                                  # no file, no copy
@@ -263,12 +262,53 @@ class RestartTests(Base):
 
     def test_modes_are_checked(self):
         with self.assertRaisesRegex(ContractError, "INVALID_PERSONALITY"):
-            pe.load("none", str(self.file), self.directory)
+            pe.load("none", str(self.file), self.conversations)
         with self.assertRaisesRegex(ContractError, "INVALID_PERSONALITY"):
-            pe.load("required", None, self.directory)
+            pe.load("required", None, self.conversations)
         with self.assertRaisesRegex(ContractError, "INVALID_PERSONALITY"):
-            pe.load("au-hasard", str(self.file), self.directory)
-        self.assertEqual(pe.load("none", None, self.directory).event, "PERSONALITY_NONE")
+            pe.load("au-hasard", str(self.file), self.conversations)
+        self.assertEqual(pe.load("none", None, self.conversations).event, "PERSONALITY_NONE")
+
+
+class BackupTests(Base):
+    """toytoy, 10/10/2026: the kept personality is saved and restored with the conversations (G099)."""
+
+    def database(self):
+        return self.conversations.directory / "conversations.sqlite3"
+
+    def test_the_backup_carries_the_copy_and_reports_it_without_its_text(self):
+        self.write(value())
+        kept = self.load().current
+        saved = st.backup(self.database(), self.root / "b.sqlite3")
+        self.assertEqual(saved["personality"], kept.identity())
+        self.assertEqual(saved["rows"]["personality_copy"], 1)
+        self.assertNotIn(SOUL, json.dumps(saved, ensure_ascii=False))
+        self.assertEqual(st.inspect(self.database())["personality"], kept.identity())
+
+    def test_restore_then_restart_with_an_invalid_file_finds_the_saved_version(self):
+        self.write(value()); first = self.load().current
+        st.backup(self.database(), self.root / "b.sqlite3")
+        self.write(value(version="0.3")); self.load()                           # copy now 0.3
+        self.write(b"{", 0o600)                                                 # the file is then broken
+        os.replace(self.root / "b.sqlite3", self.database())                    # server stopped: restore
+        for extra in ("-wal", "-shm"):
+            Path(str(self.database()) + extra).unlink(missing_ok=True)
+        state = pe.load("last-valid", str(self.file), ConversationStore(self.runtime.store))
+        self.assertEqual((state.current, state.event), (first, "PERSONALITY_FILE_REFUSED+LAST_VALID_KEPT"))
+
+    def test_the_copy_counts_in_the_logical_digest(self):
+        before = st.inspect(self.database())
+        self.assertNotIn("personality_copy", before["rows"])                   # absent: digest as before
+        self.assertIsNone(before["personality"])
+        self.write(value()); self.load()
+        with_copy = st.inspect(self.database())["logical_sha256"]
+        self.assertNotEqual(with_copy, before["logical_sha256"])
+        self.write(value(version="0.3")); self.load()
+        self.assertNotEqual(st.inspect(self.database())["logical_sha256"], with_copy)
+
+    def test_a_tampered_copy_is_reported_invalid(self):
+        self.conversations.keep_personality_copy('{"schema":"autre"}')
+        self.assertEqual(st.inspect(self.database())["personality"], "INVALID")
 
 
 class ExactVersionTests(Base):
@@ -277,24 +317,24 @@ class ExactVersionTests(Base):
     def test_the_demanded_version_is_used(self):
         self.write(value())
         sha = pe.build(value()).sha256
-        state = pe.load("required", str(self.file), self.directory, sha)
+        state = pe.load("required", str(self.file), self.conversations, sha)
         self.assertEqual((state.current.sha256, state.event, state.blocked), (sha, "PERSONALITY_LOADED", False))
 
     def test_another_valid_file_is_refused_never_copied_and_the_copy_is_used(self):
         self.write(value()); pinned = self.load().current                 # v0.2 copied
         self.write(value(version="0.3"))
-        state = pe.load("required", str(self.file), self.directory, pinned.sha256)
+        state = pe.load("required", str(self.file), self.conversations, pinned.sha256)
         self.assertEqual((state.current, state.event), (pinned, "PERSONALITY_VERSION_MISMATCH+LAST_VALID_KEPT"))
-        self.assertEqual(pe.read_copy(self.directory), value())              # the copy was not replaced
+        self.assertEqual(pe.read_copy(self.conversations), value())              # the copy was not replaced
 
     def test_without_the_demanded_version_only_the_conversation_is_blocked(self):
         self.write(value(version="0.3")); self.load()                       # the copy holds 0.3
         expected = pe.build(value()).sha256                                  # the operator demands 0.2
-        state = pe.load("required", str(self.file), self.directory, expected)
+        state = pe.load("required", str(self.file), self.conversations, expected)
         self.assertEqual((state.current, state.blocked), (None, True))
         self.assertEqual(state.event, "PERSONALITY_VERSION_MISMATCH+COPY_NOT_EXPECTED_VERSION")
         self.write(b"{", 0o600)
-        state = pe.load("required", str(self.file), self.directory, expected)
+        state = pe.load("required", str(self.file), self.conversations, expected)
         self.assertEqual((state.blocked, state.event), (True, "PERSONALITY_FILE_REFUSED+COPY_NOT_EXPECTED_VERSION"))
         reply = self.say(dg.Dialogue(self.conversations, Recording(self.runtime.catalog), self.runtime.catalog,
                                      personality=state), "t1")["reply"]
@@ -306,7 +346,7 @@ class ExactVersionTests(Base):
         for mode, expected in (("last-valid", sha), ("required", sha.upper()), ("required", sha[:16])):
             with self.subTest(mode=mode, expected=expected):
                 with self.assertRaisesRegex(ContractError, "INVALID_PERSONALITY"):
-                    pe.load(mode, str(self.file), self.directory, expected)
+                    pe.load(mode, str(self.file), self.conversations, expected)
 
     def test_the_operator_helper_prints_the_sha_to_demand(self):
         import contextlib, io

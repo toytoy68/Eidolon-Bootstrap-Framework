@@ -61,7 +61,27 @@ def logical_digest(db):
     for table, order in {**CORE_TABLES, **OPTIONAL_TABLES}.items():
         if table in names:
             content[table] = [list(r) for r in db.execute(f"SELECT * FROM {table} ORDER BY {order}")]
-    return digest(content), {table: len(rows) for table, rows in content.items()}
+    counts = {table: len(rows) for table, rows in content.items()}
+    # C-070: the kept personality copy is part of what a backup must carry (absent: digest unchanged).
+    row = db.execute("SELECT value FROM meta WHERE key=?", (cs.PERSONALITY_KEY,)).fetchone() \
+        if "meta" in names else None
+    if row is not None:
+        content["personality_copy"] = row[0]
+        counts["personality_copy"] = 1
+    return digest(content), counts
+
+
+def _personality(db):
+    """What the kept personality copy is, for the operator: version and sha256, never its text."""
+    from .personality import parse_copy
+    row = db.execute("SELECT value FROM meta WHERE key=?", (cs.PERSONALITY_KEY,)).fetchone()
+    if row is None:
+        return None
+    try:
+        value = parse_copy(row[0])
+    except ContractError:
+        return "INVALID"
+    return {"version": value["version"], "sha256": digest(value)}
 
 
 def _describe(db):
@@ -90,9 +110,10 @@ def inspect(path):
             report = _describe(db)
             integrity = db.execute("PRAGMA integrity_check").fetchone()[0]
             if report["state"] == "UNKNOWN":
-                sha, counts = None, None
+                sha, counts, personality = None, None, None
             else:
                 sha, counts = logical_digest(db)
+                personality = _personality(db)
             db.execute("COMMIT")
         finally:
             db.close()
@@ -100,7 +121,7 @@ def inspect(path):
         code = "CONVERSATION_STORE_BUSY" if is_busy(exc) else "CONVERSATION_STORE_UNAVAILABLE"
         raise StorageError(code + ": database unreadable") from None
     return {"protocol": INSPECTION, **report, "integrity": "ok" if integrity == "ok" else "FAILED",
-            "logical_sha256": sha, "rows": counts, "supported_versions": sorted(cs.SCHEMAS),
+            "logical_sha256": sha, "rows": counts, "personality": personality, "supported_versions": sorted(cs.SCHEMAS),
             "migrated": False, "authorizes_execution": False}
 
 

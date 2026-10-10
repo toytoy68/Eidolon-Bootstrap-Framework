@@ -111,7 +111,7 @@ class ConversationAPI:
         # attempt_seconds=None: wall budget per attempt = the adapter's own timeout + 5 s, 120 s otherwise,
         # derived per turn from the model actually used (a profile may change between turns, G098).
         from .personality import load as load_personality
-        self.personality = load_personality(personality_mode, personality_file, str(self.conversations.directory),
+        self.personality = load_personality(personality_mode, personality_file, self.conversations,
                                              personality_sha256)
         self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds,
                                  media_proposals=media_worker is not None, personality=self.personality)
@@ -433,7 +433,7 @@ def main(argv=None):
         elif args.command == "backup":
             saved = conversation_storage.backup(database, args.output)
             print(json.dumps({key: saved[key] for key in ("version", "state", "logical_sha256", "file_sha256",
-                                                           "bytes", "rows")}))
+                                                           "bytes", "rows", "personality")}))
         elif args.command == "profile":
             print(json.dumps(_profile(store, args)))
         elif args.command == "media-link":

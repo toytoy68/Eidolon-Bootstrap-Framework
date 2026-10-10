@@ -108,6 +108,19 @@ Garanties testées :
   présent) : rien n'est migré, aucun fichier partiel ne reste ;
 - sauvegarde endommagée : détectée par `verify_backup`.
 
+**Personnalité du dialogue (C-070)** : la dernière version valide gardée par
+Core est une ligne `meta` (`personality_last_valid`) de cette base.
+
+- Elle fait donc partie de la sauvegarde, et elle **compte dans l'empreinte
+  logique**. Sans copie, l'empreinte ne change pas par rapport aux versions
+  précédentes.
+- `inspect-store` et `backup` indiquent :
+  - sa version et son empreinte dans `personality`, jamais son texte ;
+  - `null` si aucune copie n'existe ;
+  - `INVALID` si la copie est altérée.
+- Une restauration la ramène. Testé dans
+  [test_personality.py](../tests/test_personality.py) (`BackupTests`).
+
 **Retour arrière** : arrêter le serveur, puis remettre le fichier de
 sauvegarde à la place de `<état>/conversations/conversations.sqlite3` (droits
 0600). Les conversations écrites **après** la sauvegarde sont perdues. Il n'y

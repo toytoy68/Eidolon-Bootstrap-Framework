@@ -63,6 +63,8 @@ MEDIA_PROPOSALS_TABLE = ("CREATE TABLE media_proposals (proposal_id TEXT NOT NUL
 MIGRATIONS = {1: (ATTEMPTS_TABLE,), 2: (ATTACHMENTS_TABLE,), 3: (MEDIA_LINKS_TABLE,), 4: (MEDIA_LINK_JOB_ID,),
               5: (MEDIA_PROPOSALS_TABLE,)}
 RECEIPT_PROTOCOL = "eidolon-proposal-submission-receipt/1"
+# C-070: the last valid dialogue personality, a meta row like the profile selection (no schema change).
+PERSONALITY_KEY = "personality_last_valid"
 MAX_TURNS = 1000
 MAX_PAGE = 50
 MAX_CANDIDATES = 10
@@ -582,6 +584,23 @@ class ConversationStore:
                 or not isinstance(value["name"], str) or not cv.PROFILE_NAME.fullmatch(value["name"]):
             raise ConversationError("CONVERSATION_STORE_UNAVAILABLE: invalid profile selection")
         return value
+
+    def personality_copy(self):
+        """The last valid dialogue personality kept by Core (C-070), as stored text, or None.
+
+        Checked by personality.parse_copy: the store keeps it, it does not interpret it.
+        """
+        with self._db() as db:
+            row = db.execute("SELECT value FROM meta WHERE key=?", (PERSONALITY_KEY,)).fetchone()
+        return None if row is None else row[0]
+
+    def keep_personality_copy(self, body):
+        """Replace the kept personality copy, in one transaction (saved and restored with the store)."""
+        if not isinstance(body, str) or not 1 <= len(body.encode("utf-8")) <= 64 * 1024:
+            raise ConversationError("INVALID_CONVERSATION: invalid personality copy")
+        with self._db(write=True) as db:
+            db.execute("INSERT INTO meta VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                       (PERSONALITY_KEY, body))
 
     def missions_of(self, client_id, conversation_id):
         """Missions created from THIS client's submissions in THIS conversation: {mission_id: link} (G100)."""

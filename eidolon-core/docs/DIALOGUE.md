@@ -213,10 +213,15 @@ Décisions de GPT transmises par toytoy (C-MSG-C127), mises en œuvre ici.
   `personality` :
   - `{"version", "sha256"}` de cette valeur ;
   - `null` si aucune personnalité n'a pris part à la réponse.
-- **Dernière version valide conservée** : Core en garde une copie,
-  `<état>/conversations/personality-last-valid.json` (0600, écriture
-  atomique, empreinte revérifiée à la relecture). Elle est remplacée
-  seulement par un fichier valide.
+- **Dernière version valide conservée** : Core en garde une copie **dans le
+  dépôt des conversations**, sous la forme d'une ligne `meta`
+  `personality_last_valid`, comme le choix du profil (G098). Il n'y a ni
+  changement de schéma ni fichier à part.
+  - L'écriture se fait en une transaction SQLite, et l'empreinte est
+    revérifiée à chaque relecture.
+  - Seul un fichier valide la remplace.
+  - Elle est **sauvegardée, vérifiée et restaurée avec les conversations**
+    (G099, voir [CONVERSATION-STORE.md](CONVERSATION-STORE.md)).
 
 Serveur : `--conversations … --personality <fichier>
 [--personality-mode last-valid|required]`, ou `--personality-mode none`
@@ -248,7 +253,7 @@ redémarrage suivant.
 La page affiche « Personnalité : version … (empreinte) », « Personnalité :
 aucune chargée », ou rien pour une réponse plus ancienne que ce champ.
 
-Tests : [test_personality.py](../tests/test_personality.py) (24).
+Tests : [test_personality.py](../tests/test_personality.py) (28).
 
 ## Pannes : jamais de réponse devinée
 
@@ -296,8 +301,8 @@ Le parcours simulé, en un test :
   - l'effet réel d'une personnalité sur un petit modèle local (format JSON,
     aveu d'ignorance) n'est pas qualifié ; il faut le mesurer sur le banc
     avant activation ;
-  - la sauvegarde du dépôt des conversations (G099) ne copie pas
-    `personality-last-valid.json` : après une restauration, la copie revient
-    du fichier de l'opérateur au démarrage suivant ;
+  - une restauration rend la copie **de la date de la sauvegarde**. Au
+    démarrage suivant, un fichier opérateur valide la remplace, comme
+    d'habitude ;
   - changer la version exigée demande un redémarrage avec la nouvelle
     empreinte.

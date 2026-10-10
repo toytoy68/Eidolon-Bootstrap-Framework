@@ -15,7 +15,8 @@ One Personality is ONE coherent value: the text composed into the prompt and the
 reply are computed from the same validated object, never re-read separately.
 
 At start, the operator's private file is read once. A valid file becomes the personality in use and
-Core keeps its own copy (<state>/conversations/personality-last-valid.json). An invalid or unreadable
+Core keeps its own copy inside the conversation store (meta row "personality_last_valid"), so the
+G099 backup carries it and a restore brings it back. An invalid or unreadable
 file is refused and the last valid copy is used instead; Core never repairs or guesses a personality.
 Modes:
   none        no personality; replies say none is loaded;
@@ -35,7 +36,7 @@ from .contracts import ContractError, digest, encode
 
 SCHEMA = "eidolon-personality/1"
 COPY_SCHEMA = "eidolon-personality-copy/1"
-COPY_NAME = "personality-last-valid.json"
+MAX_COPY_BYTES = 64 * 1024
 MODES = ("none", "last-valid", "required")
 MAX_FILE_BYTES = 32 * 1024
 MAX_SOUL_CHARS = 16000
@@ -106,6 +107,15 @@ def build(value):
     return Personality(value["version"], sha, block)
 
 
+def _unique(pairs):
+    result = {}
+    for key, item in pairs:
+        if key in result:
+            raise ValueError("duplicate key")
+        result[key] = item
+    return result
+
+
 def _read_private(path, error):
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
@@ -122,15 +132,8 @@ def _read_private(path, error):
     if len(raw) > MAX_FILE_BYTES:
         raise ContractError(f"{error}: too large")
 
-    def unique(pairs):
-        result = {}
-        for key, item in pairs:
-            if key in result:
-                raise ValueError("duplicate key")
-            result[key] = item
-        return result
     try:
-        return json.loads(raw.decode("utf-8"), object_pairs_hook=unique)
+        return json.loads(raw.decode("utf-8"), object_pairs_hook=_unique)
     except (ValueError, UnicodeError, RecursionError):
         raise ContractError(f"{error}: invalid JSON") from None
 
@@ -139,52 +142,44 @@ def read_operator_file(path):
     return validate(_read_private(path, "PERSONALITY_FILE_REFUSED"))
 
 
-def read_copy(directory):
-    """The last valid copy, checked again (shape, sha256); None if there is none."""
-    path = os.path.join(directory, COPY_NAME)
-    if not os.path.lexists(path):
-        return None
-    value = _read_private(path, "PERSONALITY_COPY_INVALID")
+def parse_copy(body):
+    """A stored copy (text), checked again: exact shape, valid personality, matching sha256."""
+    if not isinstance(body, str) or len(body.encode("utf-8")) > MAX_COPY_BYTES:
+        raise ContractError("PERSONALITY_COPY_INVALID: bounded text required")
+    try:
+        value = json.loads(body, object_pairs_hook=_unique)
+    except (ValueError, RecursionError):
+        raise ContractError("PERSONALITY_COPY_INVALID: invalid JSON") from None
     if (not isinstance(value, dict) or set(value) != {"schema", "sha256", "personality"}
             or value["schema"] != COPY_SCHEMA):
         raise ContractError("PERSONALITY_COPY_INVALID: exact fields required")
-    personality = validate(value["personality"])
+    try:
+        personality = validate(value["personality"])
+    except ContractError:
+        raise ContractError("PERSONALITY_COPY_INVALID: invalid personality") from None
     if digest(personality) != value["sha256"]:
         raise ContractError("PERSONALITY_COPY_INVALID: sha256 mismatch")
     return personality
 
 
-def write_copy(directory, value):
-    """Atomic private copy: temporary file, fsync, rename, fsync of the directory."""
+def read_copy(conversations):
+    """The last valid copy kept in the conversation store, checked again; None if there is none."""
+    body = conversations.personality_copy()
+    return None if body is None else parse_copy(body)
+
+
+def write_copy(conversations, value):
+    """The copy lives in the conversation store (one SQLite transaction): it is saved, verified and
+    restored with the conversations (G099 backup), never as a separate file."""
     value = validate(value)
-    body = encode({"schema": COPY_SCHEMA, "sha256": digest(value), "personality": value}).encode("utf-8")
-    final, temporary = os.path.join(directory, COPY_NAME), os.path.join(directory, "." + COPY_NAME + ".tmp")
-    try:
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
-        try:
-            os.write(fd, body)
-            os.fsync(fd)
-        finally:
-            os.close(fd)
-        os.replace(temporary, final)
-        directory_fd = os.open(directory, os.O_RDONLY)
-        try:
-            os.fsync(directory_fd)
-        finally:
-            os.close(directory_fd)
-    except OSError:
-        raise ContractError("PERSONALITY_COPY_UNWRITABLE: the last valid copy cannot be kept") from None
+    conversations.keep_personality_copy(encode({"schema": COPY_SCHEMA, "sha256": digest(value), "personality": value}))
 
 
 SHA256 = re.compile(r"[0-9a-f]{64}")
 
 
-def load(mode, path, directory, expected_sha256=None):
-    """Decide the personality once, at start. directory: Core's conversations directory.
+def load(mode, path, conversations, expected_sha256=None):
+    """Decide the personality once, at start. conversations: the ConversationStore keeping the copy.
 
     expected_sha256 (required mode only): the exact version the operator demands.
 
@@ -217,14 +212,14 @@ def load(mode, path, directory, expected_sha256=None):
             else "PERSONALITY_FILE_REFUSED"
     else:
         try:
-            kept = read_copy(directory)
+            kept = read_copy(conversations)
         except ContractError:
             kept = None                     # a bad copy is replaced by the valid operator file
         if kept != value:
-            write_copy(directory, value)
+            write_copy(conversations, value)
         return state(build(value), "PERSONALITY_LOADED")
     try:
-        kept = read_copy(directory)
+        kept = read_copy(conversations)
     except ContractError:
         return state(None, refused + "+PERSONALITY_COPY_INVALID")
     if kept is None:
