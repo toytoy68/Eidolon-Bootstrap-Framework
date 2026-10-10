@@ -1,0 +1,198 @@
+{
+ "passed": 32,
+ "total": 32,
+ "checks": [
+  {
+   "step": "S2",
+   "check": "mission de démonstration avec rappel mémoire simulé",
+   "ok": true,
+   "detail": "['synthetic-note@1']"
+  },
+  {
+   "step": "S2",
+   "check": "jeton privé créé, jamais affiché",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S2",
+   "check": "profil de dialogue choisi explicitement",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S2",
+   "check": "dépôt des conversations à jour (lecture seule)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S2",
+   "check": "sauvegarde vérifiée avant ouverture",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S2",
+   "check": "sauvegarde signée par la clé du serveur, créée à la 1re sauvegarde",
+   "ok": true,
+   "detail": "CREATED"
+  },
+  {
+   "step": "S2",
+   "check": "signature vérifiée avec la clé publique copiée (backup-key)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S3",
+   "check": "diagnostic sans démarrage",
+   "ok": true,
+   "detail": "['[INFO] Serveur non démarré ; port, navigateur et tunnel SSH non testés. Ce diagnostic ne qualifie pas la bêta et ne remplace pas un audit de la base.']"
+  },
+  {
+   "step": "W",
+   "check": "tunnel vers un AUTRE port local : conversation refusée (Host)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "W",
+   "check": "page servie à travers le tunnel",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "W",
+   "check": "santé en lecture seule",
+   "ok": true,
+   "detail": "read_only"
+  },
+  {
+   "step": "W",
+   "check": "sans jeton : 401",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "W",
+   "check": "missions listées",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "step": "W",
+   "check": "mission lue à distance ; contenu mémoire non exposé par l'API de lecture",
+   "ok": true,
+   "detail": "recalled_text_statistics"
+  },
+  {
+   "step": "W",
+   "check": "jeton de lecture refusé sur la conversation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "C",
+   "check": "proposition, modèle nommé",
+   "ok": true,
+   "detail": "{'model_id': 'simulated-dialogue/1', 'profile': 'recette'}"
+  },
+  {
+   "step": "C",
+   "check": "mission créée, non lancée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "C",
+   "check": "annulation demandée, non confirmée",
+   "ok": true,
+   "detail": "request_received"
+  },
+  {
+   "step": "L",
+   "check": "coupure du tunnel : plus de réponse côté PC",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "L",
+   "check": "aucune mission changée par la coupure",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "L",
+   "check": "retour du tunnel : état neuf, mission opérateur visible",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "L",
+   "check": "seule la mission de l'opérateur s'ajoute",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S7",
+   "check": "arrêt du serveur sur SIGTERM",
+   "ok": true,
+   "detail": "-15"
+  },
+  {
+   "step": "R",
+   "check": "reçu ancien de validation retrouvé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "R",
+   "check": "reçu ancien d'annulation retrouvé, sans renvoi",
+   "ok": true,
+   "detail": "request_received"
+  },
+  {
+   "step": "R",
+   "check": "même reçu lisible par l'API de lecture",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "step": "R",
+   "check": "même validation renvoyée : même reçu, aucune 2e mission",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S8",
+   "check": "arrêt : port fermé",
+   "ok": true,
+   "detail": "-15"
+  },
+  {
+   "step": "S8",
+   "check": "bases intactes après arrêt",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "S8",
+   "check": "aucune clé ni jeton dans les sorties",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "R",
+   "check": "restauration sans --signer refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "step": "R",
+   "check": "sauvegarde signée restaurée ; base remplacée gardée ; dépôt à jour",
+   "ok": true,
+   "detail": "conversations.sqlite3.before-restore-20261010051031"
+  }
+ ]
+}

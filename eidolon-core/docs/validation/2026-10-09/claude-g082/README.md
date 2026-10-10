@@ -22,6 +22,33 @@ fichiers, `--verify` OK ([construction](bundle-build.json),
 | S7 redémarrage | arrêt sur SIGTERM ; après redémarrage, **reçus anciens** retrouvés (validation, annulation, aussi par l'API de lecture) ; même validation renvoyée = même reçu, aucune 2ᵉ mission |
 | S8 arrêt | port fermé ; bases intactes (`integrity_check`, dépôt `CURRENT`) ; ni clé ni jeton dans les sorties |
 
+## Rejeu du 10/10/2026 (après C-130 à C-135) : 32/32
+
+Demande de toytoy : rejouer la recette sur le paquet installé, après la
+signature obligatoire des sauvegardes.
+
+- **Paquet** : archive du commit `a480e4f262da5d657f0620d3f8269356fd1d283f`,
+  144 fichiers, `--verify` OK ([construction](bundle-build-c135.json),
+  [vérification](bundle-verify-c135.json)).
+- **Installation** : environnement neuf (`--no-index`, sans `PYTHONPATH`),
+  lancement depuis `/`. Le script de recette n'est pas dans l'archive : il a
+  été lancé depuis une copie à part, contre le module installé.
+- **Résultat** : [recipe_g082-rerun-c135.json](recipe_g082-rerun-c135.json),
+  **32/32**.
+  - Les **28 vérifications d'origine** passent toutes, sans changement.
+  - **4 vérifications ajoutées** passent aussi :
+
+| Étape | Ajout vérifié |
+| --- | --- |
+| S2 | la sauvegarde est **signée** par la clé du serveur, créée à cette première sauvegarde (`CREATED`) ; `.sig` présent |
+| S2 | `backup-key` donne la clé publique (sans clé privée) ; `verify-backup` avec cette copie → `VERIFIED`, même empreinte logique |
+| R | après l'arrêt (S8), `restore-backup` **sans** `--signer` est refusé (code 2) |
+| R | `restore-backup --signer` → `RESTORED`, `VERIFIED` ; base remplacée gardée (`conversations.sqlite3.before-restore-…`) ; dépôt `CURRENT` avec l'empreinte logique de la sauvegarde |
+
+Limites inchangées : conteneur seulement, relais TCP à la place de `ssh -L`,
+modèle et mémoire simulés. Le chiffrement `age` n'est pas exercé par cette
+recette ; il l'est par les tests unitaires.
+
 ## Deux constats pour la vraie bêta
 
 1. **Le tunnel doit garder le même numéro de port des deux côtés.** Les routes
