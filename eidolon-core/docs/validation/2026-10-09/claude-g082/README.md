@@ -49,6 +49,30 @@ Limites inchangées : conteneur seulement, relais TCP à la place de `ssh -L`,
 modèle et mémoire simulés. Le chiffrement `age` n'est pas exercé par cette
 recette ; il l'est par les tests unitaires.
 
+## Rejeu avec chiffrement age (10/10/2026) : 36/36
+
+Demande de toytoy : ajouter le chiffrement age à la recette.
+
+- **Paquet** : archive du commit `6fce66be05350c242edd83a856affef4f17ecd12`,
+  144 fichiers, `--verify` OK ([construction](bundle-build-age.json),
+  [vérification](bundle-verify-age.json)).
+- **Installation et lancement** : même procédure que le rejeu précédent.
+- **Résultat** : [recipe_g082-rerun-age.json](recipe_g082-rerun-age.json),
+  **36/36**, soit les 32 vérifications précédentes et 4 nouvelles.
+
+| Étape | Ajout vérifié |
+| --- | --- |
+| S2 | clé age créée côté « PC » (dossier séparé, 0600) ; le serveur ne reçoit que la clé **publique** ; `backup --encrypt-to` → fichier `age-encryption.org/v1`, **signé** (clé du serveur `EXISTING`), sans en-tête SQLite en clair ; à côté, seulement `.age` et `.age.sig` |
+| S2 | côté PC : `decrypt-backup --signer --identity` → `VERIFIED`, même empreinte logique, et empreinte du clair égale à celle annoncée au chiffrement |
+| R | `restore-backup` d'une sauvegarde chiffrée **sans** `--identity` → `RESTORE_REFUSED`, base inchangée |
+| R | `restore-backup --signer --identity` → `RESTORED`, `VERIFIED`, dépôt `CURRENT` avec l'empreinte de la sauvegarde chiffrée, aucun fichier temporaire restant |
+
+**Défaut trouvé et corrigé en préparant ce rejeu** (commit `6fce66b`) :
+- La base remplacée était gardée sous un nom daté **à la seconde**. Une
+  seconde restauration dans la même seconde était refusée (`RESTORE_REFUSED`).
+- Le nom porte maintenant les microsecondes.
+- Un test de non-régression échoue sans la correction et passe avec.
+
 ## Deux constats pour la vraie bêta
 
 1. **Le tunnel doit garder le même numéro de port des deux côtés.** Les routes
