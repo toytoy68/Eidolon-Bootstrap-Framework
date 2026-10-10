@@ -43,7 +43,7 @@ readonly COMPONENT_NEXT="02-nvidia"
 # Identité du nœud Eidolon
 # ----------------------------------------------------------
 
-readonly HOSTNAME="Eidolon-Core-Alpha"
+readonly HOSTNAME="${EIDOLON_HOSTNAME:-Eidolon-core}"
 readonly DOMAIN="local"
 
 readonly PRIMARY_USER="toytoy"
@@ -55,7 +55,7 @@ readonly LOCALE="fr_FR.UTF-8"
 # Configuration réseau (Profil Eidolon Lab)
 # ----------------------------------------------------------
 
-readonly STATIC_IP="192.168.1.135/24"
+readonly STATIC_IP="${EIDOLON_STATIC_IP:-192.168.1.101/24}"
 readonly GATEWAY="192.168.1.254"
 
 readonly DNS_SERVERS=(
