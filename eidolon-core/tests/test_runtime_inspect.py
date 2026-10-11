@@ -5,6 +5,7 @@
 # Description : Diagnostic sans mutation, observations de verrous et bornes
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
+from contextlib import closing
 from contextlib import redirect_stdout, redirect_stderr
 import fcntl
 import io
@@ -320,7 +321,7 @@ class RuntimeInspectionTests(unittest.TestCase):
         self.assertEqual(report["recorded_block"], mission["error"]["code"])
         self.assertIn("BLOCKED_REVIEW_MISSION", report["hints"])
         self.assertNotIn("message", report)
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("UPDATE missions SET body=json_set(body,'$.error.code','free text: secret') WHERE id=?",
                        (mission["id"],))
         report = self.inspect(mission)

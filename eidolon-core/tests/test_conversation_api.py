@@ -16,6 +16,7 @@ from pathlib import Path
 import secrets
 import shutil
 import socket
+from contextlib import closing
 import sqlite3
 import tempfile
 import threading
@@ -290,7 +291,7 @@ class CredentialStoreTests(unittest.TestCase):
         store = Store(self.root / "foreign")
         os.mkdir(Path(store.directory) / "conversations", 0o700)
         path = Path(store.directory) / "conversations" / "clients.sqlite3"
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
         os.chmod(path, 0o600)
         before = hashlib.sha256(path.read_bytes()).hexdigest()

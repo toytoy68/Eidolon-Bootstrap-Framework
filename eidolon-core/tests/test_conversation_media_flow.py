@@ -9,6 +9,7 @@
 import json
 import os
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 import tempfile
 import threading
@@ -203,10 +204,10 @@ class ResultTests(Base):
 class StorageTests(Base):
     def test_g099_r1_new_tables_are_part_of_the_logical_digest(self):
         path = self.conv.path
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             before = st.logical_digest(db)
         self.say("Crée une image : un phare")
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             after = st.logical_digest(db)
         self.assertNotEqual(before[0], after[0])
         self.assertEqual(after[1]["media_proposals"], 1)
@@ -219,7 +220,7 @@ class StorageTests(Base):
                               "request": prepare(cm.media_request(p)), "automatic_retry": False})
         link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p, job_dir=str(folder),
                  artifact_root=str(Path(self.tmp.name) / "media" / "artifacts"))
-        with sqlite3.connect(self.conv.path) as db:              # rewrite as an exact v4 store
+        with closing(sqlite3.connect(self.conv.path)) as db, db:              # rewrite as an exact v4 store
             db.executescript("""
                 CREATE TABLE old_links AS SELECT conversation_id, proposal_sha256, owner_client_id, proposal, job_dir,
                     collection_dir, artifact_root, linked_at FROM media_links;

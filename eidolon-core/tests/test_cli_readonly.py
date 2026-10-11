@@ -9,6 +9,7 @@ from contextlib import redirect_stdout, redirect_stderr
 import io
 import json
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 import tempfile
 import unittest
@@ -55,7 +56,7 @@ class ReadOnlyCLITests(unittest.TestCase):
                     self.assertEqual(self.files(), before)
 
     def test_old_schema_is_refused_without_migration(self):
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute('DROP TABLE command_receipts')
             db.execute('PRAGMA user_version=0')
         before = self.files()
@@ -68,7 +69,7 @@ class ReadOnlyCLITests(unittest.TestCase):
                 self.assertEqual(self.files(), before)
 
     def test_current_schema_missing_required_table_is_not_repaired(self):
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute('DROP TABLE command_receipts')
         before = self.files()
         for command in self.commands:

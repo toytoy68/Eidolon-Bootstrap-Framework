@@ -6,6 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
+from contextlib import closing
 import json
 from pathlib import Path
 import shutil
@@ -282,7 +283,7 @@ class LinkAndRouteTests(Base):
         p = self.proposal(); job = self.job(p); folder = self.write_job(job)
         link_job(self.conv, owner_client_id="pc", conversation_id=self.cid, proposal=p,
                  job_dir=str(folder), artifact_root=str(self.root))
-        with sqlite3.connect(self.conv.path) as db:
+        with closing(sqlite3.connect(self.conv.path)) as db, db:
             row = db.execute("SELECT conversation_id, proposal_sha256, owner_client_id, proposal, "
                              "job_dir, collection_dir, artifact_root, linked_at FROM media_links").fetchone()
             db.execute("DROP TABLE media_links"); db.execute("DROP TABLE IF EXISTS media_proposals")   # v6 (G122)

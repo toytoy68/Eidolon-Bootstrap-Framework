@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+from contextlib import closing
 import sqlite3
 import subprocess
 import sys
@@ -334,7 +335,7 @@ class StorageTests(Base):
         other = Store(Path(self.tmp.name) / "linked")
         os.mkdir(other.directory / "conversations", 0o700)
         external = Path(self.tmp.name) / "external.sqlite3"
-        with sqlite3.connect(external) as db:
+        with closing(sqlite3.connect(external)) as db, db:
             db.execute("CREATE TABLE unrelated (value TEXT)")
         before = hashlib.sha256(external.read_bytes()).hexdigest()
         (other.directory / "conversations" / "conversations.sqlite3").symlink_to(external)
@@ -347,7 +348,7 @@ class StorageTests(Base):
         other = Store(Path(self.tmp.name) / "foreign")
         os.mkdir(other.directory / "conversations", 0o700)
         path = other.directory / "conversations" / "conversations.sqlite3"
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute("CREATE TABLE unrelated (value TEXT)")
         os.chmod(path, 0o600)
         before = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -359,7 +360,7 @@ class StorageTests(Base):
         other = Store(Path(self.tmp.name) / "foreign-meta")
         os.mkdir(other.directory / "conversations", 0o700)
         path = other.directory / "conversations" / "conversations.sqlite3"
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute("CREATE TABLE unrelated (value TEXT)")
             db.execute("INSERT INTO unrelated VALUES ('synthetic unrelated content')")
             db.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
@@ -380,7 +381,7 @@ class StorageTests(Base):
             self.conv.open(client_id="pc", client_key="after-replacement")
         with self.assertRaisesRegex(ContractError, "STORE_CHANGED"):          # reopening: foreign identity
             cs.ConversationStore(self.runtime.store)
-        with sqlite3.connect(self.conv.path) as db:
+        with closing(sqlite3.connect(self.conv.path)) as db, db:
             self.assertEqual(db.execute("SELECT count(*) FROM conversations").fetchone()[0], 0)
 
     def test_g085_r3_reads_never_create_a_missing_file(self):
@@ -447,7 +448,7 @@ class MigrationTests(unittest.TestCase):
             folder = Path(store.directory) / "conversations"
             os.mkdir(folder, 0o700)
             path = folder / "conversations.sqlite3"
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.executescript(self.V1 + f"INSERT INTO meta VALUES ('schema','{cs.SCHEMA_V1}'),('store_id','{store_id}');")
             os.chmod(path, 0o600)
             before = hashlib.sha256(path.read_bytes()).hexdigest()

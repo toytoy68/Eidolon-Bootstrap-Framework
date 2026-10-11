@@ -1658,3 +1658,6 @@ les trois corrections G129. C122 dernière livraison Claude observée.
 Le nouveau bilan PROJECT-STATUS-2026-10-09 référencé par le README est ajouté
 à la liste documentaire optionnelle du builder. Modules, client, contrats et
 recettes installées inchangés. Vérification ciblée de l'archive après cet ajout.
+
+## Prise en charge Codex — 12/10/2026
+Base 91892a2. Validation VM et consolidation autorisées par toytoy. Fermeture SQLite explicite dans les tests, assertions conservées.

@@ -5,6 +5,7 @@
 # Description : Crashs réels, exclusion, revue et transactions de recherche
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
+from contextlib import closing
 from contextlib import contextmanager
 import json
 import os
@@ -199,7 +200,7 @@ class ResearchGuardTests(unittest.TestCase):
             db.execute("UPDATE runs SET body=?", (raw,))
         with self.assertRaisesRegex(GuardError, "INVALID_RESEARCH_RECORD"):
             self.guard.inspect()
-        with sqlite3.connect(self.guard.path) as db:
+        with closing(sqlite3.connect(self.guard.path)) as db, db:
             db.execute("UPDATE metadata SET value=?", ("g-" + "0"*32,))
         with self.assertRaisesRegex(GuardError, "RESEARCH_GUARD_CHANGED"):
             self.guard.inspect()

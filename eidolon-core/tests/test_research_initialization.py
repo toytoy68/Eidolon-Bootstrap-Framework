@@ -5,6 +5,7 @@
 # Description : Garde et pauses jamais recréées après une initialisation perdue
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
+from contextlib import closing
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import shutil
@@ -38,11 +39,11 @@ class ResearchInitializationTests(unittest.TestCase):
         self.fixture = self.store.directory / 'research-fixture'
 
     def binding(self):
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             return db.execute("SELECT value FROM sync_metadata WHERE key='research_fixture_guard_id'").fetchone()
 
     def unbind(self):
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("DELETE FROM sync_metadata WHERE key='research_fixture_guard_id'")
 
     def files(self):
@@ -133,7 +134,7 @@ class ResearchInitializationTests(unittest.TestCase):
         self.assertIsNone(self.binding())
 
     def test_bad_binding_is_refused_without_repair(self):
-        with sqlite3.connect(self.store.path) as db:
+        with closing(sqlite3.connect(self.store.path)) as db, db:
             db.execute("UPDATE sync_metadata SET value='PRIVATE_CANARY' WHERE key='research_fixture_guard_id'")
         before = self.files()
         with self.assertRaisesRegex(ContractError, '^INVALID_RESEARCH_BACKEND_BINDING$'):
@@ -165,7 +166,7 @@ class ResearchInitializationTests(unittest.TestCase):
             if mode == 'empty':
                 path.write_bytes(b'')
             else:
-                with sqlite3.connect(path) as db:
+                with closing(sqlite3.connect(path)) as db, db:
                     db.execute('DROP TABLE pause_events')
             before = self.files()
             with self.subTest(mode=mode), self.assertRaisesRegex(ContractError, 'UNSUPPORTED_PAUSE_DATABASE'):
@@ -174,7 +175,7 @@ class ResearchInitializationTests(unittest.TestCase):
 
     def test_executor_does_not_repair_pause_schema_after_runtime_construction(self):
         path = self.fixture / 'pauses.sqlite3'
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute('DROP TABLE pause_events')
         before = self.files()
         with self.assertRaisesRegex(ContractError, 'UNSUPPORTED_PAUSE_DATABASE'):

@@ -6,6 +6,7 @@
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
 
+from contextlib import closing
 import json
 import os
 from pathlib import Path
@@ -179,7 +180,7 @@ class ExecutionTests(Base):
 
 class MigrationTests(Base):
     def downgrade(self):
-        with sqlite3.connect(self.conv.path) as db:
+        with closing(sqlite3.connect(self.conv.path)) as db, db:
             db.executescript("DROP TABLE media_proposals; DROP TABLE media_links; DROP TABLE attachments; UPDATE meta SET value='eidolon-conversation-store/2' "
                              "WHERE key='schema'; PRAGMA user_version=2;")
 
@@ -193,14 +194,14 @@ class MigrationTests(Base):
                 raise Crash()
         with self.assertRaises(Crash):
             cs.ConversationStore(self.store, migrate=True, checkpoint=crash)
-        with sqlite3.connect(self.conv.path) as db:
+        with closing(sqlite3.connect(self.conv.path)) as db, db:
             self.assertEqual(db.execute("PRAGMA user_version").fetchone()[0], 2)      # rolled back, intact
         migrated = cs.ConversationStore(self.store, migrate=True)
         self.assertEqual(migrated.owner(self.a), "pc")
         migrated.attach(owner_client_id="pc", conversation_id=self.a, reference=self.ref, verify=self.verify)
 
     def test_future_version_is_refused(self):
-        with sqlite3.connect(self.conv.path) as db:
+        with closing(sqlite3.connect(self.conv.path)) as db, db:
             db.execute("PRAGMA user_version=9")
         with self.assertRaisesRegex(ContractError, "CONVERSATION_STORE_UNAVAILABLE"):
             cs.ConversationStore(self.store, migrate=True)

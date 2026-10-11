@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 import subprocess
 import sys
@@ -60,17 +61,17 @@ class Base(unittest.TestCase):
             create=lambda request, intent: self.runtime.store.create(request, self.runtime.configuration(), intent=intent))
         self.path = conv.path
         self.missions_db = Path(self.runtime.store.directory) / "missions.sqlite3"
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.executescript("DROP TABLE media_proposals; DROP TABLE media_links; DROP TABLE attempts; DROP TABLE attachments; UPDATE meta SET value='%s' "
                              "WHERE key='schema'; PRAGMA user_version=1;" % cs.SCHEMA_V1)
         self.core_before = self.core()
 
     def core(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             return {t: db.execute(f"SELECT * FROM {t} ORDER BY {o}").fetchall() for t, o in st.CORE_TABLES.items()}
 
     def version(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             return db.execute("PRAGMA user_version").fetchone()[0]
 
     def missions(self):
@@ -91,7 +92,7 @@ class InspectionTests(Base):
         self.assertEqual(sha(self.path), before)
 
     def test_future_version_is_refused_everywhere_and_nothing_is_written(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("PRAGMA user_version=9")
         before = sha(self.path)
         self.assertEqual(st.inspect(self.path)["state"], "FUTURE_VERSION")
@@ -163,7 +164,7 @@ class MigrationTests(Base):
 
         def backup_then_write(source, output):
             report = original(source, output)
-            with sqlite3.connect(self.path) as db:
+            with closing(sqlite3.connect(self.path)) as db, db:
                 db.execute("INSERT INTO conversations VALUES ('c-%s', 'pc', 'late', 'x', 0, NULL)" % ("9" * 32))
             return report
         with patch.object(st, "backup", backup_then_write):
@@ -211,13 +212,13 @@ class MediaLinkStorageTests(unittest.TestCase):
         self.conv = cs.ConversationStore(self.store, create=True)
         self.path = self.conv.path
         self.cid = self.conv.open(client_id="pc", client_key="media")["conversation_id"]
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("INSERT INTO media_links VALUES (?,?,?,?,?,?,?,?,?)",
                        (self.cid, "a" * 64, "pc", "{}", "/private/job", "/private/collection",
                         "/private/artifacts", "2026-10-09T00:00:00Z", "media-" + "1" * 32))
 
     def as_v4(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             row = db.execute("SELECT conversation_id, proposal_sha256, owner_client_id, proposal, "
                              "job_dir, collection_dir, artifact_root, linked_at FROM media_links").fetchone()
             db.execute("DROP TABLE media_links"); db.execute(cs.MEDIA_LINKS_TABLE)
@@ -229,7 +230,7 @@ class MediaLinkStorageTests(unittest.TestCase):
     def test_media_link_insert_changes_digest_and_is_counted(self):
         before = st.inspect(self.path)
         self.assertEqual(before["rows"]["media_links"], 1)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("DELETE FROM media_links")
         after = st.inspect(self.path)
         self.assertEqual(after["rows"]["media_links"], 0)
@@ -242,7 +243,7 @@ class MediaLinkStorageTests(unittest.TestCase):
                 before = st.inspect(self.path)
                 saved = st.backup(self.path, self.base / ("backup-%d.sqlite3" % index))
                 self.assertEqual(saved["logical_sha256"], before["logical_sha256"])
-                with sqlite3.connect(self.path) as db:
+                with closing(sqlite3.connect(self.path)) as db, db:
                     db.execute(f"UPDATE media_links SET {column}=?", ("changed-" + column,))
                 self.assertNotEqual(st.inspect(self.path)["logical_sha256"], before["logical_sha256"])
 
@@ -252,7 +253,7 @@ class MediaLinkStorageTests(unittest.TestCase):
 
         def backup_then_change_link(source, output):
             saved = original(source, output)
-            with sqlite3.connect(self.path) as db:
+            with closing(sqlite3.connect(self.path)) as db, db:
                 db.execute("UPDATE media_links SET job_dir='/private/replacement'")
             return saved
 
@@ -278,7 +279,7 @@ class MediaLinkStorageTests(unittest.TestCase):
         self.assertEqual(st.inspect(self.path), before)
         migrated = st.migrate_with_backup(self.store, self.base / "retry.sqlite3")
         self.assertEqual((migrated["from_version"], migrated["version"]), (4, cs.VERSION))
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertEqual(db.execute("SELECT job_id FROM media_links").fetchall(), [(None,)])
 
 
