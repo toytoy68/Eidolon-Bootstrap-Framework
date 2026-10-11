@@ -83,6 +83,7 @@ class OllamaConfig:
     max_response_bytes: int = 256_000
     max_output_bytes: int = 64_000    # same bound as contracts.parse_plan
     allow_non_loopback: bool = False  # operator decision, see OLLAMA-ADAPTER.md
+    think: bool | None = None
 
     def __post_init__(self):
         if (not isinstance(self.endpoint, str) or not 1 <= len(self.endpoint) <= 2000
@@ -124,6 +125,8 @@ class OllamaConfig:
             value = getattr(self, name)
             if type(value) is not int or not 1 <= value <= 4_000_000:
                 raise ContractError(f"{name} must be a positive bounded integer")
+        if self.think is not None and type(self.think) is not bool:
+            raise ContractError("think must be a boolean or None")
         if type(self.allow_non_loopback) is not bool:
             raise ContractError("allow_non_loopback must be a boolean")
 
@@ -132,7 +135,7 @@ class OllamaConfig:
 
     def manifest(self):
         """Canonical, secret-free description that identifies this controller."""
-        return {"adapter": "ollama-chat/4", "endpoint": self.endpoint.rstrip("/"), "model": self.model,
+        result = {"adapter": "ollama-chat/4", "endpoint": self.endpoint.rstrip("/"), "model": self.model,
                 "options": dict(sorted(self.options.items())), "format": digest(PLAN_SCHEMA),
                 "allow_non_loopback": self.allow_non_loopback,
                 "system_prompt": prompt_fingerprint(), "timeout_seconds": self.timeout_seconds,
@@ -140,6 +143,9 @@ class OllamaConfig:
                             "response_bytes": self.max_response_bytes,
                             "output_bytes": self.max_output_bytes,
                             "output_tokens": self.options.get("num_predict")}}
+        if self.think is not None:
+            result["think"] = self.think
+        return result
 
 
 class UrllibTransport:
@@ -198,9 +204,12 @@ class OllamaModel:
         return planner_messages(request, context)
 
     def propose(self, request, context):
-        body = encode({"model": self.config.model, "messages": self.messages(request, context),
-                       "stream": False, "format": PLAN_SCHEMA,
-                       "options": dict(sorted(self.config.options.items()))}).encode("utf-8")
+        payload = {"model": self.config.model, "messages": self.messages(request, context),
+                   "stream": False, "format": PLAN_SCHEMA,
+                   "options": dict(sorted(self.config.options.items()))}
+        if self.config.think is not None:
+            payload["think"] = self.config.think
+        body = encode(payload).encode("utf-8")
         if len(body) > self.config.max_prompt_bytes:
             raise OllamaError("PROMPT_TOO_LARGE", f"{len(body)} > {self.config.max_prompt_bytes} bytes")
         status, content_type, raw = self.transport.post(

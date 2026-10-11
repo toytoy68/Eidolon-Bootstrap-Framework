@@ -1,0 +1,18 @@
+# Eidolon Core Technologies (ECT) — restricted VM101 inference profile
+# Private key and pinned host key are external operator artifacts.
+[Unit]
+Description=Eidolon restricted GPU inference tunnel to VM101
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=toytoy
+Group=toytoy
+ExecStart=/usr/bin/ssh -F /dev/null -NT -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o ExitOnForwardFailure=yes -o ConnectTimeout=5 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o UserKnownHostsFile=/home/toytoy/.ssh/eidolon-gpu-known-hosts -i /home/toytoy/.ssh/eidolon-gpu-inference -L 127.0.0.1:11435:127.0.0.1:11434 toytoy@192.168.1.135
+Restart=always
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target

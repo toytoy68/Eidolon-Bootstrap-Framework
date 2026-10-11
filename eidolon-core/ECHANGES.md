@@ -1661,3 +1661,6 @@ recettes installées inchangés. Vérification ciblée de l'archive après cet a
 
 ## Prise en charge Codex — 12/10/2026
 Base 91892a2. Validation VM et consolidation autorisées par toytoy. Fermeture SQLite explicite dans les tests, assertions conservées.
+
+## Prise en charge Codex — GPU, 12/10/2026
+Base 4e50dcf. Accès VM101 confirmé et autorisé par toytoy. Lot : option think explicite du client Ollama et séparation question factuelle/action dans le prompt, tests et recette GPU.

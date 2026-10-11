@@ -51,7 +51,7 @@ def _decode(raw):
                 or any(ord(c) <= 32 or ord(c) == 127 for c in value["endpoint"])):
             raise ValueError()
         provider = value["provider"]
-        optional = OPTIONAL | ({"context_tokens", "api_key_env"} if provider == "llama-server" else set())
+        optional = OPTIONAL | ({"context_tokens", "api_key_env"} if provider == "llama-server" else {"think"})
         if not set(value) <= REQUIRED | optional:
             raise ValueError()
         url = urlsplit(value["endpoint"])
