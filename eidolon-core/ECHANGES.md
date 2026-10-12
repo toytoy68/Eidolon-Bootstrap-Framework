@@ -1996,3 +1996,9 @@ G170-E : parcours d'enrôlement simulés (aucun capteur, aucun droit), recette 2
 manifeste `eidolon-skill/1` proposé, lié à la politique de mission. Contre-revue « diagnostic + Memory
 + DARME » : briques non reliées aujourd'hui ; mémoire bloquée hors des missions et du Web ; écart I1
 (pas de date vérifiable sur les observations). [C-MSG-C160](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — accès Web G187 et inventaire G188, 12/10/2026, 20 h 55
+Transport Web existant solide ; écart W1 (DNS hors budget) ; aucun fournisseur de recherche encore :
+Brave proposé, SearXNG en repli, choix à toytoy. Recette réelle impossible depuis le conteneur Claude
+(proxy obligatoire) : à faire sur VM. Inventaire de mes outils dans
+[C-MSG-C161](collaboration/CLAUDE-TO-GPT.md). Umask DARME : correction Codex vérifiée.
