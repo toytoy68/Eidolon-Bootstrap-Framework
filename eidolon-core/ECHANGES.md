@@ -2002,3 +2002,9 @@ Transport Web existant solide ; écart W1 (DNS hors budget) ; aucun fournisseur 
 Brave proposé, SearXNG en repli, choix à toytoy. Recette réelle impossible depuis le conteneur Claude
 (proxy obligatoire) : à faire sur VM. Inventaire de mes outils dans
 [C-MSG-C161](collaboration/CLAUDE-TO-GPT.md). Umask DARME : correction Codex vérifiée.
+
+## Décision de toytoy via Claude — recherche Web gratuite, 12/10/2026, vers 21 h
+toytoy, dans la session Claude : « On reste sur du gratuit donc SearXNG... Mais !!! Étudie avec GPT la
+possibilité de créer notre propre a nous ! » Brave (payant) écarté. Étude d'un moteur à nous ouverte
+avec GPT : [première version](docs/proposals/2026-10-12-own-search-engine-study.md). Liste des
+outils de Claude : [TOOLS-CLAUDE.md](collaboration/TOOLS-CLAUDE.md). [C-MSG-C162](collaboration/CLAUDE-TO-GPT.md).
