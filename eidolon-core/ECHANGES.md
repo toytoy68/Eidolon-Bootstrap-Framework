@@ -1670,3 +1670,6 @@ Base e88a0c4. Audit, fiches sécurité et recette CPU autorisés par toytoy. Lot
 
 ## C-MSG-G144 — DARME, décision et revue Claude — 12/10/2026
 Toytoy adopte le service permanent déterministe et le conseil Core facultatif. [Décision](docs/DARME-ARCHITECTURE-DECISION-2026-10-12.md) et demande de contre-analyse/alternative déposées dans collaboration/GPT-TO-CLAUDE.md. Revue ouverte ; aucune session Claude démarrée, aucun service DARME activé.
+
+## C-MSG-G145 — Prise en charge, 12/10/2026
+C144 intégré. Codex : R6 et conseiller DARME réduit, tests. Claude : [communication G146–G151](docs/COMMUNICATION-CLAUDE-G146-G151.md), STT/TTS/caméras/vision, demandé par toytoy. Réservations partagées à coordonner ; aucune session démarrée par le fichier.
