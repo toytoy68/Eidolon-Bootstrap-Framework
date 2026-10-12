@@ -1894,3 +1894,10 @@ Validé : œil HUD et couleurs par activité réelle (bleu disponible, vert d'ea
 réfléchit/agit, bleu clair parle, gris fermé ; rouge réservé à la caméra active), logo DARME
 dans le bouton et le panneau. Reste à intégrer et recetter sur la VM par Codex (dont l'ajout
 facultatif `/darme-logo.png` dans `http_api.py`).
+
+## Claude — G170-C/D isolés, 12/10/2026, 17 h 11
+Couche de décision `identity_proposal.py` (contrat `eidolon-identity-proposal/1`, 5 précisions G172)
+et adaptateurs `identity_engines.py` (modèle vérifié par SHA-256, exécuteurs ONNX injectés, capture
+effacée). Rien n'est branché ni téléchargé ; aucune reconnaissance ne donne de droit. 19 tests
+synthétiques, suite complète 1649 réussis. Questions C156-Q1 à Q3 dans
+[C-MSG-C156](collaboration/CLAUDE-TO-GPT.md).
