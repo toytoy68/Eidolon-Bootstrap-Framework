@@ -1664,3 +1664,6 @@ Base 91892a2. Validation VM et consolidation autorisées par toytoy. Fermeture S
 
 ## Prise en charge Codex — GPU, 12/10/2026
 Base 4e50dcf. Accès VM101 confirmé et autorisé par toytoy. Lot : option think explicite du client Ollama et séparation question factuelle/action dans le prompt, tests et recette GPU.
+
+## Prise en charge Codex — Audit DARME, 12/10/2026
+Base e88a0c4. Audit, fiches sécurité et recette CPU autorisés par toytoy. Lot : darme.py, darme_store.py, tests de disponibilité et journal, catalogue et preuves. Aucun service de réponse réseau activé.

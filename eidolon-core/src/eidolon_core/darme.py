@@ -80,6 +80,7 @@ class DarmeMonitor:
         self.events = OrderedDict()
         self.acknowledged = set()
         self.intervention = False
+        self.ingestion_paused = False
 
     def health(self, source, healthy):
         if source not in self.sources or type(healthy) is not bool:
@@ -92,6 +93,7 @@ class DarmeMonitor:
         if event.event_id in self.events and self.events[event.event_id] != event:
             raise ValueError("event id collision")
         if event.event_id not in self.events and len(self.events) >= self.max_events:
+            self.ingestion_paused = True
             raise OverflowError("DARME_EVENT_CAPACITY: ingest paused; storage required")
         self.events[event.event_id] = event
 
@@ -104,7 +106,7 @@ class DarmeMonitor:
         active = [e for e in self.events.values()
                   if e.severity in (Severity.WARNING, Severity.CRITICAL)
                   and e.event_id not in self.acknowledged]
-        visibility = "complete" if all(self.healthy.values()) else "partial"
+        visibility = "complete" if all(self.healthy.values()) and not self.ingestion_paused else "partial"
         badge = (Badge.RED if active else Badge.BLUE if self.intervention else
                  Badge.GREY if visibility == "partial" else Badge.GOLD)
         return {
@@ -114,6 +116,7 @@ class DarmeMonitor:
             "sources": dict(sorted(self.healthy.items())),
             "unacknowledged_alerts": len(active),
             "intervention": self.intervention,
+            "ingestion_paused": self.ingestion_paused,
             "events": [
                 {"event_id": e.event_id, "source": e.source, "category": e.category,
                  "severity": e.severity.value, "observed_at": e.observed_at,

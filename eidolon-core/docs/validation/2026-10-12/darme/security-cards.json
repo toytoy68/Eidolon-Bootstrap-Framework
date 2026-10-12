@@ -1,0 +1,50 @@
+[
+  [
+    "prompt-injection",
+    "Injection de prompt dans les journaux",
+    "https://www.ncsc.gov.uk/blog-post/prompt-injection-is-not-sql-injection",
+    "Un texte de journal peut contenir des instructions hostiles. Le NCSC recommande de réduire l'impact par des garde-fous déterministes plutôt que de compter sur le seul modèle. DARME : traiter logs et souvenirs comme données non fiables ; aucune sortie LLM ne commande le pare-feu."
+  ],
+  [
+    "least-privilege",
+    "Privilèges minimaux et agent consultatif",
+    "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+    "OWASP recommande défense en profondeur, limitation des outils et permissions, contrôle des sorties et validation humaine des opérations sensibles. Politique DARME proposée : LLM sans shell, sans secret ni droit de blocage ; actions éventuelles via contrôleur séparé."
+  ],
+  [
+    "log-privacy",
+    "Confidentialité et intégrité des logs",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+    "OWASP conseille de ne pas enregistrer directement mots de passe, jetons d'accès et données sensibles ; nettoyer les entrées contre les injections de journaux, protéger accès et rétention. DARME : retirer secrets et borner les champs avant prompt et stockage."
+  ],
+  [
+    "suricata-eve",
+    "Suricata EVE : événements structurés",
+    "https://docs.suricata.io/en/latest/output/eve/eve-json-output.html",
+    "Suricata EVE fournit des événements JSON d'alertes et protocoles. Piste DARME : intégrer ces événements par collecteur séparé avec normalisation et limites. Une alerte n'est pas une preuve universelle de compromission ; le trafic absent du point de capture reste invisible."
+  ],
+  [
+    "crowdsec-separation",
+    "CrowdSec : détection séparée du blocage",
+    "https://docs.crowdsec.net/docs/intro/",
+    "CrowdSec sépare traitement des logs, API locale et composants de remédiation appelés bouncers. DARME : commencer par lecture et alertes ; ne pas installer un bouncer sans politique de récupération testée. Examiner le partage de signaux externes avant activation."
+  ],
+  [
+    "systemd-isolation",
+    "Isolation du service permanent",
+    "https://manpages.debian.org/trixie/systemd/systemd.exec.5.en.html",
+    "systemd documente NoNewPrivileges, ProtectSystem, PrivateTmp et les restrictions de capacités. DARME : compte dédié, écriture limitée à son journal, ressources bornées. Ces options doivent être testées ; elles ne prouvent pas seules une isolation complète ni une protection de tout le réseau."
+  ],
+  [
+    "authenticated-collectors",
+    "Authenticité des collecteurs et rejeu",
+    "https://docs.python.org/3/library/hmac.html",
+    "Python hmac fournit l'authentification de messages et compare_digest pour comparer les signatures. Piste DARME : signer événements et cœur de collecte, vérifier source, horodatage et identifiant anti-rejeu. HMAC seul ne garantit pas fraîcheur, déduplication ou sécurité de la clé."
+  ],
+  [
+    "telemetry-loss",
+    "Perte de télémétrie et capacité DARME",
+    "internal:eidolon_core/darme.py@e88a0c4",
+    "Politique DARME : aucune donnée n'est pas une preuve d'absence de menace. Une sonde périmée, une file saturée ou un stockage indisponible doit dégrader la visibilité ; le badge gris indique l'inconnu. Une alerte connue non acquittée reste rouge même si une sonde disparaît. LLM indisponible : conserver les règles et alertes."
+  ]
+]

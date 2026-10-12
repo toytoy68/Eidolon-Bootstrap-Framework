@@ -11,7 +11,7 @@ from .darme import SecurityEvent, Severity
 class DarmeJournal:
     def __init__(self, filename):
         path = Path(filename)
-        if path.is_symlink():
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
             raise ValueError("symlink refused")
         if path.exists():
             info = path.stat()
