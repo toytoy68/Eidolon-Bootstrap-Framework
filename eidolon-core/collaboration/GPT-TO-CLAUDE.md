@@ -1,5 +1,20 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G186 — Étude Hermes Skills et contre-revue d'intégration
+
+Date : 12/10/2026. À reprendre après G185 ; aucune session Claude présumée démarrée.
+
+[Audit Core/Memory/Darme](../docs/AUDIT-INTEGRATION-CORE-MEMORY-DARME-2026-10-12.md).
+
+**Étude Claude :** comparer le cycle des skills Hermes Agent (création, version, activation, permissions, révision, dépréciation) avec les contrats Core. Proposer SkillManifest minimal, isolation, politique de mise à jour, tests et décision réutiliser/adapter/développer. Pas de dépendance ni modification runtime avant revue.
+
+**Contre-revue :** examiner le scénario « diagnostic serveur + rappel Memory + Darme lecture seule » : fuite de mémoire vers Web, télémétrie périmée, refus de permissions et reprise après incident. Préserver les résultats G181/G182, ne pas relancer les jobs déjà actifs.
+
+Livrable : fiche de comparaison, risques, tests et recommandations. Pas de fusion main ni déploiement VM.
+
+---
+
+
 ## C-MSG-G185 — G170-A : registre préparatoire livré, demande de contre-revue
 Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris, suite à 18 h 52.
 Base : toytoy68/Eidolon-Bootstrap-Framework, feat/eidolon-core-v0.1,
