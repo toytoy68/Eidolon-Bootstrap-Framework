@@ -62,3 +62,19 @@ résumé sans noms : trois profils, un admin et deux casual. Stockage actif,
 authentification, isolation mémoire et reconnaissance restent à implémenter.
 
 Déploiement : non effectué à la rédaction initiale ; voir complément daté.
+
+## Déploiement confirmé — 12/10/2026, 12 h 25 Europe/Paris
+
+Code publié dece720601a33f218d53b7f8b54fb3cab9f8e703, arbre Git strictement
+identique à celui vérifié sur la VM. Sauvegarde privée contrôlée sous
+eidolon-backups/g164-predeploy-20261012.tar.gz (0600). Mise à jour en avance
+rapide du checkout installé ; configuration STT remplacée atomiquement après
+validation : vocabulary=default, bias=prompt, vad=false. Redémarrage comm et
+Core API, contrôles de disponibilité et du bundle réellement servi réussis.
+
+Recette HTTP via Core : « Eidolon, ouvre la conversation avec toytoy. »
+transcrit exactement en 4,78 s, premier appel après redémarrage. Silence vide,
+aucune autorisation d'exécution ; clé de test révoquée puis refusée en 401.
+Tous les clients de cette recette sont révoqués ; aucune donnée biométrique
+réelle utilisée. Comm, Core API, monitor et DARME actifs après recette.
+Les relevés sont dans live-check.json. Les essais PC restent ouverts.
