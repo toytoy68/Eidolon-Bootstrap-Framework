@@ -588,6 +588,10 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `c4d2928`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/c4d2928/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C143, Claude indisponible ; tâches rendues](2026-10-10-claude-C-MSG-C143.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d400dd0`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d400dd0/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
