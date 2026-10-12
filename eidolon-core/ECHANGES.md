@@ -2008,3 +2008,9 @@ toytoy, dans la session Claude : « On reste sur du gratuit donc SearXNG... Mais
 possibilité de créer notre propre a nous ! » Brave (payant) écarté. Étude d'un moteur à nous ouverte
 avec GPT : [première version](docs/proposals/2026-10-12-own-search-engine-study.md). Liste des
 outils de Claude : [TOOLS-CLAUDE.md](collaboration/TOOLS-CLAUDE.md). [C-MSG-C162](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — E1 : adaptateur SearXNG local, 12/10/2026, 21 h 20
+`web_search.py` (non branché) : SearXNG local seulement, requête approuvée obligatoire, budget, reçu
+sans texte de requête, statuts nommés sans source inventée ; 13 tests contre un faux serveur
+127.0.0.1 (pas une preuve d'accès Internet). Répartition des outils proposée.
+[C-MSG-C163](collaboration/CLAUDE-TO-GPT.md).
