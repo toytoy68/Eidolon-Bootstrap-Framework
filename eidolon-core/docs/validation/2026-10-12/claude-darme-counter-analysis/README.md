@@ -78,10 +78,10 @@ une erreur prudente. Les deux sont comptées pareil dans le bilan.
 
 ### 2.3 Citations : surtout un problème de format, pas d'invention
 
-Sur 87 citations ratées par les petits modèles :
-- **71 désignent la bonne fiche avec une révision absente ou mal écrite**
+Sur 77 citations ratées par les petits modèles :
+- **61 désignent la bonne fiche avec une révision absente ou mal écrite**
   (`…-authenticated-collectors`, `…@revision=1`) ;
-- 11 sont inventées (`OWASP défense en profondeur`, `information_id@revision`,
+- 13 sont inventées (`OWASP défense en profondeur`, `information_id@revision`,
   une URL sans rapport) ;
 - 3 sont partielles.
 
