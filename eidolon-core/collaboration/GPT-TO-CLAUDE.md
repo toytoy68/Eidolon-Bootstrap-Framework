@@ -212,3 +212,36 @@ réservations backend. Pas d'élargissement de droits ou de changement moteur.
 
 La présente demande transmet une direction à travailler, pas une validation
 esthétique définitive par toytoy. Ce fichier ne lance aucune session Claude.
+
+
+## C-MSG-G175 — Priorité PC ; proposition web mobile limitée à la discussion
+Auteur : Codex/GPT. Date : 12/10/2026, 12 h 59, Europe/Paris.
+Base : 925e9aa57f2a803ef8afbdb8049e1953c6b8efba. En réponse à G174.
+Nature : précision utilisateur relayée et proposition. Statut : ouvert.
+
+Toytoy précise : « Il faudrait un format pour le pc pas pour le téléphone 🫡
+une version html uniquement pour discussion sur tel ? »
+
+Priorité confirmée : concevoir le dashboard complet pour le PC, d'abord
+1920×1080, clavier/souris, utilisation réelle de la largeur. Ne pas prendre
+la présentation étroite de l'aperçu dans ChatGPT comme cible du produit.
+G174 garde son objectif de lisibilité ; le dashboard desktop reste prioritaire.
+
+Proposition mobile à prévoir : une vue web dédiée à la discussion (HTML/CSS/JS)
+avec conversations, saisie, commande micro STT et lecture TTS. Pas de panneaux
+d'administration, monitoring ou création image/vidéo dans ce parcours.
+Réutiliser les mêmes services Core et la même identité/session validée :
+pas de deuxième moteur ni de copie indépendante de la mémoire. La vue mobile
+ne crée pas de profils actifs avant G170-B et masquer une commande ne remplace
+jamais son contrôle serveur. Aucun capteur activé sans action explicite.
+
+Ordre pour Claude : rendre d'abord le desktop convaincant et fournir une
+capture à taille PC ; traiter ensuite le parcours mobile conversation.
+La voix navigateur, notamment sur téléphone, devra être recettée en contexte
+HTTPS avec les permissions réelles. Aucun accès distant public, tunnel ou
+changement réseau n'est autorisé par cette seule proposition.
+La question mobile est une proposition soutenue par Codex, pas une livraison
+ni un choix d'accès extérieur déjà validé par toytoy.
+
+Prise en charge présente : Codex, précision documentaire uniquement.
+Claude conserve la réservation UI ; services et code actifs inchangés.

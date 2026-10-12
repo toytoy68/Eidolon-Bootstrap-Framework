@@ -1724,3 +1724,9 @@ Codex prend revue/proposition, Claude garde l'UI et reçoit un cadrage de
 lisibilité dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md).
 Conversation centrale, détails à la demande, états authentiques préservés.
 Aucune nouvelle UI intégrée/déployée ; capture réelle VM encore à faire.
+
+
+## C-MSG-G175 — Desktop prioritaire, discussion mobile proposée
+Précision directe de toytoy : dashboard au format PC. Vue web mobile limitée
+à la discussion proposée ; même Core, sans administration. Cadrage transmis
+dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucune UI déployée.
