@@ -1,0 +1,79 @@
+{
+  "qwen3:0.6b": {
+    "strict_case_passes": 1,
+    "critical_preserved": 0,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> unknown": 2,
+      "warning -> unknown": 7,
+      "critical -> unknown": 3,
+      "unknown -> unknown": 4
+    }
+  },
+  "qwen3:1.7b": {
+    "strict_case_passes": 0,
+    "critical_preserved": 2,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> info": 2,
+      "warning -> info": 6,
+      "critical -> critical": 2,
+      "unknown -> unknown": 2,
+      "unknown -> info": 2,
+      "warning -> unknown": 1,
+      "critical -> unknown": 1
+    }
+  },
+  "qwen3.5:0.8b": {
+    "strict_case_passes": 1,
+    "critical_preserved": 0,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> info": 2,
+      "warning -> info": 6,
+      "critical -> info": 2,
+      "unknown -> info": 3,
+      "warning -> warning": 1,
+      "critical -> unknown": 1,
+      "unknown -> unknown": 1
+    }
+  },
+  "granite4:350m": {
+    "strict_case_passes": 0,
+    "critical_preserved": 0,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> info": 2,
+      "warning -> null": 3,
+      "critical -> unknown": 3,
+      "unknown -> unknown": 4,
+      "warning -> unknown": 2,
+      "warning -> warning": 2
+    }
+  },
+  "smollm2:1.7b": {
+    "strict_case_passes": 0,
+    "critical_preserved": 0,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> unknown": 2,
+      "warning -> unknown": 6,
+      "critical -> unknown": 3,
+      "unknown -> unknown": 4,
+      "warning -> null": 1
+    }
+  },
+  "gemma3:1b": {
+    "strict_case_passes": 1,
+    "critical_preserved": 1,
+    "critical_cases": 3,
+    "confusion_matrix": {
+      "info -> info": 2,
+      "warning -> warning": 7,
+      "critical -> known_alert": 2,
+      "unknown -> warning": 2,
+      "unknown -> unknown": 2,
+      "critical -> critical": 1
+    }
+  }
+}

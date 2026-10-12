@@ -43,3 +43,7 @@ CPU antérieur : Gemma3 4B, réponse mémoire en 244,10 s avec clarification ; Q
 - `2026-10-12/veille-models/results.json` : réponses, références et mesures détaillées.
 - `2026-10-12/veille-models/oversized-context-results.json` : résultats négatifs du premier protocole, interrompu après sept réponses Gemma.
 - `2026-10-12/veille-models/run.py` et `cases.json` : reproduction du protocole compact ; nécessite les fiches importées et les tunnels locaux.
+
+## DARME — recette CPU du 12 octobre 2026
+
+96 réponses CPU et 16 réponses témoin GPU supplémentaires sont consignées dans [le bilan DARME](2026-10-12/darme/REPORT.md), avec contexte, longueur, génération, délais, conformité du niveau, actions et citations. Aucun candidat CPU n'est qualifié pour le contrat complet en l'état. Ces mesures ne sont pas des scores de détection réseau réelle.

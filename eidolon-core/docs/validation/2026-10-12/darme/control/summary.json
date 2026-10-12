@@ -1,0 +1,18 @@
+{
+  "gemma4:12b": {
+    "cases": 16,
+    "triage_correct": 16,
+    "action_none": 16,
+    "unsupported_citation_cases": 0,
+    "mean_inference_s": 1.0151261596911354,
+    "max_inference_s": 1.2131702220067382,
+    "weighted_tokens_s": 126.85815590102386,
+    "mean_prompt_tokens": 458.8125,
+    "mean_response_tokens": 74.625,
+    "mean_response_chars": 130.5,
+    "truncated": 0,
+    "cpu_only": false,
+    "exact_expected_citations": 8,
+    "citation_cases": 14
+  }
+}

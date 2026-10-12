@@ -1,0 +1,10 @@
+{
+  "events": 1000,
+  "build_and_ingest_s": 0.005528592999326065,
+  "snapshot_s": 0.002272488985909149,
+  "journal_write_s": 0.06389495998155326,
+  "replay_s": 0.007697738998103887,
+  "journal_bytes": 192512,
+  "process_peak_rss_kib": 16676,
+  "no_enforcement": true
+}

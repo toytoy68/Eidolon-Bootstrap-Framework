@@ -1,0 +1,18 @@
+{
+  "corrected_sampler_samples": 24,
+  "sampled_max_total_ollama_rss_kib": 6840776,
+  "sampled_max_total_interval_cpu_percent": 201.0784613256938,
+  "resident_models_during_sampling": [
+    "gemma3:1b",
+    "smollm2:1.7b",
+    "qwen3.5:0.8b"
+  ],
+  "scope": "global Ollama server and all runner processes; not per-model RSS; sum may include shared pages",
+  "initial_sampler_invalid_for_runner_rss": true,
+  "initial_sampler_note": "ps -C ollama omitted differently named runner processes; initial RSS/CPU discarded",
+  "cpu_only_confirmed_all_candidates": true,
+  "gpu_util_percent_during_cpu_sample": 0,
+  "weights_added_bytes": 6538970742,
+  "disk_free_bytes_after_downloads": 103831887872,
+  "models_unloaded_after_recipe": true
+}

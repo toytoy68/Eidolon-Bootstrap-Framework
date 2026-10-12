@@ -1,0 +1,50 @@
+[
+  {
+    "model": "qwen3:0.6b",
+    "cold_s": 1.9988105570082553,
+    "load_s": 0.776470046,
+    "reported_size_bytes": 1018534295,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  },
+  {
+    "model": "qwen3:1.7b",
+    "cold_s": 2.2081771779921837,
+    "load_s": 1.279284195,
+    "reported_size_bytes": 1882424605,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  },
+  {
+    "model": "qwen3.5:0.8b",
+    "cold_s": 2.7382464239781257,
+    "load_s": 1.843538848,
+    "reported_size_bytes": 559394322,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  },
+  {
+    "model": "granite4:350m",
+    "cold_s": 1.196890014980454,
+    "load_s": 0.790974471,
+    "reported_size_bytes": 845791885,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  },
+  {
+    "model": "smollm2:1.7b",
+    "cold_s": 3.590932928986149,
+    "load_s": 1.529080641,
+    "reported_size_bytes": 2695448492,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  },
+  {
+    "model": "gemma3:1b",
+    "cold_s": 1.5358152849948965,
+    "load_s": 1.02540706,
+    "reported_size_bytes": 880541695,
+    "reported_vram_bytes": 0,
+    "cpu_only": true
+  }
+]

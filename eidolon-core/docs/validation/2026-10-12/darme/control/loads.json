@@ -1,0 +1,10 @@
+[
+  {
+    "model": "gemma4:12b",
+    "cold_s": 6.34019267099211,
+    "load_s": 6.153438736,
+    "reported_size_bytes": 1085926276,
+    "reported_vram_bytes": 1085926276,
+    "cpu_only": false
+  }
+]

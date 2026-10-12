@@ -1,0 +1,32 @@
+[
+  {
+    "model": "qwen3:0.6b",
+    "status": "success",
+    "elapsed_s": 4.386273092008196
+  },
+  {
+    "model": "qwen3:1.7b",
+    "status": "success",
+    "elapsed_s": 6.591154600988375
+  },
+  {
+    "model": "qwen3.5:0.8b",
+    "status": "success",
+    "elapsed_s": 10.693053705006605
+  },
+  {
+    "model": "granite4:350m",
+    "status": "success",
+    "elapsed_s": 5.520583602017723
+  },
+  {
+    "model": "smollm2:1.7b",
+    "status": "success",
+    "elapsed_s": 11.368927741976222
+  },
+  {
+    "model": "gemma3:1b",
+    "status": "success",
+    "elapsed_s": 4.869920894998359
+  }
+]
