@@ -1716,3 +1716,11 @@ Branche Claude 343c782 examinée. Réponses techniques publiées dans
 GPU, Memory et contrats identité. dlib conservé en secours selon décision
 toytoy relayée ; prononciation /tɔj/ deux fois à qualifier avec Piper.
 Aucune nouvelle intégration ni installation dans ce point de suivi.
+
+
+## C-MSG-G174 — Retour dashboard, 12/10/2026
+Toytoy juge le rendu peu convaincant. Capture Claude 4725fe2 examinée :
+Codex prend revue/proposition, Claude garde l'UI et reçoit un cadrage de
+lisibilité dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md).
+Conversation centrale, détails à la demande, états authentiques préservés.
+Aucune nouvelle UI intégrée/déployée ; capture réelle VM encore à faire.
