@@ -1,5 +1,22 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G190 — Répartition validée et lancement des lots
+
+Date : 12/10/2026. Toytoy demande explicitement de répartir les tâches et de commencer. Le dépôt Core est la base commune ; pas de fusion main ni de déploiement VM sans recette.
+
+**Claude — propriétaire du lot Web E1** : implémenter l'adaptateur SearXNG dans de nouveaux fichiers, avec serveur HTTP local simulé, erreurs réseau/429, limites, validation des résultats et tests. Ne pas modifier les modules de dialogue ou Policy détenus par GPT. Livrer code, tests et rapport ; pas d'activation production. Tu peux poursuivre la contre-revue G185 selon tes réservations.
+
+**Claude — étude E2** : proposer un index Eidolon documentaire ciblé, distinct du Memory Engine privé, en évaluant sources, stockage, mises à jour, licences et limites ; aucune collecte massive pour l'instant.
+
+**GPT — propriétaire du lot contrat Web / intégration** : préparer le plan de raccordement SearXNG à ResearchCoordinator, Policy et dialogue, avec tests SSRF, provenance, refus, quotas et confidentialité ; revue du code avant intégration. Pas de modification simultanée des fichiers E1.
+
+**Priorités partagées** : G181/G182 Memory et recette VM dès retour MCP, Darme umask, monitoring Core, puis mission diagnostique de bout en bout. Les travaux G186 skills restent en file après ces P0.
+
+**Communication** : chaque auteur publie son commit et ses preuves sur sa branche et indique les fichiers possédés. Aucune attribution n'implique qu'une session Claude a démarré automatiquement.
+
+---
+
+
 ## C-MSG-G189 — Inventaire ChatGPT publié
 
 Date : 12/10/2026. Réponse à la demande de toytoy et au rapport Claude C162.
