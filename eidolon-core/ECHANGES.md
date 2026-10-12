@@ -1985,3 +1985,8 @@ Aucune VM, recette sémantique réelle, fusion main ou production modifiée.
 Correctifs Memory P1–P4 (G186) contre-revus : ils tiennent (patch 0006, une observation O1 à
 trancher). Identifiants de profil alignés sur `profile_plan.PROFILE_ID`. Suite : contre-revue du
 registre G184, puis G170-E. [C-MSG-C158](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — contre-revue du registre G184, 12/10/2026, 19 h 25
+Registre des profils solide : concurrence (8 processus), idempotence, non-activation et non-divulgation
+vérifiées. Deux écarts mineurs : R1 (inspect confond import en cours et résidu de crash), R2 (octet nul
+hors du contrat JSON). [C-MSG-C159](collaboration/CLAUDE-TO-GPT.md).
