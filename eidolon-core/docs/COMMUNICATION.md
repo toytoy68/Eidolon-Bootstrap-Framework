@@ -268,8 +268,58 @@ ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 -L 127.0.0.1:8766:127.0.0.1:8766 …
 | Point | Qui | Statut |
 | --- | --- | --- |
 | Inventaire des machines (§1.2) | toytoy ou GPT | à faire |
-| Installation des moteurs sur la VM, mesures réelles : premier son, durée de transcription, RAM, charge processeur | toytoy ou GPT, avec ce guide | à faire |
-| Câblage de la page (`build.js`, `index.html`, `main.js`) | Claude, après accord de GPT | en attente |
+| Installation des moteurs sur la VM, mesures réelles : premier son, durée de transcription, RAM, charge processeur | GPT | fait (G162) |
+| Câblage de la page (`build.js`, `index.html`, `main.js`) | Claude | fait (G155) |
 | Essai Windows : micro et caméra réels, refus de permission, webcam occupée, branchement à chaud, échelle 125/150 % | toytoy | à faire |
-| Recette audio de référence licite (avec texte attendu), silence, bruit, nombres, noms Eidolon | après installation | à faire |
+| Recette audio de référence licite (avec texte attendu), silence, bruit, nombres, noms Eidolon | banc prêt (§6), exécution VM par Codex | en cours (G164) |
 | Identification nominative facultative | décision de toytoy, plus tard | hors lot |
+
+## 6. Vocabulaire contrôlé et garde-fous de la dictée (G164)
+
+**Constat réel** (GPT, [audio-real.json](validation/2026-10-12/dashboard-vm/audio-real.json)) :
+avec Whisper small, la voix synthétique Siwis donne « toi-toi » pour toytoy
+et « et de longs » pour Eidolon. Les nombres 24 et 110 sont justes. Taux
+d'erreur sur les mots de cette phrase : 14,8 % (calcul du banc ci-dessous).
+
+**Ce qui est ajouté dans `comm_stt.py`**, réglable dans `comm.json`,
+section `stt` :
+
+| Réglage | Effet | Par défaut |
+| --- | --- | --- |
+| `vocabulary` | `"default"` ou `{"terms": [...], "replacements": {...}}` | absent : comportement actuel |
+| `bias` | `none`, `prompt` (amorce « Glossaire : Eidolon, toytoy. »), `hotwords` | `none` |
+| `silence_rms` | sous ce niveau, l'audio n'est **pas envoyé** au modèle : texte vide | 200 |
+| `vad` | filtre de voix de faster-whisper | `false` |
+
+**Garde-fous**, toujours actifs :
+- **Silence** : jamais transmis au modèle (`"silence": true`).
+- **Segment sans parole** : écarté selon la règle de Whisper
+  (`no_speech_prob` > 0,6 **et** `avg_logprob` < −1).
+- **Textes inventés connus** sur bruit (« Sous-titres réalisés par… »,
+  « Merci d'avoir regardé… », Amara.org) : écartés.
+- **Écho de l'amorce** : écarté s'il contient « Glossaire », ou s'il ne
+  contient que les mots du glossaire alors que le modèle doute de la
+  parole. « Eidolon. » dit clairement est **gardé**.
+- Le nombre de segments écartés est renvoyé (`dropped_segments`).
+
+**Remplacements** :
+- seulement des formes **sans ambiguïté**, en mots entiers
+  (« toi-toi », « toy toy », « Eidolone »…) ;
+- « toi, toi seul » ou « et de longs essais » ne sont pas touchés ;
+- chaque remplacement est renvoyé à la page (`corrections`), et le texte
+  reste modifiable avant l'envoi.
+
+**À mesurer avant de choisir** :
+[bench_stt_vocabulary.py](validation/2026-10-12/claude-g164/bench_stt_vocabulary.py)
+compare six réglages sur le **même** audio :
+- les réglages : `baseline`, `guards`, `replace`, `prompt`, `hotwords`,
+  `prompt+vad` ;
+- l'audio : 8 phrases Piper, dont 4 avec bruit ajouté, plus 4 cas de
+  silence ou de bruit seul.
+Codex le lance sur la VM.
+
+**Règle de choix** : un réglage n'est retenu que si :
+1. le silence et le bruit restent **vides** ;
+2. le taux d'erreur des phrases **sans nom** ne se dégrade pas.
+La voix est synthétique : ce n'est pas une précision sur une voix humaine,
+qui reste à vérifier sur ton PC.
