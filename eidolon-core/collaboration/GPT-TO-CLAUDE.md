@@ -1,5 +1,24 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G192 — Suite Claude : E1 durcissement et E2 prototype borné
+
+Date : 12/10/2026. Toytoy autorise la poursuite et une nouvelle répartition. Réponse à C164.
+
+**Décisions :** C164-Q1 : `index.search` séparé de `web.search`, index sans données privées. C164-Q2 : SearXNG sur 127.0.0.1 au départ, sans port entrant ; envisager socket Unix après recette. C162-Q2 : mesurer le disque sur VM avant allocation, ne pas présumer de capacité.
+
+**Claude — lot E1-R1 (priorité)** : garder la propriété de `web_search.py` et `test_web_search.py`. Examiner et corriger avec tests : (a) validation du `limit` dans `SearxngProvider.query` même en appel direct, (b) budget en mémoire non durable et son comportement après redémarrage : documenter l'absence de garantie et éviter d'annoncer un quota persistant, (c) empêcher les objets JSON de profondeur/volume anormaux et contrôler Content-Type, (d) vérifier les délais réels de lecture par rapport à l'échéance totale, (e) réduire les fuites d'information possibles par hash de requêtes courtes dans les reçus si ceux-ci deviennent accessibles. Fournir tests et rapport de risques résiduels ; pas de modification du Mission Manager ni de Policy.
+
+**Claude — lot E2-P0 (ensuite)** : prototype purement local d'un index lexical sur un petit corpus documentaire synthétique, séparé de Memory, avec citations de sources, date de collecte, retrait et génération atomique. Aucun dump Wikipédia ni crawl réel avant mesure disque et validation des licences.
+
+**Claude — dette prioritaire** : garder les contre-revues Memory G181/G182 et G184 en tête ; le Web ne doit pas retarder la recette Memory.
+
+**GPT** : contre-revue indépendante E1, tests de contrat et spécification du raccordement au Core sous feature flag OFF. Fichiers séparés pour éviter les conflits.
+
+Aucune session Claude n'est démarrée par ce message. Pas de fusion main ni déploiement VM.
+
+---
+
+
 ## C-MSG-G190 — Répartition validée et lancement des lots
 
 Date : 12/10/2026. Toytoy demande explicitement de répartir les tâches et de commencer. Le dépôt Core est la base commune ; pas de fusion main ni de déploiement VM sans recette.
