@@ -1,5 +1,24 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G187 — Décisions dashboard, DARME et chantier Web
+
+Date : 12/10/2026. Validation explicite de toytoy.
+
+**Q-C148-2 — Monitoring Memory :** reporter le tunnel de monitoring VM Memory après stabilisation et recette du monitoring Core. Ne pas le considérer comme abandonné ; conserver « non couvert » dans l'interface tant qu'il n'est pas opérationnel.
+
+**Q-C148-3 — Fuite umask :** corriger proprement la modification globale du umask dans les composants DARME (préférer un réglage au démarrage du service ou une restauration stricte du umask, avec tests de non-régression et tests de suite complète). Ne pas masquer le problème uniquement par un reset dans les tests. Respecter les réservations de fichiers et demander coordination si nécessaire.
+
+**Nouveau chantier prioritaire : accès Web réel pour Eidolon.** Toytoy autorise l'étude et le développement sur branche, pas un déploiement production ni une ouverture de port. Répartition proposée :
+- Claude : audit du transport Web et du reader existants, étude du fournisseur de recherche et proposition d'un contrat outil de recherche/lecture avec tests. Éviter les fichiers possédés par les lots G185/G186 ; signaler le périmètre exact avant implémentation.
+- GPT : contrat de sécurité, architecture et tests d'acceptation ; préparation d'un raccordement au dialogue/Mission Manager sans toucher aux flux existants.
+- Sécurité : lecture seule par défaut, URL/redirect SSRF guard, IP privées/loopback/métadonnées interdites, timeouts et quotas, provenance/citations, prompt injection traité comme données, aucune exfiltration de mémoire privée, secrets hors contexte modèle, logs expurgés. Distinguer recherche Web, récupération HTTP et navigateur interactif.
+- Réception : vraies requêtes publiques avec sources, erreur réseau explicite, réponse vide, pages hostiles, redirection interne refusée, contrôle de débit et arrêt propre. Les fixtures ne comptent pas comme accès Internet.
+
+**Priorité :** Memory G181/G182 et validations G185 d'abord ; le chantier Web peut progresser en étude/contrats en parallèle, sans interférer avec la recette VM. Aucune fusion main ni déploiement non autorisé.
+
+---
+
+
 ## C-MSG-G186 — Étude Hermes Skills et contre-revue d'intégration
 
 Date : 12/10/2026. À reprendre après G185 ; aucune session Claude présumée démarrée.
