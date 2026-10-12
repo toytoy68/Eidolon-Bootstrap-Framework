@@ -55,7 +55,7 @@
   {
    "check": "1280 : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
    "ok": true,
-   "detail": "n installéMesures il y a 0 s.CPUindisponible (premier sondage)Charge 1/5/15 min1.69 / 0.83 / 0.48Mémoire711.6 Mio utilisés sur 15.7 GioSwapaucunDisque du journal19.9 Gio libres sur 252.0 GioGPUnon son"
+   "detail": ": non installéMesures il y a 0 s.CPUindisponible (premier sondage)Charge 1/5/15 min2.6 / 1 / 0.37Mémoire730.9 Mio utilisés sur 15.7 GioSwapaucunDisque du journal19.9 Gio libres sur 252.0 GioGPUnon son"
   },
   {
    "check": "1280 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
@@ -140,7 +140,7 @@
   {
    "check": "360 : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
    "ok": true,
-   "detail": "-telemetry : non installéMesures il y a 0 s.CPU6.7 % de 4 vCPUCharge 1/5/15 min1.57 / 0.83 / 0.49Mémoire712.3 Mio utilisés sur 15.7 GioSwapaucunDisque du journal19.9 Gio libres sur 252.0 GioGPUnon son"
+   "detail": "y-telemetry : non installéMesures il y a 0 s.CPU7.8 % de 4 vCPUCharge 1/5/15 min2.2 / 0.97 / 0.36Mémoire711.8 Mio utilisés sur 15.7 GioSwapaucunDisque du journal19.9 Gio libres sur 252.0 GioGPUnon son"
   },
   {
    "check": "360 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
@@ -210,27 +210,27 @@
   {
    "check": "2560x1440 à 100 % : aucun débordement, aucune erreur",
    "ok": true,
-   "detail": "{\"overflow\":0,\"conversation\":[228,84,2312],\"monitor\":[2097,130,446],\"missions\":[228,1495,918]}"
+   "detail": "{\"overflow\":0,\"conversation\":[228,101,2312],\"monitor\":[2097,246,446],\"missions\":[228,1512,918]}"
   },
   {
    "check": "2560x1440 à 125 % : aucun débordement, aucune erreur",
    "ok": true,
-   "detail": "{\"overflow\":0,\"conversation\":[228,84,1800],\"monitor\":[1585,130,446],\"missions\":[228,1495,714]}"
+   "detail": "{\"overflow\":0,\"conversation\":[228,101,1800],\"monitor\":[1585,246,446],\"missions\":[228,1512,714]}"
   },
   {
    "check": "2560x1440 à 150 % : aucun débordement, aucune erreur",
    "ok": true,
-   "detail": "{\"overflow\":0,\"conversation\":[228,84,1459],\"monitor\":[1244,130,446],\"missions\":[228,1559,577]}"
+   "detail": "{\"overflow\":0,\"conversation\":[228,101,1459],\"monitor\":[1244,246,446],\"missions\":[228,1576,577]}"
   },
   {
    "check": "1920x1080 à 100 % (Edge agrandi) : aucun débordement, aucune erreur",
    "ok": true,
-   "detail": "{\"overflow\":0,\"conversation\":[228,84,1672],\"monitor\":[1457,130,446],\"missions\":[228,1535,662]}"
+   "detail": "{\"overflow\":0,\"conversation\":[228,101,1672],\"monitor\":[1457,246,446],\"missions\":[228,1552,662]}"
   },
   {
    "check": "1920x1080 à 125 % (Edge agrandi) : aucun débordement, aucune erreur",
    "ok": true,
-   "detail": "{\"overflow\":0,\"conversation\":[228,84,1288],\"monitor\":[1073,130,446],\"missions\":[228,1599,509]}"
+   "detail": "{\"overflow\":0,\"conversation\":[228,101,1288],\"monitor\":[1073,246,446],\"missions\":[228,1616,509]}"
   }
  ]
 }

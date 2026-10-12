@@ -308,18 +308,41 @@ input[type="password"] {
   background: var(--panel-2); color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
   padding: .35rem .9rem .35rem .55rem; max-width: 22rem;
 }
-.eye-icon { width: 36px; height: 22px; flex: 0 0 auto; }
-.eye-lid { fill: none; stroke: var(--accent); stroke-width: 2; }
-.eye-iris { fill: none; stroke: var(--accent); stroke-width: 2; }
-.eye-pupil { fill: var(--accent); }
+/* G176, retour de toytoy : œil « HUD » (anneaux, graduations, arcs, iris strié, lueur).
+   La couleur dit ce que fait Eidolon ; le ROUGE est réservé à la caméra active ; l'animation n'existe
+   que pendant une activité réelle et disparaît avec prefers-reduced-motion. */
+.eye { --eye-color: #3ec9ff; --eye-deep: #0b4f8a; }
+.eye[data-activity="closed"] { --eye-color: #6f8aa3; --eye-deep: #24384d; }
+.eye[data-activity="listening"] { --eye-color: #3effc0; --eye-deep: #0b6b55; }   /* écoute : vert d'eau */
+.eye[data-activity="thinking"] { --eye-color: #b48cff; --eye-deep: #4b2a8f; }    /* réfléchit / agit : violet */
+.eye[data-activity="speaking"] { --eye-color: #9fe6ff; --eye-deep: #1a7fd1; }    /* parle : bleu clair vif */
+.eye-icon { width: 52px; height: 52px; flex: 0 0 auto; overflow: visible;
+  filter: drop-shadow(0 0 4px var(--eye-color)); }
+.eye-ring-outer { fill: none; stroke: var(--eye-color); stroke-width: 2.5; stroke-dasharray: 18 4 6 4 30 4 10 4 20 0; opacity: .9; }
+.eye-ticks { fill: none; stroke: var(--eye-color); stroke-width: 5; stroke-dasharray: .35 .65; opacity: .55; }
+.eye-arcs path, .eye-brackets { fill: none; stroke: var(--eye-color); stroke-width: 3; stroke-linecap: round; }
+.eye-brackets { stroke-width: 2; opacity: .7; }
+.eye-iris { stroke: var(--eye-color); stroke-width: 1.5; }
+.eye-striae { fill: none; stroke: var(--eye-color); stroke-width: 9; stroke-dasharray: .25 .75; opacity: .55; }
+.eye-pupil { fill: #020812; stroke: var(--eye-color); stroke-width: 1; }
+.eye-glint { fill: #e9f7ff; opacity: .85; }
+.eye-stop-core { stop-color: #03101f; }
+.eye-stop-deep { stop-color: var(--eye-deep); }
+.eye-stop-edge { stop-color: var(--eye-color); }
+.eye-hud, .eye-arcs, .eye-ticks, .eye-striae { transform-box: view-box; transform-origin: 50px 50px; }
+.eye[data-activity="thinking"] .eye-hud { animation: eye-spin 6s linear infinite; }
+.eye[data-activity="thinking"] .eye-arcs { animation: eye-spin 3s linear infinite reverse; }
+.eye[data-activity="speaking"] .eye-striae, .eye[data-activity="speaking"] .eye-iris { animation: eye-talk .9s ease-in-out infinite; }
+.eye[data-activity="listening"] .eye-ticks { animation: eye-listen 1.2s ease-in-out infinite; }
+@keyframes eye-spin { to { transform: rotate(360deg); } }
+@keyframes eye-talk { 50% { opacity: .35; } }
+@keyframes eye-listen { 50% { opacity: 1; stroke-width: 7; } }
+/* Camera really capturing: red outer ring AND the words "caméra active"; never shown for mere activity. */
+.eye.eye-camera { border-color: var(--bad); }
+.eye.eye-camera .eye-ring-outer { stroke: #ff5a4f; stroke-dasharray: none; stroke-width: 3.5; }
 .eye-text, .darme-state { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
 .eye-name { font-weight: 700; }
 .eye-state { color: var(--muted); font-size: .82rem; overflow-wrap: anywhere; }
-.eye.eye-busy .eye-pupil { animation: eye-think 1.6s ease-in-out infinite; }
-@keyframes eye-think { 50% { opacity: .35; } }
-/* Camera really capturing: red iris AND the words "caméra active"; never shown for mere activity. */
-.eye.eye-camera { border-color: var(--bad); }
-.eye.eye-camera .eye-iris { stroke: var(--bad); stroke-width: 3; }
 .darme-icon { width: 22px; height: 26px; flex: 0 0 auto; }
 .darme-icon path:first-child { fill: none; stroke: currentColor; stroke-width: 2; }
 .darme-mark { fill: none; stroke: currentColor; stroke-width: 2; opacity: 0; }
@@ -376,3 +399,8 @@ input[type="password"] {
 /* The drawer already says "Voix et caméra": the block title stays for screen readers only. */
 .drawer #comm-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 1400px) { .brand-title { display: none; } }
+/* Logo DARME (toytoy) : identité seulement ; le mot d'état reste toujours écrit à côté. */
+.darme-logo { height: 34px; width: auto; flex: 0 0 auto; }
+.darme.has-logo .darme-icon { display: none; }
+.darme-emblem { height: 100px; width: auto; margin-right: auto; }
+.drawer-close { align-items: center; gap: 1rem; }

@@ -23,7 +23,8 @@
     var activity = phase !== "open" ? "fermée" : mic === "capturing" ? "écoute" :
       (pending || mic === "processing" || cam === "processing") ? "réfléchit" : speaker === "processing" ? "parle" : "disponible";
     var camera = CAMERA[cam] || "éteinte";
-    return { activity: activity, camera: camera, cameraActive: cam === "capturing",
+    var key = { "fermée": "closed", "écoute": "listening", "réfléchit": "thinking", "parle": "speaking" }[activity] || "idle";
+    return { activity: activity, key: key, camera: camera, cameraActive: cam === "capturing",
       busy: activity === "écoute" || activity === "réfléchit" || activity === "parle",
       text: (phase === "open" ? "Eidolon " + activity : "Conversation fermée") + " · caméra " + camera };
   }
@@ -92,6 +93,7 @@
       var view = eyeState(state);
       $("eye-state").textContent = view.text;
       eye.classList.toggle("eye-busy", view.busy);
+      eye.setAttribute("data-activity", view.key);         // colour/animation only for a real activity
       eye.classList.toggle("eye-camera", view.cameraActive);
       eye.setAttribute("aria-label", "Activité d'Eidolon et caméra : " + view.text + ". Ouvrir la voix et la caméra.");
       return view;
@@ -103,6 +105,16 @@
       darme.setAttribute("aria-label", view.text + ". Ouvrir le détail des machines.");
       return view;
     }
+    // DARME logo (optional asset): shown only once really decoded, the shield and the words stay otherwise.
+    [["darme-logo", function () { darme.classList.add("has-logo"); }], ["darme-emblem", null]].forEach(function (item) {
+      var img = $(item[0]);
+      if (!img || typeof img.decode !== "function") return;
+      img.decode().then(function () {
+        if (!img.naturalWidth) return;
+        img.hidden = false;
+        if (item[1]) item[1]();
+      }, function () { /* not served: keep the shield */ });
+    });
     // Side panels start under the top bar, whatever its height (wrapping, zoom, Windows scaling).
     var bar = doc.querySelector(".appbar");
     function place() {

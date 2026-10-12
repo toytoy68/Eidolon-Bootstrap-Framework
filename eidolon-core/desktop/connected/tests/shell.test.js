@@ -50,3 +50,13 @@ test("DARME button: a real alert stays visible with its count; a stale red is no
   assert.equal(S.darmeSummary(monitorState([machine("red", "stale", 3)])).level, "stale");
   assert.match(S.darmeSummary(monitorState([machine("grey")], { error: "MONITOR_UNREACHABLE" })).text, /dernière lecture en échec/);
 });
+
+test("eye colour key follows the real activity only; the camera never changes it", () => {
+  const key = (phase, c, pending) => S.eyeState({ phase, pending, comm: c }).key;
+  assert.equal(key("closed", null), "closed");
+  assert.equal(key("open", comm("ready", "ready")), "idle");
+  assert.equal(key("open", comm("capturing", "ready")), "listening");
+  assert.equal(key("open", comm("ready", "ready"), true), "thinking");
+  assert.equal(key("open", comm("ready", "ready", "processing")), "speaking");
+  assert.equal(key("open", comm("ready", "capturing")), "idle");     // red ring = camera, not an activity colour
+});
