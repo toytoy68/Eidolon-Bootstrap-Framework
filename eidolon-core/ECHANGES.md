@@ -1745,3 +1745,10 @@ Installation demandée par toytoy. Service actif/activé, handshake local et
 filtrage vérifiés ; configurations privées sur VM uniquement. Freebox,
 import téléphone, HTTPS mobile et recette 4G restent ouverts.
 [Rapport](docs/WIREGUARD-DEPLOYMENT-2026-10-12.md). Claude informé du choix VPN.
+
+
+## C-MSG-G178 — Memory prioritaire, répartition du 12 octobre
+Demande directe toytoy : Memory/Qdrant avant finitions UI/mobile.
+Codex : adaptateur Qdrant et banc isolé. Claude : A5-02, corpus indépendant,
+baseline et contre-revue, puis desktop et identité. Réservations détaillées
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucun changement de corpus réel.
