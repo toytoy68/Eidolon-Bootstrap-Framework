@@ -1676,3 +1676,6 @@ C144 intégré. Codex : R6 et conseiller DARME réduit, tests. Claude : [communi
 
 ## C-MSG-G152 — Livraison DARME réduite, 12/10/2026
 R6 et conseiller intégrés ; 1 494 tests Core sans ignorés, 2 018 Memory + 12 subtests, 690 réponses modèle. [Bilan](docs/validation/2026-10-12/darme-reduced/REPORT.md). Aucun secours CPU adopté ni service DARME permanent activé. Lot communication G146–G151 déposé pour Claude.
+
+## C-MSG-G153 — DARME service, 12/10/2026
+Lot Codex autorisé par toytoy, isolé des fichiers Claude : service passif déployé sur Core/Memory, 59 tests et recette systemd sur les deux VM. [Contrat et limites](docs/DARME-DEPLOYMENT-2026-10-12.md). Aucun collecteur réseau ni remédiation ; statut gris/partiel explicite.
