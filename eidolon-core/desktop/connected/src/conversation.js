@@ -442,6 +442,8 @@
     return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt, resume: resume,
       cancelPropose: cancelPropose, cancelSubmit: cancelSubmit, cancelCheck: cancelCheck, cancelSelect: cancelSelect,
       loadMedia: loadMedia,
+      // C147: the voice/camera block reuses this key for /v1/comm/* (same origin); still memory only.
+      authorization: function () { return token; },
       state: function () { return JSON.parse(JSON.stringify(state)); } };
   }
 

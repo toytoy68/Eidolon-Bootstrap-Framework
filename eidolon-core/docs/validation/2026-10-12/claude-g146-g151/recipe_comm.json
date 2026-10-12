@@ -1,0 +1,72 @@
+{
+ "passed": 11,
+ "total": 11,
+ "measures": {
+  "stt_s": 0.005,
+  "tts_chunk_s": [
+   0.0174,
+   0.0169,
+   0.0224
+  ],
+  "vision_s": 0.0127,
+  "service_rss_kib": 26364,
+  "note": "moteurs simulés ou factices : ne qualifie ni la VM ni Windows"
+ },
+ "checks": [
+  {
+   "check": "service démarré en boucle locale, capture désactivée par défaut",
+   "ok": true,
+   "detail": "[INFO] eidolon-comm sur http://127.0.0.1:37335 — stt simulated, tts piper, vision ollama-vision ; capture désactivée par défaut."
+  },
+  {
+   "check": "statut : 3 moteurs annoncés, capture off",
+   "ok": true,
+   "detail": "piper"
+  },
+  {
+   "check": "jeton de lecture refusé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "sans clé : refusé",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "autre origine refusée",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "transcription : texte non vérifié, sans permission",
+   "ok": true,
+   "detail": "[parole simulée, 2.0 s]"
+  },
+  {
+   "check": "audio refusé hors format",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "synthèse Piper (exécutable factice) phrase par phrase",
+   "ok": true,
+   "detail": "{'voice': 'fr_FR-siwis-medium', 'engine': 'piper'}"
+  },
+  {
+   "check": "vision Ollama (factice) : présence, sans identité, image non gardée",
+   "ok": true,
+   "detail": "USER_PRESENT"
+  },
+  {
+   "check": "aucun fichier audio ou image laissé dans l'état",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "check": "arrêt propre sur SIGTERM",
+   "ok": true,
+   "detail": "-15"
+  }
+ ]
+}

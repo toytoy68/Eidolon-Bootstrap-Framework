@@ -1,0 +1,41 @@
+# Eidolon — service local voix, synthèse et image ponctuelle (G151, C147). PROFIL À INSTALLER PAR L'OPÉRATEUR.
+# Même compte que eidolon-core-api : le service lit les clés appairées de l'état Core, dont les fichiers
+# privés (0600) sont vérifiés au propriétaire. Il n'écrit rien dans cet état (lecture seule ci-dessous).
+[Unit]
+Description=Eidolon communication (voix, synthèse, image ponctuelle) — boucle locale
+After=network.target
+
+[Service]
+Type=simple
+User=toytoy
+Group=toytoy
+WorkingDirectory=/home/toytoy/eidolon-comm
+Environment=PYTHONPATH=/opt/eidolon-core/bootstrap/eidolon-core/src
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/home/toytoy/eidolon-comm/venv/bin/python -m eidolon_core.comm_service --state /home/toytoy/eidolon-beta/state --config /home/toytoy/eidolon-comm/comm.json --port 8766 --read-token-file /home/toytoy/eidolon-beta/read-token
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+# Whisper small + Piper : à ajuster après mesure réelle sur la VM (non mesuré).
+MemoryMax=3G
+CPUQuota=200%
+TasksMax=64
+LimitNOFILE=256
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

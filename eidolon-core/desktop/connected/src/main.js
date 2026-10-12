@@ -71,6 +71,17 @@
       }
     });
     window.addEventListener("pagehide", function () { conversation.clear(); });
+    // C147: voice and camera (all off by default), through Core's same-origin relay /v1/comm/*.
+    var commApi = root.EidolonCommunication;
+    if (commApi && document.getElementById("comm")) {
+      var comm = commApi.createCommunication(commApi.browserDeps(window, function () {
+        return conversation.conversation.authorization();
+      }));
+      commApi.mount(document, comm, { observe: function (node, fn) {
+        if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
+      } });
+      window.addEventListener("pagehide", function () { comm.cancelTalk(); comm.stopSpeaking(); });
+    }
 
     function stopAuto() {
       if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }

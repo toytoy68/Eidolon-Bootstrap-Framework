@@ -266,6 +266,19 @@ class _Handler(BaseHTTPRequestHandler):
         size = int(length) if length is not None else 0
         # G088: conversation routes are mounted on this origin when an operator enabled them.
         conversation = self.server.conversation_api is not None and self.path.startswith("/v1/conversations/")
+        if self.server.comm_port is not None and self.path.startswith("/v1/comm/"):
+            # C147: same-origin relay to the local voice/vision service; it checks the paired key itself.
+            from .comm_relay import MAX_BODY as COMM_MAX_BODY, relay
+            if size > COMM_MAX_BODY:
+                raise APIError(413, "REQUEST_TOO_LARGE")
+            raw = self.rfile.read(size)
+            if len(raw) != size:
+                raise APIError(400, "INCOMPLETE_BODY")
+            status, value = relay(self.server.comm_port, self.command, self.path, self._one("Authorization"),
+                                  self._one("Content-Type"), raw)
+            # A spoken sentence (base64 WAV) exceeds MAX_RESPONSE: the relay bounds it itself (4 MiB).
+            self._send(status, json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+            return
         if size > (CONVERSATION_MAX_BODY if conversation else MAX_REQUEST):
             raise APIError(413, "REQUEST_TOO_LARGE")
         if conversation:
@@ -406,7 +419,7 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None, None), memory=None):
+                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None):
         """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -431,6 +444,9 @@ class ReadServer(HTTPServer):
                                                     personality_mode=personality[0], personality_file=personality[1],
                                                     personality_sha256=personality[2] if len(personality) > 2 else None,
                                                      memory=memory)
+        if comm_port is not None and (type(comm_port) is not int or not 1024 <= comm_port <= 65535):
+            raise ValueError("INVALID_COMM_PORT")
+        self.comm_port = comm_port          # C147: /v1/comm/* relayed to 127.0.0.1:<comm_port> when set
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -526,6 +542,8 @@ def main(argv=None):
                         help="Version exacte exigée (64 caractères hexadécimaux), avec --personality-mode required")
     parser.add_argument("--memory-bridge-token-file", metavar="FICHIER",
                         help="Active explicitement le rappel mémoire via tunnel SSH localhost")
+    parser.add_argument("--comm-port", type=int, metavar="PORT",
+                        help="relaie /v1/comm/* vers le service local eidolon-comm (voix, synthèse, image)")
     parser.add_argument("--memory-bridge-port", type=int, default=18765,
                         help="Port local du tunnel SSH Memory Bridge (défaut 18765)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
@@ -577,7 +595,7 @@ def main(argv=None):
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
                         media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
-                        memory=memory) as server:
+                        memory=memory, comm_port=args.comm_port) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality
