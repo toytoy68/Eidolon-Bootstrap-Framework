@@ -1688,3 +1688,12 @@ Codex : backend DARME installé sur Core/Memory, 75+6 tests, événements SSH r�
 
 ## C-MSG-G162/G163 — Dashboard installé, 12/10/2026
 C147/C148 fusionnés sans retrait DARME ; voix/vision/monitoring Core actifs. Corrections SQL readonly, présence, umask et double validation. 1 591 Core sans ignorés, 130 Node/26 ignorés, 12/12 Chromium VM. [Bilan](docs/validation/2026-10-12/dashboard-vm/REPORT.md), [suite Claude G164–G169](docs/DASHBOARD-SUITE-CLAUDE-G164-G169.md). Memory/GPU encore hors de la page ; PC physique à essayer.
+
+## Prise en charge Codex — G170, 12/10/2026
+Base 7e3245f. Demande utilisateur à 11 h 49 Europe/Paris : reconnaissance du locuteur et trois profils, un administrateur et deux casual. Lot documentaire isolé : contrat, TODO, file de travaux ; préparation privée des profils hors Git. Aucun changement API/UI ou service actif.
+
+## G170 — Contrat livré, profils privés préparés
+[Contrat](docs/USER-PROFILES-SPEAKER-RECOGNITION-G170.md), TODO et file actualisés.
+Trois profils dans un plan privé 0600, non importé par le Runtime.
+Reconnaissance voix/visage, sessions et isolation mémoire à réaliser.
+Noms réels hors Git ; aucun service ou droit actif modifié.

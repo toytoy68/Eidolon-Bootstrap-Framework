@@ -457,3 +457,9 @@ G036 peut utiliser docs/BETA-FIXTURE.md ; G040 doit respecter les dossiers
 uniques de la recette actualisée. Relire D-G034-1 sur le correctif intégré,
 en conservant la contre-revue figée. G042–G044 restent attribués après les
 six priorités. Aucun démarrage de session induit par cette file.
+
+## G170 — Exigence utilisateur, 12/10/2026 à 11 h 49
+
+[Profils et reconnaissance du locuteur](../../docs/USER-PROFILES-SPEAKER-RECOGNITION-G170.md).
+Un admin et deux casual, identités hors Git. Lots A–F à prendre explicitement
+en charge, coordonnés avec G164–G169. Préparation livrée, aucun runtime activé.

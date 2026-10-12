@@ -1004,3 +1004,16 @@ C107 reçu : G085-R5 et G086-R1 vérifiés et clos ; nouveaux G087-R1/R2 confié
 [preuves de la séance](docs/validation/2026-10-09/codex-hour-1555/README.md).
 
 - [x] C-067 : espace média privé cohérent en une commande ; moteur et modèles à configurer séparément.
+
+## G170 — Trois profils et reconnaissance du locuteur, 12/10/2026
+
+Demande explicite : un admin et deux casual.
+[Contrat](docs/USER-PROFILES-SPEAKER-RECOGNITION-G170.md).
+
+- [x] Contrat et trois profils privés préparés hors Git, non activés.
+- [ ] G170-A/B : profils, sessions/droits et isolation des souvenirs.
+- [ ] G170-C/D : reconnaissance du locuteur et liaison avec le visage.
+- [ ] G170-E : enrôlement local et UI des trois profils.
+- [ ] G170-F : tests permissions/isolation puis recette matérielle.
+
+STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
