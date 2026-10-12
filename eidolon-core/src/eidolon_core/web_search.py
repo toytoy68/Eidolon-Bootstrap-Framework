@@ -129,13 +129,13 @@ class SearxngProvider:
         self._factory = connection_factory
         self.provider_id = "searxng/1"
 
-    def _connection(self):
+    def _connection(self, timeout):
         if self._factory is not None:
-            return self._factory(self.host, self.port, self.limits.timeout_seconds)
+            return self._factory(self.host, self.port, timeout)
         cls = http.client.HTTPSConnection if self.scheme == "https" else http.client.HTTPConnection
-        return cls(self.host, self.port, timeout=self.limits.timeout_seconds)
+        return cls(self.host, self.port, timeout=timeout)
 
-    def query(self, query, limit):
+    def query(self, query, limit, *, seconds=None):
         """Raw exchange -> (results, unresponsive_engines). Raises AccessFailure with a named code only."""
         if not isinstance(query, str) or not query.strip() or len(query) > MAX_QUERY_CHARS:
             raise ContractError("invalid search query")
@@ -143,8 +143,9 @@ class SearxngProvider:
             raise ContractError("invalid search query")
         target = "/search?" + urllib.parse.urlencode({"q": query, "format": "json", "language": self.language,
                                                        "safesearch": self.safesearch, "pageno": 1})
-        deadline = time.monotonic() + self.limits.timeout_seconds
-        conn = self._connection()
+        seconds = self.limits.timeout_seconds if seconds is None else min(seconds, self.limits.timeout_seconds)
+        deadline = time.monotonic() + seconds
+        conn = self._connection(seconds)
         try:
             conn.request("GET", target, headers={"User-Agent": USER_AGENT, "Accept": "application/json",
                                                  "Accept-Encoding": "identity", "Connection": "close"})
@@ -214,8 +215,12 @@ def _no_constant(_):
 _STATUS_OF = {"RATE_LIMITED": "BLOCKED", "ACCESS_DENIED": "BLOCKED", "TIMEOUT": "TIMEOUT"}
 
 
-def web_search(provider, query, *, approved, budget, max_results=10, clock=lambda: datetime.now(timezone.utc)):
-    """G187 web.search. ``approved`` must be True: the caller showed this exact query to the user.
+def web_search(provider, query, *, approved, budget, max_results=10, deadline=None, request_id=None,
+               clock=lambda: datetime.now(timezone.utc)):
+    """G187 web.search (G190 SearchResponse). ``approved`` must be True: the caller showed this exact query.
+
+    ``deadline``: seconds left for this call (never more than the provider timeout). ``request_id``: the
+    caller's identifier, echoed in the receipt so the Mission Manager can bind it durably.
 
     Never raises on provider failures: the status says what happened, and an EMPTY or failed search is
     never completed with invented sources.
@@ -224,14 +229,22 @@ def web_search(provider, query, *, approved, budget, max_results=10, clock=lambd
         raise ContractError("SearxngProvider and Budget required")
     if type(max_results) is not int or not 1 <= max_results <= provider.limits.max_results:
         raise ContractError("invalid max_results")
+    if deadline is not None and (type(deadline) not in (int, float) or not 0 < deadline <= 60):
+        raise ContractError("deadline must be within (0, 60] seconds")
+    if request_id is not None and (not isinstance(request_id, str) or not request_id.isascii()
+                                   or not 1 <= len(request_id) <= 80
+                                   or not all(c.isalnum() or c in "-_." for c in request_id)):
+        raise ContractError("invalid request_id")
     query_sha256 = hashlib.sha256(query.encode("utf-8")).hexdigest() if isinstance(query, str) else None
-    receipt = {"schema": SCHEMA, "provider": provider.provider_id, "query_sha256": query_sha256,
+    receipt = {"schema": SCHEMA, "request_id": request_id, "provider": provider.provider_id,
+               "query_sha256": query_sha256,
                "query_shown_to_user": approved is True, "sent_at": None, "results_count": 0,
                "unresponsive_engines": 0, "budget_used": None, "error_code": None}
 
     def out(status, results=(), code=None):
         receipt.update(error_code=code, results_count=len(results), budget_used=budget.used())
-        return {"status": status, "results": [dict(r, rank=i + 1, provider=provider.provider_id)
+        return {"status": status, "provider": provider.provider_id, "fetched_at": receipt["sent_at"],
+                "error_code": code, "results": [dict(r, rank=i + 1, provider=provider.provider_id)
                                              for i, r in enumerate(results)],
                 "receipt": dict(receipt), "untrusted": True}
 
@@ -244,7 +257,7 @@ def web_search(provider, query, *, approved, budget, max_results=10, clock=lambd
         return out("BLOCKED", code="BUDGET_EXHAUSTED")
     receipt["sent_at"] = clock().isoformat()
     try:
-        results, unresponsive = provider.query(query, max_results)
+        results, unresponsive = provider.query(query, max_results, seconds=deadline)
     except AccessFailure as exc:
         return out(_STATUS_OF.get(exc.code, "ERROR"), code=exc.code)
     receipt["unresponsive_engines"] = unresponsive

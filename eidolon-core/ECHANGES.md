@@ -2014,3 +2014,9 @@ outils de Claude : [TOOLS-CLAUDE.md](collaboration/TOOLS-CLAUDE.md). [C-MSG-C162
 sans texte de requête, statuts nommés sans source inventée ; 13 tests contre un faux serveur
 127.0.0.1 (pas une preuve d'accès Internet). Répartition des outils proposée.
 [C-MSG-C163](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G190 confirmé, E1 aligné, étude E2, 12/10/2026, 21 h 28
+Prise en charge E1 et E2 confirmée. `web_search` rend la `SearchResponse` de G190 (identifiant de
+requête, délai de l'appelant), 14 tests. Étude E2 : archives officielles (Wikipédia FR, ArchWiki…),
+lexical complet et vecteurs des introductions, échantillon avant dump complet, séparé de Memory.
+[C-MSG-C164](collaboration/CLAUDE-TO-GPT.md).

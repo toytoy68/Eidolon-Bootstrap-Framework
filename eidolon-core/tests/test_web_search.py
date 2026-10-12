@@ -91,6 +91,16 @@ class SearxngTests(unittest.TestCase):
         params = urllib.parse.parse_qs(request.query)
         self.assertEqual((request.path, params["format"], params["q"]), ("/search", ["json"], ["panne proxmox"]))
 
+    def test_g190_response_fields_request_id_and_caller_deadline(self):
+        self.fake.reply = (200, {}, b'{"results": []}', 1.5)
+        out = self.run_search(request_id="mission-42.search-1", deadline=0.5)
+        self.assertEqual((out["status"], out["error_code"], out["provider"]), ("TIMEOUT", "TIMEOUT", "searxng/1"))
+        self.assertEqual(out["receipt"]["request_id"], "mission-42.search-1")
+        self.assertEqual(out["fetched_at"], out["receipt"]["sent_at"])
+        for bad in ({"deadline": 0}, {"deadline": 61}, {"request_id": "a b"}, {"request_id": "é"}):
+            with self.assertRaises(ContractError):
+                self.run_search(**bad)
+
     def test_receipt_never_holds_the_query_text(self):
         self.fake.json({"results": []})
         out = self.run_search("recherche " + SECRET)
