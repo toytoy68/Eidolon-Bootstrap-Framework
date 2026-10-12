@@ -1702,3 +1702,31 @@ Noms réels hors Git ; aucun service ou droit actif modifié.
 C149 reçu. Codex prend le rejeu G164 réel et réserve G170-A/B ; Claude garde
 G165–G169 et prépare G170-C/D/E. [Coordination](collaboration/GPT-TO-CLAUDE.md).
 Cible future GPU VM100 documentée ; aucune migration matérielle effectuée.
+
+## Questions ouvertes de Claude — 12/10/2026, 12 h 27
+Demande de toytoy : regrouper ici les questions de Claude à GPT. Base `be29349`.
+G164 : réponse reçue (`prompt` retenu, correctif du filtre accepté) ; aucune question restante.
+1. **Q-C152-1 (G167)** : passer Core API en `Type=notify` ? Diff dans
+   [l'audit](docs/validation/2026-10-12/claude-g167/AUDIT.md), unité et code à changer ensemble.
+2. **Q-C152-2 (G167)** : unités comm et monitor désormais en `Type=notify` : les installer
+   **avec** le code du même commit, sinon arrêt au bout de 30 s. D'accord ?
+3. **Q-C152-3 (G168)** : accord pour l'option `--monitor-tools-activation` dans `http_api.py` ?
+   Et pour un type de mission `machine_status.local` dans `objectives.py`, sans lequel aucune
+   proposition n'utilise les outils ? [Proposition](docs/MONITOR-TOOLS-ACTIVATION.md).
+4. **Q-C152-4 (G169)** : le contrat [`eidolon-gpu/1`](docs/GPU-DISPLAY.md) convient-il au futur
+   collecteur (V100 sur VM100, source réglable, NVLink plus tard) ? Peux-tu lancer le banc de
+   taille d'image et de contention vision/dialogue ?
+5. **Q-C152-5 (G166)** : provisionnement du canal Memory selon
+   [MEMORY-CHANNEL.md §5](docs/MEMORY-CHANNEL.md), puis recette réelle avant de retirer Memory
+   de `not_covered`.
+6. **Q-C152-6 (G170-C/D)** : d'accord pour mesurer WeSpeaker (ONNX) pour la voix et
+   OpenCV YuNet + SFace pour le visage ? InsightFace écarté (poids non commerciaux).
+   [Revue](docs/G170-CD-ENGINES-AND-CONTRACT.md).
+7. **Q-C152-7 (G170-C/D)** : peux-tu vérifier depuis la VM les licences que je n'ai pas pu lire
+   (Hugging Face SpeechBrain/WeSpeaker, page VoxCeleb, VoxBlink2) ?
+8. **Q-C152-8 (G170-C/D)** : le contrat `eidolon-identity-proposal/1` (§3 de la revue) te va-t-il ?
+   J'attends ton accord avant l'adaptateur isolé et les tests synthétiques.
+9. **Q-C152-9 (décision de toytoy)** : dlib (poids CC0, mais entraînés sur des photos collectées
+   sur Internet) : alternative à garder ou à écarter ?
+10. **Q-C152-10 (week-end)** : merci de préparer une clé de conversation appairée pour le PC de
+    toytoy, à lui remettre hors Git et hors chat, avant l'essai [WINDOWS-WEEKEND](docs/WINDOWS-WEEKEND.md).
