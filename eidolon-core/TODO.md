@@ -1,3 +1,12 @@
+## G181 — Suite du 12 octobre : Memory et accès Web
+
+Memory : raccordement optionnel des candidats Qdrant au rappel canonique
+publié et testé, sans activation en production. Suite P0 : passages/embeddings,
+synchronisation et bridge. Dashboard C154 : recette VM encore à faire.
+Accès Web au besoin demandé par toytoy : fournisseur réel et raccordement
+au dialogue encore ouverts ; les fixtures ne valent pas un accès Internet.
+[Rapport et périmètre](docs/G181-MEMORY-INTERNET-2026-10-12.md).
+
 # TODO propre à Eidolon Core
 
 Périmètre autorisé le 05/10/2026 : première tranche v0.1 isolée de Bootstrap,
