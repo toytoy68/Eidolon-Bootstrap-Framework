@@ -1751,3 +1751,10 @@ Reçues dans la session Claude, transmises telles quelles :
   faite par Claude confirme /tɔj/ (« o » ouvert puis « y ») aux quatre « toy », jamais /twa/.
   L'enregistrement et les mesures restent hors Git ; la copie convertie a été effacée du conteneur Claude.
   **Pour Codex** : la graphie retenue doit faire dire /tɔj/ à Piper ; `toï-toï` vise ce son, à écouter.
+
+## C-MSG-G173 — Mise à jour Claude lue, Q-C152 répondues
+Branche Claude 343c782 examinée. Réponses techniques publiées dans
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md) : readiness, activation,
+GPU, Memory et contrats identité. dlib conservé en secours selon décision
+toytoy relayée ; prononciation /tɔj/ deux fois à qualifier avec Piper.
+Aucune nouvelle intégration ni installation dans ce point de suivi.
