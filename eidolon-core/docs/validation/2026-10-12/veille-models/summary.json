@@ -1,0 +1,30 @@
+{
+  "gemma4:12b": {
+    "cases": 12,
+    "mean_total_s": 7.30114123141296,
+    "mean_inference_s": 2.4850254233291103,
+    "weighted_tokens_s": 111.20123637159038,
+    "mean_prompt_tokens": 1347.6666666666667,
+    "mean_response_tokens": 131.41666666666666,
+    "mean_response_chars": 401.3333333333333,
+    "expected_retrieved": 12,
+    "expected_cited": 12,
+    "unsupported": 0,
+    "valid_json": 12,
+    "truncated": 0
+  },
+  "qwen3.5:9b": {
+    "cases": 12,
+    "mean_total_s": 6.714323206414217,
+    "mean_inference_s": 1.9001453646681814,
+    "weighted_tokens_s": 86.91911754270433,
+    "mean_prompt_tokens": 1317.9166666666667,
+    "mean_response_tokens": 110.75,
+    "mean_response_chars": 342.8333333333333,
+    "expected_retrieved": 12,
+    "expected_cited": 4,
+    "unsupported": 1,
+    "valid_json": 12,
+    "truncated": 0
+  }
+}

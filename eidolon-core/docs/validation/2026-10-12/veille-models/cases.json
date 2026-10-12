@@ -1,0 +1,64 @@
+[
+  {
+    "slug": "gpu-scheduling",
+    "question": "Selon la veille externe, résume Ai2 : budgets de temps GPU, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-gpu-scheduling"
+  },
+  {
+    "slug": "lightonocr3",
+    "question": "Selon la veille externe, résume LightOnOCR-3 : OCR et structure documentaire, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-lightonocr3"
+  },
+  {
+    "slug": "liquid-d1",
+    "question": "Selon la veille externe, résume Liquid AI : modèles de décision d1, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-liquid-d1"
+  },
+  {
+    "slug": "falcon-asr",
+    "question": "Selon la veille externe, résume Falcon ASR : reconnaissance vocale, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-falcon-asr"
+  },
+  {
+    "slug": "thinkingbox",
+    "question": "Selon la veille externe, résume ThinkingBox : vérifier le résultat des agents, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-thinkingbox"
+  },
+  {
+    "slug": "astabrief",
+    "question": "Selon la veille externe, résume AstaBrief 8B : synthèses scientifiques citées, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-astabrief"
+  },
+  {
+    "slug": "llamacpp-decisions",
+    "question": "Selon la veille externe, résume llama.cpp : API de décisions, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-llamacpp-decisions"
+  },
+  {
+    "slug": "dgx-spark64",
+    "question": "Selon la veille externe, résume DGX Spark : configuration 64 Go, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-dgx-spark64"
+  },
+  {
+    "slug": "tts-leaderboard",
+    "question": "Selon la veille externe, résume Open TTS Leaderboard : évaluation vocale, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-tts-leaderboard"
+  },
+  {
+    "slug": "provenanceguard",
+    "question": "Selon la veille externe, résume ProvenanceGuard : vérifier la bonne source, donne la date de publication, l'intérêt pour Eidolon et une limite. Cite information_id@revision.",
+    "expected": "veille-tech-20261012-provenanceguard"
+  },
+  {
+    "slug": "unknown-score",
+    "question": "Quel score français exact Falcon ASR a-t-il obtenu sur nos essais Eidolon selon la veille ? Cite la source et n'invente aucune mesure.",
+    "expected": "veille-tech-20261012-falcon-asr",
+    "absent": true
+  },
+  {
+    "slug": "purchase",
+    "question": "La fiche DGX Spark 64 Go prouve-t-elle que toytoy a acheté et installé cet appareil ? Explique à partir de la veille et cite la source.",
+    "expected": "veille-tech-20261012-dgx-spark64",
+    "absent": true
+  }
+]
