@@ -20,13 +20,14 @@ from datetime import datetime, timezone
 
 from .darme import DarmeMonitor, SecurityEvent, Severity
 from .darme_store import DarmeJournal
+from .darme_machine import MachineMetrics
 
 ALLOWED_UNITS = frozenset(('eidolon-core-api.service', 'eidolon-gpu-tunnel.service',
                           'eidolon-memory-tunnel.service', 'eidolon-memory-bridge.service',
-                          'eidolon-collaboration.service'))
+                          'eidolon-collaboration.service', 'eidolon-darme-ssh.service'))
 
 def validate_config(data):
-    if not isinstance(data, dict) or set(data) != {'units', 'interval'}:
+    if not isinstance(data, dict) or set(data) not in ({'units', 'interval'}, {'units', 'interval', 'ssh_feed'}):
         raise ValueError('invalid configuration')
     units = data['units']
     if (not isinstance(units, list) or not units or len(set(units)) != len(units)
@@ -34,6 +35,8 @@ def validate_config(data):
         raise ValueError('invalid unit allowlist')
     if type(data['interval']) is not int or not 5 <= data['interval'] <= 30:
         raise ValueError('invalid polling interval')
+    if 'ssh_feed' in data and type(data['ssh_feed']) is not bool:
+        raise ValueError('invalid SSH feed setting')
     return data
 
 def probe(unit):
@@ -46,11 +49,20 @@ def probe(unit):
     return state == 'active'
 
 class Collector:
-    def __init__(self, journal, units, directory, service_probe=probe, disk_probe=shutil.disk_usage):
+    def __init__(self, journal, units, directory, service_probe=probe, disk_probe=shutil.disk_usage,
+                 *, ssh_feed=False):
         self.journal, self.units, self.directory = journal, units, directory
         self.service_probe, self.disk_probe = service_probe, disk_probe
         self.previous = {}
         self.sources = list(units) + ['journal-disk', 'security-telemetry']
+        self.feed = None
+        if ssh_feed:
+            from .darme_ssh import FeedVerifier
+            self.sources.append('ssh-auth')
+            self.feed = FeedVerifier('/etc/eidolon-darme/ssh-public.raw', Path(directory)/'ssh-receiver.json')
+        self.metrics = MachineMetrics(directory)
+        self.machine = None
+        self.feed_healthy = False
         self.error = False
         # Replay before serving: corruption must fail startup, never show healthy.
         historical = journal.replay(DarmeMonitor(self.sources))
@@ -61,6 +73,19 @@ class Collector:
     def sample(self):
         health = {}
         self.error = False
+        self.machine = self.metrics.sample()
+        self.feed_healthy = False
+        if self.feed:
+            from .darme_ssh import read_bounded
+            try:
+                payload, events, digest = self.feed.verify(read_bounded('/run/eidolon-darme-ssh/feed.json'))
+                for event in events:
+                    self.journal.record(event)
+                self.feed.commit(payload, digest)
+                self.feed_healthy = payload['healthy']
+            except (OSError, ValueError, OverflowError) as exc:
+                self.feed_healthy = False
+                self.error = isinstance(exc, OverflowError)
         for unit in self.units:
             try:
                 healthy = self.service_probe(unit)
@@ -88,6 +113,8 @@ class Collector:
         monitor = self.journal.replay(DarmeMonitor(self.sources))
         for source, healthy in health.items():
             monitor.health(source, healthy)
+        if self.feed:
+            monitor.health('ssh-auth', self.feed_healthy)
         monitor.ingestion_paused |= self.error
         self.monitor = monitor
 
@@ -97,14 +124,16 @@ class Collector:
         result.update(service_schema='eidolon-darme-service/1',
                       scope='local_service_availability_and_journal_disk',
                       security_telemetry_installed=False, advisor='fixed',
-                      generated_at=datetime.now(timezone.utc).isoformat())
+                      generated_at=datetime.now(timezone.utc).isoformat(),
+                      machine=self.machine, ssh_auth_monitoring=self.feed is not None,
+                      ssh_feed_healthy=self.feed_healthy)
         return result
 
 def serve(config, state, runtime):
     os.umask(0o077)
     units = validate_config(json.loads(Path(config).read_text()))
     journal = DarmeJournal(Path(state) / 'journal.sqlite')
-    collector = Collector(journal, units['units'], state)
+    collector = Collector(journal, units['units'], state, ssh_feed=units.get('ssh_feed', False))
     endpoint = Path(runtime) / 'status.sock'
     # RuntimeDirectory is owned by the dedicated account; refuse unexpected objects.
     if endpoint.exists() or endpoint.is_symlink():

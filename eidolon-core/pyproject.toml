@@ -9,6 +9,9 @@ description = "Sequential, evidence-driven Eidolon mission runtime"
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+darme-ssh = ["cryptography>=43,<51"]
+
 [project.scripts]
 eidolon-core = "eidolon_core.cli:main"
 eidolon-media = "eidolon_core.media_cli:main"

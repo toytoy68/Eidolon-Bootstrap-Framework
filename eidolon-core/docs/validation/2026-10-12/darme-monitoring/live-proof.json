@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-12",
+  "core": {
+    "status": {
+      "advisor": "fixed",
+      "authorizes_execution": false,
+      "badge": "grey",
+      "enforcement_enabled": false,
+      "generated_at": "2026-10-12T06:40:33.423245+00:00",
+      "health_ttl_seconds": 60,
+      "ingestion_paused": false,
+      "intervention": false,
+      "machine": {
+        "cpu_count": 8,
+        "cpu_percent": 0.26,
+        "disk": {
+          "free_bytes": 305960460288,
+          "scope": "journal_filesystem",
+          "total_bytes": 632516374528,
+          "used_bytes": 299807830016
+        },
+        "errors": [],
+        "gpu": null,
+        "load_1_5_15": [
+          0.0068359375,
+          0.0380859375,
+          0.001953125
+        ],
+        "memory": {
+          "available_bytes": 15154421760,
+          "total_bytes": 16704749568,
+          "used_bytes": 1550327808
+        },
+        "sampled_at": "2026-10-12T06:40:24.413270+00:00",
+        "schema": "eidolon-machine/1",
+        "swap": {
+          "free_bytes": 17179865088,
+          "total_bytes": 17179865088,
+          "used_bytes": 0
+        }
+      },
+      "schema": "eidolon-darme-status/1",
+      "scope": "local_service_availability_and_journal_disk",
+      "security_telemetry_installed": false,
+      "service_schema": "eidolon-darme-service/1",
+      "sources": {
+        "eidolon-core-api.service": true,
+        "eidolon-darme-ssh.service": true,
+        "eidolon-gpu-tunnel.service": true,
+        "eidolon-memory-tunnel.service": true,
+        "journal-disk": true,
+        "security-telemetry": false,
+        "ssh-auth": true
+      },
+      "ssh_auth_monitoring": true,
+      "ssh_feed_healthy": true,
+      "unacknowledged_alerts": 0,
+      "unrepresented_alerts": 0,
+      "unrepresented_events": 0,
+      "visibility": "partial"
+    },
+    "collector_memory_about_mb": 11.4,
+    "main_memory_about_mb": 12.6
+  },
+  "memory": {
+    "status": {
+      "advisor": "fixed",
+      "authorizes_execution": false,
+      "badge": "grey",
+      "enforcement_enabled": false,
+      "generated_at": "2026-10-12T06:40:41.295799+00:00",
+      "health_ttl_seconds": 60,
+      "ingestion_paused": false,
+      "intervention": false,
+      "machine": {
+        "cpu_count": 4,
+        "cpu_percent": 0.15,
+        "disk": {
+          "free_bytes": 862018760704,
+          "scope": "journal_filesystem",
+          "total_bytes": 940652277760,
+          "used_bytes": 30775566336
+        },
+        "errors": [],
+        "gpu": null,
+        "load_1_5_15": [
+          0.00048828125,
+          0.00927734375,
+          0
+        ],
+        "memory": {
+          "available_bytes": 6155210752,
+          "total_bytes": 8262766592,
+          "used_bytes": 2107555840
+        },
+        "sampled_at": "2026-10-12T06:40:38.584462+00:00",
+        "schema": "eidolon-machine/1",
+        "swap": {
+          "free_bytes": 8517840896,
+          "total_bytes": 8518627328,
+          "used_bytes": 786432
+        }
+      },
+      "schema": "eidolon-darme-status/1",
+      "scope": "local_service_availability_and_journal_disk",
+      "security_telemetry_installed": false,
+      "service_schema": "eidolon-darme-service/1",
+      "sources": {
+        "eidolon-collaboration.service": true,
+        "eidolon-darme-ssh.service": true,
+        "eidolon-memory-bridge.service": true,
+        "journal-disk": true,
+        "security-telemetry": false,
+        "ssh-auth": true
+      },
+      "ssh_auth_monitoring": true,
+      "ssh_feed_healthy": true,
+      "unacknowledged_alerts": 0,
+      "unrepresented_alerts": 0,
+      "unrepresented_events": 0,
+      "visibility": "partial"
+    },
+    "collector_memory_about_mb": 11.4,
+    "main_memory_about_mb": 12.1
+  },
+  "tests": {
+    "darme": 75,
+    "monitor_tools": 6,
+    "claude_comm_python_pattern": 59,
+    "claude_comm_node": 14
+  },
+  "scope": "Core/Memory VMs only; dashboard wiring assigned, no GPU/Proxmox telemetry installed",
+  "real_ssh_acceptance": {
+    "each_vm_single_local_refusal": true,
+    "red_badge": true,
+    "test_event_acknowledged": true,
+    "raw_logs_published": false
+  },
+  "restart_sequence_persisted": true,
+  "private_key_unreadable_by_readers": true
+}
