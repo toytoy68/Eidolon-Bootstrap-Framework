@@ -1,0 +1,31 @@
+{
+  "audio": [
+    {
+      "audio_s": 5,
+      "reference": "Bonjour. Le serveur fonctionne.",
+      "tts_server_chunk_s": 1.1690647810173687,
+      "stt_s": 4.326005665992852,
+      "real_time_factor": 0.8652011331985705,
+      "transcript": "Bonjour. Le serveur fonctionne.",
+      "synthetic_audio": true
+    },
+    {
+      "audio_s": 20,
+      "reference": "Bonjour toytoy. Nous testons la mémoire Eidolon, les nombres vingt-quatre et cent dix, puis la caméra et la synthèse vocale. Le serveur fonctionne et les données restent locales.",
+      "tts_server_chunk_s": 1.2232818760094233,
+      "stt_s": 3.980234051006846,
+      "real_time_factor": 0.1990117025503423,
+      "transcript": "Bonjour toi-toi, nous testons la mémoire et de longs, les nombres 24 et 110, puis la caméra et la synthèse vocale. Le serveur fonctionne et les données restent locales.",
+      "synthetic_audio": true
+    }
+  ],
+  "vision": {
+    "error": "CommError:ENGINE_UNAVAILABLE: inconsistent presence in the vision model answer",
+    "synthetic_image": true,
+    "raw_observation": {
+      "present": true,
+      "people_count": 0,
+      "description": "L'image montre un drapeau avec un grand cercle rouge au centre sur un fond gris clair, bordé par deux bandes horizontales noires en haut et en bas."
+    }
+  }
+}

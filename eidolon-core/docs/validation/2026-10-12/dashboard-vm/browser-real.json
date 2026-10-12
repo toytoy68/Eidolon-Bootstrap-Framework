@@ -1,0 +1,71 @@
+{
+  "passed": 12,
+  "total": 12,
+  "checks": [
+    {
+      "width": 1280,
+      "check": "capture_off_and_no_background_reads",
+      "ok": true
+    },
+    {
+      "width": 1280,
+      "check": "real_core_metrics_visible",
+      "ok": true,
+      "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Surveillance de sécurité incomplète : voir les sources.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME il y a 0 s (validité 60 s).eidolon-core-api.service : répondeidolon-darme-ssh.service : répondeidolon-gpu-tunnel.service : répondeidolon-memory-tunnel.service : répondjournal-disk : répondsecurity-telemetry : non installéssh-auth : répondMesures il y a 4 s.CPU0.4 % de 8 vCPUCharge 1/5/15 min0 / 0.01 / 0.07Mémoire1.5 Gio utilisés sur 15.6 GioSwap0 o utilisés sur 16.0 GioDisque du journal283.1 Gio libres sur 589.1 GioGPUnon sondé sur cette machine"
+    },
+    {
+      "width": 1280,
+      "check": "uncovered_machines_explicit",
+      "ok": true
+    },
+    {
+      "width": 1280,
+      "check": "manual_single_read_and_no_overflow",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "width": 1280,
+      "check": "key_not_in_markup_or_persistent_storage",
+      "ok": true
+    },
+    {
+      "width": 1280,
+      "check": "close_hides_and_stops_monitor",
+      "ok": true
+    },
+    {
+      "width": 360,
+      "check": "capture_off_and_no_background_reads",
+      "ok": true
+    },
+    {
+      "width": 360,
+      "check": "real_core_metrics_visible",
+      "ok": true,
+      "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Surveillance de sécurité incomplète : voir les sources.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME il y a 0 s (validité 60 s).eidolon-core-api.service : répondeidolon-darme-ssh.service : répondeidolon-gpu-tunnel.service : répondeidolon-memory-tunnel.service : répondjournal-disk : répondsecurity-telemetry : non installéssh-auth : répondMesures il y a 4 s.CPU0.4 % de 8 vCPUCharge 1/5/15 min0 / 0.01 / 0.07Mémoire1.5 Gio utilisés sur 15.6 GioSwap0 o utilisés sur 16.0 GioDisque du journal283.1 Gio libres sur 589.1 GioGPUnon sondé sur cette machine"
+    },
+    {
+      "width": 360,
+      "check": "uncovered_machines_explicit",
+      "ok": true
+    },
+    {
+      "width": 360,
+      "check": "manual_single_read_and_no_overflow",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "width": 360,
+      "check": "key_not_in_markup_or_persistent_storage",
+      "ok": true
+    },
+    {
+      "width": 360,
+      "check": "close_hides_and_stops_monitor",
+      "ok": true
+    }
+  ],
+  "physical_devices_tested": false
+}

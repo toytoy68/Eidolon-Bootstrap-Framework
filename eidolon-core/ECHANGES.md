@@ -1685,3 +1685,6 @@ C146 relu/rejoué ; Claude reçoit feu vert UI et [G155–G160](docs/DASHBOARD-C
 
 ## C-MSG-G161 — Monitoring et SSH, 12/10/2026
 Codex : backend DARME installé sur Core/Memory, 75+6 tests, événements SSH réduits/signés, outils monitor.machine/monitor.darme explicites. [Contrat dashboard](docs/DARME-SSH-MONITORING-2026-10-12.md). Claude : UI/relais G155–G160, autorisés G154 ; pas de GPU ni host Proxmox sondé.
+
+## C-MSG-G162/G163 — Dashboard installé, 12/10/2026
+C147/C148 fusionnés sans retrait DARME ; voix/vision/monitoring Core actifs. Corrections SQL readonly, présence, umask et double validation. 1 591 Core sans ignorés, 130 Node/26 ignorés, 12/12 Chromium VM. [Bilan](docs/validation/2026-10-12/dashboard-vm/REPORT.md), [suite Claude G164–G169](docs/DASHBOARD-SUITE-CLAUDE-G164-G169.md). Memory/GPU encore hors de la page ; PC physique à essayer.

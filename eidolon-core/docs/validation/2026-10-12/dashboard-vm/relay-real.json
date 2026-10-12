@@ -1,0 +1,73 @@
+{
+  "engines": {
+    "protocol": "eidolon-comm/1",
+    "capture_default": "off",
+    "stt": {
+      "engine": "faster-whisper",
+      "model": "faster-whisper:whisper-small",
+      "state": "ready",
+      "language": "fr",
+      "limits": {
+        "seconds": 30,
+        "bytes": 1048576
+      }
+    },
+    "tts": {
+      "engine": "piper",
+      "state": "ready",
+      "default_voice": "fr_FR-siwis-medium",
+      "voices": {
+        "fr_FR-siwis-medium": {
+          "language": "fr_FR",
+          "sample_rate": 22050,
+          "quality": "medium"
+        }
+      },
+      "default_rate": 0.9,
+      "limits": {
+        "characters": 2000,
+        "chunk_characters": 300
+      }
+    },
+    "vision": {
+      "engine": "ollama-vision",
+      "model": "gemma4:12b",
+      "state": "ready",
+      "identification": "not_available",
+      "limits": {
+        "bytes": 2097152,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "authorizes_execution": false
+  },
+  "unauthenticated_refused": true,
+  "read_token_refused": true,
+  "wrong_origin_refused": true,
+  "tts_server_first_chunk_s": 1.8433740900072735,
+  "stt_5s_s": 4.56800877902424,
+  "transcript": "Le serveur fonctionne.",
+  "vision_s": 4.981639238016214,
+  "vision": {
+    "present": false,
+    "people_count": 0,
+    "description": "L'image montre un cercle rouge vif centré sur un fond gris clair, avec des bandes horizontales noires en haut et en bas.",
+    "event": "USER_ABSENT",
+    "purpose": "scene",
+    "image": {
+      "format": "png",
+      "width": 320,
+      "height": 240,
+      "kept": false
+    },
+    "identity": null,
+    "engine": "ollama-vision",
+    "model": "gemma4:12b",
+    "processing_s": 4.98,
+    "unverified": true,
+    "authenticates": false,
+    "authorizes_execution": false
+  },
+  "revoked_client_refused": true
+}
