@@ -46,11 +46,10 @@ class WebBudgetConcurrencyTests(unittest.TestCase):
             rows = db.execute("SELECT query_ref FROM calls").fetchall()
         self.assertNotIn(query, str(rows))
 
-    def test_reserved_replay_requires_caller_to_avoid_second_io(self):
+    def test_atomic_created_flag_prevents_replay(self):
         b = self.ledger()
-        self.assertEqual(b.reserve("req1", "alice", "m1", "web.search", "q"), "RESERVED")
-        # Known contract gap: the current API does not distinguish a newly
-        # created reservation from an existing RESERVED one. Integration MUST
-        # NOT interpret a replayed RESERVED as permission to execute again.
-        self.assertEqual(b.reserve("req1", "alice", "m1", "web.search", "q"), "RESERVED")
+        first = b.reserve("req1", "alice", "m1", "web.search", "q", return_created=True)
+        second = b.reserve("req1", "alice", "m1", "web.search", "q", return_created=True)
+        self.assertEqual(first, ("RESERVED", True))
+        self.assertEqual(second, ("RESERVED", False))
         self.assertEqual(b.inspect("req1")["state"], "UNCERTAIN")
