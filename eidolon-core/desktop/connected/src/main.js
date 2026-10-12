@@ -55,8 +55,14 @@
     // G124: unfinished cancellation requests (ids, key, digest; no secret) survive a reload in this tab only.
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
+    var monitorPhase = null;
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
+      onPhase: function (phase) {
+        if (!monitoring || phase === monitorPhase) return;
+        monitorPhase = phase;
+        if (phase === "open") monitoring.ready(); else if (phase === "closed") monitoring.stop();
+      },
       storage: cancelStorage,
       missionStatus: function (st) {
         var id = st.submission && st.submission.receipt && st.submission.receipt.mission_id;
@@ -71,6 +77,16 @@
       }
     });
     window.addEventListener("pagehide", function () { conversation.clear(); });
+    // G156: machine dashboard (DARME status through Core's relay /v1/monitor/*), same paired key.
+    var monApi = root.EidolonMonitoring, monitoring = null;
+    if (monApi && document.getElementById("monitor")) {
+      monitoring = monApi.createMonitoring({ transport: transport,
+        key: function () { return conversation.conversation.authorization(); },
+        onChange: function (st) { monApi.render(document, st); } });
+      monApi.mount(document, monitoring);
+      document.addEventListener("visibilitychange", function () { monitoring.visibility(document.hidden); });
+      window.addEventListener("pagehide", function () { monitoring.stop(); });
+    }
     // C147: voice and camera (all off by default), through Core's same-origin relay /v1/comm/*.
     var commApi = root.EidolonCommunication;
     if (commApi && document.getElementById("comm")) {

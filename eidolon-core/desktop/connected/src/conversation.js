@@ -139,6 +139,7 @@
   function createConversation(options) {
     var transport = options.transport, onChange = options.onChange || function () {};
     var token = null, epoch = 0, cancelRead = 0, submissionRead = 0, resumeRead = 0;
+    var submissionDigest = null;
     var state = { phase: "closed", error: null, conversationId: null, identity: null, items: [],
       proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
 
@@ -256,7 +257,13 @@
       if (typeof reason !== "string" || !reason.trim() || reason.length > 4000) return false;
       if (state.submission && (state.submission.status === "sent" || state.submission.status === "recorded")) return false;
       var p = state.proposal, sha = state.proposalSha, mine = epoch, identity = state.identity;
-      var local = await digest(p);
+      // Reserve before the asynchronous digest: the first validation owns this proposal.
+      if (submissionDigest && submissionDigest.epoch === mine && submissionDigest.proposal === p) return false;
+      var reservation = { epoch: mine, proposal: p };
+      submissionDigest = reservation;
+      var local;
+      try { local = await digest(p); }
+      finally { if (submissionDigest === reservation) submissionDigest = null; }
       // C-069: closed, replaced or already submitted during the digest → nothing is sent.
       if (mine !== epoch || p !== state.proposal || identity !== state.identity || sha !== state.proposalSha) return false;
       if (state.submission && (state.submission.status === "sent" || state.submission.status === "recorded")) return false;
@@ -743,7 +750,10 @@
   }
 
   function mount(doc, deps) {
-    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) { render(doc, st, deps.missionStatus(st)); } });
+    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
+      render(doc, st, deps.missionStatus(st));
+      if (deps.onPhase) deps.onPhase(st.phase);           // G156: the machine dashboard follows the key
+    } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();

@@ -244,7 +244,7 @@ Commencer par `small` ou `base` sur processeur ; mesurer avant `medium`.
  "tts": {"kind": "piper", "executable": "/home/eidolon/eidolon-comm/piper/piper",
          "voice_dir": "/home/eidolon/eidolon-comm/voices", "default_voice": "fr_FR-siwis-medium"},
  "vision": {"kind": "ollama", "endpoint": "http://127.0.0.1:11434", "model": "moondream"},
- "allowed_origin": "http://127.0.0.1:8765"}
+ "allowed_origin": "http://127.0.0.1:8767"}
 ```
 Une section absente = moteur indisponible, et rien d'autre ne change.
 

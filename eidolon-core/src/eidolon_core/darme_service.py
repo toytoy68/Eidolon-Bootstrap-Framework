@@ -130,7 +130,6 @@ class Collector:
         return result
 
 def serve(config, state, runtime):
-    os.umask(0o077)
     units = validate_config(json.loads(Path(config).read_text()))
     journal = DarmeJournal(Path(state) / 'journal.sqlite')
     collector = Collector(journal, units['units'], state, ssh_feed=units.get('ssh_feed', False))
@@ -180,6 +179,7 @@ def main():
     parser.add_argument('--state', required=True)
     parser.add_argument('--runtime', required=True)
     args = parser.parse_args()
+    os.umask(0o077)
     serve(args.config, args.state, args.runtime)
 
 if __name__ == '__main__':

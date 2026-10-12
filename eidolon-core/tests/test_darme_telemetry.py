@@ -8,6 +8,7 @@
 import base64
 from datetime import datetime, timezone, timedelta
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -125,6 +126,8 @@ class SignatureTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.verifier.verify(self.signed(item))
         with self.assertRaises(ValueError):self.verifier.verify(b'x'*(128*1024+1))
     def test_collector_capacity_retains_events_and_sequence(self):
+        previous_umask=os.umask(0o022)
+        self.addCleanup(os.umask,previous_umask)
         from eidolon_core.darme_ssh import collect
         root=Path(self.temp.name)
         key_file=root/'private'
@@ -140,6 +143,8 @@ class SignatureTests(unittest.TestCase):
              mock.patch('eidolon_core.darme_ssh.signal.signal',side_effect=register), \
              mock.patch('eidolon_core.darme_ssh.time.sleep',side_effect=stop):
             collect(key_file,root,root)
+        observed_umask=os.umask(0o022)
+        self.assertEqual(observed_umask,0o022)
         state=json.loads((root/'checkpoint.json').read_bytes())
         envelope=json.loads((root/'feed.json').read_bytes())
         self.assertEqual(state['sequence'],6)

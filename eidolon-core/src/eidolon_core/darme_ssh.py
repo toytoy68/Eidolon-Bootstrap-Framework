@@ -153,7 +153,6 @@ def rows(cursor):
 
 def collect(key_file, state_dir, runtime_dir):
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-    os.umask(0o077)
     key = Ed25519PrivateKey.from_private_bytes(read_bounded(key_file,32))
     state_path = Path(state_dir)/'checkpoint.json'
     state = {'sequence':0,'cursor':None,'events':[],'overflow':False}
@@ -209,6 +208,7 @@ def main():
     parser.add_argument('--state',required=True)
     parser.add_argument('--runtime',required=True)
     args = parser.parse_args()
+    os.umask(0o077)
     collect(args.key,args.state,args.runtime)
 
 if __name__ == '__main__':

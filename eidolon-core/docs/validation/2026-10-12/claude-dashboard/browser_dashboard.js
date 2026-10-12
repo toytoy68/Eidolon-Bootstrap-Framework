@@ -2,7 +2,7 @@
  * Projet      : Eidolon Core
  * Organisation: Eidolon Core Technologies (ECT)
  * Fichier     : browser_dashboard.js
- * Description : Dashboard servi par Core : bloc voix/caméra avec faux micro et fausse caméra de Chromium (C147)
+ * Description : Dashboard servi par Core : voix/caméra (faux périphériques Chromium) et état des machines (C147, G158)
  * Standard    : Eidolon Presentation Standard v1
  * ========================================================== */
 // node browser_dashboard.js <page url> <conversation key> [captures dir]   (NODE_PATH -> playwright)
@@ -20,10 +20,11 @@ const path = require("node:path");
   try {
     for (const width of [1280, 360]) {
       const page = await browser.newPage({ viewport: { width, height: width === 360 ? 760 : 800 } });
-      const errors = [], foreign = [], comm = [];
+      const errors = [], foreign = [], comm = [], monitor = [];
       page.on("pageerror", (e) => errors.push(String(e)));
       page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
-      page.on("request", (r) => { if (!r.url().startsWith(origin)) foreign.push(r.url()); if (r.url().includes("/v1/comm/")) comm.push(r.method() + " " + new URL(r.url()).pathname); });
+      page.on("request", (r) => { if (!r.url().startsWith(origin)) foreign.push(r.url()); if (r.url().includes("/v1/comm/")) comm.push(r.method() + " " + new URL(r.url()).pathname);
+        if (r.url().includes("/v1/monitor/")) monitor.push(r.method()); });
       await page.goto(url);
       await page.fill("#conv-key", key); await page.press("#conv-key", "Enter");
       await page.waitForSelector("#conv-body:not([hidden])");
@@ -60,6 +61,23 @@ const path = require("node:path");
       const note = await page.textContent("#comm-note");
       const live = await page.evaluate(() => /capture/.test(document.getElementById("comm-camera-state").textContent));
       check(width + " : présence décrite, observation non vérifiée, caméra relâchée", /non vérifiée/.test(note) && !live, note);
+      // G156/G158: machine dashboard — visible once the key is open, nothing read before the click.
+      check(width + " : état des machines visible, aucune lecture avant demande",
+        (await page.isVisible("#monitor")) && monitor.length === 0 && !(await page.isChecked("#monitor-auto")), monitor.join(","));
+      await page.click("#monitor-refresh");
+      await page.waitForFunction(() => document.querySelectorAll("#monitor-machines .monitor-card").length === 3, null, { timeout: 15000 });
+      const cards = await page.$$eval("#monitor-machines .monitor-card", (els) => els.map((e) => e.textContent));
+      check(width + " : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
+        /Gris/.test(cards[0]) && /PAS un état sécurisé/.test(cards[0]) && /Périmètre/.test(cards[0]) && /il y a \d+ s/.test(cards[0])
+        , cards[0]);
+      check(width + " : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
+        /Mesures il y a \d+ s/.test(cards[0]) && /Mémoire.*utilisés sur/.test(cards[0]) && /Disque du journal/.test(cards[0])
+        && /GPUnon sondé/.test(cards[0]), cards[0].slice(-220));
+      check(width + " : Memory indisponible et GPU non surveillé, aucune mesure inventée",
+        /Indisponible/.test(cards[1]) && /Non surveillé/.test(cards[2]) && !/Gio|%/.test(cards[1] + cards[2]), cards.slice(1).join(" | "));
+      await page.waitForTimeout(1500);
+      check(width + " : une seule lecture sans actualisation automatique", monitor.length === 1, monitor.join(","));
+      if (captures) await page.locator("#monitor").screenshot({ path: path.join(captures, "dashboard-monitor-" + width + ".png") });
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       const storage = await page.evaluate(() => [localStorage.length, document.cookie.length]);
       const html = await page.content();
@@ -67,6 +85,10 @@ const path = require("node:path");
       check(width + " : pas de débordement, aucune erreur", overflow === 0 && errors.length === 0, JSON.stringify({ overflow, errors }));
       check(width + " : clé ni stockée ni affichée", storage[0] === 0 && storage[1] === 0 && !html.includes(key), JSON.stringify(storage));
       if (captures) await page.locator("#comm").screenshot({ path: path.join(captures, "dashboard-comm-" + width + ".png") });
+      await page.click("#conv-close");
+      await page.waitForSelector("#monitor", { state: "hidden" });
+      check(width + " : fermeture de la conversation : tableau masqué et vidé",
+        (await page.locator("#monitor-machines li").count()) === 0, "");
       await page.close();
     }
   } catch (e) { out.checks.push({ check: "exécution", ok: false, detail: String(e).slice(0, 300) }); }
