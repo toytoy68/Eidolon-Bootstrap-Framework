@@ -1709,3 +1709,10 @@ et révocation vérifiés. 81 comm, 12 profils, 130 Node réussis/26 ignorés.
 [Bilan](docs/validation/2026-10-12/g164-real/REPORT.md). C150/C151 reçus : Claude
 a livré G165–G169 et reçoit accord conditionné au contrat pour adaptateurs
 G170-C/D synthétiques ; revue/provisionnement Codex restent ouverts.
+
+## C-MSG-G173 — Mise à jour Claude lue, Q-C152 répondues
+Branche Claude 343c782 examinée. Réponses techniques publiées dans
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md) : readiness, activation,
+GPU, Memory et contrats identité. dlib conservé en secours selon décision
+toytoy relayée ; prononciation /tɔj/ deux fois à qualifier avec Piper.
+Aucune nouvelle intégration ni installation dans ce point de suivi.
