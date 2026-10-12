@@ -1,6 +1,6 @@
 {
- "passed": 31,
- "total": 31,
+ "passed": 37,
+ "total": 37,
  "checks": [
   {
    "check": "services démarrés (Core : relais, eidolon-comm, eidolon-monitor)",
@@ -45,12 +45,12 @@
   {
    "check": "1280 : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
    "ok": true,
-   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Aucun collecteur de sécurité installé.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME "
+   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Surveillance de sécurité incomplète : voir les sources.Périmètre : services locaux (systemd actif) et disque du jour"
   },
   {
    "check": "1280 : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
    "ok": true,
-   "detail": "n installéMesures il y a 0 s.CPUindisponible (premier sondage)Charge 1/5/15 min1.92 / 1.22 / 0.99Mémoire765.8 Mio utilisés sur 15.7 GioSwapaucunDisque du journal22.5 Gio libres sur 252.0 GioGPUnon son"
+   "detail": "n installéMesures il y a 0 s.CPUindisponible (premier sondage)Charge 1/5/15 min1.63 / 1.43 / 0.75Mémoire772.8 Mio utilisés sur 15.7 GioSwapaucunDisque du journal20.3 Gio libres sur 252.0 GioGPUnon son"
   },
   {
    "check": "1280 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
@@ -120,12 +120,12 @@
   {
    "check": "360 : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
    "ok": true,
-   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Aucun collecteur de sécurité installé.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME "
+   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Surveillance de sécurité incomplète : voir les sources.Périmètre : services locaux (systemd actif) et disque du jour"
   },
   {
    "check": "360 : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
    "ok": true,
-   "detail": "ity-telemetry : non installéMesures il y a 0 s.CPU8.3 % de 4 vCPUCharge 1/5/15 min2.01 / 1.25 / 1Mémoire766.3 Mio utilisés sur 15.7 GioSwapaucunDisque du journal22.5 Gio libres sur 252.0 GioGPUnon son"
+   "detail": "y-telemetry : non installéMesures il y a 0 s.CPU5.8 % de 4 vCPUCharge 1/5/15 min1.46 / 1.4 / 0.75Mémoire772.6 Mio utilisés sur 15.7 GioSwapaucunDisque du journal20.3 Gio libres sur 252.0 GioGPUnon son"
   },
   {
    "check": "360 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
@@ -156,6 +156,36 @@
    "check": "360 : fermeture de la conversation : tableau masqué et vidé",
    "ok": true,
    "detail": ""
+  },
+  {
+   "check": "1366x768 à 125 % : micro activé, parler et terminer au clavier seul, focus visible",
+   "ok": true,
+   "detail": "solid"
+  },
+  {
+   "check": "1366x768 à 125 % : aucun débordement horizontal, aucune erreur",
+   "ok": true,
+   "detail": "{\"overflow\":0,\"errors\":[]}"
+  },
+  {
+   "check": "1366x768 à 150 % : micro activé, parler et terminer au clavier seul, focus visible",
+   "ok": true,
+   "detail": "solid"
+  },
+  {
+   "check": "1366x768 à 150 % : aucun débordement horizontal, aucune erreur",
+   "ok": true,
+   "detail": "{\"overflow\":0,\"errors\":[]}"
+  },
+  {
+   "check": "1920x1080 à 150 % : micro activé, parler et terminer au clavier seul, focus visible",
+   "ok": true,
+   "detail": "solid"
+  },
+  {
+   "check": "1920x1080 à 150 % : aucun débordement horizontal, aucune erreur",
+   "ok": true,
+   "detail": "{\"overflow\":0,\"errors\":[]}"
   }
  ]
 }

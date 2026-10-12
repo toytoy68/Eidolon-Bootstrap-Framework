@@ -2591,7 +2591,10 @@
         });
         var dev = st[kind];
         dev.devices = found;
-        if (!found.some(function (d) { return d.id === dev.selected; })) dev.selected = found.length ? found[0].id : null;
+        var lost = !found.some(function (d) { return d.id === dev.selected; });
+        // G165: the microphone unplugged while talking: capture dropped at once, nothing transcribed.
+        if (lost && dev.selected !== null && kind === "microphone" && dev.state === "capturing") { cancelTalk(); dev.state = "disabled"; dev.reason = "débranché"; }
+        if (lost) dev.selected = found.length ? found[0].id : null;
         if (!found.length && dev.state !== "permission_denied") { dev.state = "unavailable"; dev.reason = null; }
         else if (found.length && dev.state === "unavailable") { dev.state = "disabled"; dev.reason = null; }
       });
@@ -2636,6 +2639,12 @@
       catch (e) { set("microphone", errorState(e)); return false; }
       var epoch = ++talkEpoch;
       talk = { stream: stream, recorder: deps.recorder(stream), epoch: epoch };
+      // G165: a track that ends by itself (device unplugged, taken by the system) stops the capture.
+      (stream.getTracks ? stream.getTracks() : []).forEach(function (track) {
+        if (track.addEventListener) track.addEventListener("ended", function () {
+          if (talk && talk.epoch === epoch) { cancelTalk(); set("microphone", "disabled", "débranché"); refresh(); }
+        });
+      });
       talk.timer = deps.setTimeout(function () { if (talk && talk.epoch === epoch) stopTalk(); }, max);
       set("microphone", "capturing");
       return true;

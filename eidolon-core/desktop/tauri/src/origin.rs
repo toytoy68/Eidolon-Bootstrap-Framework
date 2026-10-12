@@ -90,9 +90,44 @@ pub fn allowed(url: &Url, port: u16) -> bool {
         && url.password().is_none()
 }
 
+/// Device permission requested by the page (G165), reduced to what the shell decides.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Device {
+    Microphone,
+    Camera,
+    Autoplay,
+    Other,
+}
+
+/// What the shell answers to a WebView2 permission request.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Decision {
+    /// WebView2 shows its own prompt: the person decides (Windows privacy settings still apply).
+    AskUser,
+    Deny,
+}
+
+/// Microphone and camera: never granted by the shell itself, always asked to the person, and the page
+/// only asks after its switch is ticked. Autoplay keeps WebView2's default (the voice plays after a
+/// click). Everything else (location, notifications, clipboard, files, MIDI, sensors…) is refused.
+pub fn device_permission(device: Device) -> Decision {
+    match device {
+        Device::Microphone | Device::Camera | Device::Autoplay => Decision::AskUser,
+        Device::Other => Decision::Deny,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn devices_are_asked_never_granted_and_the_rest_refused() {
+        assert_eq!(device_permission(Device::Microphone), Decision::AskUser);
+        assert_eq!(device_permission(Device::Camera), Decision::AskUser);
+        assert_eq!(device_permission(Device::Autoplay), Decision::AskUser);
+        assert_eq!(device_permission(Device::Other), Decision::Deny);
+    }
 
     fn os(v: &[&str]) -> Vec<OsString> {
         v.iter().map(OsString::from).collect()

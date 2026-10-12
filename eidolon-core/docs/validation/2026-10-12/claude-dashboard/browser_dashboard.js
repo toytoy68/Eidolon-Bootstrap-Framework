@@ -91,6 +91,38 @@ const path = require("node:path");
         (await page.locator("#monitor-machines li").count()) === 0, "");
       await page.close();
     }
+    // G165: Windows display scaling (CSS pixels = screen / scale) and keyboard only.
+    for (const [label, width, height, scale] of [["1366x768 à 125 %", 1093, 614, 1.25], ["1366x768 à 150 %", 911, 512, 1.5],
+                                                 ["1920x1080 à 150 %", 1280, 720, 1.5]]) {
+      const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale });
+      const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(String(e)));
+      await page.goto(url);
+      await page.fill("#conv-key", key); await page.press("#conv-key", "Enter");
+      await page.waitForSelector("#conv-body:not([hidden])");
+      await page.waitForFunction(() => document.getElementById("comm-mic-state").textContent.length > 0);
+      // Keyboard only: Tab to the microphone switch, Space to enable, Tab to "Parler", Enter twice.
+      let reached = false;
+      for (let i = 0; i < 40 && !reached; i++) { await page.keyboard.press("Tab"); reached = await page.evaluate(() => document.activeElement.id === "comm-mic-on"); }
+      await page.keyboard.press("Space");
+      await page.waitForFunction(() => /prêt/.test(document.getElementById("comm-mic-state").textContent));
+      let talk = false;
+      for (let i = 0; i < 12 && !talk; i++) { await page.keyboard.press("Tab"); talk = await page.evaluate(() => document.activeElement.id === "comm-talk"); }
+      const outline = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.getElementById("comm-mic-state").classList.contains("recording"));
+      await page.waitForTimeout(800);
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.getElementById("conv-text").value.length > 0, null, { timeout: 15000 });
+      check(label + " : micro activé, parler et terminer au clavier seul, focus visible", reached && talk && outline !== "none", outline);
+      await page.click("#monitor-refresh");
+      await page.waitForFunction(() => document.querySelectorAll("#monitor-machines .monitor-card").length === 3, null, { timeout: 15000 });
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      check(label + " : aucun débordement horizontal, aucune erreur", overflow === 0 && errors.length === 0, JSON.stringify({ overflow, errors }));
+      if (captures && scale === 1.5 && width === 911) await page.locator("#comm").screenshot({ path: path.join(captures, "dashboard-comm-911-150.png") });
+      await context.close();
+    }
   } catch (e) { out.checks.push({ check: "exécution", ok: false, detail: String(e).slice(0, 300) }); }
   finally { await browser.close(); }
   console.log(JSON.stringify(out));

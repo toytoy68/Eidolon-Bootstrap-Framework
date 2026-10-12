@@ -14,7 +14,7 @@
 
 mod origin;
 
-use tauri::webview::NewWindowResponse;
+use tauri::webview::{NewWindowResponse, PermissionKind, PermissionResponse};
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 
 fn main() {
@@ -45,6 +45,20 @@ fn main() {
                 .on_new_window(|_, _| {
                     eprintln!("eidolon-consultation : {}", origin::NEW_WINDOW_REFUSED);
                     NewWindowResponse::Deny
+                })
+                // G165: microphone/camera are asked to the person by WebView2, never granted here;
+                // every other permission (location, notifications, clipboard, files…) is refused.
+                .on_permission_request(|_, kind| {
+                    let device = match kind {
+                        PermissionKind::Microphone => origin::Device::Microphone,
+                        PermissionKind::Camera => origin::Device::Camera,
+                        PermissionKind::Autoplay => origin::Device::Autoplay,
+                        _ => origin::Device::Other,
+                    };
+                    match origin::device_permission(device) {
+                        origin::Decision::AskUser => PermissionResponse::Default,
+                        origin::Decision::Deny => PermissionResponse::Deny,
+                    }
                 })
                 .build()?;
             Ok(())
