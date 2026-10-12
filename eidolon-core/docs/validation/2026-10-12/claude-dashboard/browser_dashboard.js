@@ -124,8 +124,11 @@ const path = require("node:path");
       await context.close();
     }
     // Écran PC 2560x1440 (question de toytoy) : échelle Windows 100, 125 et 150 %.
+    // + écran de toytoy (MSI Optix G24C6, 1920x1080) : zone visible d'Edge plein écran, barre des tâches et onglets ôtés.
     for (const [label, width, height, scale] of [["2560x1440 à 100 %", 2560, 1440, 1], ["2560x1440 à 125 %", 2048, 1152, 1.25],
-                                                 ["2560x1440 à 150 %", 1707, 960, 1.5]]) {
+                                                 ["2560x1440 à 150 %", 1707, 960, 1.5],
+                                                 ["1920x1080 à 100 % (Edge agrandi)", 1920, 940, 1],
+                                                 ["1920x1080 à 125 % (Edge agrandi)", 1536, 750, 1.25]]) {
       const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale });
       const page = await context.newPage();
       const errors = [];
@@ -141,7 +144,7 @@ const path = require("node:path");
           conversation: box("conversation"), monitor: box("monitor"), missions: box("missions") };
       });
       check(label + " : aucun débordement, aucune erreur", layout.overflow === 0 && errors.length === 0, JSON.stringify(layout));
-      if (captures) await page.screenshot({ path: path.join(captures, "dashboard-2560x1440-" + Math.round(scale * 100) + ".png"), fullPage: true });
+      if (captures) await page.screenshot({ path: path.join(captures, "dashboard-" + label.split(" ")[0] + "-" + Math.round(scale * 100) + ".png"), fullPage: true });
       await context.close();
     }
   } catch (e) { out.checks.push({ check: "exécution", ok: false, detail: String(e).slice(0, 300) }); }

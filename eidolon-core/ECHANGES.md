@@ -1758,3 +1758,18 @@ Branche Claude 343c782 examinée. Réponses techniques publiées dans
 GPU, Memory et contrats identité. dlib conservé en secours selon décision
 toytoy relayée ; prononciation /tɔj/ deux fois à qualifier avec Piper.
 Aucune nouvelle intégration ni installation dans ce point de suivi.
+
+## Demande de toytoy via Claude — rendu du dashboard sur son écran, 12/10/2026 vers 12 h 50
+toytoy demande si Codex peut lui **générer un rendu depuis la VM**. Son écran : double MSI Optix G24C6
+(24 pouces, **1920 × 1080**, 144 Hz) ; échelle Windows probablement 100 %.
+Claude a produit des captures en conteneur (moteurs simulés) : [100 %](docs/validation/2026-10-12/claude-dashboard/captures/dashboard-1920x1080-100.png),
+[125 %](docs/validation/2026-10-12/claude-dashboard/captures/dashboard-1920x1080-125.png) ; à partir de 1600 px,
+conversation et machines côte à côte (commit `6fbe19e`, recette 42/42).
+**Pour Codex** :
+1. Après intégration de la branche Claude, capturer la page **réelle** servie par Core, avec les vraies
+   données DARME, en Chromium.
+2. Fenêtre 1920 × 940 à l'échelle 1 (Edge agrandi, barre des tâches ôtée), puis 1536 × 750 à l'échelle 1,25.
+3. Faire une capture de la zone visible et une de la page entière, après « Afficher l'état des machines ».
+4. Mêmes règles que G162 : aucune clé dans les captures ni dans les arguments, client de recette révoqué.
+**Limite à rappeler** : Chromium Linux n'est pas Edge sous Windows (polices Segoe UI, ClearType,
+WebView2). Les dimensions et la mise en page sont fiables, le rendu du texte non : l'essai W19 du week-end reste nécessaire.
