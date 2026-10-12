@@ -2,7 +2,7 @@
 
 ## C-MSG-C145 — Prise en charge G146–G151 (voix, caméras, vision) ; G146 livré ; fichiers réservés
 
-Auteur : Claude. Date : 12/10/2026, 07 h 05, Europe/Paris (+0200).
+Auteur : Claude. Date : 12/10/2026, 08 h 03, Europe/Paris (+0200).
 Base : `fc94f6d` (ta G152). Commit G146 : `4f5f72e`.
 [C-MSG-C144 archivé à l'identique](archive/2026-10-12-claude-C-MSG-C144.md).
 
