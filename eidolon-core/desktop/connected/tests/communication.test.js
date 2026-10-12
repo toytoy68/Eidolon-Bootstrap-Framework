@@ -36,7 +36,8 @@ function setup(over) {
   const sent = [], timers = [];
   const transport = over.transport || (async (method, path, body) => {
     sent.push({ method, path, body });
-    if (path === "/v1/comm/stt") return { status: 200, json: { text: "Diagnostique le NAS.", empty: false } };
+    if (path === "/v1/comm/stt") return { status: 200, json: { text: "Diagnostique le NAS.", empty: false,
+      corrections: [{ from: "toi-toi", to: "toytoy", count: 1 }, { from: 5, to: "x" }] } };
     if (path === "/v1/comm/tts") return { status: 200, json: { wav_base64: "UklGRg==", index: body.index, chunks: 2, last: body.index === 1 } };
     if (path.startsWith("/v1/comm/vision")) return { status: 200, json: { present: true, people_count: 1, identity: null } };
     return { status: 200, json: {} };
@@ -103,7 +104,8 @@ test("push to talk: indicator on only while capturing, transcript returned as te
   assert.equal(comm.state().microphone.indicator.recording, true);
   assert.equal(comm.state().capturing, true);
   const result = await comm.stopTalk();
-  assert.deepEqual(result, { text: "Diagnostique le NAS.", empty: false, unverified: true });
+  assert.deepEqual(result, { text: "Diagnostique le NAS.", empty: false, unverified: true,
+    corrections: [{ from: "toi-toi", to: "toytoy" }] });                // G164: reported, malformed ones dropped
   assert.equal(comm.state().microphone.state, "ready");
   assert.equal(comm.state().capturing, false);
   assert.equal(media.live(), 0);                                      // track stopped right after

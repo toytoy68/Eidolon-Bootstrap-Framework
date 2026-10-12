@@ -155,7 +155,11 @@
         var result = await call("POST", "/v1/comm/stt", encodeWav(audio.samples, audio.rate), "audio/wav");
         if (t.epoch !== talkEpoch) return null;                       // cancelled meanwhile: late answer dropped
         set("microphone", "ready");
-        return { text: result.text, empty: result.empty, unverified: true };   // to the input field, not sent
+        // G164: server-side vocabulary corrections are reported, never hidden.
+        var corrections = Array.isArray(result.corrections) ? result.corrections.filter(function (c) {
+          return c && typeof c.from === "string" && typeof c.to === "string";
+        }).map(function (c) { return { from: c.from.slice(0, 40), to: c.to.slice(0, 40) }; }).slice(0, 16) : [];
+        return { text: result.text, empty: result.empty, unverified: true, corrections: corrections };   // to the input field, not sent
       } catch (e) {
         if (t.epoch === talkEpoch) set("microphone", "ready", e.code || "ERREUR");
         return null;
@@ -351,7 +355,8 @@
       if (comm.state().microphone.state === "capturing") {
         comm.stopTalk().then(function (r) {
           if (!r) return;
-          $("comm-note").textContent = r.empty ? "Rien n'a été entendu." : "Transcription placée dans le champ : relisez-la, puis envoyez.";
+          $("comm-note").textContent = r.empty ? "Rien n'a été entendu." : "Transcription placée dans le champ : relisez-la, puis envoyez."
+            + (r.corrections && r.corrections.length ? " Corrigé : " + r.corrections.map(function (c) { return "« " + c.from + " » → « " + c.to + " »"; }).join(", ") + "." : "");
           if (!r.empty) { var area = $("conv-text"); area.value = (area.value ? area.value + " " : "") + r.text; area.focus(); }
         });
       } else comm.startTalk();

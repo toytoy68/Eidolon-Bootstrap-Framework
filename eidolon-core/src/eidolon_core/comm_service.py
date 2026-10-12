@@ -238,16 +238,23 @@ def load_config(path):
 
 def build_engines(config):
     """(stt, tts, vision) services from the configuration; a missing section means unavailable."""
-    from .comm_stt import FasterWhisperSTT, SimulatedSTT, SpeechToText
+    from .comm_stt import DEFAULT_VOCABULARY, SILENCE_RMS, FasterWhisperSTT, SimulatedSTT, SpeechToText, Vocabulary
     from .comm_tts import PiperTTS, SimulatedTTS, TextToSpeech
     from .comm_vision import OllamaVision, SimulatedVision, Vision
     gate = DeviceGate()
     stt = tts = vision = None
     if config.get("stt"):
         s = config["stt"]
+        words = s.get("vocabulary")                   # G164: optional; "default" = DEFAULT_VOCABULARY
+        if words == "default":
+            words = DEFAULT_VOCABULARY
+        if words is not None and (not isinstance(words, dict) or not set(words) <= {"terms", "replacements"}):
+            raise CommError("INVALID_REQUEST", "stt.vocabulary: terms and replacements only")
+        vocabulary = Vocabulary(words.get("terms", ()), words.get("replacements")) if words is not None else None
         engine = SimulatedSTT() if s.get("kind") == "simulated" else FasterWhisperSTT(
-            s["model_dir"], threads=s.get("threads", 2), beam_size=s.get("beam_size", 1), vad=s.get("vad", False))
-        stt = SpeechToText(engine, gate=gate)
+            s["model_dir"], threads=s.get("threads", 2), beam_size=s.get("beam_size", 1), vad=s.get("vad", False),
+            bias=s.get("bias", "none"), vocabulary=vocabulary)
+        stt = SpeechToText(engine, gate=gate, vocabulary=vocabulary, silence_rms=s.get("silence_rms", SILENCE_RMS))
     if config.get("tts"):
         t = config["tts"]
         engine = SimulatedTTS() if t.get("kind") == "simulated" else PiperTTS(t["executable"], t["voice_dir"])

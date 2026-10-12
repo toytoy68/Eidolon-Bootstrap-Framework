@@ -145,3 +145,97 @@ class RealEngineTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class _FakeArray:
+    def astype(self, _):
+        return self
+
+    def __truediv__(self, _):
+        return self
+
+
+class _Segment:
+    def __init__(self, text, no_speech=0.01, logprob=-0.2, start=0.0, end=1.0):
+        self.text, self.no_speech_prob, self.avg_logprob, self.start, self.end = text, no_speech, logprob, start, end
+
+
+class VocabularyAndGuardTests(unittest.TestCase):
+    """G164: glossary bias, exact reported corrections, and silence/noise never turned into text."""
+
+    def setUp(self):
+        import sys
+        import types
+        self.calls, self.reply = [], []
+        test = self
+
+        class WhisperModel:
+            def __init__(self, *args, **kwargs):
+                pass
+
+            def transcribe(self, audio, **options):
+                test.calls.append(options)
+                return iter(test.reply), None
+        modules = {"faster_whisper": types.SimpleNamespace(WhisperModel=WhisperModel),
+                   "numpy": types.SimpleNamespace(frombuffer=lambda *a, **k: _FakeArray(), int16="i2", float32="f4")}
+        saved = {name: sys.modules.get(name) for name in modules}
+        sys.modules.update(modules)
+        self.addCleanup(lambda: [sys.modules.pop(n, None) if v is None else sys.modules.__setitem__(n, v)
+                                 for n, v in saved.items()])
+        self.dir = tempfile.TemporaryDirectory(); self.addCleanup(self.dir.cleanup)
+        open(os.path.join(self.dir.name, "model.bin"), "wb").close()
+        from eidolon_core.comm_stt import DEFAULT_VOCABULARY, Vocabulary
+        self.vocabulary = Vocabulary(DEFAULT_VOCABULARY["terms"], DEFAULT_VOCABULARY["replacements"])
+
+    def service(self, bias):
+        engine = FasterWhisperSTT(self.dir.name, bias=bias, vocabulary=self.vocabulary)
+        return SpeechToText(engine, vocabulary=self.vocabulary)
+
+    def test_bias_modes_pass_the_glossary_but_never_insert_it(self):
+        self.reply = [_Segment("Bonjour toi-toi, nous testons la mémoire Eidolone, les nombres 24 et 110.")]
+        for bias, expected in (("none", {}), ("prompt", {"initial_prompt": "Glossaire : Eidolon, toytoy."}),
+                               ("hotwords", {"hotwords": "Eidolon toytoy"})):
+            self.calls.clear()
+            out = self.service(bias).transcribe("pc", wav(tone(2)))
+            self.assertEqual({k: v for k, v in self.calls[0].items() if k in ("initial_prompt", "hotwords")}, expected)
+            self.assertEqual(out["text"], "Bonjour toytoy, nous testons la mémoire Eidolon, les nombres 24 et 110.")
+            self.assertEqual(out["corrections"], [{"from": "Eidolone", "to": "Eidolon", "count": 1},
+                                                  {"from": "toi-toi", "to": "toytoy", "count": 1}])
+            self.assertNotIn("Glossaire", out["text"])
+
+    def test_ambiguous_phrases_are_left_alone(self):
+        self.reply = [_Segment("Et de longs essais, toi, toi seul, un toit-toit et le toi-toilette.")]
+        out = self.service("prompt").transcribe("pc", wav(tone(2)))
+        self.assertEqual((out["text"], out["corrections"]), ("Et de longs essais, toi, toi seul, un toit-toit et le toi-toilette.", []))
+
+    def test_silence_never_reaches_the_model(self):
+        out = self.service("prompt").transcribe("pc", wav(b"\0\0" * 16000 * 3))
+        self.assertEqual((out["text"], out["silence"], self.calls), ("", True, []))
+
+    def test_noise_hallucinations_and_repeated_glossary_are_dropped(self):
+        self.reply = [_Segment("Sous-titres réalisés par la communauté d'Amara.org", no_speech=0.5, logprob=-1.4),
+                      _Segment("Merci d'avoir regardé cette vidéo !", no_speech=0.5, logprob=-1.4),
+                      _Segment("Glossaire : Eidolon, toytoy.", no_speech=0.5, logprob=-1.4), _Segment("Eidolon, toytoy", no_speech=0.5, logprob=-1.4),
+                      _Segment("Il fait beau", no_speech=0.9, logprob=-1.4)]
+        out = self.service("prompt").transcribe("pc", wav(tone(2)))
+        self.assertEqual((out["text"], out["empty"], out["dropped_segments"]), ("", True, 5))
+
+    def test_real_words_with_good_confidence_are_kept(self):
+        self.reply = [_Segment("Eidolon.", no_speech=0.05), _Segment("Eidolon, ouvre la conversation.", no_speech=0.7, logprob=-0.3),
+                      _Segment("Merci beaucoup.", no_speech=0.1, logprob=-0.4)]
+        out = self.service("prompt").transcribe("pc", wav(tone(2)))
+        self.assertEqual(out["text"], "Eidolon. Eidolon, ouvre la conversation. Merci beaucoup.")
+        self.assertNotIn("no_speech_prob", json_dumps(out["segments"]))
+
+    def test_invalid_vocabulary_and_bias_refused(self):
+        from eidolon_core.comm_stt import Vocabulary
+        for terms, replacements in ((["<script>"], None), (["a"] * 33, None), ([], {"x": "y\n"})):
+            with self.assertRaises(CommError):
+                Vocabulary(terms, replacements)
+        with self.assertRaises(CommError):
+            FasterWhisperSTT(self.dir.name, bias="everything")
+
+
+def json_dumps(value):
+    import json
+    return json.dumps(value)
