@@ -260,10 +260,9 @@ def build_engines(config):
 
 
 def main(argv=None):
-    from .client_credentials import ClientCredentials
+    from .comm_credentials import ReadOnlyClientCredentials, ReadOnlyCredentialStore
     from .http_api import read_token
     from .presentation import message
-    from .store import Store
     parser = argparse.ArgumentParser(prog="python -m eidolon_core.comm_service",
                                      description="Eidolon — service local voix, synthèse et image ponctuelle")
     parser.add_argument("--state", required=True, help="état Core (clés appairées de la conversation, lecture)")
@@ -275,7 +274,7 @@ def main(argv=None):
     try:
         config = load_config(args.config)
         stt, tts, vision = build_engines(config)
-        api = CommAPI(ClientCredentials(Store(args.state)), stt=stt, tts=tts, vision=vision,
+        api = CommAPI(ReadOnlyClientCredentials(ReadOnlyCredentialStore(args.state)), stt=stt, tts=tts, vision=vision,
                       read_token=read_token(args.read_token_file) if args.read_token_file else None,
                       allowed_origin=config.get("allowed_origin"))
     except (OSError, ValueError, KeyError, TypeError, CommError) as exc:
