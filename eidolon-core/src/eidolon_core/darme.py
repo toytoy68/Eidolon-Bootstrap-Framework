@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from collections import OrderedDict
 from datetime import datetime, timezone
 from enum import Enum
+import math
+import time
 MAX_EVENTS = 10000
 
 def _safe(value, limit, allow_empty=False):
@@ -66,7 +68,7 @@ class SecurityEvent:
 class DarmeMonitor:
     """In-memory projection of trusted events; no authority to enforce changes."""
 
-    def __init__(self, sources, max_events=MAX_EVENTS):
+    def __init__(self, sources, max_events=MAX_EVENTS, *, health_ttl=60, clock=time.monotonic):
         sources = list(sources)
         if not sources or len(set(sources)) != len(sources):
             raise ValueError("unique named sources required")
@@ -74,18 +76,29 @@ class DarmeMonitor:
             _safe(source, 128)
         if type(max_events) is not int or not 1 <= max_events <= MAX_EVENTS:
             raise ValueError("invalid event capacity")
+        if (type(health_ttl) not in (int, float) or not math.isfinite(health_ttl)
+                or not 0 < health_ttl <= 3600 or not callable(clock)):
+            raise ValueError("invalid source freshness configuration")
+        self.health_ttl, self.clock = health_ttl, clock
         self.sources = frozenset(sources)
         self.max_events = max_events
         self.healthy = {source: False for source in self.sources}
+        self.last_seen = {source: None for source in self.sources}
         self.events = OrderedDict()
         self.acknowledged = set()
         self.intervention = False
         self.ingestion_paused = False
+        self.unrepresented_alerts = 0
+        self.unrepresented_events = 0
 
     def health(self, source, healthy):
         if source not in self.sources or type(healthy) is not bool:
             raise ValueError("invalid source health")
+        now = self.clock()
+        if type(now) not in (int, float) or not math.isfinite(now):
+            raise ValueError("invalid monotonic clock")
         self.healthy[source] = healthy
+        self.last_seen[source] = now if healthy else None
 
     def ingest(self, event):
         if not isinstance(event, SecurityEvent) or event.source not in self.sources:
@@ -106,15 +119,24 @@ class DarmeMonitor:
         active = [e for e in self.events.values()
                   if e.severity in (Severity.WARNING, Severity.CRITICAL)
                   and e.event_id not in self.acknowledged]
-        visibility = "complete" if all(self.healthy.values()) and not self.ingestion_paused else "partial"
-        badge = (Badge.RED if active else Badge.BLUE if self.intervention else
+        now = self.clock()
+        if type(now) not in (int, float) or not math.isfinite(now):
+            raise ValueError("invalid monotonic clock")
+        fresh = {source: bool(self.healthy[source] and self.last_seen[source] is not None
+                             and 0 <= now - self.last_seen[source] <= self.health_ttl)
+                 for source in self.sources}
+        visibility = "complete" if all(fresh.values()) and not self.ingestion_paused else "partial"
+        badge = (Badge.RED if active or self.unrepresented_alerts else Badge.BLUE if self.intervention else
                  Badge.GREY if visibility == "partial" else Badge.GOLD)
         return {
             "schema": "eidolon-darme-status/1",
             "badge": badge.value,
             "visibility": visibility,
-            "sources": dict(sorted(self.healthy.items())),
-            "unacknowledged_alerts": len(active),
+            "sources": dict(sorted(fresh.items())),
+            "health_ttl_seconds": self.health_ttl,
+            "unacknowledged_alerts": len(active) + self.unrepresented_alerts,
+            "unrepresented_alerts": self.unrepresented_alerts,
+            "unrepresented_events": self.unrepresented_events,
             "intervention": self.intervention,
             "ingestion_paused": self.ingestion_paused,
             "events": [
