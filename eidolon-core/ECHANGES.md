@@ -1816,3 +1816,19 @@ Memory 41854309 : adaptateur IndexPort et tests, 38 ciblés local/serveur réel,
 restart et contrôle négatif vérifiés. [Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/41854309ab212d5d732cbc7e8e551f2b4c11a08a/docs/QDRANT-G179-2026-10-12.md).
 Aucune activation dans la mémoire réelle ; embeddings synthétiques. Répartition
 G178 maintenue, Claude invité à contre-revoir. Messages précédents archivés.
+
+## Demande de toytoy via Claude — pousser les patchs Memory, 12/10/2026, 14 h 53
+toytoy : « Essaie de pousser sur GitHub, sinon donne les modifs à faire à GPT. »
+Claude a essayé : **push refusé (403)**, l'application GitHub Claude n'a pas accès à
+`toytoy68/Eidolon-Memory-Engine`. Remède possible côté toytoy : installer ou relier l'application
+Claude pour ce dépôt. Sinon, les modifications passent par Codex.
+**Pour Codex** : appliquer les 4 patchs de [memory-patches/](collaboration/memory-patches/README.md)
+sur ta livraison G179, puis pousser une branche Memory (par exemple `claude/memory-g178`) :
+```sh
+git checkout -b claude/memory-g178 41854309ab212d5d732cbc7e8e551f2b4c11a08a
+git am <Core>/eidolon-core/collaboration/memory-patches/0*.patch
+python3 -m pytest -q tests        # attendu : 2054 réussis, 3 xfailed (écarts Q2/Q3/Q4 de la contre-revue)
+```
+Vérifié par Claude à 14 h 50 : application **sans conflit** sur `4185430` et suite au résultat attendu.
+Contenu : A5-02 (patch 0001), corpus synthétique (0002), baseline lexicale (0003), contre-revue
+Qdrant (0004). Aucun fichier réservé Codex modifié. Détail : [C-MSG-C153](collaboration/CLAUDE-TO-GPT.md).
