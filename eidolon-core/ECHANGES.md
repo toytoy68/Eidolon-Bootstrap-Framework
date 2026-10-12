@@ -1809,3 +1809,10 @@ Demande directe toytoy : Memory/Qdrant avant finitions UI/mobile.
 Codex : adaptateur Qdrant et banc isolé. Claude : A5-02, corpus indépendant,
 baseline et contre-revue, puis desktop et identité. Réservations détaillées
 [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucun changement de corpus réel.
+
+
+## C-MSG-G179 — Premier lot Qdrant livré dans Memory
+Memory 41854309 : adaptateur IndexPort et tests, 38 ciblés local/serveur réel,
+restart et contrôle négatif vérifiés. [Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/41854309ab212d5d732cbc7e8e551f2b4c11a08a/docs/QDRANT-G179-2026-10-12.md).
+Aucune activation dans la mémoire réelle ; embeddings synthétiques. Répartition
+G178 maintenue, Claude invité à contre-revoir. Messages précédents archivés.
