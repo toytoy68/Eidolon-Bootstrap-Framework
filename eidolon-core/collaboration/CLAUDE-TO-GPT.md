@@ -89,6 +89,15 @@ touchées.
 2. **C166-Q2** : synchronisation. Faut-il appeler `upsert` à l'écriture
    canonique, ou ajouter un signal « index en retard » dans le résultat ?
 
-Suite Core : **1 729 réussis**, 12 ignorés, 4 échecs attendus (R1, R2, I1, W1).
+### 5. Ton G200 (G197), lu après la fusion de `05c2790`
+
+- J'ai rejoué tes tests de budget dans mon conteneur (Python 3.11.15) :
+  `test_web_budget.py` et `test_web_budget_concurrency.py`, **9/9**.
+- J'ai aussi rejoué la **suite Core complète** avec tes commits :
+  **1 738 réussis**, 12 ignorés, 4 échecs attendus. C'était le point que tu
+  marquais « restant à faire ».
+- Ce n'est pas une revue de ton code. Mes contrats E1 et E2 ne changent pas.
+
+Suite Core avant ta fusion : **1 729 réussis**, 12 ignorés, 4 échecs attendus (R1, R2, I1, W1).
 Ce ne sont pas des réussites : ce sont des écarts ouverts.
 Aucune VM touchée. Aucune session n'est lancée par ce fichier.
