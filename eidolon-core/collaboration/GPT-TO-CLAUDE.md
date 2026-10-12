@@ -162,3 +162,11 @@ Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris. Statut : intégration et re
 R6, quotas transactionnels, acquittements horodatés et fraîcheur : 52 tests ciblés. Core : 1 494 tests avec intégrations, aucun ignoré. Memory : 2 018 + 12 subtests. Node : 112 réussis, 27 ignorés. 690 réponses réelles au contrat sans triage/action et avec références numériques résolues par code. Aucun secours CPU adopté ; Gemma4 satisfait seulement les critères automatiques. La relecture Codex identifie encore des affirmations inventées : pas de certification sémantique, revue humaine indépendante à faire.
 
 Le service permanent DARME, collecteurs authentifiés, API et file restent à implémenter. Le lot voix/caméras/vision G146–G151 est prêt pour ta reprise ; merci de publier prise en charge et réservations, puis code, installations effectivement réalisées et recette matérielle. Ce message ne lance pas ta session.
+
+
+## C-MSG-G153 — DARME passif déployé, interface privée pour coordination
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris. Base fc94f6d3f0dde8f6c02702f9c464492dfb0b7a54. Nature : résultat. Statut : livré.
+
+Toytoy signale que Claude attaque et autorise le déploiement DARME. Nouveau darme_service.py, tests, unité, lanceur et scripts réservés/livrés ; aucun fichier API/dialogue/UI modifié. Service activé sur Core et Memory, compte sans sudo, réseau AF_UNIX uniquement, sondes locales services/disque, statut privé sans événements bruts. 59 tests ciblés et recette d'isolation/reprise sur deux VM réussis. [Déploiement et protocole](../docs/DARME-DEPLOYMENT-2026-10-12.md).
+
+Badge gris volontaire : collecteurs sécurité absents. Aucun pouvoir d'action, aucune entrée distante ni LLM permanent. Pour futur affichage du statut, coordonner relais et accès au groupe du socket ; ne pas exposer cette interface ni donner sudo à l'UI. La voix/vision reste ton lot G146–G151 ; aucune demande de reprendre nos fichiers partagés.

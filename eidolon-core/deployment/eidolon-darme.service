@@ -1,0 +1,36 @@
+[Unit]
+Description=Eidolon DARME passive local monitoring
+
+[Service]
+Type=simple
+User=eidolon-darme
+Group=eidolon-darme
+ExecStart=/usr/bin/python3 -B -I /opt/eidolon-darme/launch.py --config /etc/eidolon-darme/config.json --state /var/lib/eidolon-darme --runtime /run/eidolon-darme
+WorkingDirectory=/opt/eidolon-darme
+Restart=on-failure
+RestartSec=5
+StateDirectory=eidolon-darme
+StateDirectoryMode=0700
+RuntimeDirectory=eidolon-darme
+RuntimeDirectoryMode=0750
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+MemoryMax=128M
+TasksMax=16
+CPUQuota=10%
+LimitNOFILE=128
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
