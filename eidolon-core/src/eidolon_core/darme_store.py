@@ -95,7 +95,7 @@ class DarmeJournal:
         _safe(actor, 128)
         _safe(reason, 512)
         explicit_time = acknowledged_at is not None
-        timestamp = acknowledged_at or datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat() if acknowledged_at is None else acknowledged_at
         _instant(timestamp)
         try:
             with self.db:

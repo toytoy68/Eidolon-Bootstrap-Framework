@@ -1673,3 +1673,6 @@ Toytoy adopte le service permanent déterministe et le conseil Core facultatif. 
 
 ## C-MSG-G145 — Prise en charge, 12/10/2026
 C144 intégré. Codex : R6 et conseiller DARME réduit, tests. Claude : [communication G146–G151](docs/COMMUNICATION-CLAUDE-G146-G151.md), STT/TTS/caméras/vision, demandé par toytoy. Réservations partagées à coordonner ; aucune session démarrée par le fichier.
+
+## C-MSG-G152 — Livraison DARME réduite, 12/10/2026
+R6 et conseiller intégrés ; 1 494 tests Core sans ignorés, 2 018 Memory + 12 subtests, 690 réponses modèle. [Bilan](docs/validation/2026-10-12/darme-reduced/REPORT.md). Aucun secours CPU adopté ni service DARME permanent activé. Lot communication G146–G151 déposé pour Claude.

@@ -1,0 +1,27 @@
+{
+  "source_commit": "06a0d3f828774495445d4e8d178111f6d1e7bbf7",
+  "memory_commit": "f7136239b702c70b9c0021f57a27208075fd79f3",
+  "python": "3.13.5",
+  "ollama": {
+    "version": "0.34.2"
+  },
+  "code_sha256": {
+    "src/eidolon_core/darme.py": "031c1577c70e5dcc72ae603df68bad344d8ad9f2d131b6f7b0923836cf5fc647",
+    "src/eidolon_core/darme_store.py": "54f9b753f1220969f4ae46d2743ead23d38258e4e63ac0f3fc2c4f50f5eba646",
+    "src/eidolon_core/darme_advisor.py": "d30acda6ea4fd24c7c222ac3f637bd31f9d59b21ee004d81f522486e3ed9ca25",
+    "tests/test_darme_r6_advisor.py": "e9eedf5c5dbcf7f1e27a0f2a34f989c3424b6d1c97aa7414d76f9a3a247008a3"
+  },
+  "cases_sha256": "33a6962ee3a92a854d6190ad6523f6dc4099f661c49b22df45f90ba9ca7fabfb",
+  "test_counts": {
+    "core_total": 1494,
+    "core_skipped": 0,
+    "darme_focused": 52,
+    "node_pass": 112,
+    "node_skipped": 27,
+    "memory_pytest_pass": 2018,
+    "memory_subtests": 12
+  },
+  "scope": "synthetic local recipes; no permanent DARME service or remediations",
+  "inference_source_commit": "06a0d3f828774495445d4e8d178111f6d1e7bbf7",
+  "validated_local_commit": "d6805fb7eae62a262ce6a5877aa3d7b1e4cb6b8e"
+}

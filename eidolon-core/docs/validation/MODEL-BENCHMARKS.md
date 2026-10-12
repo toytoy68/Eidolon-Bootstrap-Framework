@@ -47,3 +47,7 @@ CPU antérieur : Gemma3 4B, réponse mémoire en 244,10 s avec clarification ; Q
 ## DARME — recette CPU du 12 octobre 2026
 
 96 réponses CPU et 16 réponses témoin GPU supplémentaires sont consignées dans [le bilan DARME](2026-10-12/darme/REPORT.md), avec contexte, longueur, génération, délais, conformité du niveau, actions et citations. Aucun candidat CPU n'est qualifié pour le contrat complet en l'état. Ces mesures ne sont pas des scores de détection réseau réelle.
+
+
+## DARME, contrat réduit — 12 octobre 2026
+690 réponses : six modèles CPU et Gemma4 12B témoin GPU. Mesures de contexte, longueur, débit, moyenne/p95 et sorties : [bilan détaillé](2026-10-12/darme-reduced/REPORT.md), [CSV](2026-10-12/darme-reduced/final-measurements.csv). Aucun secours CPU adopté. Gemma4 : moyenne API chaude 0,74 s, p95 0,94 s, 106,4 tokens/s ; critères automatiques réussis, qualité sémantique non certifiée.

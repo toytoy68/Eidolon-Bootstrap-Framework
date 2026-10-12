@@ -1,0 +1,18 @@
+{
+  "elapsed_s": 7.254612149001332,
+  "advice": {
+    "explanation": "L'alerte critique demeure active car l'absence de télémétrie de la sonde NAS ne constitue pas une preuve d'absence de menace selon la politique DARME.",
+    "citations": [
+      "darme-security-20261012-telemetry-loss@1"
+    ],
+    "origin": "model",
+    "reason": "accepted",
+    "advisory_only": true,
+    "authorizes_execution": false
+  },
+  "memory_ids": [
+    "darme-security-20261012-telemetry-loss",
+    "darme-security-20261012-suricata-eve"
+  ],
+  "scope": "direct advisory adapter, not a deployed DARME endpoint"
+}

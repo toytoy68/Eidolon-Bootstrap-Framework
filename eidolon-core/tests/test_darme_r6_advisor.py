@@ -80,6 +80,12 @@ class ReplayTests(unittest.TestCase):
             self.assertFalse(j.acknowledge('x','op','seen'))
             with self.assertRaises(ValueError):j.acknowledge('x','op','seen',acknowledged_at='2026-10-12T05:00:00Z')
             self.assertEqual(j.db.execute('SELECT acknowledged_at FROM acknowledgements').fetchone()[0],at);j.close()
+    def test_invalid_explicit_ack_date_is_not_coerced(self):
+        with tempfile.TemporaryDirectory() as d:
+            j=DarmeJournal(Path(d)/"j.db");j.record(self.event("x"))
+            for invalid in ["",False,0]:
+                with self.assertRaises(ValueError):j.acknowledge("x","op","seen",acknowledged_at=invalid)
+            self.assertEqual(j.db.execute("SELECT COUNT(*) FROM acknowledgements").fetchone()[0],0);j.close()
     def test_legacy_ack_date_remains_unknown(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/'j.db';db=sqlite3.connect(p)

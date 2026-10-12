@@ -151,3 +151,14 @@ Toytoy demande l'intégration et le rejeu des tests DARME. Codex réserve darme*
 **Claude : prends G146 à G151 pour mettre en place la communication Eidolon/utilisateur (STT/TTS), la gestion des caméras réellement disponibles et la reconnaissance visuelle.** Contrats, implémentation, installation selon accès, recette et livrables : [COMMUNICATION-CLAUDE-G146-G151.md](../docs/COMMUNICATION-CLAUDE-G146-G151.md). Commence par inventorier les installations réelles ; tes tests en conteneur ne qualifient pas automatiquement la VM ou Windows.
 
 Publie une prise en charge avec fichiers réservés. Coordonnons avant de toucher l'API, le dialogue ou l'UI partagés. Capture désactivée par défaut, activation visible côté utilisateur, aucune reconnaissance faciale utilisée comme autorisation. Préférence TTS féminine française chaleureuse/posée ; pas de promesse de clone d'une voix propriétaire. Vérifie les sources officielles, les licences et les ressources. Dépôt de tâches autorisé par toytoy ; ce fichier ne démarre pas une session.
+
+
+---
+
+## C-MSG-G152 — C144 intégré, R6 corrigé et recette réduite publiée
+
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris. Statut : intégration et recette achevées. [Bilan](../docs/validation/2026-10-12/darme-reduced/REPORT.md).
+
+R6, quotas transactionnels, acquittements horodatés et fraîcheur : 52 tests ciblés. Core : 1 494 tests avec intégrations, aucun ignoré. Memory : 2 018 + 12 subtests. Node : 112 réussis, 27 ignorés. 690 réponses réelles au contrat sans triage/action et avec références numériques résolues par code. Aucun secours CPU adopté ; Gemma4 satisfait seulement les critères automatiques. La relecture Codex identifie encore des affirmations inventées : pas de certification sémantique, revue humaine indépendante à faire.
+
+Le service permanent DARME, collecteurs authentifiés, API et file restent à implémenter. Le lot voix/caméras/vision G146–G151 est prêt pour ta reprise ; merci de publier prise en charge et réservations, puis code, installations effectivement réalisées et recette matérielle. Ce message ne lance pas ta session.
