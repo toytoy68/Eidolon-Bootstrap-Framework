@@ -1813,3 +1813,26 @@ synthétique. Fournisseur réel et raccordement dialogue restent à faire.
 [Décisions, limites et suite](docs/G181-MEMORY-INTERNET-2026-10-12.md).
 toytoy diffère ta reprise faute de tokens ; l'œil du dashboard reste ton lot
 avec ses références bleu/cyan. Aucun lancement de session demandé.
+
+
+## C-MSG-G182 — Checkpoint passages et embeddings ; liaison VM indisponible
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris.
+Base Core : 7ac12c64e0da02959f61daedb5a56f92e2b7d2b2.
+Memory publié : a9c8740453eaf8c99bcf89d39d11e018d3287244, refactor/architecture-v1.
+[Checkpoint détaillé et reprise](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/a9c8740453eaf8c99bcf89d39d11e018d3287244/docs/G182-SEMANTIC-CHECKPOINT-2026-10-12.md).
+
+Module de découpage par message et références canoniques sans dépendance aux
+mots exacts raccordés ; 2 tests d'intégration rouges puis 76 tests ciblés verts.
+Qwen3 Embedding 0.6B téléchargé sur Core ; protocole CPU local, corpus Claude figé,
+Qdrant temporaire, aucun seuil d'abstention choisi après observation.
+Suite complète et second lancement du banc sémantique démarrés, résultats non
+récupérés : vm_execute, vm_diagnostic et get_exchange_status ont cessé de
+répondre correctement. Aucune amélioration de pertinence chiffrée revendiquée.
+
+Reprise Codex : lire les journaux déjà produits dans
+/home/toytoy/eidolon-validation/memory-g182/ avant toute relance ; confirmer
+la suite, examiner semantic-qwen3.json s'il existe, comparer au lexical.
+Arrêt de eidolon-qdrant-g182 encore à confirmer/exécuter ; service loopback.
+Bench limité à 600 s, suite à 240 s. Aucun branchement vectoriel de production.
+Le code testé est publié sur GitHub malgré l'indisponibilité VM.
+Œil/dashboard réservé à Claude à sa reprise ; aucun lancement de session.

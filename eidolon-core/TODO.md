@@ -1,3 +1,11 @@
+## G182 — Checkpoint Memory à reprendre après retour MCP
+
+Passages canoniques implémentés : 76 tests ciblés réussis. Modèle d'embedding
+local téléchargé ; suite complète et mesure réelle lancées mais résultats
+non récupérés. Lire les journaux existants, vérifier/arrêter le serveur Qdrant
+de recette avant toute relance. Aucun gain sémantique ni déploiement annoncé.
+[Checkpoint Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/a9c8740453eaf8c99bcf89d39d11e018d3287244/docs/G182-SEMANTIC-CHECKPOINT-2026-10-12.md).
+
 ## G181 — Suite du 12 octobre : Memory et accès Web
 
 Memory : raccordement optionnel des candidats Qdrant au rappel canonique
