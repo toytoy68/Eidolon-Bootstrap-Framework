@@ -123,6 +123,27 @@ const path = require("node:path");
       if (captures && scale === 1.5 && width === 911) await page.locator("#comm").screenshot({ path: path.join(captures, "dashboard-comm-911-150.png") });
       await context.close();
     }
+    // Écran PC 2560x1440 (question de toytoy) : échelle Windows 100, 125 et 150 %.
+    for (const [label, width, height, scale] of [["2560x1440 à 100 %", 2560, 1440, 1], ["2560x1440 à 125 %", 2048, 1152, 1.25],
+                                                 ["2560x1440 à 150 %", 1707, 960, 1.5]]) {
+      const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale });
+      const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(String(e)));
+      await page.goto(url);
+      await page.fill("#conv-key", key); await page.press("#conv-key", "Enter");
+      await page.waitForSelector("#conv-body:not([hidden])");
+      await page.click("#monitor-refresh");
+      await page.waitForFunction(() => document.querySelectorAll("#monitor-machines .monitor-card").length === 3, null, { timeout: 15000 });
+      const layout = await page.evaluate(() => {
+        const box = (id) => { const r = document.getElementById(id).getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width)]; };
+        return { overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          conversation: box("conversation"), monitor: box("monitor"), missions: box("missions") };
+      });
+      check(label + " : aucun débordement, aucune erreur", layout.overflow === 0 && errors.length === 0, JSON.stringify(layout));
+      if (captures) await page.screenshot({ path: path.join(captures, "dashboard-2560x1440-" + Math.round(scale * 100) + ".png"), fullPage: true });
+      await context.close();
+    }
   } catch (e) { out.checks.push({ check: "exécution", ok: false, detail: String(e).slice(0, 300) }); }
   finally { await browser.close(); }
   console.log(JSON.stringify(out));

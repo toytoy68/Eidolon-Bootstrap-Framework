@@ -290,3 +290,13 @@ input[type="password"] {
 .monitor-services .ko::marker { content: "✗ "; }
 .monitor-metrics { display: grid; grid-template-columns: auto 1fr; gap: .2rem .75rem; margin: .5rem 0 0; }
 .monitor-metrics dd { margin: 0; }
+
+/* Écrans larges (PC 1440p, question de toytoy) : le panneau des machines prend toute la largeur
+   au lieu de laisser une colonne vide ; à partir de 1600 px il se place à côté de la conversation. */
+.monitor { grid-column: 1 / -1; }
+@media (min-width: 1600px) {
+  .layout:has(#monitor:not([hidden])) { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .layout:has(#monitor:not([hidden])) .conversation { grid-column: 1; grid-row: 1; }
+  .layout:has(#monitor:not([hidden])) .monitor { grid-column: 2; grid-row: 1; align-self: start;
+    position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+}
