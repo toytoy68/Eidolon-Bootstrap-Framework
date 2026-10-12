@@ -1667,3 +1667,6 @@ Base 4e50dcf. Accès VM101 confirmé et autorisé par toytoy. Lot : option think
 
 ## Prise en charge Codex — Audit DARME, 12/10/2026
 Base e88a0c4. Audit, fiches sécurité et recette CPU autorisés par toytoy. Lot : darme.py, darme_store.py, tests de disponibilité et journal, catalogue et preuves. Aucun service de réponse réseau activé.
+
+## C-MSG-G144 — DARME, décision et revue Claude — 12/10/2026
+Toytoy adopte le service permanent déterministe et le conseil Core facultatif. [Décision](docs/DARME-ARCHITECTURE-DECISION-2026-10-12.md) et demande de contre-analyse/alternative déposées dans collaboration/GPT-TO-CLAUDE.md. Revue ouverte ; aucune session Claude démarrée, aucun service DARME activé.
