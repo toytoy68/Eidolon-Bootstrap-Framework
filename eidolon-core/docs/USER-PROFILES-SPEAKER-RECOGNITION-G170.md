@@ -78,3 +78,14 @@ l'opérateur ; fichier 0600, dossier 0700. Schéma de plan
 eidolon-user-profile-plan/1, statut PLANNED_NOT_ACTIVE ; aucun importeur
 Runtime encore implémenté. Aucun jeton créé, permission changée ou service
 redémarré. Ce document et les tâches ne lancent aucune session d'agent.
+
+## Première brique G170-A — validateur livré le 12/10/2026
+
+`profile_plan.validate_profile_plan()` valide strictement le plan préparatoire
+et retourne des données immuables. Trois profils, un admin, deux casual ;
+identifiants uniques, aliases normalisés sans collisions, aucun champ secret,
+rôle inconnu ou activation accepté. Résumé de diagnostic sans identités.
+12 tests synthétiques réussis et validation du fichier privé réel sans
+affichage de ses noms. Aucune entrée/sortie dans ce module, aucune permission
+Runtime accordée. Import transactionnel, sessions et isolation mémoire
+restent à implémenter ; le plan privé est toujours PLANNED_NOT_ACTIVE.

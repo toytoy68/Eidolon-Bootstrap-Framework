@@ -52,6 +52,8 @@ class Vocabulary:
     TERM = re.compile(r"[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9' -]{0,39}")
 
     def __init__(self, terms=(), replacements=None):
+        if not isinstance(terms, (list, tuple)) or (replacements is not None and not isinstance(replacements, dict)):
+            raise CommError("INVALID_REQUEST", "vocabulary: terms array and replacements object required")
         terms, replacements = list(terms), dict(replacements or {})
         if len(terms) > 32 or not all(isinstance(t, str) and self.TERM.fullmatch(t) for t in terms):
             raise CommError("INVALID_REQUEST", "vocabulary terms: up to 32 short words")
@@ -98,12 +100,13 @@ def kept(segment, vocabulary=None):
     no_speech, logprob = segment.get("no_speech_prob"), segment.get("avg_logprob")
     if no_speech is not None and logprob is not None and no_speech > NO_SPEECH_PROB and logprob < LOW_LOGPROB:
         return False
-    if HALLUCINATIONS.search(text):
+    doubtful = (no_speech is not None and logprob is not None
+                and no_speech > 0.3 and logprob < LOW_LOGPROB)
+    if doubtful and HALLUCINATIONS.search(text):
         return False
     # A glossary echo: the prompt itself, or only its words while the model doubts there was speech.
     # "Eidolon." clearly spoken is kept.
-    if vocabulary is not None and vocabulary.only_prompt(text) and (
-            "glossaire" in text.lower() or (no_speech is not None and no_speech > 0.3)):
+    if doubtful and vocabulary is not None and vocabulary.only_prompt(text):
         return False
     return True
 

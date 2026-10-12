@@ -213,9 +213,9 @@ class VocabularyAndGuardTests(unittest.TestCase):
         self.assertEqual((out["text"], out["silence"], self.calls), ("", True, []))
 
     def test_noise_hallucinations_and_repeated_glossary_are_dropped(self):
-        self.reply = [_Segment("Sous-titres réalisés par la communauté d'Amara.org"),
-                      _Segment("Merci d'avoir regardé cette vidéo !"),
-                      _Segment("Glossaire : Eidolon, toytoy."), _Segment("Eidolon, toytoy", no_speech=0.5),
+        self.reply = [_Segment("Sous-titres réalisés par la communauté d'Amara.org", no_speech=0.5, logprob=-1.4),
+                      _Segment("Merci d'avoir regardé cette vidéo !", no_speech=0.5, logprob=-1.4),
+                      _Segment("Glossaire : Eidolon, toytoy.", no_speech=0.5, logprob=-1.4), _Segment("Eidolon, toytoy", no_speech=0.5, logprob=-1.4),
                       _Segment("Il fait beau", no_speech=0.9, logprob=-1.4)]
         out = self.service("prompt").transcribe("pc", wav(tone(2)))
         self.assertEqual((out["text"], out["empty"], out["dropped_segments"]), ("", True, 5))

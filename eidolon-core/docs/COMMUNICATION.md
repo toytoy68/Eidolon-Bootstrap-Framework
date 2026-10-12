@@ -272,7 +272,7 @@ ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 -L 127.0.0.1:8766:127.0.0.1:8766 …
 | Câblage de la page (`build.js`, `index.html`, `main.js`) | Claude | fait (G155) |
 | Essai Windows : micro et caméra réels, refus de permission, webcam occupée, branchement à chaud, échelle 125/150 % | toytoy | à faire |
 | Recette audio de référence licite (avec texte attendu), silence, bruit, nombres, noms Eidolon | banc prêt (§6), exécution VM par Codex | en cours (G164) |
-| Identification nominative facultative | décision de toytoy, plus tard | hors lot |
+| Identification nominative voix/visage | adoptée dans G170, profils privés préparés | à implémenter, distincte du STT |
 
 ## 6. Vocabulaire contrôlé et garde-fous de la dictée (G164)
 
@@ -286,24 +286,28 @@ section `stt` :
 
 | Réglage | Effet | Par défaut |
 | --- | --- | --- |
-| `vocabulary` | `"default"` ou `{"terms": [...], "replacements": {...}}` | absent : comportement actuel |
+| `vocabulary` | `"default"` ou `{"terms": [...], "replacements": {...}}` | absent : aucun vocabulaire |
 | `bias` | `none`, `prompt` (amorce « Glossaire : Eidolon, toytoy. »), `hotwords` | `none` |
 | `silence_rms` | sous ce niveau, l'audio n'est **pas envoyé** au modèle : texte vide | 200 |
 | `vad` | filtre de voix de faster-whisper | `false` |
 
 **Garde-fous**, toujours actifs :
-- **Silence** : jamais transmis au modèle (`"silence": true`).
+- **Niveau sonore sous le seuil configuré** : non transmis au modèle
+  (`"silence": true`). Le RMS ne prouve pas une absence de parole ; un
+  seuil trop haut peut supprimer une voix faible. Zéro désactive cette garde.
 - **Segment sans parole** : écarté selon la règle de Whisper
   (`no_speech_prob` > 0,6 **et** `avg_logprob` < −1).
 - **Textes inventés connus** sur bruit (« Sous-titres réalisés par… »,
-  « Merci d'avoir regardé… », Amara.org) : écartés.
-- **Écho de l'amorce** : écarté s'il contient « Glossaire », ou s'il ne
-  contient que les mots du glossaire alors que le modèle doute de la
-  parole. « Eidolon. » dit clairement est **gardé**.
+  « Merci d'avoir regardé… », Amara.org) : écartés seulement si
+  `no_speech_prob` > 0,3 et `avg_logprob` < −1. La phrase seule ne prouve
+  pas une hallucination ; les paroles confiantes ou sans scores restent lisibles.
+- **Écho de l'amorce** : écarté seulement si le texte reprend les mots du
+  glossaire avec les deux scores incertains ci-dessus. Une citation volontaire
+  du glossaire et « Eidolon. » dits clairement sont gardés.
 - Le nombre de segments écartés est renvoyé (`dropped_segments`).
 
 **Remplacements** :
-- seulement des formes **sans ambiguïté**, en mots entiers
+- des formes sélectionnées explicitement, en mots entiers
   (« toi-toi », « toy toy », « Eidolone »…) ;
 - « toi, toi seul » ou « et de longs essais » ne sont pas touchés ;
 - chaque remplacement est renvoyé à la page (`corrections`), et le texte
@@ -323,3 +327,8 @@ Codex le lance sur la VM.
 2. le taux d'erreur des phrases **sans nom** ne se dégrade pas.
 La voix est synthétique : ce n'est pas une précision sur une voix humaine,
 qui reste à vérifier sur ton PC.
+
+Revue Codex G171 : filtre textuel inconditionnel corrigé après reproduction
+de trois faux rejets à bonne confiance. Les heuristiques restent faillibles ;
+aucune absence générale d’hallucinations n’est garantie. Voir la recette
+[réelle G164](validation/2026-10-12/g164-real/REPORT.md).

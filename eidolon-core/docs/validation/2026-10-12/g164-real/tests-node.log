@@ -1,0 +1,790 @@
+TAP version 13
+# Subtest: keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body
+ok 1 - keyboard only: connect, list, select, refresh, receipt; focus is never lost to the page body # SKIP playwright unavailable
+  ---
+  duration_ms: 0.944331
+  ...
+# Subtest: focus after a refused token goes back to the token field, with the status announced
+ok 2 - focus after a refused token goes back to the token field, with the status announced # SKIP playwright unavailable
+  ---
+  duration_ms: 0.10694
+  ...
+# Subtest: visible focus indicator on every control reached by Tab
+ok 3 - visible focus indicator on every control reached by Tab # SKIP playwright unavailable
+  ---
+  duration_ms: 0.074316
+  ...
+# Subtest: layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 4 - layout 1280x720: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps # SKIP playwright unavailable
+  ---
+  duration_ms: 0.076537
+  ...
+# Subtest: layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 5 - layout zoom 200 % (1280x720 vu à 640x360): no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps # SKIP playwright unavailable
+  ---
+  duration_ms: 0.082131
+  ...
+# Subtest: layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps
+ok 6 - layout 320x640: no horizontal scroll, contrast >= 4.5, controls >= 24 px, long text wraps # SKIP playwright unavailable
+  ---
+  duration_ms: 0.061363
+  ...
+# Subtest: reduced motion: no animation or transition anywhere
+ok 7 - reduced motion: no animation or transition anywhere # SKIP playwright unavailable
+  ---
+  duration_ms: 0.135957
+  ...
+# Subtest: dark color scheme keeps contrast
+ok 8 - dark color scheme keeps contrast # SKIP playwright unavailable
+  ---
+  duration_ms: 0.081126
+  ...
+# Subtest: G066 pages of one generation are appended in order; the list is complete only at the end
+ok 9 - G066 pages of one generation are appended in order; the list is complete only at the end
+  ---
+  duration_ms: 2.658181
+  ...
+# Subtest: G066 refused pages never change what is shown and are never mixed
+ok 10 - G066 refused pages never change what is shown and are never mixed
+  ---
+  duration_ms: 3.235545
+  ...
+# Subtest: G066 RESET_REQUIRED freezes the previous list until an explicit reload of a new generation
+ok 11 - G066 RESET_REQUIRED freezes the previous list until an explicit reload of a new generation
+  ---
+  duration_ms: 0.724384
+  ...
+# Subtest: G066 an answer to an older request is ignored after a reload
+ok 12 - G066 an answer to an older request is ignored after a reload
+  ---
+  duration_ms: 0.302109
+  ...
+# Subtest: G066 archive refusals stay in their panel; connection failures freeze the list
+ok 13 - G066 archive refusals stay in their panel; connection failures freeze the list
+  ---
+  duration_ms: 4.041333
+  ...
+# Subtest: G066 nothing is read without an explicit request, and a late answer after disconnect is dropped
+ok 14 - G066 nothing is read without an explicit request, and a late answer after disconnect is dropped
+  ---
+  duration_ms: 0.561483
+  ...
+# Subtest: G066 real Core C-030 pages: two pages, change between pages, unavailable folder
+ok 15 - G066 real Core C-030 pages: two pages, change between pages, unavailable folder
+  ---
+  duration_ms: 1559.944152
+  ...
+# Subtest: G066 real Core without --research-archives: ARCHIVES_NOT_CONFIGURED, missions still readable
+ok 16 - G066 real Core without --research-archives: ARCHIVES_NOT_CONFIGURED, missions still readable
+  ---
+  duration_ms: 1256.570648
+  ...
+# Subtest: G066 Chromium: keyboard load, table of metadata only, small screen without page scroll
+ok 17 - G066 Chromium: keyboard load, table of metadata only, small screen without page scroll # SKIP playwright unavailable
+  ---
+  duration_ms: 0.210688
+  ...
+# Subtest: everything is off by default; devices found are disabled, not capturing
+ok 18 - everything is off by default; devices found are disabled, not capturing
+  ---
+  duration_ms: 5.579043
+  ...
+# Subtest: no device: unavailable, and typed text is untouched
+ok 19 - no device: unavailable, and typed text is untouched
+  ---
+  duration_ms: 0.31272
+  ...
+# Subtest: permission refused, busy webcam, device gone
+ok 20 - permission refused, busy webcam, device gone
+  ---
+  duration_ms: 0.691085
+  ...
+# Subtest: enabling asks permission once and keeps nothing open
+ok 21 - enabling asks permission once and keeps nothing open
+  ---
+  duration_ms: 0.319944
+  ...
+# Subtest: push to talk: indicator on only while capturing, transcript returned as text, not sent as a turn
+ok 22 - push to talk: indicator on only while capturing, transcript returned as text, not sent as a turn
+  ---
+  duration_ms: 10.616313
+  ...
+# Subtest: talk stops by itself at the 30 s limit
+ok 23 - talk stops by itself at the 30 s limit
+  ---
+  duration_ms: 15.04095
+  ...
+# Subtest: cancel while capturing drops the audio and sends nothing
+ok 24 - cancel while capturing drops the audio and sends nothing
+  ---
+  duration_ms: 0.806644
+  ...
+# Subtest: double press does not start two captures
+ok 25 - double press does not start two captures
+  ---
+  duration_ms: 0.219078
+  ...
+# Subtest: speech is chunk by chunk, and talking stops it at once (anti-echo)
+ok 26 - speech is chunk by chunk, and talking stops it at once (anti-echo)
+  ---
+  duration_ms: 11.558216
+  ...
+# Subtest: speech plays every chunk when nothing interrupts
+ok 27 - speech plays every chunk when nothing interrupts
+  ---
+  duration_ms: 7.164081
+  ...
+# Subtest: snapshot: one frame, camera released at once, result without identity
+ok 28 - snapshot: one frame, camera released at once, result without identity
+  ---
+  duration_ms: 0.674232
+  ...
+# Subtest: hot-plug: a new camera is listed; the selected one gone falls back
+ok 29 - hot-plug: a new camera is listed; the selected one gone falls back
+  ---
+  duration_ms: 6.551591
+  ...
+# Subtest: server errors keep the page usable
+ok 30 - server errors keep the page usable
+  ---
+  duration_ms: 5.369419
+  ...
+# Subtest: WAV encoding resamples to 16 kHz mono 16-bit
+ok 31 - WAV encoding resamples to 16 kHz mono 16-bit
+  ---
+  duration_ms: 0.650405
+  ...
+# Subtest: keyboard only: open, send, focus returns to the message, visible focus on every conversation control
+ok 32 - keyboard only: open, send, focus returns to the message, visible focus on every conversation control # SKIP playwright unavailable
+  ---
+  duration_ms: 2.449591
+  ...
+# Subtest: 320x640: long sources and long texts never overflow
+ok 33 - 320x640: long sources and long texts never overflow # SKIP playwright unavailable
+  ---
+  duration_ms: 0.224573
+  ...
+# Subtest: zoom 200 % (640x360): long sources and long texts never overflow
+ok 34 - zoom 200 % (640x360): long sources and long texts never overflow # SKIP playwright unavailable
+  ---
+  duration_ms: 0.185348
+  ...
+# Subtest: an answer arriving after the conversation was closed is ignored
+ok 35 - an answer arriving after the conversation was closed is ignored # SKIP playwright unavailable
+  ---
+  duration_ms: 0.411818
+  ...
+# Subtest: an uncertain mission is shown as such, with no follow button and no automatic resubmission
+ok 36 - an uncertain mission is shown as such, with no follow button and no automatic resubmission # SKIP playwright unavailable
+  ---
+  duration_ms: 0.246604
+  ...
+# Subtest: reload then resume: earlier turns and proposal come back, nothing is resent
+ok 37 - reload then resume: earlier turns and proposal come back, nothing is resent # SKIP playwright unavailable
+  ---
+  duration_ms: 0.171408
+  ...
+# Subtest: media drafts survive opening and closing a conversation
+ok 38 - media drafts survive opening and closing a conversation # SKIP playwright unavailable
+  ---
+  duration_ms: 0.208348
+  ...
+# Subtest: G096: hostile model text stays literal text, unsupported citations are flagged, nothing is submitted
+ok 39 - G096: hostile model text stays literal text, unsupported citations are flagged, nothing is submitted # SKIP playwright unavailable
+  ---
+  duration_ms: 0.213753
+  ...
+# Subtest: G100: two missions, choose one, confirm by keyboard: a recorded request, never a confirmed stop; no overflow at 320 px
+ok 40 - G100: two missions, choose one, confirm by keyboard: a recorded request, never a confirmed stop; no overflow at 320 px # SKIP playwright unavailable
+  ---
+  duration_ms: 0.388316
+  ...
+# Subtest: G101: media results from the real server (none, then a real linked job), then a hostile view stays plain text
+ok 41 - G101: media results from the real server (none, then a real linked job), then a hostile view stays plain text # SKIP playwright unavailable
+  ---
+  duration_ms: 0.40223
+  ...
+# Subtest: G122/G123: a media request from the real dialogue becomes a queue ticket; nothing is launched; reload keeps it
+ok 42 - G122/G123: a media request from the real dialogue becomes a queue ticket; nothing is launched; reload keeps it # SKIP playwright unavailable
+  ---
+  duration_ms: 0.281306
+  ...
+# Subtest: G124: an uncertain cancellation is checked after a reload with its own key, then confirmed once; keyboard only
+ok 43 - G124: an uncertain cancellation is checked after a reload with its own key, then confirmed once; keyboard only # SKIP playwright unavailable
+  ---
+  duration_ms: 0.246072
+  ...
+# Subtest: the canonical digest matches Core's published proposal digest
+ok 44 - the canonical digest matches Core's published proposal digest
+  ---
+  duration_ms: 17.583968
+  ...
+# Subtest: a malformed key is refused locally and the key never appears in the state
+ok 45 - a malformed key is refused locally and the key never appears in the state
+  ---
+  duration_ms: 1.61766
+  ...
+# Subtest: read token refused by the server keeps the conversation closed
+ok 46 - read token refused by the server keeps the conversation closed
+  ---
+  duration_ms: 0.30608
+  ...
+# Subtest: a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal
+ok 47 - a lost answer is uncertain and is resent with the SAME key; a 4xx is a refusal
+  ---
+  duration_ms: 1.260684
+  ...
+# Subtest: submission sends the locally verified digest and identity; a tampered proposal is never sent
+ok 48 - submission sends the locally verified digest and identity; a tampered proposal is never sent
+  ---
+  duration_ms: 11.405077
+  ...
+# Subtest: an uncertain submission is resolved by its receipt, never by a new key
+ok 49 - an uncertain submission is resolved by its receipt, never by a new key
+  ---
+  duration_ms: 1.658087
+  ...
+# Subtest: answers that arrive after closing are ignored
+ok 50 - answers that arrive after closing are ignored
+  ---
+  duration_ms: 1.363161
+  ...
+# Subtest: mission stages: created, running, result, unknown effect, never invented
+ok 51 - mission stages: created, running, result, unknown effect, never invented
+  ---
+  duration_ms: 0.402821
+  ...
+# Subtest: G091: a partial context is said in words; a complete one says nothing
+ok 52 - G091: a partial context is said in words; a complete one says nothing
+  ---
+  duration_ms: 0.243266
+  ...
+# Subtest: G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing
+ok 53 - G092: resuming reads the conversation back, marks unanswered turns pending and resends nothing
+  ---
+  duration_ms: 0.595922
+  ...
+# Subtest: G098: each reply names its profile and model; a change is said; nothing is invented
+ok 54 - G098: each reply names its profile and model; a change is said; nothing is invented
+  ---
+  duration_ms: 2.264029
+  ...
+# Subtest: G101: media results are plain text lines; wrong job, partial, copied reference, HTML
+ok 55 - G101: media results are plain text lines; wrong job, partial, copied reference, HTML
+  ---
+  duration_ms: 0.649021
+  ...
+# Subtest: G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early
+ok 56 - G100: two active missions ask which one; the request names the exact mission and digest; never 'cancelled' early
+  ---
+  duration_ms: 7.154279
+  ...
+# Subtest: G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key
+ok 57 - G100: a tampered proposal is never sent; a lost answer is checked, then resent with the SAME key
+  ---
+  duration_ms: 1.682188
+  ...
+# Subtest: G100: finished missions and media jobs are said, nothing is offered
+ok 58 - G100: finished missions and media jobs are said, nothing is offered
+  ---
+  duration_ms: 0.327162
+  ...
+# Subtest: G101: media results are read on demand, errors are said, closing forgets them
+ok 59 - G101: media results are read on demand, errors are said, closing forgets them
+  ---
+  duration_ms: 0.425397
+  ...
+# Subtest: G124-R1: a late answer for A updates A's record only; B, selected meanwhile, stays under review
+ok 60 - G124-R1: a late answer for A updates A's record only; B, selected meanwhile, stays under review
+  ---
+  duration_ms: 2.478136
+  ...
+# Subtest: G124: an uncertain cancellation survives a reload; it is CHECKED with its own key, never resent
+ok 61 - G124: an uncertain cancellation survives a reload; it is CHECKED with its own key, never resent
+  ---
+  duration_ms: 5.67068
+  ...
+# Subtest: G122/G123: media proposal and ticket wording; no state reads as a success
+ok 62 - G122/G123: media proposal and ticket wording; no state reads as a success
+  ---
+  duration_ms: 0.57437
+  ...
+# Subtest: G124-R1: a late cancellation of A cannot confirm the newly selected B
+ok 63 - G124-R1: a late cancellation of A cannot confirm the newly selected B
+  ---
+  duration_ms: 6.02369
+  ...
+# Subtest: G124-R1: a late error cannot erase a new review, even for the same mission
+ok 64 - G124-R1: a late error cannot erase a new review, even for the same mission
+  ---
+  duration_ms: 16.193839
+  ...
+# Subtest: G124-R1: cancellation proposals arriving out of order keep the latest selection
+ok 65 - G124-R1: cancellation proposals arriving out of order keep the latest selection
+  ---
+  duration_ms: 1.107708
+  ...
+# Subtest: G124-R1: a hashed proposal for another requested mission is refused
+ok 66 - G124-R1: a hashed proposal for another requested mission is refused
+  ---
+  duration_ms: 0.850075
+  ...
+# Subtest: G124-R1: receipt lookup from A cannot rewrite a review of B
+ok 67 - G124-R1: receipt lookup from A cannot rewrite a review of B
+  ---
+  duration_ms: 7.94272
+  ...
+# Subtest: G124-R1: receipt queries cannot race the initial submission
+ok 68 - G124-R1: receipt queries cannot race the initial submission
+  ---
+  duration_ms: 1.144978
+  ...
+# Subtest: G124-R1: older NOT_FOUND cannot undo a newer confirmed receipt
+ok 69 - G124-R1: older NOT_FOUND cannot undo a newer confirmed receipt
+  ---
+  duration_ms: 0.817081
+  ...
+# Subtest: G124-R1: unknown receipt status and disappearance of a known receipt never permit resend
+ok 70 - G124-R1: unknown receipt status and disappearance of a known receipt never permit resend
+  ---
+  duration_ms: 1.349509
+  ...
+# Subtest: G124-R1: an explicit resend keeps the entire original command including its reason
+ok 71 - G124-R1: an explicit resend keeps the entire original command including its reason
+  ---
+  duration_ms: 4.545708
+  ...
+# Subtest: G124-R1: closing and resuming discard outstanding cancellation responses
+ok 72 - G124-R1: closing and resuming discard outstanding cancellation responses
+  ---
+  duration_ms: 1.954286
+  ...
+# Subtest: G123: an older media refresh cannot replace the latest view
+ok 73 - G123: an older media refresh cannot replace the latest view
+  ---
+  duration_ms: 0.421088
+  ...
+# Subtest: G125: busy storage is explained without converting uncertainty into absence or retrying
+ok 74 - G125: busy storage is explained without converting uncertainty into absence or retrying
+  ---
+  duration_ms: 10.758879
+  ...
+# Subtest: G125: a busy receipt read retains the old receipt without claiming a fresh confirmation
+ok 75 - G125: a busy receipt read retains the old receipt without claiming a fresh confirmation
+  ---
+  duration_ms: 10.51398
+  ...
+# Subtest: C069: a delayed mission submission cannot become the new proposal's receipt
+ok 76 - C069: a delayed mission submission cannot become the new proposal's receipt
+  ---
+  duration_ms: 61.302397
+  ...
+# Subtest: C069: closing during the asynchronous digest sends no mission command
+ok 77 - C069: closing during the asynchronous digest sends no mission command
+  ---
+  duration_ms: 0.809844
+  ...
+# Subtest: C069: rapid duplicate validation emits only one submission
+ok 78 - C069: rapid duplicate validation emits only one submission
+  ---
+  duration_ms: 51.441916
+  ...
+# Subtest: C069: a late receipt lookup cannot overwrite a newer mission submission
+ok 79 - C069: a late receipt lookup cannot overwrite a newer mission submission
+  ---
+  duration_ms: 9.30097
+  ...
+# Subtest: C069: an old mission receipt lookup cannot downgrade a more recent FOUND
+ok 80 - C069: an old mission receipt lookup cannot downgrade a more recent FOUND
+  ---
+  duration_ms: 3.595482
+  ...
+# Subtest: C069: switching conversations ignores the previous conversation's late turn
+ok 81 - C069: switching conversations ignores the previous conversation's late turn
+  ---
+  duration_ms: 0.949061
+  ...
+# Subtest: C069: concurrent conversation resumes keep the last requested conversation
+ok 82 - C069: concurrent conversation resumes keep the last requested conversation
+  ---
+  duration_ms: 0.539275
+  ...
+# Subtest: C069: a malformed replacement key closes the previous session and drops its response
+ok 83 - C069: a malformed replacement key closes the previous session and drops its response
+  ---
+  duration_ms: 0.471651
+  ...
+# Subtest: C069: out-of-order turn answers do not replace a newer proposal or erase its receipt
+ok 84 - C069: out-of-order turn answers do not replace a newer proposal or erase its receipt
+  ---
+  duration_ms: 5.6777
+  ...
+# Subtest: C069: a receipt check during submission sends no concurrent lookup
+ok 85 - C069: a receipt check during submission sends no concurrent lookup
+  ---
+  duration_ms: 51.711636
+  ...
+# Subtest: UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly
+ok 86 - UTF-8 with BOM, so Windows PowerShell 5.1 reads the accents correctly
+  ---
+  duration_ms: 1.597332
+  ...
+# Subtest: the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination
+ok 87 - the forward binds 127.0.0.1 on both sides, same port, and ends ssh options before the destination
+  ---
+  duration_ms: 0.247642
+  ...
+# Subtest: host key verification and system settings are never weakened
+ok 88 - host key verification and system settings are never weakened
+  ---
+  duration_ms: 0.402232
+  ...
+# Subtest: preview by default; connection only with -Connect; stop limited to its own recorded ssh process
+ok 89 - preview by default; connection only with -Connect; stop limited to its own recorded ssh process
+  ---
+  duration_ms: 0.310413
+  ...
+# Subtest: no secret is read or printed; inputs are validated before reaching ssh or the remote shell
+ok 90 - no secret is read or printed; inputs are validated before reaching ssh or the remote shell
+  ---
+  duration_ms: 0.239889
+  ...
+# Subtest: the optional remote diagnostic is C-009c --check, which starts nothing
+ok 91 - the optional remote diagnostic is C-009c --check, which starts nothing
+  ---
+  duration_ms: 0.132561
+  ...
+# Subtest: remote relative paths keep their home anchor after cd; absolute paths remain literal
+ok 92 - remote relative paths keep their home anchor after cd; absolute paths remain literal
+  ---
+  duration_ms: 0.118168
+  ...
+# Subtest: missing executable rejects without an unhandled spawn error
+ok 93 - missing executable rejects without an unhandled spawn error
+  ---
+  duration_ms: 8.744673
+  ...
+# Subtest: startup deadline waits for its silent owned child to exit
+ok 94 - startup deadline waits for its silent owned child to exit
+  ---
+  duration_ms: 113.527471
+  ...
+# Subtest: stderr is drained and a child ignoring TERM is killed, then stop is idempotent
+ok 95 - stderr is drained and a child ignoring TERM is killed, then stop is idempotent
+  ---
+  duration_ms: 167.715747
+  ...
+# Subtest: all six operations prepare drafts, never submissions
+ok 96 - all six operations prepare drafts, never submissions
+  ---
+  duration_ms: 1.300518
+  ...
+# Subtest: editing and analysis require a compatible source
+ok 97 - editing and analysis require a compatible source
+  ---
+  duration_ms: 2.743111
+  ...
+# Subtest: budgets and input bounds reject oversized, empty or unsupported files
+ok 98 - budgets and input bounds reject oversized, empty or unsupported files
+  ---
+  duration_ms: 0.299329
+  ...
+# Subtest: preparation reads metadata only, never file content or paths
+ok 99 - preparation reads metadata only, never file content or paths
+  ---
+  duration_ms: 0.83979
+  ...
+# Subtest: workspace navigation preserves separate drafts, edits invalidate summary, clear removes files
+ok 100 - workspace navigation preserves separate drafts, edits invalidate summary, clear removes files
+  ---
+  duration_ms: 1.272769
+  ...
+# Subtest: analysis hides generation settings and missing sources produce a useful message
+ok 101 - analysis hides generation settings and missing sources produce a useful message
+  ---
+  duration_ms: 2.078731
+  ...
+# Subtest: read-only HTML has no execution command button, including disabled placeholders (C103)
+ok 102 - read-only HTML has no execution command button, including disabled placeholders (C103)
+  ---
+  duration_ms: 0.682428
+  ...
+# Subtest: Chromium: media workspaces send nothing, preserve escaped text and reset on disconnect
+ok 103 - Chromium: media workspaces send nothing, preserve escaped text and reset on disconnect # SKIP playwright unavailable
+  ---
+  duration_ms: 0.084792
+  ...
+# Subtest: nothing is read when the conversation opens; one read on demand, never more than one timer
+ok 104 - nothing is read when the conversation opens; one read on demand, never more than one timer
+  ---
+  duration_ms: 6.283781
+  ...
+# Subtest: grey is never secure; gold says its scope; red counts alerts; nothing claims more than the server
+ok 105 - grey is never secure; gold says its scope; red counts alerts; nothing claims more than the server
+  ---
+  duration_ms: 0.827829
+  ...
+# Subtest: stale status loses its colour; unavailable and invalid machines say so
+ok 106 - stale status loses its colour; unavailable and invalid machines say so
+  ---
+  duration_ms: 0.257486
+  ...
+# Subtest: metrics follow eidolon-machine/1: null is 'indisponible', never zero; GPU never measured
+ok 107 - metrics follow eidolon-machine/1: null is 'indisponible', never zero; GPU never measured
+  ---
+  duration_ms: 0.67025
+  ...
+# Subtest: polling: bounded interval, one request in flight, paused when hidden
+ok 108 - polling: bounded interval, one request in flight, paused when hidden
+  ---
+  duration_ms: 6.778916
+  ...
+# Subtest: three failures in a row stop polling; the last data stays, marked
+ok 109 - three failures in a row stop polling; the last data stays, marked
+  ---
+  duration_ms: 1.518313
+  ...
+# Subtest: refusal (revoked key) and a Core without --monitor-port stop at once
+ok 110 - refusal (revoked key) and a Core without --monitor-port stop at once
+  ---
+  duration_ms: 1.275473
+  ...
+# Subtest: closing the conversation stops and forgets; a late answer is ignored
+ok 111 - closing the conversation stops and forgets; a late answer is ignored
+  ---
+  duration_ms: 1.258283
+  ...
+# Subtest: a key that disappears between two reads stops the polling
+ok 112 - a key that disappears between two reads stops the polling
+  ---
+  duration_ms: 0.895347
+  ...
+# Subtest: real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+ok 113 - real server + beta fixture: the three receipt queries, an absent key and a wrong mission
+  ---
+  duration_ms: 1246.264235
+  ...
+# Subtest: real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+ok 114 - real server: another store behind the same address answers STORE_CHANGED; lookups stop until reconnection
+  ---
+  duration_ms: 2019.439124
+  ...
+# Subtest: Chromium on the real server: receipt lookup shown next to the current capture, no command button
+ok 115 - Chromium on the real server: receipt lookup shown next to the current capture, no command button # SKIP playwright unavailable
+  ---
+  duration_ms: 0.144555
+  ...
+# Subtest: G060 real Core projections of research missions: labels, notes, no query or page text
+ok 116 - G060 real Core projections of research missions: labels, notes, no query or page text
+  ---
+  duration_ms: 1748.000132
+  ...
+# Subtest: G060 labels never claim truth; unknown objectives and outcomes stay as received
+ok 117 - G060 labels never claim truth; unknown objectives and outcomes stay as received
+  ---
+  duration_ms: 0.461958
+  ...
+# Subtest: G060 Chromium on the real server: research note shown, no command, no query
+ok 118 - G060 Chromium on the real server: research note shown, no command, no query # SKIP playwright unavailable
+  ---
+  duration_ms: 0.076336
+  ...
+# Subtest: served assets are the committed ones and app.js is the current bundle
+ok 119 - served assets are the committed ones and app.js is the current bundle
+  ---
+  duration_ms: 964.540295
+  ...
+# Subtest: real server: list, snapshot, a cancellation written by another process seen by poll and relist
+ok 120 - real server: list, snapshot, a cancellation written by another process seen by poll and relist
+  ---
+  duration_ms: 999.413077
+  ...
+# Subtest: real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+ok 121 - real server: wrong token is 401, a server stopped is offline with data kept, a restarted server resumes
+  ---
+  duration_ms: 874.286507
+  ...
+# Subtest: real server: another state behind the same address wipes the display
+ok 122 - real server: another state behind the same address wipes the display
+  ---
+  duration_ms: 1621.185348
+  ...
+# Subtest: Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout
+ok 123 - Chromium on the real server: token, list, details, no storage, no foreign request, mobile layout # SKIP playwright unavailable
+  ---
+  duration_ms: 0.189857
+  ...
+# Subtest: Chromium: a page opened through another Host is refused by the server, and the client says so
+ok 124 - Chromium: a page opened through another Host is refused by the server, and the client says so # SKIP playwright unavailable
+  ---
+  duration_ms: 0.092398
+  ...
+# Subtest: token format is checked locally; nothing is sent for a malformed token
+ok 125 - token format is checked locally; nothing is sent for a malformed token
+  ---
+  duration_ms: 1.359143
+  ...
+# Subtest: connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+ok 126 - connect reads health, lists, then a selection asks one snapshot; the token is only in the header argument
+  ---
+  duration_ms: 2.902058
+  ...
+# Subtest: pagination sends next_cursor unchanged and stops at the end; never more than three pages
+ok 127 - pagination sends next_cursor unchanged and stops at the end; never more than three pages
+  ---
+  duration_ms: 2.482549
+  ...
+# Subtest: list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+ok 128 - list RESET_REQUIRED keeps the old inventory marked stale; an explicit relist starts without cursor
+  ---
+  duration_ms: 0.712177
+  ...
+# Subtest: 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+ok 129 - 401 forgets the token, stops, keeps the last data marked stale and drops answers still in flight
+  ---
+  duration_ms: 0.755553
+  ...
+# Subtest: 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+ok 130 - 403 (Host/Origin) and 503 stop requests and keep the last state; 400 is a Core error, not a capture
+  ---
+  duration_ms: 1.437957
+  ...
+# Subtest: network failure: offline, data kept and dated; reconnect to the same store resumes
+ok 131 - network failure: offline, data kept and dated; reconnect to the same store resumes
+  ---
+  duration_ms: 0.920757
+  ...
+# Subtest: reconnection to another store wipes the previous display: no mixed identities
+ok 132 - reconnection to another store wipes the previous display: no mixed identities
+  ---
+  duration_ms: 0.941525
+  ...
+# Subtest: a list answering for another store than health is refused and nothing is shown
+ok 133 - a list answering for another store than health is refused and nothing is shown
+  ---
+  duration_ms: 0.378463
+  ...
+# Subtest: an answer for a previous selection never replaces the current one
+ok 134 - an answer for a previous selection never replaces the current one
+  ---
+  duration_ms: 0.781007
+  ...
+# Subtest: disconnect forgets token and display; a late answer is dropped
+ok 135 - disconnect forgets token and display; a late answer is dropped
+  ---
+  duration_ms: 0.512739
+  ...
+# Subtest: poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+ok 136 - poll: DELTA drains has_more within five pages; RESET_REQUIRED waits for the explicit reload
+  ---
+  duration_ms: 2.541533
+  ...
+# Subtest: an invalid or authority-claiming answer is rejected, never displayed
+ok 137 - an invalid or authority-claiming answer is rejected, never displayed
+  ---
+  duration_ms: 0.499698
+  ...
+# Subtest: a malformed mission id is never turned into a request path
+ok 138 - a malformed mission id is never turned into a request path
+  ---
+  duration_ms: 0.344281
+  ...
+# Subtest: G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+ok 139 - G036 FOUND: historical APPROVED then REVOKED are records next to a current REVOKED capture, never merged
+  ---
+  duration_ms: 1.185048
+  ...
+# Subtest: G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+ok 140 - G036 cancellation receipt: REQUESTED is recorded, not a confirmed stop
+  ---
+  duration_ms: 0.622928
+  ...
+# Subtest: G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+ok 141 - G036 NOT_FOUND keeps the uncertainty; nothing else is asked or sent
+  ---
+  duration_ms: 0.577388
+  ...
+# Subtest: G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+ok 142 - G036 STORE_CHANGED blocks further lookups until an explicit reconnection; mismatch and unavailable stay local
+  ---
+  duration_ms: 1.999974
+  ...
+# Subtest: G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+ok 143 - G036 invalid keys are never sent; answers that do not echo the question or claim authority are refused
+  ---
+  duration_ms: 0.854593
+  ...
+# Subtest: G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+ok 144 - G036 a receipt answer arriving after another selection, or after disconnect, is dropped
+  ---
+  duration_ms: 0.755676
+  ...
+# Subtest: G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused
+ok 145 - G048 receipt_binding: EVENT_HASH and LEGACY_FIELDS kept, absent stays unspecified, unknown or misplaced refused
+  ---
+  duration_ms: 3.323864
+  ...
+# Subtest: G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+ok 146 - G043 a 200 list page refused by the protocol does not advance lastSuccessAt and is reported
+  ---
+  duration_ms: 0.376999
+  ...
+# Subtest: G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+ok 147 - G043 a 200 snapshot refused (other store) or older than the shown one does not advance freshness
+  ---
+  duration_ms: 0.659601
+  ...
+# Subtest: G043 an answer for a previous list epoch does not advance freshness
+ok 148 - G043 an answer for a previous list epoch does not advance freshness
+  ---
+  duration_ms: 0.373881
+  ...
+# Subtest: G043 two concurrent connections: only the last one is applied, the first answer never counts
+ok 149 - G043 two concurrent connections: only the last one is applied, the first answer never counts
+  ---
+  duration_ms: 0.25882
+  ...
+# Subtest: G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+ok 150 - G043 RESET_REQUIRED is an accepted protocol answer, but the frozen view is never presented as current
+  ---
+  duration_ms: 0.500708
+  ...
+# Subtest: G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry
+ok 151 - G043 503 BUSY is not an outage: data kept and marked not current, explicit retry works, no automatic retry
+  ---
+  duration_ms: 0.779725
+  ...
+# Subtest: G125 503 STATE_BUSY (database locked by a writer) is busy, not unavailable; explicit retry only
+ok 152 - G125 503 STATE_BUSY (database locked by a writer) is busy, not unavailable; explicit retry only
+  ---
+  duration_ms: 0.367124
+  ...
+# Subtest: G125 STATE_UNAVAILABLE stays an outage of the base, distinct from busy
+ok 153 - G125 STATE_UNAVAILABLE stays an outage of the base, distinct from busy
+  ---
+  duration_ms: 0.21645
+  ...
+# Subtest: G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture
+ok 154 - G043 a FOUND receipt does not refresh the connection's last accepted read nor the capture
+  ---
+  duration_ms: 9.277264
+  ...
+# Subtest: G125 STATE_BUSY keeps the last read visible and permits only an explicit read retry
+ok 155 - G125 STATE_BUSY keeps the last read visible and permits only an explicit read retry
+  ---
+  duration_ms: 0.646395
+  ...
+# Subtest: G125 missing or corrupt storage remains unavailable, not busy
+ok 156 - G125 missing or corrupt storage remains unavailable, not busy
+  ---
+  duration_ms: 0.703707
+  ...
+1..156
+# tests 156
+# suites 0
+# pass 130
+# fail 0
+# cancelled 0
+# skipped 26
+# todo 0
+# duration_ms 4919.186976

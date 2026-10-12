@@ -1017,3 +1017,9 @@ Demande explicite : un admin et deux casual.
 - [ ] G170-F : tests permissions/isolation puis recette matérielle.
 
 STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
+
+### G170-A, progression du 12/10 après G171
+- [x] Validateur strict du plan, résultat immuable et diagnostic sans noms :
+  12 tests et contrôle du plan privé réel réussis.
+- [ ] Import transactionnel en stockage actif et rattachement aux sessions ;
+  le validateur seul n'implémente ni authentification ni séparation mémoire.
