@@ -164,3 +164,112 @@ texte reste disponible.
     ligne d'initialisation dans `main.js`. Je les annoncerai avant de les
     faire.
 - `media_backends.py`, `darme*.py` et le paquetage restent à Codex.
+
+## 3. Ce qui est livré (G147 à G151)
+
+| Lot | Fichiers | Tests |
+| --- | --- | --- |
+| Contrat commun | `comm_contract.py` : erreurs, contrôle WAV (mono, 16 bits, 16 kHz, 30 s, 1 Mio), une requête par client et par périphérique | dans les tests suivants |
+| **G147** transcription | `comm_stt.py` : faster-whisper sur processeur, chargé depuis un **dossier local** (`model.bin`), jamais par un nom de modèle, donc jamais téléchargé ; simulateur ; silence → texte vide ; annulation entre les segments ; délai maximal | `test_comm_stt.py` (11) |
+| **G148** synthèse | `comm_tts.py` : Piper, avec l'exécutable de l'opérateur, les voix **présentes** dans son dossier, un environnement vide et un délai ; découpage en phrases ; vitesse (défaut 0,9) et volume ; arrêt immédiat, processus récupéré | `test_comm_tts.py` (10, avec un faux Piper local) |
+| **G149** page | `desktop/connected/src/communication.js` : tout éteint par défaut, voyant de capture, appui pour parler (30 s au plus), annulation, anti-écho, une image et la caméra relâchée aussitôt, branchement à chaud, encodage WAV 16 kHz | `communication.test.js` (14) |
+| **G150** vision | `comm_vision.py` : JPEG ou PNG contrôlé (2 Mio, 1280 × 720), Ollama en boucle locale, présence puis scène, **aucune identité**, image jamais gardée | `test_comm_vision.py` (7, faux Ollama) |
+| **G151** service | `comm_service.py` : `eidolon-comm` séparé, clé appairée, jeton de lecture refusé, hôte et origine de la page contrôlés, corps trop gros refusé avant lecture, rien dans les journaux, `--check` | `test_comm_service.py` (9) |
+
+**Recette en conteneur** :
+[recipe_comm.py](validation/2026-10-12/claude-g146-g151/recipe_comm.py) →
+[recipe_comm.json](validation/2026-10-12/claude-g146-g151/recipe_comm.json),
+**11/11**.
+
+Elle lance le vrai processus du service et passe par les **vrais
+adaptateurs** Piper et Ollama, branchés sur des moteurs **factices**. La
+transcription utilise le simulateur. Vérifié :
+- clé exigée, jeton de lecture et autre origine refusés ;
+- transcription non vérifiée et sans permission ;
+- synthèse phrase par phrase ;
+- présence sans identité ;
+- **aucun fichier laissé dans l'état** ;
+- arrêt propre.
+
+Ces mesures (quelques millisecondes, environ 26 Mo de mémoire pour le
+service) **ne disent rien** des vrais moteurs.
+
+**Pas encore câblé dans la page.** `communication.js` n'est ni dans
+`build.js` ni dans `index.html`, des fichiers partagés : il attend l'accord
+de GPT sur le câblage proposé (C145).
+
+## 4. Installer sur une VM (guide, non exécuté par Claude)
+
+Rien n'a été installé par Claude. Toutes les commandes s'exécutent avec un
+compte **sans sudo** (par exemple `eidolon`), dans des dossiers à lui.
+Chaque modèle se télécharge **explicitement**, par l'opérateur. Licences et
+fiches **à vérifier sur la source officielle** avant usage.
+
+**Transcription (faster-whisper)** — licence MIT (à vérifier) :
+```sh
+python3 -m venv ~/eidolon-comm/venv
+~/eidolon-comm/venv/bin/pip install faster-whisper            # téléchargement explicite
+# Modèle CTranslate2 déjà converti, copié dans un dossier local, par exemple
+#   ~/eidolon-comm/models/whisper-small/model.bin
+# (dépôts « Systran/faster-whisper-* » ; poids Whisper d'OpenAI, licence MIT à vérifier).
+```
+Commencer par `small` ou `base` sur processeur ; mesurer avant `medium`.
+
+**Synthèse (Piper)** :
+- Le projet d'origine `rhasspy/piper` était sous licence MIT ; sa suite
+  `OHF-Voice/piper1-gpl` est sous GPL-3.0. **À vérifier**, comme les options
+  de l'exécutable installé : l'adaptateur passe `--model`, `--output_raw` et
+  `--length_scale`.
+- Voix françaises **féminines** candidates, à écouter et dont la licence est
+  à vérifier sur leur fiche (`MODEL_CARD`) :
+  - `fr_FR-siwis-medium` ;
+  - `fr_FR-upmc-medium`, voix de locutrice ;
+  - `fr_FR-mls`, multilocuteur.
+- Chaque voix = `<nom>.onnx` + `<nom>.onnx.json` dans
+  `~/eidolon-comm/voices/`.
+
+**Vision (Ollama, déjà présent sur VM101)** :
+- Un modèle **capable de lire des images**, déjà chargé ou téléchargé
+  explicitement (`ollama pull …`). Exemples à évaluer :
+  - `moondream` (léger) ;
+  - `gemma3:4b` ;
+  - un modèle Qwen-VL.
+- Licences propres à chaque modèle, à vérifier. Mesurer la contention avec
+  le dialogue de Core avant de partager le GPU.
+
+**Configuration** (`~/eidolon-comm/comm.json`, `chmod 600`) :
+```json
+{"schema": "eidolon-comm-config/1",
+ "stt": {"kind": "faster-whisper", "model_dir": "/home/eidolon/eidolon-comm/models/whisper-small", "threads": 2},
+ "tts": {"kind": "piper", "executable": "/home/eidolon/eidolon-comm/piper/piper",
+         "voice_dir": "/home/eidolon/eidolon-comm/voices", "default_voice": "fr_FR-siwis-medium"},
+ "vision": {"kind": "ollama", "endpoint": "http://127.0.0.1:11434", "model": "moondream"},
+ "allowed_origin": "http://127.0.0.1:8765"}
+```
+Une section absente = moteur indisponible, et rien d'autre ne change.
+
+**Vérifier, démarrer, arrêter, désinstaller** :
+```sh
+python -m eidolon_core.comm_service --state <état Core> --config ~/eidolon-comm/comm.json --check
+python -m eidolon_core.comm_service --state <état Core> --config ~/eidolon-comm/comm.json \
+       --port 8766 --read-token-file <jeton de lecture>            # Ctrl+C ou SIGTERM pour arrêter
+# Désinstaller : arrêter le service, puis supprimer ~/eidolon-comm (venv, modèles, voix, configuration).
+# L'état Core n'est pas touché : le service n'y lit que les clés appairées.
+```
+
+**Tunnel du PC** : ajouter le port 8766 **au même numéro** des deux côtés,
+comme pour 8765 (constat G082) :
+```sh
+ssh -N -L 127.0.0.1:8765:127.0.0.1:8765 -L 127.0.0.1:8766:127.0.0.1:8766 …
+```
+
+## 5. Reste à faire (réel)
+
+| Point | Qui | Statut |
+| --- | --- | --- |
+| Inventaire des machines (§1.2) | toytoy ou GPT | à faire |
+| Installation des moteurs sur la VM, mesures réelles : premier son, durée de transcription, RAM, charge processeur | toytoy ou GPT, avec ce guide | à faire |
+| Câblage de la page (`build.js`, `index.html`, `main.js`) | Claude, après accord de GPT | en attente |
+| Essai Windows : micro et caméra réels, refus de permission, webcam occupée, branchement à chaud, échelle 125/150 % | toytoy | à faire |
+| Recette audio de référence licite (avec texte attendu), silence, bruit, nombres, noms Eidolon | après installation | à faire |
+| Identification nominative facultative | décision de toytoy, plus tard | hors lot |
