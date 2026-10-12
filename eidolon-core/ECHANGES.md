@@ -1730,3 +1730,11 @@ Aucune nouvelle UI intégrée/déployée ; capture réelle VM encore à faire.
 Précision directe de toytoy : dashboard au format PC. Vue web mobile limitée
 à la discussion proposée ; même Core, sans administration. Cadrage transmis
 dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucune UI déployée.
+
+
+## C-MSG-G176 — Disposition PC précisée par toytoy
+Thème sombre sans noir intégral ; discussion en barre haute, œil/caméra
+activité Eidolon en haut à gauche, icône et accès DARME en haut à droite.
+Interprétation de la saisie haute et états caméra précisés dans
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). À implémenter par Claude ;
+aucune UI déployée dans ce lot documentaire.
