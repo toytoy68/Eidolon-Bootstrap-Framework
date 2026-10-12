@@ -1,0 +1,305 @@
+From 8f26c89dd25eb0a8d9a962cd85936d3820d05a8a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 12 Oct 2026 21:40:47 +0000
+Subject: [PATCH] test(claude-eval): G201 acceptance cases and a separate
+ calibration set
+
+Calibration set (24 questions: direct, paraphrase, off-topic) frozen by
+SHA and disjoint from the held-out corpus-v1. Strict xfail acceptance
+cases for GPT's G201 decisions: staleness signal, verified archive
+passages from the production index, retention without orphan.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../dev-calibration-v1.json                   | 187 ++++++++++++++++++
+ .../test_g201_contract_probes.py              |  83 ++++++++
+ 2 files changed, 270 insertions(+)
+ create mode 100644 docs/claude-memory-eval/dev-calibration-v1.json
+ create mode 100644 tests/claude_memory_eval/test_g201_contract_probes.py
+
+diff --git a/docs/claude-memory-eval/dev-calibration-v1.json b/docs/claude-memory-eval/dev-calibration-v1.json
+new file mode 100644
+index 0000000..21bac5b
+--- /dev/null
++++ b/docs/claude-memory-eval/dev-calibration-v1.json
+@@ -0,0 +1,187 @@
++{
++ "schema": "claude-memory-calibration/1",
++ "version": 1,
++ "author": "Claude",
++ "date": "2026-10-12",
++ "purpose": "Development set to CALIBRATE an abstention threshold (G201 Q1). Separate from corpus-v1 questions, which stay the held-out test set; never tune on corpus-v1.",
++ "documents": "corpus-v1.json documents (same 30 synthetic documents)",
++ "synthetic": true,
++ "questions": [
++  {
++   "id": "dev-dir-1",
++   "question": "Vers quel disque le NAS copie-t-il les photos ?",
++   "expected": [
++    "tech-nas-backup"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-2",
++   "question": "Quelle voix française utilise Piper ?",
++   "expected": [
++    "tech-voice"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-3",
++   "question": "Combien de threads utilise la dictée Whisper ?",
++   "expected": [
++    "tech-stt"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-4",
++   "question": "Où WireGuard est-il installé ?",
++   "expected": [
++    "tech-wireguard"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-5",
++   "question": "Quelle tisane est-ce que je bois le soir ?",
++   "expected": [
++    "pref-tea"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-6",
++   "question": "Quel est le rôle de Qdrant par rapport au Markdown ?",
++   "expected": [
++    "tech-memory-qdrant"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-7",
++   "question": "Quand le cousin Paul fête-t-il son anniversaire ?",
++   "expected": [
++    "person-paul-cousin"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-dir-8",
++   "question": "À quelle fréquence arroser les tomates ?",
++   "expected": [
++    "routine-garden"
++   ],
++   "category": "direct"
++  },
++  {
++   "id": "dev-par-1",
++   "question": "Quel accès distant permet de joindre le téléphone de l'extérieur ?",
++   "expected": [
++    "tech-wireguard"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-2",
++   "question": "Quelle boisson chaude sans sucre je prends en me levant ?",
++   "expected": [
++    "pref-coffee"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-3",
++   "question": "Qui doit intervenir pour la plomberie ?",
++   "expected": [
++    "person-paul-plumber"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-4",
++   "question": "Quand l'entretien de la voiture est-il programmé ?",
++   "expected": [
++    "routine-car"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-5",
++   "question": "Quel composant observe les services sans pouvoir agir ?",
++   "expected": [
++    "tech-darme"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-6",
++   "question": "À quelle température faut-il mettre le chauffage en route ?",
++   "expected": [
++    "cond-heating"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-7",
++   "question": "Quel métal reste liquide à température ambiante ?",
++   "expected": [
++    "chem-mercure"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-par-8",
++   "question": "Qui faut-il avertir si deux sauvegardes nocturnes ratent ?",
++   "expected": [
++    "cond-backup"
++   ],
++   "category": "paraphrase"
++  },
++  {
++   "id": "dev-off-1",
++   "question": "Quelle est la recette de la tarte aux pommes ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-2",
++   "question": "Combien coûte un abonnement de train Paris-Lyon ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-3",
++   "question": "Quel est le mot de passe du routeur Wi-Fi ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-4",
++   "question": "Quand le dentiste a-t-il programmé le prochain rendez-vous ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-5",
++   "question": "Quel temps fera-t-il demain à Strasbourg ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-6",
++   "question": "Quelle est la taille de l'écran du salon ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-7",
++   "question": "Quel est le nom du chat des voisins ?",
++   "expected": [],
++   "category": "off_topic"
++  },
++  {
++   "id": "dev-off-8",
++   "question": "Combien de kilomètres a parcouru le vélo ?",
++   "expected": [],
++   "category": "off_topic"
++  }
++ ]
++}
+diff --git a/tests/claude_memory_eval/test_g201_contract_probes.py b/tests/claude_memory_eval/test_g201_contract_probes.py
+new file mode 100644
+index 0000000..e302eec
+--- /dev/null
++++ b/tests/claude_memory_eval/test_g201_contract_probes.py
+@@ -0,0 +1,83 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_g201_contract_probes.py
++# Description : Cas de test proposés par Claude pour les décisions G201 : passages, retard d'index, calibration
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Executable acceptance cases for GPT's G201 decisions (Claude, own file). Strict xfail = not built yet;
++each turns red the day the behaviour exists, so the probe is then promoted to an ordinary test.
++The only names assumed are the ones G201 chose (INDEX_STALE / INDEX_PENDING); placement is left free."""
++from collections import Counter
++import hashlib
++import json
++from pathlib import Path
++
++import pytest
++
++from core.retrieval.contextual import ContextualRecall
++from tests.test_archive_chunks import store_archive
++from tests.test_contextual_recall import backend, store, STAMP
++from tests.test_qdrant_index import client, index  # noqa: F401  (fixtures)
++
++EVAL = Path(__file__).resolve().parents[2] / 'docs' / 'claude-memory-eval'
++DEV_SHA256 = '244b8fd5cb0775451a4c1b6dc33edbb0ea1f144fe269823291f5632f71563780'
++
++
++def test_calibration_set_is_frozen_and_disjoint_from_the_held_out_corpus():
++    raw = (EVAL / 'dev-calibration-v1.json').read_bytes()
++    assert hashlib.sha256(raw).hexdigest() == DEV_SHA256
++    dev = json.loads(raw)['questions']
++    held_out = json.loads((EVAL / 'corpus-v1.json').read_text())
++    documents = {d['id'] for d in held_out['documents']}
++    assert Counter(q['category'] for q in dev) == {'direct': 8, 'paraphrase': 8, 'off_topic': 8}
++    assert not {q['question'] for q in dev} & {q['question'] for q in held_out['questions']}
++    assert all(set(q['expected']) <= documents for q in dev)
++    assert all(q['expected'] == [] for q in dev if q['category'] == 'off_topic')
++
++
++@pytest.mark.xfail(strict=True, reason='G201 Q2 not built yet: changes after the last indexing must be '
++                   'signalled (INDEX_STALE or INDEX_PENDING), never silently absent from semantic recall')
++def test_unindexed_changes_are_signalled_in_the_result(tmp_path, index):
++    data = backend(tmp_path)
++    store(data, 'first')
++    index.rebuild(data.persistent_root)
++    store(data, 'second', content='power second measurement')
++    result = ContextualRecall(data, index=index).recall('second measurement', query_scope={'goal': 'efficiency'}, at=STAMP)
++    assert 'INDEX_STALE' in repr(result) or 'INDEX_PENDING' in repr(result)
++
++
++@pytest.mark.xfail(strict=True, reason='G201 Q1 (passages in production) not built yet: an archive passage '
++                   'found through the production index must carry document, revision/digest and position, '
++                   'and be re-read from the Markdown before citation')
++def test_production_index_returns_verified_archive_passages(tmp_path, index):
++    data = backend(tmp_path)
++    archive = store_archive(data, ['Ne pas acheter la V100 maintenant.', 'Garder la carte actuelle.'])
++    index.rebuild(data.persistent_root)
++    item = ContextualRecall(data, index=index).recall('V100').items[0]
++    reference = item.excerpt_reference
++    assert (item.information_id, item.revision) == ('archive', archive.revision)
++    assert {'message_index', 'start', 'end'} <= set(reference)
++    assert item.content.startswith('Ne pas')                     # negation kept (A5-02, P3)
++
++
++@pytest.mark.xfail(strict=True, reason='G201 Q3 not built yet: a failed rebuild must not leave an unreferenced '
++                   'generation, and any cleanup must spare the aliased generation and readers in flight')
++def test_retention_never_removes_the_live_generation_and_leaves_no_orphan(tmp_path, index, client):
++    data = backend(tmp_path)
++    store(data, 'item')
++    index.rebuild(data.persistent_root)
++    live = {a.alias_name: a.collection_name for a in client.get_aliases().aliases}[index.alias]
++    before = {c.name for c in client.get_collections().collections}
++    path = data.persistent_root / 'item.md'
++    real = index.embed
++
++    def changing(text):
++        path.write_bytes(path.read_bytes() + b'\n')
++        return real(text)
++    index.embed = changing
++    with pytest.raises(ValueError):
++        index.rebuild(data.persistent_root)
++    index.embed = real
++    names = {c.name for c in client.get_collections().collections}
++    assert live in names and names <= before                   # live kept; nothing left by the failure
+-- 
+2.43.0
+

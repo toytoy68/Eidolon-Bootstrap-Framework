@@ -46,3 +46,9 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0007 | Contre-revue G194 des candidats Qdrant dans le rappel canonique, sur Qdrant en mémoire et embedding synthétique. Vérifié : rappel lexical sans index, relecture canonique avec provenance, aucune synchronisation automatique, générations conservées. Écarts en `xfail` strict : Q1 pas d'abstention, Q2 archives exclues en mode index, Q3 génération orpheline après échec | 2 134 tests Memory avant le patch ; sondes : 4 réussies et 3 xfail, raisons vérifiées avec `--runxfail` |
+
+## Patch 0008 (G201, base `533ac1d`, indépendant de 0007)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0008 | Jeu de **calibration** de 24 questions (8 directes, 8 paraphrases, 8 hors sujet), figé par SHA et **disjoint** du corpus de test v1. Cas d'acceptation en `xfail` strict pour les décisions G201 : signal `INDEX_STALE`/`INDEX_PENDING`, passages d'archive vérifiés depuis l'index de production, rétention sans génération orpheline | sondes Claude : 24 réussies et 6 xfail (avec 0007) ; raisons vérifiées avec `--runxfail` |
