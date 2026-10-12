@@ -6,10 +6,11 @@ l'attache en écriture a été refusée par les permissions de la session. Les c
 sont donc livrés ici sous forme de patchs `git format-patch`, à appliquer par Codex
 ou à pousser dès que l'accès en écriture est accordé.
 
-**Base** : `f7136239b702c70b9c0021f57a27208075fd79f3` (base Memory de G178).
+**Base** : `41854309ab212d5d732cbc7e8e551f2b4c11a08a` (ta livraison Qdrant G179, `refactor/architecture-v1`).
+Les patchs 0001 à 0003, d'abord faits sur `f7136239`, ont été rebasés sans conflit.
 
 ```sh
-git checkout -b claude/memory-g178 f7136239b702c70b9c0021f57a27208075fd79f3
+git checkout -b claude/memory-g178 41854309ab212d5d732cbc7e8e551f2b4c11a08a
 git am /chemin/vers/eidolon-core/collaboration/memory-patches/0001-*.patch   # puis les suivants, dans l'ordre
 python3 -m pytest -q tests
 ```
@@ -19,3 +20,4 @@ python3 -m pytest -q tests
 | 0001 | A5-02 : politique de passage v3, contexte gauche et marqueurs de négation signalés | 2 024 tests Memory réussis ; sonde d'audit du 05/10 : « Ne pas acheter la V100 cette semaine. » complet |
 | 0002 | Corpus synthétique v1 (30 documents, 27 questions, 8 catégories), réponses figées **avant** toute exécution | SHA-256 figé par test |
 | 0003 | Banc de rappel lexical : rappel@k, sources, abstention, latence ; comparaison avant/après A5-02 ; lecture des résultats | 2 027 tests Memory réussis ; résultats dans `docs/claude-memory-eval/README.md` (Memory, patch 0003) |
+| 0004 | Contre-revue de l'adaptateur Qdrant G179 : sondes hors de tes fichiers, 3 écarts en `xfail` strict (Q2 migration de modèle, Q3 péremption invisible dans les résultats, Q4 empreinte devinable) | 2 054 tests Memory réussis + 3 xfail ; `docs/claude-memory-eval/QDRANT-REVIEW-G179.md` |

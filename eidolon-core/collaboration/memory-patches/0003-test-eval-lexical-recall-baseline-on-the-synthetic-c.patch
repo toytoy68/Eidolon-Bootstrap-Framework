@@ -1,7 +1,7 @@
-From a4311a43857bfdeb230b0ed8e488fb3450fe4365 Mon Sep 17 00:00:00 2001
+From 02c3eda3c8482837db9c1497044c0085997e5a98 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Mon, 12 Oct 2026 12:29:36 +0000
-Subject: [PATCH 3/3] test(eval): lexical recall baseline on the synthetic
+Subject: [PATCH 3/4] test(eval): lexical recall baseline on the synthetic
  corpus (recall@k, sources, abstention, latency), before/after A5-02
  comparison, honest reading (no abstention, paraphrase 1/5, corrections ranked
  by lexical luck)

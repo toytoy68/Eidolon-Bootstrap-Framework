@@ -1,7 +1,7 @@
-From 7e541df570f82b8e10b7581e2e4feddc721c8d90 Mon Sep 17 00:00:00 2001
+From 85f06822e044d97d00878d8c64f620fb25e38a5c Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Mon, 12 Oct 2026 12:28:26 +0000
-Subject: [PATCH 2/3] test(eval): synthetic memory evaluation corpus v1 (30
+Subject: [PATCH 2/4] test(eval): synthetic memory evaluation corpus v1 (30
  documents, 27 questions: paraphrase, direct, negation, corrected, tech vs
  fiction, homonym, condition, absence), references fixed before any engine run
 

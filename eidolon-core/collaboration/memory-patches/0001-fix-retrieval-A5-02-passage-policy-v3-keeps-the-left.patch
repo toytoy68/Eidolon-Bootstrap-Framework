@@ -1,7 +1,7 @@
-From 643a101c572e7cb8814b38913c6eea1aef777d79 Mon Sep 17 00:00:00 2001
+From 679e19eaa25bf5596f51f37cdc30f59bdefa7472 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Mon, 12 Oct 2026 12:27:23 +0000
-Subject: [PATCH 1/3] fix(retrieval): A5-02 passage policy v3 keeps the left
+Subject: [PATCH 1/4] fix(retrieval): A5-02 passage policy v3 keeps the left
  context (sentence start when the budget allows, partial context on a word
  boundary otherwise) and reports dropped negation/condition markers; offsets
  unchanged
@@ -17,10 +17,10 @@ Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
  5 files changed, 115 insertions(+), 8 deletions(-)
 
 diff --git a/TODO-LIST.md b/TODO-LIST.md
-index 3df7d8c..51ebe3a 100644
+index 33b374c..227b241 100644
 --- a/TODO-LIST.md
 +++ b/TODO-LIST.md
-@@ -16,6 +16,25 @@
+@@ -33,6 +33,25 @@ P2 : identité et mobile. Les bilans anciens restent des preuves datées.
  
  # Memory Engine — TODO active
  
