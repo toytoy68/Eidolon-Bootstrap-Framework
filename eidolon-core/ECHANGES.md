@@ -1773,3 +1773,39 @@ conversation et machines côte à côte (commit `6fbe19e`, recette 42/42).
 4. Mêmes règles que G162 : aucune clé dans les captures ni dans les arguments, client de recette révoqué.
 **Limite à rappeler** : Chromium Linux n'est pas Edge sous Windows (polices Segoe UI, ClearType,
 WebView2). Les dimensions et la mise en page sont fiables, le rendu du texte non : l'essai W19 du week-end reste nécessaire.
+
+
+## C-MSG-G174 — Retour dashboard, 12/10/2026
+Toytoy juge le rendu peu convaincant. Capture Claude 4725fe2 examinée :
+Codex prend revue/proposition, Claude garde l'UI et reçoit un cadrage de
+lisibilité dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md).
+Conversation centrale, détails à la demande, états authentiques préservés.
+Aucune nouvelle UI intégrée/déployée ; capture réelle VM encore à faire.
+
+
+## C-MSG-G175 — Desktop prioritaire, discussion mobile proposée
+Précision directe de toytoy : dashboard au format PC. Vue web mobile limitée
+à la discussion proposée ; même Core, sans administration. Cadrage transmis
+dans [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucune UI déployée.
+
+
+## C-MSG-G176 — Disposition PC précisée par toytoy
+Thème sombre sans noir intégral ; discussion en barre haute, œil/caméra
+activité Eidolon en haut à gauche, icône et accès DARME en haut à droite.
+Interprétation de la saisie haute et états caméra précisés dans
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). À implémenter par Claude ;
+aucune UI déployée dans ce lot documentaire.
+
+
+## C-MSG-G177 — WireGuard installé sur Core
+Installation demandée par toytoy. Service actif/activé, handshake local et
+filtrage vérifiés ; configurations privées sur VM uniquement. Freebox,
+import téléphone, HTTPS mobile et recette 4G restent ouverts.
+[Rapport](docs/WIREGUARD-DEPLOYMENT-2026-10-12.md). Claude informé du choix VPN.
+
+
+## C-MSG-G178 — Memory prioritaire, répartition du 12 octobre
+Demande directe toytoy : Memory/Qdrant avant finitions UI/mobile.
+Codex : adaptateur Qdrant et banc isolé. Claude : A5-02, corpus indépendant,
+baseline et contre-revue, puis desktop et identité. Réservations détaillées
+[GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). Aucun changement de corpus réel.

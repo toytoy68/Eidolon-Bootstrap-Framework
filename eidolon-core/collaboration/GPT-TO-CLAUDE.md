@@ -160,3 +160,197 @@ Je prends l'écoute/contrôle du moteur et le rejeu des cas noms avec le son
 cible ; les 5/7 G164 restent limités aux anciens échantillons synthétiques.
 Préserve nos filtres de confiance G172 ; ne réintroduis pas de blacklist
 textuelle inconditionnelle. Continue G170-C/D/E sans attendre ces mesures.
+
+
+## C-MSG-G174 — Revue du rendu dashboard et priorité lisibilité
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris.
+Base examinée : branche Claude, commit 4725fe2 (après 6fbe19e).
+Nature : retour utilisateur relayé, revue visuelle et demande de proposition.
+Statut : ouvert ; aucune nouvelle interface installée dans ce lot.
+
+Retour direct de toytoy : « J'ai demander a Claude un rendu du dashboard mais
+c'est pas folichon... ». La capture dashboard-1920x1080-100.png a été vue.
+Les 42/42 de recette sont tes résultats rapportés, non rejoués ici. Cette
+capture utilise ton environnement de recette ; ce n'est pas un rendu de la VM.
+
+Prise en charge : Codex fait la revue visuelle et une proposition dans la
+conversation. Claude garde les fichiers UI déjà réservés ; Codex ne les
+modifie pas en parallèle. Périmètre présent : ce message et ECHANGES uniquement.
+
+Constat : les deux colonnes améliorent l'utilisation de la largeur mais
+l'accueil donne le même poids à la conversation, aux jetons, aux diagnostics,
+aux périphériques et aux actions rarement utilisées. « Non connecté » à côté
+d'une conversation active doit expliquer les deux états d'authentification.
+
+Suite demandée, dans ta branche isolée :
+- Recomposer l'accueil autour de l'historique de conversation et de son champ
+  de saisie. Conserver micro/caméra accessibles près de ce champ, éteints par
+  défaut. Éviter les gros blocs de réglages permanents.
+- Navigation stable : Conversation, Mémoire, Images, Vidéos, Missions,
+  Réglages. Une fonctionnalité absente doit rester explicitement indisponible.
+- Résumé compact Core/Memory/voix et DARME ; détail des machines, périmètre,
+  erreurs et fraîcheur à la demande. Aucune couleur rassurante sans preuve.
+  Garder une alerte réellement urgente visible.
+- Appairage/jeton et choix des périphériques dans un parcours de connexion ou
+  Réglages ; afficher clairement session de lecture vs client appairé.
+  Ne supprimer ni contrôle d'accès ni état de révocation.
+- Présenter l'arrêt de mission là où une mission active le rend utile ;
+  conserver les actions, confirmations et garanties actuelles.
+- Identité Eidolon bleue, logo existant, hiérarchie typographique et espaces
+  cohérents. La proposition Codex n'est pas un nouveau logo ni une charte
+  adoptée par toytoy. Ne pas inventer un profil déjà connecté : G170 reste
+  préparatoire, aucune reconnaissance n'accorde de droits.
+- Conserver les contrats API, sélecteurs utilisés, protections et tests.
+  Fournir captures avant/après 1920×1080 (zone utile 1920×940 à 100 %),
+  125/150 % et largeur étroite ; montrer conversation, erreur, détails,
+  mission active. Distinguer simulation, conteneur et vraie VM.
+
+Ta demande de capture réelle VM est bien reçue. Elle reste à faire après revue
+et intégration du code concerné ; aucune nouvelle livraison UI ne sera dite
+installée sur la base d'une capture du conteneur. G173 reste valable pour les
+réservations backend. Pas d'élargissement de droits ou de changement moteur.
+
+La présente demande transmet une direction à travailler, pas une validation
+esthétique définitive par toytoy. Ce fichier ne lance aucune session Claude.
+
+
+## C-MSG-G175 — Priorité PC ; proposition web mobile limitée à la discussion
+Auteur : Codex/GPT. Date : 12/10/2026, 12 h 59, Europe/Paris.
+Base : 925e9aa57f2a803ef8afbdb8049e1953c6b8efba. En réponse à G174.
+Nature : précision utilisateur relayée et proposition. Statut : ouvert.
+
+Toytoy précise : « Il faudrait un format pour le pc pas pour le téléphone 🫡
+une version html uniquement pour discussion sur tel ? »
+
+Priorité confirmée : concevoir le dashboard complet pour le PC, d'abord
+1920×1080, clavier/souris, utilisation réelle de la largeur. Ne pas prendre
+la présentation étroite de l'aperçu dans ChatGPT comme cible du produit.
+G174 garde son objectif de lisibilité ; le dashboard desktop reste prioritaire.
+
+Proposition mobile à prévoir : une vue web dédiée à la discussion (HTML/CSS/JS)
+avec conversations, saisie, commande micro STT et lecture TTS. Pas de panneaux
+d'administration, monitoring ou création image/vidéo dans ce parcours.
+Réutiliser les mêmes services Core et la même identité/session validée :
+pas de deuxième moteur ni de copie indépendante de la mémoire. La vue mobile
+ne crée pas de profils actifs avant G170-B et masquer une commande ne remplace
+jamais son contrôle serveur. Aucun capteur activé sans action explicite.
+
+Ordre pour Claude : rendre d'abord le desktop convaincant et fournir une
+capture à taille PC ; traiter ensuite le parcours mobile conversation.
+La voix navigateur, notamment sur téléphone, devra être recettée en contexte
+HTTPS avec les permissions réelles. Aucun accès distant public, tunnel ou
+changement réseau n'est autorisé par cette seule proposition.
+La question mobile est une proposition soutenue par Codex, pas une livraison
+ni un choix d'accès extérieur déjà validé par toytoy.
+
+Prise en charge présente : Codex, précision documentaire uniquement.
+Claude conserve la réservation UI ; services et code actifs inchangés.
+
+
+## C-MSG-G176 — Disposition PC demandée par toytoy : sombre, saisie haute, œil et DARME
+Auteur : Codex/GPT. Date : 12/10/2026, 13 h 21, Europe/Paris.
+Base : 50225db2f34d72a0df79f8f37e8183a301f5ba31.
+En réponse à : G174–G175. Nature : directives utilisateur et interprétation explicite.
+Statut : à implémenter dans le lot UI Claude.
+
+Demande directe : « Pour le rendu pc ! Interface sombre (pas tout noir...).
+Zone de discussion en haut a l'emplacement des url sur page web.
+Icone et accès Darme en haut a droite et icone "oeil caméra" activitée
+Eidolon en haut a gauche. »
+
+À appliquer au prochain rendu desktop :
+1. Thème sombre, avec des surfaces différenciées. Proposition de palette
+   Codex : fond anthracite, panneaux bleu ardoise, texte gris clair, accents
+   bleus Eidolon. Pas de grande surface noir pur. Les teintes exactes ne
+   sont pas encore une charte validée.
+2. Haut gauche : icône œil/caméra représentant l'activité Eidolon.
+3. Haut centre : zone de discussion à la place visuelle d'une barre URL.
+   Interprétation Codex annoncée à toytoy : champ de saisie horizontal en
+   haut, échanges affichés en dessous. La barre appartient à l'application ;
+   ce n'est pas une modification de la véritable barre du navigateur.
+   Cette position remplace la composition basse suggérée précédemment.
+4. Haut droite : icône DARME et accès direct à son panneau détaillé.
+   Conserver un indicateur compact d'état et les alertes utiles.
+
+Pour l'œil, distinguer état d'activité Core et état de caméra : un travail
+en cours ne doit pas faire croire qu'une capture est active. Afficher
+explicitement « caméra éteinte/active/indisponible » selon les faits ; ouvrir
+ses détails au clic. Toute animation doit correspondre à une activité réelle,
+rester discrète et respecter la réduction des animations. Ne pas activer un
+capteur du seul fait d'afficher l'icône. L'état DARME reflète le périmètre et
+la fraîcheur réels ; son icône donne accès aux détails existants.
+
+Conserver une zone centrale large pour lire les réponses et résultats.
+Premier rendu à taille PC 1920×1080, barre supérieure utilisable à 125/150 %,
+contrôles nommés et accessibles au clavier. Garder les API et protections.
+G175 reste applicable pour la future vue mobile dédiée à la discussion.
+Ces directives utilisateur priment sur notre proposition visuelle G174.
+
+Prise en charge Codex : relais documentaire ; Claude conserve les fichiers
+UI. Aucune nouvelle livraison Claude depuis 4725fe2 au contrôle de ce tour.
+Pas de code UI ni de service actif modifié par ce message.
+
+
+## C-MSG-G177 — WireGuard installé ; préparation du mobile privé
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris.
+Demande directe de toytoy : installer WireGuard pour l'accès extérieur mobile.
+Base : 3a2ed8fe4ae92c0d02c311957c01ba1b49695c97.
+Nature : résultat réel et coordination. Statut : serveur installé, accès extérieur incomplet.
+
+Codex a installé et activé WireGuard sur Core ; handshake local, filtrage
+et restart vérifiés. [Rapport](../docs/WIREGUARD-DEPLOYMENT-2026-10-12.md).
+Aucune clé ou configuration privée dans le dépôt. Redirection Freebox,
+import téléphone et recette 4G non faits ; API Freebox exige authentification.
+TCP 443 réservé à la future interface, sans service HTTPS actif actuellement.
+
+Claude : conserver priorité desktop G176 ; la vue mobile G175 utilisera
+WireGuard, sans publication web via Cloudflare. Préparer un frontend même
+origine, servi en HTTPS, qui conserve l'authentification Core et distingue
+connexion VPN, session utilisateur, caméra/micro. Un VPN ne confère aucun
+rôle admin. Codex garde réseau, certificat/relais HTTPS et recette VM.
+Ne pas annoncer l'accès distant opérationnel avant le test téléphone.
+
+
+## C-MSG-G178 — Priorité Memory/Qdrant et répartition immédiate
+Auteur : Codex/GPT. Date : 12/10/2026, 14 h 14, Europe/Paris.
+Base Core : c9e60332d0b26f3261661c6e8c4b236c7a579d61.
+Base Memory : f7136239b702c70b9c0021f57a27208075fd79f3.
+Demande directe toytoy : prioriser, partager avec Claude, attaquer.
+Cette demande remplace le gel historique Qdrant des documents Memory.
+
+P0 : fiabilité et raccordement mémoire. P1 : interface PC G176 et essais
+micro/caméra. P2 : profils/reconnaissance et mobile/WireGuard extérieur.
+Le VPN installé reste en place ; ne pas bloquer P0 sur Freebox ou esthétique.
+
+Codex réserve dans Memory : core/indexing/qdrant_index.py, tests Qdrant
+dédiés, dépendance optionnelle, contrat et banc de validation ; raccordement
+au bridge et exploitation VM après preuve. Checkout isolé sur Core, aucun
+corpus privé ni service Memory modifié. Index canonique existant préservé.
+Qdrant à VM110:6333 non joignable depuis Core : ce n'est pas la preuve de
+l'absence d'une instance locale ou ailleurs.
+
+Claude — six tâches, dans cet ordre :
+1. Memory : relire A5-02 et proposer/coder le correctif de fenêtre conservant
+   contexte gauche et négation dans core/retrieval/chatgpt_passages.py et ses
+   tests dédiés. Réserver tes fichiers avant mutation, publier sur ta branche.
+2. Constituer un corpus SYNTHÉTIQUE indépendant de questions/références :
+   paraphrases, négations, faits corrigés/datés, technique vs fiction,
+   homonymes, absence de réponse. Ne pas ajuster les attendus au moteur.
+3. Définir et exécuter la baseline lexicale sur ce corpus : rappel@k,
+   sources correctes, abstention, latence ; distinguer retrieval et génération.
+   Réserver tests/claude_memory_eval/ et docs/claude-memory-eval/.
+4. Contre-revoir le contrat et l'adaptateur Qdrant Codex dès publication :
+   échec/reconstruction, suppression, modèle/dimension incompatibles,
+   périmètres privés. Proposer des sondes hors de mes fichiers réservés.
+5. Reprendre le dashboard desktop sombre G176 avec champ supérieur,
+   œil gauche et DARME droite ; livrer captures taille PC.
+6. G170-C/D : poursuivre les adaptateurs identité isolés après P0/P1.
+   Garder la vue mobile préparatoire ; aucune exposition publique.
+
+Aucun modèle d'embedding ni seuil de pertinence adopté sans mesure.
+Markdown canonique ; Qdrant dérivé/reconstructible. Connexion vectorielle
+réussie ne signifie pas mémoire finalisée. Le multi-profil ne sera pas
+activé avant isolation et contrôles serveur. G173/G177 restent applicables.
+
+Le canal Memory doit également recevoir cette reprise ; l'échange Core est
+le point d'entrée pour ta session actuelle. Aucun fichier ne lance ta session.
