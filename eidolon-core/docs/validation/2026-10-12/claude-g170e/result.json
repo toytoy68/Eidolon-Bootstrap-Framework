@@ -1,0 +1,146 @@
+{
+ "checks": [
+  {
+   "check": "1920 consent first",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 indicator on while capturing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 retry message",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 indicator off after capture",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 enrolled, no right",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 table updated",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 suggestion only",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 ambiguous names nobody",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 delete asks confirmation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 deleted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 no horizontal scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 no sensor requested",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 no network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1920 no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 consent first",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 indicator on while capturing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 retry message",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 indicator off after capture",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 enrolled, no right",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 table updated",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 suggestion only",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 ambiguous names nobody",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 delete asks confirmation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 deleted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 no horizontal scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 no sensor requested",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 no network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 no page error",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "passed": 28,
+ "total": 28
+}

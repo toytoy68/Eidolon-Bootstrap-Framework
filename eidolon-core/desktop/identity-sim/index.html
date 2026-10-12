@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'">
+<title>Profils — simulation G170-E</title>
+<link rel="stylesheet" href="sim.css">
+</head>
+<body>
+<p class="banner" role="note"><strong>SIMULATION</strong> — aucun micro, aucune caméra, aucun serveur.
+Les prises sont imaginaires, les profils sont inventés, rien ne donne de droit.</p>
+<main>
+  <section class="panel" aria-labelledby="profiles-title">
+    <h1 id="profiles-title">Profils</h1>
+    <ul id="profiles" class="profiles"></ul>
+    <p class="note">La connexion se fait toujours à la main (clé de conversation). La reconnaissance ne fait que
+    suggérer.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="flow-title" aria-live="polite">
+    <h2 id="flow-title"></h2>
+    <p id="indicator" class="indicator" hidden>● capture en cours (simulation)</p>
+    <p id="flow-text"></p>
+    <p id="flow-error" class="error" role="alert" hidden></p>
+    <div id="controls" class="controls"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="suggest-title">
+    <h2 id="suggest-title">Ce que l'œil afficherait</h2>
+    <label for="proposal-state">Résultat simulé de la reconnaissance</label>
+    <select id="proposal-state"></select>
+    <p id="suggestion" class="suggestion"></p>
+  </section>
+</main>
+<script src="enrolment.js"></script>
+<script src="sim.js"></script>
+</body>
+</html>
