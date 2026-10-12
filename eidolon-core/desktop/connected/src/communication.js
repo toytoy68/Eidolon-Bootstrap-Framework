@@ -222,7 +222,167 @@
       state: snapshotState, onChange: function (fn) { listeners.push(fn); } };
   }
 
-  var api = { createCommunication: createCommunication, encodeWav: encodeWav, indicator: indicator,
+  // ---- Real browser adapters (exercised by the Chromium recipe with fake devices) ----
+  function browserDeps(win, key) {
+    var nav = win.navigator && win.navigator.mediaDevices;
+    var AudioCtx = win.AudioContext || win.webkitAudioContext;
+    function bytes(b64) {
+      var bin = win.atob(b64), out = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out;
+    }
+    return {
+      key: key,
+      media: nav ? {
+        enumerateDevices: function () { return nav.enumerateDevices(); },
+        getUserMedia: function (c) { return nav.getUserMedia(c); },
+        onDeviceChange: function (fn) { if (nav.addEventListener) nav.addEventListener("devicechange", fn); }
+      } : { enumerateDevices: function () { return Promise.resolve([]); },
+            getUserMedia: function () { var e = new Error("no media"); e.name = "NotFoundError"; return Promise.reject(e); } },
+      // Microphone samples kept in memory only until "stop"; nothing is written anywhere.
+      recorder: function (stream) {
+        var ctx = new AudioCtx(), source = ctx.createMediaStreamSource(stream);
+        var node = ctx.createScriptProcessor(4096, 1, 1), parts = [], length = 0, done = false;
+        node.onaudioprocess = function (ev) {
+          if (done) return;
+          var chunk = new Float32Array(ev.inputBuffer.getChannelData(0)); parts.push(chunk); length += chunk.length;
+        };
+        source.connect(node); node.connect(ctx.destination);
+        function finish() { done = true; try { source.disconnect(); node.disconnect(); } catch (e) { /* closed */ } return ctx.close(); }
+        return {
+          stop: function () {
+            var all = new Float32Array(length), at = 0, rate = ctx.sampleRate;
+            parts.forEach(function (p) { all.set(p, at); at += p.length; });
+            parts = [];
+            return finish().then(function () { return { samples: all, rate: rate }; });
+          },
+          cancel: function () { parts = []; finish(); }
+        };
+      },
+      // One frame, scaled within 1280x720, encoded as JPEG in memory.
+      grabFrame: function (stream) {
+        var video = win.document.createElement("video");
+        video.muted = true; video.playsInline = true; video.srcObject = stream;
+        return video.play().then(function () {
+          return new Promise(function (resolve) { if (video.videoWidth) resolve(); else video.onloadeddata = resolve; });
+        }).then(function () {
+          var scale = Math.min(1, 1280 / video.videoWidth, 720 / video.videoHeight);
+          var canvas = win.document.createElement("canvas");
+          canvas.width = Math.round(video.videoWidth * scale); canvas.height = Math.round(video.videoHeight * scale);
+          canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+          video.srcObject = null;
+          return new Promise(function (resolve) { canvas.toBlob(resolve, "image/jpeg", 0.85); });
+        }).then(function (blob) { return blob.arrayBuffer(); }).then(function (buf) { return new Uint8Array(buf); });
+      },
+      // Web Audio from memory: no data:/blob: URL, so the page CSP stays unchanged. stop() resolves done.
+      player: function (b64) {
+        var ctx = new AudioCtx(), source = null, finish;
+        var done = new Promise(function (resolve) { finish = resolve; });
+        ctx.decodeAudioData(bytes(b64).buffer).then(function (buffer) {
+          source = ctx.createBufferSource(); source.buffer = buffer; source.connect(ctx.destination);
+          source.onended = function () { ctx.close(); finish(); };
+          source.start();
+        }, function () { ctx.close(); finish(); });
+        return { done: done, stop: function () { try { if (source) source.stop(); } catch (e) { /* ended */ } ctx.close(); finish(); } };
+      },
+      transport: function (method, path, body, token, type) {
+        var headers = { "Authorization": "Bearer " + token }, init = { method: method, headers: headers, cache: "no-store",
+          credentials: "omit", redirect: "error", referrerPolicy: "no-referrer" };
+        if (body instanceof Uint8Array) { headers["Content-Type"] = type || "application/octet-stream"; init.body = body; }
+        else if (body !== null && body !== undefined) { headers["Content-Type"] = "application/json"; init.body = JSON.stringify(body); }
+        return win.fetch(path, init).then(function (res) {
+          return res.text().then(function (text) {
+            var json = null;
+            try { json = JSON.parse(text); } catch (e) { json = null; }
+            return { status: res.status, json: json };
+          });
+        });
+      },
+      setTimeout: function (fn, ms) { return win.setTimeout(fn, ms); },
+      clearTimeout: function (id) { win.clearTimeout(id); }
+    };
+  }
+
+  // ---- Binding to the "Voix et caméra" block of index.html ----
+  function mount(doc, comm, hooks) {
+    function $(id) { return doc.getElementById(id); }
+    var spoken = 0;
+    function fill(select, dev) {
+      var keep = select.value;
+      while (select.firstChild) select.removeChild(select.firstChild);
+      dev.devices.forEach(function (d) {
+        var o = doc.createElement("option"); o.value = d.id; o.textContent = d.label; select.appendChild(o);
+      });
+      select.value = dev.selected || keep || "";
+      select.disabled = !dev.devices.length;
+    }
+    function render(s) {
+      [["mic", "microphone"], ["speaker", "speaker"], ["camera", "camera"]].forEach(function (pair) {
+        var dev = s[pair[1]], line = $("comm-" + pair[0] + "-state");
+        line.textContent = dev.indicator.text;
+        line.className = "comm-indicator " + dev.indicator.tone + (dev.indicator.recording ? " recording" : "");
+        var box = $("comm-" + pair[0] + "-on");
+        box.checked = ["ready", "capturing", "processing"].indexOf(dev.state) !== -1;
+        box.disabled = dev.state === "unavailable" && pair[1] !== "speaker";
+      });
+      fill($("comm-mic-select"), s.microphone);
+      fill($("comm-camera-select"), s.camera);
+      var talking = s.microphone.state === "capturing";
+      $("comm-talk").disabled = !(s.microphone.state === "ready" || talking);
+      $("comm-talk").setAttribute("aria-pressed", talking ? "true" : "false");
+      $("comm-talk").textContent = talking ? "Terminer" : "Parler";
+      $("comm-talk-cancel").hidden = !(talking || s.microphone.state === "processing");
+      $("comm-voice-stop").hidden = s.speaker.state !== "processing";
+      $("comm-presence").disabled = $("comm-scene").disabled = s.camera.state !== "ready";
+    }
+    comm.onChange(render);
+    function toggle(id, kind) {
+      $(id).addEventListener("change", function (ev) {
+        if (ev.target.checked) {
+          if (kind === "speaker") spoken = doc.querySelectorAll("#conv-log .conv-reply").length;   // never read history
+          comm.enable(kind);
+        } else comm.disable(kind);
+      });
+    }
+    toggle("comm-mic-on", "microphone"); toggle("comm-speaker-on", "speaker"); toggle("comm-camera-on", "camera");
+    $("comm-mic-select").addEventListener("change", function (ev) { comm.select("microphone", ev.target.value); });
+    $("comm-camera-select").addEventListener("change", function (ev) { comm.select("camera", ev.target.value); });
+    $("comm-talk").addEventListener("click", function () {
+      if (comm.state().microphone.state === "capturing") {
+        comm.stopTalk().then(function (r) {
+          if (!r) return;
+          $("comm-note").textContent = r.empty ? "Rien n'a été entendu." : "Transcription placée dans le champ : relisez-la, puis envoyez.";
+          if (!r.empty) { var area = $("conv-text"); area.value = (area.value ? area.value + " " : "") + r.text; area.focus(); }
+        });
+      } else comm.startTalk();
+    });
+    $("comm-talk-cancel").addEventListener("click", function () { comm.cancelTalk(); });
+    $("comm-voice-stop").addEventListener("click", function () { comm.stopSpeaking(); });
+    function look(purpose) {
+      comm.snapshot(purpose).then(function (r) {
+        if (!r) return;
+        $("comm-note").textContent = (r.present ? (r.people_count > 1 ? r.people_count + " personnes visibles. " : "Une personne visible. ")
+          : "Personne n'est visible. ") + (purpose === "scene" ? r.description : "") + " (observation non vérifiée)";
+      });
+    }
+    $("comm-presence").addEventListener("click", function () { look("presence"); });
+    $("comm-scene").addEventListener("click", function () { look("scene"); });
+    // Read each NEW reply aloud when the voice is on (the text of Core's reply, as shown).
+    var log = $("conv-log");
+    if (log && hooks && hooks.observe) hooks.observe(log, function () {
+      var replies = doc.querySelectorAll("#conv-log .conv-reply");
+      if (replies.length <= spoken) { spoken = Math.min(spoken, replies.length); return; }
+      var last = replies[replies.length - 1];
+      spoken = replies.length;
+      var text = last.querySelector(".conv-text, .conv-note");
+      if (text && text.textContent.trim()) comm.speak(text.textContent.trim().slice(0, 2000));
+    });
+    render(comm.state());
+    comm.refresh();
+    return { render: render };
+  }
+
+  var api = { createCommunication: createCommunication, browserDeps: browserDeps, mount: mount, encodeWav: encodeWav, indicator: indicator,
     errorState: errorState, LABELS: LABELS, MAX_TALK_MS: MAX_TALK_MS };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonCommunication = api;

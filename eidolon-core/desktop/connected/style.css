@@ -259,3 +259,14 @@ input[type="password"] {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* C147 — voix et caméra : voyant rouge seulement pendant la capture */
+.comm-devices { display: grid; gap: .5rem; }
+.comm-device { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.comm-device select { max-width: 100%; }
+.comm-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.comm-indicator { font-size: .9rem; color: var(--muted, #9aa); }
+.comm-indicator.recording { color: #fff; background: #b3261e; padding: 0 .5rem; border-radius: 999px; font-weight: 600; }
+.comm-indicator.recording::before { content: "● "; }
+.comm-indicator.busy { font-style: italic; }
+#comm-talk[aria-pressed="true"] { background: #b3261e; color: #fff; }

@@ -1,0 +1,101 @@
+{
+ "passed": 19,
+ "total": 19,
+ "checks": [
+  {
+   "check": "services démarrés (Core :relais, eidolon-comm)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1280 : tout éteint par défaut",
+   "ok": true,
+   "detail": "[[false,\"Micro : désactivé\"],[false,\"Voix d'Eidolon : désactivé\"],[false,\"Caméra : désactivé\"]]"
+  },
+  {
+   "check": "1280 : aucune requête voix avant activation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1280 : voyant rouge pendant la capture seulement",
+   "ok": true,
+   "detail": "Micro : capture en cours"
+  },
+  {
+   "check": "1280 : transcription dans le champ, non envoyée",
+   "ok": true,
+   "detail": "[parole simulée, 1.2 s]"
+  },
+  {
+   "check": "1280 : réponse lue à voix haute (synthèse demandée)",
+   "ok": true,
+   "detail": "POST /v1/comm/stt,POST /v1/comm/tts"
+  },
+  {
+   "check": "1280 : présence décrite, observation non vérifiée, caméra relâchée",
+   "ok": true,
+   "detail": "Personne n'est visible.  (observation non vérifiée)"
+  },
+  {
+   "check": "1280 : même origine seulement (CSP inchangée)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1280 : pas de débordement, aucune erreur",
+   "ok": true,
+   "detail": "{\"overflow\":0,\"errors\":[]}"
+  },
+  {
+   "check": "1280 : clé ni stockée ni affichée",
+   "ok": true,
+   "detail": "[0,0]"
+  },
+  {
+   "check": "360 : tout éteint par défaut",
+   "ok": true,
+   "detail": "[[false,\"Micro : désactivé\"],[false,\"Voix d'Eidolon : désactivé\"],[false,\"Caméra : désactivé\"]]"
+  },
+  {
+   "check": "360 : aucune requête voix avant activation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 : voyant rouge pendant la capture seulement",
+   "ok": true,
+   "detail": "Micro : capture en cours"
+  },
+  {
+   "check": "360 : transcription dans le champ, non envoyée",
+   "ok": true,
+   "detail": "[parole simulée, 1.2 s]"
+  },
+  {
+   "check": "360 : réponse lue à voix haute (synthèse demandée)",
+   "ok": true,
+   "detail": "POST /v1/comm/stt,POST /v1/comm/tts"
+  },
+  {
+   "check": "360 : présence décrite, observation non vérifiée, caméra relâchée",
+   "ok": true,
+   "detail": "Personne n'est visible.  (observation non vérifiée)"
+  },
+  {
+   "check": "360 : même origine seulement (CSP inchangée)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 : pas de débordement, aucune erreur",
+   "ok": true,
+   "detail": "{\"overflow\":0,\"errors\":[]}"
+  },
+  {
+   "check": "360 : clé ni stockée ni affichée",
+   "ok": true,
+   "detail": "[0,0]"
+  }
+ ]
+}

@@ -66,6 +66,34 @@
           <textarea id="conv-text" rows="3" maxlength="8000"></textarea>
           <button id="conv-send" type="submit">Envoyer</button>
         </form>
+        <section id="comm" class="conv-proposal comm" aria-labelledby="comm-title">
+          <h3 id="comm-title">Voix et caméra</h3>
+          <p class="help">Tout est éteint par défaut. Rien n'est enregistré ; le texte reste toujours disponible.</p>
+          <div class="comm-devices">
+            <div class="comm-device">
+              <label><input id="comm-mic-on" type="checkbox"> Micro</label>
+              <select id="comm-mic-select" aria-label="Choisir le micro" disabled></select>
+              <span id="comm-mic-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+            <div class="comm-device">
+              <label><input id="comm-speaker-on" type="checkbox"> Voix d'Eidolon (lire les réponses)</label>
+              <span id="comm-speaker-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+            <div class="comm-device">
+              <label><input id="comm-camera-on" type="checkbox"> Caméra</label>
+              <select id="comm-camera-select" aria-label="Choisir la caméra" disabled></select>
+              <span id="comm-camera-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="comm-actions">
+            <button id="comm-talk" type="button" aria-pressed="false" disabled>Parler</button>
+            <button id="comm-talk-cancel" class="media-secondary" type="button" hidden>Abandonner l'enregistrement</button>
+            <button id="comm-voice-stop" class="media-secondary" type="button" hidden>Arrêter la voix</button>
+            <button id="comm-presence" class="media-secondary" type="button" disabled>Quelqu'un est-il là ?</button>
+            <button id="comm-scene" class="media-secondary" type="button" disabled>Décrire la scène</button>
+          </div>
+          <p id="comm-note" class="help" role="status" aria-live="polite"></p>
+        </section>
         <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>
           <h3 id="conv-proposal-title">Proposition à valider</h3>
           <p id="conv-proposal-request" class="conv-request"></p>
