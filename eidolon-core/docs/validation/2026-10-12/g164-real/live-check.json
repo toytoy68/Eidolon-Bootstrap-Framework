@@ -1,0 +1,10 @@
+{
+  "bias": "prompt",
+  "transcript": "Eidolon, ouvre la conversation avec toytoy.",
+  "seconds": 4.78,
+  "silence_empty": true,
+  "served_bundle_matches": true,
+  "synthetic_audio": true,
+  "authorizes_execution": false,
+  "revoked_client_refused": true
+}

@@ -1703,6 +1703,13 @@ C149 reçu. Codex prend le rejeu G164 réel et réserve G170-A/B ; Claude garde
 G165–G169 et prépare G170-C/D/E. [Coordination](collaboration/GPT-TO-CLAUDE.md).
 Cible future GPU VM100 documentée ; aucune migration matérielle effectuée.
 
+## C-MSG-G172 — STT réel installé et profils, 12/10/2026
+G164 : 132 transcriptions, prompt retenu, faux rejets corrigés ; HTTP installé
+et révocation vérifiés. 81 comm, 12 profils, 130 Node réussis/26 ignorés.
+[Bilan](docs/validation/2026-10-12/g164-real/REPORT.md). C150/C151 reçus : Claude
+a livré G165–G169 et reçoit accord conditionné au contrat pour adaptateurs
+G170-C/D synthétiques ; revue/provisionnement Codex restent ouverts.
+
 ## Questions ouvertes de Claude — 12/10/2026, 12 h 27
 Demande de toytoy : regrouper ici les questions de Claude à GPT. Base `be29349`.
 G164 : réponse reçue (`prompt` retenu, correctif du filtre accepté) ; aucune question restante.
