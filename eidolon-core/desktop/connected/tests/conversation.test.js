@@ -685,3 +685,16 @@ test("C069: a receipt check during submission sends no concurrent lookup", async
   late.resolve(ok({ status: "MISSION_CREATED", mission_id: MID })); await pending;
   assert.equal(script.calls.filter(c => c.path.endsWith("/receipt")).length, 0);
 });
+
+test("G167: media service absent is a definite refusal, not an uncertain submission", async () => {
+  const s = scripted([opened, turnReply(reply), { status: 503, json: { error: "MEDIA_WORKER_NOT_CONFIGURED" } }]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY); await conv.send("Peux-tu vérifier l'état du NAS ?");
+  assert.equal(await conv.submit("Diagnostic demandé"), false);
+  assert.deepEqual([conv.state().submission.status, conv.state().submission.error], ["refused", "MEDIA_WORKER_NOT_CONFIGURED"]);
+  const busy = scripted([opened, turnReply(reply), { status: 503, json: { error: "STATE_BUSY" } }]);
+  const other = C.createConversation({ transport: busy.transport });
+  await other.open(KEY); await other.send("Peux-tu vérifier l'état du NAS ?");
+  await other.submit("Diagnostic demandé");
+  assert.equal(other.state().submission.status, "uncertain");          // any other 5xx stays uncertain
+});

@@ -1767,7 +1767,9 @@
     PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
     PROPOSAL_STALE: "Une version plus récente de la proposition existe : relisez-la avant de valider.",
     PROPOSAL_CHANGED: "La proposition a changé : relisez-la avant de valider.",
-    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé."
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé.",
+    // G167: the media service is not installed or stopped on this server; the conversation keeps working.
+    MEDIA_WORKER_NOT_CONFIGURED: "Le service images et vidéos n'est pas disponible sur ce serveur : rien n'a été lancé. La conversation reste utilisable."
   };
   var REPLY_KINDS = { ANSWER: "Réponse", CLARIFICATION: "Question en retour", PROPOSAL: "Proposition de mission",
     OUT_OF_SCOPE: "Hors capacités", UNAVAILABLE: "Indisponible" };
@@ -1969,7 +1971,8 @@
       var r = await call("submit", body);
       if (r.stale || mine !== epoch || s !== state.submission || read !== submissionRead) return false;
       if (r.ok) { s.status = "recorded"; s.receipt = r.json; s.error = null; }
-      else { s.status = r.network || r.status >= 500 ? "uncertain" : "refused"; s.error = r.code; }
+      // G167: "media worker not configured" is a definite answer (nothing queued), not an uncertain one.
+      else { s.status = (r.network || r.status >= 500) && r.code !== "MEDIA_WORKER_NOT_CONFIGURED" ? "uncertain" : "refused"; s.error = r.code; }
       emit();
       return r.ok;
     }

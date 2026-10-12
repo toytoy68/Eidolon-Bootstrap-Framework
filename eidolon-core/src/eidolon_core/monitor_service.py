@@ -436,6 +436,8 @@ def main(argv=None):
         print(message("INFO", f"eidolon-monitor sur http://127.0.0.1:{server.server_port} — "
                               f"{len(api.machines)} machine(s), lecture seule."), flush=True)
         try:
+            from .sd_notify import notify
+            notify()                                # G167: Type=notify, ready only once the port is open
             server.serve_forever()
         except KeyboardInterrupt:
             pass

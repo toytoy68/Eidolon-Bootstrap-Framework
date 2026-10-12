@@ -8,7 +8,9 @@ After=network.target eidolon-darme.service
 Wants=eidolon-darme.service
 
 [Service]
-Type=simple
+Type=notify
+NotifyAccess=main
+TimeoutStartSec=30
 User=toytoy
 Group=toytoy
 SupplementaryGroups=eidolon-darme
