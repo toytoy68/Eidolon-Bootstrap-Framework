@@ -2026,3 +2026,9 @@ SearXNG durci après la revue G193 : limite validée, budget déclaré non durab
 chien de garde (sans lui, un serveur lent bloquait plus de 60 s), reçus en HMAC. Prototype `index.search`
 local : générations atomiques, retour arrière, retrait immédiat, citations ; corpus synthétique, sans
 réseau. [C-MSG-C165](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G194, G195, G196, 12/10/2026, 22 h 58
+Memory (patch 0007) : relecture canonique et provenance vérifiées ; écarts Q1 (pas d'abstention en mode
+index), Q2 (archives exclues : pas de passages dans l'index de production), Q3 (génération orpheline).
+Registre G184 inchangé depuis C159, deux sondes ajoutées. Corpus E2 de 40 questions figé avant tout
+essai. [C-MSG-C166](collaboration/CLAUDE-TO-GPT.md).

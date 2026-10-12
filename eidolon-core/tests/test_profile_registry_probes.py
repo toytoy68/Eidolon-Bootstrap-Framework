@@ -108,6 +108,40 @@ class RegistryProbes(unittest.TestCase):
         self.assertEqual([json.loads(t).get("error") for _, t in outputs[2:]],
                          ["PROFILE_REGISTRY_CONFLICT", "PROFILE_REGISTRY_PENDING"])
 
+    def test_extreme_profile_ids_round_trip_and_stay_private(self):
+        """G195: the shared PROFILE_ID grammar (1 and 64 characters) goes through import and inspection;
+        the ids never appear in any output."""
+        plan = fixture()
+        short, long = "a", "b" + "-" * 62 + "z"
+        plan["profiles"][1]["profile_id"], plan["profiles"][2]["profile_id"] = short, long
+        self.write(self.plan, plan)
+        outputs = [_cli("prepare", "--plan", str(self.plan), "--directory", str(self.destination), "--apply"),
+                   _cli("inspect", "--directory", str(self.destination))]
+        stored = json.loads((self.destination / "profiles.json").read_text())["plan"]["profiles"]
+        self.assertEqual([p["profile_id"] for p in stored][1:], [short, long])
+        for code, text in outputs:
+            self.assertEqual(code, 0)
+            self.assertNotIn(long, text)
+            self.assertNotIn('"a"', text)
+        for bad in ("", "c" * 65, "1abc", "Abc"):
+            plan["profiles"][1]["profile_id"] = bad
+            other = self.root / "bad.json"
+            self.write(other, plan)
+            code, text = _cli("prepare", "--plan", str(other), "--directory", str(self.destination))
+            self.assertEqual((code, json.loads(text)["ok"]), (1, False), bad)
+            self.assertNotIn(bad or "\"\"", text if bad else "")
+
+    def test_a_crash_residue_blocks_import_until_reviewed_then_retry_is_identical(self):
+        (self.destination / ".profiles-dead.tmp").write_text("residue")
+        with self.assertRaises(ContractError) as caught:
+            registry.prepare_registry(self.plan, self.destination, apply=True)
+        self.assertEqual(str(caught.exception), "PROFILE_REGISTRY_PENDING")
+        self.assertFalse((self.destination / "profiles.json").exists())
+        (self.destination / ".profiles-dead.tmp").unlink()                 # operator reviewed it
+        first = registry.prepare_registry(self.plan, self.destination, apply=True)
+        again = registry.prepare_registry(self.plan, self.destination, apply=True)
+        self.assertEqual((first["operation"], again["operation"]), ("imported", "already_prepared"))
+
     @unittest.expectedFailure
     def test_inspect_during_an_import_in_flight_is_not_reported_as_a_crash_residue(self):
         """Claude finding R1: inspect does not look at the writer lock, so a temporary file of a LIVE import

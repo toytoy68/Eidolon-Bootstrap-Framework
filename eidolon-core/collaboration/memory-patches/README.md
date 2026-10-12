@@ -40,3 +40,9 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0006 | Contre-revue aléatoire des correctifs P1–P4 : couverture des morceaux et frontières base + accents (1 200 archives), extrait indexé fidèle, borné et marqueurs recomptés (9 000 références). Observation O1 en `xfail` strict | 2 134 tests Memory réussis avant patch ; sondes : 6 réussies + 1 xfail, vérifié avec `--runxfail` |
+
+## Patch 0007 (G194, base `533ac1d6cfd975dbcebf730d0a3f31b17a1f6e44`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0007 | Contre-revue G194 des candidats Qdrant dans le rappel canonique, sur Qdrant en mémoire et embedding synthétique. Vérifié : rappel lexical sans index, relecture canonique avec provenance, aucune synchronisation automatique, générations conservées. Écarts en `xfail` strict : Q1 pas d'abstention, Q2 archives exclues en mode index, Q3 génération orpheline après échec | 2 134 tests Memory avant le patch ; sondes : 4 réussies et 3 xfail, raisons vérifiées avec `--runxfail` |
