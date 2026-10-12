@@ -52,7 +52,7 @@
   // Pure view model of one machine (tested without DOM).
   function describe(machine) {
     var d = machine.darme, out = { id: machine.id, label: machine.label, cls: "unknown", badge: "?", text: "",
-      scope: null, freshness: null, services: [], metrics: [], metricsNote: null, measured: null };
+      scope: null, freshness: null, services: [], metrics: [], metricsNote: null, measured: null, gpu: null };
     if (!d) {
       out.cls = "unknown"; out.badge = STATES[machine.state] || "Inconnu";
       out.text = ERRORS[machine.error] || "état inconnu";
@@ -83,7 +83,22 @@
       out.metrics.push({ name: "Mémoire", text: m.memory ? bytes(m.memory.used_bytes) + " utilisés sur " + bytes(m.memory.total_bytes) : "indisponible" });
       out.metrics.push({ name: "Swap", text: m.swap ? (m.swap.total_bytes ? bytes(m.swap.used_bytes) + " utilisés sur " + bytes(m.swap.total_bytes) : "aucun") : "indisponible" });
       out.metrics.push({ name: "Disque du journal", text: m.disk ? bytes(m.disk.free_bytes) + " libres sur " + bytes(m.disk.total_bytes) : "indisponible" });
-      out.metrics.push({ name: "GPU", text: "non sondé sur cette machine" });
+      if (m.gpu) {
+        // G169: named source, its own date; each device separately; null stays "indisponible".
+        var g = m.gpu;
+        out.gpu = { source: g.source.label + " (" + g.source.collector + ")", measured: (g.stale ? "PÉRIMÉES, " : "") + "il y a " + age(g.age_seconds)
+          + ", toutes les " + g.cadence_seconds + " s" + (g.driver ? ", pilote " + g.driver : ""), errors: g.errors.slice() };
+        g.devices.forEach(function (dv) {
+          var na = "indisponible";
+          out.metrics.push({ name: "GPU " + dv.index + " — " + dv.name, text: [
+            dv.temperature_c === null ? "température " + na : dv.temperature_c + " °C",
+            dv.power_w === null ? "puissance " + na : Math.round(dv.power_w) + " W" + (dv.power_limit_w === null ? "" : " / " + Math.round(dv.power_limit_w) + " W"),
+            dv.utilization_percent === null ? "utilisation " + na : dv.utilization_percent + " %",
+            dv.memory_used_bytes === null || dv.memory_total_bytes === null ? "VRAM " + na : "VRAM " + bytes(dv.memory_used_bytes) + " / " + bytes(dv.memory_total_bytes)
+          ].join(", ") });
+        });
+        if (!g.devices.length) out.metrics.push({ name: "GPU", text: "aucun GPU visible par la source" });
+      } else out.metrics.push({ name: "GPU", text: m.gpu_error ? "mesures GPU refusées (" + m.gpu_error + ")" : "non sondé sur cette machine" });
       if (m.errors.length) out.metricsNote = "Mesures manquantes : " + m.errors.join(", ") + ".";
     } else if (!out.metricsNote) out.metricsNote = "Mesures CPU, charge, mémoire, swap et disque : pas publiées par DARME sur cette machine.";
     return out;
@@ -220,6 +235,8 @@
         card.appendChild(services);
       }
       if (v.measured) card.appendChild(el(doc, "p", "help", v.measured));
+      if (v.gpu) card.appendChild(el(doc, "p", "help", "GPU : source " + v.gpu.source + ", mesures " + v.gpu.measured + "."
+        + (v.gpu.errors.length ? " Manquant : " + v.gpu.errors.join(", ") + "." : "")));
       if (v.metrics.length) {
         var metrics = el(doc, "dl", "monitor-metrics");
         v.metrics.forEach(function (m) { metrics.appendChild(el(doc, "dt", null, m.name)); metrics.appendChild(el(doc, "dd", null, m.text)); });

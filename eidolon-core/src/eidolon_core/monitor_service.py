@@ -118,6 +118,72 @@ def _bytes(item, fields, *, scope=None):
     return result
 
 
+def _maybe(value, *, high=None, integer=False):
+    if value is None:
+        return None
+    if integer and type(value) is not int:
+        raise ValueError("integer expected")
+    if not _number(value, high=high):
+        raise ValueError("number expected")
+    return value
+
+
+def gpu_view(raw, *, now):
+    """(GPU view, error) for the PROPOSED eidolon-gpu/1 block (docs/GPU-DISPLAY.md, G169).
+
+    The source is named (VM101 today, VM100 with two V100 later): a value never moves from one machine
+    to another. Absent values stay null; an invalid block is dropped alone (CPU metrics are kept)."""
+    if raw is None:
+        return None, None
+    try:
+        if not isinstance(raw, dict) or raw.get("schema") != "eidolon-gpu/1":
+            raise ValueError("schema")
+        source = raw["source"]
+        if (not isinstance(source, dict) or set(source) != {"id", "label", "collector"}
+                or not all(isinstance(source[k], str) and re.fullmatch(r"[A-Za-z0-9 ._-]{1,40}", source[k]) for k in source)):
+            raise ValueError("source")
+        sampled = datetime.fromisoformat(raw["sampled_at"])
+        if sampled.tzinfo is None:
+            raise ValueError("naive date")
+        age = now - sampled.timestamp()
+        if age < -FUTURE_TOLERANCE:
+            return None, "GPU_CLOCK_SKEW"
+        cadence = raw.get("cadence_seconds")
+        if type(cadence) is not int or not 1 <= cadence <= 3600:
+            raise ValueError("cadence")
+        driver = raw.get("driver")
+        if driver is not None and (not isinstance(driver, str) or not re.fullmatch(r"[0-9.]{1,20}", driver)):
+            raise ValueError("driver")
+        devices = raw.get("devices")
+        if not isinstance(devices, list) or len(devices) > 8:
+            raise ValueError("devices")
+        out = []
+        for device in devices:
+            if not isinstance(device, dict) or type(device.get("index")) is not int or not 0 <= device["index"] < 16:
+                raise ValueError("device index")
+            name = device.get("name")
+            if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9 ._()/-]{1,64}", name):
+                raise ValueError("device name")
+            used, total = _maybe(device.get("memory_used_bytes"), integer=True), _maybe(device.get("memory_total_bytes"), integer=True)
+            if used is not None and total is not None and used > total:
+                raise ValueError("memory")
+            power, limit = _maybe(device.get("power_w"), high=2000), _maybe(device.get("power_limit_w"), high=2000)
+            out.append({"index": device["index"], "name": name,
+                        "temperature_c": _maybe(device.get("temperature_c"), high=150),
+                        "power_w": power, "power_limit_w": limit,
+                        "utilization_percent": _maybe(device.get("utilization_percent"), high=100),
+                        "memory_used_bytes": used, "memory_total_bytes": total})
+        errors = raw.get("errors", [])
+        if (not isinstance(errors, list) or len(errors) > 16
+                or not all(isinstance(e, str) and re.fullmatch(r"[a-z][a-z0-9_]{0,39}", e) for e in errors)):
+            raise ValueError("errors")
+        return {"source": dict(source), "sampled_at": sampled.astimezone(timezone.utc).isoformat(),
+                "age_seconds": max(0, round(age)), "stale": age > max(DEFAULT_TTL, 3 * cadence),
+                "cadence_seconds": cadence, "driver": driver, "devices": out, "errors": list(errors)}, None
+    except (ValueError, KeyError, TypeError):
+        return None, "GPU_INVALID"
+
+
 def machine_view(raw, *, now):
     """(machine view, error) from the eidolon-machine/1 field published by Codex (G161).
 
@@ -151,8 +217,11 @@ def machine_view(raw, *, now):
                 "swap": _bytes(raw.get("swap"), ("total_bytes", "free_bytes", "used_bytes")),
                 "disk": _bytes(raw.get("disk"), ("total_bytes", "free_bytes", "used_bytes"),
                                scope="journal_filesystem"),
-                "gpu": None,                         # never probed on these CPU VMs (G161): nothing is relayed
-                "errors": list(errors)}
+                "gpu": None, "errors": list(errors)}
+        # G169: a GPU block only if it follows the proposed eidolon-gpu/1 contract; null on CPU VMs (G161).
+        view["gpu"], gpu_error = gpu_view(raw.get("gpu"), now=now)
+        if gpu_error:
+            view["gpu_error"] = gpu_error
         return view, None
     except (ValueError, KeyError, TypeError):
         return None, "MACHINE_INVALID"
