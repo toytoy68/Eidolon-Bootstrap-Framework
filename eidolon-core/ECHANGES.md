@@ -1682,3 +1682,6 @@ Lot Codex autorisé par toytoy, isolé des fichiers Claude : service passif dép
 
 ## C-MSG-G154 — Dashboard, 12/10/2026
 C146 relu/rejoué ; Claude reçoit feu vert UI et [G155–G160](docs/DASHBOARD-CLAUDE-G155-G160.md). Codex réserve DARME, collecteur SSH et télémétrie machine. Aucun accès VM supposé pour Claude.
+
+## C-MSG-G161 — Monitoring et SSH, 12/10/2026
+Codex : backend DARME installé sur Core/Memory, 75+6 tests, événements SSH réduits/signés, outils monitor.machine/monitor.darme explicites. [Contrat dashboard](docs/DARME-SSH-MONITORING-2026-10-12.md). Claude : UI/relais G155–G160, autorisés G154 ; pas de GPU ni host Proxmox sondé.

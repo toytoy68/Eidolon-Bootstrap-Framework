@@ -1,0 +1,38 @@
+[Unit]
+Description=Eidolon DARME reduced signed SSH authentication collector
+After=systemd-journald.service ssh.service
+
+[Service]
+Type=simple
+User=eidolon-darme-ssh
+Group=eidolon-darme
+SupplementaryGroups=systemd-journal eidolon-darme-ssh
+ExecStart=/usr/bin/python3 -B -I /opt/eidolon-darme/ssh-launch.py --key /etc/eidolon-darme-ssh/private.raw --state /var/lib/eidolon-darme-ssh --runtime /run/eidolon-darme-ssh
+WorkingDirectory=/opt/eidolon-darme
+Restart=on-failure
+RestartSec=5
+StateDirectory=eidolon-darme-ssh
+StateDirectoryMode=0700
+RuntimeDirectory=eidolon-darme-ssh
+RuntimeDirectoryMode=0750
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+MemoryMax=64M
+TasksMax=16
+CPUQuota=10%
+LimitNOFILE=128
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
