@@ -1,0 +1,105 @@
+From 7cced2389fc99077e9ae3ce1552d3f0baa7ef980 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 12 Oct 2026 17:17:37 +0000
+Subject: [PATCH] test(claude-eval): randomised counter-review of the G186
+ fixes P1-P4
+
+Chunk coverage and base+mark boundaries (1 200 archives), indexed passage
+verbatim/bounded/marker count (9 000 references). Observation O1 as strict
+xfail: one over-long mark run refuses the whole archive.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_canonical_probes_g186.py             | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_canonical_probes_g186.py
+
+diff --git a/tests/claude_memory_eval/test_canonical_probes_g186.py b/tests/claude_memory_eval/test_canonical_probes_g186.py
+new file mode 100644
+index 0000000..a7ee26e
+--- /dev/null
++++ b/tests/claude_memory_eval/test_canonical_probes_g186.py
+@@ -0,0 +1,79 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_canonical_probes_g186.py
++# Description : Contre-revue Claude des correctifs G186 (P1-P4) : propriétés aléatoires du découpage et de l'extrait indexé
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent randomised properties of the G186 fixes (Claude). Positive tests pin what holds; strict xfail
++documents an observation that is a policy choice to confirm, not a defect claimed."""
++import random
++import unicodedata
++
++import pytest
++
++from core.retrieval.archive_chunks import chunk_messages, resolve_passage
++from core.retrieval.chatgpt_passages import _MARKERS, _WORD, _sentence_start
++from tests.test_archive_chunks import archive
++
++PIECES = ['Ne', 'pas', 'acheter', 'la', 'V100', 'été', 'ñ', 'sauf', 'si', 'x' * 30,
++          'á̂̃', '😀', 'ok', 'jamais']
++SEPS = [' ', ' ', '. ', '! ', '\n', '? ', ', ', '']
++
++
++def text_of(rng, words):
++    return ''.join(rng.choice(PIECES) + rng.choice(SEPS) for _ in range(words))
++
++
++def is_mark(char):
++    return unicodedata.category(char).startswith('M')
++
++
++@pytest.mark.parametrize('seed', range(3))
++def test_chunks_cover_each_message_and_never_split_a_base_from_its_marks(seed):
++    rng = random.Random(seed)
++    for _ in range(400):
++        texts = [text_of(rng, rng.randint(1, 60)) for _ in range(rng.randint(1, 3))]
++        max_chars = rng.randint(32, 90)
++        overlap = rng.randint(0, max_chars - 1)
++        chunks = chunk_messages(archive(texts), max_chars=max_chars, overlap=overlap)
++        for i, text in enumerate(texts):
++            covered = set()
++            for chunk in (c for c in chunks if c.reference['message_index'] == i):
++                start, end = chunk.reference['start'], chunk.reference['end']
++                assert chunk.text == text[start:end] and 0 < end - start <= max_chars
++                assert not is_mark(text[start]) or start == 0
++                assert end == len(text) or not is_mark(text[end])
++                covered.update(range(start, end))
++            assert covered == set(range(len(text)))
++
++
++@pytest.mark.parametrize('seed', range(3))
++def test_indexed_passage_is_verbatim_bounded_and_counts_what_it_drops(seed):
++    rng = random.Random(100 + seed)
++    for _ in range(3000):
++        text = text_of(rng, rng.randint(1, 40))
++        if len(text) < 2:
++            continue
++        start = rng.randrange(len(text) - 1)
++        stop = rng.randint(start + 1, len(text))
++        budget = rng.randint(1, 120)
++        passage, ref = resolve_passage(archive([text]), {'message_index': 0, 'start': start, 'end': stop}, budget)
++        assert passage == text[ref['start']:ref['end']] and len(passage) <= budget
++        sentence = _sentence_start(text, start)
++        assert ref['start'] in (start, sentence)
++        if ref['start'] == sentence:
++            assert ref['left_markers_dropped'] == 0
++        else:
++            dropped = sum(1 for w in _WORD.finditer(text, sentence, start)
++                          if unicodedata.normalize('NFC', w.group().casefold()) in _MARKERS)
++            assert ref['left_markers_dropped'] == dropped
++        assert ref['end'] <= stop
++
++
++@pytest.mark.xfail(strict=True, reason='Claude observation O1 (G186): one message with a mark run longer than '
++                   'max_chars makes chunk_messages refuse the WHOLE archive; per-message exclusion to confirm')
++def test_one_pathological_message_does_not_block_the_other_messages():
++    texts = ['Message ordinaire.', 'a' + '́' * 200, 'Autre message ordinaire.']
++    chunks = chunk_messages(archive(texts), max_chars=64, overlap=8)
++    assert {c.reference['message_index'] for c in chunks} >= {0, 2}
+-- 
+2.43.0
+

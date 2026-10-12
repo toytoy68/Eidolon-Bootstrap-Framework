@@ -34,3 +34,9 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0005 | Contre-vérification A5-02 v3 (12 000 cas aléatoires) et sondes du rappel canonique par index G181/G182 : 6 sondes vertes, 4 écarts en `xfail` strict (P1 à P4) | 2 112 tests Memory réussis + 4 xfail ; chaque xfail vérifié avec `--runxfail` |
+
+## Patch 0006 (G186, base `533ac1d6cfd975dbcebf730d0a3f31b17a1f6e44`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0006 | Contre-revue aléatoire des correctifs P1–P4 : couverture des morceaux et frontières base + accents (1 200 archives), extrait indexé fidèle, borné et marqueurs recomptés (9 000 références). Observation O1 en `xfail` strict | 2 134 tests Memory réussis avant patch ; sondes : 6 réussies + 1 xfail, vérifié avec `--runxfail` |
