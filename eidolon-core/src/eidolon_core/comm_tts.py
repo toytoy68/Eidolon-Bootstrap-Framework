@@ -31,6 +31,27 @@ from .comm_contract import CommError, DeviceGate, write_wav
 
 MAX_TEXT = 2000
 MAX_CHUNK = 300
+# Names the French voice would misread, spelled for the ear (toytoy said like the English "toy" twice,
+# not "toi-toi"; told by toytoy on 12/10/2026). Applied to the spoken chunk only, never to displayed text.
+# The spelling is a best guess for Piper/espeak French: to be confirmed by listening (docs/COMMUNICATION.md §7).
+DEFAULT_PRONUNCIATIONS = {"toytoy": "toï-toï"}
+WORD = re.compile(r"[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ' -]{0,39}")
+
+
+def pronunciation_rules(mapping):
+    """Validated (pattern, spoken) list: whole words, case-insensitive, longest first."""
+    if not isinstance(mapping, dict) or len(mapping) > 64 or not all(
+            isinstance(k, str) and isinstance(v, str) and WORD.fullmatch(k) and WORD.fullmatch(v)
+            for k, v in mapping.items()):
+        raise CommError("INVALID_REQUEST", "pronunciations: up to 64 short word pairs")
+    return [(re.compile(r"(?<![\w-])" + re.escape(k) + r"(?![\w-])", re.IGNORECASE), v)
+            for k, v in sorted(mapping.items(), key=lambda kv: -len(kv[0]))]
+
+
+def pronounce(text, rules):
+    for pattern, spoken in rules:
+        text = pattern.sub(spoken, text)
+    return text
 DEFAULT_RATE = 0.9
 VOICE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}")
 CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
@@ -173,8 +194,10 @@ class PiperTTS:
 class TextToSpeech:
     """One synthesis per client at a time (DeviceGate on the speaker), and one engine call at a time."""
 
-    def __init__(self, engine, *, default_voice=None, gate=None, time_budget=30.0):
+    def __init__(self, engine, *, default_voice=None, gate=None, time_budget=30.0, pronunciations=None):
         self.engine, self.gate, self.time_budget = engine, gate or DeviceGate(), time_budget
+        self.pronunciations = DEFAULT_PRONUNCIATIONS if pronunciations is None else pronunciations
+        self._rules = pronunciation_rules(self.pronunciations)
         if default_voice is not None and default_voice not in engine.catalog:
             raise CommError("ENGINE_UNAVAILABLE", "the configured default voice is not installed")
         self.default_voice = default_voice or sorted(engine.catalog)[0]
@@ -183,6 +206,7 @@ class TextToSpeech:
     def status(self):
         return {"engine": self.engine.engine, "state": "ready", "default_voice": self.default_voice,
                 "voices": self.engine.catalog, "default_rate": DEFAULT_RATE,
+                "pronunciations": len(self.pronunciations),
                 "limits": {"characters": MAX_TEXT, "chunk_characters": MAX_CHUNK}}
 
     def plan(self, text):
@@ -204,7 +228,7 @@ class TextToSpeech:
                 raise CommError("DEVICE_BUSY", "the synthesis engine is busy")
             started = time.monotonic()
             try:
-                pcm, sample_rate = self.engine.synthesize(parts[index], voice, float(rate), cancel,
+                pcm, sample_rate = self.engine.synthesize(pronounce(parts[index], self._rules), voice, float(rate), cancel,
                                                           started + self.time_budget)
             finally:
                 self._engine_lock.release()

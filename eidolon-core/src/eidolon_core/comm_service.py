@@ -261,7 +261,8 @@ def build_engines(config):
     if config.get("tts"):
         t = config["tts"]
         engine = SimulatedTTS() if t.get("kind") == "simulated" else PiperTTS(t["executable"], t["voice_dir"])
-        tts = TextToSpeech(engine, default_voice=t.get("default_voice"), gate=gate)
+        tts = TextToSpeech(engine, default_voice=t.get("default_voice"), gate=gate,
+                           pronunciations=t.get("pronunciations"))   # absent: DEFAULT_PRONUNCIATIONS
     if config.get("vision"):
         v = config["vision"]
         engine = SimulatedVision() if v.get("kind") == "simulated" else OllamaVision(v["endpoint"], v["model"])

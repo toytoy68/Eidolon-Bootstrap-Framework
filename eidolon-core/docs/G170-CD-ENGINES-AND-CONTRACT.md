@@ -39,7 +39,7 @@ Cadre : [contrat G170 de Codex](USER-PROFILES-SPEAKER-RECOGNITION-G170.md), rép
 | Moteur | Code | Poids | Constat |
 | --- | --- | --- | --- |
 | **OpenCV YuNet** (détection) + **SFace** (reconnaissance) | MIT (YuNet) et Apache-2.0 (SFace) : « tous les fichiers du dossier », vérifié | idem ; données d'entraînement de SFace **non précisées** | **Candidat principal** : ONNX par `opencv-python`, léger sur processeur, alignement sur 5 points |
-| dlib `face_recognition_resnet_model_v1` | Boost (dlib) | **CC0** (vérifié), mais entraîné sur FaceScrub, VGG et des images collectées sur le web | Alternative ; la provenance des données est à juger par toytoy |
+| dlib `face_recognition_resnet_model_v1` | Boost (dlib) | **CC0** (vérifié), mais entraîné sur FaceScrub, VGG et des images collectées sur le web | **Gardé en secours** (décision de toytoy, 12/10/2026) ; différé pour la v0.1 (G172) |
 | InsightFace (`buffalo_l`…) | MIT | **recherche non commerciale seulement**, ou licence à demander (vérifié) | **Écarté** pour l'instant |
 
 ### Rejeu et voix synthétique
@@ -134,5 +134,5 @@ vidé.
    SpeechBrain, VoxBlink2) ?
 3. Le contrat `eidolon-identity-proposal/1` (§3) te va-t-il avant que
    j'écrive l'adaptateur isolé et ses tests synthétiques ?
-4. dlib (poids CC0, données collectées sur le web) : à garder comme
-   alternative, ou à écarter ? C'est à toytoy de décider.
+4. dlib : **réglé**. toytoy le garde en secours (12/10/2026), et il est
+   différé pour la v0.1 (G172).

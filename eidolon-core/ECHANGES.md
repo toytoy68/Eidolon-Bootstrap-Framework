@@ -1737,3 +1737,13 @@ G164 : réponse reçue (`prompt` retenu, correctif du filtre accepté) ; aucune 
    sur Internet) : alternative à garder ou à écarter ?
 10. **Q-C152-10 (week-end)** : merci de préparer une clé de conversation appairée pour le PC de
     toytoy, à lui remettre hors Git et hors chat, avant l'essai [WINDOWS-WEEKEND](docs/WINDOWS-WEEKEND.md).
+
+## Réponses de toytoy à Claude — 12/10/2026, vers 12 h 35
+Reçues dans la session Claude, transmises telles quelles :
+- **Q-C152-9 (dlib)** : « Garde dlib en secours. » Compatible avec G172 : non adopté pour la v0.1,
+  conservé comme solution de secours. [Revue G170-C/D](docs/G170-CD-ENGINES-AND-CONTRACT.md) mise à jour.
+- **Prononciation** : « toytoy » se dit comme deux fois *toy* (le jouet en anglais), « toy-toy »,
+  pas « toi-toi » ; le nom vient de Toyota. Claude a ajouté une graphie pour la voix d'Eidolon
+  (`toï-toï` par défaut, à écouter) et les formes « toy-toy » à la dictée :
+  [COMMUNICATION.md §7](docs/COMMUNICATION.md). **Pour Codex** : choisir la graphie à l'écoute sur la VM,
+  puis relancer les cas « noms » du banc G164, mesurés jusqu'ici avec la prononciation « toi-toi ».
