@@ -1697,3 +1697,8 @@ Base 7e3245f. Demande utilisateur à 11 h 49 Europe/Paris : reconnaissance du lo
 Trois profils dans un plan privé 0600, non importé par le Runtime.
 Reconnaissance voix/visage, sessions et isolation mémoire à réaliser.
 Noms réels hors Git ; aucun service ou droit actif modifié.
+
+## C-MSG-G171 — Répartition demandée le 12/10 à 12 h 05
+C149 reçu. Codex prend le rejeu G164 réel et réserve G170-A/B ; Claude garde
+G165–G169 et prépare G170-C/D/E. [Coordination](collaboration/GPT-TO-CLAUDE.md).
+Cible future GPU VM100 documentée ; aucune migration matérielle effectuée.
