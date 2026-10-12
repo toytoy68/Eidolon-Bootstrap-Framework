@@ -1,0 +1,1314 @@
+From a4311a43857bfdeb230b0ed8e488fb3450fe4365 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 12 Oct 2026 12:29:36 +0000
+Subject: [PATCH 3/3] test(eval): lexical recall baseline on the synthetic
+ corpus (recall@k, sources, abstention, latency), before/after A5-02
+ comparison, honest reading (no abstention, paraphrase 1/5, corrections ranked
+ by lexical luck)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ docs/claude-memory-eval/README.md             |  78 +++
+ .../baseline-lexical-v1-passage-v2.json       | 504 ++++++++++++++++++
+ .../baseline-lexical-v1.json                  | 504 ++++++++++++++++++
+ tests/claude_memory_eval/__init__.py          |   0
+ tests/claude_memory_eval/run_baseline.py      | 116 ++++
+ .../test_corpus_and_runner.py                 |  51 ++
+ 6 files changed, 1253 insertions(+)
+ create mode 100644 docs/claude-memory-eval/README.md
+ create mode 100644 docs/claude-memory-eval/baseline-lexical-v1-passage-v2.json
+ create mode 100644 docs/claude-memory-eval/baseline-lexical-v1.json
+ create mode 100644 tests/claude_memory_eval/__init__.py
+ create mode 100644 tests/claude_memory_eval/run_baseline.py
+ create mode 100644 tests/claude_memory_eval/test_corpus_and_runner.py
+
+diff --git a/docs/claude-memory-eval/README.md b/docs/claude-memory-eval/README.md
+new file mode 100644
+index 0000000..697509e
+--- /dev/null
++++ b/docs/claude-memory-eval/README.md
+@@ -0,0 +1,78 @@
++# Évaluation du rappel mémoire — corpus synthétique v1 et baseline lexicale (G178, tâches 2 et 3)
++
++Auteur : Claude. Date : 12/10/2026, Europe/Paris. Demandé par Codex (G178), accepté par toytoy.
++
++**Nature** :
++- **rappel seulement**, sans génération ni modèle ;
++- données **synthétiques**, inventées, aucun corpus privé ;
++- exécution en conteneur, pas sur la VM.
++
++## Corpus ([corpus-v1.json](corpus-v1.json))
++
++- 30 documents courts et 27 questions.
++- Les réponses attendues ont été **écrites et commitées avant toute
++  exécution** (commit `7e541df`). Le test
++  `tests/claude_memory_eval/test_corpus_and_runner.py` fige le corpus par son
++  SHA-256 : changer une réponse attendue oblige à créer une v2.
++
++| Catégorie | Questions | Ce qu'elle mesure |
++| --- | ---: | --- |
++| direct | 4 | Contrôle : la question reprend les mots du document |
++| paraphrase | 5 | Mêmes idées, autres mots (« copie de sécurité des images » pour « sauvegarde des photos ») |
++| negation | 3 | La source porte une négation : l'extrait doit la garder |
++| corrected | 3 | Un fait et sa correction datée : la version récente doit passer devant |
++| tech_vs_fiction | 2 | « NAS » technique contre le robot « Nas » d'une histoire |
++| homonym | 4 | Mercure (planète, métal, dieu), deux personnes nommées Paul |
++| condition | 2 | « si… » et « seulement si… » gardés dans l'extrait |
++| absence | 4 | Aucune réponse dans le corpus : un bon moteur s'abstient |
++
++## Résultats ([baseline-lexical-v1.json](baseline-lexical-v1.json))
++
++Moteur : `ContextualRecall` avec ses réglages par défaut (5 résultats,
++`lexical_passage_v1`). La colonne « avant A5-02 » rejoue le même banc sur
++`f713623`, soit l'ancien découpage v2
++([résultat](baseline-lexical-v1-passage-v2.json)).
++
++| Mesure | Avec A5-02 (passage v3) | Avant A5-02 (v2) |
++| --- | ---: | ---: |
++| rappel@1 (23 questions avec réponse) | **0,783** | 0,739 |
++| rappel@5 | 0,826 | 0,826 |
++| Vérifications d'extrait (négation, condition, ordre) | **10/10** | 8/10 |
++| Négation gardée dans l'extrait | **3/3** | 1/3 |
++| Abstention sur les 4 questions sans réponse | **0/4** | 0/4 |
++| Latence médiane / maximale par question | 8,5 / 32 ms | — |
++
++## Lecture honnête
++
++1. **A5-02 corrigé, effet mesuré** : la négation passe de 1/3 à 3/3 dans
++   l'extrait. Le gain en rappel@1 (+0,04) vient du contexte ajouté, qui
++   apporte des mots ; il ne dit rien de la compréhension.
++2. **Paraphrase : 1/5.** La recherche lexicale ne trouve pas une idée dite
++   avec d'autres mots. C'est la limite attendue que des embeddings et Qdrant
++   devront mesurer **sur ce même corpus**.
++3. **Aucune abstention (0/4).** Le moteur renvoie toujours 5 résultats, même
++   sans réponse, sur de simples mots partagés (« port », « serveur »,
++   « Paul »). Un consommateur ne doit pas lire « résultat présent » comme
++   « réponse trouvée ». Il faudrait un seuil ou un signal de couverture,
++   **mesuré** et non choisi au hasard.
++4. **Faits corrigés : 3/3 en tête, mais par chance lexicale.**
++   - L'ancienne version suit **toujours** en 2e position : le moteur ne
++     connaît pas les dates.
++   - **Cas dangereux (neg-1)** : à « Faut-il acheter la V100 cette
++     semaine ? », l'ancienne consigne (« Il faut acheter… ») sort **avant**
++     sa correction (« ne pas acheter… »).
++   - Une relation de remplacement explicite, ou un tri tenant compte de la
++     date, est nécessaire avant tout usage décisionnel.
++5. Homonymes, technique contre fiction et conditions : réussis ici, sur des
++   phrases courtes et explicites. Ce n'est **pas** une preuve sur un vrai
++   corpus.
++
++## Rejouer
++
++```sh
++python3 tests/claude_memory_eval/run_baseline.py          # écrit baseline-lexical-v1.json
++python3 -m pytest -q tests/claude_memory_eval
++```
++
++Pour comparer Qdrant ou un autre moteur : garder `corpus-v1.json` et
++`evaluate()`, remplacer seulement la fonction de rappel passée au banc.
+diff --git a/docs/claude-memory-eval/baseline-lexical-v1-passage-v2.json b/docs/claude-memory-eval/baseline-lexical-v1-passage-v2.json
+new file mode 100644
+index 0000000..3e9ce42
+--- /dev/null
++++ b/docs/claude-memory-eval/baseline-lexical-v1-passage-v2.json
+@@ -0,0 +1,504 @@
++{
++ "schema": "claude-memory-eval-result/1",
++ "engine": "ContextualRecall defaults (lexical_passage_v1, passage v3)",
++ "corpus_sha256": "80ea76bf9054834ae6d8e73ba36df38c38c7d0fd4148eb727a3ae3e9bb82a3a1",
++ "retrieval_only": true,
++ "synthetic": true,
++ "summary": {
++  "recall@1": 0.739,
++  "recall@3": 0.826,
++  "recall@5": 0.826,
++  "answerable": 23,
++  "abstention_rate": 0.0,
++  "absence_questions": 4,
++  "checks_passed": "8/10",
++  "latency_ms_median": 7.65,
++  "latency_ms_max": 49.04,
++  "by_category": {
++   "absence": {
++    "n": 4,
++    "hit@1": 0,
++    "hit@5": 0,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "condition": {
++    "n": 2,
++    "hit@1": 2,
++    "hit@5": 2,
++    "checks": "2/2",
++    "abstained": 0
++   },
++   "corrected": {
++    "n": 3,
++    "hit@1": 3,
++    "hit@5": 3,
++    "checks": "3/3",
++    "abstained": 0
++   },
++   "direct": {
++    "n": 4,
++    "hit@1": 4,
++    "hit@5": 4,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "homonym": {
++    "n": 4,
++    "hit@1": 4,
++    "hit@5": 4,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "negation": {
++    "n": 3,
++    "hit@1": 2,
++    "hit@5": 3,
++    "checks": "1/3",
++    "abstained": 0
++   },
++   "paraphrase": {
++    "n": 5,
++    "hit@1": 0,
++    "hit@5": 1,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "tech_vs_fiction": {
++    "n": 2,
++    "hit@1": 2,
++    "hit@5": 2,
++    "checks": "2/2",
++    "abstained": 0
++   }
++  }
++ },
++ "rows": [
++  {
++   "id": "para-1",
++   "category": "paraphrase",
++   "returned": [
++    "cond-backup",
++    "distract-carte",
++    "distract-port",
++    "fiction-mercure",
++    "person-paul-plumber"
++   ],
++   "latency_ms": 49.04,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-2",
++   "category": "paraphrase",
++   "returned": [
++    "tech-nas-backup",
++    "tech-voice",
++    "chem-mercure",
++    "distract-photos",
++    "pref-tea"
++   ],
++   "latency_ms": 7.29,
++   "rank": 2,
++   "hit@1": false,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "para-3",
++   "category": "paraphrase",
++   "returned": [
++    "pref-coffee",
++    "pref-no-meat",
++    "pref-tea",
++    "tech-gpu-buy-old",
++    "tech-voice"
++   ],
++   "latency_ms": 7.97,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-4",
++   "category": "paraphrase",
++   "returned": [
++    "distract-port",
++    "pref-tea",
++    "tech-wireguard",
++    "chem-mercure",
++    "date-meeting"
++   ],
++   "latency_ms": 8.68,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-5",
++   "category": "paraphrase",
++   "returned": [
++    "tech-gpu-buy-old",
++    "fiction-mercure",
++    "tech-core-port-old",
++    "cond-backup",
++    "date-meeting"
++   ],
++   "latency_ms": 9.26,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "direct-1",
++   "category": "direct",
++   "returned": [
++    "tech-nas-backup",
++    "tech-nas-format",
++    "distract-photos",
++    "fiction-nas",
++    "tech-darme"
++   ],
++   "latency_ms": 10.23,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-2",
++   "category": "direct",
++   "returned": [
++    "person-paul-plumber",
++    "cond-backup",
++    "distract-carte",
++    "distract-port",
++    "fiction-mercure"
++   ],
++   "latency_ms": 9.15,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-3",
++   "category": "direct",
++   "returned": [
++    "routine-car",
++    "distract-carte",
++    "distract-port",
++    "science-mercure",
++    "cond-backup"
++   ],
++   "latency_ms": 9.28,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-4",
++   "category": "direct",
++   "returned": [
++    "tech-darme"
++   ],
++   "latency_ms": 7.01,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "neg-1",
++   "category": "negation",
++   "returned": [
++    "tech-gpu-buy-old",
++    "tech-gpu-buy-new",
++    "cond-backup",
++    "cond-heating",
++    "date-meeting"
++   ],
++   "latency_ms": 9.03,
++   "rank": 2,
++   "hit@1": false,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": false
++  },
++  {
++   "id": "neg-2",
++   "category": "negation",
++   "returned": [
++    "tech-nas-format",
++    "pref-coffee",
++    "fiction-nas",
++    "pref-no-meat",
++    "pref-tea"
++   ],
++   "latency_ms": 8.21,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": false
++  },
++  {
++   "id": "neg-3",
++   "category": "negation",
++   "returned": [
++    "pref-no-meat",
++    "distract-port",
++    "routine-car",
++    "person-paul-plumber",
++    "distract-carte"
++   ],
++   "latency_ms": 7.73,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-1",
++   "category": "corrected",
++   "returned": [
++    "tech-core-port-new",
++    "tech-core-port-old",
++    "tech-wireguard",
++    "date-meeting",
++    "date-meeting-old"
++   ],
++   "latency_ms": 7.15,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-2",
++   "category": "corrected",
++   "returned": [
++    "date-meeting",
++    "date-meeting-old",
++    "tech-gpu-buy-new",
++    "tech-stt",
++    "tech-voice"
++   ],
++   "latency_ms": 7.65,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-3",
++   "category": "corrected",
++   "returned": [
++    "tech-gpu-buy-new",
++    "tech-gpu-buy-old",
++    "cond-backup",
++    "cond-heating",
++    "date-meeting"
++   ],
++   "latency_ms": 6.58,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "tf-1",
++   "category": "tech_vs_fiction",
++   "returned": [
++    "tech-nas-backup",
++    "tech-nas-format",
++    "distract-photos",
++    "fiction-nas",
++    "tech-darme"
++   ],
++   "latency_ms": 6.93,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "tf-2",
++   "category": "tech_vs_fiction",
++   "returned": [
++    "tech-core-port-new",
++    "tech-core-port-old",
++    "distract-port",
++    "tech-stt",
++    "tech-voice"
++   ],
++   "latency_ms": 6.17,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "hom-1",
++   "category": "homonym",
++   "returned": [
++    "science-mercure",
++    "distract-carte",
++    "distract-port",
++    "routine-car",
++    "tech-core-port-new"
++   ],
++   "latency_ms": 7.35,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-2",
++   "category": "homonym",
++   "returned": [
++    "chem-mercure",
++    "distract-port",
++    "fiction-mercure",
++    "routine-car",
++    "science-mercure"
++   ],
++   "latency_ms": 7.74,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-3",
++   "category": "homonym",
++   "returned": [
++    "person-paul-cousin",
++    "tech-core-port-old",
++    "distract-carte",
++    "distract-port",
++    "person-paul-plumber"
++   ],
++   "latency_ms": 7.77,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-4",
++   "category": "homonym",
++   "returned": [
++    "person-paul-plumber",
++    "person-paul-cousin",
++    "chem-mercure",
++    "cond-heating",
++    "date-meeting-old"
++   ],
++   "latency_ms": 8.06,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "cond-1",
++   "category": "condition",
++   "returned": [
++    "cond-backup",
++    "cond-heating",
++    "tech-nas-format",
++    "date-meeting",
++    "date-meeting-old"
++   ],
++   "latency_ms": 7.02,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "cond-2",
++   "category": "condition",
++   "returned": [
++    "cond-heating",
++    "chem-mercure",
++    "date-meeting-old",
++    "distract-port",
++    "distract-serveur"
++   ],
++   "latency_ms": 7.61,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "abs-1",
++   "category": "absence",
++   "returned": [
++    "distract-port",
++    "routine-car",
++    "tech-core-port-old",
++    "chem-mercure",
++    "distract-carte"
++   ],
++   "latency_ms": 7.51,
++   "abstained": false
++  },
++  {
++   "id": "abs-2",
++   "category": "absence",
++   "returned": [
++    "distract-carte",
++    "distract-port",
++    "routine-car",
++    "science-mercure",
++    "chem-mercure"
++   ],
++   "latency_ms": 6.97,
++   "abstained": false
++  },
++  {
++   "id": "abs-3",
++   "category": "absence",
++   "returned": [
++    "tech-gpu-buy-new",
++    "tech-gpu-buy-old",
++    "distract-port",
++    "distract-serveur",
++    "fiction-mercure"
++   ],
++   "latency_ms": 6.92,
++   "abstained": false
++  },
++  {
++   "id": "abs-4",
++   "category": "absence",
++   "returned": [
++    "person-paul-plumber",
++    "tech-core-port-old",
++    "distract-port",
++    "person-paul-cousin",
++    "routine-car"
++   ],
++   "latency_ms": 7.61,
++   "abstained": false
++  }
++ ]
++}
+diff --git a/docs/claude-memory-eval/baseline-lexical-v1.json b/docs/claude-memory-eval/baseline-lexical-v1.json
+new file mode 100644
+index 0000000..150150c
+--- /dev/null
++++ b/docs/claude-memory-eval/baseline-lexical-v1.json
+@@ -0,0 +1,504 @@
++{
++ "schema": "claude-memory-eval-result/1",
++ "engine": "ContextualRecall defaults (lexical_passage_v1, passage v3)",
++ "corpus_sha256": "80ea76bf9054834ae6d8e73ba36df38c38c7d0fd4148eb727a3ae3e9bb82a3a1",
++ "retrieval_only": true,
++ "synthetic": true,
++ "summary": {
++  "recall@1": 0.783,
++  "recall@3": 0.826,
++  "recall@5": 0.826,
++  "answerable": 23,
++  "abstention_rate": 0.0,
++  "absence_questions": 4,
++  "checks_passed": "10/10",
++  "latency_ms_median": 8.5,
++  "latency_ms_max": 32.35,
++  "by_category": {
++   "absence": {
++    "n": 4,
++    "hit@1": 0,
++    "hit@5": 0,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "condition": {
++    "n": 2,
++    "hit@1": 2,
++    "hit@5": 2,
++    "checks": "2/2",
++    "abstained": 0
++   },
++   "corrected": {
++    "n": 3,
++    "hit@1": 3,
++    "hit@5": 3,
++    "checks": "3/3",
++    "abstained": 0
++   },
++   "direct": {
++    "n": 4,
++    "hit@1": 4,
++    "hit@5": 4,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "homonym": {
++    "n": 4,
++    "hit@1": 4,
++    "hit@5": 4,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "negation": {
++    "n": 3,
++    "hit@1": 2,
++    "hit@5": 3,
++    "checks": "3/3",
++    "abstained": 0
++   },
++   "paraphrase": {
++    "n": 5,
++    "hit@1": 1,
++    "hit@5": 1,
++    "checks": "0/0",
++    "abstained": 0
++   },
++   "tech_vs_fiction": {
++    "n": 2,
++    "hit@1": 2,
++    "hit@5": 2,
++    "checks": "2/2",
++    "abstained": 0
++   }
++  }
++ },
++ "rows": [
++  {
++   "id": "para-1",
++   "category": "paraphrase",
++   "returned": [
++    "person-paul-plumber",
++    "routine-car",
++    "tech-voice",
++    "cond-backup",
++    "distract-carte"
++   ],
++   "latency_ms": 32.35,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-2",
++   "category": "paraphrase",
++   "returned": [
++    "tech-voice",
++    "tech-nas-backup",
++    "routine-garden",
++    "chem-mercure",
++    "distract-photos"
++   ],
++   "latency_ms": 7.39,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "para-3",
++   "category": "paraphrase",
++   "returned": [
++    "pref-coffee",
++    "pref-no-meat",
++    "pref-tea",
++    "tech-gpu-buy-old",
++    "tech-voice"
++   ],
++   "latency_ms": 9.04,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-4",
++   "category": "paraphrase",
++   "returned": [
++    "distract-port",
++    "pref-tea",
++    "tech-wireguard",
++    "chem-mercure",
++    "date-meeting"
++   ],
++   "latency_ms": 10.46,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "para-5",
++   "category": "paraphrase",
++   "returned": [
++    "tech-gpu-buy-old",
++    "fiction-mercure",
++    "tech-core-port-old",
++    "distract-serveur",
++    "tech-core-port-new"
++   ],
++   "latency_ms": 10.79,
++   "rank": null,
++   "hit@1": false,
++   "hit@3": false,
++   "hit@5": false
++  },
++  {
++   "id": "direct-1",
++   "category": "direct",
++   "returned": [
++    "tech-nas-backup",
++    "tech-nas-format",
++    "fiction-nas",
++    "distract-photos",
++    "tech-darme"
++   ],
++   "latency_ms": 8.6,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-2",
++   "category": "direct",
++   "returned": [
++    "person-paul-plumber",
++    "routine-car",
++    "cond-backup",
++    "distract-carte",
++    "distract-port"
++   ],
++   "latency_ms": 9.6,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-3",
++   "category": "direct",
++   "returned": [
++    "routine-car",
++    "distract-carte",
++    "distract-port",
++    "person-paul-plumber",
++    "science-mercure"
++   ],
++   "latency_ms": 10.7,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "direct-4",
++   "category": "direct",
++   "returned": [
++    "tech-darme"
++   ],
++   "latency_ms": 7.78,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "neg-1",
++   "category": "negation",
++   "returned": [
++    "tech-gpu-buy-old",
++    "tech-gpu-buy-new",
++    "person-paul-plumber",
++    "routine-car",
++    "science-mercure"
++   ],
++   "latency_ms": 8.12,
++   "rank": 2,
++   "hit@1": false,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "neg-2",
++   "category": "negation",
++   "returned": [
++    "tech-nas-format",
++    "fiction-nas",
++    "pref-coffee",
++    "tech-nas-backup",
++    "pref-no-meat"
++   ],
++   "latency_ms": 10.06,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "neg-3",
++   "category": "negation",
++   "returned": [
++    "pref-no-meat",
++    "routine-car",
++    "distract-port",
++    "person-paul-plumber",
++    "distract-carte"
++   ],
++   "latency_ms": 11.15,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-1",
++   "category": "corrected",
++   "returned": [
++    "tech-core-port-new",
++    "tech-core-port-old",
++    "tech-wireguard",
++    "date-meeting",
++    "date-meeting-old"
++   ],
++   "latency_ms": 8.5,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-2",
++   "category": "corrected",
++   "returned": [
++    "date-meeting",
++    "date-meeting-old",
++    "tech-voice",
++    "tech-gpu-buy-new",
++    "tech-stt"
++   ],
++   "latency_ms": 9.62,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "corr-3",
++   "category": "corrected",
++   "returned": [
++    "tech-gpu-buy-new",
++    "tech-gpu-buy-old",
++    "person-paul-plumber",
++    "routine-car",
++    "science-mercure"
++   ],
++   "latency_ms": 9.81,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "tf-1",
++   "category": "tech_vs_fiction",
++   "returned": [
++    "tech-nas-backup",
++    "tech-nas-format",
++    "fiction-nas",
++    "distract-photos",
++    "tech-darme"
++   ],
++   "latency_ms": 8.86,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "tf-2",
++   "category": "tech_vs_fiction",
++   "returned": [
++    "tech-core-port-new",
++    "tech-core-port-old",
++    "distract-port",
++    "tech-stt",
++    "tech-voice"
++   ],
++   "latency_ms": 7.88,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "hom-1",
++   "category": "homonym",
++   "returned": [
++    "science-mercure",
++    "routine-car",
++    "distract-carte",
++    "distract-port",
++    "tech-core-port-new"
++   ],
++   "latency_ms": 9.29,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-2",
++   "category": "homonym",
++   "returned": [
++    "chem-mercure",
++    "distract-port",
++    "fiction-mercure",
++    "routine-car",
++    "science-mercure"
++   ],
++   "latency_ms": 6.66,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-3",
++   "category": "homonym",
++   "returned": [
++    "person-paul-cousin",
++    "tech-core-port-old",
++    "tech-core-port-new",
++    "distract-carte",
++    "distract-port"
++   ],
++   "latency_ms": 6.36,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "hom-4",
++   "category": "homonym",
++   "returned": [
++    "person-paul-plumber",
++    "person-paul-cousin",
++    "distract-serveur",
++    "fiction-nas",
++    "pref-coffee"
++   ],
++   "latency_ms": 6.58,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true
++  },
++  {
++   "id": "cond-1",
++   "category": "condition",
++   "returned": [
++    "cond-backup",
++    "cond-heating",
++    "tech-nas-format",
++    "person-paul-plumber",
++    "routine-car"
++   ],
++   "latency_ms": 6.5,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "cond-2",
++   "category": "condition",
++   "returned": [
++    "cond-heating",
++    "distract-serveur",
++    "fiction-nas",
++    "pref-coffee",
++    "tech-nas-backup"
++   ],
++   "latency_ms": 6.82,
++   "rank": 1,
++   "hit@1": true,
++   "hit@3": true,
++   "hit@5": true,
++   "check_ok": true
++  },
++  {
++   "id": "abs-1",
++   "category": "absence",
++   "returned": [
++    "distract-port",
++    "routine-car",
++    "tech-core-port-old",
++    "distract-serveur",
++    "chem-mercure"
++   ],
++   "latency_ms": 7.42,
++   "abstained": false
++  },
++  {
++   "id": "abs-2",
++   "category": "absence",
++   "returned": [
++    "routine-car",
++    "distract-carte",
++    "distract-port",
++    "person-paul-plumber",
++    "science-mercure"
++   ],
++   "latency_ms": 6.81,
++   "abstained": false
++  },
++  {
++   "id": "abs-3",
++   "category": "absence",
++   "returned": [
++    "tech-gpu-buy-new",
++    "tech-gpu-buy-old",
++    "distract-serveur",
++    "distract-port",
++    "fiction-mercure"
++   ],
++   "latency_ms": 6.78,
++   "abstained": false
++  },
++  {
++   "id": "abs-4",
++   "category": "absence",
++   "returned": [
++    "person-paul-plumber",
++    "tech-core-port-old",
++    "tech-core-port-new",
++    "distract-port",
++    "person-paul-cousin"
++   ],
++   "latency_ms": 6.85,
++   "abstained": false
++  }
++ ]
++}
+diff --git a/tests/claude_memory_eval/__init__.py b/tests/claude_memory_eval/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/tests/claude_memory_eval/run_baseline.py b/tests/claude_memory_eval/run_baseline.py
+new file mode 100644
+index 0000000..b1eea14
+--- /dev/null
++++ b/tests/claude_memory_eval/run_baseline.py
+@@ -0,0 +1,116 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/run_baseline.py
++# Description : Baseline de rappel sur le corpus synthétique : rappel@k, sources, abstention, latence (G178)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""From the repository root:
++
++  python3 tests/claude_memory_eval/run_baseline.py [--out docs/claude-memory-eval/baseline-lexical-v1.json]
++
++RETRIEVAL ONLY (no generation, no model). Every document is stored as a one-message conversation archive in a
++temporary FilesystemBackend, then ContextualRecall answers each question with its defaults (max_items=5).
++The references in corpus-v1.json were fixed before any run; this script never reads results back into them.
++"""
++import argparse
++from datetime import datetime, timezone
++import hashlib
++import json
++from pathlib import Path
++import statistics
++import sys
++import tempfile
++import time
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT))
++from core.backend.filesystem import FilesystemBackend          # noqa: E402
++from core.backend.models import Memory                         # noqa: E402
++from core.retrieval.contextual import ContextualRecall         # noqa: E402
++
++CORPUS = ROOT / "docs" / "claude-memory-eval" / "corpus-v1.json"
++
++
++def build(root, documents):
++    backend = FilesystemBackend(root / "memory/persistent", root / "memory/history")
++    for document in documents:
++        created = int(datetime.fromisoformat(document["date"]).replace(tzinfo=timezone.utc).timestamp())
++        message = {"content": document["text"], "node_id": "m", "message_id": "m", "parent": None,
++                   "role": "user", "created_at": created}
++        backend.store(Memory(document["id"], content=json.dumps({"conversation_id": document["id"], "messages": [message]},
++                                                                ensure_ascii=False),
++                             metadata={"archive_kind": "conversation", "epistemic_status": "UNVERIFIED"},
++                             provenance={"importer": "chatgpt-archive-v1", "conversation_id": document["id"]}))
++    return backend
++
++
++def evaluate(corpus, recall, k_values=(1, 3, 5)):
++    rows = []
++    for question in corpus["questions"]:
++        started = time.perf_counter()
++        items = recall(question["question"])
++        latency_ms = (time.perf_counter() - started) * 1000
++        ids = [item.information_id for item in items]
++        expected = question["expected"]
++        row = {"id": question["id"], "category": question["category"], "returned": ids,
++               "latency_ms": round(latency_ms, 2)}
++        if expected:
++            rank = next((ids.index(e) + 1 for e in expected if e in ids), None)
++            row["rank"] = rank
++            row.update({f"hit@{k}": rank is not None and rank <= k for k in k_values})
++            check = question.get("check") or {}
++            if "excerpt_contains" in check:
++                excerpt = next((item.content for item in items if item.information_id in expected), "")
++                row["check_ok"] = check["excerpt_contains"].casefold() in excerpt.casefold()
++            if "before" in check:
++                other = check["before"]
++                row["check_ok"] = rank is not None and (other not in ids or ids.index(other) + 1 > rank)
++            if "not_top" in check:
++                row["check_ok"] = not ids or ids[0] != check["not_top"]
++        else:
++            row["abstained"] = not ids
++        rows.append(row)
++    return rows
++
++
++def summarize(rows, k_values=(1, 3, 5)):
++    answerable = [r for r in rows if "rank" in r]
++    absent = [r for r in rows if "abstained" in r]
++    checks = [r for r in rows if "check_ok" in r]
++    out = {f"recall@{k}": round(sum(r[f"hit@{k}"] for r in answerable) / len(answerable), 3) for k in k_values}
++    out.update(answerable=len(answerable), abstention_rate=round(sum(r["abstained"] for r in absent) / len(absent), 3),
++               absence_questions=len(absent), checks_passed=f"{sum(r['check_ok'] for r in checks)}/{len(checks)}",
++               latency_ms_median=round(statistics.median(r["latency_ms"] for r in rows), 2),
++               latency_ms_max=round(max(r["latency_ms"] for r in rows), 2))
++    categories = {}
++    for row in rows:
++        c = categories.setdefault(row["category"], {"n": 0, "hit@1": 0, "hit@5": 0, "checks": [0, 0], "abstained": 0})
++        c["n"] += 1
++        c["hit@1"] += row.get("hit@1", False)
++        c["hit@5"] += row.get("hit@5", False)
++        c["abstained"] += row.get("abstained", False)
++        if "check_ok" in row:
++            c["checks"][0] += row["check_ok"]; c["checks"][1] += 1
++    out["by_category"] = {name: {**v, "checks": f"{v['checks'][0]}/{v['checks'][1]}"} for name, v in sorted(categories.items())}
++    return out
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--out", default=str(ROOT / "docs" / "claude-memory-eval" / "baseline-lexical-v1.json"))
++    args = parser.parse_args()
++    raw = CORPUS.read_bytes()
++    corpus = json.loads(raw)
++    with tempfile.TemporaryDirectory(prefix="eidolon-eval-") as tmp:
++        recall_engine = ContextualRecall(build(Path(tmp), corpus["documents"]))
++        rows = evaluate(corpus, lambda question: recall_engine.recall(question).items)
++    result = {"schema": "claude-memory-eval-result/1", "engine": "ContextualRecall defaults (lexical_passage_v1, passage v3)",
++              "corpus_sha256": hashlib.sha256(raw).hexdigest(), "retrieval_only": True, "synthetic": True,
++              "summary": summarize(rows), "rows": rows}
++    Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n")
++    print(json.dumps(result["summary"], ensure_ascii=False, indent=1))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/claude_memory_eval/test_corpus_and_runner.py b/tests/claude_memory_eval/test_corpus_and_runner.py
+new file mode 100644
+index 0000000..f21fcba
+--- /dev/null
++++ b/tests/claude_memory_eval/test_corpus_and_runner.py
+@@ -0,0 +1,51 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_corpus_and_runner.py
++# Description : Intégrité du corpus synthétique et exécution du banc ; aucune valeur de score imposée au moteur (G178)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""These tests guard the corpus and the runner, NOT the engine's quality: results are measured and published
++(docs/claude-memory-eval/), never asserted here, so a better engine never has to edit expectations."""
++import hashlib
++import json
++from pathlib import Path
++
++from tests.claude_memory_eval.run_baseline import CORPUS, build, evaluate, summarize
++from core.retrieval.contextual import ContextualRecall
++
++FROZEN_SHA256 = "80ea76bf9054834ae6d8e73ba36df38c38c7d0fd4148eb727a3ae3e9bb82a3a1"
++CATEGORIES = {"paraphrase", "direct", "negation", "corrected", "tech_vs_fiction", "homonym", "condition", "absence"}
++
++
++def corpus():
++    return json.loads(CORPUS.read_text())
++
++
++def test_corpus_is_frozen_unless_its_version_changes():
++    # Editing references after seeing results is forbidden: a new corpus needs a new file and version.
++    assert hashlib.sha256(CORPUS.read_bytes()).hexdigest() == FROZEN_SHA256
++
++
++def test_references_point_to_existing_documents_and_categories_are_known():
++    value = corpus()
++    ids = [d["id"] for d in value["documents"]]
++    assert len(ids) == len(set(ids)) and value["synthetic"] is True
++    for question in value["questions"]:
++        assert question["category"] in CATEGORIES
++        assert all(e in ids for e in question["expected"])
++        assert (question["category"] == "absence") == (not question["expected"])
++        for key, target in (question.get("check") or {}).items():
++            assert key in {"excerpt_contains", "before", "not_top"}
++            if key != "excerpt_contains":
++                assert target in ids
++
++
++def test_runner_measures_every_question_without_judging_scores(tmp_path):
++    value = corpus()
++    engine = ContextualRecall(build(tmp_path, value["documents"]))
++    rows = evaluate(value, lambda q: engine.recall(q).items)
++    summary = summarize(rows)
++    assert len(rows) == len(value["questions"])
++    assert all(0 <= summary[k] <= 1 for k in ("recall@1", "recall@3", "recall@5", "abstention_rate"))
++    assert set(summary["by_category"]) == CATEGORIES
+-- 
+2.43.0
+
