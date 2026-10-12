@@ -1,7 +1,7 @@
 {
   "schema": "eidolon-monitor-config/1",
   "machines": [
-    {"id": "core", "label": "Core", "socket": "/run/eidolon-darme/status.sock"}
+    {"id": "core", "label": "Core", "socket": "/run/eidolon-darme/status.sock", "peer_user": "eidolon-darme"}
   ],
   "not_covered": ["Memory", "VM101 GPU"],
   "allowed_origin": "http://127.0.0.1:8767"

@@ -62,7 +62,7 @@ test("grey is never secure; gold says its scope; red counts alerts; nothing clai
   assert.match(grey.text, /Aucun collecteur de sécurité/);
   assert.match(grey.scope, /systemd actif/);
   assert.match(grey.freshness, /il y a 4 s/);
-  assert.match(grey.metricsNote, /pas encore publiées/);
+  assert.match(grey.metricsNote, /pas publiées/);
   assert.deepEqual(grey.services.map((x) => x.text), ["répond", "non installé"]);
   const gold = M.describe({ id: "c", label: "C", state: "ok", darme: darme({ badge: "gold", visibility: "complete", security_telemetry_installed: true }), machine: null });
   assert.match(gold.text, /pas une garantie de sécurité/);
@@ -82,14 +82,25 @@ test("stale status loses its colour; unavailable and invalid machines say so", (
   assert.match(bad.text, /horloge/);
 });
 
-test("metrics: shown as sent, null is 'indisponible', never zero; no GPU value is made up", () => {
-  const v = M.describe({ id: "c", label: "C", state: "ok", darme: darme(),
-    machine: { cpu_percent: 12.34, load_1: 0.456, memory_used_bytes: 3 * 1024 ** 3, swap_used_bytes: null, disk: { root_free_bytes: 1024 } } });
-  assert.deepEqual(v.metrics, [
-    { name: "cpu_percent", text: "12.3 %" }, { name: "load_1", text: "0.46" }, { name: "memory_used_bytes", text: "3.0 Gio" },
-    { name: "swap_used_bytes", text: "indisponible" }, { name: "disk · root_free_bytes", text: "1.0 Kio" }]);
+test("metrics follow eidolon-machine/1: null is 'indisponible', never zero; GPU never measured", () => {
+  const machine = { sampled_at: "2026-10-12T10:00:00+00:00", age_seconds: 3, stale: false, cpu_count: 8, cpu_percent: 12.34,
+    load_1_5_15: [0.456, 0.3, 0.2], memory: { total_bytes: 8 * 1024 ** 3, available_bytes: 5 * 1024 ** 3, used_bytes: 3 * 1024 ** 3 },
+    swap: { total_bytes: 0, free_bytes: 0, used_bytes: 0 }, disk: { scope: "journal_filesystem", total_bytes: 4 * 1024 ** 3, free_bytes: 1024 ** 3, used_bytes: 3 * 1024 ** 3 },
+    gpu: null, errors: [] };
+  const v = M.describe({ id: "c", label: "C", state: "ok", darme: darme(), machine });
+  assert.deepEqual(v.metrics.map((x) => x.name + " = " + x.text), [
+    "CPU = 12.3 % de 8 vCPU", "Charge 1/5/15 min = 0.46 / 0.3 / 0.2", "Mémoire = 3.0 Gio utilisés sur 8.0 Gio",
+    "Swap = aucun", "Disque du journal = 1.0 Gio libres sur 4.0 Gio", "GPU = non sondé sur cette machine"]);
+  assert.equal(v.measured, "Mesures il y a 3 s.");
   assert.equal(v.metricsNote, null);
-  assert.ok(!JSON.stringify(v).includes("gpu"));
+  const first = M.describe({ id: "c", label: "C", state: "ok", darme: darme(),
+    machine: Object.assign({}, machine, { cpu_percent: null, memory: null, stale: true, age_seconds: 120, errors: ["memory_unavailable"] }) });
+  assert.match(first.metrics[0].text, /indisponible \(premier sondage\)/);
+  assert.equal(first.metrics[2].text, "indisponible");
+  assert.match(first.measured, /PÉRIMÉES, il y a 2 min/);
+  assert.match(first.metricsNote, /memory_unavailable/);
+  const refused = M.describe({ id: "c", label: "C", state: "ok", darme: darme({ machine_error: "MACHINE_INVALID" }), machine: null });
+  assert.deepEqual([refused.metrics.length, /refusées/.test(refused.metricsNote)], [0, true]);
 });
 
 test("polling: bounded interval, one request in flight, paused when hidden", async () => {

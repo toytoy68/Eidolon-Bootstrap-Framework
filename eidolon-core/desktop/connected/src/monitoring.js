@@ -8,7 +8,7 @@
 // Reads GET /v1/monitor/status (Core relays it to eidolon-monitor) with the paired conversation key.
 // Rules (docs/DASHBOARD-DEPLOYMENT.md §5): grey is never shown as secure, gold only means "every declared
 // source answered" within a stated scope; freshness is always visible and stale data loses its colour;
-// metrics absent from the server are shown as absent, never invented (no GPU through the Core CPU);
+// metrics follow eidolon-machine/1 (G161); absent ones are shown as absent, never invented (no GPU value);
 // nothing is read before the user asks; one request at a time, every POLL_MS at most, paused while the tab is hidden, stopped after
 // MAX_FAILURES failures in a row and at once when the conversation closes. The page text stays usable.
 (function (root) {
@@ -52,7 +52,7 @@
   // Pure view model of one machine (tested without DOM).
   function describe(machine) {
     var d = machine.darme, out = { id: machine.id, label: machine.label, cls: "unknown", badge: "?", text: "",
-      scope: null, freshness: null, services: [], metrics: [], metricsNote: null };
+      scope: null, freshness: null, services: [], metrics: [], metricsNote: null, measured: null };
     if (!d) {
       out.cls = "unknown"; out.badge = STATES[machine.state] || "Inconnu";
       out.text = ERRORS[machine.error] || "état inconnu";
@@ -74,16 +74,18 @@
       var absent = name === "security-telemetry" && !d.security_telemetry_installed;
       out.services.push({ name: name, ok: d.sources[name], text: d.sources[name] ? "répond" : absent ? "non installé" : "ne répond pas" });
     });
-    if (machine.machine) {
-      Object.keys(machine.machine).forEach(function (key) {
-        var value = machine.machine[key];
-        if (value && typeof value === "object") {
-          Object.keys(value).forEach(function (inner) {
-            out.metrics.push({ name: key + " · " + inner, text: metric(inner, value[inner]) });
-          });
-        } else out.metrics.push({ name: key, text: metric(key, value) });
-      });
-    } else out.metricsNote = "Mesures CPU, charge, mémoire, swap et disque : pas encore publiées par DARME sur cette machine.";
+    if (d.machine_error) out.metricsNote = "Mesures machine refusées (" + d.machine_error + ") : rien n'est affiché.";
+    var m = machine.machine;
+    if (m) {
+      out.measured = "Mesures " + (m.stale ? "PÉRIMÉES, " : "") + "il y a " + age(m.age_seconds) + ".";
+      out.metrics.push({ name: "CPU", text: m.cpu_percent === null ? "indisponible (premier sondage)" : metric("cpu_percent", m.cpu_percent) + " de " + m.cpu_count + " vCPU" });
+      out.metrics.push({ name: "Charge 1/5/15 min", text: m.load_1_5_15 ? m.load_1_5_15.map(function (x) { return metric("load", x); }).join(" / ") : "indisponible" });
+      out.metrics.push({ name: "Mémoire", text: m.memory ? bytes(m.memory.used_bytes) + " utilisés sur " + bytes(m.memory.total_bytes) : "indisponible" });
+      out.metrics.push({ name: "Swap", text: m.swap ? (m.swap.total_bytes ? bytes(m.swap.used_bytes) + " utilisés sur " + bytes(m.swap.total_bytes) : "aucun") : "indisponible" });
+      out.metrics.push({ name: "Disque du journal", text: m.disk ? bytes(m.disk.free_bytes) + " libres sur " + bytes(m.disk.total_bytes) : "indisponible" });
+      out.metrics.push({ name: "GPU", text: "non sondé sur cette machine" });
+      if (m.errors.length) out.metricsNote = "Mesures manquantes : " + m.errors.join(", ") + ".";
+    } else if (!out.metricsNote) out.metricsNote = "Mesures CPU, charge, mémoire, swap et disque : pas publiées par DARME sur cette machine.";
     return out;
   }
 
@@ -217,6 +219,7 @@
         v.services.forEach(function (s) { services.appendChild(el(doc, "li", s.ok ? "ok" : "ko", s.name + " : " + s.text)); });
         card.appendChild(services);
       }
+      if (v.measured) card.appendChild(el(doc, "p", "help", v.measured));
       if (v.metrics.length) {
         var metrics = el(doc, "dl", "monitor-metrics");
         v.metrics.forEach(function (m) { metrics.appendChild(el(doc, "dt", null, m.name)); metrics.appendChild(el(doc, "dd", null, m.text)); });

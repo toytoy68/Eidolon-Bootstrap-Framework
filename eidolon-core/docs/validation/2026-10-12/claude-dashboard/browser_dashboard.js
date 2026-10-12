@@ -69,9 +69,12 @@ const path = require("node:path");
       const cards = await page.$$eval("#monitor-machines .monitor-card", (els) => els.map((e) => e.textContent));
       check(width + " : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
         /Gris/.test(cards[0]) && /PAS un état sécurisé/.test(cards[0]) && /Périmètre/.test(cards[0]) && /il y a \d+ s/.test(cards[0])
-        && /pas encore publiées/.test(cards[0]), cards[0]);
+        , cards[0]);
+      check(width + " : mesures eidolon-machine/1 du vrai collecteur (CPU, charge, mémoire, swap, disque), GPU non sondé",
+        /Mesures il y a \d+ s/.test(cards[0]) && /Mémoire.*utilisés sur/.test(cards[0]) && /Disque du journal/.test(cards[0])
+        && /GPUnon sondé/.test(cards[0]), cards[0].slice(-220));
       check(width + " : Memory indisponible et GPU non surveillé, aucune mesure inventée",
-        /Indisponible/.test(cards[1]) && /Non surveillé/.test(cards[2]) && !/Gio|%/.test(cards.join(" ")), cards.slice(1).join(" | "));
+        /Indisponible/.test(cards[1]) && /Non surveillé/.test(cards[2]) && !/Gio|%/.test(cards[1] + cards[2]), cards.slice(1).join(" | "));
       await page.waitForTimeout(1500);
       check(width + " : une seule lecture sans actualisation automatique", monitor.length === 1, monitor.join(","));
       if (captures) await page.locator("#monitor").screenshot({ path: path.join(captures, "dashboard-monitor-" + width + ".png") });

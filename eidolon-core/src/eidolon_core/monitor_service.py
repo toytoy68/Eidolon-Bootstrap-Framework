@@ -14,8 +14,8 @@ revoked clients are refused). Core relays it on the page origin with http_api --
 The adapter only ever sends the fixed bytes STATUS\\n to each configured socket: nothing provided by the
 browser reaches DARME. Replies are bounded (size, delay), re-validated field by field and reduced to an
 allow-list; raw events, subjects, paths, process contents and tokens are never relayed. The `machine`
-field announced by Codex (G154) is passed only as flat numbers/short labels until its contract is
-published. Grey is never presented as secure: the adapter keeps visibility/scope/freshness explicit.
+field follows Codex's published eidolon-machine/1 contract (G161), field by field; the socket's peer
+account is checked (SO_PEERCRED) when the configuration names it. Grey is never presented as secure: the adapter keeps visibility/scope/freshness explicit.
 """
 import argparse
 from datetime import datetime, timezone
@@ -27,6 +27,7 @@ import os
 import re
 import socket
 import stat
+import struct
 import sys
 import threading
 import time
@@ -43,7 +44,6 @@ CACHE_SECONDS = 2.0                       # several tabs never multiply reads of
 POLL_SECONDS = 10                         # = DARME sampling interval
 DEFAULT_TTL = 60
 FUTURE_TOLERANCE = 5.0
-KEY = re.compile(r"[a-z][a-z0-9_]{0,39}")
 STATUS = {"UNAUTHORIZED": 401, "READ_TOKEN_NOT_ALLOWED": 403, "HOST_REFUSED": 403, "ORIGIN_REFUSED": 403,
           "NOT_FOUND": 404, "METHOD_NOT_ALLOWED": 405, "INVALID_REQUEST": 400}
 
@@ -54,13 +54,19 @@ class Refused(Exception):
         self.code = code
 
 
-def read_darme(path, *, timeout=SOCKET_TIMEOUT):
-    """Raw JSON object from one DARME status socket, or a generic error code (never the OS message)."""
+def read_darme(path, *, timeout=SOCKET_TIMEOUT, peer_uid=None):
+    """Raw JSON object from one DARME status socket, or a generic error code (never the OS message).
+
+    peer_uid: the socket must be served by this account (SO_PEERCRED, as monitor_tools.read_status)."""
     connection = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     connection.settimeout(timeout)
     deadline = time.monotonic() + timeout
     try:
         connection.connect(path)
+        if peer_uid is not None:
+            _, uid, _ = struct.unpack("3i", connection.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+            if uid != peer_uid:
+                return None, "PEER_REFUSED"
         connection.sendall(b"STATUS\n")
         raw = b""
         while not raw.endswith(b"\n"):
@@ -91,28 +97,64 @@ def _count(value):
     return value if type(value) is int and 0 <= value < 10**9 else None
 
 
-def _flat(value):
-    """Provisional `machine` field: flat {key: finite number | null | short label}, at most 32 keys."""
-    if not isinstance(value, dict) or len(value) > 32:
+def _number(value, *, low=0, high=None):
+    return (type(value) in (int, float) and math.isfinite(value) and value >= low
+            and (high is None or value <= high))
+
+
+def _bytes(item, fields, *, scope=None):
+    """{field: int >= 0} with free/available + used <= total, or None (the whole block, never a half)."""
+    if item is None:
         return None
-    result = {}
-    for key, item in value.items():
-        if not isinstance(key, str) or not KEY.fullmatch(key):
-            return None
-        if item is None or type(item) is bool:
-            result[key] = item
-        elif type(item) in (int, float) and math.isfinite(item):
-            result[key] = item
-        elif isinstance(item, str) and re.fullmatch(r"[A-Za-z0-9 ._%/-]{0,32}", item):
-            result[key] = item
-        elif isinstance(item, dict):
-            inner = _flat(item)
-            if inner is None or any(isinstance(v, dict) for v in inner.values()):
-                return None                              # one nesting level (e.g. per-disk), no more
-            result[key] = inner
-        else:
-            return None
+    if (not isinstance(item, dict) or any(type(item.get(f)) is not int or item[f] < 0 for f in fields)
+            or item[fields[1]] + item[fields[2]] > item[fields[0]]):
+        raise ValueError("invalid byte counters")
+    result = {f: item[f] for f in fields}
+    if scope is not None:
+        if item.get("scope") != scope:
+            raise ValueError("unknown disk scope")
+        result["scope"] = scope
     return result
+
+
+def machine_view(raw, *, now):
+    """(machine view, error) from the eidolon-machine/1 field published by Codex (G161).
+
+    Allow-list of the contract fields only; one invalid block invalidates the view (no half truth)."""
+    if raw is None:
+        return None, None
+    try:
+        if not isinstance(raw, dict) or raw.get("schema") != "eidolon-machine/1":
+            raise ValueError("schema")
+        sampled = datetime.fromisoformat(raw["sampled_at"])
+        if sampled.tzinfo is None:
+            raise ValueError("naive date")
+        age = now - sampled.timestamp()
+        if age < -FUTURE_TOLERANCE:
+            return None, "MACHINE_CLOCK_SKEW"
+        cpu, count, load = raw.get("cpu_percent"), raw.get("cpu_count"), raw.get("load_1_5_15")
+        if cpu is not None and not _number(cpu, high=100):
+            raise ValueError("cpu")
+        if type(count) is not int or not 1 <= count <= 4096:
+            raise ValueError("cpu count")
+        if load is not None and (not isinstance(load, list) or len(load) != 3 or not all(_number(x) for x in load)):
+            raise ValueError("load")
+        errors = raw.get("errors", [])
+        if (not isinstance(errors, list) or len(errors) > 16
+                or not all(isinstance(e, str) and re.fullmatch(r"[a-z][a-z0-9_]{0,39}", e) for e in errors)):
+            raise ValueError("errors")
+        view = {"sampled_at": sampled.astimezone(timezone.utc).isoformat(), "age_seconds": max(0, round(age)),
+                "stale": age > DEFAULT_TTL, "cpu_count": count, "cpu_percent": cpu,
+                "load_1_5_15": list(load) if load is not None else None,
+                "memory": _bytes(raw.get("memory"), ("total_bytes", "available_bytes", "used_bytes")),
+                "swap": _bytes(raw.get("swap"), ("total_bytes", "free_bytes", "used_bytes")),
+                "disk": _bytes(raw.get("disk"), ("total_bytes", "free_bytes", "used_bytes"),
+                               scope="journal_filesystem"),
+                "gpu": None,                         # never probed on these CPU VMs (G161): nothing is relayed
+                "errors": list(errors)}
+        return view, None
+    except (ValueError, KeyError, TypeError):
+        return None, "MACHINE_INVALID"
 
 
 def summarize(raw, *, now=None):
@@ -149,11 +191,14 @@ def summarize(raw, *, now=None):
         "unacknowledged_alerts": _count(raw.get("unacknowledged_alerts")),
         "intervention": raw.get("intervention") is True,
         "ingestion_paused": raw.get("ingestion_paused") is True,
+        "ssh_auth_monitoring": raw.get("ssh_auth_monitoring") is True,
         "generated_at": generated.astimezone(timezone.utc).isoformat(),
         "age_seconds": max(0, round(age)),
         "health_ttl_seconds": ttl,
     }
-    machine = _flat(raw["machine"]) if "machine" in raw else None
+    machine, machine_error = machine_view(raw.get("machine"), now=now)
+    if machine_error:
+        darme["machine_error"] = machine_error
     return ("stale" if age > ttl else "ok"), darme, machine, None
 
 
@@ -194,7 +239,7 @@ class MonitorAPI:
             machines = []
             for machine in self.machines:
                 entry = {"id": machine["id"], "label": machine["label"]}
-                raw, error = self.reader(machine["socket"])
+                raw, error = self.reader(machine["socket"], peer_uid=machine.get("peer_uid"))
                 if raw is None:
                     state = "invalid" if error in ("INVALID_REPLY", "REPLY_TOO_LARGE") else "unavailable"
                     entry.update(state=state, error=error, darme=None, machine=None)
@@ -307,7 +352,8 @@ def load_config(path):
         raise ValueError("MONITOR_CONFIG_INVALID: 1 to 8 machines")
     seen = set()
     for machine in machines:
-        if (not isinstance(machine, dict) or set(machine) != {"id", "label", "socket"}
+        if (not isinstance(machine, dict) or not {"id", "label", "socket"} <= set(machine)
+                or not set(machine) <= {"id", "label", "socket", "peer_user"}
                 or not isinstance(machine["id"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", machine["id"])
                 or machine["id"] in seen
                 or not isinstance(machine["label"], str) or not re.fullmatch(r"[^\x00-\x1f<>]{1,40}", machine["label"])
@@ -315,6 +361,14 @@ def load_config(path):
                 or len(machine["socket"]) > 100 or ".." in machine["socket"]):
             raise ValueError("MONITOR_CONFIG_INVALID: machine id, label, absolute socket")
         seen.add(machine["id"])
+        if "peer_user" in machine:
+            if not isinstance(machine["peer_user"], str) or not re.fullmatch(r"[a-z_][a-z0-9_-]{0,31}", machine["peer_user"]):
+                raise ValueError("MONITOR_CONFIG_INVALID: peer_user")
+            import pwd
+            try:
+                machine["peer_uid"] = pwd.getpwnam(machine.pop("peer_user")).pw_uid
+            except KeyError:
+                raise ValueError("MONITOR_CONFIG_INVALID: unknown peer_user") from None
     not_covered = value.get("not_covered", [])
     if (not isinstance(not_covered, list) or len(not_covered) > 8
             or not all(isinstance(x, str) and re.fullmatch(r"[^\x00-\x1f<>]{1,60}", x) for x in not_covered)):

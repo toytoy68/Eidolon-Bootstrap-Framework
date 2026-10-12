@@ -61,7 +61,10 @@ class FakeDarme:
                 self.requests.append(connection.recv(65))
                 reply = self.reply() if callable(self.reply) else self.reply
                 if reply is not None:
-                    connection.sendall(reply)
+                    try:
+                        connection.sendall(reply)
+                    except OSError:                       # the reader already left (refused peer)
+                        pass
 
     def close(self):
         self.server.close()
@@ -103,7 +106,7 @@ class MonitorTests(unittest.TestCase):
         core, memory = body["machines"]
         self.assertEqual((core["state"], core["darme"]["badge"], core["darme"]["secure_claim"]), ("ok", "grey", False))
         self.assertEqual(core["darme"]["scope"], "local_service_availability_and_journal_disk")
-        self.assertIsNone(core["machine"])                  # contract not published: nothing invented
+        self.assertIsNone(core["machine"])                  # no machine field: nothing invented
         self.assertEqual((memory["state"], memory["error"], memory["darme"]), ("unavailable", "UNAVAILABLE", None))
         self.assertEqual((body["not_covered"], body["gpu_metrics"], body["authorizes_execution"]),
                          (["VM101 GPU"], None, False))
@@ -150,13 +153,34 @@ class MonitorTests(unittest.TestCase):
         self.assertNotIn("secret", body); self.assertNotIn("t0k3n", body); self.assertNotIn("events", body)
         self.assertIn('"unacknowledged_alerts": 2', body)
 
-    def test_machine_field_is_flat_and_bounded(self):
-        ok = {"cpu_percent": 12.5, "load_1": 0.4, "memory_used_bytes": 10**9, "swap_used_bytes": None,
-              "disk": {"root_free_bytes": 5 * 10**9}, "error": "unavailable"}
-        self.assertEqual(summarize(darme_status(machine=ok))[2], ok)
-        for bad in ({"cmdline": ["python", "x"]}, {"Bad Key": 1}, {"a": float("nan")}, {"a": {"b": {"c": 1}}},
-                    {"a": "x" * 40}, {"a": "<script>"}, {f"k{i}": 1 for i in range(33)}):
-            self.assertIsNone(summarize(darme_status(machine=bad))[2], bad)
+    def test_machine_field_follows_the_published_contract(self):
+        now = datetime.now(timezone.utc)
+        machine = {"schema": "eidolon-machine/1", "sampled_at": now.isoformat(), "cpu_count": 8, "cpu_percent": 12.5,
+                   "load_1_5_15": [0.4, 0.3, 0.2], "memory": {"total_bytes": 8 << 30, "available_bytes": 6 << 30,
+                   "used_bytes": 2 << 30}, "swap": {"total_bytes": 0, "free_bytes": 0, "used_bytes": 0},
+                   "disk": {"scope": "journal_filesystem", "total_bytes": 100, "free_bytes": 60, "used_bytes": 40},
+                   "gpu": None, "errors": [], "extra": "/home/toytoy/secret"}
+        darme, view = summarize(darme_status(machine=machine))[1:3]
+        self.assertEqual((view["cpu_percent"], view["load_1_5_15"], view["memory"]["used_bytes"], view["gpu"]),
+                         (12.5, [0.4, 0.3, 0.2], 2 << 30, None))
+        self.assertEqual((view["stale"], view["disk"]["scope"]), (False, "journal_filesystem"))
+        self.assertNotIn("extra", json.dumps(view)); self.assertNotIn("machine_error", darme)
+        first = dict(machine, cpu_percent=None, memory=None, errors=["memory_unavailable"])
+        self.assertEqual(summarize(darme_status(machine=first))[2]["errors"], ["memory_unavailable"])
+        old = dict(machine, sampled_at=(now - timedelta(seconds=120)).isoformat())
+        self.assertTrue(summarize(darme_status(machine=old))[2]["stale"])
+        future = dict(machine, sampled_at=(now + timedelta(seconds=60)).isoformat())
+        self.assertEqual(summarize(darme_status(machine=future))[1]["machine_error"], "MACHINE_CLOCK_SKEW")
+        for bad in (dict(machine, schema="x"), dict(machine, cpu_percent=150), dict(machine, load_1_5_15=[1, 2]),
+                    dict(machine, memory={"total_bytes": 1, "available_bytes": 2, "used_bytes": 0}),
+                    dict(machine, disk=dict(machine["disk"], scope="/mnt/nas")), dict(machine, errors=["Bad Code!"]),
+                    dict(machine, cpu_count=0), dict(machine, sampled_at="2026-10-12T10:00:00")):
+            state, darme, view, _ = summarize(darme_status(machine=bad))
+            self.assertEqual((state, view, darme["machine_error"]), ("ok", None, "MACHINE_INVALID"), bad)
+
+    def test_socket_peer_account_is_checked(self):
+        self.assertEqual(read_darme(self.darme.path, peer_uid=os.getuid())[1], None)
+        self.assertEqual(read_darme(self.darme.path, peer_uid=os.getuid() + 1), (None, "PEER_REFUSED"))
 
     def test_bounded_reply_and_silent_socket(self):
         self.reply = b"{" + b" " * (70 * 1024)

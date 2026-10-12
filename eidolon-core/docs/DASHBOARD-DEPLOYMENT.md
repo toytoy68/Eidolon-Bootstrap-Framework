@@ -1,7 +1,7 @@
 # Déploiement du dashboard (page connectée + voix et caméra) — essai PC du week-end
 
 Auteur : Claude. Date : 12/10/2026, Europe/Paris. Demande de toytoy : « travaille sur le déploiement du
-dashboard » ; essai sur le PC **le week-end prochain**. Échanges : C147, G154 (lots G155–G160), C148.
+dashboard » ; essai sur le PC **le week-end prochain**. Échanges : C147, G154 (lots G155–G160), G161 (contrat machine), C148.
 
 Le dashboard est la **page connectée servie par Core** (`desktop/connected`), ouverte sur le PC :
 - dans un navigateur ;
@@ -29,18 +29,22 @@ OpenSSH, déjà présent sur Windows.
   Il montre :
   - le badge DARME avec son mot (Or, Gris, Rouge, Bleu, Statut périmé,
     Indisponible), son **périmètre** et sa **fraîcheur** ;
-  - les sources et les mesures machine **seulement si DARME les publie**.
+  - les sources ;
+  - les mesures machine du contrat `eidolon-machine/1` de Codex (G161) :
+    CPU, charge, mémoire, swap et disque du journal, datés. Une mesure
+    absente est écrite « indisponible », jamais 0 ; le GPU est « non sondé ».
   Le gris est écrit « ce n'est PAS un état sécurisé ». Le GPU de VM101 est
   affiché « Non surveillé », sans aucune mesure.
 - **Adaptateur `eidolon-monitor`** (G157), port 8768 en boucle locale. Core
   le relaie avec `--monitor-port 8768` : contrat au §5.
 - Recette navigateur :
   [recipe_dashboard.json](validation/2026-10-12/claude-dashboard/recipe_dashboard.json),
-  **29/29** à 1280 et 360 px. Elle utilise :
+  **31/31** à 1280 et 360 px. Elle utilise :
   - Chromium avec **faux** micro et **fausse** caméra ;
   - Core, le service voix et l'adaptateur lancés comme sur la VM ;
   - des moteurs simulés ;
-  - le **vrai** `Collector` DARME, avec des sondes injectées.
+  - le **vrai** `Collector` DARME, avec ses vraies mesures machine
+    (`eidolon-machine/1`) et des sondes de services injectées.
   Captures : [voix à 360 px](validation/2026-10-12/claude-dashboard/captures/dashboard-comm-360.png),
   [machines à 360 px](validation/2026-10-12/claude-dashboard/captures/dashboard-monitor-360.png).
 
@@ -145,10 +149,9 @@ traités sur la VM.
 
 ## 4. Ce qui n'est pas prêt ou pas vérifié
 
-- **Mesures machine** (CPU, charge, RAM, swap, disque) : le contrat du champ
-  `machine` n'est pas encore publié par Codex. L'adaptateur ne relaie donc
-  qu'une forme **provisoire** : à plat, nombres ou `null`, 32 clés au
-  maximum. La page affiche « pas encore publiées » tant que le champ manque.
+- **Mesures machine** : le contrat de Codex (G161) est suivi champ par champ.
+  Elles ne sont vérifiées qu'en conteneur ; la lecture du vrai socket sur la
+  VM revient à Codex.
 - **Memory** : aucune sonde depuis Core. Une lecture du DARME de Memory
   demanderait un relais à part (tunnel de socket), **non fait**.
 - **WebView2 et Tauri** : permissions micro et caméra non essayées.
@@ -178,7 +181,11 @@ refusés :
      "sources": {"unité": true}, "scope": "…", "security_telemetry_installed": false,
      "unacknowledged_alerts": 0, "intervention": false, "ingestion_paused": false,
      "generated_at": "…", "age_seconds": 4, "health_ttl_seconds": 60},
-   "machine": null}],
+   "machine": {"sampled_at": "…", "age_seconds": 3, "stale": false, "cpu_count": 8, "cpu_percent": 12.5,
+     "load_1_5_15": [0.4, 0.3, 0.2], "memory": {"total_bytes": 0, "available_bytes": 0, "used_bytes": 0},
+     "swap": {"total_bytes": 0, "free_bytes": 0, "used_bytes": 0},
+     "disk": {"scope": "journal_filesystem", "total_bytes": 0, "free_bytes": 0, "used_bytes": 0},
+     "gpu": null, "errors": []}}],
  "not_covered": ["Memory", "VM101 GPU"], "gpu_metrics": null, "authorizes_execution": false}
 ```
 
@@ -198,14 +205,28 @@ refusés :
 **Statut périmé** : au-delà de `health_ttl_seconds`, `state` vaut `stale`
 et la page retire la couleur du badge.
 
+**Champ `machine`** (contrat `eidolon-machine/1`, G161) :
+- seuls les champs du contrat sont recopiés ;
+- un bloc incohérent (par exemple utilisé + libre > total, ou un disque
+  d'un autre `scope`) **annule toute la vue** : `machine: null`, et
+  `darme.machine_error` vaut `MACHINE_INVALID` ;
+- une date de mesure en avance donne `MACHINE_CLOCK_SKEW` ;
+- au-delà de 60 s, `stale: true`, et la page écrit « Mesures PÉRIMÉES ».
+
+**Compte du socket** : avec `"peer_user": "eidolon-darme"` dans
+`monitor.json`, l'adaptateur vérifie par `SO_PEERCRED` que le socket est
+bien servi par ce compte (`PEER_REFUSED` sinon), comme `read_status()` de
+`monitor_tools.py`.
+
 **Jamais relayés** :
 - `events` et les sujets d'événements ;
 - les champs inconnus ;
 - les chemins et les jetons.
 
-**Accès au socket** : l'unité donne `SupplementaryGroups=eidolon-darme` à
-**ce seul processus**. Le compte `toytoy` n'est pas ajouté au groupe, et ni
-sudo ni le socket ne sont exposés au navigateur.
+**Accès au socket** : Codex a ajouté `toytoy` au groupe `eidolon-darme`
+(G161). L'unité garde en plus `SupplementaryGroups=eidolon-darme`, pour que
+l'accès ne dépende pas de l'appartenance du compte au groupe. Ni sudo ni le socket ne
+sont exposés au navigateur.
 
 ## 6. Revue de sécurité et nature des preuves (G160)
 
@@ -214,15 +235,16 @@ sudo ni le socket ne sont exposés au navigateur.
 | Surface réseau | Un seul port tunnelé (8767). Les ports 8766 et 8768 sont en boucle locale, avec `IPAddressDeny=any`. CSP `connect-src 'self'` inchangée. |
 | Authentification | Les services vérifient eux-mêmes la clé appairée. Core ne fait que transmettre `Authorization`. Jeton de lecture et clé révoquée refusés (tests). |
 | Entrées navigateur | Monitor : aucune donnée du navigateur ne va à DARME. Voix : corps borné, formats vérifiés (lot G146–G151). |
-| Sorties | Liste blanche champ par champ côté adaptateur. La page affiche tout en `textContent`, jamais en HTML. |
-| Capture | Rien au chargement, ni micro ni caméra ni lecture machine (tests 156/156 et recette 29/29). |
+| Sorties | Liste blanche champ par champ côté adaptateur ; compte du socket vérifié (`SO_PEERCRED`). La page affiche tout en `textContent`, jamais en HTML. |
+| Capture | Rien au chargement, ni micro ni caméra ni lecture machine (tests 156/156 et recette 31/31). |
 | Suivi | Une requête à la fois, toutes les 10 s au plus. Pause quand l'onglet est caché. Arrêt après 3 échecs, sur refus 401/403, et à la fermeture ou au départ de la page. |
 | ResourceWarning (G154) | Socket non fermé quand Ollama répond par une erreur HTTP (`HTTPError`, module vision). Corrigé : 64 tests `test_comm*.py` sans avertissement sous `-X dev`. |
 | Installation | Simulation par défaut, sauvegarde avant écriture, unité Core seulement complétée, configurations jamais écrasées, liens refusés (7 tests). |
 
 **Nature des preuves** :
 - **Simulé (conteneur)** : moteurs voix et vision, faux périphériques
-  Chromium, sondes DARME injectées dans le vrai `Collector`.
+  Chromium, sondes de services injectées dans le vrai `Collector`. Les
+  mesures machine, elles, sont réelles mais prises dans le conteneur.
 - **Pas encore fait** :
   - appels réels sur la VM (installation, prévol `--probe`, socket DARME
     réel avec le groupe) ;
