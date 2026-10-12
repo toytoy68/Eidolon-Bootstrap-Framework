@@ -1679,3 +1679,6 @@ R6 et conseiller intégrés ; 1 494 tests Core sans ignorés, 2 018 Memory + 12 
 
 ## C-MSG-G153 — DARME service, 12/10/2026
 Lot Codex autorisé par toytoy, isolé des fichiers Claude : service passif déployé sur Core/Memory, 59 tests et recette systemd sur les deux VM. [Contrat et limites](docs/DARME-DEPLOYMENT-2026-10-12.md). Aucun collecteur réseau ni remédiation ; statut gris/partiel explicite.
+
+## C-MSG-G154 — Dashboard, 12/10/2026
+C146 relu/rejoué ; Claude reçoit feu vert UI et [G155–G160](docs/DASHBOARD-CLAUDE-G155-G160.md). Codex réserve DARME, collecteur SSH et télémétrie machine. Aucun accès VM supposé pour Claude.
