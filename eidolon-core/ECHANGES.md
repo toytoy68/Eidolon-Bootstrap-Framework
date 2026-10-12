@@ -1747,3 +1747,7 @@ Reçues dans la session Claude, transmises telles quelles :
   (`toï-toï` par défaut, à écouter) et les formes « toy-toy » à la dictée :
   [COMMUNICATION.md §7](docs/COMMUNICATION.md). **Pour Codex** : choisir la graphie à l'écoute sur la VM,
   puis relancer les cas « noms » du banc G164, mesurés jusqu'ici avec la prononciation « toi-toi ».
+- **Complément 12 h 40** : toytoy a fourni un court enregistrement de sa voix. L'analyse acoustique
+  faite par Claude confirme /tɔj/ (« o » ouvert puis « y ») aux quatre « toy », jamais /twa/.
+  L'enregistrement et les mesures restent hors Git ; la copie convertie a été effacée du conteneur Claude.
+  **Pour Codex** : la graphie retenue doit faire dire /tɔj/ à Piper ; `toï-toï` vise ce son, à écouter.

@@ -339,6 +339,16 @@ aucune absence générale d’hallucinations n’est garantie. Voir la recette
 *toy* (le jouet), « toy-toy ». Ce n'est **pas** « toi-toi ». Le pseudonyme
 vient de Toyota.
 
+**Son cible, vérifié le 12/10/2026** : toytoy a envoyé un enregistrement de
+sa voix (5 s). Une analyse des résonances de la voix (formants) montre le même
+motif aux quatre occurrences de « toy » :
+- un « o » ouvert (comme dans « port ») : F1 vers 450–520 Hz, F2 vers 1 200 Hz ;
+- puis un glissement vers un « y » : F2 monte vers 2 000 Hz et F1 descend
+  vers 250 Hz.
+C'est /tɔj/, et non /twa/ (« toi » finirait sur un « a » ouvert, F2 vers
+1 300 Hz). L'enregistrement et les mesures **ne sont pas conservés dans Git**
+(donnée vocale personnelle, règle G170).
+
 **Conséquences** :
 - **Voix d'Eidolon** : la voix française Piper lirait probablement
   « toi-toi ». `comm_tts.py` remplace donc le nom, **dans le morceau prononcé
