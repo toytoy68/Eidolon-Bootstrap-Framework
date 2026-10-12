@@ -68,6 +68,18 @@ class ProfilePlanTests(unittest.TestCase):
             with self.subTest(role=role), self.assertRaises(ProfilePlanError):
                 validate_profile_plan(data)
 
+    def test_profile_id_boundaries_are_shared_with_identity_consumers(self):
+        from eidolon_core.profile_plan import PROFILE_ID
+        for identifier in ("a", "a" * 64):
+            data = fixture(); data["profiles"][0]["profile_id"] = identifier
+            self.assertIsNotNone(PROFILE_ID.fullmatch(identifier))
+            self.assertEqual(validate_profile_plan(data).profiles[0].profile_id, identifier)
+        for identifier in ("", "1a", "A", "a" * 65, "a/b"):
+            data = fixture(); data["profiles"][0]["profile_id"] = identifier
+            self.assertIsNone(PROFILE_ID.fullmatch(identifier))
+            with self.assertRaises(ProfilePlanError):
+                validate_profile_plan(data)
+
     def test_alias_collision_uses_case_and_unicode_normalization(self):
         for name in ["operator", "Ｏｐｅｒａｔｏｒ"]:
             data = fixture(); data["profiles"][1]["aliases"] = [name]

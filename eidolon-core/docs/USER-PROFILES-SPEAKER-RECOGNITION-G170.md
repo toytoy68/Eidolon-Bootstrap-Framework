@@ -89,3 +89,11 @@ rôle inconnu ou activation accepté. Résumé de diagnostic sans identités.
 affichage de ses noms. Aucune entrée/sortie dans ce module, aucune permission
 Runtime accordée. Import transactionnel, sessions et isolation mémoire
 restent à implémenter ; le plan privé est toujours PLANNED_NOT_ACTIVE.
+
+## Deuxième brique G170-A — registre préparatoire G184
+
+[Import privé du plan](PROFILE-REGISTRY-G184.md) : publication atomique,
+relecture stricte et reprise d'un import identique ; aucune activation de
+compte/session/droit, aucun gabarit biométrique. Le registre est séparé de
+l'état actif du Runtime et n'est pas chargé automatiquement. Les essais G184
+utilisent des données fictives dans l'environnement de développement, sans VM.

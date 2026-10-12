@@ -14,6 +14,7 @@ import unicodedata
 from .contracts import ContractError
 
 SCHEMA = "eidolon-user-profile-plan/1"
+PROFILE_ID = re.compile(r"[a-z][a-z0-9-]{0,63}")
 POLICY = {
     "speaker_recognition": "planned", "face_recognition": "planned",
     "biometric_enrollment": "not_started", "biometric_authorization": False,
@@ -99,7 +100,7 @@ def validate_profile_plan(value):
                  and set(row) <= {"profile_id", "display_name", "role", "given_name", "aliases"},
                  "PROFILE_FIELDS")
         pid = row["profile_id"]
-        _require(type(pid) is str and re.fullmatch(r"[a-z][a-z0-9-]{0,63}", pid),
+        _require(type(pid) is str and PROFILE_ID.fullmatch(pid),
                  "PROFILE_ID_INVALID")
         _require(pid not in ids, "PROFILE_ID_DUPLICATE")
         ids.add(pid)
