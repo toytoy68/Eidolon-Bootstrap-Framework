@@ -42,6 +42,7 @@ MAX_REPLY = 64 * 1024
 SOCKET_TIMEOUT = 3.0
 CACHE_SECONDS = 2.0                       # several tabs never multiply reads of the single-threaded DARME
 POLL_SECONDS = 10                         # = DARME sampling interval
+REMOTE_SECONDS = 10                       # G166: at most one SSH read per remote machine per DARME sample
 DEFAULT_TTL = 60
 FUTURE_TOLERANCE = 5.0
 STATUS = {"UNAUTHORIZED": 401, "READ_TOKEN_NOT_ALLOWED": 403, "HOST_REFUSED": 403, "ORIGIN_REFUSED": 403,
@@ -206,11 +207,16 @@ class MonitorAPI:
     """Transport-free handler: (method, path, headers) -> (status, JSON value, extra headers)."""
 
     def __init__(self, credentials, machines, *, not_covered=(), read_token=None, allowed_hosts=None,
-                 allowed_origin=None, reader=read_darme, clock=time.time, cache_seconds=CACHE_SECONDS):
+                 allowed_origin=None, reader=read_darme, remote_reader=None, clock=time.time,
+                 cache_seconds=CACHE_SECONDS):
         self.credentials, self.machines, self.not_covered = credentials, list(machines), list(not_covered)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts, self.allowed_origin = allowed_hosts, allowed_origin
         self.reader, self.clock, self.cache_seconds = reader, clock, cache_seconds
+        if remote_reader is None:
+            from .monitor_remote import read_ssh as remote_reader
+        self.remote_reader = remote_reader
+        self._remote = {}                    # machine id -> (monotonic time, raw, error): one SSH read per 10 s
         self._lock = threading.Lock()
         self._cache = (None, -math.inf)
 
@@ -239,7 +245,7 @@ class MonitorAPI:
             machines = []
             for machine in self.machines:
                 entry = {"id": machine["id"], "label": machine["label"]}
-                raw, error = self.reader(machine["socket"], peer_uid=machine.get("peer_uid"))
+                raw, error = self._read(machine)
                 if raw is None:
                     state = "invalid" if error in ("INVALID_REPLY", "REPLY_TOO_LARGE") else "unavailable"
                     entry.update(state=state, error=error, darme=None, machine=None)
@@ -254,6 +260,15 @@ class MonitorAPI:
                      "gpu_metrics": None, "authorizes_execution": False}
             self._cache = (value, time.monotonic())
             return value
+
+    def _read(self, machine):
+        if "ssh" not in machine:
+            return self.reader(machine["socket"], peer_uid=machine.get("peer_uid"))
+        at, raw, error = self._remote.get(machine["id"], (-math.inf, None, None))
+        if time.monotonic() - at >= REMOTE_SECONDS:
+            raw, error = self.remote_reader(machine["ssh"])
+            self._remote[machine["id"]] = (time.monotonic(), raw, error)
+        return raw, error
 
     def handle(self, method, path, headers):
         extra = {}
@@ -352,6 +367,17 @@ def load_config(path):
         raise ValueError("MONITOR_CONFIG_INVALID: 1 to 8 machines")
     seen = set()
     for machine in machines:
+        if (isinstance(machine, dict) and "ssh" in machine and "socket" not in machine
+                and set(machine) <= {"id", "label", "ssh"}):
+            # G166: remote DARME through the forced-command feed (monitor_remote.py, docs/MEMORY-CHANNEL.md).
+            from .monitor_remote import validate
+            machine["ssh"] = validate(machine["ssh"])
+            if (not isinstance(machine["id"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", machine["id"])
+                    or machine["id"] in seen or not isinstance(machine["label"], str)
+                    or not re.fullmatch(r"[^\x00-\x1f<>]{1,40}", machine["label"])):
+                raise ValueError("MONITOR_CONFIG_INVALID: machine id, label")
+            seen.add(machine["id"])
+            continue
         if (not isinstance(machine, dict) or not {"id", "label", "socket"} <= set(machine)
                 or not set(machine) <= {"id", "label", "socket", "peer_user"}
                 or not isinstance(machine["id"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", machine["id"])
