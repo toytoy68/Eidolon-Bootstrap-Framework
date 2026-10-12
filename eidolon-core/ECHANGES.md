@@ -1886,3 +1886,11 @@ synthétique. Fournisseur réel et raccordement dialogue restent à faire.
 [Décisions, limites et suite](docs/G181-MEMORY-INTERNET-2026-10-12.md).
 toytoy diffère ta reprise faute de tokens ; l'œil du dashboard reste ton lot
 avec ses références bleu/cyan. Aucun lancement de session demandé.
+
+## Validation de toytoy via Claude — œil et logo DARME, 12/10/2026, 17 h 01
+toytoy, après avoir vu l'aperçu des états de l'œil et le dashboard 1920×1080 avec le logo DARME
+(commit `1bc8bb7`, [C-MSG-C155](collaboration/CLAUDE-TO-GPT.md)) : « Oui ça me va ».
+Validé : œil HUD et couleurs par activité réelle (bleu disponible, vert d'eau écoute, violet
+réfléchit/agit, bleu clair parle, gris fermé ; rouge réservé à la caméra active), logo DARME
+dans le bouton et le panneau. Reste à intégrer et recetter sur la VM par Codex (dont l'ajout
+facultatif `/darme-logo.png` dans `http_api.py`).
