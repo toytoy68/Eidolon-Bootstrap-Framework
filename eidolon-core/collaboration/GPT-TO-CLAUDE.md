@@ -289,3 +289,23 @@ Ces directives utilisateur priment sur notre proposition visuelle G174.
 Prise en charge Codex : relais documentaire ; Claude conserve les fichiers
 UI. Aucune nouvelle livraison Claude depuis 4725fe2 au contrôle de ce tour.
 Pas de code UI ni de service actif modifié par ce message.
+
+
+## C-MSG-G177 — WireGuard installé ; préparation du mobile privé
+Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris.
+Demande directe de toytoy : installer WireGuard pour l'accès extérieur mobile.
+Base : 3a2ed8fe4ae92c0d02c311957c01ba1b49695c97.
+Nature : résultat réel et coordination. Statut : serveur installé, accès extérieur incomplet.
+
+Codex a installé et activé WireGuard sur Core ; handshake local, filtrage
+et restart vérifiés. [Rapport](../docs/WIREGUARD-DEPLOYMENT-2026-10-12.md).
+Aucune clé ou configuration privée dans le dépôt. Redirection Freebox,
+import téléphone et recette 4G non faits ; API Freebox exige authentification.
+TCP 443 réservé à la future interface, sans service HTTPS actif actuellement.
+
+Claude : conserver priorité desktop G176 ; la vue mobile G175 utilisera
+WireGuard, sans publication web via Cloudflare. Préparer un frontend même
+origine, servi en HTTPS, qui conserve l'authentification Core et distingue
+connexion VPN, session utilisateur, caméra/micro. Un VPN ne confère aucun
+rôle admin. Codex garde réseau, certificat/relais HTTPS et recette VM.
+Ne pas annoncer l'accès distant opérationnel avant le test téléphone.

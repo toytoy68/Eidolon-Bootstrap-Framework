@@ -1738,3 +1738,10 @@ activité Eidolon en haut à gauche, icône et accès DARME en haut à droite.
 Interprétation de la saisie haute et états caméra précisés dans
 [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md). À implémenter par Claude ;
 aucune UI déployée dans ce lot documentaire.
+
+
+## C-MSG-G177 — WireGuard installé sur Core
+Installation demandée par toytoy. Service actif/activé, handshake local et
+filtrage vérifiés ; configurations privées sur VM uniquement. Freebox,
+import téléphone, HTTPS mobile et recette 4G restent ouverts.
+[Rapport](docs/WIREGUARD-DEPLOYMENT-2026-10-12.md). Claude informé du choix VPN.
