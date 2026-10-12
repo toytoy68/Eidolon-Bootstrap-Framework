@@ -56,9 +56,20 @@
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     var monitorPhase = null;
+    // G176: frame (eye, DARME button, sections). Pure views of the existing states, no new request.
+    var shellApi = root.EidolonShell, shell = shellApi ? shellApi.mount(document) : null;
+    var eyeInput = { phase: "closed", pending: false, comm: null };
+    function eye() { if (shell) shell.renderEye(eyeInput); }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
-      onPhase: function (phase) {
+      onPhase: function (phase, st) {
+        eyeInput.phase = phase;
+        eyeInput.pending = !!(st && st.items && st.items.some(function (i) { return i.status === "sent" || i.status === "pending"; }));
+        var closed = phase !== "open";
+        ["comm"].forEach(function (id) { var n = document.getElementById(id); if (n) n.hidden = closed; });
+        var note = document.getElementById("comm-closed-note"); if (note) note.hidden = !closed;
+        var darmeNote = document.getElementById("darme-closed-note"); if (darmeNote) darmeNote.hidden = !closed;
+        eye();
         if (!monitoring || phase === monitorPhase) return;
         monitorPhase = phase;
         if (phase === "open") monitoring.ready(); else if (phase === "closed") monitoring.stop();
@@ -82,7 +93,7 @@
     if (monApi && document.getElementById("monitor")) {
       monitoring = monApi.createMonitoring({ transport: transport,
         key: function () { return conversation.conversation.authorization(); },
-        onChange: function (st) { monApi.render(document, st); } });
+        onChange: function (st) { monApi.render(document, st); if (shell) shell.renderDarme(st); } });
       monApi.mount(document, monitoring);
       document.addEventListener("visibilitychange", function () { monitoring.visibility(document.hidden); });
       window.addEventListener("pagehide", function () { monitoring.stop(); });
@@ -93,6 +104,7 @@
       var comm = commApi.createCommunication(commApi.browserDeps(window, function () {
         return conversation.conversation.authorization();
       }));
+      comm.onChange(function (state) { eyeInput.comm = state; eye(); });
       commApi.mount(document, comm, { observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });

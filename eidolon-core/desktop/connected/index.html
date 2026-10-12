@@ -17,84 +17,66 @@
 </head>
 <body>
   <a class="skip" href="#missions">Aller à la liste des missions</a>
-  <header class="top">
-    <div class="brand">
-      <!-- Official logo (G078): shown only once actually loaded, the text name stays otherwise. -->
-      <h1><img id="brand-logo" class="logo" src="/eidolon-logo.png" alt="Eidolon Core Technologies"
+  <a class="skip" href="#token">Aller au jeton de lecture (réglages)</a>
+  <!-- G176 (demande de toytoy) : œil d'activité à gauche, zone de discussion en haut, DARME à droite. -->
+  <header class="appbar">
+    <div class="appbar-left">
+      <button id="eye-button" class="eye" type="button" aria-controls="eye-drawer" aria-expanded="false">
+        <svg class="eye-icon" viewBox="0 0 36 22" aria-hidden="true" focusable="false"><path class="eye-lid" d="M2 11C6.5 3.8 11.7 1.5 18 1.5S29.5 3.8 34 11c-4.5 7.2-9.7 9.5-16 9.5S6.5 18.2 2 11Z"/><circle class="eye-iris" cx="18" cy="11" r="6"/><circle class="eye-pupil" cx="18" cy="11" r="2.6"/></svg>
+        <span class="eye-text"><span class="eye-name">Eidolon</span><span id="eye-state" class="eye-state">Conversation fermée · caméra éteinte</span></span>
+      </button>
+      <h1 class="brand-title"><img id="brand-logo" class="logo" src="/eidolon-logo.png" alt="Eidolon Core Technologies"
                width="206" height="56" hidden><span id="brand-name">Eidolon Core</span></h1>
-      <span id="mode-badge" class="badge" title="Aucune commande : ni accord, ni lancement, ni annulation">Consultation seule</span>
     </div>
-    <form id="connect-form" class="connect" autocomplete="off" novalidate>
-      <label for="token">Jeton de lecture</label>
-      <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
-             inputmode="text" maxlength="128" aria-describedby="token-help">
-      <button id="connect" type="submit">Se connecter</button>
-      <button id="disconnect" type="button" disabled>Se déconnecter</button>
-      <p id="token-help" class="help">Gardé en mémoire de cette page uniquement ; effacé à la déconnexion ou au rechargement.</p>
-    </form>
+    <div class="appbar-center">
+      <form id="conv-connect" class="appbar-form conv-connect" autocomplete="off" novalidate>
+        <label for="conv-key" class="sr-only">Clé de conversation</label>
+        <input id="conv-key" name="conv-key" type="password" autocomplete="off" spellcheck="false"
+               maxlength="64" aria-describedby="conv-key-help" placeholder="Clé de conversation pour parler à Eidolon">
+        <button id="conv-open" type="submit">Ouvrir la conversation</button>
+        <p id="conv-key-help" class="sr-only">Distincte du jeton de lecture, délivrée par l'opérateur. Gardée en mémoire de cette page uniquement.</p>
+      </form>
+      <form id="conv-form" class="appbar-form conv-form" hidden autocomplete="off" novalidate>
+          <label for="conv-text" class="sr-only">Votre message à Eidolon</label>
+          <textarea id="conv-text" rows="1" maxlength="8000" placeholder="Écrire à Eidolon…" aria-describedby="conv-text-help"></textarea>
+          <span id="conv-text-help" class="sr-only">Entrée pour envoyer, Maj+Entrée pour aller à la ligne.</span>
+          <button id="conv-send" type="submit">Envoyer</button>
+        </form>
+    </div>
+    <div class="appbar-right">
+      <span id="mode-badge" class="badge" title="Aucune commande : ni accord, ni lancement, ni annulation">Consultation seule</span>
+      <button id="darme-button" class="darme" type="button" aria-controls="darme-drawer" aria-expanded="false" data-level="off">
+        <svg class="darme-icon" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path d="M12 1.5 22 5v8.2c0 6.3-4.2 11-10 13.3C6.2 24.2 2 19.5 2 13.2V5Z"/><path class="darme-mark" d="M7.5 13.5 11 17l6-7"/></svg>
+        <span id="darme-state" class="darme-state">DARME · conversation fermée</span>
+      </button>
+    </div>
   </header>
 
-  <section id="connection" class="connection" aria-live="polite" aria-atomic="true">
-    <p id="connection-status" class="status">Non connecté.</p>
-    <p id="connection-detail" class="detail"></p>
-    <p id="connection-notice" class="notice" hidden></p>
-  </section>
+  <div class="shell">
+    <nav class="sidenav" aria-label="Sections">
+      <a href="#conversation" data-nav="conversation">Conversation</a>
+      <a href="#memory" data-nav="memory">Mémoire</a>
+      <a href="#media-agents" data-nav="media">Images et vidéos</a>
+      <a href="#missions" data-nav="missions">Missions</a>
+      <a href="#settings" data-nav="settings">Réglages</a>
+    </nav>
 
-  <main class="layout">
-    <!-- G088: conversation home. No command control exists before a conversation key is accepted. -->
-    <section id="conversation" class="panel conversation" aria-labelledby="conv-title">
-      <div class="panel-head">
-        <h2 id="conv-title">Conversation</h2>
-        <button id="conv-close" class="media-secondary" type="button" hidden>Fermer la conversation</button>
-      </div>
-      <p id="conv-status" class="status" role="status" aria-live="polite"></p>
-      <form id="conv-connect" class="conv-connect" autocomplete="off" novalidate>
-        <label for="conv-key">Clé de conversation</label>
-        <input id="conv-key" name="conv-key" type="password" autocomplete="off" spellcheck="false"
-               maxlength="64" aria-describedby="conv-key-help">
-        <button id="conv-open" type="submit">Ouvrir la conversation</button>
-        <p id="conv-key-help" class="help">Distincte du jeton de lecture, délivrée par l'opérateur. Gardée en mémoire de cette page uniquement.</p>
-      </form>
-      <div id="conv-body" hidden>
-        <div id="conv-recent" class="conv-recent" hidden>
+    <main class="layout">
+      <!-- G088: conversation home. No command control exists before a conversation key is accepted. -->
+      <section id="conversation" class="panel conversation" aria-labelledby="conv-title">
+        <div class="panel-head">
+          <h2 id="conv-title" tabindex="-1">Conversation</h2>
+          <button id="conv-close" class="media-secondary" type="button" hidden>Fermer la conversation</button>
+        </div>
+        <p id="conv-status" class="status" role="status" aria-live="polite"></p>
+        <p id="conv-welcome" class="help">Saisissez votre clé de conversation dans la barre du haut. Elle est distincte du jeton de lecture et gardée en mémoire de cette page uniquement.</p>
+        <div id="conv-body" hidden>
+          <div id="conv-recent" class="conv-recent" hidden>
           <p class="help">Reprendre une conversation précédente (rien n'est renvoyé automatiquement) :</p>
           <ul id="conv-recent-list" class="conv-recent-list"></ul>
         </div>
-        <ol id="conv-log" class="conv-log"></ol>
-        <form id="conv-form" class="conv-form" autocomplete="off" novalidate>
-          <label for="conv-text">Votre message</label>
-          <textarea id="conv-text" rows="3" maxlength="8000"></textarea>
-          <button id="conv-send" type="submit">Envoyer</button>
-        </form>
-        <section id="comm" class="conv-proposal comm" aria-labelledby="comm-title">
-          <h3 id="comm-title">Voix et caméra</h3>
-          <p class="help">Tout est éteint par défaut. Rien n'est enregistré ; le texte reste toujours disponible.</p>
-          <div class="comm-devices">
-            <div class="comm-device">
-              <label><input id="comm-mic-on" type="checkbox"> Micro</label>
-              <select id="comm-mic-select" aria-label="Choisir le micro" disabled></select>
-              <span id="comm-mic-state" class="comm-indicator" role="status" aria-live="polite"></span>
-            </div>
-            <div class="comm-device">
-              <label><input id="comm-speaker-on" type="checkbox"> Voix d'Eidolon (lire les réponses)</label>
-              <span id="comm-speaker-state" class="comm-indicator" role="status" aria-live="polite"></span>
-            </div>
-            <div class="comm-device">
-              <label><input id="comm-camera-on" type="checkbox"> Caméra</label>
-              <select id="comm-camera-select" aria-label="Choisir la caméra" disabled></select>
-              <span id="comm-camera-state" class="comm-indicator" role="status" aria-live="polite"></span>
-            </div>
-          </div>
-          <div class="comm-actions">
-            <button id="comm-talk" type="button" aria-pressed="false" disabled>Parler</button>
-            <button id="comm-talk-cancel" class="media-secondary" type="button" hidden>Abandonner l'enregistrement</button>
-            <button id="comm-voice-stop" class="media-secondary" type="button" hidden>Arrêter la voix</button>
-            <button id="comm-presence" class="media-secondary" type="button" disabled>Quelqu'un est-il là ?</button>
-            <button id="comm-scene" class="media-secondary" type="button" disabled>Décrire la scène</button>
-          </div>
-          <p id="comm-note" class="help" role="status" aria-live="polite"></p>
-        </section>
-        <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>
+          <ol id="conv-log" class="conv-log" aria-label="Échanges"></ol>
+          <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>
           <h3 id="conv-proposal-title">Proposition à valider</h3>
           <p id="conv-proposal-request" class="conv-request"></p>
           <p id="conv-proposal-meta" class="help"></p>
@@ -110,7 +92,7 @@
             <button id="conv-follow" type="button" hidden>Suivre la mission dans Détails</button>
           </div>
         </section>
-        <section id="conv-cancel" class="conv-proposal" aria-labelledby="conv-cancel-title">
+          <section id="conv-cancel" class="conv-proposal" aria-labelledby="conv-cancel-title">
           <h3 id="conv-cancel-title">Arrêter une mission</h3>
           <p class="help">Une demande d'arrêt est enregistrée par Core ; seule la mission elle-même confirme l'arrêt.</p>
           <button id="conv-cancel-start" class="media-secondary" type="button">Demander l'arrêt d'une mission</button>
@@ -127,29 +109,22 @@
           <button id="conv-cancel-check" class="media-secondary" type="button" hidden>Vérifier l'état de l'arrêt</button>
           <ul id="conv-cancel-pending" class="conv-recent-list" aria-label="Autres demandes d'arrêt à suivre" hidden></ul>
         </section>
-        <section id="conv-media" class="conv-proposal" aria-labelledby="conv-media-title">
+          <section id="conv-media" class="conv-proposal" aria-labelledby="conv-media-title">
           <h3 id="conv-media-title">Résultats image et vidéo</h3>
           <p class="help">Fichiers produits par les travaux liés à cette conversation, vérifiés sur le serveur. Leur contenu n'est pas vérifié.</p>
           <button id="conv-media-load" class="media-secondary" type="button">Afficher les résultats</button>
           <p id="conv-media-state" class="conv-state" role="status" aria-live="polite"></p>
           <div id="conv-media-list" class="conv-media-list"></div>
         </section>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <!-- G156: machine dashboard, shown only while a conversation key is open; read-only, no command. -->
-    <section id="monitor" class="panel monitor" aria-labelledby="monitor-title" hidden>
-      <div class="panel-head">
-        <h2 id="monitor-title">État des machines</h2>
-        <button id="monitor-refresh" class="media-secondary" type="button">Afficher l'état des machines</button>
-      </div>
-      <p class="help">Lecture seule du statut DARME. Le gris n'est jamais un état sécurisé ; aucune action n'est possible d'ici.</p>
-      <label class="monitor-auto"><input id="monitor-auto" type="checkbox"> Actualisation automatique (10 s)</label>
-      <p id="monitor-status" class="status" role="status" aria-live="polite"></p>
-      <ul id="monitor-machines" class="monitor-machines"></ul>
-    </section>
+      <section id="memory" class="panel memory" aria-labelledby="memory-title">
+        <h2 id="memory-title" tabindex="-1">Mémoire</h2>
+        <p class="notice">Indisponible dans cette page. La mémoire est consultée par Eidolon pendant la conversation, côté serveur ; aucune lecture ni modification directe n'est proposée ici.</p>
+      </section>
 
-    <section id="media-agents" class="panel media-home" aria-labelledby="media-title">
+      <section id="media-agents" class="panel media-home" aria-labelledby="media-title">
       <div class="panel-head">
         <div><p class="media-eyebrow">Vos espaces créatifs</p><h2 id="media-title">Image &amp; Vidéo</h2></div>
         <span class="media-badge">Préparation locale</span>
@@ -236,7 +211,7 @@
       </section>
     </section>
 
-    <section id="missions" class="panel" aria-labelledby="missions-title" tabindex="-1">
+      <section id="missions" class="panel" aria-labelledby="missions-title" tabindex="-1">
       <div class="panel-head">
         <h2 id="missions-title">Missions</h2>
         <button id="relist" type="button" disabled>Relire la liste</button>
@@ -245,7 +220,7 @@
       <ul id="mission-list" class="mission-list"></ul>
     </section>
 
-    <section id="details" class="panel" aria-labelledby="details-title">
+      <section id="details" class="panel" aria-labelledby="details-title">
       <div class="panel-head">
         <h2 id="details-title">Détails</h2>
         <div class="actions">
@@ -273,7 +248,7 @@
         <div id="receipt-result" aria-live="polite"></div>
       </section>
     </section>
-    <section id="archives" class="panel archives" aria-labelledby="archives-title">
+      <section id="archives" class="panel archives" aria-labelledby="archives-title">
       <div class="panel-head">
         <h2 id="archives-title">Archives de recherche</h2>
         <div class="actions">
@@ -285,7 +260,78 @@
       <p id="archives-status" class="status" aria-live="polite"></p>
       <div id="archives-body"></div>
     </section>
-  </main>
+
+      <section id="settings" class="panel settings" aria-labelledby="settings-title">
+        <h2 id="settings-title" tabindex="-1">Réglages et connexions</h2>
+        <p class="help">Deux accès distincts : la <strong>conversation</strong> (clé appairée, saisie en haut de page) permet de proposer des missions ; la <strong>lecture</strong> (jeton) affiche missions et archives sans aucun droit d'action. La voix et la caméra se règlent depuis l'œil, en haut à gauche.</p>
+        <h3>Lecture des missions (jeton)</h3>
+        <form id="connect-form" class="connect" autocomplete="off" novalidate>
+      <label for="token">Jeton de lecture</label>
+      <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
+             inputmode="text" maxlength="128" aria-describedby="token-help">
+      <button id="connect" type="submit">Se connecter</button>
+      <button id="disconnect" type="button" disabled>Se déconnecter</button>
+      <p id="token-help" class="help">Gardé en mémoire de cette page uniquement ; effacé à la déconnexion ou au rechargement.</p>
+    </form>
+        <section id="connection" class="connection" aria-live="polite" aria-atomic="true">
+    <p id="connection-status" class="status">Non connecté.</p>
+    <p id="connection-detail" class="detail"></p>
+    <p id="connection-notice" class="notice" hidden></p>
+  </section>
+      </section>
+    </main>
+  </div>
+
+  <aside id="eye-drawer" class="drawer drawer-left drawer-closed" aria-labelledby="eye-drawer-title">
+    <div class="panel-head">
+      <h2 id="eye-drawer-title" tabindex="-1">Voix et caméra</h2>
+      <button class="media-secondary" type="button" data-close-drawer="eye">Fermer</button>
+    </div>
+    <p id="comm-closed-note" class="help">Ouvrez une conversation pour utiliser le micro, la voix d'Eidolon ou la caméra. Tout reste éteint par défaut.</p>
+    <section id="comm" class="conv-proposal comm" aria-labelledby="comm-title" hidden>
+          <h3 id="comm-title">Voix et caméra</h3>
+          <p class="help">Tout est éteint par défaut. Rien n'est enregistré ; le texte reste toujours disponible.</p>
+          <div class="comm-devices">
+            <div class="comm-device">
+              <label><input id="comm-mic-on" type="checkbox"> Micro</label>
+              <select id="comm-mic-select" aria-label="Choisir le micro" disabled></select>
+              <span id="comm-mic-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+            <div class="comm-device">
+              <label><input id="comm-speaker-on" type="checkbox"> Voix d'Eidolon (lire les réponses)</label>
+              <span id="comm-speaker-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+            <div class="comm-device">
+              <label><input id="comm-camera-on" type="checkbox"> Caméra</label>
+              <select id="comm-camera-select" aria-label="Choisir la caméra" disabled></select>
+              <span id="comm-camera-state" class="comm-indicator" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="comm-actions">
+            <button id="comm-talk" type="button" aria-pressed="false" disabled>Parler</button>
+            <button id="comm-talk-cancel" class="media-secondary" type="button" hidden>Abandonner l'enregistrement</button>
+            <button id="comm-voice-stop" class="media-secondary" type="button" hidden>Arrêter la voix</button>
+            <button id="comm-presence" class="media-secondary" type="button" disabled>Quelqu'un est-il là ?</button>
+            <button id="comm-scene" class="media-secondary" type="button" disabled>Décrire la scène</button>
+          </div>
+          <p id="comm-note" class="help" role="status" aria-live="polite"></p>
+        </section>
+  </aside>
+
+  <aside id="darme-drawer" class="drawer drawer-right drawer-closed" aria-labelledby="monitor-title">
+    <div class="drawer-close"><button class="media-secondary" type="button" data-close-drawer="darme">Fermer</button></div>
+    <p id="darme-closed-note" class="help">Ouvrez une conversation pour lire l'état des machines.</p>
+    <section id="monitor" class="panel monitor" aria-labelledby="monitor-title" hidden>
+      <div class="panel-head">
+        <h2 id="monitor-title">État des machines</h2>
+        <button id="monitor-refresh" class="media-secondary" type="button">Afficher l'état des machines</button>
+      </div>
+      <p class="help">Lecture seule du statut DARME. Le gris n'est jamais un état sécurisé ; aucune action n'est possible d'ici.</p>
+      <label class="monitor-auto"><input id="monitor-auto" type="checkbox"> Actualisation automatique (10 s)</label>
+      <p id="monitor-status" class="status" role="status" aria-live="polite"></p>
+      <ul id="monitor-machines" class="monitor-machines"></ul>
+    </section>
+  </aside>
 
   <footer class="foot">
     <p>Sans clé de conversation, lecture seule : rien ici n'approuve, ne lance ni n'annule. Avec une clé, seule une proposition figée que vous validez crée une mission. Une capture datée n'est pas une preuve qu'un processus vit encore.</p>

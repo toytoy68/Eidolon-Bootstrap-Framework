@@ -566,6 +566,10 @@
     }
     doc.getElementById("conv-connect").hidden = !closed;
     doc.getElementById("conv-body").hidden = closed;
+    // G176: the top bar holds the key field while closed, the message field while open (never both).
+    var form = doc.getElementById("conv-form"), welcome = doc.getElementById("conv-welcome");
+    if (form) form.hidden = closed;
+    if (welcome) welcome.hidden = !closed;
     doc.getElementById("conv-close").hidden = closed;
     var status = doc.getElementById("conv-status");
     status.textContent = st.phase === "opening" ? "Ouverture…" :
@@ -755,7 +759,7 @@
   function mount(doc, deps) {
     var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
-      if (deps.onPhase) deps.onPhase(st.phase);           // G156: the machine dashboard follows the key
+      if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
@@ -764,6 +768,13 @@
       conv.open(value).then(function (ok) { (ok ? doc.getElementById("conv-text") : input).focus(); });
     });
     doc.getElementById("conv-close").addEventListener("click", function () { conv.close(); doc.getElementById("conv-key").focus(); });
+    // G176: Enter sends from the top bar, Shift+Enter keeps a new line (IME composition never sends).
+    doc.getElementById("conv-text").addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      var form = doc.getElementById("conv-form");
+      if (form.requestSubmit) form.requestSubmit(); else doc.getElementById("conv-send").click();
+    });
     doc.getElementById("conv-form").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-text"), text = input.value;

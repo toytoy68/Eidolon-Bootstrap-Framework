@@ -53,6 +53,12 @@ Le navigateur s'ouvre sur `http://127.0.0.1:8767/`. Sinon, saisir cette adresse
 
 ## 2. Essais dans Edge ou Chrome
 
+Disposition (G176) :
+- en haut à gauche, l'**œil** : activité d'Eidolon et état réel de la caméra ; un clic ouvre la voix et la caméra ;
+- au centre, la **zone de discussion** ;
+- en haut à droite, **DARME** : un clic ouvre l'état des machines ;
+- à gauche, le menu des sections ; le jeton de lecture est dans **Réglages**.
+
 Pour chaque essai, noter **OK** ou **KO** et la mesure demandée dans
 [le modèle de résultats](validation/windows-weekend/RESULTS-template.md).
 
@@ -60,14 +66,14 @@ Pour chaque essai, noter **OK** ou **KO** et la mesure demandée dans
 
 | # | Essai | Attendu |
 | --- | --- | --- |
-| W1 | Ouvrir la conversation avec la clé | bloc « Voix et caméra » visible, **tout décoché**, aucun voyant rouge, aucune demande de permission |
-| W2 | « Afficher l'état des machines » | Core **Gris**, « Surveillance de sécurité incomplète », périmètre et fraîcheur visibles, mesures CPU, mémoire et disque ; Memory et VM101 GPU « Non surveillé » |
+| W1 | Saisir la clé dans la **barre du haut** | la barre devient le champ « Écrire à Eidolon… » ; l'œil (en haut à gauche) affiche « Eidolon disponible · caméra éteinte » ; aucune demande de permission |
+| W2 | Bouton **DARME** (en haut à droite), puis « Afficher l'état des machines » | Core **Gris**, « Surveillance de sécurité incomplète », périmètre et fraîcheur visibles, mesures CPU, mémoire et disque ; Memory et VM101 GPU « Non surveillé » |
 
 ### Micro et dictée
 
 | # | Essai | Attendu |
 | --- | --- | --- |
-| W3 | Cocher **Micro** | le navigateur demande la permission ; accorder ; état « prêt » ; liste des micros avec leurs noms |
+| W3 | Cliquer l'**œil** (en haut à gauche) pour ouvrir « Voix et caméra », puis cocher **Micro** | le navigateur demande la permission ; accorder ; état « prêt » ; liste des micros avec leurs noms |
 | W4 | « Parler », dire « Bonjour Eidolon, ici toytoy. Il est quinze heures trente. », puis « Terminer » | voyant rouge **seulement** pendant la parole ; texte dans le champ, **non envoyé**. Noter : la durée entre « Terminer » et le texte, le texte obtenu, et la ligne « Corrigé : … » si elle apparaît |
 | W5 | Dire une phrase de 20 s environ | noter la durée et les erreurs (noms, nombres) |
 | W6 | « Parler » puis « Terminer » sans rien dire, pièce calme puis ventilateur ou bruit de fond | « Rien n'a été entendu. » ; **aucun texte inventé** (par exemple « Sous-titres… ») |
@@ -97,7 +103,7 @@ Pour chaque essai, noter **OK** ou **KO** et la mesure demandée dans
 
 | # | Essai | Attendu |
 | --- | --- | --- |
-| W18 | **Clavier seul** : Tab jusqu'à « Micro », Espace, Tab jusqu'à « Parler », Entrée, parler, Entrée | tout fonctionne, focus toujours visible (contour) |
+| W18 | **Clavier seul** : depuis le champ du haut, Maj+Tab jusqu'à l'œil, Entrée, Tab jusqu'à « Micro », Espace, Tab jusqu'à « Parler », Entrée, parler, Entrée ; Échap ferme le panneau | tout fonctionne, focus toujours visible (contour) |
 | W19 | Échelle Windows **125 %** puis **150 %** (Paramètres › Système › Écran › Échelle), fenêtre étroite, puis Ctrl + et Ctrl − dans le navigateur | rien ne déborde ni ne se chevauche ; boutons lisibles |
 | W20 | Cocher « Actualisation automatique », attendre 30 s, puis « Fermer la conversation » | l'heure de lecture avance ; à la fermeture, le panneau des machines disparaît et la caméra et le micro sont relâchés |
 | W21 | Couper le Wi-Fi ou le tunnel 30 s, puis le rétablir | messages d'erreur clairs, pas de plantage ; la page refonctionne après réouverture |

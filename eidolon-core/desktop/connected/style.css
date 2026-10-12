@@ -6,35 +6,22 @@
  * Standard    : Eidolon Presentation Standard v1
  * ========================================================== */
 :root {
-  --bg: #f4f6f8;
-  --panel: #ffffff;
-  --ink: #17202a;
-  --muted: #4a5663;
-  --line: #c9d1da;
-  --accent: #1f4e8c;
-  --accent-ink: #ffffff;
-  --ok: #1d6b3a;
-  --warn: #8a4b00;
-  --bad: #a3231b;
-  --stale-bg: #fff6e5;
-  --focus: #b35c00;
-  color-scheme: light dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #11161c;
-    --panel: #1a2129;
-    --ink: #e8edf2;
-    --muted: #b3bfcc;
-    --line: #3a4652;
-    --accent: #8fb8ee;
-    --accent-ink: #0d1520;
-    --ok: #7fd49c;
-    --warn: #f0b45c;
-    --bad: #ff9a8f;
-    --stale-bg: #2e2617;
-    --focus: #ffb366;
-  }
+  /* G176 (demande de toytoy) : interface sombre, pas noire. Anthracite, panneaux ardoise, bleu Eidolon.
+     Proposition de teintes, pas une charte validée. Contrastes vérifiés par a11y.test.js (>= 4.5). */
+  --bg: #1c2128;
+  --panel: #252d38;
+  --panel-2: #2d3744;
+  --ink: #e7ecf2;
+  --muted: #aab5c2;
+  --line: #3d4958;
+  --accent: #7fb0ff;
+  --accent-ink: #0d1a2c;
+  --ok: #7fd49c;
+  --warn: #f0b45c;
+  --bad: #ff9a8f;
+  --stale-bg: #33291a;
+  --focus: #ffb366;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -291,12 +278,101 @@ input[type="password"] {
 .monitor-metrics { display: grid; grid-template-columns: auto 1fr; gap: .2rem .75rem; margin: .5rem 0 0; }
 .monitor-metrics dd { margin: 0; }
 
-/* Écrans larges (PC 1440p, question de toytoy) : le panneau des machines prend toute la largeur
-   au lieu de laisser une colonne vide ; à partir de 1600 px il se place à côté de la conversation. */
-.monitor { grid-column: 1 / -1; }
-@media (min-width: 1600px) {
-  .layout:has(#monitor:not([hidden])) { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
-  .layout:has(#monitor:not([hidden])) .conversation { grid-column: 1; grid-row: 1; }
-  .layout:has(#monitor:not([hidden])) .monitor { grid-column: 2; grid-row: 1; align-self: start;
-    position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+
+/* ---- G176 : cadre PC ---------------------------------------------------------------------------- */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.appbar {
+  position: sticky; top: 0; z-index: 30;                         /* stays above the side panels: always reachable */
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .75rem 1.25rem; align-items: center;
+  padding: .6rem 1.25rem; background: var(--panel); border-bottom: 1px solid var(--line);
 }
+.appbar-left, .appbar-right { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.appbar-right { justify-content: flex-end; }
+.brand-title { font-size: 1rem; }
+.brand-title .logo { height: 36px; }
+.appbar-center { min-width: 0; }
+.appbar-form { display: flex; gap: .5rem; align-items: flex-end; margin: 0; }
+.appbar-form[hidden] { display: none; }
+.appbar-form input[type="password"], .appbar-form textarea {
+  flex: 1 1 auto; min-width: 0; width: 100%;
+  font: inherit; min-height: 44px; padding: .55rem 1rem;
+  border: 1px solid var(--line); border-radius: 22px;              /* barre d'adresse */
+  background: var(--panel-2); color: var(--ink);
+}
+.appbar-form textarea { resize: none; max-height: 30vh; field-sizing: content; line-height: 1.4; }
+.appbar-form textarea::placeholder, .appbar-form input::placeholder { color: var(--muted); opacity: 1; }
+.appbar-form button { border-radius: 22px; flex: 0 0 auto; }
+
+.eye, .darme {
+  display: flex; align-items: center; gap: .6rem; text-align: left;
+  background: var(--panel-2); color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
+  padding: .35rem .9rem .35rem .55rem; max-width: 22rem;
+}
+.eye-icon { width: 36px; height: 22px; flex: 0 0 auto; }
+.eye-lid { fill: none; stroke: var(--accent); stroke-width: 2; }
+.eye-iris { fill: none; stroke: var(--accent); stroke-width: 2; }
+.eye-pupil { fill: var(--accent); }
+.eye-text, .darme-state { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.eye-name { font-weight: 700; }
+.eye-state { color: var(--muted); font-size: .82rem; overflow-wrap: anywhere; }
+.eye.eye-busy .eye-pupil { animation: eye-think 1.6s ease-in-out infinite; }
+@keyframes eye-think { 50% { opacity: .35; } }
+/* Camera really capturing: red iris AND the words "caméra active"; never shown for mere activity. */
+.eye.eye-camera { border-color: var(--bad); }
+.eye.eye-camera .eye-iris { stroke: var(--bad); stroke-width: 3; }
+.darme-icon { width: 22px; height: 26px; flex: 0 0 auto; }
+.darme-icon path:first-child { fill: none; stroke: currentColor; stroke-width: 2; }
+.darme-mark { fill: none; stroke: currentColor; stroke-width: 2; opacity: 0; }
+.darme-state { font-size: .88rem; font-weight: 600; }
+.darme[data-level="grey"] { border-style: dashed; color: var(--muted); }
+.darme[data-level="gold"] { color: #f2cf6b; border-color: #f2cf6b; }
+.darme[data-level="gold"] .darme-mark { opacity: 1; }
+.darme[data-level="red"] { background: #a3231b; border-color: #a3231b; color: #fff; }
+.darme[data-level="blue"] { background: #1f4e8c; border-color: #1f4e8c; color: #fff; }
+.darme[data-level="stale"], .darme[data-level="unknown"], .darme[data-level="error"] { color: var(--warn); border-style: dotted; }
+.darme[data-level="off"], .darme[data-level="idle"] { color: var(--muted); }
+
+.shell { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1rem; padding: 1rem 1.25rem 0; }
+.sidenav { position: sticky; top: 5rem; align-self: start; display: flex; flex-direction: column; gap: .25rem; }
+.sidenav a {
+  display: block; min-height: 40px; padding: .55rem .9rem; border-radius: 8px;
+  color: var(--ink); text-decoration: none; border: 1px solid transparent;
+}
+.sidenav a:hover { background: var(--panel); border-color: var(--line); }
+.shell .layout { padding: 0 0 1rem; }
+.memory, .settings { grid-column: 1 / -1; }
+.settings .connect { margin: .5rem 0; }
+.settings .connection { padding: .5rem 0 0; border-bottom: 0; }
+.conversation .conv-log { min-height: 8rem; }
+
+.drawer {
+  /* Starts right under the top bar (height measured by shell.js), so the message field stays reachable. */
+  position: fixed; top: var(--appbar-h, 4.5rem); bottom: 0; z-index: 20; width: min(30rem, 100vw); overflow-y: auto;
+  background: var(--panel); border: 1px solid var(--line); padding: 1rem; box-shadow: 0 0 24px rgba(0, 0, 0, .45);
+}
+.drawer-left { left: 0; }
+.drawer-right { right: 0; }
+.drawer-closed { display: none; }
+.drawer .monitor { border: 0; padding: 0; background: transparent; }
+.drawer-close { display: flex; justify-content: flex-end; }
+.drawer .comm { margin-top: .75rem; }
+
+@media (max-width: 900px) {
+  .appbar { grid-template-columns: 1fr auto; }
+  .appbar-center { grid-column: 1 / -1; grid-row: 2; }
+  .brand-title, #mode-badge { display: none; }
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .sidenav { position: static; flex-direction: row; flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .eye-state { display: none; }
+  .eye, .darme { padding: .35rem .6rem; }
+}
+/* The top-bar forms stay on one line (the generic .conv-form wraps). */
+.appbar .appbar-form { flex-wrap: nowrap; margin: 0; }
+.appbar .appbar-form textarea, .appbar .appbar-form input[type="password"] { flex: 1 1 auto; padding: .55rem 1rem; }
+/* Earlier conversations: compact chips, still >= 24 px targets. */
+.conv-recent-list button { min-height: 32px; padding: .2rem .7rem; font-size: .88rem; background: var(--panel-2); }
+/* The drawer already says "Voix et caméra": the block title stays for screen readers only. */
+.drawer #comm-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (max-width: 1400px) { .brand-title { display: none; } }
