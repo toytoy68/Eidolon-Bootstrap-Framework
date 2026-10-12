@@ -28,7 +28,7 @@ class WebBudget:
     def _id(value):
         return type(value) is str and re.fullmatch(r"[a-zA-Z0-9_.-]{1,100}", value) is not None
 
-    def reserve(self, request_id, actor, mission, operation, query):
+    def reserve(self, request_id, actor, mission, operation, query, *, return_created=False):
         if (not all(self._id(v) for v in (request_id, actor, mission))
                 or operation not in ("web.search", "web.fetch")
                 or type(query) is not str or not 1 <= len(query) <= 2000):
@@ -44,13 +44,13 @@ class WebBudget:
                     if row[:4] != (actor,mission,operation,ref):
                         raise BudgetError("request id collision")
                     db.execute("COMMIT")
-                    return row[4]
+                    return (row[4], False) if return_created else row[4]
                 used = db.execute("SELECT count(*) FROM calls WHERE actor=? AND day=?", (actor,day)).fetchone()[0]
                 if used >= self.limit:
                     raise BudgetError("daily budget exhausted")
                 db.execute("INSERT INTO calls VALUES (?,?,?,?,?,?,?,?,?,?)", (request_id,actor,mission,operation,ref,day,"RESERVED",now,None,None))
                 db.execute("COMMIT")
-                return "RESERVED"
+                return ("RESERVED", True) if return_created else "RESERVED"
             except BaseException:
                 if db.in_transaction:
                     db.execute("ROLLBACK")
