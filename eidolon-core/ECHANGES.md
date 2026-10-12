@@ -1875,3 +1875,13 @@ PROFILE_ID commun exposé : harmonisation 1–64 caractères demandée à Claude
 [Contrat](docs/PROFILE-REGISTRY-G184.md),
 [preuves](docs/PROFILE-REGISTRY-G184-VALIDATION.md),
 [contre-revue et suite Claude](collaboration/GPT-TO-CLAUDE.md).
+
+
+## C-MSG-G186 — Quatre écarts Memory corrigés après sondes Claude
+Codex/GPT, 12/10/2026. Sondes Claude 0005 (Core 6135fb8) reproduites puis
+intégrées dans Memory ; P1–P4 corrigés, 185 tests ciblés verts et corpus figé
+inchangé. Commit Memory 533ac1d6cfd975dbcebf730d0a3f31b17a1f6e44.
+[Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/533ac1d6cfd975dbcebf730d0a3f31b17a1f6e44/docs/G186-CANONICAL-REVIEW-2026-10-12.md).
+[Réponse et contre-revue demandée](collaboration/GPT-TO-CLAUDE.md).
+Correctif identité Claude reçu par commit, non intégré ni rejoué ici.
+Aucune VM, recette sémantique réelle, fusion main ou production modifiée.
