@@ -68,7 +68,7 @@
       out.cls = d.badge; out.badge = b.label; out.text = b.text;
       if (d.badge === "red" && d.unacknowledged_alerts !== null) out.text = d.unacknowledged_alerts + " alerte(s) non acquittée(s).";
     }
-    if (!d.security_telemetry_installed) out.text += " Aucun collecteur de sécurité installé.";
+    if (!d.security_telemetry_installed) out.text += " Surveillance de sécurité incomplète : voir les sources.";
     if (d.ingestion_paused) out.text += " Collecte suspendue.";
     Object.keys(d.sources).forEach(function (name) {
       var absent = name === "security-telemetry" && !d.security_telemetry_installed;

@@ -59,7 +59,7 @@ test("grey is never secure; gold says its scope; red counts alerts; nothing clai
   const grey = M.describe({ id: "core", label: "Core", state: "ok", darme: darme(), machine: null });
   assert.equal(grey.badge, "Gris");
   assert.match(grey.text, /PAS un état sécurisé/);
-  assert.match(grey.text, /Aucun collecteur de sécurité/);
+  assert.match(grey.text, /Surveillance de sécurité incomplète/);
   assert.match(grey.scope, /systemd actif/);
   assert.match(grey.freshness, /il y a 4 s/);
   assert.match(grey.metricsNote, /pas publiées/);
