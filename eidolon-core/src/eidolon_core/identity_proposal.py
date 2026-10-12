@@ -273,23 +273,38 @@ def _fused(state, profile, basis, states, reason=None):
 
 
 class EphemeralCapture:
-    """Raw audio/image held in memory only while an engine needs it, wiped on exit, error or cancel (G172 point 5)."""
+    """Raw audio/image held only while an engine needs it (G172 point 5), with an explicit ownership contract.
+
+    A ``bytearray`` is TAKEN OVER without copy: the caller hands it in and must not keep using it; that very
+    buffer is zeroed on exit, error or cancel. ``bytes`` are immutable and cannot be wiped: they are copied once
+    into an owned buffer (wiped), and the original object stays the caller's responsibility (``source_wiped``
+    is False). This wipes the buffer owned here, never a copy made elsewhere (HTTP layer, numpy, ONNX Runtime,
+    OpenCV): no promise of erasing every trace in the Python process.
+    """
 
     def __init__(self, data):
-        if not isinstance(data, (bytes, bytearray, memoryview)):
-            raise TypeError("raw capture must be bytes")
-        self._buffer = bytearray(data)
+        if isinstance(data, bytearray):
+            self._buffer, self.source_wiped = data, True
+        elif isinstance(data, (bytes, memoryview)):
+            self._buffer, self.source_wiped = bytearray(data), False
+        else:
+            raise TypeError("raw capture must be bytes or bytearray")
+        self._view = None
 
     def __enter__(self):
-        return memoryview(self._buffer)
+        self._view = memoryview(self._buffer)
+        return self._view
 
     def __exit__(self, *exc):
         self.wipe()
         return False
 
     def wipe(self):
-        for i in range(len(self._buffer)):
-            self._buffer[i] = 0
+        size = len(self._buffer)
+        self._buffer[:] = bytes(size)                    # same length: allowed even while views are exported
+        if self._view is not None:
+            self._view.release()                         # views derived from it (cast) keep reading zeros
+            self._view = None
         self._buffer = bytearray()
 
     def __len__(self):

@@ -186,20 +186,31 @@ class Fusion(unittest.TestCase):
 
 
 class EphemeralCaptureTests(unittest.TestCase):
-    def test_buffer_is_wiped_on_exit_and_on_error(self):
-        capture = P.EphemeralCapture(b"secret-audio")
+    def test_a_handed_over_bytearray_is_the_buffer_wiped_on_exit_and_on_error(self):
+        owned = bytearray(b"secret-audio")
+        capture = P.EphemeralCapture(owned)
         with capture as view:
-            kept = view
+            derived = view.cast("B")
             self.assertEqual(bytes(view), b"secret-audio")
-        self.assertEqual(bytes(kept), b"\x00" * 12)
+        self.assertTrue(capture.source_wiped)
+        self.assertEqual((bytes(owned), bytes(derived)), (b"\x00" * 12, b"\x00" * 12))
         self.assertEqual(len(capture), 0)
-        failing = P.EphemeralCapture(b"secret-image")
+        failing = bytearray(b"secret-image")
         with self.assertRaises(RuntimeError):
-            with failing as view:
-                kept = view
+            with P.EphemeralCapture(failing):
                 raise RuntimeError("cancel")
-        self.assertEqual(bytes(kept), b"\x00" * 12)
-        self.assertNotIn("secret", repr(failing))
+        self.assertEqual(bytes(failing), b"\x00" * 12)
+
+    def test_immutable_bytes_are_copied_once_and_reported_as_not_wiped(self):
+        source = b"secret-bytes"
+        capture = P.EphemeralCapture(source)
+        with capture as view:
+            kept = view.cast("B")
+        self.assertFalse(capture.source_wiped)                        # the caller's bytes cannot be wiped here
+        self.assertEqual(bytes(kept), b"\x00" * 12)                   # the owned copy is
+        self.assertNotIn("secret", repr(capture))
+        with self.assertRaises(TypeError):
+            P.EphemeralCapture("text")
 
 
 def pcm(seconds, amplitude):
@@ -215,16 +226,29 @@ class Adapters(unittest.TestCase):
             model = Path(tmp) / "model.onnx"
             model.write_bytes(b"synthetic model bytes")
             digest = hashlib.sha256(b"synthetic model bytes").hexdigest()
-            info = E.verify_model(model, digest, name="wespeaker-fake", preprocessing="fbank80/1")
-            self.assertEqual(info.model_sha256, digest)
+            verified = E.verify_model(model, digest, name="wespeaker-fake", preprocessing="fbank80/1")
+            self.assertEqual((verified.engine.model_sha256, verified.data), (digest, b"synthetic model bytes"))
+            self.assertNotIn("synthetic", repr(verified))
+            for path, expected in ((model, "0" * 64), (Path(tmp) / "absent.onnx", digest), (Path(tmp), digest)):
+                with self.assertRaises(E.ModelRejected):
+                    E.verify_model(path, expected, name="x", preprocessing="y")
             with self.assertRaises(E.ModelRejected):
-                E.verify_model(model, "0" * 64, name="x", preprocessing="y")
-            with self.assertRaises(E.ModelRejected):
-                E.verify_model(Path(tmp) / "absent.onnx", digest, name="x", preprocessing="y")
+                E.verify_model(model, digest, name="x", preprocessing="y", max_bytes=4)
             link = Path(tmp) / "link.onnx"
             link.symlink_to(model)
             with self.assertRaises(E.ModelRejected):
                 E.verify_model(link, digest, name="x", preprocessing="y")
+
+    def test_a_model_replaced_after_verification_never_reaches_the_engine(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            model = Path(tmp) / "model.onnx"
+            model.write_bytes(b"verified model")
+            verified = E.verify_model(model, hashlib.sha256(b"verified model").hexdigest(), name="x", preprocessing="y")
+            replacement = Path(tmp) / "other.onnx"
+            replacement.write_bytes(b"swapped model!")
+            replacement.replace(model)                                   # atomic swap after the check
+            model.write_bytes(b"rewritten in place")
+            self.assertEqual(verified.data, b"verified model")          # engines load these bytes, not the path
 
     def test_voice_adapter_measures_speech_and_wipes_the_capture(self):
         seen = []
@@ -237,6 +261,12 @@ class Adapters(unittest.TestCase):
         quiet = adapter.observe(pcm(2.0, 10))
         self.assertEqual(propose_voice(quiet)["state"], "silence")
         self.assertEqual(adapter.observe(b"\x00").error, "invalid_capture")
+        handed = bytearray(pcm(2.0, 3000))
+        adapter.observe(handed)
+        self.assertEqual(set(handed), {0})                           # ownership passed with the call
+        refused = bytearray(b"\x01\x02\x03")
+        self.assertEqual(adapter.observe(refused).error, "invalid_capture")
+        self.assertEqual(bytes(refused), b"\x00" * 3)
 
     def test_engine_failure_is_a_generic_code(self):
         def broken(samples, rate):

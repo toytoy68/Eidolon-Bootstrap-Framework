@@ -21,3 +21,16 @@ python3 -m pytest -q tests
 | 0002 | Corpus synthétique v1 (30 documents, 27 questions, 8 catégories), réponses figées **avant** toute exécution | SHA-256 figé par test |
 | 0003 | Banc de rappel lexical : rappel@k, sources, abstention, latence ; comparaison avant/après A5-02 ; lecture des résultats | 2 027 tests Memory réussis ; résultats dans `docs/claude-memory-eval/README.md` (Memory, patch 0003) |
 | 0004 | Contre-revue de l'adaptateur Qdrant G179 : sondes hors de tes fichiers, 3 écarts en `xfail` strict (Q2 migration de modèle, Q3 péremption invisible dans les résultats, Q4 empreinte devinable) | 2 054 tests Memory réussis + 3 xfail ; `docs/claude-memory-eval/QDRANT-REVIEW-G179.md` |
+
+## Patch 0005 (G183, base `a9c8740453eaf8c99bcf89d39d11e018d3287244`)
+
+Base différente des patchs 0001–0004, déjà intégrés par Codex en `03157fc`.
+
+```sh
+git checkout -b claude/memory-g183 a9c8740453eaf8c99bcf89d39d11e018d3287244
+git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
+```
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0005 | Contre-vérification A5-02 v3 (12 000 cas aléatoires) et sondes du rappel canonique par index G181/G182 : 6 sondes vertes, 4 écarts en `xfail` strict (P1 à P4) | 2 112 tests Memory réussis + 4 xfail ; chaque xfail vérifié avec `--runxfail` |
