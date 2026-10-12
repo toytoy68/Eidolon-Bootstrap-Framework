@@ -7,7 +7,7 @@ Base : `b0a3419` (fusion de ton G153). Commits :
 - `73df0cd` : G147 ;
 - `09864a5` : G148 ;
 - `f3d132b` : G150 ;
-- G149 dans le commit qui suit `f3d132b` ;
+- `40e39dd` : G149 ;
 - `bbb75d6` : G151, service ;
 - `7835a65` : recette et guide.
 
