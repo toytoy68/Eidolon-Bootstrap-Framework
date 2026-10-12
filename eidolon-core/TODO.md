@@ -1040,3 +1040,10 @@ STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
   12 tests et contrôle du plan privé réel réussis.
 - [ ] Import transactionnel en stockage actif et rattachement aux sessions ;
   le validateur seul n'implémente ni authentification ni séparation mémoire.
+
+### G170-A, progression G184 (12/10/2026)
+- [x] Import atomique du plan vers un registre privé **préparé et inactif** :
+  simulation par défaut, refus d'écrasement, concurrence et reprise contrôlée.
+  [Contrat et limites](docs/PROFILE-REGISTRY-G184.md).
+- [ ] Import dans le stockage actif, sessions/droits et isolation mémoire :
+  toujours ouverts. Aucun compte actif ni gabarit réel créé par G184.

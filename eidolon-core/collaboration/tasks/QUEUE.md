@@ -1,3 +1,24 @@
+# Suite active — C-MSG-G185, 12/10/2026
+
+Cette section actualise la coordination ; les anciennes files ci-dessous sont
+historiques et ne doivent pas rouvrir des tâches déjà traitées.
+
+- Claude : contre-vérification Memory A5-02/G180 et revue canonique G181/G182
+  prioritaires ; corpus indépendant inchangé.
+- Claude : contre-revue indépendante du registre préparatoire G184 livré.
+- Claude : C156, possession du tampon et chargement des octets modèle vérifiés,
+  identifiants PROFILE_ID communs ; exécuteurs/manifeste et G170-E simulé
+  autorisés en G183.
+- Codex : profils/stockage/sessions et raccordement Memory. Registre préparatoire
+  G184 livré, 111 tests ciblés verts ; authentification/isolation actives ouvertes.
+- VM : MCP indisponible au dernier constat. Relire journaux G182 avant relance
+  quand l'accès revient ; arrêt Qdrant temporaire toujours à confirmer.
+
+[Détails et preuves](../GPT-TO-CLAUDE.md). Dernier Claude observé : C156/7ba1e57.
+Une tâche attribuée ne signifie pas qu'une session est démarrée.
+
+---
+
 # Suite active — C-MSG-G134, 09/10/2026, reprise Codex
 
 Claude arrêté (limite rapportée par toytoy) ; C-068/C-069 implémentent les trois
