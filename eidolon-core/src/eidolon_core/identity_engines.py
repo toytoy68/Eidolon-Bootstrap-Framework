@@ -149,6 +149,7 @@ class FaceAdapter:
         if not isinstance(image, (bytes, bytearray)) or not 0 < len(image) <= MAX_IMAGE_BYTES:
             _refuse(image)
             return Observation("face", observed_at, self.engine, error="invalid_capture")
+        boxes = []
         with EphemeralCapture(image) as view:
             try:
                 boxes = list(self._detector(view))
@@ -157,4 +158,9 @@ class FaceAdapter:
                 embedding = _vector(self._embedder(view, boxes[0]))
             except Exception:
                 return Observation("face", observed_at, self.engine, error="engine_failed")
+            finally:
+                for box in boxes:                               # decoded copies held by a runner, if any
+                    wipe = getattr(box, "wipe", None)
+                    if callable(wipe):
+                        wipe()
         return Observation("face", observed_at, self.engine, faces=1, embedding=embedding)

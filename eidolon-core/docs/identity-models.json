@@ -1,0 +1,59 @@
+{
+  "schema": "eidolon-identity-models/1",
+  "status": "proposal for Codex review (C156-Q1, G183); nothing provisioned, nothing activated",
+  "prepared_by": "Claude, 2026-10-12",
+  "models": [
+    {
+      "id": "yunet-2023mar",
+      "role": "face detector (5 landmarks)",
+      "file": "face_detection_yunet_2023mar.onnx",
+      "source": "https://github.com/opencv/opencv_zoo/blob/47534e27c9851bb1128ccc0102f1145e27f23f98/models/face_detection_yunet/face_detection_yunet_2023mar.onnx",
+      "revision": "opencv/opencv_zoo@47534e27c9851bb1128ccc0102f1145e27f23f98",
+      "license_code": "MIT (models/face_detection_yunet/LICENSE)",
+      "license_weights": "MIT (same LICENSE, folder-wide)",
+      "size_bytes": 232589,
+      "sha256_published": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+      "sha256_published_origin": "Git LFS pointer of the file at the pinned revision",
+      "sha256_computed": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+      "preprocessing": "yunet-2023mar+sface-align5/1",
+      "io": "BGR image of any size (setInputSize) -> rows [x, y, w, h, 5 x (x, y), score]"
+    },
+    {
+      "id": "sface-2021dec",
+      "role": "face encoder",
+      "file": "face_recognition_sface_2021dec.onnx",
+      "source": "https://github.com/opencv/opencv_zoo/blob/47534e27c9851bb1128ccc0102f1145e27f23f98/models/face_recognition_sface/face_recognition_sface_2021dec.onnx",
+      "revision": "opencv/opencv_zoo@47534e27c9851bb1128ccc0102f1145e27f23f98",
+      "license_code": "Apache-2.0 (models/face_recognition_sface/LICENSE)",
+      "license_weights": "Apache-2.0 (same LICENSE, folder-wide); training data not specified upstream",
+      "size_bytes": 38696353,
+      "sha256_published": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+      "sha256_published_origin": "Git LFS pointer of the file at the pinned revision",
+      "sha256_computed": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+      "preprocessing": "yunet-2023mar+sface-align5/1",
+      "io": "112x112 crop aligned on the 5 YuNet landmarks (OpenCV alignCrop) -> 128 floats"
+    },
+    {
+      "id": "wespeaker-voxceleb-resnet34-lm",
+      "role": "speaker encoder",
+      "file": "voxceleb_resnet34_LM.onnx",
+      "source": "https://wenet.org.cn/downloads?models=wespeaker&version=voxceleb_resnet34_LM.onnx",
+      "source_listed_in": "wenet-e2e/wespeaker@9fecd6cb4f47475d01761d87c826298dff4ef18c docs/pretrained.md",
+      "revision": null,
+      "license_code": "Apache-2.0 (wenet-e2e/wespeaker)",
+      "license_weights": "CC BY 4.0 per docs/pretrained.md (follows the VoxCeleb dataset licence); VoxCeleb page still to check",
+      "size_bytes": null,
+      "sha256_published": null,
+      "sha256_computed": null,
+      "not_obtained": "the session network policy refuses wenet.org.cn, huggingface.co and modelscope.cn; reported, not bypassed",
+      "preprocessing": "kaldi-fbank80-hamming-25ms-10ms-cmn/1",
+      "io": "feats [1, T, 80] float32 (PCM16 scale, dither 0, CMN) -> embs [1, 256] (to confirm on the file)"
+    }
+  ],
+  "dependencies": {
+    "onnxruntime": "1.23.2 (CPU)",
+    "opencv": "opencv-python-headless 4.12.0.88, one distribution only (FaceDetectorYN and FaceRecognizerSF from buffers)",
+    "numpy": "2.2.6",
+    "test_only": "kaldi-native-fbank 1.21.3 (fbank parity reference), onnx 1.19.1 (synthetic speaker model)"
+  }
+}
