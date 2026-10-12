@@ -2020,3 +2020,9 @@ Prise en charge E1 et E2 confirmée. `web_search` rend la `SearchResponse` de G1
 requête, délai de l'appelant), 14 tests. Étude E2 : archives officielles (Wikipédia FR, ArchWiki…),
 lexical complet et vecteurs des introductions, échantillon avant dump complet, séparé de Memory.
 [C-MSG-C164](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — E1-R1 et E2-P0, 12/10/2026, 21 h 45
+SearXNG durci après la revue G193 : limite validée, budget déclaré non durable, JSON et type contrôlés,
+chien de garde (sans lui, un serveur lent bloquait plus de 60 s), reçus en HMAC. Prototype `index.search`
+local : générations atomiques, retour arrière, retrait immédiat, citations ; corpus synthétique, sans
+réseau. [C-MSG-C165](collaboration/CLAUDE-TO-GPT.md).

@@ -58,7 +58,8 @@ class Fake:
         self.base = f"http://127.0.0.1:{self.server.server_address[1]}"
 
     def json(self, value, status=200):
-        self.reply = (status, {"Content-Type": "application/json"}, json.dumps(value).encode(), 0)
+        """Compact JSON, so that size bounds are tested separately from shape bounds."""
+        self.reply = (status, {"Content-Type": "application/json"}, json.dumps(value, separators=(",", ":")).encode(), 0)
 
     def close(self):
         self.server.shutdown()
@@ -92,7 +93,7 @@ class SearxngTests(unittest.TestCase):
         self.assertEqual((request.path, params["format"], params["q"]), ("/search", ["json"], ["panne proxmox"]))
 
     def test_g190_response_fields_request_id_and_caller_deadline(self):
-        self.fake.reply = (200, {}, b'{"results": []}', 1.5)
+        self.fake.reply = (200, {"Content-Type": "application/json"}, b'{"results": []}', 1.5)
         out = self.run_search(request_id="mission-42.search-1", deadline=0.5)
         self.assertEqual((out["status"], out["error_code"], out["provider"]), ("TIMEOUT", "TIMEOUT", "searxng/1"))
         self.assertEqual(out["receipt"]["request_id"], "mission-42.search-1")
@@ -106,7 +107,43 @@ class SearxngTests(unittest.TestCase):
         out = self.run_search("recherche " + SECRET)
         self.assertEqual(out["status"], "EMPTY")
         self.assertNotIn(SECRET, json.dumps(out["receipt"]))
-        self.assertEqual(len(out["receipt"]["query_sha256"]), 64)
+        self.assertNotIn("query_sha256", out["receipt"])          # a plain hash of a short query is reversible
+        self.assertIsNone(out["receipt"]["query_ref"])
+        key, other = b"k" * 32, b"o" * 32
+        refs = [W.web_search(self.provider, "oui", approved=True, budget=self.budget, receipt_key=k)["receipt"]["query_ref"]
+                for k in (key, key, other)]
+        self.assertEqual((len(refs[0]), refs[0] == refs[1], refs[0] == refs[2]), (64, True, False))
+        with self.assertRaises(ContractError):
+            self.run_search(receipt_key=b"short")
+
+    def test_budget_is_declared_non_durable(self):
+        self.fake.json({"results": []})
+        self.assertEqual(self.run_search()["receipt"]["budget_scope"], "process_memory_not_durable")
+        spent = W.Budget(per_day=1)
+        self.assertTrue(spent.take())
+        self.assertFalse(spent.take())
+        self.assertTrue(W.Budget(per_day=1).take())               # a restart starts from zero: not a quota
+
+    def test_limit_is_validated_even_on_direct_calls(self):
+        self.fake.json({"results": [result(f"https://e.example/{i}") for i in range(30)]})
+        for bad in (0, -1, 11, True, 2.0, "3", None):
+            with self.assertRaises(ContractError, msg=repr(bad)):
+                self.provider.query("x", bad)
+        with self.assertRaises(ContractError):
+            self.provider.search("x", 0)
+        self.assertEqual(len(self.provider.search("x", 20)), 10)    # coordinator's limit, clamped to ours
+
+    def test_abnormal_json_shapes_are_refused(self):
+        deep = {"results": []}
+        node = deep
+        for _ in range(W.MAX_JSON_DEPTH + 2):
+            node["x"] = {}
+            node = node["x"]
+        wide = {"results": [], "noise": list(range(W.MAX_JSON_NODES + 1))}
+        for value in (deep, wide):
+            self.fake.json(value)
+            out = self.run_search()
+            self.assertEqual((out["status"], out["error_code"]), ("ERROR", "INVALID_RESPONSE"))
 
     def test_unapproved_query_is_never_sent(self):
         out = self.run_search(approved="yes")
@@ -124,13 +161,16 @@ class SearxngTests(unittest.TestCase):
         self.assertEqual(self.run_search(budget=budget)["status"], "EMPTY")
 
     def test_failures_are_named_statuses_never_invented_sources(self):
+        J = {"Content-Type": "application/json; charset=utf-8"}
         cases = [((429, {}, b"", 0), "BLOCKED", "RATE_LIMITED"), ((403, {}, b"", 0), "BLOCKED", "ACCESS_DENIED"),
                  ((500, {}, b"boom", 0), "ERROR", "UNAVAILABLE"),
-                 ((200, {}, b"<html>not json</html>", 0), "ERROR", "INVALID_RESPONSE"),
-                 ((200, {}, b'{"results": "x"}', 0), "ERROR", "INVALID_RESPONSE"),
-                 ((200, {}, b'{"results": [], "x": NaN}', 0), "ERROR", "INVALID_RESPONSE"),
-                 ((200, {"Content-Encoding": "gzip"}, b"\x1f\x8b", 0), "ERROR", "UNSUPPORTED_CONTENT"),
-                 ((200, {}, b'{"results": []}', 3), "TIMEOUT", "TIMEOUT")]
+                 ((200, J, b"<html>not json</html>", 0), "ERROR", "INVALID_RESPONSE"),
+                 ((200, J, b'{"results": "x"}', 0), "ERROR", "INVALID_RESPONSE"),
+                 ((200, J, b'{"results": [], "x": NaN}', 0), "ERROR", "INVALID_RESPONSE"),
+                 ((200, {**J, "Content-Encoding": "gzip"}, b"\x1f\x8b", 0), "ERROR", "UNSUPPORTED_CONTENT"),
+                 ((200, {"Content-Type": "text/html"}, b'{"results": []}', 0), "ERROR", "UNSUPPORTED_CONTENT"),
+                 ((200, {}, b'{"results": []}', 0), "ERROR", "UNSUPPORTED_CONTENT"),
+                 ((200, J, b'{"results": []}', 3), "TIMEOUT", "TIMEOUT")]
         for reply, status, code in cases:
             self.fake.reply = reply
             out = self.run_search()
@@ -206,3 +246,48 @@ class SearxngTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DrippingServer:
+    """Raw TCP peer that sends a status line then one header byte every 0.2 s, forever."""
+
+    def __init__(self):
+        import socket as _socket
+        self.sock = _socket.socket()
+        self.sock.bind(("127.0.0.1", 0))
+        self.sock.listen(1)
+        self.stop = threading.Event()
+        self.thread = threading.Thread(target=self.run, daemon=True)
+        self.thread.start()
+        self.base = f"http://127.0.0.1:{self.sock.getsockname()[1]}"
+
+    def run(self):
+        try:
+            conn, _ = self.sock.accept()
+        except OSError:
+            return
+        with conn:
+            try:
+                conn.recv(4096)
+                conn.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nX-Slow: ")
+                while not self.stop.is_set():
+                    conn.sendall(b"a")
+                    time.sleep(0.2)
+            except OSError:
+                pass
+
+    def close(self):
+        self.stop.set()
+        self.sock.close()
+
+
+class HardDeadlineTests(unittest.TestCase):
+    def test_headers_dripped_byte_by_byte_cannot_outlive_the_deadline(self):
+        server = DrippingServer()
+        self.addCleanup(server.close)
+        provider = W.SearxngProvider(server.base, limits=W.SearchLimits(timeout_seconds=1))
+        start = time.monotonic()
+        out = W.web_search(provider, "x", approved=True, budget=W.Budget())
+        elapsed = time.monotonic() - start
+        self.assertEqual((out["status"], out["error_code"]), ("TIMEOUT", "TIMEOUT"))
+        self.assertLess(elapsed, 1.6)

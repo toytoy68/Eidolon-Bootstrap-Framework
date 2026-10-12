@@ -20,6 +20,7 @@ Two entry points:
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
+import hmac
 import http.client
 import ipaddress
 import json
@@ -34,6 +35,8 @@ from .research import AccessFailure, Hit
 SCHEMA = "eidolon-web-search/1"
 STATUSES = ("OK", "EMPTY", "BLOCKED", "TIMEOUT", "ERROR")
 MAX_QUERY_CHARS = 400
+MAX_JSON_DEPTH = 16          # SearXNG's answer is about 4 levels deep
+MAX_JSON_NODES = 50_000      # values in the whole answer, after the byte bound
 USER_AGENT = "EidolonCore/0.1 (local SearXNG client)"
 
 
@@ -56,7 +59,13 @@ class SearchLimits:
 
 
 class Budget:
-    """Calls per UTC day, in memory (a durable budget belongs to the Mission Manager integration)."""
+    """Calls per UTC day, IN PROCESS MEMORY ONLY: no durability is claimed.
+
+    A restart, a second process or a second Budget object starts again from zero, so this is a guard against
+    a runaway loop inside one process, never a quota. The durable, atomic budget per mission or user belongs
+    to the Mission Manager integration (G192/G193, GPT); receipts say so with ``budget_scope``.
+    """
+    SCOPE = "process_memory_not_durable"
 
     def __init__(self, per_day=100, *, clock=lambda: datetime.now(timezone.utc)):
         if type(per_day) is not int or not 1 <= per_day <= 10_000:
@@ -129,6 +138,21 @@ class SearxngProvider:
         self._factory = connection_factory
         self.provider_id = "searxng/1"
 
+    def _watchdog(self, conn, remaining):
+        """Hard deadline: shut the socket down when time is up, whatever phase is blocking (headers dripped
+        byte by byte, slow body). Per-operation socket timeouts alone do not bound the total."""
+        def stop():
+            sock = getattr(conn, "sock", None)
+            if sock is not None:
+                try:
+                    sock.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
+        timer = threading.Timer(remaining, stop)
+        timer.daemon = True
+        timer.start()
+        return timer
+
     def _connection(self, timeout):
         if self._factory is not None:
             return self._factory(self.host, self.port, timeout)
@@ -137,6 +161,8 @@ class SearxngProvider:
 
     def query(self, query, limit, *, seconds=None):
         """Raw exchange -> (results, unresponsive_engines). Raises AccessFailure with a named code only."""
+        if type(limit) is not int or not 1 <= limit <= self.limits.max_results:
+            raise ContractError("invalid search limit")
         if not isinstance(query, str) or not query.strip() or len(query) > MAX_QUERY_CHARS:
             raise ContractError("invalid search query")
         if any(ord(c) < 32 for c in query):
@@ -145,8 +171,13 @@ class SearxngProvider:
                                                        "safesearch": self.safesearch, "pageno": 1})
         seconds = self.limits.timeout_seconds if seconds is None else min(seconds, self.limits.timeout_seconds)
         deadline = time.monotonic() + seconds
-        conn = self._connection(seconds)
+        conn, timer = self._connection(seconds), None
         try:
+            conn.connect()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise AccessFailure("TIMEOUT")
+            timer = self._watchdog(conn, remaining)
             conn.request("GET", target, headers={"User-Agent": USER_AGENT, "Accept": "application/json",
                                                  "Accept-Encoding": "identity", "Connection": "close"})
             response = conn.getresponse()
@@ -157,6 +188,9 @@ class SearxngProvider:
             if response.status != 200:
                 raise AccessFailure("UNAVAILABLE")
             if (response.getheader("Content-Encoding") or "identity").strip().lower() != "identity":
+                raise AccessFailure("UNSUPPORTED_CONTENT")
+            media = (response.getheader("Content-Type") or "").split(";", 1)[0].strip().lower()
+            if media != "application/json":
                 raise AccessFailure("UNSUPPORTED_CONTENT")
             chunks, size = [], 0
             while True:
@@ -174,14 +208,17 @@ class SearxngProvider:
         except (socket.timeout, TimeoutError):
             raise AccessFailure("TIMEOUT") from None
         except (OSError, http.client.HTTPException):
-            raise AccessFailure("UNAVAILABLE") from None
+            # A watchdog shutdown surfaces as a broken read: name it by the clock, not by the symptom.
+            raise AccessFailure("TIMEOUT" if time.monotonic() >= deadline else "UNAVAILABLE") from None
         finally:
+            if timer is not None:
+                timer.cancel()
             conn.close()
         try:
             value = json.loads(b"".join(chunks).decode("utf-8"), parse_constant=_no_constant)
         except (ValueError, UnicodeError, RecursionError):
             raise AccessFailure("INVALID_RESPONSE") from None
-        if not isinstance(value, dict) or not isinstance(value.get("results"), list):
+        if not isinstance(value, dict) or not isinstance(value.get("results"), list) or not _bounded(value):
             raise AccessFailure("INVALID_RESPONSE")
         results, seen = [], set()
         for item in value["results"]:
@@ -203,8 +240,10 @@ class SearxngProvider:
         return results, len(unresponsive) if isinstance(unresponsive, list) else 0
 
     def search(self, query, limit):
-        """ResearchCoordinator interface."""
-        results, _ = self.query(query, limit)
+        """ResearchCoordinator interface: at most ``limit`` hits (clamped to this provider's own bound)."""
+        if type(limit) is not int or not 1 <= limit <= 1000:
+            raise ContractError("invalid search limit")
+        results, _ = self.query(query, min(limit, self.limits.max_results))
         return [Hit(r["url"], r["title"], r["snippet"]) for r in results]
 
 
@@ -212,15 +251,36 @@ def _no_constant(_):
     raise ValueError("non-finite value")
 
 
+def _bounded(value):
+    """Depth and node count of an already size-bounded JSON value, iteratively (no recursion)."""
+    stack, nodes = [(value, 1)], 0
+    while stack:
+        item, depth = stack.pop()
+        nodes += 1
+        if depth > MAX_JSON_DEPTH or nodes > MAX_JSON_NODES:
+            return False
+        if isinstance(item, dict):
+            stack.extend((v, depth + 1) for v in item.values())
+        elif isinstance(item, list):
+            stack.extend((v, depth + 1) for v in item)
+    return True
+
+
 _STATUS_OF = {"RATE_LIMITED": "BLOCKED", "ACCESS_DENIED": "BLOCKED", "TIMEOUT": "TIMEOUT"}
 
 
 def web_search(provider, query, *, approved, budget, max_results=10, deadline=None, request_id=None,
-               clock=lambda: datetime.now(timezone.utc)):
+               receipt_key=None, clock=lambda: datetime.now(timezone.utc)):
     """G187 web.search (G190 SearchResponse). ``approved`` must be True: the caller showed this exact query.
 
     ``deadline``: seconds left for this call (never more than the provider timeout). ``request_id``: the
     caller's identifier, echoed in the receipt so the Mission Manager can bind it durably.
+
+    ``approved`` is a declaration by the caller, NOT a permission: the Policy decision bound to the actor,
+    the mission and this exact query stays the integrator's job (G193 point 2).
+
+    Receipts never hold the query, nor a plain hash of it (a short query is found back by dictionary):
+    ``query_ref`` is an HMAC under ``receipt_key`` (32+ bytes kept by the caller), else None.
 
     Never raises on provider failures: the status says what happened, and an EMPTY or failed search is
     never completed with invented sources.
@@ -235,11 +295,14 @@ def web_search(provider, query, *, approved, budget, max_results=10, deadline=No
                                    or not 1 <= len(request_id) <= 80
                                    or not all(c.isalnum() or c in "-_." for c in request_id)):
         raise ContractError("invalid request_id")
-    query_sha256 = hashlib.sha256(query.encode("utf-8")).hexdigest() if isinstance(query, str) else None
+    if receipt_key is not None and (not isinstance(receipt_key, bytes) or len(receipt_key) < 32):
+        raise ContractError("receipt_key must be at least 32 bytes")
+    query_ref = (hmac.new(receipt_key, query.encode("utf-8"), hashlib.sha256).hexdigest()
+                 if receipt_key is not None and isinstance(query, str) else None)
     receipt = {"schema": SCHEMA, "request_id": request_id, "provider": provider.provider_id,
-               "query_sha256": query_sha256,
-               "query_shown_to_user": approved is True, "sent_at": None, "results_count": 0,
-               "unresponsive_engines": 0, "budget_used": None, "error_code": None}
+               "query_ref": query_ref, "query_shown_to_user": approved is True, "sent_at": None,
+               "results_count": 0, "unresponsive_engines": 0, "budget_used": None,
+               "budget_scope": Budget.SCOPE, "error_code": None}
 
     def out(status, results=(), code=None):
         receipt.update(error_code=code, results_count=len(results), budget_used=budget.used())
