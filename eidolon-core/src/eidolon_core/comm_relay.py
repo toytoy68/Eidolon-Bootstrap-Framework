@@ -25,16 +25,22 @@ METHODS = ("GET", "POST", "DELETE")
 TIMEOUT = 90.0
 
 
-def error(code):
-    return {"protocol": "eidolon-comm/1", "error": code, "authorizes_execution": False}
+MONITOR = ("/v1/monitor/", "eidolon-monitor/1", ("GET",), "MONITOR_UNAVAILABLE")   # G157, same mechanism
 
 
-def relay(port, method, path, authorization, content_type, body, *, timeout=TIMEOUT):
-    """(status, JSON value) from the local communication service, or a Core-side refusal."""
-    if not path.startswith(PREFIX) or ".." in path or "\\" in path:
-        return 404, error("NOT_FOUND")
-    if method not in METHODS:
-        return 405, error("METHOD_NOT_ALLOWED")
+def error(code, protocol="eidolon-comm/1"):
+    return {"protocol": protocol, "error": code, "authorizes_execution": False}
+
+
+def relay(port, method, path, authorization, content_type, body, *, timeout=TIMEOUT, service=None):
+    """(status, JSON value) from the local communication service, or a Core-side refusal.
+
+    service=MONITOR relays the read-only monitoring adapter instead (GET only, same bounds)."""
+    prefix, protocol, methods, unavailable = service or (PREFIX, "eidolon-comm/1", METHODS, "COMM_UNAVAILABLE")
+    if not path.startswith(prefix) or ".." in path or "\\" in path:
+        return 404, error("NOT_FOUND", protocol)
+    if method not in methods:
+        return 405, error("METHOD_NOT_ALLOWED", protocol)
     headers = {"Host": f"127.0.0.1:{port}", "Content-Length": str(len(body))}
     if authorization is not None:
         headers["Authorization"] = authorization
@@ -47,15 +53,15 @@ def relay(port, method, path, authorization, content_type, body, *, timeout=TIME
         raw = response.read(MAX_RESPONSE + 1)
         status = response.status
     except (ConnectionError, socket.timeout, OSError, http.client.HTTPException):
-        return 503, error("COMM_UNAVAILABLE")
+        return 503, error(unavailable, protocol)
     finally:
         connection.close()
     if len(raw) > MAX_RESPONSE:
-        return 502, error("COMM_RESPONSE_TOO_LARGE")
+        return 502, error(unavailable.split("_")[0] + "_RESPONSE_TOO_LARGE", protocol)
     try:
         value = json.loads(raw.decode("utf-8")) if raw else None
     except (ValueError, UnicodeError):
-        return 502, error("COMM_RESPONSE_INVALID")
+        return 502, error(unavailable.split("_")[0] + "_RESPONSE_INVALID", protocol)
     if not isinstance(value, dict):
-        return 502, error("COMM_RESPONSE_INVALID")
+        return 502, error(unavailable.split("_")[0] + "_RESPONSE_INVALID", protocol)
     return status, value

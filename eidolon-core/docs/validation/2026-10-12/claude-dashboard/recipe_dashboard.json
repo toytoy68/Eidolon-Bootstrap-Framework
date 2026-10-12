@@ -1,9 +1,9 @@
 {
- "passed": 19,
- "total": 19,
+ "passed": 29,
+ "total": 29,
  "checks": [
   {
-   "check": "services démarrés (Core :relais, eidolon-comm)",
+   "check": "services démarrés (Core : relais, eidolon-comm, eidolon-monitor)",
    "ok": true,
    "detail": ""
   },
@@ -38,6 +38,26 @@
    "detail": "Personne n'est visible.  (observation non vérifiée)"
   },
   {
+   "check": "1280 : état des machines visible, aucune lecture avant demande",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "1280 : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
+   "ok": true,
+   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Aucun collecteur de sécurité installé.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME "
+  },
+  {
+   "check": "1280 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
+   "ok": true,
+   "detail": "MemoryIndisponibleservice DARME absent ou arrêté | VM101 GPUNon surveilléAucune sonde sur cette machine depuis ce tableau de bord : aucune mesure affichée."
+  },
+  {
+   "check": "1280 : une seule lecture sans actualisation automatique",
+   "ok": true,
+   "detail": "GET"
+  },
+  {
    "check": "1280 : même origine seulement (CSP inchangée)",
    "ok": true,
    "detail": ""
@@ -51,6 +71,11 @@
    "check": "1280 : clé ni stockée ni affichée",
    "ok": true,
    "detail": "[0,0]"
+  },
+  {
+   "check": "1280 : fermeture de la conversation : tableau masqué et vidé",
+   "ok": true,
+   "detail": ""
   },
   {
    "check": "360 : tout éteint par défaut",
@@ -83,6 +108,26 @@
    "detail": "Personne n'est visible.  (observation non vérifiée)"
   },
   {
+   "check": "360 : état des machines visible, aucune lecture avant demande",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "360 : Core gris, jamais présenté comme sécurisé, périmètre et fraîcheur visibles",
+   "ok": true,
+   "detail": "CoreGrisVisibilité partielle : des sources manquent. Ce n'est PAS un état sécurisé. Aucun collecteur de sécurité installé.Périmètre : services locaux (systemd actif) et disque du journal.Statut DARME "
+  },
+  {
+   "check": "360 : Memory indisponible et GPU non surveillé, aucune mesure inventée",
+   "ok": true,
+   "detail": "MemoryIndisponibleservice DARME absent ou arrêté | VM101 GPUNon surveilléAucune sonde sur cette machine depuis ce tableau de bord : aucune mesure affichée."
+  },
+  {
+   "check": "360 : une seule lecture sans actualisation automatique",
+   "ok": true,
+   "detail": "GET"
+  },
+  {
    "check": "360 : même origine seulement (CSP inchangée)",
    "ok": true,
    "detail": ""
@@ -96,6 +141,11 @@
    "check": "360 : clé ni stockée ni affichée",
    "ok": true,
    "detail": "[0,0]"
+  },
+  {
+   "check": "360 : fermeture de la conversation : tableau masqué et vidé",
+   "ok": true,
+   "detail": ""
   }
  ]
 }

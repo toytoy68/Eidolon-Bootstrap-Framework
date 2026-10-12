@@ -743,7 +743,10 @@
   }
 
   function mount(doc, deps) {
-    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) { render(doc, st, deps.missionStatus(st)); } });
+    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
+      render(doc, st, deps.missionStatus(st));
+      if (deps.onPhase) deps.onPhase(st.phase);           // G156: the machine dashboard follows the key
+    } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();

@@ -137,6 +137,18 @@
       </div>
     </section>
 
+    <!-- G156: machine dashboard, shown only while a conversation key is open; read-only, no command. -->
+    <section id="monitor" class="panel monitor" aria-labelledby="monitor-title" hidden>
+      <div class="panel-head">
+        <h2 id="monitor-title">État des machines</h2>
+        <button id="monitor-refresh" class="media-secondary" type="button">Afficher l'état des machines</button>
+      </div>
+      <p class="help">Lecture seule du statut DARME. Le gris n'est jamais un état sécurisé ; aucune action n'est possible d'ici.</p>
+      <label class="monitor-auto"><input id="monitor-auto" type="checkbox"> Actualisation automatique (10 s)</label>
+      <p id="monitor-status" class="status" role="status" aria-live="polite"></p>
+      <ul id="monitor-machines" class="monitor-machines"></ul>
+    </section>
+
     <section id="media-agents" class="panel media-home" aria-labelledby="media-title">
       <div class="panel-head">
         <div><p class="media-eyebrow">Vos espaces créatifs</p><h2 id="media-title">Image &amp; Vidéo</h2></div>

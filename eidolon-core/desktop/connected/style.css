@@ -270,3 +270,23 @@ input[type="password"] {
 .comm-indicator.recording::before { content: "● "; }
 .comm-indicator.busy { font-style: italic; }
 #comm-talk[aria-pressed="true"] { background: #b3261e; color: #fff; }
+
+/* G156: machine dashboard. Colour is never the only signal: the badge always carries its word. */
+.monitor-auto { display: flex; align-items: center; gap: .5rem; margin: .5rem 0; }
+.monitor-machines { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.monitor-card { border: 1px solid var(--line); border-radius: 6px; padding: .75rem; min-width: 0; overflow-wrap: anywhere; }
+.monitor-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
+.monitor-head h3 { margin: 0; font-size: 1rem; }
+.monitor-badge { border-radius: 999px; padding: 0 .6rem; font-weight: 600; border: 2px solid currentColor; }
+.badge-gold { color: #7a5a00; background: #fff3c4; }
+.badge-grey { color: var(--muted); background: transparent; border-style: dashed; }
+.badge-red { color: #fff; background: #a3231b; border-color: #a3231b; }
+.badge-blue { color: #fff; background: #1f4e8c; border-color: #1f4e8c; }
+.badge-stale, .badge-unknown { color: var(--warn); background: var(--stale-bg); border-style: dotted; }
+.monitor-services { padding-left: 1.1rem; margin: .5rem 0; }
+.monitor-services .ok::marker { content: "✓ "; color: var(--ok); }
+.monitor-services .ko { color: var(--bad); }
+.monitor-services .ko::marker { content: "✗ "; }
+.monitor-metrics { display: grid; grid-template-columns: auto 1fr; gap: .2rem .75rem; margin: .5rem 0 0; }
+.monitor-metrics dd { margin: 0; }

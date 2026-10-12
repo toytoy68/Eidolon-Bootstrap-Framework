@@ -121,6 +121,9 @@ class OllamaVision:
         try:
             with self.opener.open(request, timeout=timeout) as response:
                 raw = response.read(256 * 1024 + 1)
+        except urllib.error.HTTPError as exc:
+            exc.close()                               # G160: an error/redirect reply still holds the socket
+            raise CommError("ENGINE_UNAVAILABLE", "Ollama did not answer") from None
         except (urllib.error.URLError, OSError, ValueError):
             raise CommError("ENGINE_UNAVAILABLE", "Ollama did not answer") from None
         if len(raw) > 256 * 1024:

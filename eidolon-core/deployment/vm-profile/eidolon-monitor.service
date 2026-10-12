@@ -1,0 +1,42 @@
+# Eidolon — adaptateur local de surveillance du dashboard (G157). PROFIL À INSTALLER PAR L'OPÉRATEUR.
+# Même compte que eidolon-core-api (lecture des clés appairées, fichiers 0600 vérifiés au propriétaire).
+# Seul droit ajouté : le groupe eidolon-darme, POUR CE PROCESSUS SEULEMENT (le compte toytoy n'y est pas
+# ajouté), afin de lire /run/eidolon-darme/status.sock (0660). L'adaptateur n'envoie que STATUS\n.
+[Unit]
+Description=Eidolon monitor (statut DARME en lecture seule pour le dashboard) — boucle locale
+After=network.target eidolon-darme.service
+Wants=eidolon-darme.service
+
+[Service]
+Type=simple
+User=toytoy
+Group=toytoy
+SupplementaryGroups=eidolon-darme
+WorkingDirectory=/opt/eidolon-core/bootstrap/eidolon-core
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/eidolon-core/bootstrap/eidolon-core/.venv/bin/python -m eidolon_core.monitor_service --state /home/toytoy/eidolon-beta/state --config /home/toytoy/eidolon-monitor/monitor.json --port 8768 --read-token-file /home/toytoy/eidolon-beta/read-token
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+MemoryMax=128M
+CPUQuota=10%
+TasksMax=16
+LimitNOFILE=128
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target

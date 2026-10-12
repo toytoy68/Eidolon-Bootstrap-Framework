@@ -25,16 +25,19 @@ démarre pas.
 
 ```powershell
 # 1. Aperçu : rien n'est connecté
-.\eidolon-tunnel.ps1 -Server <serveur> -User <utilisateur> -Port 8765
+.\eidolon-tunnel.ps1 -Server <serveur> -User <utilisateur> -Port 8767
 
 # 2. Connexion, avec le diagnostic C-009c sur le serveur (chemins relatifs au dossier personnel distant)
-.\eidolon-tunnel.ps1 -Server <serveur> -User <utilisateur> -Port 8765 -Connect -OpenBrowser `
+.\eidolon-tunnel.ps1 -Server <serveur> -User <utilisateur> -Port 8767 -Connect -OpenBrowser `
   -RemoteCore eidolon-recette/eidolon-core -RemoteState eidolon-beta/state -RemoteTokenFile eidolon-beta/read-token
 
 # 3. Arrêt du seul tunnel lancé par ce script pour ce port
-.\eidolon-tunnel.ps1 -Stop -Port 8765
+.\eidolon-tunnel.ps1 -Stop -Port 8767
 ```
 
+- Sur la VM Core actuelle, le port est **8767** (unité `eidolon-core-api.service`). **Un seul
+  tunnel suffit** : la voix (8766) et l'état des machines (8768) passent par le relais de Core
+  sur ce même port. Ne pas ouvrir de tunnel vers 8766 ou 8768 ([dashboard](../../../docs/DASHBOARD-DEPLOYMENT.md)).
 - Le **port** est obligatoire, entre 1024 et 65535. Il doit être **le même
   que `--port` sur le serveur**, car le serveur vérifie
   `Host: 127.0.0.1:<port>`.

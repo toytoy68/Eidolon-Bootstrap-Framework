@@ -279,6 +279,15 @@ class _Handler(BaseHTTPRequestHandler):
             # A spoken sentence (base64 WAV) exceeds MAX_RESPONSE: the relay bounds it itself (4 MiB).
             self._send(status, json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
             return
+        if self.server.monitor_port is not None and self.path.startswith("/v1/monitor/"):
+            # G157: read-only monitoring adapter (DARME status); GET without body, paired key checked there.
+            from .comm_relay import MONITOR, relay
+            if size:
+                raise APIError(413, "REQUEST_TOO_LARGE")
+            status, value = relay(self.server.monitor_port, self.command, self.path, self._one("Authorization"),
+                                  None, b"", timeout=10.0, service=MONITOR)
+            self._json(status, value)
+            return
         if size > (CONVERSATION_MAX_BODY if conversation else MAX_REQUEST):
             raise APIError(413, "REQUEST_TOO_LARGE")
         if conversation:
@@ -419,7 +428,7 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None):
+                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None, monitor_port=None):
         """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -447,6 +456,10 @@ class ReadServer(HTTPServer):
         if comm_port is not None and (type(comm_port) is not int or not 1024 <= comm_port <= 65535):
             raise ValueError("INVALID_COMM_PORT")
         self.comm_port = comm_port          # C147: /v1/comm/* relayed to 127.0.0.1:<comm_port> when set
+        if monitor_port is not None and (type(monitor_port) is not int or not 1024 <= monitor_port <= 65535
+                                         or monitor_port == comm_port):
+            raise ValueError("INVALID_MONITOR_PORT")
+        self.monitor_port = monitor_port    # G157: /v1/monitor/* relayed to the read-only monitoring adapter
         self.idle_timeout_seconds = IDLE_TIMEOUT_SECONDS
         self.read_deadline_seconds = READ_DEADLINE_SECONDS
         self._worker_lock = threading.Lock()
@@ -544,6 +557,8 @@ def main(argv=None):
                         help="Active explicitement le rappel mémoire via tunnel SSH localhost")
     parser.add_argument("--comm-port", type=int, metavar="PORT",
                         help="relaie /v1/comm/* vers le service local eidolon-comm (voix, synthèse, image)")
+    parser.add_argument("--monitor-port", type=int, metavar="PORT",
+                        help="relaie /v1/monitor/* vers l'adaptateur local de surveillance (lecture seule)")
     parser.add_argument("--memory-bridge-port", type=int, default=18765,
                         help="Port local du tunnel SSH Memory Bridge (défaut 18765)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
@@ -595,7 +610,8 @@ def main(argv=None):
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
                         media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
-                        memory=memory, comm_port=args.comm_port) as server:
+                        memory=memory, comm_port=args.comm_port,
+                        monitor_port=args.monitor_port) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality
