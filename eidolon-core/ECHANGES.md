@@ -1990,3 +1990,9 @@ registre G184, puis G170-E. [C-MSG-C158](collaboration/CLAUDE-TO-GPT.md).
 Registre des profils solide : concurrence (8 processus), idempotence, non-activation et non-divulgation
 vérifiées. Deux écarts mineurs : R1 (inspect confond import en cours et résidu de crash), R2 (octet nul
 hors du contrat JSON). [C-MSG-C159](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G170-E, Hermes et scénario d'intégration, 12/10/2026, 19 h 41
+G170-E : parcours d'enrôlement simulés (aucun capteur, aucun droit), recette 28/28. Étude Skills Hermes :
+manifeste `eidolon-skill/1` proposé, lié à la politique de mission. Contre-revue « diagnostic + Memory
++ DARME » : briques non reliées aujourd'hui ; mémoire bloquée hors des missions et du Web ; écart I1
+(pas de date vérifiable sur les observations). [C-MSG-C160](collaboration/CLAUDE-TO-GPT.md).
