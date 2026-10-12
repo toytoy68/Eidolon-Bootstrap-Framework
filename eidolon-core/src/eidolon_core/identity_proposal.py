@@ -22,11 +22,12 @@ from datetime import datetime, timedelta, timezone
 import math
 import re
 
+from .profile_plan import PROFILE_ID as PROFILE          # the server grammar, 1-64 characters (G185)
+
 SCHEMA = "eidolon-identity-proposal/1"
 MODALITIES = ("voice", "face")
 STATES = ("known", "ambiguous", "unknown", "too_short", "silence", "several_people", "no_face", "stale",
           "unavailable", "not_enrolled", "uncalibrated")
-PROFILE = re.compile(r"[a-z][a-z0-9-]{1,47}")
 SHA256 = re.compile(r"[0-9a-f]{64}")
 FUTURE_TOLERANCE = timedelta(seconds=5)
 MAX_TEMPLATES = 16                                   # per profile and modality

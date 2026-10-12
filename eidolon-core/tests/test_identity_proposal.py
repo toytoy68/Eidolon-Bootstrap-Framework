@@ -136,6 +136,18 @@ class ProposalStates(unittest.TestCase):
         self.assertNotIn("1.0", repr(VREG))
         self.assertIn("profil-alpha", repr(VREG))
 
+    def test_profile_ids_follow_the_server_grammar_at_both_ends(self):
+        from eidolon_core.profile_plan import PROFILE_ID
+        self.assertIs(P.PROFILE, PROFILE_ID)
+        for profile in ("a", "a" + "-" * 62 + "z"):                       # 1 and 64 characters accepted
+            registry = P.Registry("voice", {profile: [(1.0, 0.0, 0.0, 0.0)]}, engine=VOICE)
+            out = propose_voice(voice(), registry=registry)
+            self.assertEqual((out["state"], out["profile_id"]), ("known", profile))
+            self.assertEqual(json.loads(json.dumps(out))["candidates"][0]["profile_id"], profile)   # round trip
+        for profile in ("", "a" * 65, "1abc", "A", "ab_c"):
+            with self.assertRaises(ValueError):
+                P.Registry("voice", {profile: [(1.0, 0.0)]}, engine=VOICE)
+
     def test_calibration_and_registry_validate_their_inputs(self):
         for bad in (dict(model_sha256="x"), dict(threshold=2.0), dict(score_bounds=(1.0, -1.0)),
                     dict(margin=-0.1), dict(validity_s=0), dict(threshold_id="a b"), dict(modality="iris")):
