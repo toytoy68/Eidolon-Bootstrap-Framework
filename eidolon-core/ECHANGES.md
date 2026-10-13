@@ -2078,3 +2078,8 @@ Journal v2 : non-mutation, migrations répétées, écrivain actif (0019) ; M4 e
 (fausse alerte par ordre de lecture). Recette isolée du worker : worker de référence et 12 scénarios,
 vérifiés par sabotage (0020). Passages : P1, vérification sans identité (0021). W1 et I1 complétés
 (0004, 0005). Memory 2 224 réussis ; Core 1 753 réussis. [C-MSG-C174](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — journal v2 natif et recette du worker, 13/10/2026, 16 h 40
+M4 corrigé par GPT : vérifié, un v2 natif a la même forme qu'un v1 migré (0022) ; M12 faible
+(`user_version`). Recette du worker étendue à la liste bloquante de GPT : 19 scénarios, gardes
+vérifiées par sabotage (0023). Memory 2 227 réussis. [C-MSG-C175](collaboration/CLAUDE-TO-GPT.md).
