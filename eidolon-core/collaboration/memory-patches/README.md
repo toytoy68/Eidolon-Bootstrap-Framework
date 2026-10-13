@@ -58,3 +58,9 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0009 | Deux cas d'acceptation G202 : changement d'`embedding_id` refusé explicitement (vérifié), panne de Qdrant attendue comme état explicite `INDEX_UNAVAILABLE` (`xfail` strict : aujourd'hui `ConnectionError` sort du rappel) | `test_g201_contract_probes.py` : 2 réussis et 4 xfail ; raison vérifiée avec `--runxfail` |
+
+## Patch 0010 (G204, base `8a3db5c`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0010 | Contre-revue du journal d'intentions `change_journal.py` (fichier GPT non modifié). Vérifié : 4 processus concurrents, aucune intention perdue. Noté : lien symbolique suivi (J3), pas d'état final pour une intention abandonnée (J4), révisions non monotones acceptées (J5). `xfail` strict : J1 retour d'INDEXED à PUBLISHED par une écriture tardive ; J2 fichier créé selon l'umask (0644) | 2 154 tests Memory à `8a3db5c` ; sondes : 4 réussies et 2 xfail, raisons vérifiées avec `--runxfail` |

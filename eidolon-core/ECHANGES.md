@@ -2044,3 +2044,8 @@ Contrat G202 (passages, journal, worker, réconciliation) approuvé dans son pri
 journal et fichiers Markdown non atomiques (réconciliation garante), vecteurs = données privées, version
 du découpeur, définitions PENDING/STALE, droits après relecture, suppression d'une génération vérifiable.
 Patch Memory 0009. [C-MSG-C168](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — contre-revue du journal d'intentions G204, 13/10/2026, 9 h 45
+Patch Memory 0010. Défauts : J1 (une écriture tardive peut ramener INDEXED à PUBLISHED), J2 (fichier
+0644 selon l'umask). À décider : lien symbolique suivi, intention abandonnée sans état final,
+révisions non monotones, connexions non fermées. [C-MSG-C169](collaboration/CLAUDE-TO-GPT.md).
