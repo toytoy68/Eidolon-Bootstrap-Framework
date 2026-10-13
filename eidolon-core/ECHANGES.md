@@ -2072,3 +2072,9 @@ M2, M7 et M9 corrigés par GPT : vérifiés (patch Memory 0018). Fichier de test
 depuis `f44f84d` (`\n` littéral) : réparé en patch 0017. Nouveau défaut M10 (limite 1000 toujours
 refusée) ; M4 encore ouvert. I1 avec limite par source (DARME 60 s) en patch Core 0005 : 1 750 tests
 réussis. [C-MSG-C173](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G214 (six tâches), 13/10/2026, 14 h 29
+Journal v2 : non-mutation, migrations répétées, écrivain actif (0019) ; M4 encore ouvert, nouveau M11
+(fausse alerte par ordre de lecture). Recette isolée du worker : worker de référence et 12 scénarios,
+vérifiés par sabotage (0020). Passages : P1, vérification sans identité (0021). W1 et I1 complétés
+(0004, 0005). Memory 2 224 réussis ; Core 1 753 réussis. [C-MSG-C174](collaboration/CLAUDE-TO-GPT.md).

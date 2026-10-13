@@ -81,7 +81,7 @@ index 2c48d13..63f0dc5 100644
              raise WebTransportError("DESTINATION_REFUSED", decision.code)
          if decision.url in seen:
 diff --git a/eidolon-core/tests/test_web_g187_probes.py b/eidolon-core/tests/test_web_g187_probes.py
-index 91e54e4..02cadc2 100644
+index 91e54e4..a22053e 100644
 --- a/eidolon-core/tests/test_web_g187_probes.py
 +++ b/eidolon-core/tests/test_web_g187_probes.py
 @@ -54,7 +54,6 @@ class TransportAgainstG187(unittest.TestCase):
@@ -92,7 +92,7 @@ index 91e54e4..02cadc2 100644
      def test_a_slow_resolver_cannot_exceed_the_total_budget(self):
          """Claude finding W1: name resolution runs before and outside the deadline. system_resolver calls
          getaddrinfo, which has no timeout (resolv.conf retries can last tens of seconds), so total_seconds
-@@ -71,6 +70,40 @@ class TransportAgainstG187(unittest.TestCase):
+@@ -71,6 +70,78 @@ class TransportAgainstG187(unittest.TestCase):
              pass
          self.assertLess(time.monotonic() - start, 0.6)
  
@@ -122,13 +122,51 @@ index 91e54e4..02cadc2 100644
 +                    fetch("https://public.example/", policy=WebPolicy(), resolver=hanging,
 +                          connector=Script([ok()]), limits=limits)
 +                codes.append(caught.exception.code)
-+            self.assertEqual(len(calls), web_transport.DNS_MAX_IN_FLIGHT)      # no thread beyond the cap
-+            self.assertEqual(codes[-1], "DESTINATION_REFUSED")                # refused, never contacted
++            cap = web_transport.DNS_MAX_IN_FLIGHT
++            self.assertEqual(len(calls), cap)                                 # no thread beyond the cap
++            self.assertEqual(codes, ["DEADLINE_EXCEEDED"] * cap + ["DESTINATION_REFUSED"] * 3)
++            start = time.monotonic()                                          # saturated: refused at once
++            with self.assertRaises(WebTransportError):
++                fetch("https://public.example/", policy=WebPolicy(), resolver=hanging, connector=Script([ok()]),
++                      limits=TransportLimits(total_seconds=5, connect_seconds=1, read_seconds=1))
++            self.assertLess(time.monotonic() - start, 0.5)
 +        finally:
 +            release.set()
 +        self.assertTrue(no_resolver_thread_left())              # every slot is given back
-+        fetch("https://public.example/", policy=WebPolicy(), resolver=lambda h, p: [PUBLIC],
-+              connector=Script([ok()]), limits=TransportLimits(total_seconds=2, connect_seconds=1, read_seconds=1))
++        for _ in range(web_transport.DNS_MAX_IN_FLIGHT + 2):                 # back to normal, repeatedly
++            fetch("https://public.example/", policy=WebPolicy(), resolver=lambda h, p: [PUBLIC],
++                  connector=Script([ok()]), limits=TransportLimits(total_seconds=2, connect_seconds=1, read_seconds=1))
++        self.assertTrue(no_resolver_thread_left())
++
++    def test_one_slot_freed_lets_exactly_one_resolution_through(self):
++        """W1 recovery (G214-4): with the cap reached, freeing one hanging resolution frees exactly one slot."""
++        import threading
++        from eidolon_core import web_transport
++        gates = [threading.Event() for _ in range(web_transport.DNS_MAX_IN_FLIGHT)]
++        pending = list(gates)
++
++        def hanging(host, port):
++            pending.pop(0).wait(10)
++            return [PUBLIC]
++        quick = TransportLimits(total_seconds=0.05, connect_seconds=0.05, read_seconds=0.05)
++        try:
++            for _ in gates:
++                with self.assertRaises(WebTransportError):
++                    fetch("https://public.example/", policy=WebPolicy(), resolver=hanging, connector=Script([ok()]),
++                          limits=quick)
++            gates[0].set()
++            deadline = time.monotonic() + 5
++            while (sum(t.name == "eidolon-dns" for t in threading.enumerate()) >= len(gates)
++                   and time.monotonic() < deadline):
++                time.sleep(0.01)
++            normal = TransportLimits(total_seconds=2, connect_seconds=1, read_seconds=1)
++            fetch("https://public.example/", policy=WebPolicy(), resolver=lambda h, p: [PUBLIC],
++                  connector=Script([ok()]), limits=normal)
++            fetch("https://public.example/", policy=WebPolicy(), resolver=lambda h, p: [PUBLIC],
++                  connector=Script([ok()]), limits=normal)                    # sequential: the slot is reused
++        finally:
++            for gate in gates:
++                gate.set()
 +
  
  if __name__ == "__main__":

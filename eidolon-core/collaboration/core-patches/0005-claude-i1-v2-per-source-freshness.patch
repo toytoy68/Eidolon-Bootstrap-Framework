@@ -116,10 +116,10 @@ index a7455b0..9dcdd26 100644
          with self.assertRaises(ContractError):
 diff --git a/eidolon-core/tests/test_observation_freshness.py b/eidolon-core/tests/test_observation_freshness.py
 new file mode 100644
-index 0000000..46eeaea
+index 0000000..525ee0e
 --- /dev/null
 +++ b/eidolon-core/tests/test_observation_freshness.py
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,111 @@
 +# ==========================================================
 +# Projet      : Eidolon Core
 +# Organisation: Eidolon Core Technologies (ECT)
@@ -169,6 +169,27 @@ index 0000000..46eeaea
 +        for bad in (0, -1, float("nan"), True, "60", {"media-analysis": 0}):
 +            with self.assertRaises(ContractError, msg=repr(bad)):
 +                freshness(two_minutes, max_age=bad)
++
++    def test_time_zones_and_boundaries(self):
++        """G214-5: offsets, Z suffix, exact limits and clock skew."""
++        self.assertEqual(freshness("2026-10-12T12:08:00-05:00"), "fresh")           # 17:08 UTC
++        self.assertEqual(freshness("2026-10-12T17:08:00Z"), "fresh")
++        self.assertEqual(freshness("2026-10-13T02:38:00+09:30"), "fresh")           # 17:08 UTC
++        self.assertEqual(freshness("2026-10-12T17:05:00+00:00"), "fresh")           # exactly 300 s
++        self.assertEqual(freshness("2026-10-12T17:04:59+00:00"), "stale")
++        self.assertEqual(freshness("2026-10-12T17:09:00+00:00", "darme"), "fresh")  # exactly 60 s
++        self.assertEqual(freshness("2026-10-12T17:08:59+00:00", "darme"), "stale")
++        self.assertEqual(freshness("2026-10-12T17:11:00+00:00"), "fresh")           # +60 s: skew tolerated
++        self.assertEqual(freshness("2026-10-12T17:11:01+00:00"), "unknown")         # beyond skew
++        self.assertEqual(freshness("2027-01-01T00:00:00+00:00", "darme"), "unknown")
++
++    def test_old_observations_keep_working(self):
++        """G214-5: the pre-I1 shape (no observed_at) is accepted as unknown; other extra keys stay refused."""
++        legacy = {"source": "media-analysis", "reference": "job-1", "state": "RESULT_UNVERIFIED", "text": "x"}
++        self.assertEqual(dg.validate_observations([legacy], now=NOW),
++                         [dict(legacy, freshness="unknown")])
++        with self.assertRaises(ContractError):
++            dg.validate_observations([dict(legacy, extra="y")], now=NOW)
 +
 +    def test_an_undated_observation_is_unknown_never_fresh(self):
 +        self.assertEqual(dg.validate_observations([observation()], now=NOW)[0]["freshness"], "unknown")
