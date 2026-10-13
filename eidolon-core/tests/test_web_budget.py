@@ -48,3 +48,10 @@ class WebBudgetTests(unittest.TestCase):
             self.budget.reserve("r1","alice","m1","web.search","")
         with self.assertRaises(BudgetError):
             self.budget.finish("unknown","SUCCEEDED")
+
+    def test_invalid_clock_rejected_without_reservation(self):
+        for invalid in (float("nan"), float("inf"), -1.0):
+            budget = WebBudget(self.path, self.key, clock=lambda value=invalid: value)
+            with self.assertRaises(BudgetError):
+                budget.reserve("clockbad", "alice", "m1", "web.search", "q")
+        self.assertIsNone(self.budget.inspect("clockbad"))
