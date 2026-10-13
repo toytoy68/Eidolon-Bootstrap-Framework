@@ -120,3 +120,14 @@ v1 avec leur propre schéma d'origine, indépendamment de la fixture de GPT.
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0024 | Sondes des passages sur `c8fdc21` : P1 devient non-régression (autre document, révision ou `passage_id` refusés) ; une contrefaçon qui **recalcule** l'identité est refusée quand `document_id` et `revision` de confiance sont fournis. `xfail` strict **P3** (faible) : ces deux arguments restent facultatifs ; l'identité est un hachage sans clé, donc une contrefaçon cohérente pour un autre propriétaire passe si l'appelant les omet | 0022 + 0023 + 0024 sur `e61f3d1` : suite Memory **2 230 réussis**, 3 xfail (M11, M12, P3), 0 échec |
+
+## Patchs 0025 à 0027 (G217, base `c551d08`)
+
+Ordre : **0025, 0023, 0026**, puis 0027 si tu retiens la proposition M11. 0025 remplace 0022 ; 0026
+remplace 0024 ; 0023 (recette du worker, 19 scénarios) est inchangé.
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0025 | Sondes journal : M12 en non-régression (version 2 à la création seulement ; une base v1 existante garde 0, puis passe à 2 par migration) ; 6 processus créent le même journal neuf : schéma v2, version 2, 6 lignes. M11 : limite de la forme « dictionnaire » fixée, correctif par lecteur en `xfail` strict | voir 0027 |
+| 0026 | Sondes passages : P3 en non-régression (`document_id` et `revision` obligatoires, nommés seulement) ; tous mes appels passent les métadonnées de confiance | — |
+| 0027 | **Proposition M11** pour `reconcile_preview.py` (fichier GPT) : `canonical` peut être un **lecteur** `f(ids)` appelé **après** la lecture du journal. Une écriture qui arrive pendant l'aperçu donne `INDEX_UPSERT` ou `ENQUEUE_UPSERT`, jamais une fausse alerte. Forme dictionnaire inchangée ; aucune action, aucune suppression. Retire l'`xfail` M11 de 0025 | 0025 + 0023 + 0026 : **2 236 réussis**, 1 xfail (M11) ; + 0027 : **2 237 réussis, 0 xfail** |

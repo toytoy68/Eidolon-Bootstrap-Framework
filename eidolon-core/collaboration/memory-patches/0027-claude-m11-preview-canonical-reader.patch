@@ -1,0 +1,68 @@
+From 48ec57dce95e2f2e05e2583ea79289cffd2508ba Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 14:55:36 +0000
+Subject: [PATCH] fix(memory): M11 preview may take a canonical reader called
+ after the journal read
+
+PROPOSAL (Claude) for GPT's reconcile_preview.py. preview_reconciliation keeps
+the dict form; it now also accepts a reader f(ids) -> {id: Canonical|ABSENT}
+called AFTER pending(). A write that lands during the preview is then seen
+published against its own canon (INDEX_UPSERT or ENQUEUE_UPSERT), never as a
+false INTEGRITY_ALERT. No action, no deletion, read-only as before.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ core/indexing/reconcile_preview.py                     | 10 +++++++++-
+ .../claude_memory_eval/test_journal_v2_probes_g209.py  |  4 +---
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/core/indexing/reconcile_preview.py b/core/indexing/reconcile_preview.py
+index 16cca0c..f761233 100644
+--- a/core/indexing/reconcile_preview.py
++++ b/core/indexing/reconcile_preview.py
+@@ -25,9 +25,13 @@ class ReconcilePreview:
+ def preview_reconciliation(journal: ChangeJournal, canonical: dict, indexed: dict,
+                            *, now: float | None = None, grace_seconds: float = 600,
+                            limit: int = 100):
++    """canonical: a verified {id: Canonical | ABSENT} snapshot, or (M11) a reader ``f(ids) -> that dict``
++    called AFTER the journal is read, so a write landing during the preview is never seen PUBLISHED against
++    an older canon. The reader receives the pending and indexed ids; it may return more (manifest listing)."""
+     if not isinstance(journal, ChangeJournal):
+         raise ValueError("journal required")
+-    if type(canonical) is not dict or type(indexed) is not dict:
++    reader = canonical if callable(canonical) else None
++    if (reader is None and type(canonical) is not dict) or type(indexed) is not dict:
+         raise ValueError("verified snapshots required")
+     if type(limit) is not int or not 1 <= limit <= 999:
+         raise ValueError("invalid limit")
+@@ -46,6 +50,10 @@ def preview_reconciliation(journal: ChangeJournal, canonical: dict, indexed: dic
+             if not math.isfinite(intent.created) or intent.created > now:
+                 raise ValueError("invalid intent timestamp")
+             ages[intent.sequence] = now - intent.created
++    if reader is not None:
++        canonical = reader(frozenset(indexed) | {intent.information_id for intent in pending})
++        if type(canonical) is not dict:
++            raise ValueError("verified snapshots required")
+     actions = reconcile_plan(pending, canonical, indexed, ages=ages, grace_seconds=grace_seconds)
+     unknown_ids = (set(indexed) | {intent.information_id for intent in pending}) - set(canonical)
+     review = bool(unknown_ids) or any(action.kind in ("INTEGRITY_ALERT", "WAIT", "CLOSE_ABANDONED") for action in actions)
+diff --git a/tests/claude_memory_eval/test_journal_v2_probes_g209.py b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+index e4d1c50..8b845e3 100644
+--- a/tests/claude_memory_eval/test_journal_v2_probes_g209.py
++++ b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+@@ -247,10 +247,8 @@ def test_with_a_snapshot_dict_a_write_in_between_gives_a_false_alert(tmp_path):
+     assert kinds == {"INTEGRITY_ALERT"}
+ 
+ 
+-@pytest.mark.xfail(strict=True, raises=ValueError, reason="Claude finding M11 (G214, low): preview only takes a "
+-                   "canonical dict built before it reads the journal. Proposed fix (core patch in "
+-                   "collaboration/memory-patches/0027): accept a reader called after pending().")
+ def test_a_canonical_reader_called_after_the_journal_removes_the_false_alert(tmp_path):
++    """M11 (G214), fixed by patch 0027: the canon is read after the journal."""
+     from core.indexing.reconcile_plan import Canonical
+     journal, _ = v2_journal(tmp_path)
+     v2 = hashlib.sha256(b"v2").hexdigest()
+-- 
+2.43.0
+
