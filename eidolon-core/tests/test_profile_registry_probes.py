@@ -5,8 +5,7 @@
 # Description : Contre-revue Claude du registre G184 : concurrence, idempotence, résidus, non-activation, non-divulgation
 # Standard    : Eidolon Presentation Standard v1
 # ==========================================================
-"""Independent probes (Claude, G185 item 2). Positive tests pin what holds; strict xfail documents a finding
-and turns red the day it is resolved. profile_registry.py itself is not modified (Codex's file)."""
+"""Independent probes (Claude, G185 item 2). Positive tests pin what holds; R1 and R2 were findings, fixed in dace7e7. profile_registry.py itself is not modified (Codex's file)."""
 import contextlib
 import fcntl
 import io
@@ -142,9 +141,8 @@ class RegistryProbes(unittest.TestCase):
         again = registry.prepare_registry(self.plan, self.destination, apply=True)
         self.assertEqual((first["operation"], again["operation"]), ("imported", "already_prepared"))
 
-    @unittest.expectedFailure
     def test_inspect_during_an_import_in_flight_is_not_reported_as_a_crash_residue(self):
-        """Claude finding R1: inspect does not look at the writer lock, so a temporary file of a LIVE import
+        """Claude finding R1, fixed in dace7e7 (core-patches/0001), now a regression test: inspect does not look at the writer lock, so a temporary file of a LIVE import
         is reported as PROFILE_REGISTRY_PENDING, whose documented remedy is to examine and remove a crash
         residue. Expected: a transient BUSY (e.g. a non-blocking shared try-lock on an existing lock file)."""
         registry.prepare_registry(self.plan, self.destination, apply=True)
@@ -156,9 +154,8 @@ class RegistryProbes(unittest.TestCase):
             registry.inspect_registry(self.destination)
         self.assertEqual(str(caught.exception), "PROFILE_REGISTRY_BUSY")
 
-    @unittest.expectedFailure
     def test_cli_turns_every_invalid_path_into_a_json_error(self):
-        """Claude finding R2 (minor): a path os.open rejects with ValueError (embedded NUL, reachable through
+        """Claude finding R2 (minor), fixed in dace7e7 (core-patches/0001), now a regression test: a path os.open rejects with ValueError (embedded NUL, reachable through
         the Python API, not a shell) escapes main() as a traceback instead of the JSON error contract."""
         code, text = _cli("inspect", "--directory", str(self.root) + "/a\x00b")
         self.assertEqual((code, json.loads(text)["ok"]), (1, False))

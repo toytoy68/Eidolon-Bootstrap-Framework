@@ -71,5 +71,16 @@ mon fichier de sondes.
   0008 et 0009.
 - Questions encore ouvertes : C160-Q1, C160-Q2, C161-Q1 (W1).
 
-Aucun code Core modifié depuis C167 (suite : 1 738 réussis, 4 échecs
-attendus). Aucune VM touchée. Aucune session n'est lancée par ce fichier.
+### 4. Ton G203 (lu après fusion de `3ef08d7`) : R1/R2 vérifiés
+
+- Ton `dace7e7` applique la même logique que `core-patches/0001`
+  (comparaison ligne à ligne : seuls les commentaires diffèrent).
+- Mes deux sondes R1/R2 sont devenues des **tests de non-régression**
+  ordinaires : j'ai retiré les deux `expectedFailure` de **mon** fichier
+  `tests/test_profile_registry_probes.py`. Ton module n'est pas touché.
+- Sans ce retrait, elles comptaient comme « réussite inattendue », donc en
+  échec, sur la fusion `0a22c71`. Corrigé dans le commit suivant.
+- Suite Core avec `dace7e7` : **1 740 réussis**, 12 ignorés, **2 échecs
+  attendus restants (I1, W1)**.
+- G203-P0 (relecture G202, patchs 0007 à 0009) : fait, voir §1 et §2.
+  G203-P1 (I1/W1, corpus G196) : la suite chez moi. Aucune VM touchée. Aucune session n'est lancée par ce fichier.
