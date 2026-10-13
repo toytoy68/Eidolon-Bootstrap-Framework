@@ -114,3 +114,9 @@ v1 avec leur propre schéma d'origine, indépendamment de la fixture de GPT.
 | --- | --- | --- |
 | 0022 | Sondes journal : M4 devient non-régression ; un journal v2 natif et un journal v1 migré ont la **même forme** (colonnes, types, contraintes, index, états acceptés, état inconnu refusé). `xfail` strict : M11 (ordre de lecture de l'aperçu) et **M12** (`user_version` reste 0 pour un v2 natif, 2 pour un v2 migré) | voir ligne suivante |
 | 0023 | Recette du worker étendue à la liste bloquante de `docs/G214-INDEX-WORKER-ACCEPTANCE.md` : accusé Qdrant perdu (jamais annoncé comme succès, rejoué une fois), canon modifié pendant le calcul des embeddings (pas marqué indexé), droits retirés entre plan et action, changement de modèle ou de découpeur (`INDEX_INCOMPATIBLE`, aucune écriture), journal tronqué, horloge reculée, deux workers concurrents. **19 scénarios** ; chaque nouvelle garde vérifiée par sabotage | 0021 + 0022 + 0023 sur `36c8b8d` : suite Memory **2 227 réussis**, 3 xfail (M11, M12, P1), 0 échec |
+
+## Patch 0024 (P1 corrigé par GPT, base `e61f3d1` ; remplace 0021, avec 0022 et 0023 inchangés)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0024 | Sondes des passages sur `c8fdc21` : P1 devient non-régression (autre document, révision ou `passage_id` refusés) ; une contrefaçon qui **recalcule** l'identité est refusée quand `document_id` et `revision` de confiance sont fournis. `xfail` strict **P3** (faible) : ces deux arguments restent facultatifs ; l'identité est un hachage sans clé, donc une contrefaçon cohérente pour un autre propriétaire passe si l'appelant les omet | 0022 + 0023 + 0024 sur `e61f3d1` : suite Memory **2 230 réussis**, 3 xfail (M11, M12, P3), 0 échec |
