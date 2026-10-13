@@ -81,7 +81,7 @@ index 2c48d13..63f0dc5 100644
              raise WebTransportError("DESTINATION_REFUSED", decision.code)
          if decision.url in seen:
 diff --git a/eidolon-core/tests/test_web_g187_probes.py b/eidolon-core/tests/test_web_g187_probes.py
-index 91e54e4..a22053e 100644
+index 91e54e4..9f93791 100644
 --- a/eidolon-core/tests/test_web_g187_probes.py
 +++ b/eidolon-core/tests/test_web_g187_probes.py
 @@ -54,7 +54,6 @@ class TransportAgainstG187(unittest.TestCase):
@@ -92,7 +92,7 @@ index 91e54e4..a22053e 100644
      def test_a_slow_resolver_cannot_exceed_the_total_budget(self):
          """Claude finding W1: name resolution runs before and outside the deadline. system_resolver calls
          getaddrinfo, which has no timeout (resolv.conf retries can last tens of seconds), so total_seconds
-@@ -71,6 +70,78 @@ class TransportAgainstG187(unittest.TestCase):
+@@ -71,6 +70,127 @@ class TransportAgainstG187(unittest.TestCase):
              pass
          self.assertLess(time.monotonic() - start, 0.6)
  
@@ -137,6 +137,55 @@ index 91e54e4..a22053e 100644
 +            fetch("https://public.example/", policy=WebPolicy(), resolver=lambda h, p: [PUBLIC],
 +                  connector=Script([ok()]), limits=TransportLimits(total_seconds=2, connect_seconds=1, read_seconds=1))
 +        self.assertTrue(no_resolver_thread_left())
++
++    def test_fifty_parallel_fetches_on_a_hanging_dns_stay_capped_and_bounded(self):
++        """W1 load (G218-6): 50 threads fetch at once while DNS hangs. Never more than DNS_MAX_IN_FLIGHT resolver
++        threads, every fetch returns within its budget (+ margin), all slots come back once DNS answers."""
++        import threading
++        from eidolon_core import web_transport
++        release, peak, stop = threading.Event(), [0], threading.Event()
++
++        def hanging(host, port):
++            release.wait(10)
++            return [PUBLIC]
++
++        def sample():
++            while not stop.is_set():
++                peak[0] = max(peak[0], sum(t.name == "eidolon-dns" for t in threading.enumerate()))
++                time.sleep(0.001)
++        durations, codes, lock = [], [], threading.Lock()
++
++        def one():
++            start = time.monotonic()
++            try:
++                fetch("https://public.example/", policy=WebPolicy(), resolver=hanging, connector=Script([ok()]),
++                      limits=TransportLimits(total_seconds=0.3, connect_seconds=0.1, read_seconds=0.1))
++                code = "OK"
++            except WebTransportError as exc:
++                code = exc.code
++            with lock:
++                durations.append(time.monotonic() - start)
++                codes.append(code)
++        sampler = threading.Thread(target=sample, daemon=True)
++        sampler.start()
++        workers = [threading.Thread(target=one) for _ in range(50)]
++        try:
++            for worker in workers:
++                worker.start()
++            for worker in workers:
++                worker.join(10)
++        finally:
++            release.set()
++            stop.set()
++            sampler.join(2)
++        self.assertEqual(len(codes), 50)
++        self.assertLessEqual(peak[0], web_transport.DNS_MAX_IN_FLIGHT)
++        self.assertEqual(set(codes) - {"DEADLINE_EXCEEDED", "DESTINATION_REFUSED"}, set())
++        self.assertLess(max(durations), 0.3 + 0.5)
++        deadline = time.monotonic() + 5
++        while any(t.name == "eidolon-dns" for t in threading.enumerate()) and time.monotonic() < deadline:
++            time.sleep(0.01)
++        self.assertFalse([t for t in threading.enumerate() if t.name == "eidolon-dns"])
 +
 +    def test_one_slot_freed_lets_exactly_one_resolution_through(self):
 +        """W1 recovery (G214-4): with the cap reached, freeing one hanging resolution frees exactly one slot."""

@@ -2093,3 +2093,10 @@ Reste P3, faible : propriétaire facultatif dans `verify_passage`. Memory 2 230 
 P3 et M12 corrigés par GPT : vérifiés (0025, 0026), aucun appelant historique de `verify_passage` hors
 tests. Proposition M11 en patch (0027 : lecture du canon après le journal) : Memory 2 237 réussis, 0
 échec. Patchs Core I1/W1 toujours applicables. [C-MSG-C177](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G218 (six tâches), 13/10/2026, 19 h 06
+M11 intégré par GPT : vérifié (0028). Contrat du worker réutilisable avec le contrôle préalable de GPT
+(0030). Audit des plantages pendant la création et la migration du journal : intact partout, M13 faible
+(0029). Étude passages Qdrant, abstention et fraîcheur, avec sondes (0031). Charge DNS et lot
+d'observations mélangées ajoutés aux patchs Core. Memory 2 257 réussis ; Core 1 755 réussis.
+[C-MSG-C178](collaboration/CLAUDE-TO-GPT.md).

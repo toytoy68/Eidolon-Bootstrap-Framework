@@ -116,10 +116,10 @@ index a7455b0..9dcdd26 100644
          with self.assertRaises(ContractError):
 diff --git a/eidolon-core/tests/test_observation_freshness.py b/eidolon-core/tests/test_observation_freshness.py
 new file mode 100644
-index 0000000..525ee0e
+index 0000000..6e5f702
 --- /dev/null
 +++ b/eidolon-core/tests/test_observation_freshness.py
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,125 @@
 +# ==========================================================
 +# Projet      : Eidolon Core
 +# Organisation: Eidolon Core Technologies (ECT)
@@ -210,6 +210,20 @@ index 0000000..525ee0e
 +        before = dict(item)
 +        dg.validate_observations([item], now=NOW)
 +        self.assertEqual(item, before)
++
++
++class MixedBatch(unittest.TestCase):
++    def test_five_mixed_observations_are_each_labelled_independently(self):
++        """G218-6: the maximum batch, mixed sources and ages; one label per item, order kept."""
++        batch = [observation("darme", observed_at="2026-10-12T17:09:30+00:00"),          # 30 s: fresh
++                 observation("darme", observed_at="2026-10-12T17:08:00+00:00"),          # 120 s: stale (60 s)
++                 observation("media-analysis", observed_at="2026-10-12T17:08:00+00:00"), # 120 s: fresh (300 s)
++                 observation("media-analysis"),                                          # undated
++                 observation("darme", observed_at="2026-10-12T18:00:00+00:00")]          # future
++        labels = [o["freshness"] for o in dg.validate_observations(batch, now=NOW)]
++        self.assertEqual(labels, ["fresh", "stale", "fresh", "unknown", "unknown"])
++        with self.assertRaises(ContractError):
++            dg.validate_observations(batch + [observation()], now=NOW)                 # six: refused
 +
 +
 +class FreshnessReachesTheModel(Base):

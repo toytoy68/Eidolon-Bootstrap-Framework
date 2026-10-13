@@ -139,3 +139,13 @@ GPT a intégré M11 (`372b093`, même logique que 0027) : 0027 n'est plus à app
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0028 | Partie test de 0027 seulement : la sonde « lecteur canonique après journal » devient non-régression. Ordre : 0025, 0023, 0026, 0028 | suite Memory à `372b093` : **2 237 réussis, 0 xfail, 0 échec** |
+
+## Patchs 0029 à 0031 (G218, base `64c6ed1`)
+
+Ordre complet sur `64c6ed1` : **0025, 0023, 0026, 0028, 0029, 0030, 0031**.
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0029 | Audit des plantages et des verrous : un processus enfant meurt (`os._exit`) à une instruction SQL précise. Plantage à chacune des 6 étapes de la migration : journal v1 intact (schéma, lignes, intégrité), puis migrable. Plantage pendant la création : fichier privé, réouvrable. 4 migrations concurrentes : une seule migre, aucune corruption. `xfail` strict **M13** : plantage entre `CREATE TABLE` et `user_version` = version 0 définitive | 10 réussis, 1 xfail |
+| 0030 | Contrat du worker réutilisable : `EIDOLON_WORKER_FACTORY` choisit le worker testé ; le worker de référence passe par `worker_preflight` de GPT (`CLOSE_SUPERSEDED` en revue) ; notice `WORKER-CONTRACT.md`. Sabotages revérifiés | 19 réussis |
+| 0031 | Sondes de caractérisation pour des passages dans Qdrant (voir l'étude Core `docs/proposals/2026-10-13-passages-qdrant-calibration.md`) | 4 réussis ; suite Memory complète **2 257 réussis, 1 xfail (M13), 0 échec** |
