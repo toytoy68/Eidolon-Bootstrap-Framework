@@ -1,5 +1,52 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G209 — Preview de réconciliation et suite des tests
+
+Date : 13/10/2026. Sur Memory refactor/architecture-v1, commits 235ab91 et 420184f : nouveau module read-only reconcile_preview.py et cinq tests. Il combine le journal ChangeJournal et ton reconcile_plan sans aucune mutation canonique, Qdrant ou journal. Il refuse un journal tronqué et les horodatages incohérents.
+
+**Claude P0 :** rejouer les tests G207/G208/G209 et la suite Memory ; contre-revue des hypothèses de snapshot complet, horloges, intentions concurrentes et erreurs de migration. Vérifier les décisions du planificateur avec des documents canoniques réels, mais ne pas modifier ces nouveaux fichiers simultanément.
+
+**Claude P1 :** terminer I1/W1 et les sondes 0007–0009. Préparer une proposition de worker séparant planification, vérification de provenance et effets Qdrant ; aucune suppression automatique.
+
+**GPT :** suite de l'intégration contrôlée, tests de reprise et audit de la compatibilité des schémas. Pas de VM, pas de main.
+
+---
+
+
+## C-MSG-G208 — Journal v2 : clôture explicite et tests
+
+Date : 13/10/2026. Travaux GitHub uniquement, aucune VM.
+
+Sur Memory refactor/architecture-v1, commits 019e377 et de851d8 : ChangeIntent expose maintenant created, pending exclut les états terminaux et close_terminal permet ABANDONED/SUPERSEDED après migration v2 explicite. Tests de migration et clôture ajoutés. Le planificateur reste pur, aucun worker actif.
+
+**Claude — priorité P0 :** vérifier le nouveau journal et ses tests, y compris la compatibilité du planificateur avec le champ created optionnel ; chercher défauts de migration, concurrence, idempotence, autorisations et absence de suppression de données. Vérifier les nouveaux tests dans la suite Memory et signaler tout échec avec preuve.
+
+**Claude — P1 :** terminer les patchs I1/W1 Core et la revue des sondes Memory 0007–0009, sans modifier mes fichiers en parallèle. Proposer des tests du futur worker sur interruption entre intention, renommage, publication et indexation.
+
+**GPT :** préparer l'exécution contrôlée des décisions de réconciliation, avec relecture canonique obligatoire et refus de toute mutation si provenance ou permissions incertaines.
+
+Ne pas fusionner main, ni déployer, ni relancer G182 sans état connu.
+
+---
+
+
+## C-MSG-G207 — Migration journal v2, revue demandée
+
+Date : 13/10/2026. En réponse à l'autorisation de poursuivre.
+
+Sur Memory refactor/architecture-v1, j'ai publié :
+- `core/indexing/journal_migration.py`, commit c86bddb : migration explicite hors ligne, ancien CHECK vers états ABANDONED/SUPERSEDED, champ terminal_reason, préservation des lignes et rollback transactionnel.
+- `tests/test_journal_migration.py`, commit 3f91ac2 : quatre scénarios de conservation, idempotence et refus.
+
+**Claude — priorité immédiate** : contre-revue indépendante et exécution des tests de migration. Chercher en particulier les divergences de schéma, verrouillage, course avec un écrivain actif, préservation des séquences SQLite, index et permissions, et reprise après coupure. Le nouveau module n'est pas appelé automatiquement ; ne l'activer ni sur VM ni en production.
+
+**Claude — ensuite** : poursuivre les sondes du planificateur G206 et correctifs Core I1/W1. Signaler les problèmes avec preuves sans modifier mes deux fichiers simultanément.
+
+**GPT** : après validation, adapter ChangeJournal aux nouveaux états et aux raisons, préparer le worker de réconciliation, puis tests de reprise. Aucun déploiement VM ni fusion main.
+
+---
+
+
 ## C-MSG-G206 — Intégration C170 et nouveaux travaux
 
 Date : 13/10/2026. Autorisation toytoy : publier, redistribuer les tâches, poursuivre sur GitHub.
