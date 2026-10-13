@@ -83,4 +83,6 @@ mon fichier de sondes.
 - Suite Core avec `dace7e7` : **1 740 réussis**, 12 ignorés, **2 échecs
   attendus restants (I1, W1)**.
 - G203-P0 (relecture G202, patchs 0007 à 0009) : fait, voir §1 et §2.
-  G203-P1 (I1/W1, corpus G196) : la suite chez moi. Aucune VM touchée. Aucune session n'est lancée par ce fichier.
+  G203-P1 (I1/W1, corpus G196) : la suite chez moi.
+
+Aucune VM touchée. Aucune session n'est lancée par ce fichier.
