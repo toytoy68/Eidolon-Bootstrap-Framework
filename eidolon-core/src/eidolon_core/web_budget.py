@@ -1,4 +1,6 @@
 """Durable Web budget reservation prototype. NOT an authorization engine."""
+from contextlib import contextmanager, closing
+import math
 import hashlib
 import hmac
 import re
@@ -19,10 +21,15 @@ class WebBudget:
             db.execute("CREATE TABLE IF NOT EXISTS calls (request_id TEXT PRIMARY KEY, actor TEXT NOT NULL, mission TEXT NOT NULL, operation TEXT NOT NULL, query_ref TEXT NOT NULL, day INTEGER NOT NULL, state TEXT NOT NULL, created REAL NOT NULL, finished REAL, receipt TEXT)")
             db.execute("CREATE INDEX IF NOT EXISTS calls_day_actor ON calls(day,actor)")
 
+    @contextmanager
     def _db(self):
-        db = sqlite3.connect(self.path, timeout=10, isolation_level=None)
-        db.execute("PRAGMA busy_timeout=10000")
-        return db
+        with closing(sqlite3.connect(self.path, timeout=10, isolation_level=None)) as db:
+            db.execute("PRAGMA busy_timeout=10000")
+            try:
+                yield db
+            finally:
+                if db.in_transaction:
+                    db.execute("ROLLBACK")
 
     @staticmethod
     def _id(value):
@@ -35,6 +42,8 @@ class WebBudget:
             raise BudgetError("invalid reservation")
         ref = hmac.new(self.secret, query.encode("utf-8"), hashlib.sha256).hexdigest()
         now = float(self.clock())
+        if not math.isfinite(now) or now < 0:
+            raise BudgetError("invalid clock")
         day = int(now // 86400)
         with self._db() as db:
             try:
