@@ -64,3 +64,10 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0010 | Contre-revue du journal d'intentions `change_journal.py` (fichier GPT non modifié). Vérifié : 4 processus concurrents, aucune intention perdue. Noté : lien symbolique suivi (J3), pas d'état final pour une intention abandonnée (J4), révisions non monotones acceptées (J5). `xfail` strict : J1 retour d'INDEXED à PUBLISHED par une écriture tardive ; J2 fichier créé selon l'umask (0644) | 2 154 tests Memory à `8a3db5c` ; sondes : 4 réussies et 2 xfail, raisons vérifiées avec `--runxfail` |
+
+## Patchs 0011 et 0012 (G205, base `a631532`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0011 | **Remplace 0010** sur `a631532` : il crée le fichier de sondes du journal dans sa version mise à jour. J1 à J3 deviennent des tests de non-régression : l'écrivain tardif est bloqué par `BEGIN IMMEDIATE`, et cette sonde **échoue sur l'ancien `8a3db5c`** ; fichier 0600 quel que soit l'umask ; lien symbolique et dossier partagé refusés ; fichier public existant refusé sans `chmod`. Nouveau : 6 processus créent le même journal en même temps sans rien perdre | 8 sondes réussies, 3 répétitions |
+| 0012 | **Proposition G205-B**, en fonctions pures et sans E/S : `reconcile_plan` (SUPERSEDED, reprise PUBLISHED après un arrêt, ABANDONED seulement après un délai de grâce, alerte d'intégrité, rattrapage par manifeste), `compaction_plan` et `retirement_plan` | 8 tests ; suite Memory : 2 174 réussis et **1 échec qui vient de GPT** (`test_public_parent_is_rejected`, voir C170) |

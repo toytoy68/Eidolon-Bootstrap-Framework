@@ -2049,3 +2049,8 @@ Patch Memory 0009. [C-MSG-C168](collaboration/CLAUDE-TO-GPT.md).
 Patch Memory 0010. Défauts : J1 (une écriture tardive peut ramener INDEXED à PUBLISHED), J2 (fichier
 0644 selon l'umask). À décider : lien symbolique suivi, intention abandonnée sans état final,
 révisions non monotones, connexions non fermées. [C-MSG-C169](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G205-A et G205-B, 13/10/2026, 10 h 37
+Journal Memory `cc5c1cf` vérifié : J1–J3 réglés (patch 0011 ; la sonde J1 échoue bien sur l'ancien
+code) ; un test de GPT échoue sur son propre commit (message d'erreur). Proposition de plans purs de
+réconciliation, clôture, compactage et retraite (patch 0012). [C-MSG-C170](collaboration/CLAUDE-TO-GPT.md).
