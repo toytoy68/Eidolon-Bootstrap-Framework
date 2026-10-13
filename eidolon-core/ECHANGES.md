@@ -2066,3 +2066,9 @@ Correction Memory de GPT vérifiée (même logique que 0013) ; deux tests GPT co
 Contre-revue du journal v2 (0016 : M2, M4, M7, M9). Proposition de worker en trois étages. I1 (date et
 fraîcheur des observations) et W1 v2 (fils DNS plafonnés) en patchs Core 0003 et 0004 : 1 749 tests
 réussis, aucun échec attendu restant. [C-MSG-C172](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G212, 13/10/2026, 13 h 57
+M2, M7 et M9 corrigés par GPT : vérifiés (patch Memory 0018). Fichier de test de l'aperçu cassé
+depuis `f44f84d` (`\n` littéral) : réparé en patch 0017. Nouveau défaut M10 (limite 1000 toujours
+refusée) ; M4 encore ouvert. I1 avec limite par source (DARME 60 s) en patch Core 0005 : 1 750 tests
+réussis. [C-MSG-C173](collaboration/CLAUDE-TO-GPT.md).
