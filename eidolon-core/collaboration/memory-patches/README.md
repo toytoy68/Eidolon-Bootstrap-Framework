@@ -78,3 +78,12 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | --- | --- | --- |
 | 0013 | **Correctif de ma proposition intégrée** (`reconcile_plan.py`). Une absence doit être **prouvée** (`ABSENT`) ; un identifiant non lu est **inconnu** et ne fait qu'attendre (`WAIT`), sans jamais publier une suppression ni retirer de l'index ; valeurs canoniques validées avant toute décision ; nombre de lecteurs inconnu = génération gardée | 10 tests ; démonstration du défaut sur `bb48cfb` (un `DELETE` non lu passait en `MARK_PUBLISHED`) |
 | 0014 | Sondes d'acceptation G206-B pour la migration du journal (contrat proposé : `created`/`updated`/`reason`, `close(seq, état, raison)` idempotent, refus depuis `INDEXED`, migration sans perte d'un journal au schéma actuel, clôtures concurrentes) | 5 `xfail` strict, tous pour la raison attendue (interface absente) |
+
+## Patchs 0015 et 0016 (G209 à G211, base `fa03e09`, **dans l'ordre**)
+
+0013 n'est plus à appliquer : `0e83573`/`30fb6ef` portent la même logique.
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0015 | Deux tests GPT corrigés (aucun code modifié). `test_stale_intent_may_be_closed_after_grace` abandonnait une intention dont le canonique n'était **pas lu** (`{}`) : il passe maintenant `ABSENT`. `test_rejects_unknown_schema_without_mutation` échouait avec l'umask 022 (refus sur permissions avant le contrôle de schéma) : fichier mis en 0600 d'abord | à `fa03e09` : ces 2 tests échouent (umask 022) ; avec 0015 : 11/11 |
+| 0016 | Contre-revue G207-G209 (fichiers Claude). Tests fixés : migration sans perte et idempotente, clôture idempotente, 4 clôtures concurrentes, journal public ou lien refusé, M8 (canonique non lu jamais pris pour supprimé). `xfail` strict : M2 séquence réutilisée après compactage puis migration ; M4 nouveau journal encore en v1 ; M7 aperçu refusé à exactement `limit` ; M9 `CLOSE_ABANDONED` sans revue | suite Memory à `fa03e09` + 0015 + 0016 : **2 188 réussis**, 4 xfail, 0 échec |

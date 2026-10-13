@@ -1,0 +1,164 @@
+From d88f926ea53939188c50711572f2d478ac066407 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 09:33:57 +0000
+Subject: [PATCH 16/16] test(claude-eval): G207-G209 counter-review probes of
+ journal v2 and preview
+
+Pinned: migration keeps rows, is idempotent, refuses public or linked
+files; closing is idempotent and refused towards another terminal state;
+four concurrent identical closures succeed. Strict xfail: M2 sequence
+reuse after compaction+migration, M4 new journals still v1, M7 preview
+refuses exactly-limit journals, M8 unread canon taken as deleted (fixed
+by 0015), M9 abandonment without review.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_journal_v2_probes_g209.py            | 135 ++++++++++++++++++
+ 1 file changed, 135 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_journal_v2_probes_g209.py
+
+diff --git a/tests/claude_memory_eval/test_journal_v2_probes_g209.py b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+new file mode 100644
+index 0000000..6e511da
+--- /dev/null
++++ b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+@@ -0,0 +1,135 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_journal_v2_probes_g209.py
++# Description : Contre-revue Claude G207-G209 : migration v2, clôture terminale, aperçu de réconciliation
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent probes (Claude) on GPT's journal v2 (c86bddb..420184f). GPT's files are not modified.
++Positive tests pin what holds; strict xfail documents a finding and turns red once fixed."""
++import hashlib
++import multiprocessing
++import os
++import sqlite3
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.journal_migration import migrate_v2
++from core.indexing.reconcile_preview import preview_reconciliation
++from core.indexing import reconcile_plan as plan_module
++
++DIGEST = hashlib.sha256(b"canonical").hexdigest()
++
++
++def v2_journal(tmp_path, name="changes.sqlite3"):
++    path = tmp_path / name
++    ChangeJournal(path)
++    assert migrate_v2(path) == "MIGRATED_V2"
++    return ChangeJournal(path), path
++
++
++def test_migration_keeps_rows_is_idempotent_and_enables_closing(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    old = ChangeJournal(path)
++    a = old.begin("a", 1, "UPSERT", DIGEST)
++    b = old.begin("b", 1, "DELETE")
++    old.published(b)
++    assert migrate_v2(path) == "MIGRATED_V2"
++    assert migrate_v2(path) == "ALREADY_V2"
++    journal = ChangeJournal(path)
++    assert [(i.sequence, i.state) for i in journal.pending()] == [(a, "INTENT"), (b, "PUBLISHED")]
++    journal.close_terminal(a, "ABANDONED", "never visible")
++    journal.close_terminal(a, "ABANDONED", "never visible")                    # idempotent
++    with pytest.raises(ValueError):
++        journal.close_terminal(a, "SUPERSEDED", "other terminal")
++    assert [i.sequence for i in journal.pending()] == [b]
++
++
++def _close(path, sequence, queue):
++    try:
++        ChangeJournal(path).close_terminal(sequence, "SUPERSEDED", "race")
++        queue.put("ok")
++    except Exception as exc:
++        queue.put(type(exc).__name__ + ":" + str(exc))
++
++
++def test_concurrent_identical_closures_all_succeed_once(tmp_path):
++    journal, path = v2_journal(tmp_path)
++    sequence = journal.begin("doc", 1, "DELETE")
++    context = multiprocessing.get_context("fork")
++    queue = context.Queue()
++    workers = [context.Process(target=_close, args=(path, sequence, queue)) for _ in range(4)]
++    for worker in workers:
++        worker.start()
++    for worker in workers:
++        worker.join(30)
++    assert sorted(queue.get(timeout=10) for _ in workers) == ["ok"] * 4
++    assert journal.pending() == ()
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M2 (G209): migration copies rows into a fresh "
++                   "AUTOINCREMENT table, so its counter restarts at max(seq). After any compaction of the newest "
++                   "rows, a sequence number is REUSED. Expected: carry over sqlite_sequence.")
++def test_sequence_numbers_are_never_reused_after_compaction_and_migration(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    old = ChangeJournal(path)
++    for i in range(3):
++        old.begin(f"doc-{i}", 1, "DELETE")
++    with sqlite3.connect(path) as raw:                                         # future compaction of seq 3
++        raw.execute("DELETE FROM intents WHERE seq=3")
++    migrate_v2(path)
++    assert ChangeJournal(path).begin("new", 1, "DELETE") == 4
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M4 (G209): a brand-new journal is still created with "
++                   "the v1 schema, so close_terminal needs an offline migration even on day one.")
++def test_a_new_journal_supports_closing_without_migration(tmp_path):
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    journal.close_terminal(journal.begin("doc", 1, "DELETE"), "ABANDONED", "never visible")
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M7 (G209): preview refuses when EXACTLY `limit` "
++                   "intents are pending, although the journal is complete. Expected: read limit+1 to detect truncation.")
++def test_preview_accepts_a_complete_journal_of_exactly_limit_rows(tmp_path):
++    journal, _ = v2_journal(tmp_path)
++    for i in range(3):
++        journal.begin(f"doc-{i}", 1, "DELETE")
++    preview_reconciliation(journal, {}, {}, limit=3)
++
++
++@pytest.mark.xfail(not hasattr(plan_module, "ABSENT"), strict=True, reason="Claude finding M8 (G209, critical): with the integrated reconcile_plan, "
++                   "an id MISSING from the canonical snapshot is taken as deleted: a DELETE intent whose canon was "
++                   "not read becomes MARK_PUBLISHED, and indexed ids get ENQUEUE_DELETE. Memory patch 0013 fixes it.")
++def test_preview_never_publishes_or_deletes_from_an_unread_canonical_state(tmp_path):
++    journal, _ = v2_journal(tmp_path)
++    journal.begin("doc", 3, "DELETE")
++    preview = preview_reconciliation(journal, {}, {"doc": 3, "other": 2})
++    assert {a.kind for a in preview.actions} <= {"WAIT"}
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M9 (G209): CLOSE_ABANDONED does not require review, yet "
++                   "it depends on a wall-clock age (time.time): a forward clock jump can abandon an in-flight write.")
++def test_an_abandonment_always_requires_review(tmp_path):
++    journal, path = v2_journal(tmp_path)
++    journal.begin("doc", 5, "UPSERT", DIGEST)
++    from core.indexing.reconcile_plan import Canonical
++    preview = preview_reconciliation(journal, {"doc": Canonical(4, DIGEST)}, {"doc": 4},
++                                     now=10**10, grace_seconds=600)
++    assert [a.kind for a in preview.actions] == ["CLOSE_ABANDONED"]
++    assert preview.requires_review
++
++
++def test_migration_refuses_a_public_or_linked_journal_without_touching_it(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    ChangeJournal(path)
++    os.chmod(path, 0o644)
++    with pytest.raises(ValueError):
++        migrate_v2(path)
++    os.chmod(path, 0o600)
++    link = tmp_path / "link.sqlite3"
++    link.symlink_to(path)
++    with pytest.raises(ValueError):
++        migrate_v2(link)
++    with sqlite3.connect(path) as raw:
++        assert "ABANDONED" not in raw.execute("SELECT sql FROM sqlite_master WHERE name='intents'").fetchone()[0]
+-- 
+2.43.0
+
