@@ -143,6 +143,23 @@ def _check_pending(directory_fd):
                      for name in os.listdir(directory_fd)), "PROFILE_REGISTRY_PENDING")
 
 
+def _check_no_live_writer(directory_fd):
+    """Reader-only nonblocking lock check: live writer is BUSY, not crash residue."""
+    try:
+        fd = os.open(LOCK, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=directory_fd)
+    except FileNotFoundError:
+        return
+    try:
+        _private_file(fd, maximum=0)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ProfileRegistryError("PROFILE_REGISTRY_BUSY") from None
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
 @contextmanager
 def _writer_lock(directory_fd):
     flags = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
@@ -215,6 +232,7 @@ def prepare_registry(plan_path, directory, *, apply=False):
         expected = digest(value)
         with _directory(directory) as directory_fd:
             if not apply:
+                _check_no_live_writer(directory_fd)
                 _check_pending(directory_fd)
                 current = _existing(directory_fd)
                 if current is not None:
@@ -250,6 +268,7 @@ def inspect_registry(directory):
     """Read and revalidate, without creating a directory, file or lock."""
     try:
         with _directory(directory) as directory_fd:
+            _check_no_live_writer(directory_fd)
             _check_pending(directory_fd)
             value = _existing(directory_fd)
             _require(value is not None, "PROFILE_REGISTRY_MISSING")
@@ -273,6 +292,9 @@ def main(argv=None):
                   if args.operation == "prepare" else inspect_registry(args.directory))
     except ContractError as exc:
         print(encode({"ok": False, "error": str(exc), "runtime_active": False}))
+        return 1
+    except ValueError:
+        print(encode({"ok": False, "error": "PROFILE_REGISTRY_INVALID_INPUT", "runtime_active": False}))
         return 1
     print(encode({"ok": True, **result}))
     return 0
