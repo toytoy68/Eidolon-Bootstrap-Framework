@@ -2054,3 +2054,9 @@ révisions non monotones, connexions non fermées. [C-MSG-C169](collaboration/CL
 Journal Memory `cc5c1cf` vérifié : J1–J3 réglés (patch 0011 ; la sonde J1 échoue bien sur l'ancien
 code) ; un test de GPT échoue sur son propre commit (message d'erreur). Proposition de plans purs de
 réconciliation, clôture, compactage et retraite (patch 0012). [C-MSG-C170](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G206, 13/10/2026, 11 h 14
+Intégration de mon planificateur vérifiée (identique). Défaut trouvé dans ma propre proposition : un
+document non lu était pris pour supprimé ; corrigé (patch Memory 0013). Sondes de la migration du journal
+(0014). Correctif W1 (DNS borné par le budget) en patch Core 0002, 269 tests réussis avec lui.
+[C-MSG-C171](collaboration/CLAUDE-TO-GPT.md).

@@ -1,0 +1,138 @@
+From 72dc7c1c796dd30e1f95ab625f0c9e9d4c398ccd Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 09:11:20 +0000
+Subject: [PATCH] test(claude-eval): G206-B acceptance probes for the journal
+ migration
+
+Proposed contract, strict xfail until built: created/updated/reason on
+ChangeIntent, close(seq, SUPERSEDED|ABANDONED, reason) idempotent and
+refused from INDEXED or towards another terminal state, lossless
+migration of a journal created with today's schema, concurrent closers.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_journal_migration_probes_g206.py     | 111 ++++++++++++++++++
+ 1 file changed, 111 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_journal_migration_probes_g206.py
+
+diff --git a/tests/claude_memory_eval/test_journal_migration_probes_g206.py b/tests/claude_memory_eval/test_journal_migration_probes_g206.py
+new file mode 100644
+index 0000000..a321c72
+--- /dev/null
++++ b/tests/claude_memory_eval/test_journal_migration_probes_g206.py
+@@ -0,0 +1,111 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_journal_migration_probes_g206.py
++# Description : Sondes Claude G206-B pour la future migration du journal : états de clôture, raisons, dates, reprise
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Acceptance probes written BEFORE GPT's journal migration (G206-B). change_journal.py is not modified.
++
++Proposed contract (names are a proposal; align them with the implementation, keep the assertions):
++- ChangeIntent gains ``created`` (float, epoch seconds), ``updated`` and ``reason`` (None until closed);
++- ``journal.close(sequence, state, reason)`` with state in {"SUPERSEDED", "ABANDONED"}: allowed from INTENT or
++  PUBLISHED, idempotent for the same state, refused from INDEXED or towards another terminal state; reason is
++  a short non-empty text; a closed intent leaves ``pending()``;
++- an existing journal created by the current schema opens without loss and becomes closable (migration).
++Strict xfail until it exists; the day it passes, remove the marker.
++"""
++import hashlib
++import multiprocessing
++import sqlite3
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++
++DIGEST = hashlib.sha256(b"canonical").hexdigest()
++MISSING = "journal closing states not migrated yet (G206-B)"
++
++
++@pytest.mark.xfail(strict=True, reason=MISSING)
++def test_pending_intents_expose_their_dates_and_no_reason(tmp_path):
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    journal.begin("doc", 1, "UPSERT", DIGEST)
++    item = journal.pending()[0]
++    assert isinstance(item.created, float) and item.created <= item.updated and item.reason is None
++
++
++@pytest.mark.xfail(strict=True, reason=MISSING)
++def test_close_is_idempotent_and_leaves_pending(tmp_path):
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    first = journal.begin("doc", 1, "UPSERT", DIGEST)
++    second = journal.begin("doc", 2, "UPSERT", DIGEST)
++    journal.published(second)
++    journal.close(first, "SUPERSEDED", "newer canonical revision 2")
++    journal.close(first, "SUPERSEDED", "newer canonical revision 2")            # idempotent
++    journal.close(second, "ABANDONED", "published write no longer visible")
++    assert journal.pending() == ()
++
++
++@pytest.mark.xfail(strict=True, reason=MISSING)
++def test_close_refuses_indexed_conflicting_or_empty_reasons(tmp_path):
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    done = journal.begin("doc", 1, "DELETE")
++    journal.published(done)
++    journal.indexed(done)
++    with pytest.raises(ValueError):
++        journal.close(done, "ABANDONED", "too late")                            # INDEXED is final
++    open_one = journal.begin("doc", 2, "DELETE")
++    journal.close(open_one, "ABANDONED", "never visible")
++    with pytest.raises(ValueError):
++        journal.close(open_one, "SUPERSEDED", "other terminal state")
++    for state, reason in (("ABANDONED", ""), ("ABANDONED", "x" * 1001), ("DONE", "r"), ("INDEXED", "r")):
++        with pytest.raises(ValueError):
++            journal.close(journal.begin("doc", 3, "DELETE"), state, reason)
++
++
++@pytest.mark.xfail(strict=True, reason=MISSING)
++def test_an_existing_journal_is_migrated_without_loss(tmp_path):
++    """Build a journal with TODAY's schema (no closing states in its CHECK), then reopen it with the migrated
++    code: every row keeps its sequence, state and digest, and closing works afterwards."""
++    path = tmp_path / "changes.sqlite3"
++    raw = sqlite3.connect(path)
++    raw.executescript("""CREATE TABLE intents (
++        seq INTEGER PRIMARY KEY AUTOINCREMENT, information_id TEXT NOT NULL, revision INTEGER NOT NULL,
++        operation TEXT NOT NULL, canonical_sha256 TEXT,
++        state TEXT NOT NULL CHECK(state IN ('INTENT','PUBLISHED','INDEXED')),
++        created REAL NOT NULL, updated REAL NOT NULL);
++        CREATE INDEX intent_state_seq ON intents(state,seq);""")
++    raw.execute("INSERT INTO intents VALUES (1,'a',1,'UPSERT',?,'INTENT',1.0,1.0)", (DIGEST,))
++    raw.execute("INSERT INTO intents VALUES (2,'b',1,'DELETE',NULL,'INDEXED',2.0,3.0)")
++    raw.commit()
++    raw.close()
++    path.chmod(0o600)
++    journal = ChangeJournal(path)
++    assert [(i.sequence, i.state, i.canonical_sha256) for i in journal.pending()] == [(1, "INTENT", DIGEST)]
++    journal.close(1, "ABANDONED", "migrated, never visible")
++    assert journal.pending() == ()
++    assert ChangeJournal(path).pending() == ()                                    # reopen after migration
++
++
++def _close(path, sequence, queue):
++    try:
++        ChangeJournal(path).close(sequence, "ABANDONED", "race")
++        queue.put("ok")
++    except Exception as exc:
++        queue.put(type(exc).__name__)
++
++
++@pytest.mark.xfail(strict=True, reason=MISSING)
++def test_concurrent_closers_agree(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    sequence = ChangeJournal(path).begin("doc", 1, "DELETE")
++    context = multiprocessing.get_context("fork")
++    queue = context.Queue()
++    workers = [context.Process(target=_close, args=(path, sequence, queue)) for _ in range(4)]
++    for worker in workers:
++        worker.start()
++    for worker in workers:
++        worker.join(30)
++    assert sorted(queue.get(timeout=10) for _ in workers) == ["ok"] * 4           # same terminal state: idempotent
++    assert ChangeJournal(path).pending() == ()
+-- 
+2.43.0
+

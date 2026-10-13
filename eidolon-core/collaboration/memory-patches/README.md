@@ -71,3 +71,10 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | --- | --- | --- |
 | 0011 | **Remplace 0010** sur `a631532` : il crée le fichier de sondes du journal dans sa version mise à jour. J1 à J3 deviennent des tests de non-régression : l'écrivain tardif est bloqué par `BEGIN IMMEDIATE`, et cette sonde **échoue sur l'ancien `8a3db5c`** ; fichier 0600 quel que soit l'umask ; lien symbolique et dossier partagé refusés ; fichier public existant refusé sans `chmod`. Nouveau : 6 processus créent le même journal en même temps sans rien perdre | 8 sondes réussies, 3 répétitions |
 | 0012 | **Proposition G205-B**, en fonctions pures et sans E/S : `reconcile_plan` (SUPERSEDED, reprise PUBLISHED après un arrêt, ABANDONED seulement après un délai de grâce, alerte d'intégrité, rattrapage par manifeste), `compaction_plan` et `retirement_plan` | 8 tests ; suite Memory : 2 174 réussis et **1 échec qui vient de GPT** (`test_public_parent_is_rejected`, voir C170) |
+
+## Patchs 0013 et 0014 (G206, base `bb48cfb`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0013 | **Correctif de ma proposition intégrée** (`reconcile_plan.py`). Une absence doit être **prouvée** (`ABSENT`) ; un identifiant non lu est **inconnu** et ne fait qu'attendre (`WAIT`), sans jamais publier une suppression ni retirer de l'index ; valeurs canoniques validées avant toute décision ; nombre de lecteurs inconnu = génération gardée | 10 tests ; démonstration du défaut sur `bb48cfb` (un `DELETE` non lu passait en `MARK_PUBLISHED`) |
+| 0014 | Sondes d'acceptation G206-B pour la migration du journal (contrat proposé : `created`/`updated`/`reason`, `close(seq, état, raison)` idempotent, refus depuis `INDEXED`, migration sans perte d'un journal au schéma actuel, clôtures concurrentes) | 5 `xfail` strict, tous pour la raison attendue (interface absente) |
