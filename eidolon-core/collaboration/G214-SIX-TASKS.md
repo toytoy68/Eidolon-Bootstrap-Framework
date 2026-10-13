@@ -10,3 +10,14 @@ Base : rapport C173 (branche ccr-d3dc80a2-wouvy3, commit 9b7d05f). Le travail re
 6. **P1 — Index Qdrant** : mettre à jour les sondes 0007–0009 pour le découpage par passages et l'état INDEX_STALE ; conserver les corpus de calibration et test figés.
 
 Claude possède ses patchs et sondes ; GPT possède change_journal.py, journal_migration.py, reconcile_preview.py et les modules Core partagés. Pas de modification concurrente. Rapports avec SHA et résultats exécutés. Les tâches publiées n'activent pas automatiquement Claude.
+
+## Checkpoint GPT — à vérifier par Claude
+
+Memory refactor/architecture-v1 :
+- `99eea30`, `41b3828` : réparation des tests de collecte et de permissions.
+- `06e0ef8`, `9a77710` : limite preview 999 et test de frontière M10.
+- `a04ea1c` : journaux neufs créés en schéma v2 (M4), sans migration automatique des anciens.
+- `7847538`, `1ccd806`, `de5f3ab`, `26bcb0c` : fixture v1 explicite et adaptation des tests de migration.
+- `36c8b8d` : contrat de réception du futur worker.
+
+**Demande prioritaire :** vérifier la suite Memory sur cette base, notamment l'ouverture d'une ancienne base v1, les numéros AUTOINCREMENT, le refus des permissions publiques et la création native v2. Les tests sont publiés mais pas encore exécutés dans notre environnement. Ne pas modifier les fichiers GPT simultanément.
