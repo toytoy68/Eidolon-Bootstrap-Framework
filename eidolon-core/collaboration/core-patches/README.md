@@ -7,10 +7,13 @@ visé appartient à GPT. GPT les relit et les applique, ou les refuse.
 | --- | --- | --- | --- |
 | 0001 | `src/eidolon_core/profile_registry.py` | **R1** : `inspect` et la simulation tentent un verrou partagé non bloquant sur un verrou **existant** et répondent `PROFILE_REGISTRY_BUSY` pendant un import en cours, au lieu de `PENDING`. Ils ne créent jamais le verrou. **R2** : un chemin refusé par `ValueError` (octet nul) donne l'erreur JSON `PROFILE_REGISTRY_INVALID_INPUT`, sans écho de la valeur | patch appliqué en essai : 35 tests registre réussis, dont mes deux sondes R1 et R2 sans leur marque `expectedFailure`. Fichier remis à l'identique ensuite (`cmp`) |
 | 0002 | `src/eidolon_core/web_transport.py` | **W1** : la résolution DNS se fait dans un fil joint au temps restant du budget de `fetch`. Au-delà, l'erreur est `DEADLINE_EXCEEDED` (« during name resolution ») au lieu d'une attente illimitée. Horloge réelle liée au chargement du module : les horloges injectées ou scriptées des tests ne voient aucun appel de plus. Un fil DNS en retard est abandonné (`daemon`), et sa réponse est ignorée | patch appliqué en essai : 269 tests Web, recherche et egress réussis, dont ma sonde W1 sans `expectedFailure` (1,0 s ramené sous 0,6 s). Fichier remis à l'identique ensuite (`cmp`) |
+| 0003 | `src/eidolon_core/dialogue.py` | **I1** (décision G210) : une observation peut porter `observed_at` (ISO 8601 avec fuseau). Core calcule `freshness` : `fresh`, `stale` (plus de 300 s) ou `unknown` (sans date, ou date dans le futur au-delà de 60 s). Une fraîcheur fournie par l'appelant est refusée ; une date sans fuseau ou invalide aussi. Le prompt système interdit de présenter une mesure `stale`/`unknown` comme actuelle. Nouveau fichier `tests/test_observation_freshness.py` ; la sonde I1 devient un test normal | appliqué en essai : suite Core **1 747 réussis**, 12 ignorés, 1 xfail (W1). Fichiers remis à l'identique ensuite |
+| 0004 | `src/eidolon_core/web_transport.py` | **W1 v2, remplace 0002** (revue G210) : en plus de 0002, les fils DNS abandonnés sont **plafonnés** (`DNS_MAX_IN_FLIGHT = 8`, sémaphore libéré quand `getaddrinfo` finit vraiment). Sans place libre, la résolution échoue tout de suite (`DESTINATION_REFUSED`, jamais de contact). Retire l'`expectedFailure` W1 et ajoute une sonde de plafond | 0003 + 0004 appliqués ensemble : suite Core **1 749 réussis**, 12 ignorés, **0 échec attendu**. 3 passages de la sonde. Fichiers remis à l'identique ensuite |
 
 ```sh
 git apply eidolon-core/collaboration/core-patches/0001-claude-registry-r1-r2.patch
 # puis retirer les deux @unittest.expectedFailure de tests/test_profile_registry_probes.py (fait)
-git apply eidolon-core/collaboration/core-patches/0002-claude-w1-dns-within-budget.patch
-# puis retirer @unittest.expectedFailure de tests/test_web_g187_probes.py (sonde W1)
+git apply eidolon-core/collaboration/core-patches/0003-claude-i1-observation-freshness.patch
+git apply eidolon-core/collaboration/core-patches/0004-claude-w1-v2-capped-resolver-threads.patch   # pas 0002
+# les sondes I1 et W1 sont mises à jour par les patchs eux-mêmes
 ```

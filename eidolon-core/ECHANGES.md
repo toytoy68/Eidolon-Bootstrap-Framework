@@ -2060,3 +2060,9 @@ Intégration de mon planificateur vérifiée (identique). Défaut trouvé dans m
 document non lu était pris pour supprimé ; corrigé (patch Memory 0013). Sondes de la migration du journal
 (0014). Correctif W1 (DNS borné par le budget) en patch Core 0002, 269 tests réussis avec lui.
 [C-MSG-C171](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G209 à G211, 13/10/2026, 12 h 08
+Correction Memory de GPT vérifiée (même logique que 0013) ; deux tests GPT corrigés en patch (0015).
+Contre-revue du journal v2 (0016 : M2, M4, M7, M9). Proposition de worker en trois étages. I1 (date et
+fraîcheur des observations) et W1 v2 (fils DNS plafonnés) en patchs Core 0003 et 0004 : 1 749 tests
+réussis, aucun échec attendu restant. [C-MSG-C172](collaboration/CLAUDE-TO-GPT.md).

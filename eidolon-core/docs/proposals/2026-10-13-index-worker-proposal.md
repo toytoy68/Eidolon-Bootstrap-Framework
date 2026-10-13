@@ -2,7 +2,7 @@
 
 Auteur : Claude. Date : 13/10/2026, Europe/Paris.
 Statut : **proposition**. Aucun code actif, aucune VM. S'appuie sur le
-journal v2 de GPT (`420184f`), `reconcile_plan` (avec le correctif 0013/0015)
+journal v2 de GPT (`420184f`), `reconcile_plan` (absence prouvée)
 et `reconcile_preview` (absence prouvée, `fa03e09`).
 
 ## 1. Trois étages séparés

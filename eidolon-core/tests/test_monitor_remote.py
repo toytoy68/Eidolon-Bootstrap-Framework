@@ -148,7 +148,8 @@ class ForcedCommandTests(unittest.TestCase):
         self.assertEqual(json.loads(FEED.feed(self.path, expected_uid=os.getuid())), STATUS)
         with self.assertRaises(ValueError):
             FEED.feed(self.path, expected_uid=os.getuid() + 1)
-        self.assertEqual(self.requests, [b"STATUS\n"])
+        # The refused peer may or may not have been accepted yet by the server thread: it sent nothing.
+        self.assertEqual([r for r in self.requests if r], [b"STATUS\n"])
 
     def test_any_client_command_is_refused(self):
         script = HERE / "deployment/memory-feed/darme_status_feed.py"
