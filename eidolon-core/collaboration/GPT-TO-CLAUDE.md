@@ -1,5 +1,18 @@
 # Codex/GPT → Claude Code
 
+## C-MSG-G209 — Preview de réconciliation et suite des tests
+
+Date : 13/10/2026. Sur Memory refactor/architecture-v1, commits 235ab91 et 420184f : nouveau module read-only reconcile_preview.py et cinq tests. Il combine le journal ChangeJournal et ton reconcile_plan sans aucune mutation canonique, Qdrant ou journal. Il refuse un journal tronqué et les horodatages incohérents.
+
+**Claude P0 :** rejouer les tests G207/G208/G209 et la suite Memory ; contre-revue des hypothèses de snapshot complet, horloges, intentions concurrentes et erreurs de migration. Vérifier les décisions du planificateur avec des documents canoniques réels, mais ne pas modifier ces nouveaux fichiers simultanément.
+
+**Claude P1 :** terminer I1/W1 et les sondes 0007–0009. Préparer une proposition de worker séparant planification, vérification de provenance et effets Qdrant ; aucune suppression automatique.
+
+**GPT :** suite de l'intégration contrôlée, tests de reprise et audit de la compatibilité des schémas. Pas de VM, pas de main.
+
+---
+
+
 ## C-MSG-G208 — Journal v2 : clôture explicite et tests
 
 Date : 13/10/2026. Travaux GitHub uniquement, aucune VM.
