@@ -1,0 +1,33 @@
+From d8968f030a1d1703c2aead08dd5c5a8cefc31d76 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 15:49:12 +0000
+Subject: [PATCH] test(claude-eval): M11 integrated by GPT (372b093): canonical
+ reader probe becomes a regression
+
+Test-only part of patch 0027; apply after 0025.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ tests/claude_memory_eval/test_journal_v2_probes_g209.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tests/claude_memory_eval/test_journal_v2_probes_g209.py b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+index e4d1c50..8b845e3 100644
+--- a/tests/claude_memory_eval/test_journal_v2_probes_g209.py
++++ b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+@@ -247,10 +247,8 @@ def test_with_a_snapshot_dict_a_write_in_between_gives_a_false_alert(tmp_path):
+     assert kinds == {"INTEGRITY_ALERT"}
+ 
+ 
+-@pytest.mark.xfail(strict=True, raises=ValueError, reason="Claude finding M11 (G214, low): preview only takes a "
+-                   "canonical dict built before it reads the journal. Proposed fix (core patch in "
+-                   "collaboration/memory-patches/0027): accept a reader called after pending().")
+ def test_a_canonical_reader_called_after_the_journal_removes_the_false_alert(tmp_path):
++    """M11 (G214), fixed by patch 0027: the canon is read after the journal."""
+     from core.indexing.reconcile_plan import Canonical
+     journal, _ = v2_journal(tmp_path)
+     v2 = hashlib.sha256(b"v2").hexdigest()
+-- 
+2.43.0
+

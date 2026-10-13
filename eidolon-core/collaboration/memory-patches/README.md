@@ -131,3 +131,11 @@ remplace 0024 ; 0023 (recette du worker, 19 scénarios) est inchangé.
 | 0025 | Sondes journal : M12 en non-régression (version 2 à la création seulement ; une base v1 existante garde 0, puis passe à 2 par migration) ; 6 processus créent le même journal neuf : schéma v2, version 2, 6 lignes. M11 : limite de la forme « dictionnaire » fixée, correctif par lecteur en `xfail` strict | voir 0027 |
 | 0026 | Sondes passages : P3 en non-régression (`document_id` et `revision` obligatoires, nommés seulement) ; tous mes appels passent les métadonnées de confiance | — |
 | 0027 | **Proposition M11** pour `reconcile_preview.py` (fichier GPT) : `canonical` peut être un **lecteur** `f(ids)` appelé **après** la lecture du journal. Une écriture qui arrive pendant l'aperçu donne `INDEX_UPSERT` ou `ENQUEUE_UPSERT`, jamais une fausse alerte. Forme dictionnaire inchangée ; aucune action, aucune suppression. Retire l'`xfail` M11 de 0025 | 0025 + 0023 + 0026 : **2 236 réussis**, 1 xfail (M11) ; + 0027 : **2 237 réussis, 0 xfail** |
+
+## Patch 0028 (G218, base `372b093`)
+
+GPT a intégré M11 (`372b093`, même logique que 0027) : 0027 n'est plus à appliquer.
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0028 | Partie test de 0027 seulement : la sonde « lecteur canonique après journal » devient non-régression. Ordre : 0025, 0023, 0026, 0028 | suite Memory à `372b093` : **2 237 réussis, 0 xfail, 0 échec** |
