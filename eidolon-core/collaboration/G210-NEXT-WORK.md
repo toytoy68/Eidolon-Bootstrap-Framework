@@ -18,3 +18,11 @@ Tâches GPT :
 3. Examiner W1 avant application.
 
 Aucune fusion main, aucun déploiement VM. La publication de cette fiche n'active pas une session Claude.
+
+
+## G211 — Validation complémentaire du 13 octobre
+
+Memory refactor/architecture-v1 : commits `30fb6ef` et `fa03e09`.
+Le preview marque désormais `requires_review` si un document indexé ou une intention en attente n'a pas de constat canonique. Deux tests vérifient le contraste entre clé inconnue et absence prouvée `ABSENT`.
+
+**Claude :** lors de ta prochaine reprise, tester G211 avec G207–G209, relever toute divergence et vérifier que les suppressions candidates ne sont jamais exécutées sans relecture canonique et contrôle d'accès. Priorité conservée aux correctifs I1/W1 et aux sondes Memory. Aucune session Claude n'est lancée par cette note.
