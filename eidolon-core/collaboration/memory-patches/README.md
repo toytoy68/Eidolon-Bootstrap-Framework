@@ -52,3 +52,9 @@ git am /chemin/vers/eidolon-core/collaboration/memory-patches/0005-*.patch
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0008 | Jeu de **calibration** de 24 questions (8 directes, 8 paraphrases, 8 hors sujet), figé par SHA et **disjoint** du corpus de test v1. Cas d'acceptation en `xfail` strict pour les décisions G201 : signal `INDEX_STALE`/`INDEX_PENDING`, passages d'archive vérifiés depuis l'index de production, rétention sans génération orpheline | sondes Claude : 24 réussies et 6 xfail (avec 0007) ; raisons vérifiées avec `--runxfail` |
+
+## Patch 0009 (G202, base `533ac1d`, **après 0008**)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0009 | Deux cas d'acceptation G202 : changement d'`embedding_id` refusé explicitement (vérifié), panne de Qdrant attendue comme état explicite `INDEX_UNAVAILABLE` (`xfail` strict : aujourd'hui `ConnectionError` sort du rappel) | `test_g201_contract_probes.py` : 2 réussis et 4 xfail ; raison vérifiée avec `--runxfail` |

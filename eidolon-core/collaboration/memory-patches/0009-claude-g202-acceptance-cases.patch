@@ -1,0 +1,47 @@
+From f4ec600218913a562bbbd23fc058be0fbe1ff28b Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 07:34:41 +0000
+Subject: [PATCH] test(claude-eval): G202 acceptance cases, embedding identity
+ and index outage
+
+Pinned: a changed embedding_id is refused explicitly. Strict xfail: a
+Qdrant outage must become an explicit INDEX_UNAVAILABLE state instead of
+an exception out of recall.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_g201_contract_probes.py              | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/tests/claude_memory_eval/test_g201_contract_probes.py b/tests/claude_memory_eval/test_g201_contract_probes.py
+index e302eec..5a3774f 100644
+--- a/tests/claude_memory_eval/test_g201_contract_probes.py
++++ b/tests/claude_memory_eval/test_g201_contract_probes.py
+@@ -81,3 +81,23 @@ def test_retention_never_removes_the_live_generation_and_leaves_no_orphan(tmp_pa
+     index.embed = real
+     names = {c.name for c in client.get_collections().collections}
+     assert live in names and names <= before                   # live kept; nothing left by the failure
++
++
++def test_changing_the_embedding_identity_is_an_explicit_incompatibility(index, client):
++    """G202 acceptance 'changement d'embedding_id': already holds, pinned here."""
++    from core.indexing.qdrant_index import QdrantIndex
++    from tests.test_qdrant_index import embed
++    with pytest.raises(ValueError, match='embedding'):
++        QdrantIndex(client, index.alias, embed=embed, dimensions=32, embedding_id='synthetic-hash-v2')
++
++
++@pytest.mark.xfail(strict=True, reason='G202 mode INDEX_UNAVAILABLE not built yet: today a Qdrant outage '
++                   'raises out of recall; expected an explicit unavailable state with no item and no invented success')
++def test_index_outage_is_an_explicit_unavailable_state(tmp_path):
++    class Down:
++        def query(self, *args, **kwargs):
++            raise ConnectionError('qdrant down')
++    data = backend(tmp_path)
++    store(data, 'item')
++    result = ContextualRecall(data, index=Down()).recall('power', query_scope={'goal': 'efficiency'}, at=STAMP)
++    assert result.items == () and 'INDEX_UNAVAILABLE' in repr(result)
+-- 
+2.43.0
+

@@ -2038,3 +2038,9 @@ Correctif des écarts R1/R2 du registre livré en patch (fichier de GPT non modi
 avec le patch). Memory, patch 0008 : jeu de calibration séparé du corpus de test, et cas d'acceptation
 des décisions G201 (retard d'index signalé, passages en production, rétention).
 [C-MSG-C167](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — relecture de G202, 13/10/2026, 9 h 35
+Contrat G202 (passages, journal, worker, réconciliation) approuvé dans son principe. Six précisions :
+journal et fichiers Markdown non atomiques (réconciliation garante), vecteurs = données privées, version
+du découpeur, définitions PENDING/STALE, droits après relecture, suppression d'une génération vérifiable.
+Patch Memory 0009. [C-MSG-C168](collaboration/CLAUDE-TO-GPT.md).
