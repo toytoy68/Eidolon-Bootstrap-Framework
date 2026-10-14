@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-**G233 — suite du 14 octobre** : pagination des gros arriérés et cycle durable Memory livrés, reprise et conditions de maintenance testées. Core épinglé sur le lot. [Bilan courant](docs/PROJECT-STATUS.md). Qualification CI en cours.
+**G233 — suite du 14 octobre** : pagination des gros arriérés et cycle durable Memory livrés, reprise et conditions de maintenance testées. Core épinglé sur le lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2470 tests, Qdrant/worker/scanners/maintenance 215, Core 1763 (7 ignorés, aucun avertissement pytest).
 
 **G232 — suite du 14 octobre** : inventaire inverse Memory et revue fraîche des candidats orphelins publiés ; aucune suppression activée. Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2430 tests, Qdrant/worker/scanners 175, Core 1763 (7 ignorés, aucun avertissement pytest).
 

@@ -2,12 +2,12 @@
 
 Mise à jour : 14 octobre 2026, lot G233, Codex/GPT.
 
-**G233 publié : qualification CI en cours. Pagination et cycle durable livrés ; J2 et recette VM/PC restent ouverts.**
+**G233 publié et qualifié : trois workflows verts. Pagination et cycle durable livrés ; J2 et recette VM/PC restent ouverts.**
 
 ## G233 — Arriérés et orchestration, suite de 22 h 36
 
 Memory publié : `53f7bf01a811f65a418d1f07cb42b9734f585213`.
-[Rapport, API et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/53f7bf01a811f65a418d1f07cb42b9734f585213/docs/G233-INDEX-MAINTENANCE-2026-10-14.md).
+[Rapport, API et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/26976e3de795b0cd184e3abbac3536517857cb50/docs/G233-INDEX-MAINTENANCE-2026-10-14.md).
 
 Les deux étapes prévues après G232 sont implémentées. Le worker parcourt les
 arriérés par séquence, avec borne fixe ; les intentions à revoir n’empêchent
@@ -24,7 +24,20 @@ cycle. Une saturation de revues se termine par REVIEW_REQUIRED, sans clôture fo
 246 tests ciblés passent avec -W error, puis 40 cas G233 finaux. Preuves : arriéré de
 1005 revues avec lignes saines en fin de file, arrêt réel après effet du worker et
 avant checkpoint du contrôleur, reprise sans nouvel embedding, cycle périodique
-retrouvant un nouveau document. CI complète finale à confirmer.
+retrouvant un nouveau document. CI Memory et Core confirmées.
+Core testé : `59cb703f29527e66f15e627586350a97e7b9f1ea`, épinglé sur Memory ci-dessus.
+
+| Validation du code publié | Résultat |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38635265838) | **2470 tests et 12 sous-tests réussis**, 125,77 s |
+| Worker expérimental, même workflow | **19 réussis**, 1,35 s ; contrat distinct du cycle G233 |
+| [Qdrant/worker/scanners/maintenance](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38635266047) | **215 réussis**, 8,90 s |
+| [Core avec Memory G233](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38635366123) | **1763 tests et 1299 sous-tests réussis, 7 ignorés, aucun avertissement pytest**, 397,33 s |
+
+Les sept tests ignorés nécessitent numpy, ONNX ou OpenCV et les modèles d’identité
+optionnels. Les avertissements Node des actions GitHub sont distincts de pytest.
+Aucun échec. Les lots se chevauchent : leurs comptes ne s’additionnent pas. Les
+commits documentaires ultérieurs ne changent pas le code qualifié.
 
 L’API exécute une étape par appel ; aucun service permanent n’est activé. Les
 observations d’activité/charge/démarrage et les appels sont à raccorder explicitement

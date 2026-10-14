@@ -2154,3 +2154,10 @@ Auteur : Codex/GPT. Suite demandée jusqu’au bout par toytoy ; base Core `7eee
 Memory `53f7bf0` livre la pagination à borne fixe et le cycle durable reliant
 scanners/worker, conditions de maintenance et reports. Core : épinglage CI sur
 ce lot, bilan et points de contre-revue ; aucune activation de runtime/service.
+
+G233 confirmé : Memory `53f7bf0` (2470 tests, 12 sous-tests ; 215 ciblés ;
+19 expérimentaux), Core `59cb703` (1763 tests, 1299 sous-tests, 7 ignorés,
+aucun avertissement pytest). Trois workflows verts ; comptes chevauchants.
+Pagination des arriérés et cycle durable livrés jusqu’à qualification/publication.
+[Bilan](docs/PROJECT-STATUS.md). Activation hôte, contrat complet/découpeur et
+recette serveur/corpus/modèles/VM/PC restent distincts ; suppression désactivée.

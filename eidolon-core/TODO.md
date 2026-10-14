@@ -1,6 +1,6 @@
 ## G233 — Priorités actives, 14 octobre 2026
 
-Arriérés paginés et orchestration durable Memory livrés ; qualification CI en cours. Suite J2 : contrat historique complet/identité du découpeur, contre-revue, raccordement à l’hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée. [Bilan](docs/PROJECT-STATUS.md).
+Arriérés paginés et orchestration durable Memory livrés ; trois CI vertes : Memory 2470 tests, ciblés 215, Core 1763 (7 ignorés, aucun avertissement pytest). Suite J2 : contrat historique complet/identité du découpeur, contre-revue, raccordement à l’hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée. [Bilan](docs/PROJECT-STATUS.md).
 
 ## G232 — Priorités actives, 14 octobre 2026
 
