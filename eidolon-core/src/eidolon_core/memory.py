@@ -81,4 +81,5 @@ class BridgeMemory:
             raise ValueError("memory bridge credential must be owner-only")
         token = token_path.read_text(encoding="ascii").strip()
         result = remote_recall(query, token=token, port=self.port, timeout=self.timeout)
-        return snapshot(result)
+        from .contracts import validate_context
+        return validate_context(result)
