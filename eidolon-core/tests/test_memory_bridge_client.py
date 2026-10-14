@@ -17,7 +17,7 @@ class MemoryBridgeClientTests(unittest.TestCase):
 
     def test_rejects_control_characters_before_network(self):
         with patch("eidolon_core.memory_bridge_client.urlopen") as request:
-            for query in ("hello\\nworld", "hello\\x7f"):
+            for query in ("hello" + chr(10) + "world", "hello" + chr(127)):
                 with self.subTest(query=query), self.assertRaises(ValueError):
                     recall(query, token="x" * 40)
             request.assert_not_called()
