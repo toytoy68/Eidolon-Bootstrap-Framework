@@ -1,10 +1,25 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026 après les CI terminées à 18 h 53 Europe/Paris, lot G229, Codex/GPT.
+Mise à jour : 14 octobre 2026 après qualification du lot G230, Codex/GPT.
 
 **Deux branches publiées, trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
 
 ## G230 — Suite du 14 octobre après 19 h 55
+
+**Publication et qualification terminées** : Memory `180f3a7`, Core `e7cba2b`.
+Les commits documentaires suivants ne changent pas le code testé.
+
+| Validation | Résultat |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38611998863) | **2353 tests et 12 sous-tests réussis**, 258,42 s |
+| Worker expérimental, même workflow | **19 réussis**, 1,84 s ; contrat distinct du nouveau consommateur |
+| [Qdrant/worker ciblés](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38611998817) | **98 réussis**, 2,59 s |
+| [Core avec Memory G230](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38612137486) | **1763 tests et 1299 sous-tests réussis, 7 ignorés, aucun avertissement pytest**, 286,59 s |
+
+Les sept tests ignorés nécessitent les moteurs/modèles d'identité optionnels.
+Les huit avertissements `fork` de G229 ont disparu. Les avertissements Node des
+actions GitHub restent distincts de pytest. Aucun échec ; lots chevauchants,
+comptes non additionnables.
 
 Memory publié : `180f3a72064636964e718e2d81e88e198aeac01f`. Consommateur borné du
 journal raccordé au worker verrouillé, reprise après accusé perdu/arrêt du processus
@@ -14,14 +29,17 @@ avant récupération d'INTENT. Planification avec digest/modèle/génération di
 
 38 nouveaux tests passent ; une reprise après arrêt réel est vérifiée sur Qdrant
 local sur disque. Suite complète locale : 2346 réussis, 12 sous-tests, 6 échecs
-AF_UNIX connus, avant l'ajout du dernier test interprocessus. CI publiée à confirmer.
+AF_UNIX connus, avant l'ajout du dernier test interprocessus. Les six échecs passent ensuite en CI Linux.
 
 Core : `spawn` remplace le `fork` résiduel dans la sonde du registre ; 44 tests
 et 18 sous-tests ciblés réussis avec `-W error`. La CI complète est épinglée
-sur la nouvelle révision Memory. Aucun runtime ou service n'est activé.
+sur la nouvelle révision Memory et a réussi. Aucun runtime ou service n'est activé.
 
 J2 reste ouvert : inventaire/pagination, couverture intégrale des 19 scénarios,
-coordination alias/droits et recette du serveur Qdrant réel. Les résultats G229
+coordination alias/droits et recette du serveur Qdrant réel. L’inventaire existant
+`build_manifest` lit toute la collection : son raccordement périodique doit réutiliser
+le lecteur par descripteur et définir une reprise qui ne perd aucun document
+modifié entre deux pages. Les résultats G229
 ci-dessous restent des preuves historiques sur les anciens SHAs.
 
 ## Décision et périmètre
@@ -37,7 +55,7 @@ Pas de fusion main, déploiement VM ou modification du corpus réel.
 | --- | --- | --- |
 | Core dialogue/missions/SOUL/autorisations | Intégrés dans la branche de développement | Modèle réel et recette intégrée VM/PC |
 | Memory canon/journal | Implémentés et testés en isolation | Coordination journal/index et reprise multi-services |
-| Worker Qdrant | Verrou obligatoire, lecture canonique par descripteur, preuve digest/modèle/génération dans G229 Memory | Contrat complet de 19 scénarios sur le chemin réel, réconciliation et serveur réel |
+| Worker Qdrant | Verrou et preuve complète G229 ; consommation bornée du journal et reprise G230 | Contrat complet de 19 scénarios sur le chemin réel, réconciliation et serveur réel |
 | Dashboard Claude jusqu'à C178 | Fusion publiée, historique conservé | Vraie recette Windows |
 | Monitoring Memory distant | Module intégré dans la branche publiée | Provisionnement SSH privé et recette VM non faits |
 | GPU dashboard | Contrat et rendu sur exemples intégrés | Collecteur réel non raccordé par ce lot |
@@ -62,7 +80,7 @@ et le refus d'une étiquette imposée par l'appelant. Le test d'arrêt HTTP capt
 explicitement la déconnexion attendue, joint son thread et ferme la connexion.
 Les tests de registre emploient spawn plutôt que fork dans un processus multithread.
 
-## Qualification GitHub Actions sur les commits publiés
+## Historique G229 — Qualification GitHub Actions sur les commits publiés
 
 | Suite | Révision testée | Résultat |
 | --- | --- | --- |
@@ -113,6 +131,6 @@ L'indisponibilité MCP bloque la recette distante, pas l'analyse du dépôt.
 1. Terminer J2 : contrat réel, reprise journal/index, contrôle de dérive à révision égale.
 2. Contre-revue indépendante Claude du lot G229 et de l'intégration (fiche dédiée).
 3. Restaurer MCP puis exécuter B01–B12 avec sauvegardes et SHAs figés.
-4. Entretien CI : retirer le `fork` restant des sondes de registre et mettre à jour les actions Node.
+4. Entretien CI : mettre à jour les actions Node ; suppression du `fork` résiduel validée en G230.
 
 Les anciens rapports sont conservés comme preuves datées, sans réécriture rétroactive.

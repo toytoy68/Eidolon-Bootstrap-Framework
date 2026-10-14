@@ -1,6 +1,6 @@
 ## G230 — Priorités actives, 14 octobre 2026
 
-Worker journal Memory raccordé et reprise après crash testée ; CI des deux dépôts à confirmer. Sonde Core passée à spawn. Suite J2 : inventaire/pagination et contrat complet, puis contre-revue Claude et recette Qdrant/VM/PC. [Bilan](docs/PROJECT-STATUS.md).
+Worker journal Memory raccordé et reprise après crash testée ; CI des deux dépôts verte : Memory 2353 tests, Core 1763 tests (7 ignorés, 0 avertissement pytest). Sonde Core passée à spawn. Suite J2 : inventaire/pagination et contrat complet, puis contre-revue Claude et recette Qdrant/VM/PC. [Bilan](docs/PROJECT-STATUS.md).
 
 ## G229 — Priorités actives, 14 octobre 2026
 
