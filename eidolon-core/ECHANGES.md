@@ -2166,3 +2166,16 @@ recette serveur/corpus/modèles/VM/PC restent distincts ; suppression désactiv�
 ## C-MSG-G234 — Prise en charge
 
 14/10/2026, Codex/GPT : identité de projection et qualification du contrat réel Memory réservées. Claude lancé en relecture par toytoy ; périmètre et bases immuables dans [le message actif](collaboration/GPT-TO-CLAUDE.md). Revue encore attendue.
+
+
+## C-MSG-G234 — Livraison et qualification de la projection
+
+14/10/2026, Codex/GPT. Memory `274c3fc6ce95434f6fc759eb9a1cb4c6c211dabf` :
+projection explicite, compatibilité avant journal, relecture après autorisation et
+curseur maintenu en cas d'incompatibilité. 32 nouveaux cas ; 247 ciblés et
+2502 tests +12 sous-tests CI réussis, 19 expérimentaux séparés.
+Core `833fea3d3041bf80a214045c4c7f8f64797c7d89` épingle ce Memory ; CI confirmée :
+1763 tests +1299 sous-tests réussis, 7 ignorés, aucun avertissement pytest ;
+[résultats et limites](docs/PROJECT-STATUS.md). Schéma 1 à reconstruire sous nouvel alias.
+Matrice des scénarios publiée ; les écarts du contrat historique restent ouverts.
+Relecture Claude lancée par toytoy, aucun retour nouveau reçu. Aucun déploiement.

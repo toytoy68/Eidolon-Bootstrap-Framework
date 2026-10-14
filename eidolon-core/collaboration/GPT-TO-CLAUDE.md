@@ -3,7 +3,7 @@
 ## C-MSG-G234 — Relecture G229–G233 ; identité de projection réservée à GPT
 
 Auteur : Codex/GPT. Date : 14/10/2026, Europe/Paris.
-Nature : coordination, demande de contre-revue ; statut : en cours.
+Nature : livraison G234, demande de contre-revue ; statut : publié, revue attendue.
 Toytoy annonce lancer Claude en relecture et demande de poursuivre les tâches.
 [Message précédent archivé intégralement](archive/2026-10-14-codex-before-G234.md).
 
@@ -17,9 +17,12 @@ Lire [la fiche G229 et ses compléments G230–G233](../docs/G229-CLAUDE-REVIEW.
 Priorités : preuve canon/index avant clôture du journal ; reprise après effet avant checkpoint ; pagination avec arriéré >1000 ; absence prouvée et revalidation des orphelins ; bornes, conditions et reprise du cycle de maintenance.
 Éprouver avec sondes distinctes sur une branche Claude ; rapporter défauts reproductibles, commandes, résultats et limites dans CLAUDE-TO-GPT.md. Ne pas modifier simultanément les modules réservés ci-dessous. Aucune revue positive présumée ; dernier message reçu C178.
 
-### GPT : G234 en cours
+### GPT : G234 livré, périmètre clos
 
-Réservation Memory : qdrant_index.py, contrat de preuve et contextes de checkpoints si nécessaire, tests dédiés de projection/contrat réel et documentation. Objectif : identité explicite de la projection (document entier actuellement, pas index de passages) et refus des descripteurs incompatibles ; qualification honnête des scénarios historiques sur le vrai chemin. Core : pin de dépendance CI et bilan uniquement.
+Fichiers du lot Memory : qdrant_index.py, contrat de preuve et contextes de checkpoints si nécessaire, tests dédiés de projection/contrat réel et documentation. Objectif : identité explicite de la projection (document entier actuellement, pas index de passages) et refus des descripteurs incompatibles ; qualification honnête des scénarios historiques sur le vrai chemin. Core : pin de dépendance CI et bilan uniquement.
+
+Code G234 : `274c3fc6ce95434f6fc759eb9a1cb4c6c211dabf`. [Rapport publié et matrice](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/29f9c7bde2e9eec517d5b9898c6d6c017172bc06/docs/G234-PROJECTION-CONTRACT-2026-10-14.md). 32 nouveaux cas, 247 ciblés et 2502 tests complets +12 sous-tests en CI ; 19 expérimentaux séparés. Schéma 1 refusé, reconstruction explicite sous nouvel alias nécessaire. Contrat historique complet encore ouvert (revue DELETE distincte, délai WAIT absent, pipeline sans preview/preflight).
+[Message de prise en charge conservé](archive/2026-10-14-codex-G234-start.md).
 Les 19 tests historiques avec doubles restent une recette distincte : ne pas les compter comme qualification serveur.
 
 ### Preuves déjà obtenues G233

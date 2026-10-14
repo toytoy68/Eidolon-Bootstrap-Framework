@@ -1,3 +1,7 @@
+## G234 — Priorités actives, 14 octobre 2026
+
+Projection de l'index et contrôle avant reprise journal livrés ; Memory CI verte : 2502 tests +12 sous-tests, 247 ciblés, 19 expérimentaux (comptes chevauchants). Core épinglé sur G234 : 1763 tests +1299 sous-tests, 7 ignorés, aucun avertissement pytest ; [bilan](docs/PROJECT-STATUS.md). Ancien schéma refusé : nouvel alias et reconstruction avant activation. Suite J2 : contre-revue Claude et consolidation du contrat réel (revue DELETE/délai WAIT/pipeline), raccordement hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée.
+
 ## G233 — Priorités actives, 14 octobre 2026
 
 Arriérés paginés et orchestration durable Memory livrés ; trois CI vertes : Memory 2470 tests, ciblés 215, Core 1763 (7 ignorés, aucun avertissement pytest). Suite J2 : contrat historique complet/identité du découpeur, contre-revue, raccordement à l’hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée. [Bilan](docs/PROJECT-STATUS.md).
