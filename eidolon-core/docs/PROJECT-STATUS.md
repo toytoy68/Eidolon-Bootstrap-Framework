@@ -4,6 +4,26 @@ Mise à jour : 14 octobre 2026 après les CI terminées à 18 h 53 Europe/Paris,
 
 **Deux branches publiées, trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
 
+## G230 — Suite du 14 octobre après 19 h 55
+
+Memory publié : `180f3a72064636964e718e2d81e88e198aeac01f`. Consommateur borné du
+journal raccordé au worker verrouillé, reprise après accusé perdu/arrêt du processus
+sans ré-embedding, transitions conditionnelles SQLite et vérification durable
+avant récupération d'INTENT. Planification avec digest/modèle/génération disponible.
+[Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/180f3a72064636964e718e2d81e88e198aeac01f/docs/G230-JOURNAL-RECOVERY-2026-10-14.md).
+
+38 nouveaux tests passent ; une reprise après arrêt réel est vérifiée sur Qdrant
+local sur disque. Suite complète locale : 2346 réussis, 12 sous-tests, 6 échecs
+AF_UNIX connus, avant l'ajout du dernier test interprocessus. CI publiée à confirmer.
+
+Core : `spawn` remplace le `fork` résiduel dans la sonde du registre ; 44 tests
+et 18 sous-tests ciblés réussis avec `-W error`. La CI complète est épinglée
+sur la nouvelle révision Memory. Aucun runtime ou service n'est activé.
+
+J2 reste ouvert : inventaire/pagination, couverture intégrale des 19 scénarios,
+coordination alias/droits et recette du serveur Qdrant réel. Les résultats G229
+ci-dessous restent des preuves historiques sur les anciens SHAs.
+
 ## Décision et périmètre
 
 Toytoy a validé à 18 h 18 Europe/Paris cet ordre : cohérence Memory/Qdrant,

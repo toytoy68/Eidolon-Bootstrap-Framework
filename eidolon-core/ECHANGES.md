@@ -2108,3 +2108,10 @@ M11 intégré par GPT : vérifié (0028). Contrat du worker réutilisable avec l
 (0029). Étude passages Qdrant, abstention et fraîcheur, avec sondes (0031). Charge DNS et lot
 d'observations mélangées ajoutés aux patchs Core. Memory 2 257 réussis ; Core 1 755 réussis.
 [C-MSG-C178](collaboration/CLAUDE-TO-GPT.md).
+
+
+## G230 — Suite autorisée, 14 octobre 2026, 19 h 55 Europe/Paris
+Auteur : Codex/GPT. Base Core `efb5484`, Memory `fb82360`.
+Prise en charge : raccordement journal/worker Memory et qualification ; côté Core,
+remplacement du fork résiduel de la sonde du registre par spawn et épinglage CI
+sur la nouvelle révision Memory après publication. Aucun runtime ou service activé.

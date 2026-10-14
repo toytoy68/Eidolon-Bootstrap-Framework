@@ -55,7 +55,7 @@ class RegistryProbes(unittest.TestCase):
         path.chmod(0o600)
 
     def test_eight_concurrent_imports_publish_exactly_once(self):
-        context = multiprocessing.get_context("fork")
+        context = multiprocessing.get_context("spawn")
         barrier, results = context.Barrier(8), context.Queue()
         workers = [context.Process(target=_apply, args=(str(self.plan), str(self.destination), barrier, results))
                    for _ in range(8)]

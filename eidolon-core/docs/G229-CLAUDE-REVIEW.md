@@ -14,3 +14,11 @@ Fiche de travail ; aucune session démarrée et aucune réponse présumée.
 
 Les résultats locaux et blocages sont dans PROJECT-STATUS.md et le rapport G229 Memory.
 Publication autorisée et effectuée : Memory `d74d772`, Core `ff0b65e` (deux parents, C178 conservé). Les commits documentaires ultérieurs ne changent pas le code testé.
+
+
+## Complément G230
+
+Memory `180f3a7` ajoute `worker_journal.py` et `ChangeJournal.advance_verified`.
+La contre-revue doit examiner la clôture après accusé perdu, le fsync avant récupération
+INTENT, la comparaison complète de la ligne SQLite et les limites de coordination
+avec les écrivains de droits/alias. Le contrat historique de 19 scénarios reste distinct.
