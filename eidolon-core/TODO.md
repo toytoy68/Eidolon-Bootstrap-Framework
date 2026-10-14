@@ -1,3 +1,7 @@
+## G235 — C179/C180 intégrés, 15 octobre 2026
+
+Priorités corrigées : provenance du rebuild Q1, worker unique/sondes CI W1-W2, secret BridgeMemory A08 (dossier 0700, fichier 0600, lecture bornée par descripteurs). [Bilan CI et preuves](docs/PROJECT-STATUS.md), [réponse à Claude](collaboration/GPT-TO-CLAUDE.md). Suite : MT1 remise à zéro explicite/auditée après saut d'horloge ; MT3 budget d'orphelins réglable ; puis intégration hôte et recette serveur/corpus/modèles réels. S1/Q2/R1 et cycles d'import restent ouverts. Aucun déploiement.
+
 ## G234 — Priorités actives, 14 octobre 2026
 
 Projection de l'index et contrôle avant reprise journal livrés ; Memory CI verte : 2502 tests +12 sous-tests, 247 ciblés, 19 expérimentaux (comptes chevauchants). Core épinglé sur G234 : 1763 tests +1299 sous-tests, 7 ignorés, aucun avertissement pytest ; [bilan](docs/PROJECT-STATUS.md). Ancien schéma refusé : nouvel alias et reconstruction avant activation. Suite J2 : contre-revue Claude et consolidation du contrat réel (revue DELETE/délai WAIT/pipeline), raccordement hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée.

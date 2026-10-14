@@ -1,8 +1,57 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026, lot G234, Codex/GPT.
+Mise à jour : 15 octobre 2026, lot G235, Codex/GPT.
 
-**G234 publié : identité de projection explicite et contrôle avant reprise du journal. Trois workflows verts ; J2 et recette VM/PC restent ouverts.**
+**Revue C179/C180 intégrée ; Q1, W1/W2 et A08 corrigés. Trois workflows réussis ; maintenance et recette VM/PC encore ouvertes.**
+
+## G235 — Suite de la relecture Claude
+
+Code Memory : `507fbb140676dab2b870b582733f0bd421a3b845`.
+Code Core : `b8eadc04b2994c27df5d295ea796de4c39bfef68`.
+Claude intégré : `2dd8de86def61c811a0d4b6f0d53057c90cfe9c3`, historique complet préservé.
+[Réponse à Claude](../collaboration/GPT-TO-CLAUDE.md) et
+[rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/41fe3810aed1558a0bbaa41ea71c1181e329fe68/docs/G235-CLAUDE-REVIEW-2026-10-15.md).
+
+La reconstruction Qdrant conserve maintenant ses preuves : la maintenance ne
+ré-encode plus chaque document après rebuild. Lecture canonique ancrée sous verrou,
+points écrits dans la génération préparée, anciennes générations conservées.
+Un seul worker journal applicatif subsiste ; les anciennes expériences sont
+exclusivement sous tests. Les sondes de Claude sur le vrai chemin entrent en CI.
+Les deux mutations des gardes finaux sont détectées, reproduction indépendante.
+
+Le secret BridgeMemory est lu par descripteurs, sans lien, dans un dossier privé
+0700 avec fichier 0600 du propriétaire, régulier et sans hardlink. Lecture bornée
+à 4096 octets, contrôle après lecture, aucun réseau si refus. **Avant activation,
+vérifier le dossier du jeton : un parent 0755 est maintenant refusé.** Aucun secret
+réel ni permission de production modifiés. Ce lecteur cible le pont Linux.
+
+Preuves locales : 361 tests Memory ciblés +5 xfail ; 29 tests Core ciblés verts.
+Q1 reproduit rouge avec la sonde Claude ; les 10 nouveaux tests du secret étaient
+rouges avant correction. Contributions Claude I1/W1 et corpus de calibration
+intégrés sans retoucher leurs résultats attendus ni leurs empreintes.
+
+| Validation publiée | Résultat |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38647247658) | **2567 réussis, 5 xfail et 12 sous-tests réussis**, 280,22 s |
+| Contrat du vrai worker, même workflow | **35 réussis**, 2,61 s |
+| [Qdrant et sondes Claude](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38647247571) | **260 réussis, 1 xfail (Q2)**, 18,63 s |
+| [Core avec Memory G235](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38647296057) | **1786 réussis, 7 ignorés et 1299 sous-tests réussis**, 347,34 s |
+
+Core : aucun avertissement pytest ; 7 exclusions connues (numpy/ONNX/OpenCV et modèles
+d’identité optionnels). Avertissements Node des actions GitHub distincts de pytest.
+Comptes ciblés/complets chevauchants, non additionnés.
+
+Les xfail sont des exigences ouvertes, pas des réussites : fraîcheur dans le rappel,
+passages de production, nettoyage des générations ratées, ancienneté S1 et API delete Q2.
+La dernière correspond à une primitive du contrat IndexPort ; aucune suppression
+n'est exécutée par le worker/cycle. Aucun nettoyage automatique autorisé par les tests.
+
+Prochain lot : reprise explicite/auditée après saut d'horloge (MT1), borne d'orphelins
+configurable (MT3), puis raccordement de l'hôte et recette serveur/corpus/modèles réels.
+S1 et séparation du port administratif Q2 restent ouverts ; cycles d'import en dette.
+Revue complémentaire Q1/A08 demandée. Aucun déploiement VM, fusion main ou activation.
+Les résultats suivants sont historiques et leurs comptes ne s'additionnent pas.
+
 
 ## G234 — Projection de l'index et contrat réel
 
