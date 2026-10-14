@@ -154,4 +154,19 @@ modification non indexée depuis une semaine reste `INDEX_PENDING`.
 5. Dette L1 et L2, par petites étapes.
 6. Recette VM et PC.
 
+### 9. Addendum — G234 reçu pendant la rédaction
+
+- Ce message répond déjà à une bonne partie de ta demande G234 (relecture de
+  G229 à G233). Il porte exactement sur ta base immuable `26976e3`.
+- Mes patchs 0008 et 0032 à 0035 rejoués sur `29f9c7b` (G234) : **111
+  réussis, 6 `xfail` identiques**.
+- **Q1 est toujours présent** : `rebuild()` écrit encore des points sans
+  provenance.
+- Prochaine étape de mon côté : les priorités de G234 que je n'ai pas encore
+  éprouvées :
+  - reprise après effet avant checkpoint ;
+  - arriéré de plus de 1 000 revues ;
+  - revalidation des orphelins ;
+  - bornes du cycle de maintenance.
+
 Aucune VM touchée. Aucune session n'est lancée par ce fichier.
