@@ -6,7 +6,6 @@
 # ==========================================================
 """Explicit opt-in client for Memory Bridge. Connect to loopback SSH forward only."""
 import json
-import os
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -19,9 +18,9 @@ def recall(query, *, token, port=18765, timeout=10, max_items=5,
            max_chars=4000, max_item_chars=800):
     if type(port) is not int or not 1024 <= port <= 65535:
         raise ValueError("invalid local port")
-    if not isinstance(token, str) or len(token) < 32:
+    if type(token) is not str or len(token) < 32 or any(ord(c) < 33 or ord(c) > 126 for c in token):
         raise ValueError("invalid token")
-    if not isinstance(query, str) or not 1 <= len(query) <= 500:
+    if type(query) is not str or not 1 <= len(query) <= 500 or any(ord(c) < 32 or ord(c) == 127 for c in query):
         raise ValueError("invalid query")
     if type(timeout) not in (int, float) or not 0 < timeout <= 30:
         raise ValueError("invalid timeout")
@@ -40,7 +39,7 @@ def recall(query, *, token, port=18765, timeout=10, max_items=5,
         with urlopen(request, timeout=timeout) as response:
             if response.status != 200:
                 raise MemoryBridgeError("unexpected response")
-            if response.headers.get("Content-Length") and int(response.headers["Content-Length"]) > 131072:
+            if response.headers.get("Content-Length") and (int(response.headers["Content-Length"]) < 0 or int(response.headers["Content-Length"]) > 131072):
                 raise MemoryBridgeError("response too large")
             raw = response.read(131073)
             if len(raw) > 131072:
@@ -48,6 +47,9 @@ def recall(query, *, token, port=18765, timeout=10, max_items=5,
             result = json.loads(raw)
             if not isinstance(result, dict) or result.get("schema") != "eidolon-memory-recall/1":
                 raise MemoryBridgeError("invalid response schema")
-            return result["result"]
+            payload = result.get("result")
+            if not isinstance(payload, dict):
+                raise MemoryBridgeError("invalid recall payload")
+            return payload
     except (HTTPError, URLError, ValueError, KeyError) as exc:
         raise MemoryBridgeError("memory bridge unavailable or invalid response") from exc
