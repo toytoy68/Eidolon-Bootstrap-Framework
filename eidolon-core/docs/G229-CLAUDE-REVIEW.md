@@ -22,3 +22,12 @@ Memory `180f3a7` ajoute `worker_journal.py` et `ChangeJournal.advance_verified`.
 La contre-revue doit examiner la clôture après accusé perdu, le fsync avant récupération
 INTENT, la comparaison complète de la ligne SQLite et les limites de coordination
 avec les écrivains de droits/alias. Le contrat historique de 19 scénarios reste distinct.
+
+
+## Complément G231
+
+Memory `855a9eb` ajoute `ReconciliationScan` et `ensure_upsert_intent` : examiner
+l'intervalle entre commit du journal et commit du curseur, les modifications derrière
+le curseur, le contexte du checkpoint, la pause sur file pleine et le sens limité
+de COMPLETE. Les deux captures complètes sous verrou nécessitent une mesure sur le
+corpus réel ; la recherche inverse des orphelins n'est pas couverte par ce lot.

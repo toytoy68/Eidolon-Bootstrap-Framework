@@ -2120,3 +2120,10 @@ G230 confirmé : Memory `180f3a7` (2353 tests, 12 sous-tests ; 19 expérimentaux
 98 ciblés Qdrant), Core `e7cba2b` (1763 tests, 1299 sous-tests, 7 ignorés,
 aucun avertissement pytest). Les huit avertissements fork G229 ont disparu.
 [Bilan et liens CI](docs/PROJECT-STATUS.md). J2 et recette VM/PC restent ouverts.
+
+
+## G231 — Suite autorisée, 14 octobre 2026, 21 h 08 Europe/Paris
+Auteur : Codex/GPT. Bases Core `e316af8`, Memory `5d5c7b0`.
+Memory `855a9eb` ajoute le balayage canonique reprenable, la détection de changement
+derrière le curseur et la pause sur file pleine. Prise en charge Core : épinglage CI
+sur ce lot et bilan consolidé. Aucun changement du runtime Core ni déploiement.

@@ -1,5 +1,7 @@
 # Eidolon Core v0.1
 
+**G231 — suite du 14 octobre** : balayage Memory reprenable publié, avec curseur durable et pause sur file pleine ; Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Qualification CI en cours.
+
 **G230 — suite du 14 octobre** : reprise journal/index Memory implémentée et éprouvée sur disque ; CI Core épinglée sur ce lot, sonde de concurrence passée à `spawn`. [Bilan courant](docs/PROJECT-STATUS.md). CI du lot verte : Memory 2353 tests, Core 1763 (7 ignorés, aucun avertissement pytest).
 
 **État courant du 14 octobre — G229** : [bilan consolidé](docs/PROJECT-STATUS.md). Consolidation Memory et fusion Claude publiées ; trois workflows verts. Core : 1763 tests réussis, 7 ignorés, 8 avertissements. J2 et recette VM/PC restent ouverts. Les repères du 9 octobre ci-dessous sont historiques.

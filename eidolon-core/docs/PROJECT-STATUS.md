@@ -1,8 +1,34 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026 après qualification du lot G230, Codex/GPT.
+Mise à jour : 14 octobre 2026, lot G231, Codex/GPT.
 
-**Deux branches publiées, trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+**G231 publié : qualification CI en cours. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+
+## G231 — Balayage reprenable, suite de 21 h 08
+
+Memory publié : `855a9eb325a306543afdf7a703fb8b37ec739c9b`.
+[Rapport et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/855a9eb325a306543afdf7a703fb8b37ec739c9b/docs/G231-RESUMABLE-SCAN-2026-10-14.md).
+
+Le scanner retrouve les upserts canoniques absents du journal, en pages avec
+checkpoint SQLite. Les inventaires initial/final détectent les modifications
+derrière le curseur ; une coupure après commit du journal ne crée pas de doublon.
+Une file pleine suspend le parcours au document concerné, puis la reprise suit
+le traitement ou la revue du journal. Aucun point Qdrant n'est écrit par le scanner.
+
+33 nouveaux tests passent avec `-W error` ; 146 tests ciblés ont également passé
+avant le dernier cas de checkpoint. Suite complète locale avant ce dernier cas :
+2379 réussis, 12 sous-tests, 6 échecs AF_UNIX connus. CI finale à confirmer.
+Core est épinglé sur la nouvelle révision Memory pour sa suite d'intégration.
+
+Les captures initiale/finale lisent toute la collection sous verrou, avec budgets
+d'entrées/octets ; les pages seules sont limitées à 100 documents par défaut.
+COMPLETE décrit le passage canonique, pas la synchronisation finale de l'index.
+Un nouveau passage périodique est explicitement demandé par `restart=True`.
+
+Suite J2 : inventaire inverse des points orphelins et absence prouvée, orchestration
+scanner/worker, contrat historique complet, serveur Qdrant réel et coût sur le
+corpus réel. La recette VM/PC reste dépendante des accès. Les lots ci-dessous sont
+conservés comme preuves historiques.
 
 ## G230 — Suite du 14 octobre après 19 h 55
 
