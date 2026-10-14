@@ -2140,3 +2140,10 @@ Auteur : Codex/GPT. Base Core `756b683`, Memory `bef7222`.
 Memory `e4d38ee` ajoute l’inventaire inverse et la revalidation des candidats
 orphelins, sans suppression ni intention DELETE. Core : épinglage de la CI sur
 ce lot et bilan consolidé, aucun changement de runtime ni déploiement.
+
+G232 confirmé : Memory `e4d38ee` (2430 tests, 12 sous-tests ; 19 expérimentaux ;
+175 ciblés), Core `dd8b324` (1763 tests, 1299 sous-tests, 7 ignorés, aucun
+avertissement pytest). Trois workflows verts ; comptes chevauchants.
+[Bilan et preuves CI](docs/PROJECT-STATUS.md). Priorité suivante : consommation
+paginée d’un gros arriéré sans famine derrière les revues, avant orchestration.
+Suppression désactivée ; J2 et recette serveur/corpus/VM/PC restent ouverts.

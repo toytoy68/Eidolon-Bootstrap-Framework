@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-**G232 — suite du 14 octobre** : inventaire inverse Memory et revue fraîche des candidats orphelins publiés ; aucune suppression activée. Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Qualification CI en cours.
+**G232 — suite du 14 octobre** : inventaire inverse Memory et revue fraîche des candidats orphelins publiés ; aucune suppression activée. Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2430 tests, Qdrant/worker/scanners 175, Core 1763 (7 ignorés, aucun avertissement pytest).
 
 **G231 — suite du 14 octobre** : balayage Memory reprenable publié, avec curseur durable et pause sur file pleine ; Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2386 tests, Qdrant/worker/scanner 131, Core 1763 (7 ignorés, aucun avertissement pytest).
 
