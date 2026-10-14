@@ -161,3 +161,9 @@ Ordre sur `26976e3` : **0008, 0032, 0033, 0034, 0035**. GPT a déjà intégré l
 | 0033 | Contrat contre le **vrai** worker `JournalUpsertWorker` (Markdown réel, Qdrant en mémoire) : révisions rapides, écriture jamais renommée, droits retirés et canon modifié sur le chemin de reprise, aucune suppression ; séparation attente/revue/refus. **Tue deux mutants** qui survivent aux 26 tests GPT | 9 réussis |
 | 0034 | Jeu `dev-calibration-v2` (60 questions dont 8 pièges proches, figé, disjoint du test) ; états `INDEX_PENDING`, `INDEX_STALE`, `INDEX_UNAVAILABLE`, `INDEX_CURRENT` par la vraie chaîne. `xfail` strict **S1** (pas d'escalade par âge) | 5 réussis, 1 xfail |
 | 0035 | Générations Qdrant : bascule d'alias, ancienne génération gardée, écriture concurrente jamais validée. `xfail` strict **Q1** (provenance perdue après `rebuild`) et **Q2** (`delete()` public) | 2 réussis, 2 xfail ; suite Memory complète **2 529 réussis, 6 xfail, 0 échec** |
+
+## Patch 0036 (G234, base `29f9c7b`, après 0008 et 0032 à 0035)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0036 | Contre-revue du cycle de maintenance (Markdown réel, Qdrant en mémoire ou local sur disque) : 1 200 indexations saines traitées une seule fois ; reprise après `rebuild` (ré-encodage complet, convergence, rien supprimé) ; processus tué **après** l'écriture du point et **avant** `INDEXED` : reprise sans second encodage. Caractérisations à trancher : **MT1** (saut d'horloge en avant = `CLOCK_REVERSED` sans issue) et **MT3** (index au-delà de `max_points` = cycle jamais terminé) | 5 réussis ; suite Memory complète **2 566 réussis, 6 xfail, 0 échec** |

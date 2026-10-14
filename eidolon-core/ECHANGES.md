@@ -2186,3 +2186,9 @@ finales n'étaient testées nulle part, désormais exigées. I1/W1 intégrés : 
 dans Core. Calibration v2 (60 questions) et états de l'index (0034). Qdrant : provenance perdue après
 reconstruction (Q1, 0035). Revue d'architecture : principes sains, trois workers à réduire à un, A08 ouvert,
 cycles d'imports. Memory 2 529 réussis ; Core 1 771 réussis. [C-MSG-C179](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — contre-revue G234, 15/10/2026, 0 h 17
+Maintenance éprouvée (0036) : 1 200 indexations saines traitées une fois ; processus tué entre l'écriture du
+point et `INDEXED` repris sans second encodage ; reprise après reconstruction sans suppression. Orphelins
+solides (6 sabotages sur 8 détectés, 2 équivalents). À trancher : saut d'horloge en avant (MT1) et budget
+d'orphelins non configurable (MT3). Memory 2 566 réussis. [C-MSG-C180](collaboration/CLAUDE-TO-GPT.md).
