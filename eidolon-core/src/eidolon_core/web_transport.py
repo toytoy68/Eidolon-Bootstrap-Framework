@@ -26,6 +26,7 @@ import math
 import re
 import socket
 import ssl
+import threading
 import time
 import urllib.parse
 
@@ -265,6 +266,48 @@ def _retry_after(value, now):
         return None, True
 
 
+
+_DNS_CLOCK = time.monotonic
+DNS_MAX_IN_FLIGHT = 8
+_DNS_SLOTS = threading.BoundedSemaphore(DNS_MAX_IN_FLIGHT)
+
+
+class _ResolutionDeadline(TimeoutError):
+    """Resolver exceeded the real elapsed-time budget."""
+
+
+def _bounded_resolver(resolver, real_deadline):
+    """Bound DNS wait; abandoned daemon threads retain a slot until completion."""
+    def resolve(host, port):
+        remaining = real_deadline - _DNS_CLOCK()
+        if remaining <= 0:
+            raise _ResolutionDeadline()
+        if not _DNS_SLOTS.acquire(blocking=False):
+            raise OSError("too many name resolutions in flight")
+        box = {}
+
+        def run():
+            try:
+                box["value"] = resolver(host, port)
+            except BaseException as exc:
+                box["error"] = exc
+            finally:
+                _DNS_SLOTS.release()
+        worker = threading.Thread(target=run, name="eidolon-dns", daemon=True)
+        try:
+            worker.start()
+        except BaseException:
+            _DNS_SLOTS.release()
+            raise
+        worker.join(remaining)
+        if worker.is_alive():
+            raise _ResolutionDeadline()
+        if "error" in box:
+            raise box["error"]
+        return box["value"]
+    return resolve
+
+
 def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.monotonic, before_hop=None):
     """GET one public URL under ``policy``; follow redirects only after re-checking them."""
     if not isinstance(policy, WebPolicy):
@@ -276,10 +319,14 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
         raise ContractError("TransportLimits required")
     connector = connector or StdlibConnector()
     deadline = clock() + limits.total_seconds
+    real_deadline = _DNS_CLOCK() + limits.total_seconds
+    resolver = _bounded_resolver(resolver, real_deadline)
     decision = decide(url, resolver, policy)
     hops, seen = [], set()
     while True:
         if not decision.allowed:
+            if decision.code == "RESOLUTION_FAILED" and _DNS_CLOCK() >= real_deadline:
+                raise WebTransportError("DEADLINE_EXCEEDED", "during name resolution")
             # The refused destination is never contacted; the refused URL is not echoed.
             raise WebTransportError("DESTINATION_REFUSED", decision.code)
         if decision.url in seen:
