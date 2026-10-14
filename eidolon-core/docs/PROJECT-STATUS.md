@@ -1,8 +1,52 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026, lot G233, Codex/GPT.
+Mise à jour : 14 octobre 2026, lot G234, Codex/GPT.
 
-**G233 publié et qualifié : trois workflows verts. Pagination et cycle durable livrés ; J2 et recette VM/PC restent ouverts.**
+**G234 publié : identité de projection explicite et contrôle avant reprise du journal. Trois workflows verts ; J2 et recette VM/PC restent ouverts.**
+
+## G234 — Projection de l'index et contrat réel
+
+Memory testé : `274c3fc6ce95434f6fc759eb9a1cb4c6c211dabf`.
+Core épinglé dessus : `833fea3d3041bf80a214045c4c7f8f64797c7d89`.
+[Rapport et matrice des 19 scénarios](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/29f9c7bde2e9eec517d5b9898c6d6c017172bc06/docs/G234-PROJECTION-CONTRACT-2026-10-14.md).
+
+Le descripteur Qdrant et les points vérifiés identifient la projection réelle :
+contenu entier de l'Information, pas passages. Une projection inconnue, un ancien
+schéma ou un modèle incompatible est refusé avant la récupération du journal.
+Un changement pendant l'embedding ne permet plus de réétiqueter le descripteur.
+Une mutation canonique dans l'autorisation est détectée avant l'écriture ; une
+incompatibilité en cours de page ne fait plus avancer le curseur au-delà de la ligne.
+
+**Compatibilité : le schéma 1 nécessite un nouvel alias et une reconstruction
+explicite**, puis de nouveaux checkpoints. Aucun ancien index n'a été modifié.
+Le rapport décrit la procédure préparatoire ; elle reste à qualifier sur serveur.
+
+32 nouveaux cas ; 28 échecs démontrés avant fonctionnalité et deux régressions
+complémentaires reproduites avant correction. Après correction, 247 tests ciblés
+passent localement avec -W error. Les 32 sont inclus dans ce compte.
+
+| Validation publiée | Résultat |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38638977007) | **2502 tests et 12 sous-tests réussis**, 92,34 s |
+| Worker expérimental, même workflow | **19 réussis**, 1,01 s ; distinct du pipeline réel |
+| [Qdrant et workers](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38638976951) | **247 réussis**, 13,25 s |
+| [Core avec Memory G234](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38639019833) | **1763 tests et 1299 sous-tests réussis, 7 ignorés, aucun avertissement pytest**, 308,59 s |
+
+Les sept exclusions concernent numpy/ONNX/OpenCV et les modèles d’identité
+optionnels. Les avertissements Node des actions GitHub sont distincts de pytest.
+Les comptes se chevauchent et ne s’additionnent pas.
+
+La matrice relie chaque scénario historique aux essais du vrai chemin local et
+signale les écarts : revue DELETE séparée, absence de délai WAIT/CLOSE_ABANDONED,
+et gardes par intention au lieu de preview/preflight. **Le contrat historique
+complet n'est pas déclaré qualifié.** Les 19 tests avec doubles restent inchangés.
+La relecture Claude est demandée et lancée par toytoy ; aucun retour nouveau reçu.
+
+Suite : consolider le contrat réel avec la contre-revue, raccorder l'hôte et
+qualifier serveur Qdrant/corpus/modèles réels, puis VM/PC. MCP indisponible au dernier
+constat ; aucune activation runtime, suppression ou fusion main. Les sections
+suivantes conservent les résultats historiques, sans additionner leurs comptes.
+
 
 ## G233 — Arriérés et orchestration, suite de 22 h 36
 

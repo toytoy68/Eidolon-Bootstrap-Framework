@@ -50,3 +50,14 @@ reports et conditions d’activité, redémarrage des scans après bascule de g�
 246 tests ciblés et 40 cas G233 passent ; arriéré >1000 et arrêt réel éprouvés.
 Le contrat historique complet/découpeur, les mesures de l’hôte et la recette serveur
 restent distincts. Aucun runtime activé. [Bilan](PROJECT-STATUS.md).
+
+
+## Complément G234
+
+Memory `274c3fc6ce95434f6fc759eb9a1cb4c6c211dabf` : schéma 2/projection explicite,
+contrôle de compatibilité avant INTENT et protection pendant embeddings.
+Revoir le refus du schéma 1, la reconstruction vers un nouvel alias, la portée
+de la preuve liée au descripteur et la relecture après autorisation.
+La matrice G234 documente les écarts de contrat 3/7 et preview/preflight : ne pas
+conclure « 19 scénarios réels conformes » à partir de la recette expérimentale.
+32 nouveaux cas, 247 ciblés locaux et CI réussis ; bilan CI complet dans PROJECT-STATUS.
