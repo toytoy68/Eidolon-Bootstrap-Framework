@@ -55,3 +55,12 @@ class WebBudgetTests(unittest.TestCase):
             with self.assertRaises(BudgetError):
                 budget.reserve("clockbad", "alice", "m1", "web.search", "q")
         self.assertIsNone(self.budget.inspect("clockbad"))
+
+    def test_invalid_finish_clock_preserves_reservation(self):
+        self.budget.reserve("finishbad", "alice", "m1", "web.search", "q")
+        for invalid in (float("nan"), float("inf"), -1.0):
+            budget = WebBudget(self.path, self.key, clock=lambda value=invalid: value)
+            with self.assertRaises(BudgetError):
+                budget.finish("finishbad", "SUCCEEDED", "receipt1")
+            self.assertEqual(self.budget.inspect("finishbad")["state"], "UNCERTAIN")
+        self.assertEqual(self.budget.finish("finishbad", "SUCCEEDED", "receipt1"), "SUCCEEDED")
