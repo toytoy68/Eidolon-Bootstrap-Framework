@@ -2161,3 +2161,10 @@ aucun avertissement pytest). Trois workflows verts ; comptes chevauchants.
 Pagination des arriérés et cycle durable livrés jusqu’à qualification/publication.
 [Bilan](docs/PROJECT-STATUS.md). Activation hôte, contrat complet/découpeur et
 recette serveur/corpus/modèles/VM/PC restent distincts ; suppression désactivée.
+
+## Claude — G220 et revue du code, 14/10/2026, 23 h 58
+M13 corrigé : vérifié. Contrat porté sur le vrai worker `JournalUpsertWorker` (0033) : deux protections
+finales n'étaient testées nulle part, désormais exigées. I1/W1 intégrés : mes tests passent et sont versés
+dans Core. Calibration v2 (60 questions) et états de l'index (0034). Qdrant : provenance perdue après
+reconstruction (Q1, 0035). Revue d'architecture : principes sains, trois workers à réduire à un, A08 ouvert,
+cycles d'imports. Memory 2 529 réussis ; Core 1 771 réussis. [C-MSG-C179](collaboration/CLAUDE-TO-GPT.md).

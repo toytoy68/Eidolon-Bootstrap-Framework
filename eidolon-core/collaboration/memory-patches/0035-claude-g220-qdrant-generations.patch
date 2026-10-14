@@ -1,0 +1,103 @@
+From 71aa4a9eea38447e36acde6fff007db52829553d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 14 Oct 2026 21:56:38 +0000
+Subject: [PATCH] test(claude-eval): G220-5 Qdrant generation probes
+
+Pinned: rebuild switches the alias and keeps the old generation; a verified
+upsert racing a rebuild is never reported verified. Strict xfail Q1
+(medium): rebuild() drops canonical_sha256/embedding_id/generation, so no
+point is verifiable after a rebuild. Q2 (low): public delete() and
+provenance-less upsert() remain on the adapter.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_qdrant_generation_probes_g220.py     | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_qdrant_generation_probes_g220.py
+
+diff --git a/tests/claude_memory_eval/test_qdrant_generation_probes_g220.py b/tests/claude_memory_eval/test_qdrant_generation_probes_g220.py
+new file mode 100644
+index 0000000..f9ec550
+--- /dev/null
++++ b/tests/claude_memory_eval/test_qdrant_generation_probes_g220.py
+@@ -0,0 +1,76 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_qdrant_generation_probes_g220.py
++# Description : Claude G220-5 : générations Qdrant, bascule d'alias, provenance après reconstruction
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Probes of QdrantIndex generations with an in-memory client (no server, no network). GPT's files unchanged."""
++import pytest
++
++from core.backend.filesystem import FilesystemBackend
++from core.backend.models import Memory
++from core.indexing.qdrant_index import QdrantIndex
++from core.indexing.worker_canonical import CanonicalReader
++
++qdrant = pytest.importorskip("qdrant_client")
++
++
++@pytest.fixture
++def setup(tmp_path):
++    root = tmp_path / "persistent"
++    backend = FilesystemBackend(root, tmp_path / "history")
++    for i in range(3):
++        backend.store(Memory(f"doc-{i}", content=f"texte {i}", revision=1))
++    client = qdrant.QdrantClient(":memory:")
++    index = QdrantIndex(client, "eidolon_claude_gen", embed=lambda _: [1.0, 0.0], dimensions=2,
++                        embedding_id="synthetic-v1", create=True)
++    yield root, client, index
++    client.close()
++
++
++def _collections(client):
++    return sorted(c.name for c in client.get_collections().collections)
++
++
++def test_a_rebuild_switches_the_alias_and_keeps_the_old_generation(setup):
++    """No automatic deletion: the previous generation survives the switch (retirement is a reviewed plan)."""
++    root, client, index = setup
++    before = index.active_generation()
++    index.rebuild(root)
++    after = index.active_generation()
++    assert after != before and set(_collections(client)) == {before, after}
++    assert index.status().documents == 3
++
++
++def test_a_verified_upsert_racing_a_rebuild_is_never_reported_verified(setup):
++    """The write lands in the old generation; read-back targets the new alias, so provenance cannot match."""
++    root, client, index = setup
++    memory = Memory("doc-0", content="texte 0", revision=1)
++    _, digest = CanonicalReader(root)("doc-0")
++    evidence = index.upsert_verified(memory, canonical_sha256=digest)
++    index.rebuild(root)
++    assert index.evidence_for("doc-0") != evidence
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding Q1 (G220, medium): rebuild() writes points with "
++                   "self._point(memory) WITHOUT canonical_sha256, embedding_id and generation. After any rebuild, "
++                   "evidence_for() returns None for every point: the journal worker re-embeds them as legacy, and "
++                   "the orphan inventory sees only points without provenance. Expected: rebuild binds the verified "
++                   "file digest (it already has entry.file_sha256 / CanonicalReader) like upsert_verified.")
++def test_a_rebuilt_generation_keeps_verifiable_provenance(setup):
++    root, client, index = setup
++    index.rebuild(root)
++    _, digest = CanonicalReader(root)("doc-0")
++    evidence = index.evidence_for("doc-0")
++    assert evidence is not None and evidence.canonical_sha256 == digest
++    assert evidence.generation == index.active_generation()
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding Q2 (G220, low): QdrantIndex still exposes public delete() "
++                   "and provenance-less upsert(). No worker calls them today, but 'no automatic deletion' rests on "
++                   "every future caller. Expected: remove them from the production adapter or guard them behind an "
++                   "explicit reviewed-deletion API.")
++def test_the_production_adapter_offers_no_unreviewed_deletion(setup):
++    _, _, index = setup
++    assert not hasattr(index, "delete")
+-- 
+2.43.0
+

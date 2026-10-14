@@ -1,0 +1,230 @@
+From 4c298afe19b1ff3932d692756b6d9de0d50fddae Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 14 Oct 2026 21:56:38 +0000
+Subject: [PATCH] test(claude-eval): G220-2/3 contract against the real
+ JournalUpsertWorker and WAIT/review separation
+
+Five scenarios not pinned by tests/test_worker_journal.py, with real Markdown
+and in-memory Qdrant. Two kill mutants that survive GPT's suite: removing the
+final rights check or the final canonical check before INDEXED on the
+lost-ack recovery path. Preflight/prepare: in-flight WAIT is waiting only;
+review blocks candidates of the same preview; deletes always review;
+MARK_PUBLISHED never an index proposal.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_preflight_separation_g220.py         |  61 ++++++++
+ .../test_real_worker_contract_g220.py         | 132 ++++++++++++++++++
+ 2 files changed, 193 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_preflight_separation_g220.py
+ create mode 100644 tests/claude_memory_eval/test_real_worker_contract_g220.py
+
+diff --git a/tests/claude_memory_eval/test_preflight_separation_g220.py b/tests/claude_memory_eval/test_preflight_separation_g220.py
+new file mode 100644
+index 0000000..961a2fe
+--- /dev/null
++++ b/tests/claude_memory_eval/test_preflight_separation_g220.py
+@@ -0,0 +1,61 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_preflight_separation_g220.py
++# Description : Contre-revue Claude G220-2 : séparation attente / revue / refus (preflight, prepare, preview)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Pins GPT's G220 decision: an ordinary WAIT is not a human review; integrity, abandonment and supersession
++are. Built from real journal rows through the preview, then preflight and prepare_work."""
++import hashlib
++
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.reconcile_plan import ABSENT, Canonical
++from core.indexing.reconcile_preview import preview_reconciliation
++from core.indexing.worker_preflight import preflight
++from core.indexing.worker_prepare import prepare_work
++
++A = hashlib.sha256(b"a").hexdigest()
++
++
++def journal(tmp_path):
++    return ChangeJournal(tmp_path / "changes.sqlite3")
++
++
++def test_an_in_flight_write_is_waiting_never_review_never_candidate(tmp_path):
++    j = journal(tmp_path)
++    j.begin("doc", 2, "UPSERT", A)
++    created = j.pending()[0].created
++    preview = preview_reconciliation(j, {"doc": Canonical(1, A)}, {"doc": 1}, now=created + 5)
++    assert [a.kind for a in preview.actions] == ["WAIT"] and not preview.requires_review
++    work = prepare_work(preview, allow_upsert=True)
++    assert (work.candidate_ids, work.review_ids, work.waiting_ids) == ((), (), ("doc",))
++
++
++def test_review_items_block_every_candidate_of_the_same_preview(tmp_path):
++    """Conservative by design: one supersession in a preview withholds all upserts of that preview."""
++    j = journal(tmp_path)
++    j.published(j.begin("old", 1, "UPSERT", A))
++    created = j.pending()[0].created
++    preview = preview_reconciliation(j, {"old": Canonical(3, A), "new": Canonical(1, A)}, {"old": 1},
++                                     now=created + 1)
++    assert preview.requires_review
++    work = prepare_work(preview, allow_upsert=True)
++    assert work.candidate_ids == () and "old" in work.review_ids and "new" in work.blocked_ids
++
++
++def test_upserts_are_refused_unless_explicitly_allowed_and_deletes_are_always_review(tmp_path):
++    j = journal(tmp_path)
++    preview = preview_reconciliation(j, {"new": Canonical(1, A), "gone": ABSENT}, {"gone": 4})
++    denied, allowed = preflight(preview.actions), preflight(preview.actions, allow_upsert=True)
++    assert [a.kind for a in denied.refused] == ["ENQUEUE_UPSERT"] and denied.proposals == ()
++    assert [a.kind for a in allowed.proposals] == ["ENQUEUE_UPSERT"]
++    assert [a.kind for a in allowed.review] == ["ENQUEUE_DELETE"]
++
++
++def test_journal_recovery_is_never_an_executable_index_proposal(tmp_path):
++    j = journal(tmp_path)
++    j.begin("doc", 1, "UPSERT", A)
++    preview = preview_reconciliation(j, {"doc": Canonical(1, A)}, {})
++    result = preflight(preview.actions, allow_upsert=True)
++    assert [a.kind for a in result.review] == ["MARK_PUBLISHED"] and result.proposals == ()
+diff --git a/tests/claude_memory_eval/test_real_worker_contract_g220.py b/tests/claude_memory_eval/test_real_worker_contract_g220.py
+new file mode 100644
+index 0000000..ea866c4
+--- /dev/null
++++ b/tests/claude_memory_eval/test_real_worker_contract_g220.py
+@@ -0,0 +1,132 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_real_worker_contract_g220.py
++# Description : Contrat Claude G220-3 contre le vrai worker (JournalUpsertWorker), Markdown réel, Qdrant en mémoire
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Scenarios of the 19-scenario contract that GPT's real-worker tests do not pin, run against
++core.indexing.worker_journal.JournalUpsertWorker. Two of them kill mutants that survive GPT's suite: removing
++the final rights or final canonical check before INDEXED. Nothing leaves the process; no deletion exists."""
++import pytest
++
++from core.backend.filesystem import FilesystemBackend
++from core.backend.models import Memory
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.qdrant_index import QdrantIndex
++from core.indexing.worker_canonical import CanonicalReader
++from core.indexing.worker_journal import JournalUpsertWorker
++
++qdrant = pytest.importorskip("qdrant_client")
++
++
++class World:
++    def __init__(self, tmp_path):
++        self.root = tmp_path / "persistent"
++        self.backend = FilesystemBackend(self.root, tmp_path / "history")
++        self.journal = ChangeJournal(tmp_path / "changes.sqlite3")
++        self.client = qdrant.QdrantClient(":memory:")
++        self.index = QdrantIndex(self.client, "eidolon_claude_contract", embed=lambda _: [1.0, 0.0],
++                                 dimensions=2, embedding_id="synthetic-v1", create=True)
++        self.decisions = []                                  # scripted authorization answers, else True
++        self.calls = 0
++
++    def authorize(self, profile, ident, operation):
++        self.calls += 1
++        return self.decisions.pop(0) if self.decisions else True
++
++    def write(self, ident, revision, text, *, rename=True, publish=True):
++        """Canonical writer protocol: begin -> rename -> published."""
++        memory = Memory(ident, content=text, revision=revision)
++        digest = None
++        if rename:
++            if revision == 1:
++                self.backend.store(memory)
++            else:
++                self.backend.update(ident, memory, previous_revision=revision - 1)
++            _, digest = CanonicalReader(self.root)(ident)
++        seq = self.journal.begin(ident, revision, "UPSERT", digest or "0" * 64)
++        if rename and publish:
++            self.journal.published(seq)
++        return seq
++
++    def worker(self):
++        return JournalUpsertWorker(self.journal, canonical_root=self.root, index=self.index,
++                                   authorize=self.authorize, profile_id="owner", expected_profile_id="owner",
++                                   expected_model_id="synthetic-v1")
++
++    def states(self):
++        return {i.sequence: i.state for i in self.journal.pending(limit=999)}
++
++
++@pytest.fixture
++def world(tmp_path):
++    w = World(tmp_path)
++    yield w
++    w.client.close()
++
++
++def _lose_ack(world):
++    original = world.index.upsert_verified
++
++    def once(*args, **kwargs):
++        world.index.upsert_verified = original
++        original(*args, **kwargs)
++        raise ConnectionError("ack lost")
++    world.index.upsert_verified = once
++
++
++def test_two_fast_revisions_index_the_latest_and_send_the_older_to_review(world):
++    first = world.write("doc", 1, "v1")
++    second = world.write("doc", 2, "v2")
++    report = world.worker().run_once()
++    assert (first, "SUPERSEDED_REQUIRES_REVIEW") in report.deferred and second in report.indexed
++    assert world.index.evidence_for("doc").revision == 2 and world.states() == {first: "PUBLISHED"}
++
++
++def test_a_write_that_never_reached_the_canon_is_never_published_nor_indexed(world):
++    world.write("doc", 1, "v1")
++    world.worker().run_once()
++    orphan = world.write("doc", 2, "v2", rename=False)               # crash between begin() and rename
++    for _ in range(3):
++        report = world.worker().run_once()
++        assert orphan not in report.published and orphan not in report.indexed
++    assert world.states() == {orphan: "INTENT"} and world.index.evidence_for("doc").revision == 1
++
++
++def test_rights_revoked_on_the_recovery_path_never_mark_indexed(world):
++    """Lost ack: the point exists, so no upsert runs and only the worker's final checks guard INDEXED."""
++    seq = world.write("doc", 1, "v1")
++    _lose_ack(world)
++    assert world.worker().run_once().status == "INDEX_UNAVAILABLE"
++    world.decisions = [True, False]                                  # initial check passes, final check denies
++    report = world.worker().run_once()
++    assert seq not in report.indexed and world.states() == {seq: "PUBLISHED"}
++
++
++def test_canon_changed_on_the_recovery_path_never_marks_indexed(world):
++    """Lost ack, then the document changes between the worker's first read and its final check."""
++    seq = world.write("doc", 1, "v1")
++    _lose_ack(world)
++    world.worker().run_once()
++    backend = world.backend
++
++    def authorize(profile, ident, operation):
++        world.calls += 1
++        if world.calls == 2:                                         # after the first read, before the final one
++            backend.update("doc", Memory("doc", content="v2", revision=2), previous_revision=1)
++        return True
++    world.calls = 0
++    world.authorize = authorize
++    report = world.worker().run_once()
++    assert seq not in report.indexed and world.states() == {seq: "PUBLISHED"}
++
++
++def test_no_code_path_can_remove_a_point(world):
++    world.write("doc", 1, "v1")
++    world.worker().run_once()
++    seq = world.journal.begin("doc", 2, "DELETE")
++    report = world.worker().run_once()
++    assert (seq, "DELETE_REQUIRES_REVIEW") in report.deferred
++    assert world.index.evidence_for("doc").revision == 1
++    assert not any(hasattr(world.worker(), name) for name in ("delete", "apply_delete", "remove"))
+-- 
+2.43.0
+

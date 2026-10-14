@@ -149,3 +149,15 @@ Ordre complet sur `64c6ed1` : **0025, 0023, 0026, 0028, 0029, 0030, 0031**.
 | 0029 | Audit des plantages et des verrous : un processus enfant meurt (`os._exit`) à une instruction SQL précise. Plantage à chacune des 6 étapes de la migration : journal v1 intact (schéma, lignes, intégrité), puis migrable. Plantage pendant la création : fichier privé, réouvrable. 4 migrations concurrentes : une seule migre, aucune corruption. `xfail` strict **M13** : plantage entre `CREATE TABLE` et `user_version` = version 0 définitive | 10 réussis, 1 xfail |
 | 0030 | Contrat du worker réutilisable : `EIDOLON_WORKER_FACTORY` choisit le worker testé ; le worker de référence passe par `worker_preflight` de GPT (`CLOSE_SUPERSEDED` en revue) ; notice `WORKER-CONTRACT.md`. Sabotages revérifiés | 19 réussis |
 | 0031 | Sondes de caractérisation pour des passages dans Qdrant (voir l'étude Core `docs/proposals/2026-10-13-passages-qdrant-calibration.md`) | 4 réussis ; suite Memory complète **2 257 réussis, 1 xfail (M13), 0 échec** |
+
+## Patchs 0032 à 0035 (G220, base `26976e3`)
+
+Ordre sur `26976e3` : **0008, 0032, 0033, 0034, 0035**. GPT a déjà intégré la recette du worker (0023/0030) ;
+0025 à 0031 sont regroupés dans 0032 pour cette base.
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0032 | Sondes journal, plantages et passages rafraîchies ; **M13 corrigé** (`975ca6c`) : sa sonde devient non-régression | — |
+| 0033 | Contrat contre le **vrai** worker `JournalUpsertWorker` (Markdown réel, Qdrant en mémoire) : révisions rapides, écriture jamais renommée, droits retirés et canon modifié sur le chemin de reprise, aucune suppression ; séparation attente/revue/refus. **Tue deux mutants** qui survivent aux 26 tests GPT | 9 réussis |
+| 0034 | Jeu `dev-calibration-v2` (60 questions dont 8 pièges proches, figé, disjoint du test) ; états `INDEX_PENDING`, `INDEX_STALE`, `INDEX_UNAVAILABLE`, `INDEX_CURRENT` par la vraie chaîne. `xfail` strict **S1** (pas d'escalade par âge) | 5 réussis, 1 xfail |
+| 0035 | Générations Qdrant : bascule d'alias, ancienne génération gardée, écriture concurrente jamais validée. `xfail` strict **Q1** (provenance perdue après `rebuild`) et **Q2** (`delete()` public) | 2 réussis, 2 xfail ; suite Memory complète **2 529 réussis, 6 xfail, 0 échec** |
