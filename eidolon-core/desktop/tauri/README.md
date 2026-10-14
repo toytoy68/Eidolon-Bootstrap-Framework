@@ -17,6 +17,7 @@ contrat de Core (Host, Origin, CSP) reste inchangé et n'est pas contourné.
 | Pas d'IPC pour la page distante | aucune commande Rust, aucun plugin, aucun dossier `capabilities/` : l'ACL Tauri refuse tout appel (mesuré) |
 | Une seule origine | `on_navigation` : schéma `http`, hôte exactement `127.0.0.1`, port exact, sans identifiants. `localhost`, `[::1]`, une autre adresse ou un autre port sont refusés |
 | Pas de nouvelle fenêtre | `on_new_window` → `Deny` (`window.open` et `target=_blank`) |
+| Permissions (G165) | `on_permission_request` : micro, caméra, lecture automatique → demande de WebView2 à la personne (jamais accordées par la coquille) ; localisation, notifications, presse-papiers, fichiers, MIDI, capteurs… → refusés |
 | Pas d'outils de développement | `.devtools(false)`, y compris en mode debug |
 | Pas de paramètre libre | seul `--port N`, **une fois** (ou `EIDOLON_CORE_PORT`), est accepté, de 1024 à 65535 ; défaut 8765. Tout autre argument, une valeur non UTF-8, ou une variable présente mais invalide (même avec `--port`) → code 2 |
 | Diagnostics sans écho (G054) | messages **constants** : aucun argument, aucune valeur de variable ni aucune URL refusée n'est réaffiché (un jeton ou une adresse privée pourrait s'y trouver) |
@@ -35,8 +36,8 @@ Prérequis Linux (Ubuntu 24.04) : Rust stable, `libwebkit2gtk-4.1-dev`,
 cd eidolon-core/desktop/tauri
 cargo test                      # règles d'origine et de port
 cargo build                     # binaire : target/debug/eidolon-consultation
-# tunnel SSH ouvert vers Core sur 127.0.0.1:8765 (lanceur existant), puis :
-./target/debug/eidolon-consultation --port 8765
+# tunnel SSH ouvert vers Core (VM actuelle : port 8767, lanceur existant), puis :
+./target/debug/eidolon-consultation --port 8767
 ```
 
 Versions exactes : `tauri =2.12.1`, `tauri-build =2.7.1`, `Cargo.lock`

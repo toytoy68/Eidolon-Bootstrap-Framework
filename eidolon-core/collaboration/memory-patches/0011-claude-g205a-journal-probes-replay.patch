@@ -1,0 +1,211 @@
+From 65d2a10c75de2bf2c21e7345b07001d1f76f381d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 08:34:52 +0000
+Subject: [PATCH] test(claude-eval): G205-A replay of the change journal probes
+ on cc5c1cf
+
+J1-J3 are now regression tests: the late-writer probe is blocked by
+BEGIN IMMEDIATE (and fails on the pre-fix 8a3db5c), the file is 0600
+whatever the umask, a symlinked path or a group-readable directory is
+refused, an existing public file is refused without chmod. New: six
+processes creating the same journal at once lose nothing. J4/J5 pinned.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_change_journal_probes_g204.py        | 183 ++++++++++++++++++
+ 1 file changed, 183 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_change_journal_probes_g204.py
+
+diff --git a/tests/claude_memory_eval/test_change_journal_probes_g204.py b/tests/claude_memory_eval/test_change_journal_probes_g204.py
+new file mode 100644
+index 0000000..c4d2df8
+--- /dev/null
++++ b/tests/claude_memory_eval/test_change_journal_probes_g204.py
+@@ -0,0 +1,183 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_change_journal_probes_g204.py
++# Description : Contre-revue Claude G204 du journal d'intentions : concurrence, permissions, processus, reprise
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent probes (Claude, G204, replayed for G205 on cc5c1cf). change_journal.py is GPT's file and is
++not modified. J1-J3 were findings, fixed in cc5c1cf; J4-J5 stay pinned design points."""
++import hashlib
++import multiprocessing
++import os
++import stat
++
++import sqlite3
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++
++DIGEST = hashlib.sha256(b"canonical").hexdigest()
++
++
++def _begin_many(path, start, count, queue):
++    journal = ChangeJournal(path)
++    queue.put([journal.begin(f"doc-{start + i}", 1, "UPSERT", DIGEST) for i in range(count)])
++
++
++def test_concurrent_writers_from_several_processes_lose_nothing(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    ChangeJournal(path)
++    context = multiprocessing.get_context("fork")
++    queue = context.Queue()
++    workers = [context.Process(target=_begin_many, args=(path, 100 * k, 25, queue)) for k in range(4)]
++    for worker in workers:
++        worker.start()
++    for worker in workers:
++        worker.join(30)
++    sequences = sorted(s for _ in workers for s in queue.get(timeout=10))
++    assert len(sequences) == len(set(sequences)) == 100
++    assert [i.sequence for i in ChangeJournal(path).pending(limit=1000)] == sequences
++
++
++def _create_and_begin(path, barrier, queue):
++    barrier.wait(timeout=20)
++    try:
++        queue.put(ChangeJournal(path).begin("doc-" + str(os.getpid()), 1, "DELETE"))
++    except Exception as exc:                                         # report, never hang the test
++        queue.put(repr(exc))
++
++
++def test_simultaneous_first_creation_by_several_processes(tmp_path):
++    """G205-A: creation race. Six processes create the same new journal at once and each journals one
++    intent: no error, no lost intent, file private."""
++    path = tmp_path / "changes.sqlite3"
++    context = multiprocessing.get_context("fork")
++    barrier, queue = context.Barrier(6), context.Queue()
++    workers = [context.Process(target=_create_and_begin, args=(path, barrier, queue)) for _ in range(6)]
++    for worker in workers:
++        worker.start()
++    for worker in workers:
++        worker.join(30)
++    results = [queue.get(timeout=10) for _ in workers]
++    assert all(type(r) is int for r in results), results
++    assert sorted(i.sequence for i in ChangeJournal(path).pending()) == sorted(results)
++    assert stat.S_IMODE(os.stat(path).st_mode) == 0o600
++
++
++class _Proxy:
++    """Real sqlite3 connection, except that right after _advance's SELECT another worker tries to move the
++    same intent through its own connection (short timeout)."""
++
++    def __init__(self, real, path, sequence, outcome, connect):
++        self.real, self.path, self.sequence, self.outcome, self.connect = real, path, sequence, outcome, connect
++
++    def __getattr__(self, name):
++        return getattr(self.real, name)
++
++    def __enter__(self):
++        self.real.__enter__()
++        return self
++
++    def __exit__(self, *exc):
++        return self.real.__exit__(*exc)
++
++    def execute(self, sql, params=()):
++        cursor = self.real.execute(sql, params)
++        if sql.startswith("SELECT state") and "interloper" not in self.outcome:
++            rows = cursor.fetchall()                                 # release the statement's read lock
++            other = self.connect(self.path, timeout=0.3)
++            try:
++                with other:
++                    other.execute("UPDATE intents SET state='INDEXED' WHERE seq=?", (self.sequence,))
++                self.outcome["interloper"] = "committed"
++            except sqlite3.OperationalError:
++                self.outcome["interloper"] = "blocked"               # serialized by BEGIN IMMEDIATE
++            finally:
++                other.close()
++            return _Rows(rows)
++        return cursor
++
++
++class _Rows:
++    def __init__(self, rows):
++        self.rows = rows
++
++    def fetchone(self):
++        return self.rows[0] if self.rows else None
++
++
++def test_a_late_writer_cannot_move_an_intent_backwards(tmp_path, monkeypatch):
++    """J1 (G204), fixed in cc5c1cf: either the competing writer is blocked while _advance holds its
++    transaction, or, if it got in, the journal never moves the intent back from INDEXED."""
++    from core.indexing import change_journal as module
++    path = tmp_path / "changes.sqlite3"
++    journal = ChangeJournal(path)
++    sequence = journal.begin("doc", 1, "UPSERT", DIGEST)
++    outcome, real_connect = {}, module.sqlite3.connect
++    monkeypatch.setattr(module.sqlite3, "connect",
++                        lambda *a, **k: _Proxy(real_connect(*a, **k), str(path), sequence, outcome, real_connect))
++    try:
++        journal.published(sequence)
++    except ValueError:
++        pass                                                         # refusing is also acceptable
++    monkeypatch.setattr(module.sqlite3, "connect", real_connect)
++    state = sqlite3.connect(path).execute("SELECT state FROM intents WHERE seq=?", (sequence,)).fetchone()[0]
++    assert outcome["interloper"] in ("blocked", "committed")
++    if outcome["interloper"] == "committed":
++        assert state == "INDEXED"
++    else:
++        assert state == "PUBLISHED"
++
++
++def test_journal_file_is_private(tmp_path):
++    """J2 (G204), fixed in cc5c1cf: 0600 whatever the umask."""
++    previous = os.umask(0o022)
++    try:
++        ChangeJournal(tmp_path / "changes.sqlite3")
++    finally:
++        os.umask(previous)
++    assert stat.S_IMODE(os.stat(tmp_path / "changes.sqlite3").st_mode) == 0o600
++
++
++def test_symlinked_journal_path_and_shared_directory_are_refused(tmp_path):
++    """J3 (G204), closed by cc5c1cf: no link followed at the journal path; no group/other access."""
++    target = tmp_path / "elsewhere.sqlite3"
++    (tmp_path / "changes.sqlite3").symlink_to(target)
++    with pytest.raises(OSError):                                    # ELOOP from O_NOFOLLOW (not a ValueError)
++        ChangeJournal(tmp_path / "changes.sqlite3")
++    assert not target.exists()
++    shared = tmp_path / "shared"
++    shared.mkdir(mode=0o750)
++    shared.chmod(0o750)
++    with pytest.raises(ValueError):
++        ChangeJournal(shared / "changes.sqlite3")
++
++
++def test_an_existing_public_file_is_refused_not_repaired(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    path.touch(mode=0o644)
++    path.chmod(0o644)
++    with pytest.raises(ValueError):
++        ChangeJournal(path)
++    assert stat.S_IMODE(path.stat().st_mode) == 0o644                # never chmod-ed behind the operator
++
++
++def test_an_abandoned_intent_stays_pending_forever(tmp_path):
++    """Pinned (J4, design): an INTENT whose canonical write never happened has no terminal state, so the
++    index status would stay PENDING for ever. Reconciliation needs a way to close it (e.g. ABANDONED or
++    SUPERSEDED after re-reading the canon), with its reason."""
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    journal.begin("doc", 7, "UPSERT", DIGEST)                       # crash before the canonical rename
++    assert [i.state for i in journal.pending()] == ["INTENT"]
++    assert not any(hasattr(journal, name) for name in ("abandon", "abandoned", "supersede"))
++
++
++def test_revisions_are_not_checked_for_monotony(tmp_path):
++    """Pinned (J5, minor): an older revision can be journalled after a newer one; the worker must always
++    index the CANONICAL revision it re-reads, never the journal's."""
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    journal.begin("doc", 5, "UPSERT", DIGEST)
++    journal.begin("doc", 2, "UPSERT", DIGEST)
++    assert [i.revision for i in journal.pending()] == [5, 2]
+-- 
+2.43.0
+

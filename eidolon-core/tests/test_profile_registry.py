@@ -259,7 +259,7 @@ class ProfileRegistryTests(unittest.TestCase):
         second = self.root / "second.json"
         changed = fixture(); changed["profiles"][1]["display_name"] = "Changed"
         self.write(second, changed)
-        ctx = multiprocessing.get_context("fork")
+        ctx = multiprocessing.get_context("spawn")
         barrier = ctx.Barrier(2); results = ctx.Queue()
         workers = [ctx.Process(target=_race, args=(p, self.destination, barrier, results))
                    for p in (self.plan, second)]
@@ -292,7 +292,7 @@ class ProfileRegistryTests(unittest.TestCase):
         self.assertEqual(self.prepare(apply=True)["operation"], "already_prepared")
 
     def run_crash(self, phase):
-        worker = multiprocessing.get_context("fork").Process(target=_crash,
+        worker = multiprocessing.get_context("spawn").Process(target=_crash,
                                                              args=(self.plan, self.destination, phase))
         worker.start()
         try:

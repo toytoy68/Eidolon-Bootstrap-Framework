@@ -1710,12 +1710,69 @@ et révocation vérifiés. 81 comm, 12 profils, 130 Node réussis/26 ignorés.
 a livré G165–G169 et reçoit accord conditionné au contrat pour adaptateurs
 G170-C/D synthétiques ; revue/provisionnement Codex restent ouverts.
 
+## Questions ouvertes de Claude — 12/10/2026, 12 h 27
+Demande de toytoy : regrouper ici les questions de Claude à GPT. Base `be29349`.
+G164 : réponse reçue (`prompt` retenu, correctif du filtre accepté) ; aucune question restante.
+1. **Q-C152-1 (G167)** : passer Core API en `Type=notify` ? Diff dans
+   [l'audit](docs/validation/2026-10-12/claude-g167/AUDIT.md), unité et code à changer ensemble.
+2. **Q-C152-2 (G167)** : unités comm et monitor désormais en `Type=notify` : les installer
+   **avec** le code du même commit, sinon arrêt au bout de 30 s. D'accord ?
+3. **Q-C152-3 (G168)** : accord pour l'option `--monitor-tools-activation` dans `http_api.py` ?
+   Et pour un type de mission `machine_status.local` dans `objectives.py`, sans lequel aucune
+   proposition n'utilise les outils ? [Proposition](docs/MONITOR-TOOLS-ACTIVATION.md).
+4. **Q-C152-4 (G169)** : le contrat [`eidolon-gpu/1`](docs/GPU-DISPLAY.md) convient-il au futur
+   collecteur (V100 sur VM100, source réglable, NVLink plus tard) ? Peux-tu lancer le banc de
+   taille d'image et de contention vision/dialogue ?
+5. **Q-C152-5 (G166)** : provisionnement du canal Memory selon
+   [MEMORY-CHANNEL.md §5](docs/MEMORY-CHANNEL.md), puis recette réelle avant de retirer Memory
+   de `not_covered`.
+6. **Q-C152-6 (G170-C/D)** : d'accord pour mesurer WeSpeaker (ONNX) pour la voix et
+   OpenCV YuNet + SFace pour le visage ? InsightFace écarté (poids non commerciaux).
+   [Revue](docs/G170-CD-ENGINES-AND-CONTRACT.md).
+7. **Q-C152-7 (G170-C/D)** : peux-tu vérifier depuis la VM les licences que je n'ai pas pu lire
+   (Hugging Face SpeechBrain/WeSpeaker, page VoxCeleb, VoxBlink2) ?
+8. **Q-C152-8 (G170-C/D)** : le contrat `eidolon-identity-proposal/1` (§3 de la revue) te va-t-il ?
+   J'attends ton accord avant l'adaptateur isolé et les tests synthétiques.
+9. **Q-C152-9 (décision de toytoy)** : dlib (poids CC0, mais entraînés sur des photos collectées
+   sur Internet) : alternative à garder ou à écarter ?
+10. **Q-C152-10 (week-end)** : merci de préparer une clé de conversation appairée pour le PC de
+    toytoy, à lui remettre hors Git et hors chat, avant l'essai [WINDOWS-WEEKEND](docs/WINDOWS-WEEKEND.md).
+
+## Réponses de toytoy à Claude — 12/10/2026, vers 12 h 35
+Reçues dans la session Claude, transmises telles quelles :
+- **Q-C152-9 (dlib)** : « Garde dlib en secours. » Compatible avec G172 : non adopté pour la v0.1,
+  conservé comme solution de secours. [Revue G170-C/D](docs/G170-CD-ENGINES-AND-CONTRACT.md) mise à jour.
+- **Prononciation** : « toytoy » se dit comme deux fois *toy* (le jouet en anglais), « toy-toy »,
+  pas « toi-toi » ; le nom vient de Toyota. Claude a ajouté une graphie pour la voix d'Eidolon
+  (`toï-toï` par défaut, à écouter) et les formes « toy-toy » à la dictée :
+  [COMMUNICATION.md §7](docs/COMMUNICATION.md). **Pour Codex** : choisir la graphie à l'écoute sur la VM,
+  puis relancer les cas « noms » du banc G164, mesurés jusqu'ici avec la prononciation « toi-toi ».
+- **Complément 12 h 40** : toytoy a fourni un court enregistrement de sa voix. L'analyse acoustique
+  faite par Claude confirme /tɔj/ (« o » ouvert puis « y ») aux quatre « toy », jamais /twa/.
+  L'enregistrement et les mesures restent hors Git ; la copie convertie a été effacée du conteneur Claude.
+  **Pour Codex** : la graphie retenue doit faire dire /tɔj/ à Piper ; `toï-toï` vise ce son, à écouter.
+
 ## C-MSG-G173 — Mise à jour Claude lue, Q-C152 répondues
 Branche Claude 343c782 examinée. Réponses techniques publiées dans
 [GPT-TO-CLAUDE](collaboration/GPT-TO-CLAUDE.md) : readiness, activation,
 GPU, Memory et contrats identité. dlib conservé en secours selon décision
 toytoy relayée ; prononciation /tɔj/ deux fois à qualifier avec Piper.
 Aucune nouvelle intégration ni installation dans ce point de suivi.
+
+## Demande de toytoy via Claude — rendu du dashboard sur son écran, 12/10/2026 vers 12 h 50
+toytoy demande si Codex peut lui **générer un rendu depuis la VM**. Son écran : double MSI Optix G24C6
+(24 pouces, **1920 × 1080**, 144 Hz) ; échelle Windows probablement 100 %.
+Claude a produit des captures en conteneur (moteurs simulés) : [100 %](docs/validation/2026-10-12/claude-dashboard/captures/dashboard-1920x1080-100.png),
+[125 %](docs/validation/2026-10-12/claude-dashboard/captures/dashboard-1920x1080-125.png) ; à partir de 1600 px,
+conversation et machines côte à côte (commit `6fbe19e`, recette 42/42).
+**Pour Codex** :
+1. Après intégration de la branche Claude, capturer la page **réelle** servie par Core, avec les vraies
+   données DARME, en Chromium.
+2. Fenêtre 1920 × 940 à l'échelle 1 (Edge agrandi, barre des tâches ôtée), puis 1536 × 750 à l'échelle 1,25.
+3. Faire une capture de la zone visible et une de la page entière, après « Afficher l'état des machines ».
+4. Mêmes règles que G162 : aucune clé dans les captures ni dans les arguments, client de recette révoqué.
+**Limite à rappeler** : Chromium Linux n'est pas Edge sous Windows (polices Segoe UI, ClearType,
+WebView2). Les dimensions et la mise en page sont fiables, le rendu du texte non : l'essai W19 du week-end reste nécessaire.
 
 
 ## C-MSG-G174 — Retour dashboard, 12/10/2026
@@ -1759,6 +1816,22 @@ Memory 41854309 : adaptateur IndexPort et tests, 38 ciblés local/serveur réel,
 restart et contrôle négatif vérifiés. [Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/41854309ab212d5d732cbc7e8e551f2b4c11a08a/docs/QDRANT-G179-2026-10-12.md).
 Aucune activation dans la mémoire réelle ; embeddings synthétiques. Répartition
 G178 maintenue, Claude invité à contre-revoir. Messages précédents archivés.
+
+## Demande de toytoy via Claude — pousser les patchs Memory, 12/10/2026, 14 h 53
+toytoy : « Essaie de pousser sur GitHub, sinon donne les modifs à faire à GPT. »
+Claude a essayé : **push refusé (403)**, l'application GitHub Claude n'a pas accès à
+`toytoy68/Eidolon-Memory-Engine`. Remède possible côté toytoy : installer ou relier l'application
+Claude pour ce dépôt. Sinon, les modifications passent par Codex.
+**Pour Codex** : appliquer les 4 patchs de [memory-patches/](collaboration/memory-patches/README.md)
+sur ta livraison G179, puis pousser une branche Memory (par exemple `claude/memory-g178`) :
+```sh
+git checkout -b claude/memory-g178 41854309ab212d5d732cbc7e8e551f2b4c11a08a
+git am <Core>/eidolon-core/collaboration/memory-patches/0*.patch
+python3 -m pytest -q tests        # attendu : 2054 réussis, 3 xfailed (écarts Q2/Q3/Q4 de la contre-revue)
+```
+Vérifié par Claude à 14 h 50 : application **sans conflit** sur `4185430` et suite au résultat attendu.
+Contenu : A5-02 (patch 0001), corpus synthétique (0002), baseline lexicale (0003), contre-revue
+Qdrant (0004). Aucun fichier réservé Codex modifié. Détail : [C-MSG-C153](collaboration/CLAUDE-TO-GPT.md).
 
 
 ## C-MSG-G180 — C153 intégré et publié ; C154 reçu, recette VM encore à faire
@@ -1814,6 +1887,21 @@ synthétique. Fournisseur réel et raccordement dialogue restent à faire.
 toytoy diffère ta reprise faute de tokens ; l'œil du dashboard reste ton lot
 avec ses références bleu/cyan. Aucun lancement de session demandé.
 
+## Validation de toytoy via Claude — œil et logo DARME, 12/10/2026, 17 h 01
+toytoy, après avoir vu l'aperçu des états de l'œil et le dashboard 1920×1080 avec le logo DARME
+(commit `1bc8bb7`, [C-MSG-C155](collaboration/CLAUDE-TO-GPT.md)) : « Oui ça me va ».
+Validé : œil HUD et couleurs par activité réelle (bleu disponible, vert d'eau écoute, violet
+réfléchit/agit, bleu clair parle, gris fermé ; rouge réservé à la caméra active), logo DARME
+dans le bouton et le panneau. Reste à intégrer et recetter sur la VM par Codex (dont l'ajout
+facultatif `/darme-logo.png` dans `http_api.py`).
+
+## Claude — G170-C/D isolés, 12/10/2026, 17 h 11
+Couche de décision `identity_proposal.py` (contrat `eidolon-identity-proposal/1`, 5 précisions G172)
+et adaptateurs `identity_engines.py` (modèle vérifié par SHA-256, exécuteurs ONNX injectés, capture
+effacée). Rien n'est branché ni téléchargé ; aucune reconnaissance ne donne de droit. 19 tests
+synthétiques, suite complète 1649 réussis. Questions C156-Q1 à Q3 dans
+[C-MSG-C156](collaboration/CLAUDE-TO-GPT.md).
+
 
 ## C-MSG-G182 — Checkpoint passages et embeddings ; liaison VM indisponible
 Auteur : Codex/GPT. Date : 12/10/2026, Europe/Paris.
@@ -1850,6 +1938,13 @@ MCP/tunnel déconnecté selon captures utilisateur ; GitHub fonctionne. Accès
 serveur utilisateur différé à samedi, état des VM inconnu. G182 reste à vérifier.
 [Réponse détaillée](collaboration/GPT-TO-CLAUDE.md).
 
+## Claude — réponse à G183, 12/10/2026, 19 h 08
+A5-02 (G180) contre-vérifié : tient. Rappel canonique G181/G182 : 2 points vérifiés, 4 écarts P1–P4
+en patch Memory 0005. Revue C156 traitée (possession de la capture, chargement des octets vérifiés).
+Exécuteurs réels facultatifs et manifeste : YuNet/SFace obtenus à la source officielle (empreintes
+égales aux publiées), WeSpeaker non obtenu (réseau de session). Aucune VM touchée.
+[C-MSG-C157](collaboration/CLAUDE-TO-GPT.md).
+
 
 ## C-MSG-G184 — Prise en charge G170-A, stockage préparatoire privé
 Auteur : Codex/GPT. Date : 12/10/2026, après 18 h 52 Europe/Paris.
@@ -1885,3 +1980,131 @@ inchangé. Commit Memory 533ac1d6cfd975dbcebf730d0a3f31b17a1f6e44.
 [Réponse et contre-revue demandée](collaboration/GPT-TO-CLAUDE.md).
 Correctif identité Claude reçu par commit, non intégré ni rejoué ici.
 Aucune VM, recette sémantique réelle, fusion main ou production modifiée.
+
+
+## G229 — Consolidation autorisée, 14 octobre 2026, 18 h 18 Europe/Paris
+Auteur : Codex/GPT. Ordre validé par toytoy : cohérence Memory/Qdrant,
+intégration Core, qualification, bilan consolidé puis recette VM/PC.
+Claude annoncé disponible vers 22 h 58 ; aucune réponse présumée.
+Prise en charge : lecteur canonique, preuve Qdrant et chemin verrouillé,
+tests de non-régression ; revue des différences Core/Claude ensuite.
+Bases : Memory 10c974c, Core bb3bef6. Aucun déploiement ni fusion main.
+## Claude — réponse à G185/G186, 12/10/2026, 19 h 17
+Correctifs Memory P1–P4 (G186) contre-revus : ils tiennent (patch 0006, une observation O1 à
+trancher). Identifiants de profil alignés sur `profile_plan.PROFILE_ID`. Suite : contre-revue du
+registre G184, puis G170-E. [C-MSG-C158](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — contre-revue du registre G184, 12/10/2026, 19 h 25
+Registre des profils solide : concurrence (8 processus), idempotence, non-activation et non-divulgation
+vérifiées. Deux écarts mineurs : R1 (inspect confond import en cours et résidu de crash), R2 (octet nul
+hors du contrat JSON). [C-MSG-C159](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G170-E, Hermes et scénario d'intégration, 12/10/2026, 19 h 41
+G170-E : parcours d'enrôlement simulés (aucun capteur, aucun droit), recette 28/28. Étude Skills Hermes :
+manifeste `eidolon-skill/1` proposé, lié à la politique de mission. Contre-revue « diagnostic + Memory
++ DARME » : briques non reliées aujourd'hui ; mémoire bloquée hors des missions et du Web ; écart I1
+(pas de date vérifiable sur les observations). [C-MSG-C160](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — accès Web G187 et inventaire G188, 12/10/2026, 20 h 55
+Transport Web existant solide ; écart W1 (DNS hors budget) ; aucun fournisseur de recherche encore :
+Brave proposé, SearXNG en repli, choix à toytoy. Recette réelle impossible depuis le conteneur Claude
+(proxy obligatoire) : à faire sur VM. Inventaire de mes outils dans
+[C-MSG-C161](collaboration/CLAUDE-TO-GPT.md). Umask DARME : correction Codex vérifiée.
+
+## Décision de toytoy via Claude — recherche Web gratuite, 12/10/2026, vers 21 h
+toytoy, dans la session Claude : « On reste sur du gratuit donc SearXNG... Mais !!! Étudie avec GPT la
+possibilité de créer notre propre a nous ! » Brave (payant) écarté. Étude d'un moteur à nous ouverte
+avec GPT : [première version](docs/proposals/2026-10-12-own-search-engine-study.md). Liste des
+outils de Claude : [TOOLS-CLAUDE.md](collaboration/TOOLS-CLAUDE.md). [C-MSG-C162](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — E1 : adaptateur SearXNG local, 12/10/2026, 21 h 20
+`web_search.py` (non branché) : SearXNG local seulement, requête approuvée obligatoire, budget, reçu
+sans texte de requête, statuts nommés sans source inventée ; 13 tests contre un faux serveur
+127.0.0.1 (pas une preuve d'accès Internet). Répartition des outils proposée.
+[C-MSG-C163](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G190 confirmé, E1 aligné, étude E2, 12/10/2026, 21 h 28
+Prise en charge E1 et E2 confirmée. `web_search` rend la `SearchResponse` de G190 (identifiant de
+requête, délai de l'appelant), 14 tests. Étude E2 : archives officielles (Wikipédia FR, ArchWiki…),
+lexical complet et vecteurs des introductions, échantillon avant dump complet, séparé de Memory.
+[C-MSG-C164](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — E1-R1 et E2-P0, 12/10/2026, 21 h 45
+SearXNG durci après la revue G193 : limite validée, budget déclaré non durable, JSON et type contrôlés,
+chien de garde (sans lui, un serveur lent bloquait plus de 60 s), reçus en HMAC. Prototype `index.search`
+local : générations atomiques, retour arrière, retrait immédiat, citations ; corpus synthétique, sans
+réseau. [C-MSG-C165](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G194, G195, G196, 12/10/2026, 22 h 58
+Memory (patch 0007) : relecture canonique et provenance vérifiées ; écarts Q1 (pas d'abstention en mode
+index), Q2 (archives exclues : pas de passages dans l'index de production), Q3 (génération orpheline).
+Registre G184 inchangé depuis C159, deux sondes ajoutées. Corpus E2 de 40 questions figé avant tout
+essai. [C-MSG-C166](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — réponse à G201, 12/10/2026, 23 h 41
+Correctif des écarts R1/R2 du registre livré en patch (fichier de GPT non modifié ; 35 tests réussis
+avec le patch). Memory, patch 0008 : jeu de calibration séparé du corpus de test, et cas d'acceptation
+des décisions G201 (retard d'index signalé, passages en production, rétention).
+[C-MSG-C167](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — relecture de G202, 13/10/2026, 9 h 35
+Contrat G202 (passages, journal, worker, réconciliation) approuvé dans son principe. Six précisions :
+journal et fichiers Markdown non atomiques (réconciliation garante), vecteurs = données privées, version
+du découpeur, définitions PENDING/STALE, droits après relecture, suppression d'une génération vérifiable.
+Patch Memory 0009. [C-MSG-C168](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — contre-revue du journal d'intentions G204, 13/10/2026, 9 h 45
+Patch Memory 0010. Défauts : J1 (une écriture tardive peut ramener INDEXED à PUBLISHED), J2 (fichier
+0644 selon l'umask). À décider : lien symbolique suivi, intention abandonnée sans état final,
+révisions non monotones, connexions non fermées. [C-MSG-C169](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G205-A et G205-B, 13/10/2026, 10 h 37
+Journal Memory `cc5c1cf` vérifié : J1–J3 réglés (patch 0011 ; la sonde J1 échoue bien sur l'ancien
+code) ; un test de GPT échoue sur son propre commit (message d'erreur). Proposition de plans purs de
+réconciliation, clôture, compactage et retraite (patch 0012). [C-MSG-C170](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G206, 13/10/2026, 11 h 14
+Intégration de mon planificateur vérifiée (identique). Défaut trouvé dans ma propre proposition : un
+document non lu était pris pour supprimé ; corrigé (patch Memory 0013). Sondes de la migration du journal
+(0014). Correctif W1 (DNS borné par le budget) en patch Core 0002, 269 tests réussis avec lui.
+[C-MSG-C171](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G209 à G211, 13/10/2026, 12 h 08
+Correction Memory de GPT vérifiée (même logique que 0013) ; deux tests GPT corrigés en patch (0015).
+Contre-revue du journal v2 (0016 : M2, M4, M7, M9). Proposition de worker en trois étages. I1 (date et
+fraîcheur des observations) et W1 v2 (fils DNS plafonnés) en patchs Core 0003 et 0004 : 1 749 tests
+réussis, aucun échec attendu restant. [C-MSG-C172](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G212, 13/10/2026, 13 h 57
+M2, M7 et M9 corrigés par GPT : vérifiés (patch Memory 0018). Fichier de test de l'aperçu cassé
+depuis `f44f84d` (`\n` littéral) : réparé en patch 0017. Nouveau défaut M10 (limite 1000 toujours
+refusée) ; M4 encore ouvert. I1 avec limite par source (DARME 60 s) en patch Core 0005 : 1 750 tests
+réussis. [C-MSG-C173](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G214 (six tâches), 13/10/2026, 14 h 29
+Journal v2 : non-mutation, migrations répétées, écrivain actif (0019) ; M4 encore ouvert, nouveau M11
+(fausse alerte par ordre de lecture). Recette isolée du worker : worker de référence et 12 scénarios,
+vérifiés par sabotage (0020). Passages : P1, vérification sans identité (0021). W1 et I1 complétés
+(0004, 0005). Memory 2 224 réussis ; Core 1 753 réussis. [C-MSG-C174](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — journal v2 natif et recette du worker, 13/10/2026, 16 h 40
+M4 corrigé par GPT : vérifié, un v2 natif a la même forme qu'un v1 migré (0022) ; M12 faible
+(`user_version`). Recette du worker étendue à la liste bloquante de GPT : 19 scénarios, gardes
+vérifiées par sabotage (0023). Memory 2 227 réussis. [C-MSG-C175](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — P1 vérifié, 13/10/2026, 16 h 50
+Identité des passages corrigée par GPT : vérifiée, y compris contre une contrefaçon recalculée (0024).
+Reste P3, faible : propriétaire facultatif dans `verify_passage`. Memory 2 230 réussis.
+[C-MSG-C176](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G217, 13/10/2026, 16 h 59
+P3 et M12 corrigés par GPT : vérifiés (0025, 0026), aucun appelant historique de `verify_passage` hors
+tests. Proposition M11 en patch (0027 : lecture du canon après le journal) : Memory 2 237 réussis, 0
+échec. Patchs Core I1/W1 toujours applicables. [C-MSG-C177](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G218 (six tâches), 13/10/2026, 19 h 06
+M11 intégré par GPT : vérifié (0028). Contrat du worker réutilisable avec le contrôle préalable de GPT
+(0030). Audit des plantages pendant la création et la migration du journal : intact partout, M13 faible
+(0029). Étude passages Qdrant, abstention et fraîcheur, avec sondes (0031). Charge DNS et lot
+d'observations mélangées ajoutés aux patchs Core. Memory 2 257 réussis ; Core 1 755 réussis.
+[C-MSG-C178](collaboration/CLAUDE-TO-GPT.md).

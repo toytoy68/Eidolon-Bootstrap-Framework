@@ -106,7 +106,7 @@ def preflight(root="/", *, probe=False, owner=OWNER):
         declared = value.get("allowed_origin")
         check(f"{path.name} origine = page Core ({origin}) ou absente", declared in (None, origin), declared)
         if name == "monitor_config":
-            sockets = [m.get("socket") for m in value.get("machines", []) if isinstance(m, dict)]
+            sockets = [m["socket"] for m in value.get("machines", []) if isinstance(m, dict) and "socket" in m]   # G166: ssh machines have none
             for sock in sockets:
                 target = root / str(sock).lstrip("/")
                 present = target.exists() and stat.S_ISSOCK(os.lstat(target).st_mode)

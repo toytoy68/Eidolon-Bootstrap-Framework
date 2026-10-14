@@ -110,6 +110,12 @@ conversation n'est pas touchée.
 
 ## 3. Sur le PC Windows (week-end)
 
+**Guide complet, à suivre pas à pas** : [WINDOWS-WEEKEND.md](WINDOWS-WEEKEND.md)
+(G165). Il contient 21 essais (W1 à W21), les réglages de confidentialité
+Windows, l'application facultative et le
+[modèle de résultats](validation/windows-weekend/RESULTS-template.md).
+Le résumé ci-dessous reste valable.
+
 **Port réel : 8767** (unité `eidolon-core-api.service`). Il faut le **même
 numéro des deux côtés** du tunnel (constat G082).
 

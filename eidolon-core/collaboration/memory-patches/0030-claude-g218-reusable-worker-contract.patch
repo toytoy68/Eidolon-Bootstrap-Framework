@@ -1,0 +1,227 @@
+From bd49d9922d35661ab17a2c04f57f219e7b7c5452 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 16:54:11 +0000
+Subject: [PATCH] test(claude-eval): G218-2 reusable worker contract:
+ factory hook, GPT preflight gate, interface notice
+
+EIDOLON_WORKER_FACTORY selects the worker under test. The reference worker now
+classifies actions with worker_preflight (1a7a76f): CLOSE_SUPERSEDED goes to
+review. WORKER-CONTRACT.md documents the minimal interface and invariants.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ tests/claude_memory_eval/WORKER-CONTRACT.md   | 83 +++++++++++++++++++
+ tests/claude_memory_eval/reference_worker.py  | 13 ++-
+ .../test_worker_reference_g214.py             | 28 +++++--
+ 3 files changed, 110 insertions(+), 14 deletions(-)
+ create mode 100644 tests/claude_memory_eval/WORKER-CONTRACT.md
+
+diff --git a/tests/claude_memory_eval/WORKER-CONTRACT.md b/tests/claude_memory_eval/WORKER-CONTRACT.md
+new file mode 100644
+index 0000000..b978b0a
+--- /dev/null
++++ b/tests/claude_memory_eval/WORKER-CONTRACT.md
+@@ -0,0 +1,83 @@
++# Contrat minimal du worker d'indexation (Claude, G218-2)
++
++Recette : `tests/claude_memory_eval/test_worker_reference_g214.py` (19 scénarios).
++Référence : `reference_worker.py` (fichier de test, **pas** de production).
++
++Pour lancer la recette contre un autre worker :
++
++```sh
++EIDOLON_WORKER_FACTORY="core.indexing.worker:IndexWorker" \
++  python -m pytest -q tests/claude_memory_eval/test_worker_reference_g214.py
++```
++
++## 1. Construction
++
++```python
++Worker(journal, canon, index, rights, *, profile, lock_path, clock,
++       grace_seconds=600, crash_at=None, hooks=None,
++       descriptor=("embed-test/1", "passage-v1"))
++```
++
++| Paramètre | Rôle |
++| --- | --- |
++| `journal` | `ChangeJournal` (v2) |
++| `canon` | lecteur canonique (voir 2) |
++| `index` | client d'index (voir 3) |
++| `rights(profile, information_id) -> bool` | droits du profil, consultés **juste avant** chaque action |
++| `profile` | profil au nom duquel le worker agit |
++| `lock_path` | verrou exclusif non bloquant (`flock`) |
++| `clock() -> float` | horloge murale, passée à l'aperçu |
++| `descriptor` | `(embedding_id, version du découpeur)` attendus |
++| `crash_at`, `hooks` | points d'essai : `after_plan`, `before_upsert`, `after_upsert`. Un `hooks[nom]()` est appelé, puis `Crash` est levé si `crash_at == nom`. Ils ne servent qu'aux tests ; ta classe peut les accepter et les ignorer hors test, mais les scénarios de crash en ont besoin |
++
++## 2. Lecteur canonique (`canon`)
++
++- `listing() -> set[str]` : identifiants lisibles.
++- `snapshot(ids) -> {id: Canonical | ABSENT}` : un identifiant **illisible
++  est absent du dictionnaire** (inconnu), jamais `ABSENT`.
++- `read(id) -> Canonical | ABSENT` : lève `CanonUnreadable` si la lecture
++  échoue.
++
++## 3. Index (`index`)
++
++- `descriptor() -> (embedding_id, chunker)`.
++- `revisions() -> {id: revision}`.
++- `upsert(id, revision, sha256)` : idempotent.
++- Toutes ces méthodes lèvent `IndexUnavailable`, y compris quand l'écriture
++  a eu lieu mais que l'accusé de réception est perdu.
++- **Aucune méthode de suppression** n'est exposée à la recette.
++
++## 4. Résultat de `run_once()`
++
++Un objet avec les champs suivants :
++
++- `status` : `DONE`, `BUSY`, `INDEX_UNAVAILABLE`, `INDEX_INCOMPATIBLE`,
++  `TRUNCATED` ou `REFUSED` ;
++- `applied` : liste de `(kind, id, seq)` ;
++- `review` : liste de `(kind, id, seq)` ;
++- `proposed_deletions` : liste de `(id, seq)` ;
++- `skipped` : liste de `(id, raison)`, avec ces raisons :
++  - `"wait"` ;
++  - `"canon unreadable"` ;
++  - `"forbidden"` ;
++  - `"absence not confirmed"` ;
++  - `"canon changed since plan"` ;
++  - `"canon changed while indexing"` ;
++  - `"index read-back failed"`.
++
++## 5. Invariants vérifiés
++
++1. Planifier avec `preview_reconciliation(journal, snapshot, indexed, ...)`
++   (lecteur après journal possible depuis `372b093`), puis classer avec
++   `worker_preflight.preflight(..., allow_upsert=True)`. Seuls
++   `proposals` est exécutable ; `review` est rapporté, jamais appliqué.
++2. Pour chaque action exécutable : relire le canon **maintenant**, puis
++   vérifier les droits, puis agir.
++3. `upsert`, puis relecture de l'index, puis **relecture du canon**, et
++   seulement ensuite `indexed(seq)`.
++4. Les suppressions ne sont que **proposées**, et seulement si le canon
++   relu confirme `ABSENT`.
++5. Un modèle ou un découpeur différent donne `INDEX_INCOMPATIBLE`, sans
++   aucune écriture.
++6. Un journal tronqué ou une horloge en retard sur les intentions donne
++   `TRUNCATED` ou `REFUSED`, sans aucun effet.
+diff --git a/tests/claude_memory_eval/reference_worker.py b/tests/claude_memory_eval/reference_worker.py
+index 1a19e0a..e090872 100644
+--- a/tests/claude_memory_eval/reference_worker.py
++++ b/tests/claude_memory_eval/reference_worker.py
+@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
+ 
+ from core.indexing.reconcile_plan import ABSENT
+ from core.indexing.reconcile_preview import preview_reconciliation
++from core.indexing.worker_preflight import preflight
+ 
+ 
+ class Crash(BaseException):
+@@ -85,11 +86,14 @@ class ReferenceWorker:
+         except ValueError as exc:                                    # truncated journal, clock behind intents
+             return Report("TRUNCATED" if "truncated" in str(exc) else "REFUSED")
+         self._point("after_plan")
++        gate = preflight([a for a in preview.actions if a.kind != "WAIT"], allow_upsert=True)   # GPT, 1a7a76f
++        executable = {id(a) for a in gate.proposals}
+         for action in preview.actions:
+             if action.kind == "WAIT":
+                 report.skipped.append((action.information_id, "wait"))
+                 continue
+-            if action.kind in ("CLOSE_ABANDONED", "INTEGRITY_ALERT"):
++            deletion = action.kind in ("INDEX_DELETE", "ENQUEUE_DELETE")
++            if id(action) not in executable and not deletion:
+                 report.review.append((action.kind, action.information_id, action.sequence))
+                 continue
+             try:
+@@ -100,7 +104,7 @@ class ReferenceWorker:
+             if not self.rights(self.profile, action.information_id):
+                 report.skipped.append((action.information_id, "forbidden"))
+                 continue
+-            if action.kind in ("INDEX_DELETE", "ENQUEUE_DELETE"):
++            if deletion:                                             # verified, then only PROPOSED
+                 if current is ABSENT:
+                     report.proposed_deletions.append((action.information_id, action.sequence))
+                 else:
+@@ -117,11 +121,6 @@ class ReferenceWorker:
+         ident, seq = action.information_id, action.sequence
+         if action.kind == "MARK_PUBLISHED":
+             self.journal.published(seq)
+-        elif action.kind == "CLOSE_SUPERSEDED":
+-            if current is ABSENT or current.revision < action.revision:
+-                report.skipped.append((ident, "newer revision not confirmed"))
+-                return
+-            self.journal.close_terminal(seq, "SUPERSEDED", "newer canonical revision")
+         elif action.kind in ("INDEX_UPSERT", "ENQUEUE_UPSERT"):
+             if current is ABSENT or current.revision != action.revision:
+                 report.skipped.append((ident, "canon changed since plan"))
+diff --git a/tests/claude_memory_eval/test_worker_reference_g214.py b/tests/claude_memory_eval/test_worker_reference_g214.py
+index 54e847f..89eba7a 100644
+--- a/tests/claude_memory_eval/test_worker_reference_g214.py
++++ b/tests/claude_memory_eval/test_worker_reference_g214.py
+@@ -6,8 +6,10 @@
+ # Standard    : Eidolon Presentation Standard v1
+ # ==========================================================
+ """Contract tests for the future index worker, run against Claude's reference worker and in-memory doubles.
+-No Qdrant, no Markdown, no VM. GPT's worker should pass the same scenarios (swap ReferenceWorker)."""
++No Qdrant, no Markdown, no VM. Reusable (G218-2): set EIDOLON_WORKER_FACTORY="package.module:function" to run
++the same scenarios against another worker; see tests/claude_memory_eval/WORKER-CONTRACT.md."""
+ import hashlib
++import importlib
+ import os
+ 
+ import pytest
+@@ -18,6 +20,17 @@ from core.indexing.reconcile_plan import Canonical
+ from tests.claude_memory_eval.reference_worker import Crash, FakeCanon, FakeIndex, ReferenceWorker
+ 
+ 
++def _factory():
++    spec = os.environ.get("EIDOLON_WORKER_FACTORY")
++    if not spec:
++        return ReferenceWorker
++    module, _, name = spec.partition(":")
++    return getattr(importlib.import_module(module), name)
++
++
++WORKER = _factory()
++
++
+ def sha(text):
+     return hashlib.sha256(text.encode()).hexdigest()
+ 
+@@ -41,7 +54,7 @@ class World:
+         return self.now if self.now is not None else __import__("time").time()
+ 
+     def worker(self, profile="alice", **kwargs):
+-        return ReferenceWorker(self.journal, self.canon, self.index, self.rights, profile=profile,
++        return WORKER(self.journal, self.canon, self.index, self.rights, profile=profile,
+                                lock_path=str(self.lock), clock=self.clock, **kwargs)
+ 
+     def write(self, ident, revision, text, *, crash=None):
+@@ -155,17 +168,18 @@ def test_canon_changed_between_plan_and_action_is_not_indexed_stale(world):
+     assert world.index.points == {} and world.states() == {seq: "PUBLISHED"}
+ 
+ 
+-def test_two_fast_revisions_supersede_the_older_and_index_only_the_latest(world):
++def test_two_fast_revisions_index_only_the_latest_and_send_the_older_to_review(world):
++    """GPT's preflight (1a7a76f) puts CLOSE_SUPERSEDED in review: the older intent is never closed alone."""
+     first = world.write("doc", 1, "v1")
+     second = world.write("doc", 2, "v2")
++    report = world.worker().run_once()
++    assert ("CLOSE_SUPERSEDED", "doc", first) in report.review
+     world.worker().run_once()
+-    world.worker().run_once()
+-    assert world.index.points["doc"] == (2, sha("v2")) and world.states() == {}
++    assert world.index.points["doc"] == (2, sha("v2")) and world.index.writes == 1
++    assert world.states() == {first: "PUBLISHED"}                    # waits for a human decision
+     with __import__("sqlite3").connect(world.path) as raw:
+-        assert raw.execute("SELECT state FROM intents WHERE seq=?", (first,)).fetchone()[0] == "SUPERSEDED"
+         assert raw.execute("SELECT state FROM intents WHERE seq=?", (second,)).fetchone()[0] == "INDEXED"
+ 
+-
+ def test_a_profile_without_rights_changes_nothing(world):
+     seq = world.write("doc", 1, "v1")
+     world.allowed = {"bob": {"other"}}
+-- 
+2.43.0
+

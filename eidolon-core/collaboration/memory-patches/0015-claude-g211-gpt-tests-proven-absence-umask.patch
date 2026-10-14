@@ -1,0 +1,55 @@
+From 384a3bc588c2a91affed0828877867ed9b22ac7f Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 09:43:55 +0000
+Subject: [PATCH 15/16] test(memory): G211 align preview test with proven
+ absence; make migration schema test umask-independent
+
+test_stale_intent_may_be_closed_after_grace abandoned an intent whose canonical
+state was never read ({}); since 30fb6ef that correctly WAITs. Pass ABSENT.
+test_rejects_unknown_schema_without_mutation failed under umask 022 because
+migrate_v2 refuses on permissions before the schema check; chmod 0600 first.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ tests/test_journal_migration.py | 1 +
+ tests/test_reconcile_preview.py | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tests/test_journal_migration.py b/tests/test_journal_migration.py
+index 999af32..f8de9a1 100644
+--- a/tests/test_journal_migration.py
++++ b/tests/test_journal_migration.py
+@@ -41,6 +41,7 @@ def test_rejects_unknown_schema_without_mutation(tmp_path):
+     path = tmp_path / "journal.sqlite3"
+     with sqlite3.connect(path) as db:
+         db.execute("CREATE TABLE intents (x INTEGER)")
++    path.chmod(0o600)  # private like a real journal: test the schema check, not the umask
+     with pytest.raises(ValueError, match="unknown journal schema"):
+         migrate_v2(path)
+     with sqlite3.connect(path) as db:
+diff --git a/tests/test_reconcile_preview.py b/tests/test_reconcile_preview.py
+index 15533c9..8d8e11a 100644
+--- a/tests/test_reconcile_preview.py
++++ b/tests/test_reconcile_preview.py
+@@ -3,7 +3,7 @@ import hashlib
+ import pytest
+ 
+ from core.indexing.change_journal import ChangeJournal
+-from core.indexing.reconcile_plan import Canonical
++from core.indexing.reconcile_plan import ABSENT, Canonical
+ from core.indexing.reconcile_preview import preview_reconciliation
+ 
+ 
+@@ -32,7 +32,7 @@ def test_stale_intent_may_be_closed_after_grace(tmp_path):
+     journal = ChangeJournal(tmp_path / "changes.sqlite3")
+     journal.begin("doc", 1, "UPSERT", "a" * 64)
+     created = journal.pending()[0].created
+-    result = preview_reconciliation(journal, {}, {}, now=created + 601)
++    result = preview_reconciliation(journal, {"doc": ABSENT}, {}, now=created + 601)  # absence proven
+     assert result.actions[0].kind == "CLOSE_ABANDONED"
+     assert journal.pending()[0].state == "INTENT"
+ 
+-- 
+2.43.0
+

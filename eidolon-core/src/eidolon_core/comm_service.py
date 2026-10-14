@@ -104,7 +104,10 @@ class CommAPI:
                 raise Refused("NOT_FOUND")
             route = url.path[len(PREFIX):]
             client = self._client(headers)
-            return 200, self._route(method, route, url.query, client, body), extra
+            result = self._route(method, route, url.query, client, body)
+            if method == "POST" and self._client(headers) != client:
+                raise Refused("UNAUTHORIZED")       # G167: key revoked while processing: result discarded
+            return 200, result, extra
         except Refused as exc:
             return STATUS[exc.code], self._error(exc.code), extra
         except CommError as exc:
@@ -258,7 +261,8 @@ def build_engines(config):
     if config.get("tts"):
         t = config["tts"]
         engine = SimulatedTTS() if t.get("kind") == "simulated" else PiperTTS(t["executable"], t["voice_dir"])
-        tts = TextToSpeech(engine, default_voice=t.get("default_voice"), gate=gate)
+        tts = TextToSpeech(engine, default_voice=t.get("default_voice"), gate=gate,
+                           pronunciations=t.get("pronunciations"))   # absent: DEFAULT_PRONUNCIATIONS
     if config.get("vision"):
         v = config["vision"]
         engine = SimulatedVision() if v.get("kind") == "simulated" else OllamaVision(v["endpoint"], v["model"])
@@ -296,6 +300,8 @@ def main(argv=None):
         engines = ", ".join(f"{k} {status[k].get('engine', 'indisponible')}" for k in ("stt", "tts", "vision"))
         print(message("INFO", f"eidolon-comm sur http://127.0.0.1:{server.server_port} — {engines} ; capture désactivée par défaut."), flush=True)
         try:
+            from .sd_notify import notify
+            notify()                                # G167: Type=notify, ready only once the port is open
             server.serve_forever()
         except KeyboardInterrupt:
             pass

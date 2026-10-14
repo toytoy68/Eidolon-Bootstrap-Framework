@@ -37,8 +37,9 @@ const focused = (page) => page.evaluate(() => {
 });
 
 async function connectByKeyboard(page, token) {
-  await page.keyboard.press("Tab");               // skip link
-  await page.keyboard.press("Tab");               // token field
+  await page.keyboard.press("Tab");               // skip link: missions
+  await page.keyboard.press("Tab");               // skip link: read token (G176: the field lives in Réglages)
+  await page.keyboard.press("Enter");
   assert.equal(await focused(page), "token");
   await page.keyboard.type(token);
   await page.keyboard.press("Enter");

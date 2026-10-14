@@ -42,6 +42,7 @@ MAX_REPLY = 64 * 1024
 SOCKET_TIMEOUT = 3.0
 CACHE_SECONDS = 2.0                       # several tabs never multiply reads of the single-threaded DARME
 POLL_SECONDS = 10                         # = DARME sampling interval
+REMOTE_SECONDS = 10                       # G166: at most one SSH read per remote machine per DARME sample
 DEFAULT_TTL = 60
 FUTURE_TOLERANCE = 5.0
 STATUS = {"UNAUTHORIZED": 401, "READ_TOKEN_NOT_ALLOWED": 403, "HOST_REFUSED": 403, "ORIGIN_REFUSED": 403,
@@ -117,6 +118,72 @@ def _bytes(item, fields, *, scope=None):
     return result
 
 
+def _maybe(value, *, high=None, integer=False):
+    if value is None:
+        return None
+    if integer and type(value) is not int:
+        raise ValueError("integer expected")
+    if not _number(value, high=high):
+        raise ValueError("number expected")
+    return value
+
+
+def gpu_view(raw, *, now):
+    """(GPU view, error) for the PROPOSED eidolon-gpu/1 block (docs/GPU-DISPLAY.md, G169).
+
+    The source is named (VM101 today, VM100 with two V100 later): a value never moves from one machine
+    to another. Absent values stay null; an invalid block is dropped alone (CPU metrics are kept)."""
+    if raw is None:
+        return None, None
+    try:
+        if not isinstance(raw, dict) or raw.get("schema") != "eidolon-gpu/1":
+            raise ValueError("schema")
+        source = raw["source"]
+        if (not isinstance(source, dict) or set(source) != {"id", "label", "collector"}
+                or not all(isinstance(source[k], str) and re.fullmatch(r"[A-Za-z0-9 ._-]{1,40}", source[k]) for k in source)):
+            raise ValueError("source")
+        sampled = datetime.fromisoformat(raw["sampled_at"])
+        if sampled.tzinfo is None:
+            raise ValueError("naive date")
+        age = now - sampled.timestamp()
+        if age < -FUTURE_TOLERANCE:
+            return None, "GPU_CLOCK_SKEW"
+        cadence = raw.get("cadence_seconds")
+        if type(cadence) is not int or not 1 <= cadence <= 3600:
+            raise ValueError("cadence")
+        driver = raw.get("driver")
+        if driver is not None and (not isinstance(driver, str) or not re.fullmatch(r"[0-9.]{1,20}", driver)):
+            raise ValueError("driver")
+        devices = raw.get("devices")
+        if not isinstance(devices, list) or len(devices) > 8:
+            raise ValueError("devices")
+        out = []
+        for device in devices:
+            if not isinstance(device, dict) or type(device.get("index")) is not int or not 0 <= device["index"] < 16:
+                raise ValueError("device index")
+            name = device.get("name")
+            if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9 ._()/-]{1,64}", name):
+                raise ValueError("device name")
+            used, total = _maybe(device.get("memory_used_bytes"), integer=True), _maybe(device.get("memory_total_bytes"), integer=True)
+            if used is not None and total is not None and used > total:
+                raise ValueError("memory")
+            power, limit = _maybe(device.get("power_w"), high=2000), _maybe(device.get("power_limit_w"), high=2000)
+            out.append({"index": device["index"], "name": name,
+                        "temperature_c": _maybe(device.get("temperature_c"), high=150),
+                        "power_w": power, "power_limit_w": limit,
+                        "utilization_percent": _maybe(device.get("utilization_percent"), high=100),
+                        "memory_used_bytes": used, "memory_total_bytes": total})
+        errors = raw.get("errors", [])
+        if (not isinstance(errors, list) or len(errors) > 16
+                or not all(isinstance(e, str) and re.fullmatch(r"[a-z][a-z0-9_]{0,39}", e) for e in errors)):
+            raise ValueError("errors")
+        return {"source": dict(source), "sampled_at": sampled.astimezone(timezone.utc).isoformat(),
+                "age_seconds": max(0, round(age)), "stale": age > max(DEFAULT_TTL, 3 * cadence),
+                "cadence_seconds": cadence, "driver": driver, "devices": out, "errors": list(errors)}, None
+    except (ValueError, KeyError, TypeError):
+        return None, "GPU_INVALID"
+
+
 def machine_view(raw, *, now):
     """(machine view, error) from the eidolon-machine/1 field published by Codex (G161).
 
@@ -150,8 +217,11 @@ def machine_view(raw, *, now):
                 "swap": _bytes(raw.get("swap"), ("total_bytes", "free_bytes", "used_bytes")),
                 "disk": _bytes(raw.get("disk"), ("total_bytes", "free_bytes", "used_bytes"),
                                scope="journal_filesystem"),
-                "gpu": None,                         # never probed on these CPU VMs (G161): nothing is relayed
-                "errors": list(errors)}
+                "gpu": None, "errors": list(errors)}
+        # G169: a GPU block only if it follows the proposed eidolon-gpu/1 contract; null on CPU VMs (G161).
+        view["gpu"], gpu_error = gpu_view(raw.get("gpu"), now=now)
+        if gpu_error:
+            view["gpu_error"] = gpu_error
         return view, None
     except (ValueError, KeyError, TypeError):
         return None, "MACHINE_INVALID"
@@ -206,11 +276,16 @@ class MonitorAPI:
     """Transport-free handler: (method, path, headers) -> (status, JSON value, extra headers)."""
 
     def __init__(self, credentials, machines, *, not_covered=(), read_token=None, allowed_hosts=None,
-                 allowed_origin=None, reader=read_darme, clock=time.time, cache_seconds=CACHE_SECONDS):
+                 allowed_origin=None, reader=read_darme, remote_reader=None, clock=time.time,
+                 cache_seconds=CACHE_SECONDS):
         self.credentials, self.machines, self.not_covered = credentials, list(machines), list(not_covered)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts, self.allowed_origin = allowed_hosts, allowed_origin
         self.reader, self.clock, self.cache_seconds = reader, clock, cache_seconds
+        if remote_reader is None:
+            from .monitor_remote import read_ssh as remote_reader
+        self.remote_reader = remote_reader
+        self._remote = {}                    # machine id -> (monotonic time, raw, error): one SSH read per 10 s
         self._lock = threading.Lock()
         self._cache = (None, -math.inf)
 
@@ -239,7 +314,7 @@ class MonitorAPI:
             machines = []
             for machine in self.machines:
                 entry = {"id": machine["id"], "label": machine["label"]}
-                raw, error = self.reader(machine["socket"], peer_uid=machine.get("peer_uid"))
+                raw, error = self._read(machine)
                 if raw is None:
                     state = "invalid" if error in ("INVALID_REPLY", "REPLY_TOO_LARGE") else "unavailable"
                     entry.update(state=state, error=error, darme=None, machine=None)
@@ -254,6 +329,15 @@ class MonitorAPI:
                      "gpu_metrics": None, "authorizes_execution": False}
             self._cache = (value, time.monotonic())
             return value
+
+    def _read(self, machine):
+        if "ssh" not in machine:
+            return self.reader(machine["socket"], peer_uid=machine.get("peer_uid"))
+        at, raw, error = self._remote.get(machine["id"], (-math.inf, None, None))
+        if time.monotonic() - at >= REMOTE_SECONDS:
+            raw, error = self.remote_reader(machine["ssh"])
+            self._remote[machine["id"]] = (time.monotonic(), raw, error)
+        return raw, error
 
     def handle(self, method, path, headers):
         extra = {}
@@ -352,6 +436,17 @@ def load_config(path):
         raise ValueError("MONITOR_CONFIG_INVALID: 1 to 8 machines")
     seen = set()
     for machine in machines:
+        if (isinstance(machine, dict) and "ssh" in machine and "socket" not in machine
+                and set(machine) <= {"id", "label", "ssh"}):
+            # G166: remote DARME through the forced-command feed (monitor_remote.py, docs/MEMORY-CHANNEL.md).
+            from .monitor_remote import validate
+            machine["ssh"] = validate(machine["ssh"])
+            if (not isinstance(machine["id"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", machine["id"])
+                    or machine["id"] in seen or not isinstance(machine["label"], str)
+                    or not re.fullmatch(r"[^\x00-\x1f<>]{1,40}", machine["label"])):
+                raise ValueError("MONITOR_CONFIG_INVALID: machine id, label")
+            seen.add(machine["id"])
+            continue
         if (not isinstance(machine, dict) or not {"id", "label", "socket"} <= set(machine)
                 or not set(machine) <= {"id", "label", "socket", "peer_user"}
                 or not isinstance(machine["id"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", machine["id"])
@@ -410,6 +505,8 @@ def main(argv=None):
         print(message("INFO", f"eidolon-monitor sur http://127.0.0.1:{server.server_port} — "
                               f"{len(api.machines)} machine(s), lecture seule."), flush=True)
         try:
+            from .sd_notify import notify
+            notify()                                # G167: Type=notify, ready only once the port is open
             server.serve_forever()
         except KeyboardInterrupt:
             pass

@@ -83,7 +83,9 @@
     PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
     PROPOSAL_STALE: "Une version plus récente de la proposition existe : relisez-la avant de valider.",
     PROPOSAL_CHANGED: "La proposition a changé : relisez-la avant de valider.",
-    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé."
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé.",
+    // G167: the media service is not installed or stopped on this server; the conversation keeps working.
+    MEDIA_WORKER_NOT_CONFIGURED: "Le service images et vidéos n'est pas disponible sur ce serveur : rien n'a été lancé. La conversation reste utilisable."
   };
   var REPLY_KINDS = { ANSWER: "Réponse", CLARIFICATION: "Question en retour", PROPOSAL: "Proposition de mission",
     OUT_OF_SCOPE: "Hors capacités", UNAVAILABLE: "Indisponible" };
@@ -285,7 +287,8 @@
       var r = await call("submit", body);
       if (r.stale || mine !== epoch || s !== state.submission || read !== submissionRead) return false;
       if (r.ok) { s.status = "recorded"; s.receipt = r.json; s.error = null; }
-      else { s.status = r.network || r.status >= 500 ? "uncertain" : "refused"; s.error = r.code; }
+      // G167: "media worker not configured" is a definite answer (nothing queued), not an uncertain one.
+      else { s.status = (r.network || r.status >= 500) && r.code !== "MEDIA_WORKER_NOT_CONFIGURED" ? "uncertain" : "refused"; s.error = r.code; }
       emit();
       return r.ok;
     }
@@ -563,6 +566,10 @@
     }
     doc.getElementById("conv-connect").hidden = !closed;
     doc.getElementById("conv-body").hidden = closed;
+    // G176: the top bar holds the key field while closed, the message field while open (never both).
+    var form = doc.getElementById("conv-form"), welcome = doc.getElementById("conv-welcome");
+    if (form) form.hidden = closed;
+    if (welcome) welcome.hidden = !closed;
     doc.getElementById("conv-close").hidden = closed;
     var status = doc.getElementById("conv-status");
     status.textContent = st.phase === "opening" ? "Ouverture…" :
@@ -752,7 +759,7 @@
   function mount(doc, deps) {
     var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
-      if (deps.onPhase) deps.onPhase(st.phase);           // G156: the machine dashboard follows the key
+      if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
@@ -761,6 +768,13 @@
       conv.open(value).then(function (ok) { (ok ? doc.getElementById("conv-text") : input).focus(); });
     });
     doc.getElementById("conv-close").addEventListener("click", function () { conv.close(); doc.getElementById("conv-key").focus(); });
+    // G176: Enter sends from the top bar, Shift+Enter keeps a new line (IME composition never sends).
+    doc.getElementById("conv-text").addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      var form = doc.getElementById("conv-form");
+      if (form.requestSubmit) form.requestSubmit(); else doc.getElementById("conv-send").click();
+    });
     doc.getElementById("conv-form").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-text"), text = input.value;

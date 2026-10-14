@@ -6,7 +6,9 @@ Description=Eidolon communication (voix, synthèse, image ponctuelle) — boucle
 After=network.target
 
 [Service]
-Type=simple
+Type=notify
+NotifyAccess=main
+TimeoutStartSec=30
 User=toytoy
 Group=toytoy
 WorkingDirectory=/home/toytoy/eidolon-comm
@@ -14,6 +16,11 @@ Environment=PYTHONPATH=/opt/eidolon-core/bootstrap/eidolon-core/src
 Environment=PYTHONDONTWRITEBYTECODE=1
 ExecStart=/home/toytoy/eidolon-comm/venv/bin/python -m eidolon_core.comm_service --state /home/toytoy/eidolon-beta/state --config /home/toytoy/eidolon-comm/comm.json --port 8766 --read-token-file /home/toytoy/eidolon-beta/read-token
 Restart=on-failure
+# G167: the dialogue and the page stay first; dictation and voice yield the CPU when both run.
+Nice=10
+CPUWeight=50
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
 RestartSec=5
 UMask=0077
 NoNewPrivileges=yes

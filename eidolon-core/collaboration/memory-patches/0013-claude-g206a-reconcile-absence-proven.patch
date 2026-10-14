@@ -1,0 +1,141 @@
+From a248fda1e7a7b1a7297533eb314f43f567ed2271 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 09:10:38 +0000
+Subject: [PATCH] fix(proposal): G206-A absence must be proven in
+ reconcile_plan
+
+A missing canonical entry meant 'deleted': a failed or skipped canonical
+read could mark a DELETE as published or remove an index entry. Now
+ABSENT is explicit, a missing key is UNKNOWN and only WAITs, canonical
+values are validated before any decision, and an unknown reader count
+keeps a generation. Tests updated and two added.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ core/indexing/reconcile_plan.py               | 21 ++++++++++++---
+ .../claude_memory_eval/test_reconcile_plan.py | 26 +++++++++++++++----
+ 2 files changed, 38 insertions(+), 9 deletions(-)
+
+diff --git a/core/indexing/reconcile_plan.py b/core/indexing/reconcile_plan.py
+index d705157..0673baa 100644
+--- a/core/indexing/reconcile_plan.py
++++ b/core/indexing/reconcile_plan.py
+@@ -21,9 +21,14 @@ Rules (the canon always wins; the journal only accelerates):
+ - a same revision with another digest is an INTEGRITY alert, never indexed;
+ - manifest reconciliation: an id whose index revision differs from the canon with no intent covering it
+   gets an ENQUEUE action (the journal lost the event); an indexed id absent from the canon is deleted.
++
++Absence must be PROVEN (G206-A): ``canonical`` maps an id to a Canonical, or to ABSENT when the canon was
++read and the document is not there. An id missing from the mapping is UNKNOWN (unread, unreadable): it is
++never treated as deleted, never published, closed or removed from the index; its intents WAIT.
+ """
+ from dataclasses import dataclass
+ 
++ABSENT = "ABSENT"            # proven absence after a canonical read; a missing key means UNKNOWN
+ TERMINAL = frozenset({"INDEXED", "SUPERSEDED", "ABANDONED"})
+ ACTIONS = ("MARK_PUBLISHED", "INDEX_UPSERT", "INDEX_DELETE", "CLOSE_SUPERSEDED", "CLOSE_ABANDONED",
+            "WAIT", "INTEGRITY_ALERT", "ENQUEUE_UPSERT", "ENQUEUE_DELETE")
+@@ -45,8 +50,10 @@ class Action:
+ 
+ 
+ def _intent_action(intent, canonical, age, grace_seconds):
+-    current = canonical.get(intent.information_id)
+     seq, ident = intent.sequence, intent.information_id
++    if ident not in canonical:
++        return Action("WAIT", ident, seq, intent.revision, "canonical state unknown")
++    current = None if canonical[ident] is ABSENT else canonical[ident]
+     if current is not None and current.revision > intent.revision:
+         return Action("CLOSE_SUPERSEDED", ident, seq, current.revision, "newer canonical revision")
+     if intent.operation == "UPSERT":
+@@ -73,6 +80,9 @@ def reconcile_plan(pending, canonical, indexed, *, ages=None, grace_seconds=600)
+     """pending: ChangeIntent tuple; canonical: {id: Canonical}; indexed: {id: revision}; ages: {seq: s}."""
+     if type(grace_seconds) not in (int, float) or grace_seconds < 0:
+         raise ValueError("invalid grace delay")
++    for value in canonical.values():                      # validated BEFORE any decision
++        if value is not ABSENT and not isinstance(value, Canonical):
++            raise ValueError("canonical values must be Canonical or ABSENT")
+     ages = ages or {}
+     actions, covered = [], set()
+     for intent in sorted(pending, key=lambda i: i.sequence):
+@@ -83,9 +93,12 @@ def reconcile_plan(pending, canonical, indexed, *, ages=None, grace_seconds=600)
+         if action.kind not in ("CLOSE_SUPERSEDED", "CLOSE_ABANDONED"):
+             covered.add(intent.information_id)
+     for ident in sorted(set(canonical) | set(indexed)):
+-        if ident in covered:
++        if ident in covered or ident not in canonical:
++            continue                                             # unknown canonical state: no action
++        current = None if canonical[ident] is ABSENT else canonical[ident]
++        revision = indexed.get(ident)
++        if current is None and revision is None:
+             continue
+-        current, revision = canonical.get(ident), indexed.get(ident)
+         if current is None:
+             actions.append(Action("ENQUEUE_DELETE", ident, None, revision, "indexed but absent from the canon"))
+         elif revision != current.revision:
+@@ -114,7 +127,7 @@ def retirement_plan(generations, *, live, readers, retired_at, now, grace_second
+         raise ValueError("live generation unknown: refuse to plan anything")
+     out = []
+     for name in sorted(generations):
+-        if name == live or readers.get(name, 0) != 0:
++        if name == live or readers.get(name) != 0:          # unknown reader count = keep
+             continue
+         since = retired_at.get(name)
+         if since is not None and now - since >= grace_seconds:
+diff --git a/tests/claude_memory_eval/test_reconcile_plan.py b/tests/claude_memory_eval/test_reconcile_plan.py
+index 5907b1e..8e4f55c 100644
+--- a/tests/claude_memory_eval/test_reconcile_plan.py
++++ b/tests/claude_memory_eval/test_reconcile_plan.py
+@@ -10,7 +10,7 @@ import hashlib
+ import pytest
+ 
+ from core.indexing.change_journal import ChangeIntent, ChangeJournal
+-from core.indexing.reconcile_plan import Canonical, compaction_plan, reconcile_plan, retirement_plan
++from core.indexing.reconcile_plan import ABSENT, Canonical, compaction_plan, reconcile_plan, retirement_plan
+ 
+ A = hashlib.sha256(b"a").hexdigest()
+ B = hashlib.sha256(b"b").hexdigest()
+@@ -49,10 +49,10 @@ def test_same_revision_other_content_is_an_alert_never_indexed():
+ 
+ 
+ def test_deletes_and_lost_events_are_reconciled_from_the_manifest():
+-    plan = reconcile_plan([intent(1, "gone", 3, op="DELETE")], {"new": Canonical(1, A)},
+-                          {"gone": 3, "orphan": 5})
++    plan = reconcile_plan([intent(1, "gone", 3, op="DELETE")],
++                          {"new": Canonical(1, A), "gone": ABSENT, "orphan": ABSENT}, {"gone": 3, "orphan": 5})
+     assert kinds(plan) == [("MARK_PUBLISHED", "gone"), ("ENQUEUE_UPSERT", "new"), ("ENQUEUE_DELETE", "orphan")]
+-    published = reconcile_plan([intent(1, "gone", 3, op="DELETE", state="PUBLISHED")], {}, {"gone": 3})
++    published = reconcile_plan([intent(1, "gone", 3, op="DELETE", state="PUBLISHED")], {"gone": ABSENT}, {"gone": 3})
+     assert kinds(published) == [("INDEX_DELETE", "gone")]
+ 
+ 
+@@ -72,9 +72,25 @@ def test_compaction_never_touches_pending_rows_or_rows_a_reader_may_need():
+ 
+ def test_retirement_spares_live_read_and_recent_generations():
+     generations = {"g1", "g2", "g3", "g4"}
+-    plan = retirement_plan(generations, live="g4", readers={"g2": 1}, retired_at={"g1": 0, "g2": 0, "g3": 3000},
++    plan = retirement_plan(generations, live="g4", readers={"g1": 0, "g2": 1, "g3": 0}, retired_at={"g1": 0, "g2": 0, "g3": 3000},
+                            now=4000, grace_seconds=3600)
+     assert plan == ("g1",)                       # g2 is being read, g3 too recent, g4 live
+     assert retirement_plan(generations, live="g4", readers={}, retired_at={}, now=10**9) == ()  # unknown history
+     with pytest.raises(ValueError):
+         retirement_plan({"g1"}, live="g9", readers={}, retired_at={"g1": 0}, now=10**9)
++
++
++def test_an_unread_canonical_state_is_never_taken_for_a_deletion():
++    """G206-A: absence must be proven. An id missing from the canonical mapping (read failed, not read) only
++    WAITs: no MARK_PUBLISHED of a DELETE, no CLOSE, no index removal."""
++    plan = reconcile_plan([intent(1, "doc", 3, op="DELETE"), intent(2, "up", 1, state="PUBLISHED")],
++                          {}, {"doc": 3, "up": 1, "other": 2}, ages={1: 10**6, 2: 10**6})
++    assert kinds(plan) == [("WAIT", "doc"), ("WAIT", "up")]
++    for bad in (None, 3, "absent"):
++        with pytest.raises(ValueError):
++            reconcile_plan([intent(1, "doc", 3, op="DELETE")], {"doc": bad}, {"doc": 3})
++
++
++def test_retirement_keeps_a_generation_whose_reader_count_is_unknown():
++    assert retirement_plan({"g1", "g2"}, live="g2", readers={}, retired_at={"g1": 0}, now=10**9) == ()
++    assert retirement_plan({"g1", "g2"}, live="g2", readers={"g1": 0}, retired_at={"g1": 0}, now=10**9) == ("g1",)
+-- 
+2.43.0
+

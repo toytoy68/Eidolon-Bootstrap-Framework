@@ -1,0 +1,625 @@
+{
+ "schema": "eidolon-doc-index-eval/1",
+ "frozen": "2026-10-12",
+ "author": "Claude",
+ "status": "frozen_before_any_real_run",
+ "rules": [
+  "Questions written before any snapshot is downloaded or indexed.",
+  "Each expected page and answer is checked against the frozen snapshot revision BEFORE any scoring run; a correction is logged with its reason and a new corpus version, never after seeing results.",
+  "Abstention questions name invented or future entities: any answer citing a source is a failure.",
+  "Negation questions fail if the answer drops the negation or the warning.",
+  "Scoring: the cited source must match expected_source.corpus and page_hint; answer_must_contain items are case-insensitive substrings; also_accepted are alternatives."
+ ],
+ "licences": {
+  "frwiki": "CC BY-SA (attribution)",
+  "debian-docs": "per document (DFSG-free; to record per page)",
+  "python-docs": "PSF documentation licence (to verify)",
+  "proxmox-docs": "to verify per page"
+ },
+ "questions": [
+  {
+   "id": "q01",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quelle est la capitale de l'Australie ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Canberra"
+   },
+   "answer_must_contain": [
+    "Canberra"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q02",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "En quelle année a eu lieu la prise de la Bastille ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Prise de la Bastille"
+   },
+   "answer_must_contain": [
+    "1789"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q03",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Qui a écrit « Les Misérables » ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Les Misérables"
+   },
+   "answer_must_contain": [
+    "Victor Hugo"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q04",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quel est le symbole chimique du fer ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Fer"
+   },
+   "answer_must_contain": [
+    "Fe"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q05",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quelle est l'altitude approximative du mont Blanc ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Mont Blanc"
+   },
+   "answer_must_contain": [
+    "480"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot",
+   "note": "Altitude mesurée variable selon les campagnes : accepter une valeur entre 4 800 et 4 810 m citée par la page figée."
+  },
+  {
+   "id": "q06",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quelle rivière se jette dans le Rhône à Lyon ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Saône"
+   },
+   "answer_must_contain": [
+    "Saône"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q07",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quelle planète est la plus proche du Soleil ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Mercure (planète)"
+   },
+   "answer_must_contain": [
+    "Mercure"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q08",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Qui a peint « La Joconde » ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "La Joconde"
+   },
+   "answer_must_contain": [
+    "Léonard de Vinci"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q09",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quelle est l'unité SI de la force ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Newton (unité)"
+   },
+   "answer_must_contain": [
+    "newton"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q10",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "En quelle année les pièces et billets en euros ont-ils été mis en circulation en France ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Euro"
+   },
+   "answer_must_contain": [
+    "2002"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q11",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Qui a formulé la théorie de la relativité générale ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Relativité générale"
+   },
+   "answer_must_contain": [
+    "Einstein"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q12",
+   "theme": "wikipedia",
+   "kind": "factual",
+   "question": "Quel est le plus long fleuve coulant entièrement en France ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Loire"
+   },
+   "answer_must_contain": [
+    "Loire"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q13",
+   "theme": "debian",
+   "kind": "procedure",
+   "question": "Quelle commande met à jour la liste des paquets disponibles sous Debian ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "APT / apt(8)"
+   },
+   "answer_must_contain": [
+    "update"
+   ],
+   "also_accepted": [
+    "apt update",
+    "apt-get update"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q14",
+   "theme": "debian",
+   "kind": "factual",
+   "question": "Dans quel fichier APT lit-il classiquement la liste des dépôts ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "sources.list(5)"
+   },
+   "answer_must_contain": [
+    "/etc/apt/sources.list"
+   ],
+   "also_accepted": [
+    "/etc/apt/sources.list.d/"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q15",
+   "theme": "debian",
+   "kind": "factual",
+   "question": "Quel est le nom de code de Debian 12 ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "Debian releases"
+   },
+   "answer_must_contain": [
+    "bookworm"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q16",
+   "theme": "debian",
+   "kind": "factual",
+   "question": "Quel est le nom de code de Debian 13 ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "Debian releases"
+   },
+   "answer_must_contain": [
+    "trixie"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q17",
+   "theme": "debian",
+   "kind": "procedure",
+   "question": "Quelle commande affiche l'état et la description d'un paquet installé ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "dpkg(1)"
+   },
+   "answer_must_contain": [
+    "dpkg"
+   ],
+   "also_accepted": [
+    "apt show",
+    "dpkg -s"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q18",
+   "theme": "debian",
+   "kind": "factual",
+   "question": "Quel fichier décrit les interfaces réseau avec ifupdown ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "interfaces(5)"
+   },
+   "answer_must_contain": [
+    "/etc/network/interfaces"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q19",
+   "theme": "python",
+   "kind": "factual",
+   "question": "Quelle fonction intégrée renvoie le nombre d'éléments d'une séquence ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "Built-in Functions: len"
+   },
+   "answer_must_contain": [
+    "len"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q20",
+   "theme": "python",
+   "kind": "factual",
+   "question": "Quel module standard analyse les arguments de la ligne de commande ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "argparse"
+   },
+   "answer_must_contain": [
+    "argparse"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q21",
+   "theme": "python",
+   "kind": "procedure",
+   "question": "Quelle instruction permet d'intercepter une exception ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "Errors and Exceptions"
+   },
+   "answer_must_contain": [
+    "try",
+    "except"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q22",
+   "theme": "python",
+   "kind": "procedure",
+   "question": "Comment créer un environnement virtuel avec la bibliothèque standard ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "venv"
+   },
+   "answer_must_contain": [
+    "venv"
+   ],
+   "also_accepted": [
+    "python3 -m venv"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q23",
+   "theme": "python",
+   "kind": "factual",
+   "question": "Quel module standard lit et écrit du JSON ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "json"
+   },
+   "answer_must_contain": [
+    "json"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q24",
+   "theme": "python",
+   "kind": "factual",
+   "question": "Que renvoie dict.get(clé) quand la clé est absente et sans valeur par défaut ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "dict.get"
+   },
+   "answer_must_contain": [
+    "None"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q25",
+   "theme": "python",
+   "kind": "factual",
+   "question": "Depuis quelle version de Python l'opérateur d'affectation := existe-t-il ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "What's New In Python 3.8 / PEP 572"
+   },
+   "answer_must_contain": [
+    "3.8"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q26",
+   "theme": "proxmox",
+   "kind": "procedure",
+   "question": "Quelle commande crée une sauvegarde d'une VM sous Proxmox VE ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "vzdump"
+   },
+   "answer_must_contain": [
+    "vzdump"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q27",
+   "theme": "proxmox",
+   "kind": "factual",
+   "question": "Quelle commande gère les machines virtuelles QEMU en ligne de commande ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "qm(1)"
+   },
+   "answer_must_contain": [
+    "qm"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q28",
+   "theme": "proxmox",
+   "kind": "factual",
+   "question": "Quelle commande gère les conteneurs LXC ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "pct(1)"
+   },
+   "answer_must_contain": [
+    "pct"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q29",
+   "theme": "proxmox",
+   "kind": "factual",
+   "question": "Sur quel port l'interface web de Proxmox VE écoute-t-elle par défaut ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "Proxmox VE web interface"
+   },
+   "answer_must_contain": [
+    "8006"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q30",
+   "theme": "proxmox",
+   "kind": "factual",
+   "question": "Quel système de fichiers de cluster stocke la configuration de Proxmox VE ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "pmxcfs"
+   },
+   "answer_must_contain": [
+    "pmxcfs"
+   ],
+   "also_accepted": [
+    "/etc/pve"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q31",
+   "theme": "debian",
+   "kind": "negation",
+   "question": "Peut-on mélanger sans risque des dépôts de plusieurs versions de Debian ?",
+   "expected_source": {
+    "corpus": "debian-docs",
+    "page_hint": "DontBreakDebian"
+   },
+   "answer_must_contain": [
+    "non"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot",
+   "note": "La réponse doit garder la négation ou la mise en garde de la source."
+  },
+  {
+   "id": "q32",
+   "theme": "python",
+   "kind": "negation",
+   "question": "Faut-il installer des paquets avec « sudo pip install » dans le Python système de Debian 12 ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "PEP 668 / externally-managed-environment"
+   },
+   "answer_must_contain": [
+    "non"
+   ],
+   "also_accepted": [
+    "venv"
+   ],
+   "verification": "to_verify_on_frozen_snapshot",
+   "note": "Réponse attendue : non, utiliser un environnement virtuel."
+  },
+  {
+   "id": "q33",
+   "theme": "proxmox",
+   "kind": "negation",
+   "question": "Une sauvegarde vzdump en mode snapshot arrête-t-elle la VM ?",
+   "expected_source": {
+    "corpus": "proxmox-docs",
+    "page_hint": "vzdump backup modes"
+   },
+   "answer_must_contain": [
+    "non"
+   ],
+   "also_accepted": [],
+   "verification": "to_verify_on_frozen_snapshot",
+   "note": "Le mode stop arrête la VM ; le mode snapshot non (à vérifier sur la page figée)."
+  },
+  {
+   "id": "q34",
+   "theme": "python",
+   "kind": "negation",
+   "question": "En Python, l'opérateur « is » compare-t-il les valeurs comme « == » ?",
+   "expected_source": {
+    "corpus": "python-docs",
+    "page_hint": "Comparisons"
+   },
+   "answer_must_contain": [
+    "non"
+   ],
+   "also_accepted": [
+    "identité"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q35",
+   "theme": "wikipedia",
+   "kind": "negation",
+   "question": "Pluton est-elle encore classée comme planète par l'Union astronomique internationale ?",
+   "expected_source": {
+    "corpus": "frwiki",
+    "page_hint": "Pluton (planète naine)"
+   },
+   "answer_must_contain": [
+    "non"
+   ],
+   "also_accepted": [
+    "planète naine",
+    "2006"
+   ],
+   "verification": "to_verify_on_frozen_snapshot"
+  },
+  {
+   "id": "q36",
+   "theme": "debian",
+   "kind": "abstention",
+   "question": "Que fait la commande Debian « aptitude-quantique » ?",
+   "expected_source": null,
+   "answer_must_contain": [],
+   "also_accepted": [],
+   "verification": "abstain_expected",
+   "note": "Commande inventée : s'abstenir."
+  },
+  {
+   "id": "q37",
+   "theme": "python",
+   "kind": "abstention",
+   "question": "Que contient le module standard Python « turbojson9 » ?",
+   "expected_source": null,
+   "answer_must_contain": [],
+   "also_accepted": [],
+   "verification": "abstain_expected",
+   "note": "Module inventé : s'abstenir."
+  },
+  {
+   "id": "q38",
+   "theme": "proxmox",
+   "kind": "abstention",
+   "question": "Quel port utilise l'option Proxmox « HyperSync Cluster Mode » ?",
+   "expected_source": null,
+   "answer_must_contain": [],
+   "also_accepted": [],
+   "verification": "abstain_expected",
+   "note": "Option inventée : s'abstenir."
+  },
+  {
+   "id": "q39",
+   "theme": "wikipedia",
+   "kind": "abstention",
+   "question": "Qui a reçu la médaille Fields en 2031 ?",
+   "expected_source": null,
+   "answer_must_contain": [],
+   "also_accepted": [],
+   "verification": "abstain_expected",
+   "note": "Événement futur : s'abstenir."
+  },
+  {
+   "id": "q40",
+   "theme": "wikipedia",
+   "kind": "abstention",
+   "question": "Quelle est la population de Valdemorne-sur-Lys ?",
+   "expected_source": null,
+   "answer_must_contain": [],
+   "also_accepted": [],
+   "verification": "abstain_expected",
+   "note": "Commune inventée : s'abstenir."
+  }
+ ]
+}

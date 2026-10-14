@@ -1,0 +1,35 @@
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : sim.css
+ * Description : Page de simulation G170-E, mêmes teintes que le dashboard G176
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+:root {
+  --bg: #1c2128; --panel: #252d38; --panel-2: #2d3744; --ink: #e7ecf2; --muted: #aab5c2; --line: #3d4958;
+  --accent: #7fb0ff; --accent-ink: #0d1a2c; --ok: #7fd49c; --warn: #f0b45c; --bad: #ff9a8f; --focus: #ffb366;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, "Segoe UI", Roboto, sans-serif; }
+h1, h2 { margin: 0 0 .5rem; line-height: 1.25; font-size: 1.15rem; }
+.banner { margin: 0; padding: .6rem 16px; background: #33291a; color: var(--warn); border-bottom: 1px solid var(--line); }
+main { display: grid; gap: 16px; padding: 16px; max-width: 1100px; margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.profiles { list-style: none; margin: 0; padding: 0; }
+.profiles li { display: grid; gap: .1rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
+.profiles span { color: var(--muted); font-size: .95rem; }
+.note { color: var(--muted); font-size: .9rem; }
+.indicator { color: var(--bad); font-weight: 600; }
+.error { color: var(--bad); }
+.suggestion { background: var(--panel-2); padding: .6rem; border-radius: 8px; }
+.controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+button, select { font: inherit; color: var(--ink); background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: .45rem .8rem; min-height: 44px; }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.stop { border-color: var(--bad); color: var(--bad); }
+label { display: block; margin: .25rem 0; color: var(--muted); }
+select { width: 100%; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+button { max-width: 100%; white-space: normal; text-align: left; }

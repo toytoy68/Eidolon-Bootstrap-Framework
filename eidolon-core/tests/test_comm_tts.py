@@ -140,3 +140,39 @@ class PiperTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PronunciationTests(unittest.TestCase):
+    """toytoy is said like the English "toy" twice (toytoy, 12/10/2026), never "toi-toi"."""
+
+    def setUp(self):
+        from eidolon_core.comm_tts import SimulatedTTS, TextToSpeech
+        self.heard = []
+        test = self
+
+        class Recording(SimulatedTTS):
+            def synthesize(self, chunk, voice, rate, cancel, deadline):
+                test.heard.append(chunk)
+                return super().synthesize(chunk, voice, rate, cancel, deadline)
+        self.make = lambda **kw: TextToSpeech(Recording(), **kw)
+
+    def test_name_spelled_for_the_ear_in_the_spoken_chunk_only(self):
+        from eidolon_core.comm_tts import chunks
+        tts = self.make()
+        text = "Bonjour toytoy, Toytoy est là. Les toytoys et toytoy-x restent tels quels."
+        for index in range(len(chunks(text))):
+            tts.synthesize("pc", text, index=index)
+        heard = " ".join(self.heard)
+        self.assertIn("Bonjour toï-toï, toï-toï est là.", heard)
+        self.assertIn("Les toytoys et toytoy-x", heard)               # whole words only
+        self.assertEqual(tts.plan(text), {"chunks": len(chunks(text))})
+
+    def test_configurable_and_validated(self):
+        tts = self.make(pronunciations={"toytoy": "toye-toye", "Eidolon": "Aïdolone"})
+        tts.synthesize("pc", "Eidolon salue toytoy.")
+        self.assertEqual(self.heard[-1], "Aïdolone salue toye-toye.")
+        self.make(pronunciations={}).synthesize("pc", "toytoy")
+        self.assertEqual(self.heard[-1], "toytoy")                    # empty map: no change
+        for bad in ({"toytoy": "<x>"}, {"a\\n": "b"}, ["toytoy"], {f"k{i}": "v" for i in range(65)}):
+            with self.assertRaises(CommError, msg=bad):
+                self.make(pronunciations=bad)

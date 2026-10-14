@@ -1,0 +1,71 @@
+diff --git a/eidolon-core/src/eidolon_core/web_transport.py b/eidolon-core/src/eidolon_core/web_transport.py
+index 2c48d13..1e994ea 100644
+--- a/eidolon-core/src/eidolon_core/web_transport.py
++++ b/eidolon-core/src/eidolon_core/web_transport.py
+@@ -26,6 +26,7 @@ import math
+ import re
+ import socket
+ import ssl
++import threading
+ import time
+ import urllib.parse
+ 
+@@ -265,6 +266,43 @@ def _retry_after(value, now):
+         return None, True
+ 
+ 
++_DNS_CLOCK = time.monotonic   # bound once: tests that script time.monotonic for the connector are unaffected
++
++
++class _ResolutionDeadline(TimeoutError):
++    """Name resolution did not finish inside the fetch budget (Claude W1)."""
++
++
++def _bounded_resolver(resolver, real_deadline):
++    """Run each resolution in a worker thread joined with the time left in the fetch budget.
++
++    getaddrinfo has no timeout of its own (resolv.conf retries can last tens of seconds), so without this the
++    total budget did not bound DNS. A late resolver thread is abandoned (daemon), never awaited; its answer
++    is ignored. The decision itself still comes from egress.decide/follow, unchanged. It uses the REAL
++    monotonic clock, anchored at the start of fetch: an injected or scripted clock sees no extra call.
++    """
++    def resolve(host, port):
++        remaining = real_deadline - _DNS_CLOCK()
++        if remaining <= 0:
++            raise _ResolutionDeadline()
++        box = {}
++
++        def run():
++            try:
++                box["value"] = resolver(host, port)
++            except BaseException as exc:  # noqa: BLE001 - re-raised in the caller's thread
++                box["error"] = exc
++        worker = threading.Thread(target=run, name="eidolon-dns", daemon=True)
++        worker.start()
++        worker.join(remaining)
++        if worker.is_alive():
++            raise _ResolutionDeadline()
++        if "error" in box:
++            raise box["error"]
++        return box["value"]
++    return resolve
++
++
+ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.monotonic, before_hop=None):
+     """GET one public URL under ``policy``; follow redirects only after re-checking them."""
+     if not isinstance(policy, WebPolicy):
+@@ -276,10 +314,14 @@ def fetch(url, *, policy, resolver, connector=None, limits=None, clock=time.mono
+         raise ContractError("TransportLimits required")
+     connector = connector or StdlibConnector()
+     deadline = clock() + limits.total_seconds
++    real_deadline = _DNS_CLOCK() + limits.total_seconds
++    resolver = _bounded_resolver(resolver, real_deadline)
+     decision = decide(url, resolver, policy)
+     hops, seen = [], set()
+     while True:
+         if not decision.allowed:
++            if decision.code == "RESOLUTION_FAILED" and _DNS_CLOCK() >= real_deadline:
++                raise WebTransportError("DEADLINE_EXCEEDED", "during name resolution")
+             # The refused destination is never contacted; the refused URL is not echoed.
+             raise WebTransportError("DESTINATION_REFUSED", decision.code)
+         if decision.url in seen:

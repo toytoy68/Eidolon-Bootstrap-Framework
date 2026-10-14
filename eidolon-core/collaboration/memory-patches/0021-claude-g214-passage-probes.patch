@@ -1,0 +1,92 @@
+From 7146092e9c1b4092331507685ecb16d7de4a95d1 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 12:20:03 +0000
+Subject: [PATCH] test(claude-eval): G214-6 probes of canonical passage
+ splitting (passages.py unchanged)
+
+Pinned: full coverage without gaps, determinism, identity bound to document,
+revision and configuration, any edit or shift under a passage fails
+verification, empty text, undecodable text is a ValueError. Strict xfail P1:
+verify_passage ignores document_id, revision and passage_id, so a stale or
+forged payload with the same text is accepted for the current canon.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_passage_probes_g214.py               | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_passage_probes_g214.py
+
+diff --git a/tests/claude_memory_eval/test_passage_probes_g214.py b/tests/claude_memory_eval/test_passage_probes_g214.py
+new file mode 100644
+index 0000000..2055190
+--- /dev/null
++++ b/tests/claude_memory_eval/test_passage_probes_g214.py
+@@ -0,0 +1,64 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_passage_probes_g214.py
++# Description : Sondes Claude G214-6 sur le découpage canonique en passages (passages.py, fichier GPT non modifié)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent probes of core/indexing/passages.py (b37a72c). Positive tests pin what holds; strict xfail
++documents a finding. Frozen corpora are not touched."""
++import random
++from dataclasses import replace
++
++import pytest
++
++from core.indexing.passages import split_passages, verify_passage
++
++_RNG = random.Random(214)
++TEXT = "".join(_RNG.choice("abcdéèàç XYZ\n🙂") for _ in range(5000))
++
++
++def test_passages_cover_the_whole_text_deterministically_and_verify():
++    passages = split_passages("doc", 3, TEXT, size=512, overlap=64)
++    assert passages == split_passages("doc", 3, TEXT, size=512, overlap=64)
++    assert passages[0].start == 0 and passages[-1].end == len(TEXT)
++    assert all(b.start < a.end for a, b in zip(passages, passages[1:]))          # no gap
++    assert all(verify_passage(p, TEXT) for p in passages)
++    assert len({p.passage_id for p in passages}) == len(passages)
++
++
++def test_identity_changes_with_revision_and_configuration():
++    a = split_passages("doc", 1, TEXT)[0].passage_id
++    assert a != split_passages("doc", 2, TEXT)[0].passage_id
++    assert a != split_passages("doc", 1, TEXT, size=1000)[0].passage_id
++    assert a != split_passages("other", 1, TEXT)[0].passage_id
++
++
++def test_any_change_of_the_canonical_text_under_a_passage_fails_verification():
++    passage = split_passages("doc", 1, TEXT, size=512, overlap=64)[2]
++    edited = TEXT[:passage.start + 10] + "Z" + TEXT[passage.start + 11:]
++    if edited != TEXT:
++        assert not verify_passage(passage, edited)
++    assert not verify_passage(passage, TEXT[:passage.end - 1])                      # truncated canon
++    assert not verify_passage(replace(passage, start=passage.start + 1, end=passage.end + 1), TEXT)
++
++
++def test_empty_text_has_no_passage():
++    assert split_passages("doc", 1, "") == ()
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding P1 (G214, medium): verify_passage only compares the text "
++                   "slice. A passage claiming ANOTHER document, revision or passage_id still verifies, so a stale "
++                   "or forged Qdrant payload (old revision, same text) is accepted as a citation of the current "
++                   "canon. Expected: verify against (document_id, revision) and recompute passage_id.")
++def test_a_passage_from_another_revision_or_document_is_not_verified_for_this_one():
++    passage = split_passages("doc", 1, TEXT)[0]
++    assert not verify_passage(replace(passage, revision=7), TEXT)
++    assert not verify_passage(replace(passage, document_id="secret-profile-doc"), TEXT)
++    assert not verify_passage(replace(passage, passage_id="0" * 64), TEXT)
++
++
++def test_undecodable_text_is_a_value_error():
++    """A lone surrogate raises UnicodeEncodeError, a ValueError subclass: callers catching ValueError hold."""
++    with pytest.raises(ValueError):
++        split_passages("doc", 1, "a\udc80b")
+-- 
+2.43.0
+

@@ -1,0 +1,59 @@
+diff --git a/eidolon-core/src/eidolon_core/profile_registry.py b/eidolon-core/src/eidolon_core/profile_registry.py
+index 76f9671..70ab667 100644
+--- a/eidolon-core/src/eidolon_core/profile_registry.py
++++ b/eidolon-core/src/eidolon_core/profile_registry.py
+@@ -143,6 +143,27 @@ def _check_pending(directory_fd):
+                      for name in os.listdir(directory_fd)), "PROFILE_REGISTRY_PENDING")
+ 
+ 
++def _check_no_live_writer(directory_fd):
++    """Readers only: a temporary file of a LIVE import is not a crash residue (Claude R1).
++
++    Never creates the lock: if it exists, a non-blocking SHARED lock on it fails while a writer holds the
++    exclusive one, so inspection answers BUSY instead of PENDING, whose remedy is to remove the residue.
++    """
++    try:
++        fd = os.open(LOCK, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=directory_fd)
++    except FileNotFoundError:
++        return
++    try:
++        _private_file(fd, maximum=0)
++        try:
++            fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
++        except BlockingIOError:
++            raise ProfileRegistryError("PROFILE_REGISTRY_BUSY") from None
++        fcntl.flock(fd, fcntl.LOCK_UN)
++    finally:
++        os.close(fd)
++
++
+ @contextmanager
+ def _writer_lock(directory_fd):
+     flags = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+@@ -215,6 +236,7 @@ def prepare_registry(plan_path, directory, *, apply=False):
+         expected = digest(value)
+         with _directory(directory) as directory_fd:
+             if not apply:
++                _check_no_live_writer(directory_fd)
+                 _check_pending(directory_fd)
+                 current = _existing(directory_fd)
+                 if current is not None:
+@@ -250,6 +272,7 @@ def inspect_registry(directory):
+     """Read and revalidate, without creating a directory, file or lock."""
+     try:
+         with _directory(directory) as directory_fd:
++            _check_no_live_writer(directory_fd)
+             _check_pending(directory_fd)
+             value = _existing(directory_fd)
+             _require(value is not None, "PROFILE_REGISTRY_MISSING")
+@@ -274,6 +297,10 @@ def main(argv=None):
+     except ContractError as exc:
+         print(encode({"ok": False, "error": str(exc), "runtime_active": False}))
+         return 1
++    except ValueError:
++        # e.g. an embedded NUL rejected by os.open: same JSON contract, value never echoed (Claude R2).
++        print(encode({"ok": False, "error": "PROFILE_REGISTRY_INVALID_INPUT", "runtime_active": False}))
++        return 1
+     print(encode({"ok": True, **result}))
+     return 0
+ 

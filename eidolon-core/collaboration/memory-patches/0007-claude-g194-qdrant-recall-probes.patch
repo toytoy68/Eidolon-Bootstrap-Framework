@@ -1,0 +1,129 @@
+From 1b5192f3a2e3c9a01791e30f4aa39ef802295a93 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 12 Oct 2026 20:54:30 +0000
+Subject: [PATCH] test(claude-eval): G194 counter-review probes of Qdrant
+ candidates in canonical recall
+
+Pinned: lexical recall without index, canonical reread with provenance,
+no automatic sync (new documents invisible until an explicit upsert or
+rebuild), previous generations kept. Strict xfail findings: Q1 no
+abstention in index mode, Q2 archives excluded because the production
+index emits no passage reference, Q3 orphan generation after a failed
+rebuild.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_qdrant_recall_probes_g194.py         | 100 ++++++++++++++++++
+ 1 file changed, 100 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_qdrant_recall_probes_g194.py
+
+diff --git a/tests/claude_memory_eval/test_qdrant_recall_probes_g194.py b/tests/claude_memory_eval/test_qdrant_recall_probes_g194.py
+new file mode 100644
+index 0000000..048915c
+--- /dev/null
++++ b/tests/claude_memory_eval/test_qdrant_recall_probes_g194.py
+@@ -0,0 +1,100 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_qdrant_recall_probes_g194.py
++# Description : Contre-revue Claude G194 : candidats Qdrant, abstention, synchronisation, archives, générations
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent probes (Claude, G194) on an in-memory Qdrant with the synthetic hash embedding of the
++existing tests. Positive tests pin what holds; strict xfail documents a gap and turns red once closed.
++No server, no real model, no benchmark run; G182 references untouched."""
++import pytest
++
++from core.retrieval.contextual import ContextualRecall
++from tests.test_archive_chunks import store_archive
++from tests.test_contextual_recall import backend, store, STAMP
++from tests.test_qdrant_index import client, index  # noqa: F401  (fixtures)
++
++
++def collections(client, alias):
++    return sorted(c.name for c in client.get_collections().collections if c.name.startswith(alias + "__"))
++
++
++def test_without_index_recall_stays_lexical(tmp_path):
++    data = backend(tmp_path)
++    store(data, 'item')
++    result = ContextualRecall(data).recall('power', query_scope={'goal': 'efficiency'}, at=STAMP)
++    assert [i.information_id for i in result.items] == ['item']
++    assert 'lexical_v1_candidate' in result.items[0].selection_reasons
++
++
++def test_index_candidates_are_reread_and_carry_their_provenance(tmp_path, index):
++    data = backend(tmp_path)
++    memory = store(data, 'item', content='power measurement of the NAS')
++    index.rebuild(data.persistent_root)
++    item = ContextualRecall(data, index=index).recall('power', query_scope={'goal': 'efficiency'}, at=STAMP).items[0]
++    assert (item.content, item.provenance, item.freshness) == (memory.content, memory.provenance, 'CANONICAL_AT_READ')
++    assert item.ranking['index']['embedding_id'] == 'synthetic-hash-v1'
++    assert item.ranking['index']['index_freshness'] == 'FULL_REBUILD_SNAPSHOT'
++
++
++def test_a_new_canonical_document_is_invisible_until_an_explicit_sync(tmp_path, index):
++    """Pinned behaviour: no automatic synchronisation. A document stored after the last rebuild is simply
++    absent from index-mode recall, and nothing in the result says the index is behind."""
++    data = backend(tmp_path)
++    store(data, 'first')
++    index.rebuild(data.persistent_root)
++    store(data, 'second', content='power second measurement')
++    result = ContextualRecall(data, index=index).recall('second measurement', query_scope={'goal': 'efficiency'}, at=STAMP)
++    assert 'second' not in [i.information_id for i in result.items]
++    assert result.excluded_counts.get('INDEX_MISSING_CANONICAL', 0) == 0
++
++
++@pytest.mark.xfail(strict=True, reason='Claude finding Q1 (G194): no abstention in index mode. Cosine '
++                   'candidates are returned whatever their score, so an unrelated question still gets items. '
++                   'Expected: a calibrated threshold measured on the frozen corpus (4 abstention questions).')
++def test_an_unrelated_question_abstains_in_index_mode(tmp_path, index):
++    data = backend(tmp_path)
++    store(data, 'item', content='power measurement of the NAS')
++    index.rebuild(data.persistent_root)
++    result = ContextualRecall(data, index=index).recall('zebra violin galaxy', query_scope={'goal': 'efficiency'}, at=STAMP)
++    assert result.items == ()
++
++
++@pytest.mark.xfail(strict=True, reason='Claude finding Q2 (G194): QdrantIndex embeds a whole Information and '
++                   'never emits a passage reference, so with G186 (INDEX_PASSAGE_MISSING) every conversation '
++                   'archive is excluded in index mode. Passage indexing exists only in the benchmark script.')
++def test_conversation_archives_are_reachable_through_the_production_index(tmp_path, index):
++    data = backend(tmp_path)
++    store_archive(data, ['Ne pas acheter la V100 maintenant.', 'Garder la carte actuelle.'])
++    index.rebuild(data.persistent_root)
++    result = ContextualRecall(data, index=index).recall('V100')
++    assert [i.information_id for i in result.items] == ['archive']
++
++
++def test_rebuild_keeps_the_previous_generation(tmp_path, index, client):
++    data = backend(tmp_path)
++    store(data, 'item')
++    before = collections(client, index.alias)
++    index.rebuild(data.persistent_root)
++    index.rebuild(data.persistent_root)
++    assert len(collections(client, index.alias)) == len(before) + 2      # rollback material, never pruned
++
++
++@pytest.mark.xfail(strict=True, reason='Claude finding Q3 (G194, minor): a failed rebuild leaves its new '
++                   'generation collection behind (no cleanup), so repeated failures accumulate collections.')
++def test_a_failed_rebuild_leaves_no_orphan_generation(tmp_path, index, client):
++    data = backend(tmp_path)
++    store(data, 'item')
++    before = collections(client, index.alias)
++    path = data.persistent_root / 'item.md'
++    real = index.embed
++
++    def changing(text):
++        path.write_bytes(path.read_bytes() + b'\n')                       # the source changes mid-rebuild
++        return real(text)
++    index.embed = changing
++    with pytest.raises(ValueError):
++        index.rebuild(data.persistent_root)
++    index.embed = real
++    assert collections(client, index.alias) == before
+-- 
+2.43.0
+

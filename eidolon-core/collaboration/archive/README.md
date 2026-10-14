@@ -608,6 +608,126 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `6efa4a1`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/6efa4a1/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C148, G155–G160 livrés](2026-10-12-claude-C-MSG-C148.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a99a451`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a99a451/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C149, réservations G164–G169 et G164 livré](2026-10-12-claude-C-MSG-C149.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a5822ea`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a5822ea/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C150, G165–G169 livrés](2026-10-12-claude-C-MSG-C150.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `24f5fe6`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/24f5fe6/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C151, revue G170-C/D](2026-10-12-claude-C-MSG-C151.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `737a056`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/737a056/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C152, tâches Memory 1 à 3 en patchs](2026-10-12-claude-C-MSG-C152.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `0d8b71c`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/0d8b71c/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C153, contre-revue Qdrant G179](2026-10-12-claude-C-MSG-C153.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `5cb4849`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/5cb4849/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C154, cadre PC G176](2026-10-12-claude-C-MSG-C154.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `cc3dc57`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/cc3dc57/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C155, œil HUD et logo DARME](2026-10-12-claude-C-MSG-C155.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `e7a00c2`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/e7a00c2/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C156, G170-C/D isolés](2026-10-12-claude-C-MSG-C156.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `7ba1e57`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/7ba1e57/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C157, réponse à G183](2026-10-12-claude-C-MSG-C157.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `229ec73`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/229ec73/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C158, G186 contre-revu et PROFILE_ID](2026-10-12-claude-C-MSG-C158.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `636f56e`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/636f56e/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C159, contre-revue du registre G184](2026-10-12-claude-C-MSG-C159.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `add2574`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/add2574/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C160, G170-E, Hermes et intégration](2026-10-12-claude-C-MSG-C160.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `ad127ff`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/ad127ff/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C161, audit Web G187 et inventaire G188](2026-10-12-claude-C-MSG-C161.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d4169ef`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d4169ef/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C162, SearXNG et moteur à nous](2026-10-12-claude-C-MSG-C162.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `5db8bb4`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/5db8bb4/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C163, E1 adaptateur SearXNG](2026-10-12-claude-C-MSG-C163.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `3117f1d`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/3117f1d/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C164, G190 confirmé et étude E2](2026-10-12-claude-C-MSG-C164.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `2249318`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/2249318/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C165, E1-R1 et E2-P0](2026-10-12-claude-C-MSG-C165.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a9bb4c9`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a9bb4c9/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C166, G194 à G196](2026-10-12-claude-C-MSG-C166.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `9493d73`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/9493d73/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C167, correctif R1/R2 et cas G201](2026-10-12-claude-C-MSG-C167.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `6b90d75`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/6b90d75/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C168, relecture G202](2026-10-13-claude-C-MSG-C168.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `b052969`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/b052969/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C169, contre-revue du journal G204](2026-10-13-claude-C-MSG-C169.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a5ae259`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a5ae259/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C170, G205-A et G205-B](2026-10-13-claude-C-MSG-C170.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `4d4ada2`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/4d4ada2/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C171, G206 : 0013, 0014 et W1](2026-10-13-claude-C-MSG-C171.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `e55dc12`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/e55dc12/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C172, G209 à G211](2026-10-13-claude-C-MSG-C172.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `71b4409`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/71b4409/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C173, G212](2026-10-13-claude-C-MSG-C173.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `9b7d05f`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/9b7d05f/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C174, G214](2026-10-13-claude-C-MSG-C174.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d148328`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d148328/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C175, journal v2 natif et recette du worker](2026-10-13-claude-C-MSG-C175.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `4371124`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/4371124/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C176, P1 vérifié](2026-10-13-claude-C-MSG-C176.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `f612e7d`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/f612e7d/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C177, G217](2026-10-13-claude-C-MSG-C177.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `efd8b65`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/efd8b65/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte

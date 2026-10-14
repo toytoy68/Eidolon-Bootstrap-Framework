@@ -1767,7 +1767,9 @@
     PROPOSAL_ALREADY_SUBMITTED: "Cette proposition a déjà été validée (peut-être avant une reprise) : voir les missions.",
     PROPOSAL_STALE: "Une version plus récente de la proposition existe : relisez-la avant de valider.",
     PROPOSAL_CHANGED: "La proposition a changé : relisez-la avant de valider.",
-    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé."
+    DIGEST_MISMATCH: "La proposition affichée ne correspond pas à celle figée par Core : rien n'a été envoyé.",
+    // G167: the media service is not installed or stopped on this server; the conversation keeps working.
+    MEDIA_WORKER_NOT_CONFIGURED: "Le service images et vidéos n'est pas disponible sur ce serveur : rien n'a été lancé. La conversation reste utilisable."
   };
   var REPLY_KINDS = { ANSWER: "Réponse", CLARIFICATION: "Question en retour", PROPOSAL: "Proposition de mission",
     OUT_OF_SCOPE: "Hors capacités", UNAVAILABLE: "Indisponible" };
@@ -1969,7 +1971,8 @@
       var r = await call("submit", body);
       if (r.stale || mine !== epoch || s !== state.submission || read !== submissionRead) return false;
       if (r.ok) { s.status = "recorded"; s.receipt = r.json; s.error = null; }
-      else { s.status = r.network || r.status >= 500 ? "uncertain" : "refused"; s.error = r.code; }
+      // G167: "media worker not configured" is a definite answer (nothing queued), not an uncertain one.
+      else { s.status = (r.network || r.status >= 500) && r.code !== "MEDIA_WORKER_NOT_CONFIGURED" ? "uncertain" : "refused"; s.error = r.code; }
       emit();
       return r.ok;
     }
@@ -2247,6 +2250,10 @@
     }
     doc.getElementById("conv-connect").hidden = !closed;
     doc.getElementById("conv-body").hidden = closed;
+    // G176: the top bar holds the key field while closed, the message field while open (never both).
+    var form = doc.getElementById("conv-form"), welcome = doc.getElementById("conv-welcome");
+    if (form) form.hidden = closed;
+    if (welcome) welcome.hidden = !closed;
     doc.getElementById("conv-close").hidden = closed;
     var status = doc.getElementById("conv-status");
     status.textContent = st.phase === "opening" ? "Ouverture…" :
@@ -2436,7 +2443,7 @@
   function mount(doc, deps) {
     var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
-      if (deps.onPhase) deps.onPhase(st.phase);           // G156: the machine dashboard follows the key
+      if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
@@ -2445,6 +2452,13 @@
       conv.open(value).then(function (ok) { (ok ? doc.getElementById("conv-text") : input).focus(); });
     });
     doc.getElementById("conv-close").addEventListener("click", function () { conv.close(); doc.getElementById("conv-key").focus(); });
+    // G176: Enter sends from the top bar, Shift+Enter keeps a new line (IME composition never sends).
+    doc.getElementById("conv-text").addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      var form = doc.getElementById("conv-form");
+      if (form.requestSubmit) form.requestSubmit(); else doc.getElementById("conv-send").click();
+    });
     doc.getElementById("conv-form").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-text"), text = input.value;
@@ -2591,7 +2605,10 @@
         });
         var dev = st[kind];
         dev.devices = found;
-        if (!found.some(function (d) { return d.id === dev.selected; })) dev.selected = found.length ? found[0].id : null;
+        var lost = !found.some(function (d) { return d.id === dev.selected; });
+        // G165: the microphone unplugged while talking: capture dropped at once, nothing transcribed.
+        if (lost && dev.selected !== null && kind === "microphone" && dev.state === "capturing") { cancelTalk(); dev.state = "disabled"; dev.reason = "débranché"; }
+        if (lost) dev.selected = found.length ? found[0].id : null;
         if (!found.length && dev.state !== "permission_denied") { dev.state = "unavailable"; dev.reason = null; }
         else if (found.length && dev.state === "unavailable") { dev.state = "disabled"; dev.reason = null; }
       });
@@ -2636,6 +2653,12 @@
       catch (e) { set("microphone", errorState(e)); return false; }
       var epoch = ++talkEpoch;
       talk = { stream: stream, recorder: deps.recorder(stream), epoch: epoch };
+      // G165: a track that ends by itself (device unplugged, taken by the system) stops the capture.
+      (stream.getTracks ? stream.getTracks() : []).forEach(function (track) {
+        if (track.addEventListener) track.addEventListener("ended", function () {
+          if (talk && talk.epoch === epoch) { cancelTalk(); set("microphone", "disabled", "débranché"); refresh(); }
+        });
+      });
       talk.timer = deps.setTimeout(function () { if (talk && talk.epoch === epoch) stopTalk(); }, max);
       set("microphone", "capturing");
       return true;
@@ -2945,7 +2968,7 @@
   // Pure view model of one machine (tested without DOM).
   function describe(machine) {
     var d = machine.darme, out = { id: machine.id, label: machine.label, cls: "unknown", badge: "?", text: "",
-      scope: null, freshness: null, services: [], metrics: [], metricsNote: null, measured: null };
+      scope: null, freshness: null, services: [], metrics: [], metricsNote: null, measured: null, gpu: null };
     if (!d) {
       out.cls = "unknown"; out.badge = STATES[machine.state] || "Inconnu";
       out.text = ERRORS[machine.error] || "état inconnu";
@@ -2976,7 +2999,22 @@
       out.metrics.push({ name: "Mémoire", text: m.memory ? bytes(m.memory.used_bytes) + " utilisés sur " + bytes(m.memory.total_bytes) : "indisponible" });
       out.metrics.push({ name: "Swap", text: m.swap ? (m.swap.total_bytes ? bytes(m.swap.used_bytes) + " utilisés sur " + bytes(m.swap.total_bytes) : "aucun") : "indisponible" });
       out.metrics.push({ name: "Disque du journal", text: m.disk ? bytes(m.disk.free_bytes) + " libres sur " + bytes(m.disk.total_bytes) : "indisponible" });
-      out.metrics.push({ name: "GPU", text: "non sondé sur cette machine" });
+      if (m.gpu) {
+        // G169: named source, its own date; each device separately; null stays "indisponible".
+        var g = m.gpu;
+        out.gpu = { source: g.source.label + " (" + g.source.collector + ")", measured: (g.stale ? "PÉRIMÉES, " : "") + "il y a " + age(g.age_seconds)
+          + ", toutes les " + g.cadence_seconds + " s" + (g.driver ? ", pilote " + g.driver : ""), errors: g.errors.slice() };
+        g.devices.forEach(function (dv) {
+          var na = "indisponible";
+          out.metrics.push({ name: "GPU " + dv.index + " — " + dv.name, text: [
+            dv.temperature_c === null ? "température " + na : dv.temperature_c + " °C",
+            dv.power_w === null ? "puissance " + na : Math.round(dv.power_w) + " W" + (dv.power_limit_w === null ? "" : " / " + Math.round(dv.power_limit_w) + " W"),
+            dv.utilization_percent === null ? "utilisation " + na : dv.utilization_percent + " %",
+            dv.memory_used_bytes === null || dv.memory_total_bytes === null ? "VRAM " + na : "VRAM " + bytes(dv.memory_used_bytes) + " / " + bytes(dv.memory_total_bytes)
+          ].join(", ") });
+        });
+        if (!g.devices.length) out.metrics.push({ name: "GPU", text: "aucun GPU visible par la source" });
+      } else out.metrics.push({ name: "GPU", text: m.gpu_error ? "mesures GPU refusées (" + m.gpu_error + ")" : "non sondé sur cette machine" });
       if (m.errors.length) out.metricsNote = "Mesures manquantes : " + m.errors.join(", ") + ".";
     } else if (!out.metricsNote) out.metricsNote = "Mesures CPU, charge, mémoire, swap et disque : pas publiées par DARME sur cette machine.";
     return out;
@@ -3113,6 +3151,8 @@
         card.appendChild(services);
       }
       if (v.measured) card.appendChild(el(doc, "p", "help", v.measured));
+      if (v.gpu) card.appendChild(el(doc, "p", "help", "GPU : source " + v.gpu.source + ", mesures " + v.gpu.measured + "."
+        + (v.gpu.errors.length ? " Manquant : " + v.gpu.errors.join(", ") + "." : "")));
       if (v.metrics.length) {
         var metrics = el(doc, "dl", "monitor-metrics");
         v.metrics.forEach(function (m) { metrics.appendChild(el(doc, "dt", null, m.name)); metrics.appendChild(el(doc, "dd", null, m.text)); });
@@ -3142,6 +3182,142 @@
     BADGES: BADGES, POLL_MS: POLL_MS, MAX_FAILURES: MAX_FAILURES };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonMonitoring = api;
+})(typeof window !== "undefined" ? window : this);
+
+/* ---- src/shell.js ---- */
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : shell.js
+ * Description : Cadre PC (G176) : œil d'activité à gauche, saisie en haut, DARME à droite, navigation par sections
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+// Pure views of the existing states (conversation, voice/camera, DARME) + the navigation between sections.
+// Rules: the eye shows Eidolon's ACTIVITY and, separately, the camera's REAL state: work in progress never looks
+// like a capture, and showing the icon never switches a sensor on. The DARME button summarises without
+// reassuring: grey stays grey, stale loses its colour, an unacknowledged alert stays visible.
+(function (root) {
+  "use strict";
+  var VIEWS = ["conversation", "memory", "media", "missions", "settings"];
+  var CAMERA = { capturing: "active", processing: "image en analyse, caméra éteinte", ready: "éteinte",
+    disabled: "éteinte", stopped: "éteinte", unavailable: "indisponible", permission_denied: "refusée", busy: "occupée ailleurs" };
+
+  // Eye: activity of Eidolon and camera state, from facts only.
+  function eyeState(input) {
+    var phase = input.phase, comm = input.comm, pending = !!input.pending;
+    var mic = comm ? comm.microphone.state : "unavailable", cam = comm ? comm.camera.state : "unavailable";
+    var speaker = comm ? comm.speaker.state : "disabled";
+    var activity = phase !== "open" ? "fermée" : mic === "capturing" ? "écoute" :
+      (pending || mic === "processing" || cam === "processing") ? "réfléchit" : speaker === "processing" ? "parle" : "disponible";
+    var camera = CAMERA[cam] || "éteinte";
+    var key = { "fermée": "closed", "écoute": "listening", "réfléchit": "thinking", "parle": "speaking" }[activity] || "idle";
+    return { activity: activity, key: key, camera: camera, cameraActive: cam === "capturing",
+      busy: activity === "écoute" || activity === "réfléchit" || activity === "parle",
+      text: (phase === "open" ? "Eidolon " + activity : "Conversation fermée") + " · caméra " + camera };
+  }
+
+  // DARME button: the WORST real state among machines, never a colour without data.
+  function darmeSummary(st) {
+    if (!st || st.phase === "off") return { level: "off", text: "DARME · conversation fermée" };
+    if (st.phase === "idle") return { level: "idle", text: "DARME · non lu" };
+    if (st.phase === "loading") return { level: "idle", text: "DARME · lecture…" };
+    if (st.phase === "not_enabled") return { level: "idle", text: "DARME · non activé" };
+    if (!st.data) return { level: "error", text: "DARME · indisponible" };
+    var order = { red: 5, blue: 4, stale: 3, unknown: 2, grey: 1, gold: 0 }, worst = null, alerts = 0;
+    st.data.machines.forEach(function (m) {
+      var level = !m.darme ? "unknown" : m.state === "stale" ? "stale" : m.darme.badge;
+      if (m.darme && m.darme.badge === "red" && m.state !== "stale") alerts += m.darme.unacknowledged_alerts || 0;
+      if (worst === null || order[level] > order[worst]) worst = level;
+    });
+    var words = { red: "alerte", blue: "intervention", stale: "périmé", unknown: "incomplet", grey: "gris", gold: "or" };
+    var text = "DARME · " + (worst === "red" && alerts ? alerts + " alerte(s)" : words[worst || "unknown"]);
+    if (st.error) text += " · dernière lecture en échec";
+    return { level: worst || "unknown", text: text };
+  }
+
+  function mount(doc, hooks) {
+    hooks = hooks || {};
+    function $(id) { return doc.getElementById(id); }
+    var current = null;
+
+    // Sections stay in the page (anchors): nothing is hidden, the link only marks where the user went.
+    function show(view) {
+      if (VIEWS.indexOf(view) < 0) return;
+      current = view;
+      Array.prototype.forEach.call(doc.querySelectorAll("[data-nav]"), function (link) {
+        if (link.getAttribute("data-nav") === view) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    function drawer(button, panel, open) {
+      var willOpen = open === undefined ? panel.classList.contains("drawer-closed") : open;
+      panel.classList.toggle("drawer-closed", !willOpen);
+      button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      return willOpen;
+    }
+
+    Array.prototype.forEach.call(doc.querySelectorAll("[data-nav]"), function (link) {
+      link.addEventListener("click", function () { show(link.getAttribute("data-nav")); });
+    });
+    var eye = $("eye-button"), eyePanel = $("eye-drawer"), darme = $("darme-button"), darmePanel = $("darme-drawer");
+    eye.addEventListener("click", function () { if (drawer(eye, eyePanel)) $("eye-drawer-title").focus(); });
+    darme.addEventListener("click", function () { if (drawer(darme, darmePanel)) $("monitor-title").focus(); });
+    Array.prototype.forEach.call(doc.querySelectorAll("[data-close-drawer]"), function (button) {
+      button.addEventListener("click", function () {
+        var target = button.getAttribute("data-close-drawer");
+        drawer(target === "eye" ? eye : darme, target === "eye" ? eyePanel : darmePanel, false);
+        (target === "eye" ? eye : darme).focus();
+      });
+    });
+    doc.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      if (!eyePanel.classList.contains("drawer-closed")) { drawer(eye, eyePanel, false); eye.focus(); }
+      else if (!darmePanel.classList.contains("drawer-closed")) { drawer(darme, darmePanel, false); darme.focus(); }
+    });
+
+    function renderEye(state) {
+      var view = eyeState(state);
+      $("eye-state").textContent = view.text;
+      eye.classList.toggle("eye-busy", view.busy);
+      eye.setAttribute("data-activity", view.key);         // colour/animation only for a real activity
+      eye.classList.toggle("eye-camera", view.cameraActive);
+      eye.setAttribute("aria-label", "Activité d'Eidolon et caméra : " + view.text + ". Ouvrir la voix et la caméra.");
+      return view;
+    }
+    function renderDarme(st) {
+      var view = darmeSummary(st);
+      $("darme-state").textContent = view.text;
+      darme.setAttribute("data-level", view.level);
+      darme.setAttribute("aria-label", view.text + ". Ouvrir le détail des machines.");
+      return view;
+    }
+    // DARME logo (optional asset): shown only once really decoded, the shield and the words stay otherwise.
+    [["darme-logo", function () { darme.classList.add("has-logo"); }], ["darme-emblem", null]].forEach(function (item) {
+      var img = $(item[0]);
+      if (!img || typeof img.decode !== "function") return;
+      img.decode().then(function () {
+        if (!img.naturalWidth) return;
+        img.hidden = false;
+        if (item[1]) item[1]();
+      }, function () { /* not served: keep the shield */ });
+    });
+    // Side panels start under the top bar, whatever its height (wrapping, zoom, Windows scaling).
+    var bar = doc.querySelector(".appbar");
+    function place() {
+      if (bar) doc.documentElement.style.setProperty("--appbar-h", Math.ceil(bar.getBoundingClientRect().height) + "px");
+    }
+    place();
+    var view = doc.defaultView;
+    if (view && view.ResizeObserver && bar) new view.ResizeObserver(place).observe(bar);
+    else if (view) view.addEventListener("resize", place);
+    show(hooks.initial || "conversation");
+    return { show: show, renderEye: renderEye, renderDarme: renderDarme, view: function () { return current; } };
+  }
+
+  var api = { eyeState: eyeState, darmeSummary: darmeSummary, mount: mount, VIEWS: VIEWS };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.EidolonShell = api;
 })(typeof window !== "undefined" ? window : this);
 
 /* ---- src/main.js ---- */
@@ -3203,9 +3379,20 @@
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     var monitorPhase = null;
+    // G176: frame (eye, DARME button, sections). Pure views of the existing states, no new request.
+    var shellApi = root.EidolonShell, shell = shellApi ? shellApi.mount(document) : null;
+    var eyeInput = { phase: "closed", pending: false, comm: null };
+    function eye() { if (shell) shell.renderEye(eyeInput); }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
-      onPhase: function (phase) {
+      onPhase: function (phase, st) {
+        eyeInput.phase = phase;
+        eyeInput.pending = !!(st && st.items && st.items.some(function (i) { return i.status === "sent" || i.status === "pending"; }));
+        var closed = phase !== "open";
+        ["comm"].forEach(function (id) { var n = document.getElementById(id); if (n) n.hidden = closed; });
+        var note = document.getElementById("comm-closed-note"); if (note) note.hidden = !closed;
+        var darmeNote = document.getElementById("darme-closed-note"); if (darmeNote) darmeNote.hidden = !closed;
+        eye();
         if (!monitoring || phase === monitorPhase) return;
         monitorPhase = phase;
         if (phase === "open") monitoring.ready(); else if (phase === "closed") monitoring.stop();
@@ -3229,7 +3416,7 @@
     if (monApi && document.getElementById("monitor")) {
       monitoring = monApi.createMonitoring({ transport: transport,
         key: function () { return conversation.conversation.authorization(); },
-        onChange: function (st) { monApi.render(document, st); } });
+        onChange: function (st) { monApi.render(document, st); if (shell) shell.renderDarme(st); } });
       monApi.mount(document, monitoring);
       document.addEventListener("visibilitychange", function () { monitoring.visibility(document.hidden); });
       window.addEventListener("pagehide", function () { monitoring.stop(); });
@@ -3240,6 +3427,7 @@
       var comm = commApi.createCommunication(commApi.browserDeps(window, function () {
         return conversation.conversation.authorization();
       }));
+      comm.onChange(function (state) { eyeInput.comm = state; eye(); });
       commApi.mount(document, comm, { observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });

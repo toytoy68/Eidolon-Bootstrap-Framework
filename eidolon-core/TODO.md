@@ -1,3 +1,7 @@
+## G229 — Priorités actives, 14 octobre 2026
+
+[Bilan consolidé](docs/PROJECT-STATUS.md). Publication bloquée par approbation automatique ; CI sur SHAs finaux à vérifier. J2 : contrat réel du worker et reprise journal/index restent P0. Fusion Claude préparée ; contre-revue prévue à son retour annoncé vers 22 h 58. J3 VM/PC reste dépendant du retour MCP.
+
 ## G182 — Checkpoint Memory à reprendre après retour MCP
 
 Passages canoniques implémentés : 76 tests ciblés réussis. Modèle d'embedding

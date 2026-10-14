@@ -19,9 +19,16 @@ jobs:
         working-directory: eidolon-core
     env:
       PYTHONDONTWRITEBYTECODE: '1'
-      PYTHONPATH: src
+      PYTHONPATH: src:${{ github.workspace }}/memory-reference
+      EIDOLON_MEMORY_INTEGRATION: '1'
     steps:
       - uses: actions/checkout@v4
+      - name: Checkout exact Memory Engine integration reference
+        uses: actions/checkout@v4
+        with:
+          repository: toytoy68/Eidolon-Memory-Engine
+          ref: d74d772be25fe7d0e266711f58fba44248ba412a
+          path: memory-reference
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -29,7 +36,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq age openssl ffmpeg
-          python -m pip install pytest==9.1.1 "cryptography>=43,<51"
+          python -m pip install pytest==9.1.1 "cryptography>=43,<51" -r ../memory-reference/requirements.txt
       - name: Compile
         run: python -m compileall -q src tests
       - name: Core test suite

@@ -1,0 +1,488 @@
+From 54e7ba576a7bb0fd4415d8f2efaa7580d60b21c3 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 14:37:26 +0000
+Subject: [PATCH 23/23] test(claude-eval): isolated worker acceptance against
+ the G214 blocking list (19 scenarios)
+
+Replaces patch 0020. Adds lost Qdrant acknowledgement, canon edited while
+embeddings are computed, rights revoked between plan and action, embedding
+model or chunker change, truncated journal, clock set backwards, two
+concurrent workers. Each new guard verified by mutation.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ tests/claude_memory_eval/reference_worker.py  | 192 +++++++++++++
+ .../test_worker_reference_g214.py             | 261 ++++++++++++++++++
+ 2 files changed, 453 insertions(+)
+ create mode 100644 tests/claude_memory_eval/reference_worker.py
+ create mode 100644 tests/claude_memory_eval/test_worker_reference_g214.py
+
+diff --git a/tests/claude_memory_eval/reference_worker.py b/tests/claude_memory_eval/reference_worker.py
+new file mode 100644
+index 0000000..1a19e0a
+--- /dev/null
++++ b/tests/claude_memory_eval/reference_worker.py
+@@ -0,0 +1,192 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/reference_worker.py
++# Description : Worker de référence Claude (G214-3) pour la recette isolée : planifier, revérifier, agir
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""TEST REFERENCE ONLY (Claude, G214-3), not a production worker: it fixes the CONTRACT that GPT's worker
++must pass, with in-memory doubles. Three stages:
++
++1. plan    : preview_reconciliation on a canonical snapshot (Canonical, ABSENT or missing = unknown);
++2. verify  : for every action, re-read the canon NOW and check the profile's rights;
++3. act     : journal transitions and index upserts only after verification.
++
++Never: a Qdrant deletion (deletions are PROPOSED for review), an abandonment without review, an index write
++when the canon cannot be read, ``indexed()`` before the index read-back.
++"""
++import fcntl
++import os
++from dataclasses import dataclass, field
++
++from core.indexing.reconcile_plan import ABSENT
++from core.indexing.reconcile_preview import preview_reconciliation
++
++
++class Crash(BaseException):
++    """Simulated process death at a named point (BaseException: nothing may swallow it)."""
++
++
++class IndexUnavailable(Exception):
++    pass
++
++
++class CanonUnreadable(Exception):
++    pass
++
++
++@dataclass
++class Report:
++    status: str = "DONE"
++    applied: list = field(default_factory=list)
++    review: list = field(default_factory=list)
++    proposed_deletions: list = field(default_factory=list)
++    skipped: list = field(default_factory=list)
++
++
++class ReferenceWorker:
++    def __init__(self, journal, canon, index, rights, *, profile, lock_path, clock, grace_seconds=600,
++                 crash_at=None, hooks=None, descriptor=("embed-test/1", "passage-v1")):
++        self.journal, self.canon, self.index, self.rights = journal, canon, index, rights
++        self.profile, self.lock_path, self.clock = profile, lock_path, clock
++        self.grace_seconds, self.crash_at, self.hooks = grace_seconds, crash_at, hooks or {}
++        self.descriptor = descriptor                               # (embedding_id, chunker version) expected
++
++    def _point(self, name):
++        if name in self.hooks:
++            self.hooks[name]()
++        if self.crash_at == name:
++            raise Crash(name)
++
++    def run_once(self):
++        fd = os.open(self.lock_path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
++        try:
++            try:
++                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
++            except BlockingIOError:
++                return Report("BUSY")
++            return self._run()
++        finally:
++            os.close(fd)
++
++    def _run(self):
++        report = Report()
++        try:
++            if self.index.descriptor() != self.descriptor:
++                return Report("INDEX_INCOMPATIBLE")                 # model or chunker changed: full rebuild
++            indexed = self.index.revisions()
++        except IndexUnavailable:
++            return Report("INDEX_UNAVAILABLE")
++        ids = set(indexed) | {i.information_id for i in self.journal.pending(limit=999)} | self.canon.listing()
++        snapshot = self.canon.snapshot(ids)                          # unreadable ids are simply missing
++        try:
++            preview = preview_reconciliation(self.journal, snapshot, indexed, now=self.clock(),
++                                             grace_seconds=self.grace_seconds, limit=999)
++        except ValueError as exc:                                    # truncated journal, clock behind intents
++            return Report("TRUNCATED" if "truncated" in str(exc) else "REFUSED")
++        self._point("after_plan")
++        for action in preview.actions:
++            if action.kind == "WAIT":
++                report.skipped.append((action.information_id, "wait"))
++                continue
++            if action.kind in ("CLOSE_ABANDONED", "INTEGRITY_ALERT"):
++                report.review.append((action.kind, action.information_id, action.sequence))
++                continue
++            try:
++                current = self.canon.read(action.information_id)          # stage 2: re-read NOW
++            except CanonUnreadable:
++                report.skipped.append((action.information_id, "canon unreadable"))
++                continue
++            if not self.rights(self.profile, action.information_id):
++                report.skipped.append((action.information_id, "forbidden"))
++                continue
++            if action.kind in ("INDEX_DELETE", "ENQUEUE_DELETE"):
++                if current is ABSENT:
++                    report.proposed_deletions.append((action.information_id, action.sequence))
++                else:
++                    report.skipped.append((action.information_id, "absence not confirmed"))
++                continue
++            try:
++                self._act(action, current, report)
++            except IndexUnavailable:
++                report.status = "INDEX_UNAVAILABLE"
++                return report
++        return report
++
++    def _act(self, action, current, report):
++        ident, seq = action.information_id, action.sequence
++        if action.kind == "MARK_PUBLISHED":
++            self.journal.published(seq)
++        elif action.kind == "CLOSE_SUPERSEDED":
++            if current is ABSENT or current.revision < action.revision:
++                report.skipped.append((ident, "newer revision not confirmed"))
++                return
++            self.journal.close_terminal(seq, "SUPERSEDED", "newer canonical revision")
++        elif action.kind in ("INDEX_UPSERT", "ENQUEUE_UPSERT"):
++            if current is ABSENT or current.revision != action.revision:
++                report.skipped.append((ident, "canon changed since plan"))
++                return
++            self._point("before_upsert")                             # embeddings are computed here
++            self.index.upsert(ident, current.revision, current.sha256)
++            self._point("after_upsert")
++            if self.index.revisions().get(ident) != current.revision:       # read-back before indexed()
++                report.skipped.append((ident, "index read-back failed"))
++                return
++            try:
++                still = self.canon.read(ident)
++            except CanonUnreadable:
++                still = None
++            if still != current:                                     # canon moved while indexing
++                report.skipped.append((ident, "canon changed while indexing"))
++                return
++            if seq is not None:
++                self.journal.indexed(seq)
++        else:
++            raise ValueError(f"unexpected action {action.kind}")
++        report.applied.append((action.kind, ident, seq))
++
++
++class FakeCanon:
++    """Canonical Markdown double: {id: Canonical}; ``unreadable`` ids raise on read."""
++
++    def __init__(self):
++        self.docs, self.unreadable = {}, set()
++
++    def listing(self):
++        return set(self.docs) - self.unreadable
++
++    def read(self, ident):
++        if ident in self.unreadable:
++            raise CanonUnreadable(ident)
++        return self.docs.get(ident, ABSENT)
++
++    def snapshot(self, ids):
++        return {ident: self.docs.get(ident, ABSENT) for ident in ids if ident not in self.unreadable}
++
++
++class FakeIndex:
++    """Qdrant double: deterministic point per id; counts effective writes; never deletes."""
++
++    def __init__(self):
++        self.points, self.writes, self.available = {}, 0, True
++        self.model, self.lose_next_ack = ("embed-test/1", "passage-v1"), False
++
++    def descriptor(self):
++        if not self.available:
++            raise IndexUnavailable()
++        return self.model
++
++    def revisions(self):
++        if not self.available:
++            raise IndexUnavailable()
++        return {ident: point[0] for ident, point in self.points.items()}
++
++    def upsert(self, ident, revision, sha256):
++        if not self.available:
++            raise IndexUnavailable()
++        if self.points.get(ident) != (revision, sha256):
++            self.writes += 1
++        self.points[ident] = (revision, sha256)
++        if self.lose_next_ack:                                       # written, but the caller never knows
++            self.lose_next_ack = False
++            raise IndexUnavailable("ack lost")
+diff --git a/tests/claude_memory_eval/test_worker_reference_g214.py b/tests/claude_memory_eval/test_worker_reference_g214.py
+new file mode 100644
+index 0000000..54e847f
+--- /dev/null
++++ b/tests/claude_memory_eval/test_worker_reference_g214.py
+@@ -0,0 +1,261 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_worker_reference_g214.py
++# Description : Recette isolée Claude du worker (G214-3) : lecture échouée, ABSENT prouvé, crash, Qdrant absent
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Contract tests for the future index worker, run against Claude's reference worker and in-memory doubles.
++No Qdrant, no Markdown, no VM. GPT's worker should pass the same scenarios (swap ReferenceWorker)."""
++import hashlib
++import os
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.journal_migration import migrate_v2
++from core.indexing.reconcile_plan import Canonical
++from tests.claude_memory_eval.reference_worker import Crash, FakeCanon, FakeIndex, ReferenceWorker
++
++
++def sha(text):
++    return hashlib.sha256(text.encode()).hexdigest()
++
++
++class World:
++    def __init__(self, tmp_path):
++        self.path = tmp_path / "changes.sqlite3"
++        ChangeJournal(self.path)
++        migrate_v2(self.path)
++        self.journal = ChangeJournal(self.path)
++        self.canon, self.index = FakeCanon(), FakeIndex()
++        self.allowed = {"alice": None}                     # None = every id; else a set of ids
++        self.lock = tmp_path / "worker.lock"
++        self.now = None
++
++    def rights(self, profile, ident):
++        scope = self.allowed.get(profile, set())
++        return scope is None or ident in scope
++
++    def clock(self):
++        return self.now if self.now is not None else __import__("time").time()
++
++    def worker(self, profile="alice", **kwargs):
++        return ReferenceWorker(self.journal, self.canon, self.index, self.rights, profile=profile,
++                               lock_path=str(self.lock), clock=self.clock, **kwargs)
++
++    def write(self, ident, revision, text, *, crash=None):
++        """Canonical writer protocol: begin -> rename -> published, with optional crash points."""
++        seq = self.journal.begin(ident, revision, "UPSERT", sha(text))
++        if crash == "before_rename":
++            return seq
++        self.canon.docs[ident] = Canonical(revision, sha(text))
++        if crash == "before_published":
++            return seq
++        self.journal.published(seq)
++        return seq
++
++    def states(self):
++        return {i.sequence: i.state for i in self.journal.pending()}
++
++
++@pytest.fixture
++def world(tmp_path):
++    os.chmod(tmp_path, 0o700)
++    return World(tmp_path)
++
++
++def test_nominal_write_is_indexed_once_and_replay_is_a_no_op(world):
++    seq = world.write("doc", 1, "v1")
++    first = world.worker().run_once()
++    assert first.applied == [("INDEX_UPSERT", "doc", seq)]
++    assert world.index.points["doc"][0] == 1 and world.states() == {}
++    again = world.worker().run_once()
++    assert again.applied == [] and world.index.writes == 1
++
++
++def test_unreadable_canon_means_no_effect_at_all(world):
++    seq = world.write("doc", 1, "v1")
++    world.index.points["old"] = (3, sha("x"))
++    world.canon.unreadable |= {"doc", "old"}
++    report = world.worker().run_once()
++    assert report.applied == [] and report.proposed_deletions == []
++    assert world.states() == {seq: "PUBLISHED"} and world.index.points == {"old": (3, sha("x"))}
++
++
++def test_proven_absence_only_proposes_a_deletion_never_executes_it(world):
++    world.index.points["gone"] = (2, sha("x"))
++    report = world.worker().run_once()
++    assert report.proposed_deletions == [("gone", None)]
++    assert world.index.points == {"gone": (2, sha("x"))}
++
++
++def test_deletion_is_not_even_proposed_if_the_document_reappears_before_verification(world):
++    world.index.points["back"] = (2, sha("x"))
++
++    class Racing(FakeCanon):
++        def read(self, ident):
++            self.docs["back"] = Canonical(3, sha("y"))              # recreated after the plan
++            return super().read(ident)
++    racing = Racing()
++    world.canon = racing
++    report = world.worker().run_once()
++    assert report.proposed_deletions == [] and ("back", "absence not confirmed") in report.skipped
++
++
++def test_crash_between_upsert_and_indexed_replays_without_duplicate(world):
++    seq = world.write("doc", 1, "v1")
++    with pytest.raises(Crash):
++        world.worker(crash_at="after_upsert").run_once()
++    assert world.states() == {seq: "PUBLISHED"} and world.index.writes == 1
++    world.worker().run_once()
++    assert world.states() == {} and world.index.writes == 1
++
++
++def test_crash_after_rename_before_published_is_recovered_in_two_rounds(world):
++    seq = world.write("doc", 1, "v1", crash="before_published")
++    assert world.worker().run_once().applied == [("MARK_PUBLISHED", "doc", seq)]
++    assert world.worker().run_once().applied == [("INDEX_UPSERT", "doc", seq)]
++    assert world.states() == {} and world.index.writes == 1
++
++
++def test_crash_before_rename_waits_then_asks_for_review_never_closes_alone(world):
++    seq = world.write("doc", 1, "v1", crash="before_rename")
++    created = world.journal.pending()[0].created
++    world.now = created + 5
++    assert world.worker().run_once().review == []
++    world.now = created + 601
++    report = world.worker().run_once()
++    assert report.review == [("CLOSE_ABANDONED", "doc", seq)]
++    assert world.states() == {seq: "INTENT"} and world.index.points == {}
++
++
++def test_index_unavailable_marks_nothing_and_recovers(world):
++    seq = world.write("doc", 1, "v1")
++    world.index.available = False
++    assert world.worker().run_once().status == "INDEX_UNAVAILABLE"
++    assert world.states() == {seq: "PUBLISHED"}
++    world.index.available = True
++    world.worker().run_once()
++    assert world.states() == {} and world.index.points["doc"][0] == 1
++
++
++def test_canon_changed_between_plan_and_action_is_not_indexed_stale(world):
++    seq = world.write("doc", 1, "v1")
++
++    class Moving(FakeCanon):
++        def read(self, ident):
++            self.docs[ident] = Canonical(2, sha("v2"))
++            return super().read(ident)
++    moving = Moving()
++    moving.docs = dict(world.canon.docs)
++    world.canon = moving
++    report = world.worker().run_once()
++    assert ("doc", "canon changed since plan") in report.skipped
++    assert world.index.points == {} and world.states() == {seq: "PUBLISHED"}
++
++
++def test_two_fast_revisions_supersede_the_older_and_index_only_the_latest(world):
++    first = world.write("doc", 1, "v1")
++    second = world.write("doc", 2, "v2")
++    world.worker().run_once()
++    world.worker().run_once()
++    assert world.index.points["doc"] == (2, sha("v2")) and world.states() == {}
++    with __import__("sqlite3").connect(world.path) as raw:
++        assert raw.execute("SELECT state FROM intents WHERE seq=?", (first,)).fetchone()[0] == "SUPERSEDED"
++        assert raw.execute("SELECT state FROM intents WHERE seq=?", (second,)).fetchone()[0] == "INDEXED"
++
++
++def test_a_profile_without_rights_changes_nothing(world):
++    seq = world.write("doc", 1, "v1")
++    world.allowed = {"bob": {"other"}}
++    report = world.worker(profile="bob").run_once()
++    assert ("doc", "forbidden") in report.skipped
++    assert world.index.points == {} and world.states() == {seq: "PUBLISHED"}
++
++
++def test_a_second_worker_is_busy_and_does_nothing(world):
++    import fcntl
++    world.write("doc", 1, "v1")
++    fd = os.open(world.lock, os.O_RDWR | os.O_CREAT, 0o600)
++    try:
++        fcntl.flock(fd, fcntl.LOCK_EX)
++        assert world.worker().run_once().status == "BUSY"
++        assert world.index.points == {}
++    finally:
++        os.close(fd)
++
++
++# --- G214 blocking list (docs/G214-INDEX-WORKER-ACCEPTANCE.md, 36c8b8d) -----------------------------------
++
++def test_lost_acknowledgement_is_not_reported_as_success_and_replays_once(world):
++    seq = world.write("doc", 1, "v1")
++    world.index.lose_next_ack = True
++    assert world.worker().run_once().status == "INDEX_UNAVAILABLE"
++    assert world.states() == {seq: "PUBLISHED"}                      # not marked indexed on an unknown outcome
++    world.worker().run_once()
++    assert world.states() == {} and world.index.writes == 1
++
++
++def test_canon_modified_while_embeddings_are_computed_is_not_marked_indexed(world):
++    seq = world.write("doc", 1, "v1")
++
++    def edit():
++        world.canon.docs["doc"] = Canonical(2, sha("v2"))
++    report = world.worker(hooks={"before_upsert": edit}).run_once()
++    assert ("doc", "canon changed while indexing") in report.skipped
++    assert world.states() == {seq: "PUBLISHED"}
++    world.worker().run_once()
++    world.worker().run_once()
++    assert world.index.points["doc"] == (2, sha("v2"))
++
++
++def test_rights_revoked_between_plan_and_action_stop_the_action(world):
++    seq = world.write("doc", 1, "v1")
++
++    def revoke():
++        world.allowed = {"alice": set()}
++    report = world.worker(hooks={"after_plan": revoke}).run_once()
++    assert ("doc", "forbidden") in report.skipped
++    assert world.index.points == {} and world.states() == {seq: "PUBLISHED"}
++
++
++def test_embedding_model_or_chunker_change_refuses_any_write(world):
++    world.write("doc", 1, "v1")
++    world.index.model = ("embed-other/2", "passage-v1")
++    assert world.worker().run_once().status == "INDEX_INCOMPATIBLE"
++    world.index.model = ("embed-test/1", "passage-v2")
++    assert world.worker().run_once().status == "INDEX_INCOMPATIBLE"
++    assert world.index.points == {}
++
++
++def test_truncated_journal_and_clock_behind_intents_change_nothing(world):
++    for i in range(1000):
++        world.journal.begin(f"doc-{i}", 1, "DELETE")
++    assert world.worker().run_once().status == "TRUNCATED"
++    assert len(world.journal.pending(limit=1000)) == 1000
++
++
++def test_a_clock_set_backwards_refuses_the_round(world):
++    seq = world.write("doc", 1, "v1")
++    world.now = world.journal.pending()[0].created - 3600
++    assert world.worker().run_once().status == "REFUSED"
++    assert world.states() == {seq: "PUBLISHED"} and world.index.points == {}
++
++
++def test_two_concurrent_workers_apply_each_effect_once(world, tmp_path):
++    import threading
++    seqs = [world.write(f"doc-{i}", 1, f"v{i}") for i in range(5)]
++    reports, barrier = [], threading.Barrier(2)
++
++    def run():
++        barrier.wait()
++        reports.append(world.worker().run_once().status)
++    threads = [threading.Thread(target=run) for _ in range(2)]
++    for t in threads:
++        t.start()
++    for t in threads:
++        t.join(30)
++    world.worker().run_once()
++    assert world.states() == {} and world.index.writes == len(seqs)
++    assert set(reports) <= {"DONE", "BUSY"}
+-- 
+2.43.0
+

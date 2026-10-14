@@ -272,3 +272,46 @@ class CoreRelayTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GpuContractTests(unittest.TestCase):
+    """G169: proposed eidolon-gpu/1 block; named source, null when absent, invalid block dropped alone."""
+
+    def machine(self, gpu):
+        now = datetime.now(timezone.utc).isoformat()
+        return {"schema": "eidolon-machine/1", "sampled_at": now, "cpu_count": 8, "cpu_percent": 5.0,
+                "load_1_5_15": [0.1, 0.1, 0.1], "memory": None, "swap": None, "disk": None, "gpu": gpu, "errors": []}
+
+    def gpu(self, **changes):
+        value = {"schema": "eidolon-gpu/1", "source": {"id": "vm100", "label": "VM100 Core", "collector": "nvidia-smi"},
+                 "sampled_at": datetime.now(timezone.utc).isoformat(), "cadence_seconds": 10, "driver": "550.163.01",
+                 "devices": [{"index": i, "name": "Tesla V100-SXM2-32GB", "temperature_c": 54, "power_w": 120.5,
+                              "power_limit_w": 300, "utilization_percent": 37, "memory_used_bytes": 10 << 30,
+                              "memory_total_bytes": 32 << 30, "serial": "PRIVATE"} for i in (0, 1)],
+                 "errors": []}
+        value.update(changes)
+        return value
+
+    def test_two_devices_from_a_named_source(self):
+        view = summarize(darme_status(machine=self.machine(self.gpu())))[2]
+        gpu = view["gpu"]
+        self.assertEqual((gpu["source"]["id"], len(gpu["devices"]), gpu["stale"]), ("vm100", 2, False))
+        self.assertNotIn("serial", json.dumps(gpu))                       # allow-list only
+        self.assertEqual(gpu["devices"][1]["memory_total_bytes"], 32 << 30)
+
+    def test_missing_values_stay_null_and_cpu_vms_have_no_gpu(self):
+        partial = self.gpu(devices=[{"index": 0, "name": "GPU", "temperature_c": None}], errors=["power_unavailable"])
+        device = summarize(darme_status(machine=self.machine(partial)))[2]["gpu"]["devices"][0]
+        self.assertEqual((device["temperature_c"], device["power_w"], device["memory_used_bytes"]), (None, None, None))
+        self.assertIsNone(summarize(darme_status(machine=self.machine(None)))[2]["gpu"])
+
+    def test_invalid_gpu_block_is_dropped_alone(self):
+        for bad in (self.gpu(schema="x"), self.gpu(source={"id": "vm101"}), self.gpu(cadence_seconds=0),
+                    self.gpu(devices=[{"index": 0, "name": "<b>", "temperature_c": 50}]),
+                    self.gpu(devices=[{"index": 0, "name": "GPU", "memory_used_bytes": 2, "memory_total_bytes": 1}]),
+                    self.gpu(devices=[{"index": 0, "name": "GPU", "utilization_percent": 140}]),
+                    self.gpu(driver="550; rm")):
+            view = summarize(darme_status(machine=self.machine(bad)))[2]
+            self.assertEqual((view["gpu"], view["gpu_error"], view["cpu_percent"]), (None, "GPU_INVALID", 5.0), bad)
+        old = self.gpu(sampled_at=(datetime.now(timezone.utc) - timedelta(seconds=120)).isoformat())
+        self.assertTrue(summarize(darme_status(machine=self.machine(old)))[2]["gpu"]["stale"])

@@ -1,0 +1,190 @@
+From 7a64dfab1601eeee96835fc72f09eb6736e91d3f Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 13 Oct 2026 09:33:57 +0000
+Subject: [PATCH 18/18] test(claude-eval): G212 journal v2 probes: M2/M7/M9 now
+ regressions, v1 compatibility, M10 limit cap (strict xfail)
+
+Replaces patch 0016 on facf2e1. Still open: M4 (new journal created v1), M10
+(preview(limit=1000) always raises because pending() caps at 1000).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../test_journal_v2_probes_g209.py            | 165 ++++++++++++++++++
+ 1 file changed, 165 insertions(+)
+ create mode 100644 tests/claude_memory_eval/test_journal_v2_probes_g209.py
+
+diff --git a/tests/claude_memory_eval/test_journal_v2_probes_g209.py b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+new file mode 100644
+index 0000000..48300a1
+--- /dev/null
++++ b/tests/claude_memory_eval/test_journal_v2_probes_g209.py
+@@ -0,0 +1,165 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_journal_v2_probes_g209.py
++# Description : Contre-revue Claude G207-G209 : migration v2, clôture terminale, aperçu de réconciliation
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Independent probes (Claude) on GPT's journal v2 (c86bddb..facf2e1, G209 and G212). GPT's files are not modified.
++Positive tests pin what holds; strict xfail documents a finding and turns red once fixed."""
++import hashlib
++import multiprocessing
++import os
++import sqlite3
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.journal_migration import migrate_v2
++from core.indexing.reconcile_preview import preview_reconciliation
++from core.indexing import reconcile_plan as plan_module
++
++DIGEST = hashlib.sha256(b"canonical").hexdigest()
++
++
++def v2_journal(tmp_path, name="changes.sqlite3"):
++    path = tmp_path / name
++    ChangeJournal(path)
++    assert migrate_v2(path) == "MIGRATED_V2"
++    return ChangeJournal(path), path
++
++
++def test_migration_keeps_rows_is_idempotent_and_enables_closing(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    old = ChangeJournal(path)
++    a = old.begin("a", 1, "UPSERT", DIGEST)
++    b = old.begin("b", 1, "DELETE")
++    old.published(b)
++    assert migrate_v2(path) == "MIGRATED_V2"
++    assert migrate_v2(path) == "ALREADY_V2"
++    journal = ChangeJournal(path)
++    assert [(i.sequence, i.state) for i in journal.pending()] == [(a, "INTENT"), (b, "PUBLISHED")]
++    journal.close_terminal(a, "ABANDONED", "never visible")
++    journal.close_terminal(a, "ABANDONED", "never visible")                    # idempotent
++    with pytest.raises(ValueError):
++        journal.close_terminal(a, "SUPERSEDED", "other terminal")
++    assert [i.sequence for i in journal.pending()] == [b]
++
++
++def _close(path, sequence, queue):
++    try:
++        ChangeJournal(path).close_terminal(sequence, "SUPERSEDED", "race")
++        queue.put("ok")
++    except Exception as exc:
++        queue.put(type(exc).__name__ + ":" + str(exc))
++
++
++def test_concurrent_identical_closures_all_succeed_once(tmp_path):
++    journal, path = v2_journal(tmp_path)
++    sequence = journal.begin("doc", 1, "DELETE")
++    context = multiprocessing.get_context("fork")
++    queue = context.Queue()
++    workers = [context.Process(target=_close, args=(path, sequence, queue)) for _ in range(4)]
++    for worker in workers:
++        worker.start()
++    for worker in workers:
++        worker.join(30)
++    assert sorted(queue.get(timeout=10) for _ in workers) == ["ok"] * 4
++    assert journal.pending() == ()
++
++
++def test_sequence_numbers_are_never_reused_after_compaction_and_migration(tmp_path):
++    """M2 (G209), fixed in 3820208: sqlite_sequence is carried over."""
++    path = tmp_path / "changes.sqlite3"
++    old = ChangeJournal(path)
++    for i in range(3):
++        old.begin(f"doc-{i}", 1, "DELETE")
++    with sqlite3.connect(path) as raw:                                         # future compaction of seq 3
++        raw.execute("DELETE FROM intents WHERE seq=3")
++    migrate_v2(path)
++    assert ChangeJournal(path).begin("new", 1, "DELETE") == 4
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M4 (G209): a brand-new journal is still created with "
++                   "the v1 schema, so close_terminal needs an offline migration even on day one.")
++def test_a_new_journal_supports_closing_without_migration(tmp_path):
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    journal.close_terminal(journal.begin("doc", 1, "DELETE"), "ABANDONED", "never visible")
++
++
++def test_preview_accepts_a_complete_journal_of_exactly_limit_rows(tmp_path):
++    """M7 (G209), fixed in 854ebbe: limit + 1 rows are read to detect truncation."""
++    journal, _ = v2_journal(tmp_path)
++    for i in range(3):
++        journal.begin(f"doc-{i}", 1, "DELETE")
++    preview_reconciliation(journal, {}, {}, limit=3)
++
++
++@pytest.mark.xfail(not hasattr(plan_module, "ABSENT"), strict=True, reason="Claude finding M8 (G209, critical): with the integrated reconcile_plan, "
++                   "an id MISSING from the canonical snapshot is taken as deleted: a DELETE intent whose canon was "
++                   "not read becomes MARK_PUBLISHED, and indexed ids get ENQUEUE_DELETE. Memory patch 0013 fixes it.")
++def test_preview_never_publishes_or_deletes_from_an_unread_canonical_state(tmp_path):
++    journal, _ = v2_journal(tmp_path)
++    journal.begin("doc", 3, "DELETE")
++    preview = preview_reconciliation(journal, {}, {"doc": 3, "other": 2})
++    assert {a.kind for a in preview.actions} <= {"WAIT"}
++
++
++def test_an_abandonment_always_requires_review(tmp_path):
++    """M9 (G209), fixed in 854ebbe."""
++    journal, path = v2_journal(tmp_path)
++    journal.begin("doc", 5, "UPSERT", DIGEST)
++    from core.indexing.reconcile_plan import Canonical
++    preview = preview_reconciliation(journal, {"doc": Canonical(4, DIGEST)}, {"doc": 4},
++                                     now=10**10, grace_seconds=600)
++    assert [a.kind for a in preview.actions] == ["CLOSE_ABANDONED"]
++    assert preview.requires_review
++
++
++def test_migration_refuses_a_public_or_linked_journal_without_touching_it(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    ChangeJournal(path)
++    os.chmod(path, 0o644)
++    with pytest.raises(ValueError):
++        migrate_v2(path)
++    os.chmod(path, 0o600)
++    link = tmp_path / "link.sqlite3"
++    link.symlink_to(path)
++    with pytest.raises(ValueError):
++        migrate_v2(link)
++    with sqlite3.connect(path) as raw:
++        assert "ABANDONED" not in raw.execute("SELECT sql FROM sqlite_master WHERE name='intents'").fetchone()[0]
++
++
++def test_m2_holds_when_everything_was_compacted_and_on_a_second_migration_attempt(tmp_path):
++    path = tmp_path / "changes.sqlite3"
++    old = ChangeJournal(path)
++    last = [old.begin(f"doc-{i}", 1, "DELETE") for i in range(4)][-1]
++    with sqlite3.connect(path) as raw:
++        raw.execute("DELETE FROM intents")
++    assert migrate_v2(path) == "MIGRATED_V2"
++    assert migrate_v2(path) == "ALREADY_V2"
++    assert ChangeJournal(path).begin("new", 1, "DELETE") == last + 1
++
++
++def test_a_v1_journal_keeps_working_and_refuses_closing_without_change(tmp_path):
++    """G212: v1 compatibility. Before migration the full v1 life cycle works, and close_terminal fails
++    without altering the row."""
++    path = tmp_path / "changes.sqlite3"
++    journal = ChangeJournal(path)
++    seq = journal.begin("doc", 1, "UPSERT", DIGEST)
++    journal.published(seq)
++    other = journal.begin("other", 1, "DELETE")
++    with pytest.raises(Exception):
++        journal.close_terminal(other, "ABANDONED", "never visible")
++    journal.indexed(seq)
++    assert [(i.sequence, i.state) for i in journal.pending()] == [(other, "INTENT")]
++
++
++@pytest.mark.xfail(strict=True, reason="Claude finding M10 (G212): preview reads limit + 1 rows, but "
++                   "ChangeJournal.pending caps its limit at 1000, so preview(limit=1000), a value preview "
++                   "itself accepts, always raises 'invalid limit'. Expected: cap preview at 999 or let the "
++                   "journal read one more row.")
++def test_preview_accepts_its_own_maximum_limit(tmp_path):
++    journal, _ = v2_journal(tmp_path)
++    preview_reconciliation(journal, {}, {}, limit=1000)
+-- 
+2.43.0
+

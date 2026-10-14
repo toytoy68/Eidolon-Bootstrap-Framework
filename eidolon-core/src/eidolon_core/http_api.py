@@ -62,9 +62,11 @@ MISSION_PATH = re.compile(r"/v1/missions/(m-[0-9a-f]{32})(/poll)?")
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
           "/app.js": ("app.js", "text/javascript; charset=utf-8"),
           "/style.css": ("style.css", "text/css; charset=utf-8"),
-          "/eidolon-logo.png": ("eidolon-logo.png", "image/png")}
+          "/eidolon-logo.png": ("eidolon-logo.png", "image/png"),
+          "/darme-logo.png": ("darme-logo.png", "image/png")}
 # Served when present; an older or minimal web root without it stays valid (404, client keeps its text name).
-OPTIONAL_ASSETS = frozenset({"/eidolon-logo.png"})
+# darme-logo.png (G176, logo DARME de toytoy): identity only, never a security state.
+OPTIONAL_ASSETS = frozenset({"/eidolon-logo.png", "/darme-logo.png"})
 SECURITY_HEADERS = (("Cache-Control", "no-store"),
                     ("X-Content-Type-Options", "nosniff"),
                     ("Referrer-Policy", "no-referrer"),

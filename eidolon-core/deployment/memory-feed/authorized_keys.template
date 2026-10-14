@@ -1,0 +1,3 @@
+# /etc/ssh/eidolon-monitor-feed/authorized_keys sur Memory (root:root 0644, dossier 0755).
+# Une seule ligne. <IP_CORE> et la clé publique sont remplis sur la VM, jamais dans Git.
+restrict,from="<IP_CORE>",command="/usr/bin/python3 -I /usr/local/lib/eidolon/darme-status-feed" ssh-ed25519 <CLE_PUBLIQUE> eidolon-monitor@core

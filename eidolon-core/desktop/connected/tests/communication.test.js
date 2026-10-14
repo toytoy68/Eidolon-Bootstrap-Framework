@@ -19,7 +19,9 @@ function fakeMedia(devices, opts) {
     getUserMedia: async (c) => {
       calls.push(c);
       if (opts.error) { const e = new Error("x"); e.name = opts.error; throw e; }
-      const track = { stopped: false, stop() { this.stopped = true; } };
+      const track = { stopped: false, stop() { this.stopped = true; }, ended: [],
+        addEventListener(type, fn) { if (type === "ended") this.ended.push(fn); },
+        end() { this.stopped = true; this.ended.forEach((fn) => fn()); } };
       open.push(track);
       return { getTracks: () => [track] };
     },
@@ -208,4 +210,33 @@ test("WAV encoding resamples to 16 kHz mono 16-bit", () => {
   assert.equal(view.getUint32(40, true), 32000);                      // 1 s at 16 kHz, 2 bytes per sample
   assert.equal(view.getInt16(44, true), 32767);
   assert.equal(view.getUint16(22, true), 1);
+});
+
+test("G165: microphone unplugged while talking: capture dropped, nothing sent, state explains why", async () => {
+  const devices = [{ kind: "audioinput", deviceId: "mic1", label: "USB" }, { kind: "videoinput", deviceId: "cam1", label: "W" }];
+  const { comm, media, sent } = setup({ media: fakeMedia(devices) });
+  await comm.refresh(); await comm.enable("microphone");
+  await comm.startTalk();
+  media.open[media.open.length - 1].end();                    // the track ends by itself (unplugged)
+  await new Promise((r) => setImmediate(r));
+  const s = comm.state();
+  assert.deepEqual([s.microphone.state, s.microphone.reason, s.capturing], ["disabled", "débranché", false]);
+  assert.equal(media.live(), 0);
+  assert.equal(await comm.stopTalk(), null);
+  assert.deepEqual(sent.filter((c) => c.path === "/v1/comm/stt"), []);
+});
+
+test("G165: the selected microphone disappears from the list during capture (devicechange)", async () => {
+  const devices = [{ kind: "audioinput", deviceId: "mic1", label: "USB" }, { kind: "audioinput", deviceId: "mic2", label: "Intégré" }];
+  const media = fakeMedia(devices);
+  const { comm, sent } = setup({ media });
+  await comm.refresh(); await comm.enable("microphone");
+  await comm.startTalk();
+  devices.splice(0, 1);                                       // USB microphone gone
+  media.fire();
+  await new Promise((r) => setImmediate(r));
+  const s = comm.state();
+  assert.deepEqual([s.microphone.state, s.microphone.reason, s.microphone.selected, s.capturing], ["disabled", "débranché", "mic2", false]);
+  assert.equal(media.live(), 0);
+  assert.deepEqual(sent.filter((c) => c.path === "/v1/comm/stt"), []);
 });

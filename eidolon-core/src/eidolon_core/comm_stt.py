@@ -86,7 +86,8 @@ class Vocabulary:
 # Suggested starting point for comm.json, to be compared on the VM (docs/COMMUNICATION.md §6, G164).
 DEFAULT_VOCABULARY = {"terms": ["Eidolon", "toytoy"],
                       "replacements": {"toi-toi": "toytoy", "toi toi": "toytoy", "toy-toy": "toytoy",
-                                       "toy toy": "toytoy", "toïtoï": "toytoy", "Eidolone": "Eidolon",
+                                       "toy toy": "toytoy", "toïtoï": "toytoy", "toï-toï": "toytoy",
+                                       "toï toï": "toytoy", "toytoï": "toytoy", "Eidolone": "Eidolon",
                                        "Eidolonne": "Eidolon", "Eydolon": "Eidolon", "Aïdolon": "Eidolon",
                                        "Idolon": "Eidolon"}}
 

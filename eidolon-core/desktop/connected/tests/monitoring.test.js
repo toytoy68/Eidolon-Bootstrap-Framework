@@ -170,3 +170,25 @@ test("a key that disappears between two reads stops the polling", async () => {
   await h.fire();
   assert.deepEqual([h.mon.state().phase, h.timers.size, h.calls.length], ["off", 0, 1]);
 });
+
+test("G169: GPU devices from a named source, each value or 'indisponible', never Core CPU values", () => {
+  const base = { sampled_at: "2026-10-12T10:00:00+00:00", age_seconds: 2, stale: false, cpu_count: 8, cpu_percent: 5,
+    load_1_5_15: null, memory: null, swap: null, disk: null, errors: [] };
+  const gpu = { source: { id: "vm100", label: "VM100 Core", collector: "nvidia-smi" }, sampled_at: "x", age_seconds: 4, stale: false,
+    cadence_seconds: 10, driver: "550.163.01", errors: ["power_unavailable"], devices: [
+      { index: 0, name: "Tesla V100-SXM2-32GB", temperature_c: 54, power_w: 120.4, power_limit_w: 300, utilization_percent: 37,
+        memory_used_bytes: 10 * 1024 ** 3, memory_total_bytes: 32 * 1024 ** 3 },
+      { index: 1, name: "Tesla V100-SXM2-32GB", temperature_c: null, power_w: null, power_limit_w: null, utilization_percent: null,
+        memory_used_bytes: null, memory_total_bytes: 32 * 1024 ** 3 }] };
+  const v = M.describe({ id: "core", label: "Core", state: "ok", darme: darme(), machine: Object.assign({}, base, { gpu }) });
+  const lines = v.metrics.filter((x) => x.name.startsWith("GPU")).map((x) => x.name + " = " + x.text);
+  assert.deepEqual(lines, [
+    "GPU 0 — Tesla V100-SXM2-32GB = 54 °C, 120 W / 300 W, 37 %, VRAM 10.0 Gio / 32.0 Gio",
+    "GPU 1 — Tesla V100-SXM2-32GB = température indisponible, puissance indisponible, utilisation indisponible, VRAM indisponible"]);
+  assert.equal(v.gpu.source, "VM100 Core (nvidia-smi)");
+  assert.match(v.gpu.measured, /il y a 4 s, toutes les 10 s, pilote 550.163.01/);
+  const none = M.describe({ id: "c", label: "C", state: "ok", darme: darme(), machine: Object.assign({}, base, { gpu: null }) });
+  assert.deepEqual(none.metrics.filter((x) => x.name === "GPU").map((x) => x.text), ["non sondé sur cette machine"]);
+  const refused = M.describe({ id: "c", label: "C", state: "ok", darme: darme(), machine: Object.assign({}, base, { gpu: null, gpu_error: "GPU_INVALID" }) });
+  assert.match(refused.metrics.find((x) => x.name === "GPU").text, /refusées \(GPU_INVALID\)/);
+});

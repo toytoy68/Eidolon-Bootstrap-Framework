@@ -54,11 +54,13 @@ class MountTests(unittest.TestCase):
             sent["Content-Type"] = "application/json"
         sent.update(headers or {})
         raw = body if isinstance(body, bytes) or body is None else json.dumps(body, ensure_ascii=False).encode()
-        connection.request(method, path, body=raw, headers=sent)
-        response = connection.getresponse()
-        value = json.loads(response.read() or b"null")
-        connection.close()
-        return response.status, value
+        try:
+            connection.request(method, path, body=raw, headers=sent)
+            response = connection.getresponse()
+            value = json.loads(response.read() or b"null")
+            return response.status, value
+        finally:
+            connection.close()
 
     def simulated(self):
         return SimulatedDialogueModel(demo_catalog())
@@ -130,15 +132,30 @@ class ShutdownTests(MountTests):
         server = http_api.ReadServer(self.state, self.read, port=0, conversations=lambda: Blocked(demo_catalog()))
         threading.Thread(target=server.serve_forever, daemon=True).start()
         status, opened = self.request(server, "POST", "/v1/conversations/open", {"client_key": "k"}, self.key)
-        threading.Thread(target=lambda: self.request(server, "POST", "/v1/conversations/turn",
-                                                     {"conversation_id": opened["conversation_id"],
-                                                      "client_turn_key": "t", "text": "Diagnostique le nas."},
-                                                     self.key), daemon=True).start()
-        self.assertTrue(started.wait(5))
-        began = time.monotonic()
-        server.shutdown()
-        server.server_close()
-        self.assertLess(time.monotonic() - began, 2)
-        release.set()
+        outcomes = []
+        def request_turn():
+            try:
+                outcomes.append(self.request(server, "POST", "/v1/conversations/turn",
+                    {"conversation_id": opened["conversation_id"], "client_turn_key": "t",
+                     "text": "Diagnostique le nas."}, self.key))
+            except http.client.RemoteDisconnected:
+                outcomes.append("disconnected")
+            except Exception as exc:
+                outcomes.append(exc)  # fail in the test thread, never lose a client exception
+        client = threading.Thread(target=request_turn, daemon=True)
+        client.start()
+        try:
+            self.assertTrue(started.wait(5))
+            began = time.monotonic()
+            server.shutdown()
+            server.server_close()
+            self.assertLess(time.monotonic() - began, 2)
+        finally:
+            release.set()
+            server.shutdown()
+            server.server_close()
+            client.join(5)
+        self.assertFalse(client.is_alive())
+        self.assertEqual(outcomes, ["disconnected"])
         page = ConversationStore(Store(self.state)).page(opened["conversation_id"])
         self.assertIsNone(page["items"][0]["reply"])          # nothing recorded after shutdown began

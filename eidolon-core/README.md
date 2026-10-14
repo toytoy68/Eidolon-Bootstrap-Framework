@@ -1,5 +1,7 @@
 # Eidolon Core v0.1
 
+**État courant du 14 octobre — G229** : [bilan consolidé](docs/PROJECT-STATUS.md). Consolidation Memory et fusion Claude préparées localement ; publication et CI finale en attente. Les repères du 9 octobre ci-dessous sont historiques.
+
 **Reprise du 09/10 après 17 h 37 — C-068/C-069 :** corrections des réponses
 tardives de mission/annulation, identité exacte des résultats média, digest
 de sauvegarde et distinction du stockage occupé. Schéma conversations **v5** :

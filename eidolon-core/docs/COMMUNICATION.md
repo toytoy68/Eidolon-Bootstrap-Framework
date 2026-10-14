@@ -332,3 +332,49 @@ Revue Codex G171 : filtre textuel inconditionnel corrigé après reproduction
 de trois faux rejets à bonne confiance. Les heuristiques restent faillibles ;
 aucune absence générale d’hallucinations n’est garantie. Voir la recette
 [réelle G164](validation/2026-10-12/g164-real/REPORT.md).
+
+## 7. Prononciation des noms (12/10/2026)
+
+**Précision de toytoy** : « toytoy » se prononce comme deux fois le mot anglais
+*toy* (le jouet), « toy-toy ». Ce n'est **pas** « toi-toi ». Le pseudonyme
+vient de Toyota.
+
+**Son cible, vérifié le 12/10/2026** : toytoy a envoyé un enregistrement de
+sa voix (5 s). Une analyse des résonances de la voix (formants) montre le même
+motif aux quatre occurrences de « toy » :
+- un « o » ouvert (comme dans « port ») : F1 vers 450–520 Hz, F2 vers 1 200 Hz ;
+- puis un glissement vers un « y » : F2 monte vers 2 000 Hz et F1 descend
+  vers 250 Hz.
+C'est /tɔj/, et non /twa/ (« toi » finirait sur un « a » ouvert, F2 vers
+1 300 Hz). L'enregistrement et les mesures **ne sont pas conservés dans Git**
+(donnée vocale personnelle, règle G170).
+
+**Conséquences** :
+- **Voix d'Eidolon** : la voix française Piper lirait probablement
+  « toi-toi ». `comm_tts.py` remplace donc le nom, **dans le morceau prononcé
+  seulement**, par une graphie pour l'oreille. Le texte affiché ne change
+  pas.
+  - Graphie par défaut : `toï-toï` (comme « Hanoï »). C'est une
+    **supposition** : non écoutée.
+  - Réglable dans `comm.json`, section `tts` :
+    `"pronunciations": {"toytoy": "…"}`. Un objet vide désactive le
+    remplacement.
+- **Dictée** : la vraie voix de toytoy dira « toy-toy ». Whisper risque
+  d'écrire « toy toy », « toï-toï »… Ces formes sont ajoutées aux
+  remplacements exacts. « toi-toi » reste corrigé, au cas où.
+- **Banc G164** : l'audio de test venait de Piper, qui prononçait sans doute
+  « toi-toi ». Les résultats sur les noms (5/7 avec `prompt`) portent donc
+  sur la **mauvaise** prononciation. Une fois la bonne graphie confirmée,
+  il faut relancer les cas « noms » du banc. Le vrai essai reste celui de
+  toytoy au micro (W4 du guide du week-end).
+
+**À écouter sur la VM** (Codex), voix `fr_FR-siwis-medium`, vitesse 0,9 :
+générer « Bonjour X, comment vas-tu ? » pour chaque X ci-dessous, et
+retenir celle que toytoy reconnaît comme « toy-toy ».
+
+| Graphie | Remarque |
+| --- | --- |
+| `toï-toï` | défaut actuel |
+| `toye-toye` | |
+| `toïe-toïe` | |
+| `toy-toy` | à garder seulement si espeak le lit déjà correctement |

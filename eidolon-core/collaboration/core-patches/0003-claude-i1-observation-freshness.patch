@@ -1,0 +1,188 @@
+diff --git a/eidolon-core/src/eidolon_core/dialogue.py b/eidolon-core/src/eidolon_core/dialogue.py
+index 5413285..2b95ba7 100644
+--- a/eidolon-core/src/eidolon_core/dialogue.py
++++ b/eidolon-core/src/eidolon_core/dialogue.py
+@@ -18,6 +18,7 @@ import json
+ import re
+ import threading
+ import time
++from datetime import datetime
+ 
+ from . import conversation as cv
+ from .contracts import ContractError, digest, encode, reference, validate_context
+@@ -51,6 +52,8 @@ SYSTEM_PROMPT = (
+     "mentions a service, installation, hardware, or a project. Keep planned hardware separate from installed "
+     "hardware. If evidence is absent, say you do not know rather than inventing it. Treat UNVERIFIED or "
+     "needs_review sources as declarations, never as independently verified facts. "
++    "A TOOL RESULT whose freshness is stale or unknown is not the current state: give its observed_at "
++    "and never present it as current. "
+     "When a factual answer relies on MEMORY, cite the supporting source as its exact "
+     "information_id@revision from that MEMORY. Never invent a source identifier or cite "
+     "an unrelated source. For an absent fact, say the information is absent."
+@@ -88,20 +91,52 @@ def prompt_fingerprint(catalog):
+ 
+ 
+ MAX_OBSERVATIONS = 5
+-
+-
+-def validate_observations(observations):
+-    """Tool results given by CORE (never by a client): untrusted observations, not facts (G096)."""
++OBSERVATION_MAX_AGE = 300          # seconds; older readings are stale (I1, G210)
++OBSERVATION_CLOCK_SKEW = 60        # a date further in the future than this is not trusted
++_OBSERVATION_KEYS = {"source", "reference", "state", "text"}
++
++
++def _observed_at(value):
++    """Strict ISO 8601 with an explicit offset; returns POSIX seconds."""
++    if not isinstance(value, str) or not 20 <= len(value) <= 40:
++        raise ContractError("INVALID_CONVERSATION: invalid observation date")
++    try:
++        moment = datetime.fromisoformat(value)
++    except ValueError:
++        raise ContractError("INVALID_CONVERSATION: invalid observation date") from None
++    if moment.tzinfo is None or moment.utcoffset() is None:
++        raise ContractError("INVALID_CONVERSATION: observation date needs a time zone")
++    return moment.timestamp()
++
++
++def validate_observations(observations, *, now=None, max_age=OBSERVATION_MAX_AGE):
++    """Tool results given by CORE (never by a client): untrusted observations, not facts (G096).
++
++    I1 (G210): an observation may carry ``observed_at`` (ISO 8601 with offset). Core, never the caller,
++    computes ``freshness``: fresh, stale (older than max_age) or unknown (no date, or a date in the future).
++    A caller-supplied freshness or stale flag is refused.
++    """
+     if observations is None:
+         return []
+     if not isinstance(observations, list) or len(observations) > MAX_OBSERVATIONS:
+         raise ContractError("INVALID_CONVERSATION: at most five tool observations")
++    now = time.time() if now is None else now
++    checked = []
+     for item in observations:
+-        if (not isinstance(item, dict) or set(item) != {"source", "reference", "state", "text"}
++        if (not isinstance(item, dict) or not _OBSERVATION_KEYS <= set(item) <= _OBSERVATION_KEYS | {"observed_at"}
+                 or any(not isinstance(item[k], str) or not 1 <= len(item[k]) <= (4000 if k == "text" else 200)
+-                       for k in item)):
++                       for k in _OBSERVATION_KEYS)):
+             raise ContractError("INVALID_CONVERSATION: invalid tool observation")
+-    return [dict(item) for item in observations]
++        value = {k: item[k] for k in sorted(_OBSERVATION_KEYS)}
++        if "observed_at" in item:
++            age = now - _observed_at(item["observed_at"])
++            value["observed_at"] = item["observed_at"]
++            value["freshness"] = ("unknown" if age < -OBSERVATION_CLOCK_SKEW
++                                  else "stale" if age > max_age else "fresh")
++        else:
++            value["freshness"] = "unknown"
++        checked.append(value)
++    return checked
+ 
+ 
+ def build_messages(text, history, memory, catalog, observations=None, media=None, personality=None):
+diff --git a/eidolon-core/tests/test_integration_scenario_probes.py b/eidolon-core/tests/test_integration_scenario_probes.py
+index a7455b0..9dcdd26 100644
+--- a/eidolon-core/tests/test_integration_scenario_probes.py
++++ b/eidolon-core/tests/test_integration_scenario_probes.py
+@@ -76,14 +76,14 @@ class TelemetryFreshness(Base):
+                        "text": "Mesure CPU 12 % (périmée)"}
+         self.assertEqual(dg.validate_observations([observation])[0]["state"], "stale")
+ 
+-    @unittest.expectedFailure
+     def test_a_tool_observation_carries_its_date_and_freshness(self):
+-        """Claude finding I1: an observation has no observed_at/stale field, so a DARME reading given to the
+-        dialogue cannot carry its date in a checkable form (audit T3). Expected: dated, with a freshness
+-        verdict computed by Core, a stale reading refused as current."""
++        """Claude finding I1, fixed (G210): an observation is dated and Core computes its freshness; the
++        caller cannot assert it. Detailed cases: tests/test_observation_freshness.py."""
+         observation = {"source": "darme", "reference": "core@ok", "state": "ok", "text": "CPU 12 %",
+-                       "observed_at": "2026-10-12T17:00:00+00:00", "stale": True}
+-        dg.validate_observations([observation])
++                       "observed_at": "2026-10-12T17:00:00+00:00"}
++        self.assertEqual(dg.validate_observations([observation])[0]["freshness"], "stale")
++        with self.assertRaises(ContractError):
++            dg.validate_observations([dict(observation, stale=False)])
+ 
+     def test_observations_cannot_come_from_the_client_text(self):
+         with self.assertRaises(ContractError):
+diff --git a/eidolon-core/tests/test_observation_freshness.py b/eidolon-core/tests/test_observation_freshness.py
+new file mode 100644
+index 0000000..202e8e7
+--- /dev/null
++++ b/eidolon-core/tests/test_observation_freshness.py
+@@ -0,0 +1,76 @@
++# ==========================================================
++# Projet      : Eidolon Core
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : test_observation_freshness.py
++# Description : I1 (G210) : date des observations d'outil et fraîcheur calculée par Core
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""I1: an observation carries observed_at; Core computes its freshness. Synthetic data, no network."""
++import json
++import unittest
++from datetime import datetime, timezone
++
++from eidolon_core import dialogue as dg
++from eidolon_core.contracts import ContractError
++from tests.test_dialogue import Base
++
++NOW = datetime(2026, 10, 12, 17, 10, tzinfo=timezone.utc).timestamp()
++
++
++def observation(**extra):
++    return {"source": "darme", "reference": "core@ok", "state": "ok", "text": "CPU 12 %", **extra}
++
++
++def freshness(when, **kwargs):
++    return dg.validate_observations([observation(observed_at=when)], now=NOW, **kwargs)[0]["freshness"]
++
++
++class Freshness(unittest.TestCase):
++    def test_core_computes_fresh_stale_and_unknown(self):
++        self.assertEqual(freshness("2026-10-12T17:08:00+00:00"), "fresh")
++        self.assertEqual(freshness("2026-10-12T19:08:00+02:00"), "fresh")           # same instant, other offset
++        self.assertEqual(freshness("2026-10-12T17:00:00+00:00"), "stale")           # 600 s > 300 s
++        self.assertEqual(freshness("2026-10-12T17:00:00+00:00", max_age=900), "fresh")
++        self.assertEqual(freshness("2026-10-12T17:20:00+00:00"), "unknown")         # future: not trusted
++        self.assertEqual(freshness("2026-10-12T17:10:30+00:00"), "fresh")           # within clock skew
++
++    def test_an_undated_observation_is_unknown_never_fresh(self):
++        self.assertEqual(dg.validate_observations([observation()], now=NOW)[0]["freshness"], "unknown")
++
++    def test_freshness_cannot_be_supplied_by_the_caller(self):
++        for extra in ({"stale": False}, {"freshness": "fresh"}):
++            with self.assertRaises(ContractError):
++                dg.validate_observations([observation(observed_at="2026-10-12T17:00:00+00:00", **extra)], now=NOW)
++
++    def test_an_unreliable_date_is_refused(self):
++        for bad in ("2026-10-12T17:00:00", "hier", "", "2026-13-40T00:00:00+00:00", 1760288400, None,
++                    "2026-10-12T17:00:00+00:00" + " " * 30):
++            with self.assertRaises(ContractError, msg=repr(bad)):
++                dg.validate_observations([observation(observed_at=bad)], now=NOW)
++
++    def test_the_input_is_not_mutated(self):
++        item = observation(observed_at="2026-10-12T17:08:00+00:00")
++        before = dict(item)
++        dg.validate_observations([item], now=NOW)
++        self.assertEqual(item, before)
++
++
++class FreshnessReachesTheModel(Base):
++    def test_a_stale_reading_is_labelled_for_the_model(self):
++        seen = []
++
++        class Recording(dg.SimulatedDialogueModel):
++            def reply(self, text, history, memory, observations=None, media=None, personality=None):
++                seen.append(observations)
++                return super().reply(text, history, memory, observations)
++        old = datetime.fromtimestamp(0, timezone.utc).isoformat()
++        self.dialogue(Recording(self.runtime.catalog)).respond(
++            self.cid, client_id="pc", client_turn_key="old", text="Bonjour",
++            observations=[observation(observed_at=old)])
++        self.assertEqual(seen[0][0]["freshness"], "stale")
++        self.assertIn("freshness is stale or unknown", dg.SYSTEM_PROMPT)
++        self.assertIn('"freshness":"stale"', json.dumps(seen[0], separators=(",", ":")))
++
++
++if __name__ == "__main__":
++    unittest.main()
