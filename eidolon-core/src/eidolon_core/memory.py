@@ -71,15 +71,8 @@ class BridgeMemory:
 
     def recall(self, query):
         from .memory_bridge_client import recall as remote_recall
-        token_path = Path(self.token_file).expanduser()
-        if token_path.is_symlink() or not token_path.is_file():
-            raise ValueError("invalid memory bridge credential path")
-        import os
-        import stat
-        info = token_path.stat()
-        if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600:
-            raise ValueError("memory bridge credential must be owner-only")
-        token = token_path.read_text(encoding="ascii").strip()
+        from .bridge_credentials import read_bridge_token
+        token = read_bridge_token(self.token_file)
         result = remote_recall(query, token=token, port=self.port, timeout=self.timeout)
         from .contracts import validate_context
         return validate_context(result)
