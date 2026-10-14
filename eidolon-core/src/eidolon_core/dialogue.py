@@ -136,6 +136,14 @@ def validate_observations(observations, *, now=None, max_age=None):
     now = time.time() if now is None else now
     if type(now) not in (int, float) or not math.isfinite(now):
         raise ContractError("INVALID_CONVERSATION: invalid observation clock")
+    if max_age is not None:
+        if isinstance(max_age, dict):
+            if any(type(source) is not str or not source for source in max_age):
+                raise ContractError("INVALID_CONVERSATION: invalid freshness source")
+            for source in max_age:
+                _max_age_for(source, max_age)
+        else:
+            _max_age_for("", max_age)
     checked = []
     for item in observations:
         if (not isinstance(item, dict) or not _OBSERVATION_KEYS <= set(item) <= _OBSERVATION_KEYS | {"observed_at"}
