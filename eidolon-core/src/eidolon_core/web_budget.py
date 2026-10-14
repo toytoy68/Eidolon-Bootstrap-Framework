@@ -31,6 +31,12 @@ class WebBudget:
                 if db.in_transaction:
                     db.execute("ROLLBACK")
 
+    def _now(self):
+        value = float(self.clock())
+        if not math.isfinite(value) or value < 0:
+            raise BudgetError("invalid clock")
+        return value
+
     @staticmethod
     def _id(value):
         return type(value) is str and re.fullmatch(r"[a-zA-Z0-9_.-]{1,100}", value) is not None
@@ -41,9 +47,7 @@ class WebBudget:
                 or type(query) is not str or not 1 <= len(query) <= 2000):
             raise BudgetError("invalid reservation")
         ref = hmac.new(self.secret, query.encode("utf-8"), hashlib.sha256).hexdigest()
-        now = float(self.clock())
-        if not math.isfinite(now) or now < 0:
-            raise BudgetError("invalid clock")
+        now = self._now()
         day = int(now // 86400)
         with self._db() as db:
             try:
@@ -70,6 +74,7 @@ class WebBudget:
             raise BudgetError("invalid completion")
         if receipt_ref is not None and not self._id(receipt_ref):
             raise BudgetError("invalid receipt")
+        finished_at = self._now()
         with self._db() as db:
             try:
                 db.execute("BEGIN IMMEDIATE")
@@ -81,7 +86,7 @@ class WebBudget:
                         db.execute("COMMIT")
                         return state
                     raise BudgetError("terminal state immutable")
-                db.execute("UPDATE calls SET state=?, finished=?, receipt=? WHERE request_id=?", (state,float(self.clock()),receipt_ref,request_id))
+                db.execute("UPDATE calls SET state=?, finished=?, receipt=? WHERE request_id=?", (state,finished_at,receipt_ref,request_id))
                 db.execute("COMMIT")
                 return state
             except BaseException:
