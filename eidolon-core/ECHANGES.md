@@ -2133,3 +2133,10 @@ G231 confirmé : Memory `855a9eb` (2386 tests, 12 sous-tests ; 19 expérimentaux
 7 ignorés, aucun avertissement pytest), trois workflows verts. Comptes chevauchants.
 [Bilan et preuves CI](docs/PROJECT-STATUS.md). J2 demeure ouvert : inventaire inverse,
 orchestration, contrat complet et recette serveur/corpus/VM/PC.
+
+
+## G232 — Suite autorisée, 14 octobre 2026, 21 h 32 Europe/Paris
+Auteur : Codex/GPT. Base Core `756b683`, Memory `bef7222`.
+Memory `e4d38ee` ajoute l’inventaire inverse et la revalidation des candidats
+orphelins, sans suppression ni intention DELETE. Core : épinglage de la CI sur
+ce lot et bilan consolidé, aucun changement de runtime ni déploiement.

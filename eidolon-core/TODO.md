@@ -1,3 +1,7 @@
+## G232 — Priorités actives, 14 octobre 2026
+
+Inventaire inverse et revue revalidée Memory livrés ; CI sur les nouvelles références en cours. Suite J2 : orchestration scanner/worker et politique de revue, contrat complet, serveur/corpus réels puis VM/PC. Suppression toujours désactivée. [Bilan](docs/PROJECT-STATUS.md).
+
 ## G231 — Priorités actives, 14 octobre 2026
 
 Balayage canonique Memory reprenable livré ; trois CI vertes : Memory 2386 tests, Qdrant/worker/scanner 131, Core 1763 (7 ignorés, aucun avertissement pytest). Suite J2 : points orphelins/absence prouvée, orchestration scanner/worker, contrat complet puis recette serveur/VM/PC. [Bilan](docs/PROJECT-STATUS.md).

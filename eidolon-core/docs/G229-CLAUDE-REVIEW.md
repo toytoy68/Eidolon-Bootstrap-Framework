@@ -31,3 +31,12 @@ l'intervalle entre commit du journal et commit du curseur, les modifications der
 le curseur, le contexte du checkpoint, la pause sur file pleine et le sens limité
 de COMPLETE. Les deux captures complètes sous verrou nécessitent une mesure sur le
 corpus réel ; la recherche inverse des orphelins n'est pas couverte par ce lot.
+
+## Complément G232
+
+Memory `e4d38ee` ajoute `OrphanScan`, `inventory_page`, `proven_absent` et
+`has_pending`. Revue indépendante restante : preuve d’absence sans confondre
+ENOENT feuille/racine, atomicité page/curseur, revalidation après réapparition,
+portée de EXHAUSTED sur un index vivant et coordination avant toute future
+suppression. Deux morts réelles et 44 tests du lot passent ; aucune qualification
+serveur/VM ni suppression réelle n’est revendiquée. [Bilan](PROJECT-STATUS.md).

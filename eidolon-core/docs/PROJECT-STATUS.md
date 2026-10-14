@@ -1,8 +1,38 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026, lot G231, Codex/GPT.
+Mise à jour : 14 octobre 2026, lot G232, Codex/GPT.
 
-**G231 publié et qualifié : trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+**G232 publié : qualification CI en cours. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+
+## G232 — Inventaire inverse, suite de 21 h 32
+
+Memory publié : `e4d38ee3d4b56ec0a24ddec9939b2466ec5b9af4`.
+[Rapport et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/e4d38ee3d4b56ec0a24ddec9939b2466ec5b9af4/docs/G232-ORPHAN-REVIEW-2026-10-14.md).
+
+Inventaire paginé d’une génération Qdrant concrète, checkpoint atomique page/curseur,
+absence canonique vérifiée par descripteur. Les points étrangers ou malformés ne
+sont pas masqués par un filtre. Les points historiques sans provenance restent
+à revoir et ne deviennent pas candidats à la suppression.
+
+La revue relit absence, droits, intentions et preuve complète du point. Un document
+réapparu, une nouvelle intention ou un point modifié écartent le candidat ; une
+bascule de génération impose un nouveau passage. Aucun DELETE n’est exécuté ou
+enregistré dans le journal. Le checkpoint conserve des observations, pas des
+permissions de suppression.
+
+44 nouveaux tests réussis avec `-W error` ; 185 tests ciblés réussis avant le dernier
+contrôle de non-mutation. Deux arrêts réels de sous-processus avant/après commit
+prouvent la reprise sur SQLite/Qdrant local sur disque. CI finale à confirmer.
+Core est épinglé sur cette révision Memory pour sa suite d’intégration.
+
+EXHAUSTED signifie fin du curseur, pas instantané global : les ajouts derrière
+le curseur nécessitent un passage périodique supplémentaire. La latence réseau
+sous verrou doit être mesurée sur le serveur réel.
+
+Suite J2 : orchestration des scans/worker et politique de revue, contrat historique
+complet, serveur/corpus/modèles réels et recette VM/PC. L’exécution des suppressions
+reste désactivée. Les lots suivants sont conservés comme preuves historiques.
+
 
 ## G231 — Balayage reprenable, suite de 21 h 08
 
