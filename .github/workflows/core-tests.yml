@@ -30,4 +30,4 @@ jobs:
       - name: Compile
         run: python -m compileall -q src tests
       - name: Core test suite
-        run: python -m pytest -q -p no:cacheprovider tests --basetemp="$RUNNER_TEMP/pytest-core"
+        run: python -m pytest -q -rs -p no:cacheprovider tests --basetemp="$RUNNER_TEMP/pytest-core"
