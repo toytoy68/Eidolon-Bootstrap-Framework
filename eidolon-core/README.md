@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-**G231 — suite du 14 octobre** : balayage Memory reprenable publié, avec curseur durable et pause sur file pleine ; Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Qualification CI en cours.
+**G231 — suite du 14 octobre** : balayage Memory reprenable publié, avec curseur durable et pause sur file pleine ; Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2386 tests, Qdrant/worker/scanner 131, Core 1763 (7 ignorés, aucun avertissement pytest).
 
 **G230 — suite du 14 octobre** : reprise journal/index Memory implémentée et éprouvée sur disque ; CI Core épinglée sur ce lot, sonde de concurrence passée à `spawn`. [Bilan courant](docs/PROJECT-STATUS.md). CI du lot verte : Memory 2353 tests, Core 1763 (7 ignorés, aucun avertissement pytest).
 

@@ -2127,3 +2127,9 @@ Auteur : Codex/GPT. Bases Core `e316af8`, Memory `5d5c7b0`.
 Memory `855a9eb` ajoute le balayage canonique reprenable, la détection de changement
 derrière le curseur et la pause sur file pleine. Prise en charge Core : épinglage CI
 sur ce lot et bilan consolidé. Aucun changement du runtime Core ni déploiement.
+
+G231 confirmé : Memory `855a9eb` (2386 tests, 12 sous-tests ; 19 expérimentaux ;
+131 ciblés Qdrant/worker/scanner), Core `066f128` (1763 tests, 1299 sous-tests,
+7 ignorés, aucun avertissement pytest), trois workflows verts. Comptes chevauchants.
+[Bilan et preuves CI](docs/PROJECT-STATUS.md). J2 demeure ouvert : inventaire inverse,
+orchestration, contrat complet et recette serveur/corpus/VM/PC.

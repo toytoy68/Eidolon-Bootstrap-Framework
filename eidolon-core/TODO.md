@@ -1,6 +1,6 @@
 ## G231 — Priorités actives, 14 octobre 2026
 
-Balayage canonique Memory reprenable livré ; qualification CI sur les nouvelles références en cours. Suite J2 : points orphelins/absence prouvée, orchestration scanner/worker, contrat complet puis recette serveur/VM/PC. [Bilan](docs/PROJECT-STATUS.md).
+Balayage canonique Memory reprenable livré ; trois CI vertes : Memory 2386 tests, Qdrant/worker/scanner 131, Core 1763 (7 ignorés, aucun avertissement pytest). Suite J2 : points orphelins/absence prouvée, orchestration scanner/worker, contrat complet puis recette serveur/VM/PC. [Bilan](docs/PROJECT-STATUS.md).
 
 ## G230 — Priorités actives, 14 octobre 2026
 

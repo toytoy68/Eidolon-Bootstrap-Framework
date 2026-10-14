@@ -2,12 +2,12 @@
 
 Mise à jour : 14 octobre 2026, lot G231, Codex/GPT.
 
-**G231 publié : qualification CI en cours. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+**G231 publié et qualifié : trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
 
 ## G231 — Balayage reprenable, suite de 21 h 08
 
 Memory publié : `855a9eb325a306543afdf7a703fb8b37ec739c9b`.
-[Rapport et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/855a9eb325a306543afdf7a703fb8b37ec739c9b/docs/G231-RESUMABLE-SCAN-2026-10-14.md).
+[Rapport et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/bef722294aa5ac7481e851218a18b8e743845a9c/docs/G231-RESUMABLE-SCAN-2026-10-14.md).
 
 Le scanner retrouve les upserts canoniques absents du journal, en pages avec
 checkpoint SQLite. Les inventaires initial/final détectent les modifications
@@ -17,13 +17,28 @@ le traitement ou la revue du journal. Aucun point Qdrant n'est écrit par le sca
 
 33 nouveaux tests passent avec `-W error` ; 146 tests ciblés ont également passé
 avant le dernier cas de checkpoint. Suite complète locale avant ce dernier cas :
-2379 réussis, 12 sous-tests, 6 échecs AF_UNIX connus. CI finale à confirmer.
-Core est épinglé sur la nouvelle révision Memory pour sa suite d'intégration.
+2379 réussis, 12 sous-tests, 6 échecs AF_UNIX connus. Ces six cas passent ensuite en CI Linux.
+Core `066f128650554b5c803c57e15eb9c3f126cf299d` est épinglé sur la nouvelle révision Memory pour sa suite d'intégration.
+
+| Validation du code publié | Résultat |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38622854670) | **2386 tests et 12 sous-tests réussis**, 96,01 s |
+| Worker expérimental, même workflow | **19 réussis**, 1,24 s ; contrat distinct du scanner/consommateur |
+| [Qdrant/worker/scanner ciblés](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38622854503) | **131 réussis**, 9,20 s |
+| [Core avec Memory G231](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38622998001) | **1763 tests et 1299 sous-tests réussis, 7 ignorés, aucun avertissement pytest**, 456,96 s |
+
+Les sept tests ignorés requièrent numpy, ONNX ou OpenCV et les modèles d’identité
+optionnels. Les avertissements Node des actions GitHub sont distincts de pytest.
+Aucun échec ; les lots se chevauchent et leurs comptes ne s’additionnent pas.
+Les commits documentaires ultérieurs ne changent pas le code qualifié.
+
 
 Les captures initiale/finale lisent toute la collection sous verrou, avec budgets
 d'entrées/octets ; les pages seules sont limitées à 100 documents par défaut.
 COMPLETE décrit le passage canonique, pas la synchronisation finale de l'index.
 Un nouveau passage périodique est explicitement demandé par `restart=True`.
+Le journal dessert une seule configuration d’indexation active ; des index
+indépendants nécessitent des journaux dédiés.
 
 Suite J2 : inventaire inverse des points orphelins et absence prouvée, orchestration
 scanner/worker, contrat historique complet, serveur Qdrant réel et coût sur le
