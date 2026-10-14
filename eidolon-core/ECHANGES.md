@@ -2161,3 +2161,8 @@ aucun avertissement pytest). Trois workflows verts ; comptes chevauchants.
 Pagination des arriérés et cycle durable livrés jusqu’à qualification/publication.
 [Bilan](docs/PROJECT-STATUS.md). Activation hôte, contrat complet/découpeur et
 recette serveur/corpus/modèles/VM/PC restent distincts ; suppression désactivée.
+
+
+## C-MSG-G234 — Prise en charge
+
+14/10/2026, Codex/GPT : identité de projection et qualification du contrat réel Memory réservées. Claude lancé en relecture par toytoy ; périmètre et bases immuables dans [le message actif](collaboration/GPT-TO-CLAUDE.md). Revue encore attendue.
