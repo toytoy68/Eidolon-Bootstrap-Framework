@@ -1,8 +1,41 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026, lot G232, Codex/GPT.
+Mise à jour : 14 octobre 2026, lot G233, Codex/GPT.
 
-**G232 publié et qualifié : trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
+**G233 publié : qualification CI en cours. Pagination et cycle durable livrés ; J2 et recette VM/PC restent ouverts.**
+
+## G233 — Arriérés et orchestration, suite de 22 h 36
+
+Memory publié : `53f7bf01a811f65a418d1f07cb42b9734f585213`.
+[Rapport, API et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/53f7bf01a811f65a418d1f07cb42b9734f585213/docs/G233-INDEX-MAINTENANCE-2026-10-14.md).
+
+Les deux étapes prévues après G232 sont implémentées. Le worker parcourt les
+arriérés par séquence, avec borne fixe ; les intentions à revoir n’empêchent
+plus les lignes saines suivantes d’être traitées. L’ancien run_once conserve
+son refus des listes tronquées. Un Markdown malformé est maintenant conservé
+en revue au lieu d’interrompre le parcours entier.
+
+Le cycle IndexMaintenance relie les deux passages du worker, le scanner canonique,
+le scanner inverse et le bilan, avec checkpoints durables. Il conserve les revues,
+reprend après coupure et diffère le travail selon fenêtre, inactivité, délai après
+démarrage et charge fournie par l’hôte. Une bascule de génération impose un nouveau
+cycle. Une saturation de revues se termine par REVIEW_REQUIRED, sans clôture forcée.
+
+246 tests ciblés passent avec -W error, puis 40 cas G233 finaux. Preuves : arriéré de
+1005 revues avec lignes saines en fin de file, arrêt réel après effet du worker et
+avant checkpoint du contrôleur, reprise sans nouvel embedding, cycle périodique
+retrouvant un nouveau document. CI complète finale à confirmer.
+
+L’API exécute une étape par appel ; aucun service permanent n’est activé. Les
+observations d’activité/charge/démarrage et les appels sont à raccorder explicitement
+à l’hôte de production. CYCLE_COMPLETE décrit le travail observé, pas une preuve
+permanente de synchronisation distribuée.
+
+Suite J2 : contrat historique complet et identité du découpeur, contre-revue,
+raccordement hôte et qualification serveur/corpus/modèles réels, coût des verrous,
+puis recette VM/PC. La suppression effective reste désactivée. Les lots suivants
+sont conservés comme preuves historiques.
+
 
 ## G232 — Inventaire inverse, suite de 21 h 32
 

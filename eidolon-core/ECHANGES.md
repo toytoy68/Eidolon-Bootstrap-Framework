@@ -2147,3 +2147,10 @@ avertissement pytest). Trois workflows verts ; comptes chevauchants.
 [Bilan et preuves CI](docs/PROJECT-STATUS.md). Priorité suivante : consommation
 paginée d’un gros arriéré sans famine derrière les revues, avant orchestration.
 Suppression désactivée ; J2 et recette serveur/corpus/VM/PC restent ouverts.
+
+
+## G233 — Arriérés et orchestration, 14 octobre 2026, 22 h 36 Europe/Paris
+Auteur : Codex/GPT. Suite demandée jusqu’au bout par toytoy ; base Core `7eeee4f`.
+Memory `53f7bf0` livre la pagination à borne fixe et le cycle durable reliant
+scanners/worker, conditions de maintenance et reports. Core : épinglage CI sur
+ce lot, bilan et points de contre-revue ; aucune activation de runtime/service.

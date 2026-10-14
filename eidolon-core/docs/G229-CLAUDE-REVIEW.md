@@ -40,3 +40,13 @@ ENOENT feuille/racine, atomicité page/curseur, revalidation après réapparitio
 portée de EXHAUSTED sur un index vivant et coordination avant toute future
 suppression. Deux morts réelles et 44 tests du lot passent ; aucune qualification
 serveur/VM ni suppression réelle n’est revendiquée. [Bilan](PROJECT-STATUS.md).
+
+## Complément G233
+
+Memory `53f7bf0` : examiner la pagination à borne fixe, la reprise des pages après
+effet/avant checkpoint, le passage des revues sans famine et le traitement explicite
+d’InvalidMemory. Contre-revue du cycle FIRST/SECOND/CANONICAL/ORPHANS/FINISH,
+reports et conditions d’activité, redémarrage des scans après bascule de génération.
+246 tests ciblés et 40 cas G233 passent ; arriéré >1000 et arrêt réel éprouvés.
+Le contrat historique complet/découpeur, les mesures de l’hôte et la recette serveur
+restent distincts. Aucun runtime activé. [Bilan](PROJECT-STATUS.md).

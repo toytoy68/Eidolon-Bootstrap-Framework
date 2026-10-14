@@ -1,3 +1,7 @@
+## G233 — Priorités actives, 14 octobre 2026
+
+Arriérés paginés et orchestration durable Memory livrés ; qualification CI en cours. Suite J2 : contrat historique complet/identité du découpeur, contre-revue, raccordement à l’hôte et qualification serveur/corpus/modèles réels puis VM/PC. Suppression désactivée. [Bilan](docs/PROJECT-STATUS.md).
+
 ## G232 — Priorités actives, 14 octobre 2026
 
 Inventaire inverse et revue revalidée Memory livrés ; trois CI vertes : Memory 2430 tests, Qdrant/worker/scanners 175, Core 1763 (7 ignorés, aucun avertissement pytest). Suite J2 : consommation paginée des gros arriérés, puis orchestration scanner/worker et politique de revue, contrat complet, serveur/corpus réels puis VM/PC. Suppression toujours désactivée. [Bilan](docs/PROJECT-STATUS.md).
