@@ -1,6 +1,8 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 14 octobre 2026, lot G229, Codex/GPT.
+Mise à jour : 14 octobre 2026 après les CI terminées à 18 h 53 Europe/Paris, lot G229, Codex/GPT.
+
+**Deux branches publiées, trois workflows verts. J2 reste ouvert ; aucune recette VM/PC ni décision de bêta.**
 
 ## Décision et périmètre
 
@@ -16,8 +18,8 @@ Pas de fusion main, déploiement VM ou modification du corpus réel.
 | Core dialogue/missions/SOUL/autorisations | Intégrés dans la branche de développement | Modèle réel et recette intégrée VM/PC |
 | Memory canon/journal | Implémentés et testés en isolation | Coordination journal/index et reprise multi-services |
 | Worker Qdrant | Verrou obligatoire, lecture canonique par descripteur, preuve digest/modèle/génération dans G229 Memory | Contrat complet de 19 scénarios sur le chemin réel, réconciliation et serveur réel |
-| Dashboard Claude jusqu'à C178 | Fusion locale préparée, historique conservé | CI de l'ensemble et vraie recette Windows |
-| Monitoring Memory distant | Module intégré dans la fusion locale | Provisionnement SSH privé et recette VM non faits |
+| Dashboard Claude jusqu'à C178 | Fusion publiée, historique conservé | Vraie recette Windows |
+| Monitoring Memory distant | Module intégré dans la branche publiée | Provisionnement SSH privé et recette VM non faits |
 | GPU dashboard | Contrat et rendu sur exemples intégrés | Collecteur réel non raccordé par ce lot |
 | Voix/vision | Services existants ; lexique et prononciation Claude intégrés | Micro/caméra physiques et contention GPU |
 | Identité | Prototypes, adaptateurs et simulateur intégrés | Aucun droit accordé, aucun capteur ni modèle activé |
@@ -27,7 +29,7 @@ Pas de fusion main, déploiement VM ou modification du corpus réel.
 ## G229 — intégration de Claude
 
 Base Core : `bb3bef6fc933f5482582418e0e3a35087e411bf4`.
-Branche Claude intégrée localement : `2b52d8c31f58c62b8ea4afe0e440196dc9b07eed`.
+Branche Claude intégrée : `2b52d8c31f58c62b8ea4afe0e440196dc9b07eed`.
 Les 90 commits propres à Claude sont intégrés par une fusion à deux parents ;
 les 31 commits Core postérieurs à leur ancêtre commun restent conservés.
 Aucun conflit source. Un conflit documentaire introduit par notre déclaration
@@ -40,43 +42,57 @@ et le refus d'une étiquette imposée par l'appelant. Le test d'arrêt HTTP capt
 explicitement la déconnexion attendue, joint son thread et ferme la connexion.
 Les tests de registre emploient spawn plutôt que fork dans un processus multithread.
 
-## Preuves réellement obtenues ici
+## Qualification GitHub Actions sur les commits publiés
 
-- Memory G229 : 66 tests ciblés réussis, dont trois régressions reproduites avant correction. Rejeu complet final sur le code `556443c` : **2309 réussis, 12 sous-tests, 6 échecs liés aux sockets interdites**, 86,05 s. La CI doit encore valider ces six scénarios ; aucun n’est masqué.
+| Suite | Révision testée | Résultat |
+| --- | --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38600958582) | `d74d772` | 2315 tests et 12 sous-tests réussis, 93,51 s |
+| Worker expérimental (même exécution) | `d74d772` | 19 scénarios réussis, 1,47 s ; ne clôture pas le contrat réel |
+| [Qdrant ciblé](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38600958856) | `d74d772` | 60 tests réussis, 1,52 s |
+| [Core complet avec intégration Memory](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38601095316) | `ff0b65e` + Memory `d74d772` | 1763 tests et 1299 sous-tests réussis, 7 ignorés, 8 avertissements, 281,55 s |
+
+Les lots se chevauchent : ne pas additionner leurs comptes. Aucun échec dans ces workflows.
+Les six intégrations Memory sont activées et les dépendances de sauvegarde sont présentes.
+Les sept tests Core ignorés nécessitent numpy, ONNX ou OpenCV et des modèles d'identité.
+Les huit avertissements pytest proviennent du `fork` restant dans
+`test_profile_registry_probes.py::RegistryProbes::test_eight_concurrent_imports_publish_exactly_once` ;
+ce fichier distinct du registre déjà corrigé devra aussi passer à `spawn`.
+Les actions checkout/setup-python émettent en outre des avertissements Node 20/24.
+Ces avertissements sont enregistrés, pas supprimés par filtrage.
+
+## Historique des preuves locales
+
+- Memory G229 : 66 tests ciblés réussis, dont trois régressions reproduites avant correction. Rejeu complet final sur le code `556443c` : **2309 réussis, 12 sous-tests, 6 échecs liés aux sockets interdites**, 86,05 s. Ces six scénarios passent désormais dans la CI publiée ; aucun n’a été masqué.
 - Core après fusion, première suite locale : **1699 réussis, 51 ignorés, 1 xfail, 21 échecs, 1 avertissement**, 1288 sous-tests, 264,20 s. Vingt échecs sont liés aux sockets AF_UNIX interdites dans l'environnement ; le dernier est un succès inattendu du test W1 encore marqué expectedFailure. Cette suite n'est PAS verte.
 - Rejeu après correction des sondes I1/W1 et du test HTTP : **57 réussis, 24 sous-tests, aucun avertissement**, avec `-W error`. Inclut les six intégrations contre le véritable code Memory sur corpus synthétique.
 - Autre lot ciblé registre/identité/index documentaire/activation monitoring : **65 réussis, 18 sous-tests**, `-W error`.
 - JavaScript connecté : **139 réussis, 26 ignorés**, aucun échec ; les essais Chromium sont ignorés faute de moteur disponible. Ce n'est pas une recette visuelle Windows.
 - Les comptes se chevauchent : ne pas les additionner.
 
-La CI Core est préparée pour lire Memory au commit exact
-`d74d772be25fe7d0e266711f58fba44248ba412a` et exécuter les six intégrations
+La CI Core a lu Memory au commit exact
+`d74d772be25fe7d0e266711f58fba44248ba412a` et exécuté les six intégrations
 au lieu de les ignorer. Les dépendances age/OpenSSL/FFmpeg restent installées
 par la CI ; age est absent localement (45 tests de sauvegarde ignorés).
 Les six autres skips locaux sont des moteurs d'identité optionnels absents.
 
 ## Publication et recette
 
-Le push Memory a été **refusé par le contrôle automatique d'approbation**,
-qui demande une autorisation explicite pour publier le code dans GitHub.
-Aucune tentative de contournement, aucun push Core. Les nouveaux résultats
-GitHub Actions ne sont donc pas disponibles. Publier Memory avant Core pour
-que la référence exacte du workflow soit accessible, puis vérifier les deux CI.
+Le contrôle automatique avait refusé la première publication faute de confirmation
+explicite. Toytoy l'a donnée à **18 h 44 Europe/Paris**. Les deux branches de
+développement sont publiées, avec des arbres identiques aux fichiers préparés :
 
-J1 historique reste une preuve sur les anciens SHAs, pas sur cette fusion.
+- Memory : `d74d772be25fe7d0e266711f58fba44248ba412a`.
+- Core : `ff0b65e0caf700ff99524611495e09106b6f3240`, avec les parents
+  `bb3bef6` (Core) et `2b52d8c` (Claude C178).
+
 **J2 reste ouvert**. J3 exige B01–B12 sur VM/PC ; J4 est la décision de bêta.
 L'indisponibilité MCP bloque la recette distante, pas l'analyse du dépôt.
 
 ## Suite prioritaire
 
-1. Qualifier les commits publiés dans GitHub Actions.
-2. Terminer J2 : contrat réel, reprise journal/index, contrôle de dérive à révision égale.
-3. Contre-revue indépendante Claude du lot G229 et de l'intégration (fiche dédiée).
-4. Restaurer MCP puis exécuter B01–B12 avec sauvegardes et SHAs figés.
+1. Terminer J2 : contrat réel, reprise journal/index, contrôle de dérive à révision égale.
+2. Contre-revue indépendante Claude du lot G229 et de l'intégration (fiche dédiée).
+3. Restaurer MCP puis exécuter B01–B12 avec sauvegardes et SHAs figés.
+4. Entretien CI : retirer le `fork` restant des sondes de registre et mettre à jour les actions Node.
 
 Les anciens rapports sont conservés comme preuves datées, sans réécriture rétroactive.
-
-
-## Publication autorisée le 14 octobre à 18 h 44
-
-Toytoy a confirmé explicitement les deux publications. Le terminal sans identifiants ne peut pas pousser ; le connecteur GitHub authentifié publie les mêmes arbres Git. Memory : `d74d772be25fe7d0e266711f58fba44248ba412a`, arbre identique au lot local `eb14a45`. Core sera publié avec deux parents (base GPT et branche Claude) ; la CI est épinglée sur cette référence Memory accessible. Les anciens paragraphes de blocage relatent la tentative précédente.

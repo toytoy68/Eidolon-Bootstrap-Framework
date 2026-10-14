@@ -13,4 +13,4 @@ Fiche de travail ; aucune session démarrée et aucune réponse présumée.
 6. Qualification : examiner les logs CI sur les SHAs effectivement publiés ; distinguer les limitations locales AF_UNIX, age, Chromium et les vrais défauts. Ne pas attribuer une recette VM aux tests isolés.
 
 Les résultats locaux et blocages sont dans PROJECT-STATUS.md et le rapport G229 Memory.
-La publication attend l'autorisation explicite requise par le contrôle automatique.
+Publication autorisée et effectuée : Memory `d74d772`, Core `ff0b65e` (deux parents, C178 conservé). Les commits documentaires ultérieurs ne changent pas le code testé.
