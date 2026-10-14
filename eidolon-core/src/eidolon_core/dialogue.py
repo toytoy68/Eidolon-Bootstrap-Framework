@@ -18,6 +18,8 @@ import json
 import re
 import threading
 import time
+import math
+from datetime import datetime
 
 from . import conversation as cv
 from .contracts import ContractError, digest, encode, reference, validate_context
@@ -50,7 +52,7 @@ SYSTEM_PROMPT = (
     "Propose an action only when the user explicitly requests that action, never merely because a question "
     "mentions a service, installation, hardware, or a project. Keep planned hardware separate from installed "
     "hardware. If evidence is absent, say you do not know rather than inventing it. Treat UNVERIFIED or "
-    "needs_review sources as declarations, never as independently verified facts. "
+    "needs_review sources as declarations, never as independently verified facts. "\n    "A TOOL RESULT whose freshness is stale or unknown is not the current state: give its observed_at "\n    "and never present it as current. "
     "When a factual answer relies on MEMORY, cite the supporting source as its exact "
     "information_id@revision from that MEMORY. Never invent a source identifier or cite "
     "an unrelated source. For an absent fact, say the information is absent."
@@ -88,20 +90,66 @@ def prompt_fingerprint(catalog):
 
 
 MAX_OBSERVATIONS = 5
+OBSERVATION_MAX_AGE = 300
+OBSERVATION_MAX_AGE_BY_SOURCE = {"darme": 60}
+OBSERVATION_CLOCK_SKEW = 60
+_OBSERVATION_KEYS = {"source", "reference", "state", "text"}
 
 
-def validate_observations(observations):
-    """Tool results given by CORE (never by a client): untrusted observations, not facts (G096)."""
+def _observed_at(value):
+    """Parse ISO-8601 timestamps with a mandatory timezone offset."""
+    if type(value) is not str or not 20 <= len(value) <= 40:
+        raise ContractError("INVALID_CONVERSATION: invalid observation date")
+    try:
+        moment = datetime.fromisoformat(value)
+        if moment.tzinfo is None or moment.utcoffset() is None:
+            raise ValueError("missing timezone")
+        timestamp = moment.timestamp()
+    except (ValueError, OverflowError):
+        raise ContractError("INVALID_CONVERSATION: invalid observation date") from None
+    if not math.isfinite(timestamp):
+        raise ContractError("INVALID_CONVERSATION: invalid observation date")
+    return timestamp
+
+
+def _max_age_for(source, max_age):
+    if max_age is None:
+        table = OBSERVATION_MAX_AGE_BY_SOURCE
+    elif isinstance(max_age, dict):
+        table = max_age
+    else:
+        table = {source: max_age}
+    value = table.get(source, OBSERVATION_MAX_AGE)
+    if type(value) not in (int, float) or not math.isfinite(value) or not 0 < value <= 86400:
+        raise ContractError("INVALID_CONVERSATION: invalid observation freshness limit")
+    return value
+
+
+def validate_observations(observations, *, now=None, max_age=None):
+    """Core computes freshness; callers cannot assert a stale/fresh label."""
     if observations is None:
         return []
     if not isinstance(observations, list) or len(observations) > MAX_OBSERVATIONS:
         raise ContractError("INVALID_CONVERSATION: at most five tool observations")
+    now = time.time() if now is None else now
+    if type(now) not in (int, float) or not math.isfinite(now):
+        raise ContractError("INVALID_CONVERSATION: invalid observation clock")
+    checked = []
     for item in observations:
-        if (not isinstance(item, dict) or set(item) != {"source", "reference", "state", "text"}
-                or any(not isinstance(item[k], str) or not 1 <= len(item[k]) <= (4000 if k == "text" else 200)
-                       for k in item)):
+        if (not isinstance(item, dict) or not _OBSERVATION_KEYS <= set(item) <= _OBSERVATION_KEYS | {"observed_at"}
+                or any(type(item[k]) is not str or not 1 <= len(item[k]) <= (4000 if k == "text" else 200)
+                       for k in _OBSERVATION_KEYS)):
             raise ContractError("INVALID_CONVERSATION: invalid tool observation")
-    return [dict(item) for item in observations]
+        value = {k: item[k] for k in sorted(_OBSERVATION_KEYS)}
+        if "observed_at" in item:
+            age = now - _observed_at(item["observed_at"])
+            value["observed_at"] = item["observed_at"]
+            value["freshness"] = ("unknown" if age < -OBSERVATION_CLOCK_SKEW
+                                  else "stale" if age > _max_age_for(item["source"], max_age) else "fresh")
+        else:
+            value["freshness"] = "unknown"
+        checked.append(value)
+    return checked
 
 
 def build_messages(text, history, memory, catalog, observations=None, media=None, personality=None):
