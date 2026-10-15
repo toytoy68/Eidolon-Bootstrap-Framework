@@ -1,4 +1,10 @@
-## G251 — Bilan courant, 15 octobre 2026
+## G254 — Bilan courant, 15 octobre 2026
+
+Dix nouvelles tâches Claude G252 publiées et toutes disponibles ; leur réponse reste à recevoir. G253 adopte une vue limitée dans la maintenance Memory, G254 ajoute un appel hôte explicite qui valide la capture avant construction et conserve les permissions du moteur. [Contrats, sources et preuves finales](docs/PROJECT-STATUS.md).
+
+Suite : contre-revues G252, politique/source hôte et raccordement du lanceur réel, puis recette VM/PC. Quatre xfail historiques toujours ouverts ; MCP en erreur au contrôle de cette session. Aucun service ni déploiement activé. Les bilans suivants sont historiques.
+
+## G251 — Bilan historique, 15 octobre 2026
 
 G242–G251 livrés : fraîcheur Memory visible dans le contexte du dialogue, trajet HTTP complet testé, workflow Chromium sans exclusion, C182 et les dix livrables reçus intégrés avec histoire conservée. Contre-vérifications du préflight, provenance et entrées hôte hors plage. [Preuves finales et sources exactes](docs/PROJECT-STATUS.md).
 

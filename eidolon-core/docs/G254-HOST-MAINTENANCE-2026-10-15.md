@@ -11,7 +11,7 @@ Codex/GPT, 15 octobre 2026. Dépendance de qualification : Memory G253 `4d288dce
 3. Recalculer les arguments du tick à l'heure fournie pour cet appel : la charge peut être devenue périmée, la fenêtre peut être fermée. Les valeurs d'activité/démarrage/charge inconnues restent conservatrices. La tolérance de 60 secondes des horodatages de capteurs reste celle du normaliseur ; elle ne rend pas admissible une capture future.
 4. Construire une fois le contrôleur, appeler une fois `tick`, rendre `HostMaintenanceResult(observed_at, observation, report)`. Provenance et heure de capture conservées ; le dict d'entrée n'est pas modifié.
 
-Les exceptions de la fabrique et du tick sont propagées, sans réessai automatique ni faux succès : des effets peuvent déjà exister. Une capture valide n'accorde aucun droit d'indexation. Le contrôleur garde les fenêtres, permissions, budgets et règles de reprise ; il fournit la vue limitée G253 à ses composants.
+Les exceptions de la fabrique et du tick sont propagées, sans réessai automatique ni faux succès : des effets peuvent déjà exister. Une capture valide n'accorde aucun droit d'indexation. La fabrique peut initialiser ses checkpoints même si le tick se reporte ensuite. Le contrôleur garde les fenêtres, permissions, budgets et règles de reprise ; il fournit la vue limitée G253 à ses composants.
 
 ## Usage par le futur hôte
 
@@ -33,3 +33,9 @@ L'hôte fournit ces objets, son adaptateur indexé et ses permissions. Core n'im
 Le premier essai a échoué à la collecte parce que le module n'existait pas. Le premier test d'intégration attendait à tort une indexation dès le premier tick ; le contrat durable enregistre d'abord la borne de passe. Le test vérifie maintenant cette première étape sans indexation, puis un second appel hôte explicite : indexation autorisée ou refus `FORBIDDEN`. Les scénarios charge inconnue/haute/périmée et sortie de fenêtre n'indexent pas. Aucun test sur machine installée, modèle ou corpus privé. CI complète à confirmer.
 
 Qualification finale épinglée sur Memory `42117af68e33ad36ea47e6112b12420147fd03bf`, qui restreint aussi les sous-classes de vue étendue. Code G254 publié dans Core `b770acb5888e2ee6c864d344a85bdcc8c91e8add` ; le changement de pin ne modifie pas ce module.
+
+## Complément G255 — Dates sentinelles (C183)
+
+Le normaliseur exige désormais une horloge hôte au moins égale au 1er janvier 2000 UTC. Ce plancher de validité opérationnelle distingue les dates sentinelles d'un âge mesuré ; il ne calibre pas le retard admissible. Démarrage ou activité antérieurs deviennent inconnus et sont ramenés à l'instant d'exécution, ce qui diffère la maintenance. Une charge antérieure reste `load_ok=False`, même si la politique hôte autorise cent ans d'ancienneté ; `LOAD_IMPLAUSIBLE` s'ajoute à `LOAD_STALE` quand les deux s'appliquent. Une capture à l'époque Unix est refusée avant la fabrique.
+
+Deux échecs Claude reproduits avant intégration, puis un échec indépendant sur la charge ; après correction, 40 tests ciblés et 14 sous-tests réussis avec `-W error`. Les cinq sondes Memory C183 sont intégrées séparément ; aucune tâche G252 n'est réputée close par C183.
