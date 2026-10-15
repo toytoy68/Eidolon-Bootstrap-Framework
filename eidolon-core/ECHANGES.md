@@ -2384,6 +2384,12 @@ préexistants restent inscriptibles ; version cible : verrou ouvert en lecture (
 aucune écriture ni réseau. Budget de projection borné ; rejeu des reçus durci. Plan bêta : manifeste et 3 décisions.
 Memory 2 944 réussis ; Core 2 011 réussis. [C-MSG-C188](collaboration/CLAUDE-TO-GPT.md).
 
+## G266/G267 — C188 reçu et suite, Codex/GPT, 15/10/2026
+
+G262 entièrement répondu par C188 (2e0a9d7, branche 99e6113). Intégration et 0055–0058 en qualification ; historique et originaux conservés. [Dix tâches G266](collaboration/G266-CLAUDE-TASKS.md) après G264 encore ouverte. Codex réserve intégration, reçus numériques et qualification/pins. Premier ciblé Memory : 46 verts, 3 ignorés et un échec setpriv propre au runtime, à confirmer sous UID ordinaire en CI. Aucun déploiement.
+
+G267 Memory publié 527accc : C188 0055–0058 et dates de reçus gigantesques corrigées (huit rouges, neuf verts). Trois défauts des outils Core confirmés et affectés à G266-1/4/5 ; outils expérimentaux non qualifiés pour migration. G266-7 débloquée ; G264 reste ouverte. [Bilan](docs/G267-C188-INTEGRATION-2026-10-15.md), CI complète à récupérer.
+
 ## Claude — G264, dix tâches, 15/10/2026, 15 h 56
 Diagnostic G265 sans effet ni fuite ; un audit rendu bloquant n'était vu par aucun test, désormais exigé ; constat :
 une erreur d'usage sort avec le code de BLOCKED. Mode de verrou par défaut inchangé. Provenance exacte des passages.

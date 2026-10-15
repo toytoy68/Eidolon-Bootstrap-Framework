@@ -1,3 +1,11 @@
+## G266/G267 — Réception C188, 15 octobre 2026
+
+- [x] C188 reçu : dix G262 répondues, quatre patchs 0055–0058 en intégration, historique Claude conservé localement.
+- [x] Dix nouvelles tâches [G266](collaboration/G266-CLAUDE-TASKS.md) attribuées ; G264 reste ouverte, priorité aux tâches engagées.
+- [x] Memory G267 publié 527accc : 0055–0058 et refus public des dates non représentables ; huit rouges indépendants corrigés.
+- [ ] CI complète Memory/Core/Chromium ; [bilan G267](docs/G267-C188-INTEGRATION-2026-10-15.md).
+- [ ] G266-1/4/5 prioritaires : trois défauts reproduits (ancêtre de copie lié, modèle cache lié, budget NaN). Outils expérimentaux non qualifiés pour migration. Autres contre-revues G264/G266 ouvertes.
+
 ## G264/G265 — Suite du 15 octobre 2026
 
 - [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
