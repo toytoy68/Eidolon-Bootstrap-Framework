@@ -1,0 +1,325 @@
+From 76d610d48a7dfd5b0a2e11648070e2e815e51ac0 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 08:48:01 +0000
+Subject: [PATCH 3/4] test(claude-eval): G256-4/5 passage identity and
+ projection races
+
+point_id validates its fields and serializes them as JSON (no separator
+ambiguity). Superseded or revoked projections are kept but not served, so
+they cannot fill the candidate limit. Probe kills a surviving mutant: an
+out-of-bounds passage must be excluded, not fail the whole recall.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../archive_passage_projection.py             |  36 ++++-
+ .../test_archive_passage_identity_g256.py     |  81 +++++++++++
+ .../test_archive_projection_races_g256.py     | 131 ++++++++++++++++++
+ 3 files changed, 243 insertions(+), 5 deletions(-)
+ create mode 100644 tests/claude_memory_eval/test_archive_passage_identity_g256.py
+ create mode 100644 tests/claude_memory_eval/test_archive_projection_races_g256.py
+
+diff --git a/tests/claude_memory_eval/archive_passage_projection.py b/tests/claude_memory_eval/archive_passage_projection.py
+index bd83289..c8a1b6c 100644
+--- a/tests/claude_memory_eval/archive_passage_projection.py
++++ b/tests/claude_memory_eval/archive_passage_projection.py
+@@ -9,19 +9,30 @@
+ archive passages (proposal: Core docs/proposals/2026-10-15-archive-passages-slice.md). No Qdrant, no model,
+ no private corpus. Points carry NO text: the cited excerpt is always resolved from canonical bytes."""
+ from hashlib import sha256
++import json
++import re
+ import uuid
+ 
+ from core.indexing.port import IndexHit
+ from core.indexing.worker_canonical import CanonicalReader
+-from core.retrieval.archive_chunks import chunk_messages
++from core.retrieval.archive_chunks import chunk_messages, validate_reference
+ 
+ PROJECTION_ID = "archive-passage-v1:1200:160"
+ _NAMESPACE = uuid.UUID("5b7f0a52-6a8e-4c39-9f5e-2b3c1d7e9a10")
+ 
+ 
+ def point_id(information_id, revision, digest, reference):
+-    key = f"{PROJECTION_ID}:{information_id}:{revision}:{digest}:" \
+-          f"{reference['message_index']}:{reference['start']}:{reference['end']}"
++    """Deterministic point identity. Fields are validated, then serialized as a JSON array, so no value
++    can absorb a separator of its neighbour, and 1, 1.0 and True cannot name the same passage twice."""
++    if type(information_id) is not str or not re.fullmatch(r"[A-Za-z0-9._-]+", information_id):
++        raise ValueError("invalid information identity")
++    if type(revision) is not int or revision < 1:
++        raise ValueError("invalid revision")
++    if type(digest) is not str or not re.fullmatch(r"[0-9a-f]{64}", digest):
++        raise ValueError("invalid canonical digest")
++    validate_reference(reference)
++    key = json.dumps([PROJECTION_ID, information_id, revision, digest, reference["message_index"],
++                      reference["start"], reference["end"]], separators=(",", ":"))
+     return str(uuid.uuid5(_NAMESPACE, key))
+ 
+ 
+@@ -30,21 +41,36 @@ class ArchivePassageProjection:
+ 
+     def __init__(self, persistent_root, *, score):
+         self.root, self.score, self.points = persistent_root, score, {}
++        # information_id -> (revision, digest) of its last successful projection, or None when the last
++        # attempt could not read it (revoked, absent, unreadable). Older points are kept, never served.
++        self.current = {}
+ 
+     def project(self, information_id):
+-        memory, digest = CanonicalReader(self.root)(information_id)
++        try:
++            memory, digest = CanonicalReader(self.root)(information_id)
++        except Exception:
++            self.current[information_id] = None
++            raise
+         added = []
+         for chunk in chunk_messages(memory.content, max_chars=1200, overlap=160):
++            if not chunk.text.strip():
++                continue  # whitespace carries no evidence to rank
+             pid = point_id(information_id, memory.revision, digest, chunk.reference)
+             self.points[pid] = dict(kind="passage", information_id=information_id, revision=memory.revision,
+                                     canonical_sha256=digest, projection_id=PROJECTION_ID,
+                                     passage=dict(chunk.reference),
+                                     _vector_text=sha256(chunk.text.encode()).hexdigest())  # stand-in, no text
+             added.append(pid)
++        self.current[information_id] = (memory.revision, digest)
+         return tuple(added)
+ 
++    def _served(self, point):
++        return self.current.get(point["information_id"]) == (point["revision"], point["canonical_sha256"])
++
+     def query(self, text, *, limit):
+-        ranked = sorted(self.points.items(), key=lambda kv: (-self.score(text, kv[1]), kv[0]))[:limit]
++        # Superseded points would otherwise fill the candidate limit and hide the current passages.
++        served = [kv for kv in self.points.items() if self._served(kv[1])]
++        ranked = sorted(served, key=lambda kv: (-self.score(text, kv[1]), kv[0]))[:limit]
+         return [IndexHit(p["information_id"], float(self.score(text, p)),
+                          {"revision": p["revision"], "canonical_sha256": p["canonical_sha256"],
+                           "policy": "claude-archive-passage-experiment", "projection_id": p["projection_id"],
+diff --git a/tests/claude_memory_eval/test_archive_passage_identity_g256.py b/tests/claude_memory_eval/test_archive_passage_identity_g256.py
+new file mode 100644
+index 0000000..25aa3dc
+--- /dev/null
++++ b/tests/claude_memory_eval/test_archive_passage_identity_g256.py
+@@ -0,0 +1,81 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_archive_passage_identity_g256.py
++# Description : Identité des points de passage : séparateurs, types, bornes, Unicode (Claude, G256-4)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic only. A passage point identity must be injective over valid inputs, refuse inputs no canonical
++archive can produce, and never carry text."""
++import itertools
++import unicodedata
++
++import pytest
++
++from core.retrieval.archive_chunks import chunk_messages
++from tests.claude_memory_eval.archive_passage_projection import ArchivePassageProjection, point_id
++from tests.test_archive_chunks import archive, store_archive
++from tests.test_contextual_recall import backend
++
++D, E = "a" * 64, "b" * 64
++REF = {"message_index": 1, "start": 0, "end": 10}
++
++
++def test_no_value_can_absorb_a_neighbouring_separator():
++    # G252 joined fields with ':' — these pairs named the SAME point.
++    for left, right in [(("a", "1:b", D), ("a:1", "b", D)), (("a", 1, "2:" + D), ("a:1", 2, D))]:
++        with pytest.raises(ValueError):
++            point_id(*left, REF)
++        with pytest.raises(ValueError):
++            point_id(*right, REF)
++
++
++@pytest.mark.parametrize("args", [
++    ("a", True, D, REF), ("a", 1.0, D, REF), ("a", 0, D, REF), ("a", 1, D.upper(), REF), ("a", 1, D[:-1], REF),
++    ("é", 1, D, REF), ("a/b", 1, D, REF), ("", 1, D, REF), (None, 1, D, REF),
++    ("a", 1, D, dict(REF, extra=1)), ("a", 1, D, dict(REF, start=10)), ("a", 1, D, dict(REF, start=-1)),
++    ("a", 1, D, dict(REF, end=10.0)), ("a", 1, D, dict(REF, message_index=True)), ("a", 1, D, [1, 0, 10]),
++])
++def test_inputs_no_canonical_archive_can_produce_are_refused(args):
++    with pytest.raises(ValueError):
++        point_id(*args)
++
++
++def test_every_component_discriminates_and_the_identity_is_stable():
++    values = dict(information_id=("a", "a.b", "a-b", "A"), revision=(1, 2, 10), digest=(D, E),
++                  message_index=(0, 1), start=(0, 1), end=(11, 12))
++    seen = {}
++    for combo in itertools.product(*values.values()):
++        info, rev, dig, i, s, e = combo
++        pid = point_id(info, rev, dig, {"message_index": i, "start": s, "end": e})
++        assert pid not in seen, (combo, seen.get(pid))
++        seen[pid] = combo
++        assert pid == point_id(info, rev, dig, {"end": e, "start": s, "message_index": i})  # key order free
++
++
++def test_unicode_offsets_are_code_points_and_normalisation_never_merges(tmp_path):
++    nfc = "Crêpe déjà prête. " * 80
++    nfd = unicodedata.normalize("NFD", nfc)
++    assert nfc != nfd
++    ids = []
++    for n, text in enumerate((nfc, nfd)):
++        data = backend(tmp_path / str(n))
++        store_archive(data, ["question", text])
++        index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0)
++        ids.append(set(index.project("archive")))
++        for point in index.points.values():
++            assert set(point) == {"kind", "information_id", "revision", "canonical_sha256", "projection_id",
++                                  "passage", "_vector_text"}  # offsets and proofs, never text
++            ref = point["passage"]
++            message = text if ref["message_index"] == 1 else "question"
++            assert 0 <= ref["start"] < ref["end"] <= len(message)
++            assert not unicodedata.category(message[ref["start"]]).startswith("M")  # never starts on a mark
++    assert not ids[0] & ids[1]  # different bytes, different digest, disjoint identities
++
++
++def test_whitespace_only_and_empty_messages_produce_no_point(tmp_path):
++    assert chunk_messages(archive(["", "   "]))  # the chunker itself keeps whitespace passages
++    data = backend(tmp_path)
++    store_archive(data, ["", "   \n\t", "réel"])
++    index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0)
++    assert [p["passage"]["message_index"] for p in map(index.points.get, index.project("archive"))] == [2]
+diff --git a/tests/claude_memory_eval/test_archive_projection_races_g256.py b/tests/claude_memory_eval/test_archive_projection_races_g256.py
+new file mode 100644
+index 0000000..ffe9a96
+--- /dev/null
++++ b/tests/claude_memory_eval/test_archive_projection_races_g256.py
+@@ -0,0 +1,131 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_archive_projection_races_g256.py
++# Description : Courses de la projection d'archives : lecture/preuve, révocation, éviction (Claude, G256-5)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic archive only, in-memory projection; the real Qdrant adapter is untouched. A passage is cited
++only from the current canonical bytes, and superseded points never hide the current ones."""
++from dataclasses import replace
++
++import pytest
++
++import tests.claude_memory_eval.archive_passage_projection as projection
++from core.retrieval.contextual import ContextualRecall
++from tests.claude_memory_eval.archive_passage_projection import ArchivePassageProjection
++from tests.test_archive_chunks import archive, store_archive
++from tests.test_contextual_recall import backend
++
++TEXTS = ["Question sur la sauvegarde.", "Les clichés sont copiés chaque nuit sur le disque externe.",
++         "Autre sujet : la recette des crêpes."]
++
++
++def by_revision(first):
++    # The oldest points rank first: the worst case for the candidate limit.
++    return lambda text, point: (1.0 if point["revision"] == first else 0.5) + \
++        (0.01 if point["passage"]["message_index"] == 1 else 0.0)
++
++
++def update(data, original, texts, revision):
++    new = replace(original, content=archive(texts), revision=revision)
++    data.update("archive", new, previous_revision=revision - 1)
++    return new
++
++
++def test_superseded_points_do_not_fill_the_candidate_limit(tmp_path):
++    data = backend(tmp_path)
++    original = store_archive(data, TEXTS)
++    index = ArchivePassageProjection(data.persistent_root, score=by_revision(1))
++    index.project("archive")
++    update(data, original, [TEXTS[0], "Les clichés partent maintenant vers le NAS.", TEXTS[2]], 2)
++    index.project("archive")
++    assert len(index.points) == 6  # nothing deleted: old points are kept, not served
++    result = ContextualRecall(data, index=index, candidate_limit=3).recall("clichés", max_items=1)
++    assert [i.content for i in result.items] == ["Les clichés partent maintenant vers le NAS."]
++    assert not result.excluded_counts.get("INDEX_REVISION_MISMATCH")
++
++
++def test_bytes_changed_after_projection_at_the_same_revision_are_never_cited(tmp_path):
++    data = backend(tmp_path)
++    store_archive(data, TEXTS)
++    index = ArchivePassageProjection(data.persistent_root, score=by_revision(1))
++    index.project("archive")
++    leaf = data.persistent_root / "archive.md"
++    raw = leaf.read_text(encoding="utf-8")
++    assert raw.count("chaque nuit") == 1
++    leaf.write_text(raw.replace("chaque nuit", "chaque mois"), encoding="utf-8")  # hand edit, no new revision
++    result = ContextualRecall(data, index=index).recall("clichés")
++    assert all("chaque" not in i.content for i in result.items if i.information_id == "archive")
++    assert result.excluded_counts.get("INDEX_DIGEST_MISMATCH", 0) >= 1
++
++
++def test_a_change_between_the_canonical_read_and_point_storage_is_detected(tmp_path, monkeypatch):
++    data = backend(tmp_path)
++    original = store_archive(data, TEXTS)
++    real = projection.chunk_messages
++
++    def racing(content, **limits):  # the archive changes once the bytes have been read and hashed
++        update(data, original, [TEXTS[0], "Version écrite pendant la projection.", TEXTS[2]], 2)
++        return real(content, **limits)
++    monkeypatch.setattr(projection, "chunk_messages", racing)
++    index = ArchivePassageProjection(data.persistent_root, score=by_revision(1))
++    index.project("archive")
++    monkeypatch.setattr(projection, "chunk_messages", real)
++    assert {p["revision"] for p in index.points.values()} == {1}  # proofs describe what was read
++    result = ContextualRecall(data, index=index).recall("clichés")
++    assert not [i for i in result.items if i.information_id == "archive"]
++    assert result.excluded_counts.get("INDEX_REVISION_MISMATCH", 0) >= 1
++    index.project("archive")  # the next projection serves the new revision
++    items = ContextualRecall(data, index=index).recall("Version").items
++    assert [i.content for i in items] == ["Version écrite pendant la projection."]
++
++
++def test_a_revoked_archive_stops_being_served_without_deleting_points(tmp_path):
++    data = backend(tmp_path)
++    store_archive(data, TEXTS)
++    index = ArchivePassageProjection(data.persistent_root, score=by_revision(1))
++    index.project("archive")
++    (data.persistent_root / "archive.md").rename(tmp_path / "revoked.md")
++    with pytest.raises(ValueError, match="absent or unsafe"):
++        index.project("archive")
++    assert len(index.points) == 3 and index.query("clichés", limit=10) == []
++    assert ContextualRecall(data, index=index).recall("clichés").items == ()
++
++
++def test_an_archive_emptied_of_messages_serves_nothing(tmp_path):
++    data = backend(tmp_path)
++    original = store_archive(data, TEXTS)
++    index = ArchivePassageProjection(data.persistent_root, score=by_revision(1))
++    index.project("archive")
++    update(data, original, ["", "  "], 2)
++    assert index.project("archive") == ()
++    assert index.query("clichés", limit=10) == []
++
++
++def test_long_messages_are_covered_by_bounded_overlapping_passages(tmp_path):
++    words = " ".join(f"mot{n:04d}" for n in range(700))  # ~5 600 characters, one message
++    data = backend(tmp_path)
++    store_archive(data, ["q", words])
++    index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0)
++    refs = sorted((index.points[p]["passage"] for p in index.project("archive")
++                   if index.points[p]["passage"]["message_index"] == 1), key=lambda r: r["start"])
++    assert refs[0]["start"] == 0 and refs[-1]["end"] == len(words)
++    for a, b in zip(refs, refs[1:]):
++        assert a["end"] - a["start"] <= 1200 and a["start"] < b["start"] <= a["end"]
++        assert a["end"] - b["start"] <= 160  # overlap bound
++
++
++@pytest.mark.parametrize("ref", [{"message_index": 9, "start": 0, "end": 3},
++                                 {"message_index": 1, "start": 0, "end": 999}])
++def test_one_out_of_bounds_passage_is_excluded_and_does_not_fail_the_whole_recall(tmp_path, ref):
++    # Killed nowhere else: without the candidate-level check this point raised out of recall().
++    from core.indexing.port import IndexHit
++    data = backend(tmp_path)
++    store_archive(data, TEXTS)
++
++    class Index:
++        def query(self, text, *, limit):
++            return [IndexHit("archive", 1.0, {"revision": 1, "passage": dict(ref)})]
++    result = ContextualRecall(data, index=Index()).recall("clichés")
++    assert result.items == () and result.excluded_counts == {"INDEX_PASSAGE_UNRESOLVED": 1}
+-- 
+2.43.0
+

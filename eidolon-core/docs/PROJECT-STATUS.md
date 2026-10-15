@@ -1,5 +1,44 @@
 # Eidolon — État consolidé du dépôt
 
+Bilan G256–G257, 15 octobre 2026. Auteur : Codex/GPT. Reprise demandée par toytoy à 10 h 33 Europe/Paris.
+
+## Livré
+
+- **C184 reçu et intégré** : les dix livrables G252 sont présents, avec historique Claude conservé. Huit tests Core +15 sous-tests et 21 tests Memory vérifiés localement avec `-W error`. Une fuite de fichier dans un test de rétention a été corrigée sans changer les assertions ; le patch original est intact. Les résultats de mutation C184 sont rapportés par Claude, non réexécutés ici.
+- **[Dix nouvelles tâches G256](../collaboration/G256-CLAUDE-TASKS.md)** : durcissement des expériences de rétention/passages, preuve de bascule, contrats de politique/observations hôte, contre-revue HTTP, diagnostic navigateur et recette hôte. Toutes les sources sont disponibles. Leur réponse reste à recevoir ; le fichier ne lance aucune session.
+- **G257 : écriture HTTP sous pression TCP éprouvée**. Deux vrais clients loopback, sans lecture ou lecture lente, provoquent un TimeoutError d'écriture avec une réponse de 120 Kio sous le plafond de 128 Kio. Le serveur rend sa capacité et le verrou de rappel ; la requête suivante réussit. En neutralisant le délai d'écriture par une mutation temporaire, les deux sondes échouent. Source restaurée octet pour octet, puis 43 tests transport réussis avec `-W error`. Aucun changement applicatif nécessaire.
+
+[Contrat, harnais, contre-preuve et limites G257](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/81084e04c794eb591e42e944a61560425b839dba/docs/G257-WRITE-DEADLINE-2026-10-15.md).
+
+## Sources et qualification
+
+Memory `81084e04c794eb591e42e944a61560425b839dba` ; Core `4f9d05addf4a5ecaa3d80de798bff936610a780f`, épinglé sur ce Memory. Fusion C184 `1ac42920a7b122930cb45b6e2364b50696313684`, avec Claude `4dc0106f1bfa40d9b363afe4d483827aae7ac7ee` comme second parent. Les bilans ultérieurs sont documentaires.
+
+| Validation | Résultat vérifié |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38707295169) | 2793 réussis, 18 ignorés, 4 xfail, 12 sous-tests ; 166,89 s |
+| Contrat worker, même workflow | 52 réussis ; 2,30 s |
+| [Memory ciblé](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38707295039) | 470 réussis, 1 xfail ; 33,59 s |
+| [Core avec pin final](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38707433831) | 1887 réussis, 8 ignorés, 1328 sous-tests ; 303,19 s |
+| Propriétaires du jeton, étape root du même workflow | 5 réussis ; 0,06 s |
+| [Dernière qualification Chromium](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38693852896) | 172 réussis, zéro échec/ignoré, source Core b244a867 |
+| [Dernière recette serveur Qdrant](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38692288647) | 18 réussis, zéro ignoré, source Memory 42117af6 |
+
+Le code applicatif n'est pas modifié par ce lot. Comparaisons Git effectuées : code Core/navigateur et workflow Chromium identiques à b244a867 ; code Memory et harnais serveur identiques à leur dernière qualification. Les filtres de chemins ne relancent pas ces deux workflows pour des ajouts de tests seuls ; leurs résultats ne sont pas attribués à de nouveaux runs. Les comptes se chevauchent. Les 18 exclusions Memory sont exercées sur le serveur dédié ; 8 exclusions Core correspondent à 6 dépendances d'identité optionnelles et 2 contrôles de propriétaire exécutés sous root.
+
+## Limites et suite
+
+L'expérience G257 qualifie le délai de l'opération d'envoi socket ; elle ne borne pas un rappel déjà bloqué et ne promet pas de délai global comprenant lecture, rappel, en-têtes et corps. La réponse et les conditions réseau sont synthétiques ; aucune recette VM/PC n'est revendiquée.
+
+Rétention et passages restent sous `tests/claude_memory_eval`, sans suppression ni modification de l'adaptateur Qdrant de production. L'intégration des propositions n'adopte pas leurs politiques pour la production. Leur validation d'entrées et leurs courses sont confiées à G256. Les quatre xfail historiques restent ouverts (passages, rétention, ancien worker_status S1 et API administrative Q2).
+
+MCP recontrôlé vers 10 h 40 Europe/Paris : erreur interne -32603. Aucun service, déploiement, capteur automatique, corpus privé ou benchmark G182 lancé. Suite : recevoir G256, expliciter les politiques/source hôte, puis recette VM/PC lorsque l'accès et les préconditions sont réunis. Estimations globales inchangées.
+
+## Historique — G252–G255
+
+Les statuts suivants décrivent les lots précédents ; le bilan courant est ci-dessus.
+
+
 Bilan G252–G255, 15 octobre 2026, Codex/GPT. Demande de toytoy à 08 h 10 Europe/Paris : nouvelle série Claude et poursuite des travaux.
 
 **Dix nouvelles tâches Claude publiées ; deux lots Codex livrés et réception C183 intégrée.** Les dix livrables reçus précédemment via C181/C182 appartenaient à la série G236. C183 est arrivé pendant la qualification : il répond à G251 et ne clôt pas cette nouvelle série.
