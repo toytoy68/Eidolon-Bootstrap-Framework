@@ -2,7 +2,7 @@
 
 - [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
 - [x] Codex G265 publié dans Memory 5cfb648 : diagnostic sans jeton/modèle/réseau, verrous non bloquants et readiness ; 139 ciblés +5 sous-tests, 1 exclusion locale G263.
-- [ ] Qualification complète G265 sur le pin Memory publié ; [bilan](docs/G265-STORAGE-CHECK-2026-10-15.md).
+- [x] Quatre workflows G265 verts : Memory 2944 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail et serveur 18 ; Core 1991 +1328 sous-tests, propriétaires 5. [Sources et exclusions](docs/G265-STORAGE-CHECK-2026-10-15.md).
 - [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; les dix tâches G264 sont disponibles sur G265 publié.
 
 ## G263 — Suite engagée, 15 octobre 2026

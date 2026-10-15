@@ -2,7 +2,7 @@
 
 ## G264/G265 — Diagnostic et nouvelle répartition, 15 octobre 2026
 
-[Dix nouvelles tâches G264](../collaboration/G264-CLAUDE-TASKS.md) publiées en Core 8ee8cb6 ; G262 toujours ouverte, dernier reçu C187. Memory **5cfb648** ajoute le diagnostic explicite `--check-storage`, sans jeton/modèle/réseau/provisionnement. Les dix tâches G264 sont désormais disponibles. 139 tests ciblés +5 sous-tests réussis, 1 exclusion locale G263 sous root. Core épingle ce Memory ; qualification complète à confirmer. [Contrat, sources et preuves](G265-STORAGE-CHECK-2026-10-15.md). Aucun compte/service réel ni déploiement.
+[Dix nouvelles tâches G264](../collaboration/G264-CLAUDE-TASKS.md) publiées en Core 8ee8cb6 ; G262 toujours ouverte, dernier reçu C187. Memory **5cfb648** ajoute le diagnostic explicite `--check-storage`, sans jeton/modèle/réseau/provisionnement. Les dix tâches G264 sont désormais disponibles. **Quatre workflows G265 verts : Memory 2944 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail et serveur 18 ; Core 0d88b5e épinglé sur ce Memory : 1991 +1328 sous-tests, propriétaires 5.** Les 22 nouveaux cas G265 et les 26 G263 passent ; exclusions historiques consignées. [Contrat, sources et preuves](G265-STORAGE-CHECK-2026-10-15.md). Aucun compte/service réel ni déploiement.
 
 ## G263 — Rappel readonly explicite, 15 octobre 2026
 

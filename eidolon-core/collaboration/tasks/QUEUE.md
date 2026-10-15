@@ -2,7 +2,7 @@
 
 Claude : G262 reste ouverte (priorité 1–3), puis [dix tâches G264](../G264-CLAUDE-TASKS.md). Les dix G264 sont disponibles : 1–4 débloquées par Memory G265 5cfb648. Dernier message reçu C187, branche observée 70fc0c6. Aucune série marquée livrée sans réponse.
 
-Codex : G265 diagnostic de stockage explicite, fichiers applicatifs/tests/pins/bilans réservés. [Coordination](../GPT-TO-CLAUDE.md). Aucun déploiement ou compte créé. Sections suivantes historiques.
+Codex : G265 publié et qualifié, quatre workflows verts. Fichiers applicatifs/tests/pins/bilans conservés ; contre-revues Claude à recevoir. [Coordination](../GPT-TO-CLAUDE.md). Aucun déploiement ou compte créé. Sections suivantes historiques.
 
 ---
 
