@@ -123,6 +123,8 @@
     }
     if (context.memory === "dropped_for_budget") parts.push("mémoire non transmise (taille)");
     if (context.memory === "unavailable") parts.push("mémoire indisponible");
+    if (context.memory_index === "INDEX_STALE") parts.push("des changements de mémoire ne sont pas encore reflétés dans l’index");
+    if (context.memory_index === "INDEX_UNVERIFIED") parts.push("la mise à jour complète de l’index mémoire n’a pas pu être vérifiée");
     if (context.memory_truncated_items > 0) parts.push(context.memory_truncated_items + " extrait(s) de mémoire déjà tronqué(s)");
     return parts.length ? "Contexte partiel : " + parts.join(" ; ") + "." : null;
   }

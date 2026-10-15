@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from typing import Protocol
 
 MAX_JSON_BYTES = 1_000_000
@@ -46,10 +47,44 @@ def reference(item):
     return f"{item['information_id']}@{item['revision']}"
 
 
+MEMORY_INDEX_STATES = ("INDEX_SNAPSHOT_MATCH", "INDEX_STALE", "INDEX_UNVERIFIED")
+
+
+def _validate_index_status(value):
+    """Optional G242 metadata; inconsistent claims invalidate the recall bundle."""
+    if value is None:
+        return
+    keys = {"state", "reason", "generation", "source_digest", "canonical_digest"}
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ContractError("invalid memory index status")
+    state, reason = value["state"], value["reason"]
+    generation, source, canonical = value["generation"], value["source_digest"], value["canonical_digest"]
+    def digest_or_none(text):
+        return text is None or (isinstance(text, str) and re.fullmatch(r"[0-9a-f]{64}", text))
+    if (state not in MEMORY_INDEX_STATES
+            or (generation is not None and (not isinstance(generation, str)
+                or not re.fullmatch(r"[A-Za-z0-9_-]{1,256}", generation)))
+            or not digest_or_none(source) or not digest_or_none(canonical)):
+        raise ContractError("invalid memory index status")
+    if state == "INDEX_UNVERIFIED":
+        valid = (canonical is None and (
+            (reason == "SNAPSHOT_NOT_SUPPORTED" and generation is None and source is None)
+            or (reason == "NO_FULL_SOURCE_DIGEST" and generation is not None and source is None)
+            or (reason == "CANONICAL_CHECK_INCOMPLETE" and generation is not None and source is not None)))
+    else:
+        match = state == "INDEX_SNAPSHOT_MATCH"
+        valid = (generation is not None and source is not None and canonical is not None
+                 and (source == canonical) == match
+                 and reason == ("FULL_SOURCE_DIGEST_MATCH" if match else "FULL_SOURCE_DIGEST_MISMATCH"))
+    if not valid:
+        raise ContractError("inconsistent memory index status")
+
+
 def validate_context(value):
     value = snapshot(value)
     if not isinstance(value, dict) or not isinstance(value.get("items"), list):
         raise ContractError("memory must provide an items list")
+    _validate_index_status(value.get("index_status"))
     if len(value["items"]) > 5:
         raise ContractError("at most five memory items")
     seen = set()

@@ -242,13 +242,18 @@ def validate_context_note(context):
         return None
     keys = {"history_sent", "history_excluded", "memory", "memory_items", "memory_truncated_items",
             "observations_sent", "observations_excluded"}
-    if (not isinstance(context, dict) or set(context) != keys or context["memory"] not in CONTEXT_MEMORY
+    from .contracts import MEMORY_INDEX_STATES
+    if (not isinstance(context, dict) or set(context) not in (keys, keys | {"memory_index"})
+            or context["memory"] not in CONTEXT_MEMORY
             or any(type(context[k]) is not int or not 0 <= context[k] <= 100_000 for k in keys - {"memory"})
             or context["memory_truncated_items"] > context["memory_items"]
-            or (context["memory"] != "sent" and context["memory_items"] != 0)):
+            or (context["memory"] != "sent" and context["memory_items"] != 0)
+            or ("memory_index" in context and (context["memory"] != "sent"
+                or context["memory_index"] not in MEMORY_INDEX_STATES))):
         raise ContractError("INVALID_CONVERSATION: invalid context note")
     return dict(context, partial=context["history_excluded"] > 0 or context["memory"] in ("dropped_for_budget", "unavailable")
-                or context["memory_truncated_items"] > 0 or context["observations_excluded"] > 0)
+                or context["memory_truncated_items"] > 0 or context["observations_excluded"] > 0
+                or context.get("memory_index") in ("INDEX_STALE", "INDEX_UNVERIFIED"))
 
 
 MEDIA_TEMPLATE = re.compile(r"media\.(image|video)\.(create|edit|analyze)")

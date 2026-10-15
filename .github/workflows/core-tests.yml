@@ -6,6 +6,7 @@ on:
     paths:
       - 'eidolon-core/src/**'
       - 'eidolon-core/tests/**'
+      - 'eidolon-core/desktop/connected/**'
       - 'eidolon-core/pyproject.toml'
       - '.github/workflows/core-tests.yml'
 jobs:
@@ -27,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: toytoy68/Eidolon-Memory-Engine
-          ref: 21d24121850e71b64c73163fd04e3a5ab231b970
+          ref: 22f6a70e674da1b9c3291806e7d9d88cf1da779b
           path: memory-reference
       - uses: actions/setup-python@v5
         with:
@@ -36,9 +37,13 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq age openssl ffmpeg
-          python -m pip install pytest==9.1.1 "cryptography>=43,<51" -r ../memory-reference/requirements.txt
+          python -m pip install pytest==9.1.1 "cryptography>=43,<51" -r ../memory-reference/requirements.txt -r ../memory-reference/requirements-qdrant.txt
       - name: Compile
         run: python -m compileall -q src tests
+      - name: Connected desktop bundle and contract tests
+        run: |
+          node desktop/connected/build.js --check
+          node --test desktop/connected/tests/*.test.js
       - name: Core test suite
         run: python -m pytest -q -rs -p no:cacheprovider tests --basetemp="$RUNNER_TEMP/pytest-core"
       - name: Bridge credential owner probes with real UID changes

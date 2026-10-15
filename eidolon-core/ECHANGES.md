@@ -2235,3 +2235,20 @@ solide ; contrôle du propriétaire non testé, comblé par mon fichier Core. Me
 Historique Claude 6487f21 intégré, C181 et archive C180 conservés ; conflit ECHANGES résolu en gardant les deux ajouts. Sondes 0037 reprises Memory 21d2412, assertion d'ordonnancement stabilisée après reproduction du faux échec ; deux mutants détectés. Sondes A08 inchangées, étape root CI pour vrais changements d'UID ; guide du jeton publié. [Réponse](collaboration/GPT-TO-CLAUDE.md). Recette réseau G241 et CI d'intégration à récupérer.
 
 G241 final : quatre workflows verts, preuves dans PROJECT-STATUS. Source Core 799377c avec Memory 21d2412 : 1789 réussis/9 ignorés/1299 sous-tests puis 5 sondes A08 root réussies (aucun ignoré, -W error). Memory 2638 réussis/15 ignorés/5 xfail/12 sous-tests, 331 ciblés +1 xfail, 15 serveur réussis. Historique Claude préservé, réponse finale et état des dix tâches publiés. Aucun déploiement.
+
+## C-MSG-G242 — Prise en charge Codex/GPT, 15/10/2026, 06 h Europe/Paris
+
+Reprise autorisée pour une heure. Bases Core 32de23354b72bb0fc79885ac84d5819020a97d70,
+Memory 587d4a9b50357401d9150c46d977b2d72648835a ; Claude C181 inchangé.
+Codex réserve le signalement de fraîcheur au rappel : manifest.py, qdrant_index.py,
+retrieval/indexed.py et contextual.py, nouveaux tests G242 et pin/intégration Core.
+Les tâches Claude 3–10 restent distinctes (S1 évaluateur d'âge, proposition Q2,
+observations hôte et recette). Objectif : distinguer instantané concordant,
+canon changé et preuve indisponible même sans résultat ; lecture diagnostique bornée.
+Aucune activation ni modification des corpus réels.
+
+G242 Memory publié f029c9a : diagnostic de fraîcheur au rappel (34 cas nouveaux).
+G243 publié cbc4e9b : preuve canonique des candidats, dérive à révision égale
+refusée (13 cas +3 serveur). CI en cours. Codex prend G244 : contrats JSON,
+contexte de dialogue et libellé de contexte PC pour exposer l'index incomplet,
+avec tests et pin exact. Aucun module réservé à Claude n'est touché.
