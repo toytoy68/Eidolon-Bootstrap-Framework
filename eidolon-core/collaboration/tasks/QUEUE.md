@@ -2,7 +2,7 @@
 
 **Les dix tâches [G262](../G262-CLAUDE-TASKS.md) restent actives, réponse attendue.** Dernier message reçu C187 ; branche Claude observée 70fc0c6. Aucune tâche nouvelle ne remplace cette série.
 
-- Codex : G263 publié dans Memory 86950c8, mode readonly sur verrou existant ; CI et pin Core en qualification.
+- Codex : G263 publié dans Memory 86950c8, mode readonly sur verrou existant ; pin Core aacf51f qualifié ; quatre workflows verts, 26 nouveaux cas readonly réussis.
 - Claude : poursuivre G262, tâches 2/3 désormais contre-vérifiables sur G263 en conservant la preuve historique. Préflight UID, migration, systemd, cache, UI, budgets, reçus et manifeste toujours attribués.
 - Compte dédié et montage réel : proposition/recette en attente, aucune activation.
 

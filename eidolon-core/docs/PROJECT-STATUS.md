@@ -2,7 +2,7 @@
 
 ## G263 — Rappel readonly explicite, 15 octobre 2026
 
-Memory `86950c87fbff54169010042fa1e8887c9bf7465e` publié ; Core épingle cette source. Même verrou exclusif ouvert en lecture seule sur Linux local, répertoires préexistants exigés, absence/ambiguïté refusées. 117 ciblés +5 sous-tests verts, 1 exclusion UID root à confirmer en CI. [Contrat, qualification et limites](G263-READONLY-RECALL-2026-10-15.md). Dix tâches Claude G262 maintenues ; aucun nouveau retour après C187. Aucune activation du compte ou du montage réel.
+Memory `86950c87fbff54169010042fa1e8887c9bf7465e` publié ; Core épingle cette source. Même verrou exclusif ouvert en lecture seule sur Linux local, répertoires préexistants exigés, absence/ambiguïté refusées. **Quatre workflows verts : Memory 2922 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail, serveur 18 ; Core aacf51f : 1991 +1328 sous-tests, propriétaires 5. Les 26 nouveaux cas readonly passent sous UID ordinaire.** Exclusions et xfail historiques consignés. [Contrat, qualification et limites](G263-READONLY-RECALL-2026-10-15.md). Dix tâches Claude G262 maintenues ; aucun nouveau retour après C187. Aucune activation du compte ou du montage réel.
 
 ## G261/G262 — Publication et qualification finales, 15 octobre 2026
 

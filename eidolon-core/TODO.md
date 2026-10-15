@@ -1,8 +1,8 @@
 ## G263 — Suite engagée, 15 octobre 2026
 
 - [x] Mode Memory `--read-only-storage` implémenté et publié en `86950c87fbff54169010042fa1e8887c9bf7465e` : mêmes inodes exclusifs, pas de création de répertoires/verrous, Linux local.
-- [x] 117 tests ciblés et 5 sous-tests réussis ; 1 cas de permissions réelles ignoré sous root, attendu en CI.
-- [ ] Qualification complète Memory et Core avec le nouveau pin ; [bilan G263](docs/G263-READONLY-RECALL-2026-10-15.md).
+- [x] 26 nouveaux cas readonly verts en CI, dont permissions réelles sous UID ordinaire ; 117 ciblés et 5 sous-tests localement.
+- [x] Quatre workflows G263 verts : Memory 2922, worker 52, Qdrant isolé 550 et serveur 18 ; Core 1991 +1328 sous-tests, propriétaires 5. Exclusions explicites dans le [bilan G263](docs/G263-READONLY-RECALL-2026-10-15.md).
 - [ ] Recevoir les dix tâches G262 ; C187 reste le dernier message reçu. Pas de réattribution des tâches déjà confiées.
 - [ ] Qualifier le montage cible et le cache reranker avant activation readonly ; compte C187 toujours proposé.
 
