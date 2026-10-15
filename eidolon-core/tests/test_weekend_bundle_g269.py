@@ -45,7 +45,7 @@ def test_member_paths_refused(path):
 def test_evidence_never_promotes_missing_rows_or_guesses_results():
     raw=json.loads((ROOT/"weekend/2026-10-17/results.template.json").read_text())
     report,code=evidence.check(raw)
-    assert code==1 and report["counts"]["NOT_RUN"]==36 and not report["beta_authorized"]
+    assert code==1 and report["counts"]["NOT_RUN"]==44 and not report["beta_authorized"]
     raw["core_commit"]="a"*40;raw["memory_commit"]="b"*40
     for row in raw["checks"]:
         row.update(status="PASS",observed_at="2026-10-17T12:00:00+02:00",evidence="private report case")

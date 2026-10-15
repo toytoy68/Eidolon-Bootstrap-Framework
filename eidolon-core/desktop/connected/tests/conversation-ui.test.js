@@ -171,7 +171,7 @@ test("reload then resume: earlier turns and proposal come back, nothing is resen
   });
 });
 
-test("media drafts survive opening and closing a conversation", { skip: SKIP }, async () => {
+test("G272: session boundaries clear media drafts before another profile can see them", { skip: SKIP }, async () => {
   await withConversationPage({}, async (page, fx) => {
     await page.fill("#token", fx.token); await page.press("#token", "Enter");
     await page.waitForSelector(".mission-button");
@@ -181,8 +181,11 @@ test("media drafts survive opening and closing a conversation", { skip: SKIP }, 
     await page.waitForSelector("#image-draft:not([hidden])");
     await openByKeyboard(page, fx.key);
     await page.click("#conv-close");
-    assert.equal(await page.locator("#image-draft").isHidden(), false);
-    assert.equal(await page.inputValue("#image-prompt"), "Un phare au crépuscule");
+    assert.equal(await page.locator("#image-draft").isHidden(), true);
+    assert.equal(await page.inputValue("#image-prompt"), "");
+    await openByKeyboard(page, fx.key);
+    assert.equal(await page.locator("#image-draft").isHidden(), true);
+    assert.equal(await page.inputValue("#image-prompt"), "");
   });
 });
 

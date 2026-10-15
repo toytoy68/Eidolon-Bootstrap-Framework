@@ -254,6 +254,62 @@
       "status": "NOT_RUN",
       "observed_at": null,
       "evidence": null
+    },
+    {
+      "id": "G11",
+      "criterion": "PC/NAS : PDF textuel et Office réels, scan sans OCR et troncature explicités",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G12",
+      "criterion": "Documents : macros, XML dangereux, archive excessive et chiffrement refusés sans écriture Memory",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G13",
+      "criterion": "Document modifié, reçus volumineux paginés et mémorisation séparée confirmée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G14",
+      "criterion": "Fermeture/changement de profil pendant permission, capture et lecture : aucun résultat tardif ni capteur actif",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G15",
+      "criterion": "Modèles identité : empreintes et dépendances réelles contrôlées, absence/calibration manquante explicites",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G16",
+      "criterion": "Enrôlement volontaire : présence, consentement, annulation, redémarrage et isolation entre profils",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G17",
+      "criterion": "Retrait/réenrôlement des gabarits ; anciennes sauvegardes et limites de ressemblance consignées",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G18",
+      "criterion": "Copie arrêtée de l’état : source intacte, quotas/reçus conservés, incertitudes préservées et réattribution refusée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
     }
   ]
 }
