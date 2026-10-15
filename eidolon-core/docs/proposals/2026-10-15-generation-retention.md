@@ -52,3 +52,39 @@ Une génération échouée n'a pas d'historique de retrait. Elle est gardée
 3. Une API d'administration séparée (Q2) qui ne supprime qu'avec une
    décision humaine signée, rejouable et auditée, sur le modèle de
    `recover_clock`.
+
+## 5. Durcissement G256-1 et G256-2 (patch Memory 0048)
+
+Mes sondes G256 ont trouvé **17 défauts** dans mon classificateur G252.
+Chacun donnait `REVIEW_CANDIDATE` à tort, ou faisait planter la
+classification :
+
+- **Entrées ambiguës** :
+  - `readers=False` ou `0.0` comptés comme « zéro lecteur » ;
+  - drapeaux non booléens (`"no"`, `1`, `"false"`) pris pour vrais ;
+  - audit vide, blanc ou multiligne ;
+  - date de retrait négative.
+- **Alias mélangés** : la cible d'un alias servait de preuve pour un autre.
+- **Structure** :
+  - un générateur était consommé avant la boucle, donc aucun verdict ;
+  - alias `None` ou nom non textuel : plantage.
+
+Correctif :
+
+- les drapeaux doivent être exactement `True` ou `False` ;
+- les lecteurs doivent être un `int` égal à 0 ;
+- l'audit doit être un texte imprimable non vide ;
+- l'état de l'alias est jugé **par alias** ;
+- un générateur est lu en entier.
+
+Temps :
+
+- un retrait dans le futur donne `RETIREMENT_IN_FUTURE` ;
+- `not_before` refuse une horloge qui recule ;
+- `epoch_window` (fourni par l'hôte) refuse une horloge en millisecondes
+  et un retrait « époque Unix » ;
+- la borne du délai de grâce est **incluse** (âge = délai : candidat).
+
+Sans `epoch_window`, une horloge en millisecondes reste indiscernable d'un
+retrait très ancien. C'est une limite documentée par un test, et la
+politique hôte devra fournir cette fenêtre.

@@ -44,3 +44,25 @@ Il manque la **production** de ces passages par l'adaptateur d'index.
 - Volume réel des archives.
 
 Dans l'expérience, le score est un double de test.
+
+## G256-4 et G256-5 : identité et courses (patch Memory 0050)
+
+- **Identité** :
+  - `point_id` joignait les champs par `:`, si bien que `('a', '1:b')` et
+    `('a:1', 'b')` donnaient **le même point** ;
+  - `1`, `1.0` et `True` donnaient des identités différentes pour une même
+    révision.
+  - Correctif : champs validés comme le canon les produit, puis sérialisés
+    en tableau JSON. Le produit croisé de 384 combinaisons est injectif.
+- **Points dépassés** : les points d'une ancienne révision restaient servis
+  et pouvaient remplir toute la limite de candidats, ce qui ne laissait
+  **aucun** passage citable. Correctif : rien n'est supprimé, mais seule la
+  dernière projection lue (révision et empreinte) est servie. Une archive
+  devenue illisible (révoquée) n'est plus servie.
+- **Messages vides ou blancs** : aucun point.
+- **Sabotage de production survivant**, tué par une nouvelle sonde : sans le
+  contrôle `validate_canonical_reference` des candidats, un seul point hors
+  bornes faisait **échouer tout le rappel**, au lieu d'être écarté
+  (`INDEX_PASSAGE_UNRESOLVED`).
+- Limite connue : `chunk_messages` peut couper une séquence emoji ZWJ, ce
+  qui est documenté dans le code. Cela n'affecte que l'affichage.

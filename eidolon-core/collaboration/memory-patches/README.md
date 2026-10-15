@@ -203,3 +203,12 @@ refactorisation, à part).
 | 0045 | Contre-revue G252 (tâches 1, 2, 3, 5, 6, 8) : fraîcheur globale, preuves candidates, courses du manifeste (tue le mutant « second inventaire »), diagnostics d'âge, vue « worker » sur le contrôleur et ses trois enfants, transport du pont (déconnexion, erreurs sans fuite, échéance de lecture distincte du rappel) | 12 réussis |
 | 0046 | Classificateur **expérimental** de rétention des générations (tests seulement, aucune suppression) | 6 réussis |
 | 0047 | Tranche minimale **expérimentale** des passages d'archives : projection sans texte, citation canonique | 3 réussis ; avec 0043 à 0047, suite Memory **2 791 réussis, 18 ignorés, 4 xfail** |
+
+## Patchs 0048 à 0051 (G256, base `81084e0`, dans l'ordre)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0048 | Rétention G256-1/2 : 17 défauts de mon classificateur G252 corrigés (entrées ambiguës, alias mélangés, générateur, plantages), refus temporels publics (`RETIREMENT_IN_FUTURE`, `not_before`, `epoch_window`) | 37 réussis, 22 rouges avant ; 6 tests G252 inchangés |
+| 0049 | Reçu pur **expérimental** de bascule d'alias : rejeu, reçu incomplet, bascule non observée, chaîne ; faits de retrait pour la rétention | 6 réussis ; 10 sabotages, 9 tués, 1 équivalent retiré |
+| 0050 | Passages G256-4/5 : identité sans ambiguïté de séparateur, projection servie = dernière lue (rien supprimé), messages vides ; tue un sabotage survivant de `core/retrieval/indexed.py` (point hors bornes = rappel entier en échec) | 27 réussis, 20 rouges avant |
+| 0051 | Contre-revue G257 : écriture ≠ reste de l'échéance de lecture (tue un sabotage survivant), rappel long, en-tête/corps lents, borne de l'écriture ; `xfail` strict : verrou de rappel tenu pendant l'écriture (proposition) | 6 réussis + 1 xfail, 5 passages ; suite Memory **2 869 réussis, 18 ignorés, 5 xfail** |
