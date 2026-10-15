@@ -83,7 +83,7 @@ le trait du logo est fin, mais le « e » reste reconnaissable à 16 px.
 - La webview garde un dossier de données
   (`~/.local/share/local.eidolon.consultation` sous Linux). Le jeton n'y a
   pas été trouvé.
-- Windows : **ni compilé ni lancé**. WebView2, le mode d'exécution sans
+- Windows : **compilé et cinq tests Rust réussis en CI G270** ; interaction réelle non exécutée. WebView2, le mode d'exécution sans
   console (`windows_subsystem`) et la sémantique de navigation restent à
   vérifier sur le poste.
 

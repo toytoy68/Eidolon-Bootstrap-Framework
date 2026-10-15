@@ -1,13 +1,15 @@
+> **G270 :** cette recette conserve les contrôles initiaux du socle G269. Le parcours complet profils/chat/Internet/fichiers/activité entre VM et résident Windows est dans [RACCORDEMENTS-G270.md](RACCORDEMENTS-G270.md). Les options `--memory-bridge-token-file` du socle et `--beta-runtime` du parcours profils sont exclusives.
+
 # Recette du week-end — progression et arrêts
 
 ## 1. PC : contrôler et extraire les fichiers
 
-Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante.
+Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g270.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g270.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
 
 Depuis la racine extraite, avec Python disponible :
 
 ```powershell
-python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-weekend-2026-10-17.zip
+python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g270.zip
 $EidolonKit = '.\sources\core\eidolon-core\weekend\2026-10-17'
 & "$EidolonKit\inventory_pc.ps1" -Port 8767 > .\pc-inventory.json
 Copy-Item "$EidolonKit\results.template.json" .\results-weekend.json
@@ -70,7 +72,7 @@ Lancer ensuite le pont au premier plan, token fort déjà fourni par le mécanis
 python -m services.memory_bridge --root /COPIE/RECETTE --read-only-storage --index-config /CONFIG/index.json --port 18765
 ```
 
-Le port doit être libre et distinct de la production. Le pont écoute sur 127.0.0.1. Il requiert `EIDOLON_MEMORY_BRIDGE_TOKEN`, comme avant G269. Raccorder Core au pont via les options existantes `--memory-bridge-token-file` et `--memory-bridge-port`, après vérification de `--help` et de la configuration réelle. Le token Core d'accès client reste distinct.
+Le port doit être libre et distinct de la production. Le pont écoute sur 127.0.0.1. Il requiert `EIDOLON_MEMORY_BRIDGE_TOKEN`, comme avant G269. Pour ce seul contrôle historique du socle, raccorder Core au pont via les options existantes `--memory-bridge-token-file` et `--memory-bridge-port`, après vérification de `--help` et de la configuration réelle. Le token Core d'accès client reste distinct.
 
 Vérifier une question directe, une paraphrase et une question sans réponse attendue. Contrôler le texte cité, l'identité, la révision, la position du passage, la négation, le statut UNVERIFIED et la fraîcheur. Couper uniquement les services jetables de recette et vérifier une erreur explicite. Aucune qualité sémantique chiffrée n'est revendiquée par les tests synthétiques. **Ne pas relancer G182** : récupérer ses journaux existants séparément.
 

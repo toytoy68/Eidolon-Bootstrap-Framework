@@ -4,7 +4,7 @@ Eidolon Core Technologies (ECT) • Local AI • Modular • Reliable • Reprod
 
 **Dossier candidat préparé hors VM.** Lire [RACCORDEMENTS-G270.md](RACCORDEMENTS-G270.md) pour les nouveaux parcours et [RECETTE.md](RECETTE.md) pour la recette initiale, puis remplir [MACHINE-INVENTORY.md](MACHINE-INVENTORY.md). Le rapport unique final est [RAPPORT-UNIQUE.md](RAPPORT-UNIQUE.md).
 
-Dans le ZIP, les sources sont sous `sources/core/eidolon-core` et `sources/memory`. Les SHA exacts et empreintes de chaque fichier sont dans `MANIFEST.json` à la racine. Ce sont des sources, pas un exécutable Windows ni une image VM. Dépendances, modèles, secrets, données et journaux privés ne sont pas inclus. Les historiques de validation volumineux sont exclus ; certains anciens tests documentaires demandent un checkout Git complet.
+La livraison G270 regroupe un sous-paquet source, un sous-paquet Windows prêt à extraire et ce dossier. Dans le ZIP source, les fichiers sont sous `sources/core/eidolon-core` et `sources/memory`. Les SHA exacts et empreintes de chaque fichier sont dans `MANIFEST.json` à la racine. Le sous-paquet source ne contient pas de binaire ; le sous-paquet Windows joint contient l'exécutable et les deux lanceurs vérifiés. Aucune image VM n'est fournie. Dépendances, modèles, secrets, données et journaux privés ne sont pas inclus. Les historiques de validation volumineux sont exclus ; certains anciens tests documentaires demandent un checkout Git complet.
 
 | Fichier | Utilisation |
 | --- | --- |

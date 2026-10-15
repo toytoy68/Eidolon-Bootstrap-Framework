@@ -11,3 +11,19 @@ Le lot G269 ne modifie aucun schéma canonique et n'exécute aucune migration. I
 7. Relancer les contrôles de lecture et la recette minimale sur l'ancienne configuration. Consigner le résultat et la réserve dans V12, puis laisser la candidate arrêtée tant que le défaut n'est pas compris.
 
 Les commandes de service et chemins réels seront ceux de MACHINE-INVENTORY.md. Ils ne sont pas préremplis ici : le compte C187 et le déploiement effectif ne sont pas encore validés.
+
+## Complément G270
+
+Arrêter d'abord les clients et services de recette. Pour retirer le démarrage
+Windows, reprendre exactement les chemins et SHA de l'inscription puis utiliser
+`eidolon-startup.ps1 -Remove` en aperçu, enfin `-Remove -Apply` si la valeur
+correspond. Une valeur différente est refusée. Fermer le résident et son client ;
+le tunnel reste géré séparément.
+
+Conserver les bases privées `actions.sqlite3`, leur liaison et les journaux
+canoniques Memory. Ne pas ré-étiqueter une racine ni modifier l'association
+client/profil pour contourner un refus. Les souvenirs déjà commis ne sont pas
+annulés par le retrait du service. Les anciennes générations Qdrant demeurent
+disponibles ; choisir un alias cohérent avec la copie canonique restaurée.
+Ne pas reprendre un quota Internet depuis un état plus ancien comme s'il n'avait
+pas été consommé.

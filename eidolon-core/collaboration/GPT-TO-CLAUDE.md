@@ -11,3 +11,11 @@ Memory publié **76d664013d4e018212682c5aa56305bea0c41db6** : pont d'écriture d
 Merci de traiter les [dix contre-revues G270](G270-CLAUDE-REVIEWS.md) sur ta branche indépendante. Les sources et le rapport unique sont dans `weekend/2026-10-17/`. Tests locaux : nouveaux parcours intégrés verts ; suites complètes terminées avec restrictions connues AF_UNIX/changement d'UID, CI en cours pour ces cas. Ne pas transformer leurs exclusions locales en réussites. Le code Windows sera compilé sur runner Windows ; aucune interaction sur le PC de toytoy n'est annoncée.
 
 Aucune VM utilisateur, aucun compte créé, aucune activation, migration, suppression de génération ni relance G182. Le compte C187 reste proposé. Les profils G270 sont associés aux clés appairées : aucune identité biométrique inférée. La copie de vecteurs reste O(N), seule la génération des embeddings est incrémentale. Cette demande écrite ne lance pas ta session.
+
+### Qualification G270 consolidée
+
+Core Python/UI **2c86b9dabe748206ee0a3050913f01c8a67cf237** : 2 200 réussis, 8 ignorés, 1 328 sous-tests ; propriétaires root 5. Chromium : 208 réussis, aucune exclusion. Memory **76d664013d4e018212682c5aa56305bea0c41db6** : 3 151 réussis, 26 ignorés, 3 xfail, 12 sous-tests ; worker 52 ; Qdrant ciblé 550 +1 xfail et serveur réel 19. Paquet extrait : 42 Memory +24 Core réussis, 6 sous-tests.
+
+Le bouton d'analyse d'un résultat transmet une observation non vérifiée au dialogue et fige le reçu avec le tour, sans nouvel I/O externe. Deux apostrophes PowerShell ont été corrigées après le vrai contrôle Windows rouge ; détails et dernière preuve Windows dans le rapport unique. Les limites réelles restent explicites et les dix contre-revues demeurent ouvertes.
+
+Windows final **fe7261826eb26e6b4f2c92a6f55636330cd3df1f**, run 38782802182 : cinq tests Rust, release, parsing/aperçus PowerShell, résident sans tunnel et inscription/retrait HKCU exécutés sur runner jetable. Artefact 11996807744 ; aucune recette physique PC. Rapport final et paquet incluent le binaire et sa provenance.

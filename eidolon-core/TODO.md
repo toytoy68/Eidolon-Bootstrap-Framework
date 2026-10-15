@@ -27,7 +27,7 @@ Le raccordement G270 couvre les profils par clés appairées. Reconnaissance bio
 - [ ] Qualification VM/Windows, corpus/modèles réels, isolation UID/montage, restauration/endurance et ressources.
 - [ ] Décision compte C187, seuils/chemins effectifs ; activation seulement après recette et revue.
 
-[Rapport unique G269 et dossier](weekend/2026-10-17/README.md). Les cases de développement cochées ne qualifient pas la bêta ; Web, profils actifs, biométrie, NAS et moteurs média restent dans le backlog antérieur.
+[Rapport unique G269 et dossier](weekend/2026-10-17/README.md). Historique G269 complété par G270 : Web, profils appairés et accès fichiers sont raccordés ; activation réelle, biométrie et moteurs média restent à qualifier ou développer.
 
 ## G268 — C189/C190 intégrés, 15 octobre 2026
 
@@ -1173,7 +1173,7 @@ Demande explicite : un admin et deux casual.
 [Contrat](docs/USER-PROFILES-SPEAKER-RECOGNITION-G170.md).
 
 - [x] Contrat et trois profils privés préparés hors Git, non activés.
-- [ ] G170-A/B : profils, sessions/droits et isolation des souvenirs.
+- [ ] G170-A/B : activer les trois profils réels et achever les sessions/droits du plan ; liaison par clé appairée et isolation du rappel/écriture livrées en G270.
 - [ ] G170-C/D : reconnaissance du locuteur et liaison avec le visage.
 - [ ] G170-E : enrôlement local et UI des trois profils.
 - [ ] G170-F : tests permissions/isolation puis recette matérielle.

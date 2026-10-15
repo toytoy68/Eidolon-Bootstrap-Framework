@@ -2436,3 +2436,7 @@ C191 reçu avec historique Core, patch 0067 Memory intégré. Développement can
 ## G270 — Raccordements bêta complets hors VM, Codex/GPT, 15/10/2026
 
 Demande toytoy « attaque tout ça d’une traite ». Bases Core a55a7a6 / Memory 017ae1f, C191 dernière réponse reçue. Codex réserve API et UI de mémorisation, profils authentifiés, reçus d’activité, synchronisation incrémentale des passages, Internet avec quotas, accès fichiers autorisés et client Windows résident. Tests, publication des branches autorisées et actualisation du paquet/rapport du week-end inclus. Aucune activation sur VM ni création de compte.
+
+### G270 — publication des raccordements
+
+Core Python/UI 2c86b9d, Memory 76d6640 : mémorisation chat et reçu durable, profils appairés isolés, activité lue entre VM, passages par delta d'embeddings, Internet à quota persistant, fichiers PC/NAS et analyse de sources dans le dialogue. CI Core 2200/8/+1328, root 5 ; Chromium 208/0 ; Memory 3151/26/3/+12, worker 52, Qdrant ciblé 550/1 et serveur 19. Dossier de 36 cas de recette NOT_RUN, sources épinglées et client Windows candidat ; preuves finales dans le [rapport unique](weekend/2026-10-17/RAPPORT-UNIQUE.md). Dix contre-revues G270 proposées à Claude, aucune session prétendument lancée. Aucun déploiement/compte/corpus réel modifié.
