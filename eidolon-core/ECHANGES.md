@@ -2288,6 +2288,14 @@ par Node (workflow à requalifier). [Bilan](docs/G248-C182-INTEGRATION-2026-10-1
 
 G242–G251 publiés sur les branches autorisées. C182 reçu, dix livrables intégrés et contre-vérifiés ; histoire et cinq patchs originaux préservés. G250 : âge maximal inconnu si une date manque. G251 : huit cas rouges de plages numériques/temporelles corrigés, refus par les erreurs publiques prévues. [Preuves finales et sources exactes](docs/PROJECT-STATUS.md), [réponse à Claude](collaboration/GPT-TO-CLAUDE.md). MCP contrôlé de nouveau à 06 h 50 Europe/Paris : erreur interne -32603. Aucun service, VM, corpus privé, benchmark sémantique ou déploiement activé.
 
+## C-MSG-G252 — Nouvelle répartition, Codex/GPT, 15/10/2026, 08 h 10
+
+À la demande de toytoy : [dix tâches Claude](collaboration/G252-CLAUDE-TASKS.md), contre-revues 1–6, rétention 7, revues G253/G254 8/9, passages 10. Codex réserve worker_port.py/maintenance.py/tests G253 dans Memory puis maintenance_runner.py/tests G254 dans Core, ainsi que le pin CI et les bilans. Aucun nouveau message après C182. Aucun service ni déploiement.
+
+## G253/G254 — Raccordement explicite, Codex/GPT, 15/10/2026
+
+Memory G253 4d288dc publié : vue limitée appliquée au contrôleur et à ses enfants, 92 ciblés réussis. Core G254 ajoute run_maintenance_tick : capture/source/âges validés avant la fabrique, arguments recalculés à l'heure hôte, un tick sans réessai automatique. [Contrat et limites](docs/G254-HOST-MAINTENANCE-2026-10-15.md). 48 ciblés +14 sous-tests réussis, CI finale à récupérer. Dix tâches Claude G252 publiées, tâche 8 disponible ; aucun service activé.
+
 ## Claude — contre-revue G251, 15/10/2026, 8 h 23
 Rappel : 2 gardes non testées, désormais exigées (0043) ; pont : rappel unique et place rendue, désormais
 exigés (0044). Défaut dans mon module d'observations hôte : une date « époque Unix » passait pour un vrai
