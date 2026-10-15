@@ -1,0 +1,253 @@
+From 15f1a4d7bd33670fd3b0a85af639111510933291 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 13:15:16 +0000
+Subject: [PATCH 4/4] test(claude-eval): G262-9 replay state limits of alias
+ receipts
+
+Huge integers in epoch_window gave a raw OverflowError; a string passed as
+seen_switch_ids became a set of characters and silently disabled replay
+detection; None and invalid ids were accepted. All now give stable codes.
+Pure validation stays file-free; a separate experimental store consumes
+ids durably with O_EXCL + fsync (12 concurrent processes: exactly one wins).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../alias_switch_receipt.py                   |  30 ++++-
+ .../claude_memory_eval/receipt_seen_store.py  |  50 +++++++++
+ .../test_receipt_replay_state_g262.py         | 103 ++++++++++++++++++
+ 3 files changed, 177 insertions(+), 6 deletions(-)
+ create mode 100644 tests/claude_memory_eval/receipt_seen_store.py
+ create mode 100644 tests/claude_memory_eval/test_receipt_replay_state_g262.py
+
+diff --git a/tests/claude_memory_eval/alias_switch_receipt.py b/tests/claude_memory_eval/alias_switch_receipt.py
+index 10e39cb..cea8605 100644
+--- a/tests/claude_memory_eval/alias_switch_receipt.py
++++ b/tests/claude_memory_eval/alias_switch_receipt.py
+@@ -73,6 +73,10 @@ def make_receipt(**fields):
+ 
+ def verify_receipt(receipt, *, seen_switch_ids=frozenset()):
+     """Return the receipt's switch id; refuse incomplete, altered, unobserved or replayed receipts."""
++    return _verify(receipt, _seen(seen_switch_ids))
++
++
++def _verify(receipt, seen_switch_ids):
+     _check_body(receipt)
+     if "receipt_sha256" not in receipt:
+         raise ReceiptRefused("RECEIPT_INCOMPLETE")
+@@ -94,13 +98,26 @@ def _anchor(alias, generation):
+ def _window(epoch_window):
+     if epoch_window is None:
+         return None
+-    if (type(epoch_window) is not tuple or len(epoch_window) != 2
+-            or any(type(x) not in (int, float) or not math.isfinite(x) for x in epoch_window)
+-            or not 0 <= epoch_window[0] < epoch_window[1]):
+-        raise ReceiptRefused("RECEIPT_INVALID")
++    try:
++        if (type(epoch_window) is not tuple or len(epoch_window) != 2
++                or any(type(x) not in (int, float) or not math.isfinite(x) for x in epoch_window)
++                or not 0 <= epoch_window[0] < epoch_window[1]):
++            raise ReceiptRefused("RECEIPT_INVALID")
++    except OverflowError:                 # math.isfinite(10**400): an integer too large for a float
++        raise ReceiptRefused("RECEIPT_INVALID") from None
+     return epoch_window
+ 
+ 
++def _seen(value):
++    """G262-9: the host's consumed ids must be a real, re-readable collection of valid ids. A string would
++    otherwise become a set of characters and silently disable replay detection."""
++    if type(value) not in (set, frozenset, list, tuple):
++        raise ReceiptRefused("RECEIPT_INVALID_SEEN")
++    if any(type(item) is not str or not re.fullmatch(r"[0-9a-f]{32}", item) for item in value):
++        raise ReceiptRefused("RECEIPT_INVALID_SEEN")
++    return frozenset(value)
++
++
+ def verify_chain(receipts, *, alias, initial_generation, seen_switch_ids=frozenset(), epoch_window=None):
+     """Every switch of one alias, in order: each starts where the previous ended, time never goes back.
+ 
+@@ -109,9 +126,9 @@ def verify_chain(receipts, *, alias, initial_generation, seen_switch_ids=frozens
+     passes to generation_retention.classify; an epoch-0 or millisecond receipt then proves nothing."""
+     _anchor(alias, initial_generation)
+     window = _window(epoch_window)
+-    seen, current, last_at = set(seen_switch_ids), initial_generation, None
++    seen, current, last_at = set(_seen(seen_switch_ids)), initial_generation, None
+     for receipt in receipts:
+-        seen.add(verify_receipt(receipt, seen_switch_ids=seen))
++        seen.add(_verify(receipt, seen))
+         if receipt["alias"] != alias:
+             raise ReceiptRefused("RECEIPT_OTHER_ALIAS")
+         if window is not None and not window[0] <= receipt["switched_at"] <= window[1]:
+@@ -140,3 +157,4 @@ def retirement_facts(receipts, *, alias, initial_generation, observed_target, se
+         retired[receipt["previous_generation"]] = (receipt["switched_at"], receipt["switch_id"])
+     retired.pop(observed_target, None)  # reactivated: its older retirement no longer counts
+     return retired
++
+diff --git a/tests/claude_memory_eval/receipt_seen_store.py b/tests/claude_memory_eval/receipt_seen_store.py
+new file mode 100644
+index 0000000..b63997e
+--- /dev/null
++++ b/tests/claude_memory_eval/receipt_seen_store.py
+@@ -0,0 +1,50 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/receipt_seen_store.py
++# Description : Consommation durable EXPÉRIMENTALE des identifiants de bascule (Claude, G262-9)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""EXPERIMENTAL, test-only. Kept apart from alias_switch_receipt.py, which stays pure (no file)."""
++import os
++import re
++import stat
++
++from tests.claude_memory_eval.alias_switch_receipt import ReceiptRefused, verify_receipt
++
++
++class DirectorySeenStore:
++    """EXPERIMENTAL durable consumption of switch ids: one empty file per id, created with O_EXCL.
++
++    What it guarantees, and only that: on one local POSIX filesystem, among processes using this same
++    directory, at most one consume() of an id succeeds, and a success survives a crash once it returned
++    (file and directory fsync-ed). Not guaranteed: network filesystems, a directory that someone edits
++    or deletes, ordering between different ids. Validation (verify_*) stays pure; consumption is this."""
++
++    def __init__(self, directory):
++        self.directory = os.fspath(directory)
++        st = os.lstat(self.directory)
++        if not stat.S_ISDIR(st.st_mode) or stat.S_IMODE(st.st_mode) & 0o022:
++            raise ReceiptRefused("RECEIPT_STORE_UNSAFE")
++
++    def consumed(self):
++        return frozenset(n for n in os.listdir(self.directory) if re.fullmatch(r"[0-9a-f]{32}", n))
++
++    def consume(self, receipt):
++        """Verify (pure) against the durable set, then claim the id atomically. Returns the switch id."""
++        switch_id = verify_receipt(receipt, seen_switch_ids=self.consumed())
++        dir_fd = os.open(self.directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
++        try:
++            try:
++                fd = os.open(switch_id, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
++                             0o600, dir_fd=dir_fd)
++            except FileExistsError:
++                raise ReceiptRefused("RECEIPT_REPLAYED") from None   # lost a concurrent race
++            try:
++                os.fsync(fd)
++            finally:
++                os.close(fd)
++            os.fsync(dir_fd)
++        finally:
++            os.close(dir_fd)
++        return switch_id
+diff --git a/tests/claude_memory_eval/test_receipt_replay_state_g262.py b/tests/claude_memory_eval/test_receipt_replay_state_g262.py
+new file mode 100644
+index 0000000..54827bc
+--- /dev/null
++++ b/tests/claude_memory_eval/test_receipt_replay_state_g262.py
+@@ -0,0 +1,103 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_receipt_replay_state_g262.py
++# Description : Reçus : état de rejeu invalide, fenêtres géantes, consommation durable concurrente (Claude, G262-9)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic receipts and temporary directories only; no deletion permission is ever produced."""
++import os
++from pathlib import Path
++import subprocess
++import sys
++import textwrap
++
++import pytest
++
++from tests.claude_memory_eval.alias_switch_receipt import (ReceiptRefused, make_receipt, retirement_facts,
++                                                           verify_chain, verify_receipt)
++from tests.claude_memory_eval.receipt_seen_store import DirectorySeenStore
++
++ALIAS = "eidolon_x"
++G = {n: f"{ALIAS}__{n:032x}" for n in range(1, 4)}
++REPO = Path(__file__).resolve().parents[2]
++R = make_receipt(switch_id="1" * 32, alias=ALIAS, previous_generation=G[1], new_generation=G[2],
++                 new_descriptor_sha256="d" * 64, manifest_sha256="a" * 64, switched_at=1.8e9,
++                 observed_before=G[1], observed_after=G[2])
++
++
++def code(call):
++    with pytest.raises(ReceiptRefused) as caught:
++        call()
++    return caught.value.code
++
++
++@pytest.mark.parametrize("window", [(0, 10 ** 400), (10 ** 400, 10 ** 401), (-(10 ** 400), 0), (True, 2e9),
++                                    (0, float("inf")), [0, 2e9], (2e9, 1e9)])
++def test_huge_or_malformed_windows_get_a_stable_code(window):
++    assert code(lambda: verify_chain([R], alias=ALIAS, initial_generation=G[1], epoch_window=window)) \
++        == "RECEIPT_INVALID"
++    assert verify_chain([R], alias=ALIAS, initial_generation=G[1], epoch_window=(0, 10 ** 30)) == G[2]
++
++
++@pytest.mark.parametrize("seen", ["1" * 32, b"x", None, {"1" * 32: 0}, (x for x in ["1" * 32]), {"X"},
++                                  ["1" * 31], [1], frozenset({"1" * 32, None})])
++def test_an_invalid_seen_set_is_refused_never_ignored(seen):
++    # A string used to become a set of characters: replay detection silently off.
++    for call in (lambda: verify_receipt(R, seen_switch_ids=seen),
++                 lambda: verify_chain([R], alias=ALIAS, initial_generation=G[1], seen_switch_ids=seen),
++                 lambda: retirement_facts([R], alias=ALIAS, initial_generation=G[1], observed_target=G[2],
++                                          seen_switch_ids=seen)):
++        assert code(call) == "RECEIPT_INVALID_SEEN"
++
++
++@pytest.mark.parametrize("kind", [set, frozenset, list, tuple])
++def test_valid_collections_still_detect_replay(kind):
++    assert code(lambda: verify_chain([R], alias=ALIAS, initial_generation=G[1],
++                                     seen_switch_ids=kind(["1" * 32]))) == "RECEIPT_REPLAYED"
++
++
++def test_durable_consumption_is_once_and_survives_a_new_store(tmp_path):
++    store = DirectorySeenStore(tmp_path)
++    assert store.consume(R) == "1" * 32
++    assert code(lambda: store.consume(R)) == "RECEIPT_REPLAYED"
++    assert code(lambda: DirectorySeenStore(tmp_path).consume(R)) == "RECEIPT_REPLAYED"   # "after restart"
++    assert DirectorySeenStore(tmp_path).consumed() == {"1" * 32}
++    assert os.listdir(tmp_path) == ["1" * 32] and (tmp_path / ("1" * 32)).stat().st_size == 0
++
++
++def test_an_unsafe_store_directory_is_refused(tmp_path):
++    shared = tmp_path / "shared"
++    shared.mkdir()
++    shared.chmod(0o777)
++    assert code(lambda: DirectorySeenStore(shared)) == "RECEIPT_STORE_UNSAFE"
++    (tmp_path / "link").symlink_to(tmp_path)
++    assert code(lambda: DirectorySeenStore(tmp_path / "link")) == "RECEIPT_STORE_UNSAFE"
++
++
++def test_concurrent_processes_consume_an_id_exactly_once(tmp_path):
++    script = textwrap.dedent(f"""
++        import sys
++        sys.path.insert(0, {str(REPO)!r})
++        from tests.claude_memory_eval.receipt_seen_store import DirectorySeenStore
++        from tests.claude_memory_eval.alias_switch_receipt import ReceiptRefused
++        import tests.claude_memory_eval.test_receipt_replay_state_g262 as t
++        try:
++            DirectorySeenStore({str(tmp_path)!r}).consume(t.R)
++            print("won")
++        except ReceiptRefused as e:
++            print(e.code)
++    """)
++    procs = [subprocess.Popen([sys.executable, "-c", script], stdout=subprocess.PIPE, text=True, cwd=REPO)
++             for _ in range(12)]
++    outcomes = []
++    for p in procs:
++        out, _ = p.communicate(timeout=60)
++        outcomes.append(out.strip())
++    assert outcomes.count("won") == 1 and set(outcomes) == {"won", "RECEIPT_REPLAYED"}, outcomes
++
++
++def test_the_pure_receipt_module_still_has_no_file_access():
++    import tests.claude_memory_eval.alias_switch_receipt as module
++    source = Path(module.__file__).read_text(encoding="utf-8")
++    assert "open(" not in source and "import os" not in source
+-- 
+2.43.0
+

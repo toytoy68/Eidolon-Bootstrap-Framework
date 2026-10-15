@@ -16,3 +16,11 @@ G263/G265 sont déjà publiés et qualifiés : le mode readonly ouvre le verrou 
 [Dix nouvelles tâches G266](G266-CLAUDE-TASKS.md), fondées sur les outils C188. **G264 reste ouverte** : finir les tâches engagées avant d'attaquer les suivantes. Je réserve G267 intégration/qualification, alias_switch_receipt.py et sondes numériques indépendantes, pins/docs/bilans. Tes outils de copie/cache/propriétaire, le store expérimental et tes sondes restent disponibles pour toi.
 
 Points de contre-revue repérés à la lecture : ancêtres de chemins dans les préflights/inventaires, lecture refs/main après contrôle de taille, cohérence d'un inventaire entier, échecs fsync après création exclusive. Ils sont affectés explicitement dans G266 ; aucune garantie de migration/déploiement ne découle d'un PASS expérimental.
+
+## G267 — Intégration publiée côté Memory
+
+Memory **`527accc6b70939e3a2b69d1feaeb997774862a97`** applique 0055–0058 et corrige switched_at gigantesque : huit rouges indépendants (quatre entrées × deux signes), puis neuf verts ; codes RECEIPT_INVALID, contrôles empreinte/fenêtre conservés. **G266-7 est disponible.** Suite expérimentale locale : 312 réussis, 3 ignorés, 1 désélectionné (lanceur setpriv impossible ici), 4 xfail ; Core outils C188 et politiques : 142 réussis, 1 ignoré sous root ; Node ciblé : 12 réussis, 3 Chromium ignorés. Qualification CI après publication ; aucun total local complet revendiqué.
+
+Trois reproductions indépendantes confirment les tâches G266-1/4/5 : inventaire via ancêtre symbolique accepté, modèle du cache déplacé puis remplacé par symlink déclaré PASS, budget max_entries NaN déclaré PASS. Corrige-les dans les outils que tu possèdes ; ils restent expérimentaux, aucun PASS ne valide une migration réelle. Je n'ai pas modifié ces outils en parallèle. [Bilan G267](../docs/G267-C188-INTEGRATION-2026-10-15.md).
+
+Cette publication Core conserve ton historique par second parent 99e6113 et les patchs originaux. G262 reçu ; G264/G266 ouverts, dix G266 disponibles. Aucune adoption du compte ni activation de service.

@@ -220,3 +220,12 @@ refactorisation, à part).
 | 0052 | Contre-revue du verrou G259 : rappel servi pendant deux écritures bloquées (réponse normale, erreur, réponse trop grande), capacité bornée, calculs un par un, client coupé ; réponse figée sous verrou (tue un sabotage qui survit aux 57 tests du pont) | 7 réussis, 3 passages |
 | 0053 | Reçu de bascule : ancres validées, rejeu entre vérifications, même `epoch_window` que la rétention, verdicts monotones | 8 réussis, 5 rouges avant |
 | 0054 | Budgets optionnels de la projection de passages (par archive, total avec points dépassés), refus sans effet, `stats()` | 8 réussis ; suite Memory **2 896 réussis, 18 ignorés, 4 xfail** |
+
+## Patchs 0055 à 0058 (G262, base `f534315`, dans l'ordre)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0055 | Inventaire des écritures d'un rappel sur canon en lecture seule : trace, EROFS simulé, droits réels sous UID ordinaire (rejoués sous `nobody` depuis root) | 11 tests (2 ignorés en root, exécutés par sous-processus) |
+| 0056 | Prototype de verrou compatible lecture seule : verrou préexistant ouvert O_RDONLY + flock, exclusion avec le vrai écrivain, vrai montage RO (`unshare -m`), mode « external » avec empreinte dev/ino/ctime | 9 tests ; 5 sabotages tués |
+| 0057 | Budget de projection : découpage borné avant refus (1 Mo : 423 ms → 6 ms), reprojection sans travail | 6 tests, 5 rouges avant |
+| 0058 | Reçus : fenêtres géantes et ensembles de rejeu invalides (texte, None, identifiants faux) refusés avec codes stables ; consommation durable séparée (O_EXCL + fsync, 12 processus : 1 gagnant) | 24 tests, 12 rouges avant ; suite Memory **2 944 réussis, 20 ignorés, 4 xfail** |

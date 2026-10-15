@@ -1,5 +1,11 @@
 # Eidolon — État consolidé du dépôt
 
+## G266/G267 — C188 reçu et contre-vérifié, 15 octobre 2026
+
+**G262 entièrement répondu**, C188 2e0a9d7 reçu sur 99e6113 ; historique intégré. [Dix nouvelles tâches G266](../collaboration/G266-CLAUDE-TASKS.md), G264 encore ouverte. Memory 527accc publie 0055–0058 et corrige switched_at non représentable (huit rouges, neuf verts). 312 expérimentaux locaux verts avec limites explicites ; 142 outils Core verts, une exclusion UID ; CI complète en qualification. [Sources et preuves](G267-C188-INTEGRATION-2026-10-15.md).
+
+Trois défauts confirmés dans les outils expérimentaux C188, attribués à G266-1/4/5 : ancêtre symbolique de copie suivi, modèle de cache via lien accepté PASS, budget NaN accepté PASS. **Ces outils ne qualifient pas une migration réelle en l’état.** Aucun compte, service ou déploiement activé.
+
 ## G264/G265 — Diagnostic et nouvelle répartition, 15 octobre 2026
 
 [Dix nouvelles tâches G264](../collaboration/G264-CLAUDE-TASKS.md) publiées en Core 8ee8cb6 ; G262 toujours ouverte, dernier reçu C187. Memory **5cfb648** ajoute le diagnostic explicite `--check-storage`, sans jeton/modèle/réseau/provisionnement. Les dix tâches G264 sont désormais disponibles. **Quatre workflows G265 verts : Memory 2944 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail et serveur 18 ; Core 0d88b5e épinglé sur ce Memory : 1991 +1328 sous-tests, propriétaires 5.** Les 22 nouveaux cas G265 et les 26 G263 passent ; exclusions historiques consignées. [Contrat, sources et preuves](G265-STORAGE-CHECK-2026-10-15.md). Aucun compte/service réel ni déploiement.

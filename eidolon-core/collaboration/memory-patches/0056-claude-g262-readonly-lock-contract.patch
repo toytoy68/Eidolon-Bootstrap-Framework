@@ -1,0 +1,353 @@
+From 4f09dc107b3e1874aca26abeeea93cc225e5cbdd Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 12:11:37 +0000
+Subject: [PATCH 2/4] test(claude-eval): G262-3 read-only compatible lock
+ contract prototype
+
+Not wired to core.persistence. Legacy mode: a read-only participant opens
+the pre-existing canon lock O_RDONLY and flocks it, excluding the real
+writer across processes and across a real read-only bind mount (where
+'a+b' fails with EROFS). External mode: lock location and fingerprint
+(dev, ino, ctime) resolved from a one-time manifest in the canon, so all
+participants share one lock. Absent lock never created; substitution
+refused, including inode reuse.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ tests/claude_memory_eval/lock_contract.py     | 126 ++++++++++++
+ .../test_lock_contract_g262.py                | 189 ++++++++++++++++++
+ 2 files changed, 315 insertions(+)
+ create mode 100644 tests/claude_memory_eval/lock_contract.py
+ create mode 100644 tests/claude_memory_eval/test_lock_contract_g262.py
+
+diff --git a/tests/claude_memory_eval/lock_contract.py b/tests/claude_memory_eval/lock_contract.py
+new file mode 100644
+index 0000000..958e931
+--- /dev/null
++++ b/tests/claude_memory_eval/lock_contract.py
+@@ -0,0 +1,126 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/lock_contract.py
++# Description : Prototype EXPÉRIMENTAL de verrou compatible avec un canon en lecture seule (Claude, G262-3)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""EXPERIMENTAL, test-only, Linux (flock). NOT wired to core/persistence.py.
++
++One rule above all: readers and writers of one canon must lock the SAME inode. The location is therefore
++resolved from the canon itself, never from a reader's own configuration:
++
++- LEGACY (no manifest): the existing ``<canon>/.write.lock``. Writers keep core.persistence (open 'a+b',
++  flock). A read-only reader opens the PRE-EXISTING file O_RDONLY and flocks it: flock needs no write
++  access, and the lock is shared with writers through the inode, across a read-only bind mount.
++- EXTERNAL (manifest ``<canon>/.lockspace.json`` written once at preparation): the lock lives in a state
++  directory; the manifest records its path and (st_dev, st_ino, st_ctime_ns). Everyone verifies it.
++
++After flock, the path must still name the locked inode; otherwise LOCK_SUBSTITUTED. A reader never
++creates a lock (LOCK_ABSENT) and never proceeds unlocked. Proposal:
++Core docs/proposals/2026-10-15-readonly-lock-contract.md.
++"""
++from contextlib import contextmanager
++import fcntl
++import json
++import os
++from pathlib import Path
++import stat
++
++MANIFEST = ".lockspace.json"
++_after_open = None   # test hook: runs between open and flock
++
++
++class LockRefused(OSError):
++    def __init__(self, code):
++        super().__init__(code)
++        self.code = code
++
++
++class LockBusy(LockRefused):
++    pass
++
++
++def _identity(st):
++    return (st.st_dev, st.st_ino)
++
++
++def _fingerprint(st):
++    # An inode number is reused once a file is deleted: (dev, ino) alone cannot tell a replacement made
++    # with unlink + create. ctime does not move when the lock is opened or flocked, only on metadata change.
++    return (st.st_dev, st.st_ino, st.st_ctime_ns)
++
++
++def resolve(canon_root):
++    """('legacy', path, None) or ('external', path, (dev, ino)), from the canon only."""
++    canon = Path(canon_root)
++    manifest = canon / MANIFEST
++    try:
++        st = os.lstat(manifest)
++    except FileNotFoundError:
++        return "legacy", canon / ".write.lock", None
++    if not stat.S_ISREG(st.st_mode) or st.st_size > 4096:
++        raise LockRefused("LOCK_MANIFEST_INVALID")
++    fd = os.open(manifest, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
++    with os.fdopen(fd, "rb") as handle:
++        raw = handle.read(4097)
++    try:
++        value = json.loads(raw)
++        path, mark = Path(value["path"]), (value["dev"], value["ino"], value["ctime_ns"])
++        if (set(value) != {"schema", "path", "dev", "ino", "ctime_ns"} or value["schema"] != "eidolon-lockspace/1"
++                or not path.is_absolute() or ".." in path.parts or any(type(x) is not int for x in mark)):
++            raise ValueError
++    except (ValueError, KeyError, TypeError):
++        raise LockRefused("LOCK_MANIFEST_INVALID") from None
++    return "external", path, mark
++
++
++def prepare_external(canon_root, state_dir):
++    """Preparation step, run once by the administrator BEFORE rights are reduced. Creates nothing twice."""
++    canon, lock = Path(canon_root), Path(state_dir) / "canon.lock"
++    if (canon / MANIFEST).exists():
++        raise LockRefused("LOCK_ALREADY_PREPARED")
++    fd = os.open(lock, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
++    st = os.fstat(fd)
++    os.close(fd)
++    body = json.dumps({"schema": "eidolon-lockspace/1", "path": str(lock), "dev": st.st_dev, "ino": st.st_ino,
++                       "ctime_ns": st.st_ctime_ns})
++    (canon / MANIFEST).write_text(body)
++    return lock
++
++
++@contextmanager
++def locked(canon_root, *, blocking=True):
++    """Exclusive lock for a READ-ONLY participant (the bridge). Never creates, never writes."""
++    kind, path, expected = resolve(canon_root)
++    try:
++        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
++    except FileNotFoundError:
++        raise LockRefused("LOCK_ABSENT") from None
++    except OSError as exc:
++        if exc.errno == 40:   # ELOOP: the lock is a symlink
++            raise LockRefused("LOCK_SYMLINK") from None
++        raise
++    try:
++        st = os.fstat(fd)
++        if not stat.S_ISREG(st.st_mode) or (expected is not None and _fingerprint(st) != expected):
++            raise LockRefused("LOCK_SUBSTITUTED")
++        if _after_open is not None:
++            _after_open()
++        try:
++            fcntl.flock(fd, fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB))
++        except BlockingIOError:
++            raise LockBusy("LOCK_BUSY") from None
++        try:
++            current = os.lstat(path)
++        except FileNotFoundError:
++            current = None
++        if current is None or _identity(current) != _identity(st):
++            fcntl.flock(fd, fcntl.LOCK_UN)
++            raise LockRefused("LOCK_SUBSTITUTED")   # the path no longer names the inode we hold
++        try:
++            yield kind
++        finally:
++            fcntl.flock(fd, fcntl.LOCK_UN)
++    finally:
++        os.close(fd)
+diff --git a/tests/claude_memory_eval/test_lock_contract_g262.py b/tests/claude_memory_eval/test_lock_contract_g262.py
+new file mode 100644
+index 0000000..c8dbe7a
+--- /dev/null
++++ b/tests/claude_memory_eval/test_lock_contract_g262.py
+@@ -0,0 +1,189 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_lock_contract_g262.py
++# Description : Verrou compatible lecture seule : exclusion interprocessus, absence, substitution, montage RO réel (G262-3)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic directories. Writers are the REAL core.persistence.exclusive_write in another process.
++The read-only bind-mount case runs only where `unshare -m` is permitted (skipped otherwise, never passed)."""
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import textwrap
++
++import pytest
++
++import tests.claude_memory_eval.lock_contract as lc
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def canon(tmp_path, lock=True):
++    root = tmp_path / "memory/persistent"
++    root.mkdir(parents=True)
++    if lock:
++        (root / ".write.lock").touch()
++    return root
++
++
++def hold_writer(root):
++    """Start a process holding the REAL writer lock; returns (process, release_file)."""
++    gate = root.parent / "release"
++    code = textwrap.dedent(f"""
++        import sys, time, pathlib
++        sys.path.insert(0, {str(REPO)!r})
++        from core.persistence import exclusive_write
++        with exclusive_write(pathlib.Path({str(root)!r})):
++            print("held", flush=True)
++            while not pathlib.Path({str(gate)!r}).exists():
++                time.sleep(0.01)
++    """)
++    proc = subprocess.Popen([sys.executable, "-c", code], stdout=subprocess.PIPE, text=True)
++    assert proc.stdout.readline().strip() == "held"
++    return proc, gate
++
++
++def test_a_read_only_reader_and_the_real_writer_exclude_each_other(tmp_path):
++    root = canon(tmp_path)
++    proc, gate = hold_writer(root)
++    try:
++        with pytest.raises(lc.LockBusy):
++            with lc.locked(root, blocking=False):
++                pass
++    finally:
++        gate.touch()
++        proc.wait(5)
++        proc.stdout.close()
++    with lc.locked(root, blocking=False) as kind:
++        assert kind == "legacy"
++        from core.persistence import RepositoryBusy, exclusive_write
++        code = textwrap.dedent(f"""
++            import sys, pathlib
++            sys.path.insert(0, {str(REPO)!r})
++            from core.persistence import RepositoryBusy, exclusive_write
++            try:
++                with exclusive_write(pathlib.Path({str(root)!r}), blocking=False):
++                    print("WRITER ENTERED")
++            except RepositoryBusy:
++                print("writer busy")
++        """)
++        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=20).stdout
++        assert out.strip() == "writer busy"
++
++
++def test_a_reader_never_creates_the_lock_nor_writes(tmp_path):
++    root = canon(tmp_path, lock=False)
++    with pytest.raises(lc.LockRefused) as caught:
++        with lc.locked(root):
++            pass
++    assert caught.value.code == "LOCK_ABSENT" and not (root / ".write.lock").exists()
++
++
++def test_a_symlinked_or_substituted_lock_is_refused(tmp_path, monkeypatch):
++    root = canon(tmp_path)
++    (root / ".write.lock").unlink()
++    (root / ".write.lock").symlink_to(tmp_path / "elsewhere")
++    with pytest.raises(lc.LockRefused, match="LOCK_SYMLINK"):
++        with lc.locked(root):
++            pass
++    (root / ".write.lock").unlink()
++    (root / ".write.lock").touch()
++
++    def swap():                                    # another inode takes the name between open and flock
++        os.replace(tmp_path / "other", root / ".write.lock")
++    (tmp_path / "other").touch()
++    monkeypatch.setattr(lc, "_after_open", swap)
++    with pytest.raises(lc.LockRefused, match="LOCK_SUBSTITUTED"):
++        with lc.locked(root):
++            pass
++
++
++def test_external_space_has_a_stable_identity_and_detects_substitution(tmp_path):
++    root, state = canon(tmp_path, lock=False), tmp_path / "state"
++    state.mkdir(mode=0o700)
++    lock = lc.prepare_external(root, state)
++    with pytest.raises(lc.LockRefused, match="LOCK_ALREADY_PREPARED"):
++        lc.prepare_external(root, state)                  # never a second lock space
++    inode = lock.stat().st_ino
++    for _ in range(2):                                    # "restart": a fresh open finds the same inode
++        with lc.locked(root) as kind:
++            assert kind == "external" and lock.stat().st_ino == inode
++    lock.unlink()
++    lock.touch()                    # same path, new file (often the SAME recycled inode number): refused
++    with pytest.raises(lc.LockRefused, match="LOCK_SUBSTITUTED"):
++        with lc.locked(root):
++            pass
++
++
++def test_two_processes_in_the_external_space_exclude_each_other(tmp_path):
++    root, state = canon(tmp_path, lock=False), tmp_path / "state"
++    state.mkdir()
++    lc.prepare_external(root, state)
++    with lc.locked(root):
++        code = textwrap.dedent(f"""
++            import sys, pathlib
++            sys.path.insert(0, {str(REPO)!r})
++            import tests.claude_memory_eval.lock_contract as lc
++            try:
++                with lc.locked(pathlib.Path({str(root)!r}), blocking=False):
++                    print("ENTERED")
++            except lc.LockBusy:
++                print("busy")
++        """)
++        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=20, cwd=REPO)
++        assert out.stdout.strip() == "busy", out.stderr
++
++
++@pytest.mark.parametrize("body", ['{"schema": "x"}', "not json", '{"schema": "eidolon-lockspace/1", "path": "rel",'
++                                  ' "dev": 1, "ino": 2, "ctime_ns": 3}'])
++def test_an_invalid_manifest_is_refused(tmp_path, body):
++    root = canon(tmp_path)
++    (root / lc.MANIFEST).write_text(body)
++    with pytest.raises(lc.LockRefused, match="LOCK_MANIFEST_INVALID"):
++        with lc.locked(root):
++            pass
++
++
++UNSHARE = shutil.which("unshare") and subprocess.run(
++    ["unshare", "-m", "true"], capture_output=True).returncode == 0
++
++
++@pytest.mark.skipif(not UNSHARE, reason="mount namespaces not permitted here")
++def test_on_a_real_read_only_bind_mount_the_legacy_lock_works_for_readers_and_a_plus_b_does_not(tmp_path):
++    root = canon(tmp_path)
++    ro = tmp_path / "ro"
++    ro.mkdir()
++    proc, gate = hold_writer(root)                        # the writer uses the read-write path
++    script = textwrap.dedent(f"""
++        import errno, sys, pathlib
++        sys.path.insert(0, {str(REPO)!r})
++        import tests.claude_memory_eval.lock_contract as lc
++        ro = pathlib.Path({str(ro)!r})
++        try:
++            open(ro / ".write.lock", "a+b")
++            print("a+b OPENED")
++        except OSError as e:
++            print("a+b", errno.errorcode[e.errno])
++        try:
++            with lc.locked(ro, blocking=False):
++                print("ENTERED WHILE WRITER HOLDS")
++        except lc.LockBusy:
++            print("busy")
++        pathlib.Path({str(gate)!r}).touch()
++        import time; time.sleep(0.3)
++        with lc.locked(ro):
++            print("entered after writer")
++    """)
++    try:
++        out = subprocess.run(["unshare", "-m", "sh", "-c",
++                              f"mount --bind {root} {ro} && mount -o remount,ro,bind {ro} && "
++                              f"{sys.executable} -c \"$0\"", script],
++                             capture_output=True, text=True, timeout=30, cwd=REPO)
++    finally:
++        gate.touch()
++        proc.wait(5)
++        proc.stdout.close()
++    assert out.stdout.split("\n")[:3] == ["a+b EROFS", "busy", "entered after writer"], out.stdout + out.stderr
+-- 
+2.43.0
+
