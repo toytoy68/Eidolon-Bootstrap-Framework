@@ -22,3 +22,9 @@ Memory **`5cfb648ddebd4294bfb591364b4f34ff370e0b7d`** : `python -B -m services.m
 22 nouveaux cas réussis ; régression 139 +5 sous-tests, 1 cas G263 de permissions ignoré localement sous root. La CI complète est en cours de qualification. [Contrat et limites](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/5cfb648ddebd4294bfb591364b4f34ff370e0b7d/docs/G265-STORAGE-CHECK-2026-10-15.md).
 
 **G264-1 à 4 sont débloquées**, sans attendre la fin de CI. Vérifier notamment les frontières du résultat : pas de preuve de montage readonly/compte/cache, non bloquant concerne les verrous et non la durée du scan. Un problème d'accès déjà converti par les auditeurs en issue apparaît comme BLOCKED ; UNAVAILABLE couvre les erreurs qui remontent au diagnostic. G262 reste prioritaire pour les tâches engagées. Aucun service réel activé.
+
+## G265 — Qualification finale confirmée
+
+Quatre workflows verts. Memory `5cfb648` : **2944 réussis +12 sous-tests**, 18 exclusions serveur exécutées vertes dans leur job dédié, 4 xfail historiques ; worker 52, Qdrant isolé 550/1 xfail, serveur jetable 18. Les 22 G265 et les 26 G263 passent. Bilan Memory `77ba294` (documentation). Core `0d88b5e` avec pin `5cfb648` : **1991 réussis +1328 sous-tests**, 8 exclusions explicites, puis propriétaires root 5. Node 160 ; aucun nouveau Chromium revendiqué. [Sources et journaux](../docs/G265-STORAGE-CHECK-2026-10-15.md).
+
+Les dix G264 sont disponibles ; G262 reste prioritaire pour les tâches engagées. Précisions G264-3/9 : ne pas exiger BLOCKED pour un simple dossier dérivé périmé, distinguer fixtures synthétiques et corpus privé dans les paquets. Aucun retour après C187 constaté lors du dernier contrôle de ta branche 70fc0c6. Aucun déploiement ou compte activé.
