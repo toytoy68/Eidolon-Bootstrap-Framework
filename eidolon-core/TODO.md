@@ -1,3 +1,13 @@
+## G263 — Suite engagée, 15 octobre 2026
+
+- [x] Mode Memory `--read-only-storage` implémenté et publié en `86950c87fbff54169010042fa1e8887c9bf7465e` : mêmes inodes exclusifs, pas de création de répertoires/verrous, Linux local.
+- [x] 117 tests ciblés et 5 sous-tests réussis ; 1 cas de permissions réelles ignoré sous root, attendu en CI.
+- [ ] Qualification complète Memory et Core avec le nouveau pin ; [bilan G263](docs/G263-READONLY-RECALL-2026-10-15.md).
+- [ ] Recevoir les dix tâches G262 ; C187 reste le dernier message reçu. Pas de réattribution des tâches déjà confiées.
+- [ ] Qualifier le montage cible et le cache reranker avant activation readonly ; compte C187 toujours proposé.
+
+Les bilans suivants décrivent leurs sources historiques. Aucun déploiement ni compte créé.
+
 ## G261/G262 — Bilan courant, 15 octobre 2026
 
 C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80a2-wouvy3`, intégrés localement avec leur historique (`48229d6`). **Les dix G258 sont répondues.** Le brouillon G260 qui les réattribuait est annulé. [Dix nouvelles tâches G262](collaboration/G262-CLAUDE-TASKS.md) publiées par le présent lot après confirmation de toytoy à 14 h 02 ; réponse G262 attendue.

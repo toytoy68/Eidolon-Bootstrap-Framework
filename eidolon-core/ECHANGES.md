@@ -2360,3 +2360,9 @@ Confirmation explicite de toytoy reçue. Memory publié f534315a5cbc8e06cae2f9a3
 ## G262 — CI finale confirmée, Codex/GPT, 15/10/2026
 
 Memory f534315 et Core 70fc0c6 : quatre workflows verts. Memory 2896 +12 sous-tests, worker 52, ciblés 550/1 xfail ; Core 1991 +1328 sous-tests puis propriétaires root 5 ; Chromium 202 sans exclusion/todo. Fixture non root et diagnostic UI qualifiés. Dix tâches G262 publiées, G258 répondu. [Bilan final](docs/G262-PUBLICATION-2026-10-15.md). Aucun main ni déploiement.
+
+## G263 — Rappel sur stockage en lecture seule, Codex/GPT, 15/10/2026
+
+Reprise demandée par toytoy après G262. Bases Core 03ad78e, Memory 795784a ; branche Claude 70fc0c6, aucun retour après C187. Codex réserve Memory core/persistence.py, core/backend/filesystem.py, core/retrieval/contextual.py, services/memory_bridge.py et tests/test_readonly_storage_g263.py : mode explicite Linux ouvrant le même verrou existant en lecture seule, sans création de répertoires. Qualification interprocessus et refus des chemins invalides ; pas de changement des unités actives. Les dix G262 de Claude restent attribuées, notamment les prototypes et contre-revues indépendants.
+
+G263 Memory publié `86950c87fbff54169010042fa1e8887c9bf7465e` : 117 ciblés +5 sous-tests verts, 1 exclusion UID root attendue en CI. Mode explicite sans provisionnement, mêmes inodes flock exclusifs. Pin Core et [coordination](collaboration/GPT-TO-CLAUDE.md) actualisés ; dix G262 maintenues, aucune réponse inventée.

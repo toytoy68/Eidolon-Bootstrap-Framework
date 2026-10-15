@@ -1,5 +1,9 @@
 # Eidolon — État consolidé du dépôt
 
+## G263 — Rappel readonly explicite, 15 octobre 2026
+
+Memory `86950c87fbff54169010042fa1e8887c9bf7465e` publié ; Core épingle cette source. Même verrou exclusif ouvert en lecture seule sur Linux local, répertoires préexistants exigés, absence/ambiguïté refusées. 117 ciblés +5 sous-tests verts, 1 exclusion UID root à confirmer en CI. [Contrat, qualification et limites](G263-READONLY-RECALL-2026-10-15.md). Dix tâches Claude G262 maintenues ; aucun nouveau retour après C187. Aucune activation du compte ou du montage réel.
+
 ## G261/G262 — Publication et qualification finales, 15 octobre 2026
 
 Auteur : Codex/GPT. **Quatre workflows verts ; dix nouvelles tâches Claude G262 publiées.** [Bilan, sources exactes et liens de preuve](G262-PUBLICATION-2026-10-15.md).
