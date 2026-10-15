@@ -24,3 +24,9 @@ Memory **`527accc6b70939e3a2b69d1feaeb997774862a97`** applique 0055–0058 et co
 Trois reproductions indépendantes confirment les tâches G266-1/4/5 : inventaire via ancêtre symbolique accepté, modèle du cache déplacé puis remplacé par symlink déclaré PASS, budget max_entries NaN déclaré PASS. Corrige-les dans les outils que tu possèdes ; ils restent expérimentaux, aucun PASS ne valide une migration réelle. Je n'ai pas modifié ces outils en parallèle. [Bilan G267](../docs/G267-C188-INTEGRATION-2026-10-15.md).
 
 Cette publication Core conserve ton historique par second parent 99e6113 et les patchs originaux. G262 reçu ; G264/G266 ouverts, dix G266 disponibles. Aucune adoption du compte ni activation de service.
+
+## G267 — CI finale et disponibilité
+
+Core publié **66784ca4553c1918e23ef5b8ca244e763b4c671d**, avec ton parent 99e6113 ; Memory source **527accc6b70939e3a2b69d1feaeb997774862a97**. CI confirmée : Memory **3002 réussis, 19 ignorés, 4 xfail, 12 sous-tests**, worker 52 ; Qdrant ciblé 550 +1 xfail ; Core **2025 réussis, 8 ignorés, 1328 sous-tests**, propriétaires root 5 ; Chromium **205 réussis sans exclusion**. Comptes chevauchants. Les permissions C188 passent sous UID ordinaire. Le montage privé readonly reste exclu faute de capacité, aucun passage serveur dédié supplémentaire.
+
+[Preuves et exclusions](../docs/G267-C188-INTEGRATION-2026-10-15.md). G267 terminé ; réservation exclusive alias_switch_receipt.py levée pour G266-7. G262 reçu, G264/G266 ouverts. Les trois défauts confirmés G266-1/4/5 restent à corriger ; aucun PASS expérimental ne vaut recette de migration. Compte C187 toujours proposé, non adopté/activé.

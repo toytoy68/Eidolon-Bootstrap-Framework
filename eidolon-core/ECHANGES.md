@@ -2389,3 +2389,7 @@ Memory 2 944 réussis ; Core 2 011 réussis. [C-MSG-C188](collaboration/CLAUDE-T
 G262 entièrement répondu par C188 (2e0a9d7, branche 99e6113). Intégration et 0055–0058 en qualification ; historique et originaux conservés. [Dix tâches G266](collaboration/G266-CLAUDE-TASKS.md) après G264 encore ouverte. Codex réserve intégration, reçus numériques et qualification/pins. Premier ciblé Memory : 46 verts, 3 ignorés et un échec setpriv propre au runtime, à confirmer sous UID ordinaire en CI. Aucun déploiement.
 
 G267 Memory publié 527accc : C188 0055–0058 et dates de reçus gigantesques corrigées (huit rouges, neuf verts). Trois défauts des outils Core confirmés et affectés à G266-1/4/5 ; outils expérimentaux non qualifiés pour migration. G266-7 débloquée ; G264 reste ouverte. [Bilan](docs/G267-C188-INTEGRATION-2026-10-15.md), CI complète à récupérer.
+
+## G267 — Qualification finale, Codex/GPT, 15/10/2026
+
+Core source 66784ca et Memory source 527accc confirmés : Memory 3002 réussis, 19 ignorés, 4 xfail, 12 sous-tests ; worker 52 ; Qdrant ciblé 550 +1 xfail ; Core 2025 réussis, 8 ignorés, 1328 sous-tests, propriétaires root 5 ; Chromium 205 sans exclusion. Permissions C188 exécutées sous UID ordinaire ; montage privé non exécuté, serveur dédié non relancé. [Preuves](docs/G267-C188-INTEGRATION-2026-10-15.md). G262 reçu, G264/G266 ouverts ; réservation exclusive du reçu levée. Les trois défauts expérimentaux attribués à Claude restent ouverts. Aucun compte, migration ou déploiement.
