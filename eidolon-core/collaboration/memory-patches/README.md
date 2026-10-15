@@ -195,3 +195,11 @@ refactorisation, à part).
 | --- | --- | --- |
 | 0043 | Gardes du rappel sémantique : sabotage local de `core/retrieval/indexed.py` (10 mutants). Deux survivent aux 87 tests GPT et sont tués ici : contrôle « contenu renvoyé = contenu prouvé » (ABA entre `backend.get` et la lecture de preuve) ; archive de conversation sans référence de passage jamais citée entière. Doublons : mutant équivalent (dédoublonnage en aval) | 3 réussis |
 | 0044 | Saturation du pont mémoire : sabotage local de `services/memory_bridge.py` (8 mutants). Deux survivent aux 40 tests GPT et sont tués ici : un second rappel pendant un rappel bloqué reçoit `BUSY` aussitôt ; un échec de démarrage du traitement rend sa place | 2 réussis ; suite Memory **2 762 réussis, 18 ignorés, 4 xfail** |
+
+## Patchs 0045 à 0047 (G252, base `9a61648`, après 0043 et 0044)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0045 | Contre-revue G252 (tâches 1, 2, 3, 5, 6, 8) : fraîcheur globale, preuves candidates, courses du manifeste (tue le mutant « second inventaire »), diagnostics d'âge, vue « worker » sur le contrôleur et ses trois enfants, transport du pont (déconnexion, erreurs sans fuite, échéance de lecture distincte du rappel) | 12 réussis |
+| 0046 | Classificateur **expérimental** de rétention des générations (tests seulement, aucune suppression) | 6 réussis |
+| 0047 | Tranche minimale **expérimentale** des passages d'archives : projection sans texte, citation canonique | 3 réussis ; avec 0043 à 0047, suite Memory **2 791 réussis, 18 ignorés, 4 xfail** |
