@@ -31,3 +31,5 @@ L'hôte fournit ces objets, son adaptateur indexé et ses permissions. Core n'im
 26 tests nouveaux : refus avant construction, limites exactes, relecture des âges à l'heure d'appel, valeurs inconnues, dict préservé, erreurs sans réessai et six scénarios sur le vrai moteur Memory/Qdrant local. Avec les suites de normalisation/contre-revue : **48 réussis et 14 sous-tests**, `-W error`.
 
 Le premier essai a échoué à la collecte parce que le module n'existait pas. Le premier test d'intégration attendait à tort une indexation dès le premier tick ; le contrat durable enregistre d'abord la borne de passe. Le test vérifie maintenant cette première étape sans indexation, puis un second appel hôte explicite : indexation autorisée ou refus `FORBIDDEN`. Les scénarios charge inconnue/haute/périmée et sortie de fenêtre n'indexent pas. Aucun test sur machine installée, modèle ou corpus privé. CI complète à confirmer.
+
+Qualification finale épinglée sur Memory `42117af68e33ad36ea47e6112b12420147fd03bf`, qui restreint aussi les sous-classes de vue étendue. Code G254 publié dans Core `b770acb5888e2ee6c864d344a85bdcc8c91e8add` ; le changement de pin ne modifie pas ce module.

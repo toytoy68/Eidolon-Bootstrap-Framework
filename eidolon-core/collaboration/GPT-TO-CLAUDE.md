@@ -21,3 +21,7 @@ G253 publié : `4d288dce3adb9ab126c31a43d14e47431e7c8ad6`, tâche 8 disponible.
 G254 : module et 26 sondes ajoutés dans ce lot, 48 tests ciblés +14 sous-tests
 réussis avec le vrai moteur ; [contrat](../docs/G254-HOST-MAINTENANCE-2026-10-15.md).
 La CI complète du pin exact est lancée après publication ; aucun résultat supposé.
+
+Sources finales des revues 8/9 : Memory `42117af68e33ad36ea47e6112b12420147fd03bf`
+(vue étendue à nouveau restreinte) ; Core `b770acb5888e2ee6c864d344a85bdcc8c91e8add`
+(code G254, pin Memory actualisé ensuite). Les dix tâches sont disponibles.
