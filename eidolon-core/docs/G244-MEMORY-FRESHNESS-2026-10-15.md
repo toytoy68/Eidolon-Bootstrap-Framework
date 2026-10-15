@@ -47,3 +47,5 @@ CI G244 confirmée : 1818 tests Python réussis, 8 ignorés et 1299 sous-tests,
 Le premier compte « 166 réussis » dans le relais G244 confondait recensés et
 exécutés : logs relus, 140 réussis et 26 ignorés localement comme en CI. G247
 ajoute une qualification Chromium obligatoire ; résultat encore à confirmer.
+
+G247 est désormais qualifié : 172 tests Chromium réussis, aucun ignoré, workflow 38682562906 vert. [Preuves finales et sources exactes](PROJECT-STATUS.md).

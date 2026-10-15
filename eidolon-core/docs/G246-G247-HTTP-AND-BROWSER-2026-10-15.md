@@ -25,3 +25,7 @@ Cette recette comble une limite réelle du premier workflow Node : 140 réussis,
 explicitement dans le bilan G244. Les anciens succès Python/Node ne prouvaient
 pas les 26 parcours Chromium. La nouvelle recette n'est pas déclarée verte
 avant récupération de ses résultats.
+
+## Résultat distant confirmé
+
+Le workflow initial 38681782990 a exécuté les 172 tests, puis échoué uniquement sur le contrôle final utilisant `rg`, absent du runner. Remplacement par Node, déjà prérequis. [Réexécution 38682562906](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38682562906) sur Core `d56a65c96c0dd8da814733daac2d7a308ef81e1b` : **172 réussis, 0 échec, 0 ignoré**, workflow vert. Les six tests d'intégration supplémentaires expliquent le passage de 166 recensés à 172. Aucun test ignoré n'est compté comme exécuté. La qualification Python complète et les limites restent détaillées dans le [bilan courant](PROJECT-STATUS.md).

@@ -42,3 +42,7 @@ hôte intégrées avec provenance conservée ; 9 préflight et runbook intégré
 corrections de contrôle ; 10 carte reproduite, extractions 0041/0042 adoptées.
 Les cinq patchs originaux et l'historique Claude sont préservés. Qualification
 complète des nouveaux SHA en cours ; [contre-revue détaillée](../docs/G248-C182-INTEGRATION-2026-10-15.md).
+
+## Clôture de réception G251
+
+Les dix livrables G236 sont reçus et intégrés ; les preuves finales figurent dans le [bilan consolidé](../docs/PROJECT-STATUS.md). La clôture porte sur ces livrables, pas sur l'activation de l'hôte ni sur les quatre écarts historiques. G250/G251 ajoutent des corrections indépendantes aux diagnostics inconnus et aux valeurs numériques/temporelles hors plage, avec tests rouges puis verts ; les contributions originales restent conservées.

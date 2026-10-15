@@ -1,3 +1,9 @@
+## G251 — Bilan courant, 15 octobre 2026
+
+G242–G251 livrés : fraîcheur Memory visible dans le contexte du dialogue, trajet HTTP complet testé, workflow Chromium sans exclusion, C182 et les dix livrables reçus intégrés avec histoire conservée. Contre-vérifications du préflight, provenance et entrées hôte hors plage. [Preuves finales et sources exactes](docs/PROJECT-STATUS.md).
+
+Suite : contre-revue rappel/transport, raccordement explicite des observations hôte et de leurs seuils, choix de ports puis recette VM/PC. Quatre xfail Memory suivis ; MCP encore en erreur interne au contrôle de 06 h 50. Aucun déploiement ni changement des estimations globales. Les bilans suivants sont historiques.
+
 ## G241 — Résultats finaux confirmés, 15 octobre 2026
 
 Quatre workflows verts : Memory 2638 réussis, ciblés 331, serveur HTTP 15 (backlog 1200 et pertes réelles de réponse), Core 1789 +1299 sous-tests puis 5 sondes du jeton sous root. Exclusions et xfail détaillés dans le [bilan consolidé](docs/PROJECT-STATUS.md), comptes chevauchants. Historique C181 intégré ; tâches Claude 1/2 reçues, 3–10 ouvertes. Code et bilans publiés sur branches de développement. Aucun déploiement ni activation.

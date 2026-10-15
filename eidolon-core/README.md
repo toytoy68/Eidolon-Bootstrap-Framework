@@ -1,5 +1,9 @@
 # Eidolon Core v0.1
 
+**État courant — G251, 15 octobre 2026** : fraîcheur mémoire transmise au dialogue et visible dans le contexte PC, trajet HTTP complet testé, dix livrables Claude reçus et intégrés. Qualification Chromium : 172 réussis, aucun ignoré. [Bilan exact, CI et points ouverts](docs/PROJECT-STATUS.md). Aucun déploiement.
+
+Les repères suivants sont historiques ; consulter le bilan courant pour les statuts actualisés.
+
 **G233 — suite du 14 octobre** : pagination des gros arriérés et cycle durable Memory livrés, reprise et conditions de maintenance testées. Core épinglé sur le lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2470 tests, Qdrant/worker/scanners/maintenance 215, Core 1763 (7 ignorés, aucun avertissement pytest).
 
 **G232 — suite du 14 octobre** : inventaire inverse Memory et revue fraîche des candidats orphelins publiés ; aucune suppression activée. Core épinglé sur ce lot. [Bilan courant](docs/PROJECT-STATUS.md). Trois CI vertes : Memory 2430 tests, Qdrant/worker/scanners 175, Core 1763 (7 ignorés, aucun avertissement pytest).
@@ -17,7 +21,7 @@ migration explicite avec sauvegarde, anciennes liaisons média non requalifiées
 **Validation Python/SQLite/Chromium et paquet installé de ce lot en attente**
 (environnement indisponible). 69 cas JavaScript exercés dans V8, transports
 scriptés ; ce ne sont pas des essais Windows ou de moteurs IA.
-[État courant](docs/PROJECT-STATUS-2026-10-09.md) et
+[État historique du 09/10](docs/PROJECT-STATUS-2026-10-09.md) et
 [migration](docs/CONVERSATION-STORE.md).
 
 ![Logo officiel Eidolon Core Technologies](desktop/connected/eidolon-logo.png)
@@ -55,7 +59,7 @@ Le dialogue média et le raccordement complet à la page sont suivis dans G122/G
 
 [Identité graphique officielle](assets/branding/LOGO.md), validée par toytoy le 08/10/2026.
 
-[État actuel et suites du 09/10](docs/PROJECT-STATUS-2026-10-09.md).
+[État historique et suites du 09/10](docs/PROJECT-STATUS-2026-10-09.md).
 [État historique du 08/10](docs/PROJECT-STATUS-2026-10-08.md).
 [Preuves de la séance de 11 h 11](docs/validation/2026-10-08/codex-hour-1111/README.md).
 [Ajouts et preuves du 08/10](docs/validation/2026-10-08/codex-hour-0435/README.md) :

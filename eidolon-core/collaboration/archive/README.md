@@ -870,3 +870,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G241 final](2026-10-15-codex-G241-final.md) — résultats finaux G236–G241, conservés avant G244.
 
 - [C-MSG-G244](2026-10-15-codex-G244.md) — relais fraîcheur avant réception de C182.
+
+- [C-MSG-G249 avant CI finale](2026-10-15-codex-G249-before-ci.md) — réception C182 et intégration des dix livrables, conservée octet pour octet avant G251.
