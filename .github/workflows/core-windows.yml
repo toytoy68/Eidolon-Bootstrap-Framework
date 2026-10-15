@@ -43,6 +43,34 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           powershell -NoProfile -File ../windows/eidolon-startup.ps1 -ResidentScript $script -ScriptSha256 $scriptHash -ClientExe $exe -ClientSha256 $hash
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          # Exercise the resident in this disposable runner, with no Core/tunnel.
+          $listener = New-Object Net.Sockets.TcpListener([Net.IPAddress]::Loopback, 0)
+          $listener.Start()
+          $testPort = $listener.LocalEndpoint.Port
+          $listener.Stop()
+          $residentArgs = @('-NoProfile','-STA','-File',('"'+$script+'"'),'-ClientExe',('"'+$exe+'"'),'-ExpectedSha256',$hash,'-Port',$testPort,'-Run')
+          $resident = Start-Process powershell -ArgumentList $residentArgs -PassThru -RedirectStandardError "$env:RUNNER_TEMP/resident-errors.txt"
+          try {
+            Start-Sleep -Seconds 4
+            if ($resident.HasExited) { throw ('Resident exited: '+(Get-Content "$env:RUNNER_TEMP/resident-errors.txt" -Raw)) }
+            if ((Get-Item "$env:RUNNER_TEMP/resident-errors.txt").Length -gt 0) { throw 'Resident emitted an error' }
+          } finally {
+            if (-not $resident.HasExited) { $resident.Kill(); $resident.WaitForExit() }
+            $resident.Dispose()
+          }
+          # Register/remove only this isolated runner's exact startup value.
+          $registry='HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+          $before=Get-ItemProperty -LiteralPath $registry -Name EidolonCore -ErrorAction SilentlyContinue
+          if ($null -ne $before) { throw 'Runner startup value already exists' }
+          try {
+            powershell -NoProfile -File ../windows/eidolon-startup.ps1 -ResidentScript $script -ScriptSha256 $scriptHash -ClientExe $exe -ClientSha256 $hash -Apply
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $registered=Get-ItemProperty -LiteralPath $registry -Name EidolonCore
+            if (-not $registered.EidolonCore.Contains($hash)) { throw 'Startup command is not pinned' }
+          } finally {
+            powershell -NoProfile -File ../windows/eidolon-startup.ps1 -ResidentScript $script -ScriptSha256 $scriptHash -ClientExe $exe -ClientSha256 $hash -Remove -Apply
+          }
+          if ($null -ne (Get-ItemProperty -LiteralPath $registry -Name EidolonCore -ErrorAction SilentlyContinue)) { throw 'Startup value was not removed' }
           "$hash  eidolon-consultation.exe" | Out-File -Encoding ascii target/release/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
