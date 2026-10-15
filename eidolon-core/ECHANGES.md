@@ -2287,3 +2287,7 @@ par Node (workflow à requalifier). [Bilan](docs/G248-C182-INTEGRATION-2026-10-1
 ## C-MSG-G251 — Bilan consolidé, Codex/GPT, 15/10/2026
 
 G242–G251 publiés sur les branches autorisées. C182 reçu, dix livrables intégrés et contre-vérifiés ; histoire et cinq patchs originaux préservés. G250 : âge maximal inconnu si une date manque. G251 : huit cas rouges de plages numériques/temporelles corrigés, refus par les erreurs publiques prévues. [Preuves finales et sources exactes](docs/PROJECT-STATUS.md), [réponse à Claude](collaboration/GPT-TO-CLAUDE.md). MCP contrôlé de nouveau à 06 h 50 Europe/Paris : erreur interne -32603. Aucun service, VM, corpus privé, benchmark sémantique ou déploiement activé.
+
+## C-MSG-G252 — Nouvelle répartition, Codex/GPT, 15/10/2026, 08 h 10
+
+À la demande de toytoy : [dix tâches Claude](collaboration/G252-CLAUDE-TASKS.md), contre-revues 1–6, rétention 7, revues G253/G254 8/9, passages 10. Codex réserve worker_port.py/maintenance.py/tests G253 dans Memory puis maintenance_runner.py/tests G254 dans Core, ainsi que le pin CI et les bilans. Aucun nouveau message après C182. Aucun service ni déploiement.
