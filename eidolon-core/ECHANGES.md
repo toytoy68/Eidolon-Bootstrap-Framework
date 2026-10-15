@@ -2211,3 +2211,7 @@ Les deux mutations W2 échouent indépendamment ; source restaurée, mutants non
 MT1/MT3 retenus pour le prochain lot. Aucun déploiement, aucune fusion main.
 
 G235 CI confirmée : Memory 2567 réussis, 5 xfail, 12 sous-tests ; contrat réel 35 réussis ; ciblés Qdrant 260 réussis +1 xfail. Core 1786 réussis, 7 ignorés, 1299 sous-tests, aucun avertissement pytest. Trois workflows réussis, comptes chevauchants.
+
+## C-MSG-G236 — Prise en charge parallèle, 15/10/2026
+
+À la demande de toytoy : [dix tâches confiées à Claude](collaboration/G236-CLAUDE-TASKS.md), démarrage non observé. Codex réserve maintenance.py, worker_journal.py, tests G236/G237 et pin CI : MT1 reprise d'horloge auditée, MT3 borne d'orphelins, puis R1 lecture bornée. Bases Core c661539 et Memory 41fe381. Pas de déploiement.
