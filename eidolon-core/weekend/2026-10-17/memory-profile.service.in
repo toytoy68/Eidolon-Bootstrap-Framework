@@ -1,0 +1,23 @@
+# Eidolon Core Technologies (ECT) — candidate; writable profile bridge is an explicit choice
+[Unit]
+Description=Eidolon isolated profile recall and explicit remembering
+After=network.target
+[Service]
+Type=simple
+User=__ACCOUNT_TO_APPROVE__
+Group=__GROUP_TO_APPROVE__
+WorkingDirectory=__MEMORY_SOURCE__
+Environment=PYTHONPATH=__MEMORY_SOURCE__
+EnvironmentFile=__PRIVATE_MEMORY_TOKEN_ENV__
+ExecStart=__PYTHON__ -m services.memory_bridge --root __ISOLATED_PROFILE_ROOT__ --profile-id __PROFILE_ID__ --remember-profile __PROFILE_ID__ --index-config __PRIVATE_INDEX_JSON__ --port __MEMORY_PORT__
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__ISOLATED_PROFILE_ROOT__
+ReadOnlyPaths=__PRIVATE_CONFIG_DIRECTORY__ __MODEL_CACHE__
+Restart=on-failure
+RestartSec=10
+[Install]
+WantedBy=multi-user.target

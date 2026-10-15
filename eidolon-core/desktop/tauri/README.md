@@ -96,3 +96,12 @@ le trait du logo est fin, mais le « e » reste reconnaissable à 16 px.
 | DT3 | Appairage durable (C-D12) : où et comment garder la clé de l'appareil sous Windows. Non conçu ici ; aucune commande distante. |
 | DT4 | Distribution Windows : installateur ou exécutable seul, mode WebView2 (programme d'amorçage ou version fixe), signature. |
 | DT5 | Effacer les données de la webview à la fermeture, ou les garder ? |
+
+## G270 — client résident Windows candidat
+
+Le code Tauri reste sans nouvelle capacité IPC. Le résident natif Windows se
+trouve dans `../windows/` : icône « e », ouverture/fermeture du client, démarrage
+à la connexion avec aperçu par défaut et empreintes exigées. Voir
+`../../weekend/2026-10-17/RACCORDEMENTS-G270.md`. Le workflow Core Windows candidate
+compile cette coquille et vérifie les aperçus PowerShell ; il ne valide pas
+l'interaction WebView2, la caméra ou le microphone du PC réel.

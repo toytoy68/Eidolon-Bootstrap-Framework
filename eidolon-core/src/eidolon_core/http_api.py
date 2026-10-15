@@ -320,6 +320,12 @@ class _Handler(BaseHTTPRequestHandler):
                     raise APIError(404, "NOT_FOUND")
                 self._send(200, body, asset[1])
                 return
+            if self.path == "/v1/activity":
+                api = self.server.conversation_api
+                if api is None or api.services is None:
+                    raise APIError(503, "ACTIVITY_NOT_CONFIGURED")
+                self._json(200, api.services.activity.flush())
+                return
             if self.path == "/v1/health":
                 self._json(200, self.server.store.health())
                 return
@@ -430,7 +436,7 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None, monitor_port=None):
+                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None, monitor_port=None, services=None):
         """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -454,7 +460,7 @@ class ReadServer(HTTPServer):
                                                     read_token=token, media_worker=worker, media_artifacts=artifacts,
                                                     personality_mode=personality[0], personality_file=personality[1],
                                                     personality_sha256=personality[2] if len(personality) > 2 else None,
-                                                     memory=memory)
+                                                     memory=memory, services=services)
         if comm_port is not None and (type(comm_port) is not int or not 1024 <= comm_port <= 65535):
             raise ValueError("INVALID_COMM_PORT")
         self.comm_port = comm_port          # C147: /v1/comm/* relayed to 127.0.0.1:<comm_port> when set
@@ -555,6 +561,7 @@ def main(argv=None):
                         help="none (défaut sans fichier), last-valid (défaut avec fichier) ou required")
     parser.add_argument("--personality-sha256", metavar="EMPREINTE",
                         help="Version exacte exigée (64 caractères hexadécimaux), avec --personality-mode required")
+    parser.add_argument("--beta-runtime", metavar="FICHIER", help="Configuration privée des profils, mémoire, Internet et fichiers")
     parser.add_argument("--memory-bridge-token-file", metavar="FICHIER",
                         help="Active explicitement le rappel mémoire via tunnel SSH localhost")
     parser.add_argument("--comm-port", type=int, metavar="PORT",
@@ -565,6 +572,8 @@ def main(argv=None):
                         help="Port local du tunnel SSH Memory Bridge (défaut 18765)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
+    if args.beta_runtime and (not args.conversations or args.memory_bridge_token_file or args.check):
+        parser.error("--beta-runtime exige --conversations et exclut --memory-bridge-token-file et --check")
     if args.memory_bridge_token_file and not args.conversations:
         parser.error("--memory-bridge-token-file exige --conversations")
     if not 1024 <= args.memory_bridge_port <= 65535:
@@ -588,6 +597,7 @@ def main(argv=None):
                          research_archives=args.research_archives)
         print(render(report, args.format or "json"))
         return 0 if report["status"] == "PASS" else 2
+    services = None
     try:
         token = read_token(args.token_file)
         conversations = None
@@ -609,11 +619,13 @@ def main(argv=None):
         from .memory import BridgeMemory
         memory = (BridgeMemory(args.memory_bridge_token_file, port=args.memory_bridge_port)
                   if args.memory_bridge_token_file else None)
+        from .beta_runtime import BetaRuntime
+        services = BetaRuntime.load(args.beta_runtime) if args.beta_runtime else None
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
                         media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
                         memory=memory, comm_port=args.comm_port,
-                        monitor_port=args.monitor_port) as server:
+                        monitor_port=args.monitor_port, services=services) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality
@@ -632,6 +644,9 @@ def main(argv=None):
     except (OSError, ValueError, sqlite3.Error, ContractError):
         print(message("ERREUR", "API_STARTUP_REFUSED : vérifier état existant, token privé et port."), file=sys.stderr)
         return 2
+    finally:
+        if services is not None:
+            services.close()
     return 0
 
 

@@ -1,0 +1,17 @@
+{
+  "schema": "eidolon-beta-runtime/1",
+  "state_directory": "/srv/eidolon-private/profile-services",
+  "activity_source": "host.eidolon",
+  "clients": {"pc-toytoy": "toytoy"},
+  "profiles": {
+    "toytoy": {
+      "memory_port": 18765,
+      "read_token_file": "/srv/eidolon-private/credentials/memory-read-token",
+      "write_token_file": "/srv/eidolon-private/credentials/memory-write-token",
+      "web_enabled": true,
+      "daily_web_limit": 100,
+      "file_roots": {"documents": "/mnt/eidolon-nas/toytoy"}
+    }
+  },
+  "searxng_url": "http://127.0.0.1:8888"
+}

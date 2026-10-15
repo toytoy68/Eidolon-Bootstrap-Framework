@@ -183,6 +183,7 @@
       state.phase = "open";
       state.conversationId = r.json.conversation_id;
       state.identity = { clientId: r.json.client_id, actor: r.json.actor, storeId: r.json.store_id };
+      state.services = r.json.services || null;
       state.recent = [];
       restoreCancels();
       emit();
@@ -464,6 +465,10 @@
     return { open: open, close: close, send: send, submit: submit, checkReceipt: checkReceipt, resume: resume,
       cancelPropose: cancelPropose, cancelSubmit: cancelSubmit, cancelCheck: cancelCheck, cancelSelect: cancelSelect,
       loadMedia: loadMedia,
+      service: function (route, body) {
+        if (state.phase !== "open" || !state.services) return Promise.resolve({ ok: false, code: "PROFILE_SERVICES_NOT_CONFIGURED" });
+        return call(route, body);
+      },
       // C147: the voice/camera block reuses this key for /v1/comm/* (same origin); still memory only.
       authorization: function () { return token; },
       state: function () { return JSON.parse(JSON.stringify(state)); } };
@@ -769,10 +774,13 @@
   }
 
   function mount(doc, deps) {
+    var services = null;
     var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
+      if (services) services.update(st);
       if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
+    if (root.EidolonProfileServices) services = root.EidolonProfileServices.mount(doc, conv);
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();

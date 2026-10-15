@@ -332,11 +332,11 @@ class Dialogue:
         """Shutdown policy: stop waiting for models now; never record a reply after this point."""
         self._closing.set()
 
-    def _recall(self, text):
+    def _recall(self, text, client_id=None):
         if self.memory is None:
             return None, [], None
         try:
-            context = validate_context(self.memory.recall(text))
+            context = validate_context(self.memory.recall_for(client_id, text) if hasattr(self.memory, "recall_for") else self.memory.recall(text))
         except Exception as exc:  # noqa: BLE001 - recall is optional: no memory is better than a guessed one
             return None, [], type(exc).__name__
         return context, [reference(item) for item in context["items"]], None
@@ -472,7 +472,7 @@ class Dialogue:
         window = self.conversations.context(conversation_id, max_turns=self.history_turns + 1,
                                             max_chars=self.history_chars)
         history = [t for t in window["turns"] if t["sequence"] < turn["sequence"]]
-        memory, sources, memory_error = self._recall(text)
+        memory, sources, memory_error = self._recall(text, client_id)
         diagnostics = {"memory_error": memory_error, "model_error": None}
         media, freeze = None, None
         if self.media_proposals:

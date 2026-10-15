@@ -404,3 +404,9 @@ input[type="password"] {
 .darme.has-logo .darme-icon { display: none; }
 .darme-emblem { height: 100px; width: auto; margin-right: auto; }
 .drawer-close { align-items: center; gap: 1rem; }
+
+#profile-services { margin: 1rem 0; padding: 1rem; border: 1px solid #586174; border-radius: .6rem; }
+#profile-services label { display: block; margin-top: .75rem; }
+#service-value { width: 100%; box-sizing: border-box; }
+#service-output { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; }
+#service-output button { display: block; margin: .4rem 0; }

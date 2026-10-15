@@ -1,0 +1,22 @@
+# Eidolon Core Technologies (ECT) — candidate, replace every placeholder before review
+[Unit]
+Description=Eidolon Core authenticated profile services
+After=network.target
+[Service]
+Type=simple
+User=__ACCOUNT_TO_APPROVE__
+Group=__GROUP_TO_APPROVE__
+WorkingDirectory=__CORE_SOURCE__
+Environment=PYTHONPATH=__CORE_SOURCE__/src
+ExecStart=__PYTHON__ -m eidolon_core.http_api --state __CORE_STATE__ --token-file __CORE_READ_TOKEN__ --port __CORE_PORT__ --web-root __CORE_SOURCE__/desktop/connected --conversations __DIALOGUE_MODEL_JSON__ --beta-runtime __PRIVATE_BETA_RUNTIME_JSON__
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__CORE_STATE__ __PROFILE_SERVICES_STATE__
+ReadOnlyPaths=__PRIVATE_CONFIG_DIRECTORY__ __APPROVED_NAS_MOUNT__
+Restart=on-failure
+RestartSec=10
+[Install]
+WantedBy=multi-user.target

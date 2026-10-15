@@ -2432,3 +2432,7 @@ Demande toytoy 18 h 23 : dossier PC puis travaux hors VM et fichiers de recette 
 ### G269 — livraison hors VM, 15/10/2026
 
 C191 reçu avec historique Core, patch 0067 Memory intégré. Développement candidat : runtime index/pont épinglé, passages durables reconstruits, mémorisation explicite CLI, maintenance hôte à un tick. Dossier `weekend/2026-10-17/`, inventaires, 26 preuves à remplir, rollback, archive à SHA fixes. Memory publié c6a77631d75f96a31b3a1c291ad462ee9f94c0ea, trois CI vertes (3146/25/3, 550/1, serveur 18) ; Core épingle ce SHA. Rapport unique final dans le dossier. Aucun accès VM/PC, service, compte, migration, suppression ou benchmark G182. Les réservations G270–G273 ne constituent pas des lots terminés : le périmètre réalisé est consolidé en G269 et les raccordements restants sont explicites dans TODO.
+
+## G270 — Raccordements bêta complets hors VM, Codex/GPT, 15/10/2026
+
+Demande toytoy « attaque tout ça d’une traite ». Bases Core a55a7a6 / Memory 017ae1f, C191 dernière réponse reçue. Codex réserve API et UI de mémorisation, profils authentifiés, reçus d’activité, synchronisation incrémentale des passages, Internet avec quotas, accès fichiers autorisés et client Windows résident. Tests, publication des branches autorisées et actualisation du paquet/rapport du week-end inclus. Aucune activation sur VM ni création de compte.

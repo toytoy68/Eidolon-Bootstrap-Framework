@@ -14,6 +14,8 @@ conversation credential; the read token is refused explicitly. The client identi
 from the credential, never from the request. A submission creates the mission it names and returns a
 receipt; it does not run it. Cancellation records a request, never a confirmed stop.
 """
+from contextlib import nullcontext
+from .beta_runtime import ServiceError
 import argparse
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -42,7 +44,7 @@ PREFIX = "/v1/conversations/"
 # per character (96 000), plus the envelope.
 MAX_BODY = 100_000
 ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel_proposal", "cancel",
-          "cancel_receipt", "media_results"}
+          "cancel_receipt", "media_results", "action_preview", "action_commit", "action_receipts", "files", "activity"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -93,7 +95,7 @@ def _fields(data, required, optional=()):
 class ConversationAPI:
     def __init__(self, runtime, *, dialogue_model, read_token=None, allowed_hosts=None, attempt_seconds=None,
                  media_worker=None, media_artifacts=None, personality_mode="none", personality_file=None,
-                 personality_sha256=None, memory=None):
+                 personality_sha256=None, memory=None, services=None):
         """runtime: the mission Runtime whose Store, catalogue and configuration missions use.
 
         media_worker / media_artifacts (G122/G123): Codex's durable queue and artifact store, fixed by the
@@ -113,9 +115,12 @@ class ConversationAPI:
         from .personality import load as load_personality
         self.personality = load_personality(personality_mode, personality_file, self.conversations,
                                              personality_sha256)
+        if services is not None and memory is not None:
+            raise ValueError("profile services own their memory binding")
+        self.services = services
         self.dialogue = Dialogue(self.conversations, dialogue_model, runtime.catalog, attempt_seconds=attempt_seconds,
                                  media_proposals=media_worker is not None, personality=self.personality,
-                                 memory=memory)
+                                 memory=services if services is not None else memory)
         self.read_authorization = ("Bearer " + read_token).encode("ascii") if read_token else None
         self.allowed_hosts = allowed_hosts
 
@@ -125,6 +130,8 @@ class ConversationAPI:
         """headers: mapping name -> list of values. Returns (status, JSON-serializable object)."""
         try:
             return 200, self._route(method, path, headers, body)
+        except ServiceError as exc:
+            return exc.status, self._error(exc.code)
         except APIError as exc:
             return exc.status, self._error(exc.code)
         except CredentialError as exc:
@@ -151,6 +158,9 @@ class ConversationAPI:
     def close(self):
         """Shutdown policy (G088-R2): in-flight model attempts are abandoned, nothing more is recorded."""
         self.dialogue.close()
+        if self.services is not None:
+            self.services.close()
+            self.services = None
 
     @staticmethod
     def _error(code):
@@ -194,7 +204,10 @@ class ConversationAPI:
             raise APIError(413, "REQUEST_TOO_LARGE")
         client = self._client(headers)
         data = _decode(body)
-        return getattr(self, "_" + path[len(PREFIX):])(client, data)
+        if self.services is not None:
+            self.services.profile(client["client_id"])
+        with self.services.activity.request() if self.services is not None else nullcontext():
+            return getattr(self, "_" + path[len(PREFIX):])(client, data)
 
     def _mission_of(self, client, data):
         self._own(client, data["conversation_id"])
@@ -207,12 +220,40 @@ class ConversationAPI:
 
     # -- routes -----------------------------------------------------------------------------------
 
+    def _service(self):
+        if self.services is None:
+            raise APIError(503, "PROFILE_SERVICES_NOT_CONFIGURED")
+        return self.services
+
+    def _activity(self, client, data):
+        _fields(data, ())
+        self._service().activity.touch()
+        return {"protocol": PROTOCOL, "state": "OBSERVED"}
+
+    def _action_preview(self, client, data):
+        _fields(data, ("request_key", "action", "parameters"))
+        return self._service().preview(client["client_id"], client["actor"], data["request_key"],
+                                       data["action"], data["parameters"])
+
+    def _action_commit(self, client, data):
+        _fields(data, ("id", "sha256"))
+        return self._service().commit(client["client_id"], data["id"], data["sha256"])
+
+    def _action_receipts(self, client, data):
+        _fields(data, ())
+        return {"receipts": self._service().receipts(client["client_id"])}
+
+    def _files(self, client, data):
+        _fields(data, ("root", "path"))
+        return self._service().files(client["client_id"], data["root"], data["path"])
+
     def _open(self, client, data):
         _fields(data, {"client_key"})
         opened = self.conversations.open(client_id=client["client_id"], client_key=data["client_key"])
         # The client needs its own identity to build a submission; it is the credential's, never chosen.
         return {"protocol": PROTOCOL, **opened, "client_id": client["client_id"], "actor": client["actor"],
-                "store_id": self.conversations.store_id}
+                "store_id": self.conversations.store_id,
+                **({"services": self.services.capabilities(client["client_id"])} if self.services else {})}
 
     def _recent(self, client, data):
         _fields(data, set(), {"limit"})

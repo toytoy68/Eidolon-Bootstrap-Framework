@@ -95,6 +95,23 @@
           <p class="help">Reprendre une conversation précédente (rien n'est renvoyé automatiquement) :</p>
           <ul id="conv-recent-list" class="conv-recent-list"></ul>
         </div>
+          <details id="profile-services" hidden>
+            <summary>Retenir ceci · Internet · Fichiers</summary>
+            <p id="service-profile" class="help"></p>
+            <label for="service-action">Action</label>
+            <select id="service-action"><option value="remember">Retenir ceci</option><option value="web.search">Rechercher sur Internet</option><option value="web.fetch">Lire une page HTTPS</option><option value="file.read">Lire un fichier autorisé</option></select>
+            <label for="service-root">Dossier autorisé (fichiers seulement)</label><input id="service-root" maxlength="80" autocomplete="off">
+            <label for="service-value">Texte à retenir, recherche, URL ou chemin relatif</label>
+            <textarea id="service-value" rows="4" maxlength="16000"></textarea>
+            <p class="help">La mémorisation conserve une information non vérifiée. Internet transmet exactement la recherche ou l’URL confirmée. Les résultats et fichiers restent des sources non vérifiées.</p>
+            <button id="service-use-draft" type="button">Retenir le brouillon du chat</button>
+            <label for="service-upload">Ouvrir un fichier texte du PC</label><input id="service-upload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown,text/csv">
+            <button id="service-files" type="button">Lister ce dossier</button>
+            <button id="service-preview" type="button">Préparer l’action</button>
+            <button id="service-confirm" type="button" hidden>Confirmer cette action</button>
+            <button id="service-receipts" type="button">Consulter les reçus</button>
+            <pre id="service-output" role="status" aria-live="polite"></pre>
+          </details>
           <ol id="conv-log" class="conv-log" aria-label="Échanges"></ol>
           <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>
           <h3 id="conv-proposal-title">Proposition à valider</h3>

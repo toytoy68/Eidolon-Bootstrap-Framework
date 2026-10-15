@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 import re
 
-IDS={"V%02d"%i for i in range(1,13)}|{"P%02d"%i for i in range(1,11)}|{"O%02d"%i for i in range(1,5)}
+IDS={"V%02d"%i for i in range(1,13)}|{"P%02d"%i for i in range(1,11)}|{"O%02d"%i for i in range(1,5)}|{"G%02d"%i for i in range(1,11)}
 
 def unique(pairs):
     result={}

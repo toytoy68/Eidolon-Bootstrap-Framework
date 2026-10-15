@@ -15,7 +15,7 @@ load. Without a fresh activity receipt, maintenance remains deferred.
 """
 import argparse
 from dataclasses import asdict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, time as walltime
 import json
 import math
 import os
@@ -66,7 +66,10 @@ def capture(policy, *, now, activity=None):
 
 def validate_runtime(raw):
     fields={"schema","canonical_root","state_directory","index_config","profile_id","allowed_information_ids"}
-    if type(raw) is not dict or set(raw)!=fields or raw["schema"]!="eidolon-maintenance-runtime/1":
+    profile_scope = (type(raw) is dict and raw.get("schema") == "eidolon-maintenance-runtime/2"
+                     and set(raw) == (fields - {"allowed_information_ids"}) | {"scope"}
+                     and raw.get("scope") == "isolated_profile_root")
+    if not profile_scope and (type(raw) is not dict or set(raw)!=fields or raw["schema"]!="eidolon-maintenance-runtime/1"):
         raise ValueError("invalid maintenance runtime")
     result=dict(raw)
     for key in ("canonical_root","state_directory","index_config"):
@@ -76,15 +79,15 @@ def validate_runtime(raw):
         result[key]=Path(v)
     if type(raw["profile_id"]) is not str or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}",raw["profile_id"]):
         raise ValueError("invalid maintenance profile")
-    ids=raw["allowed_information_ids"]
+    ids=[] if profile_scope else raw["allowed_information_ids"]
     if (type(ids) is not list or len(ids)>1000 or any(type(i) is not str or
         not re.fullmatch(r"[A-Za-z0-9._-]{1,256}",i) for i in ids) or len(ids)!=len(set(ids))):
         raise ValueError("explicit distinct Information allow-list required")
-    result["allowed_information_ids"]=frozenset(ids)
+    result["allowed_information_ids"]=None if profile_scope else frozenset(ids)
     return result
 
 
-def run_once(policy, observation, *, now, runtime=None):
+def run_once(policy, observation, *, now, runtime=None, activity_provider=None):
     opened=[]
     class Preview:
         def tick(self, **kwargs):
@@ -103,11 +106,37 @@ def run_once(policy, observation, *, now, runtime=None):
                 or state==root or root in state.parents or state in root.parents):
             raise ValueError("separate existing canonical and private state directories required")
         config=load_runtime(r["index_config"])
-        if config.projection != "documents":
-            raise ValueError("incremental maintenance requires document projection")
         index=open_index(config);opened.append(index.client)
         profile=r["profile_id"];allowed=r["allowed_information_ids"]
-        authorize=lambda who,ident,action: who==profile and ident in allowed and action=="index.upsert"
+        if allowed is None:
+            from services.profile_binding import require_binding
+            if root.name != "persistent" or root.parent.name != "memory":
+                raise ValueError("isolated profile canonical layout required")
+            require_binding(root.parent.parent, profile)
+        authorize=lambda who,ident,action: who==profile and (allowed is None or ident in allowed) and action=="index.upsert"
+        if config.projection == "archive_passages":
+            from core.maintenance.window import preview_window
+            class PassageTick:
+                def tick(self, *, at, last_activity, boot_at, load_ok):
+                    decision = preview_window(at=at, last_activity=last_activity, start=walltime(4), end=walltime(8),
+                                              zone="Europe/Paris", minimum_idle_minutes=30)
+                    reasons = list(decision["reasons"])
+                    if (at-boot_at).total_seconds() < 1800:
+                        reasons.append("BOOT_RECENT")
+                    if load_ok is not True:
+                        reasons.append("LOAD_NOT_READY")
+                    if reasons:
+                        return {"state": "DEFERRED", "reasons": reasons}
+                    def idle():
+                        if activity_provider is None:
+                            return True  # explicit snapshot invocation; no live observation claimed
+                        current = datetime.now(timezone.utc)
+                        fresh = capture(policy, now=current, activity=activity_provider())
+                        previous = _aware(fresh["last_activity"], "activity")
+                        return (current-previous).total_seconds() >= 1800
+                    return index.sync(root, authorize=lambda ident: authorize(profile, ident, "index.upsert"),
+                                      should_continue=idle)
+            return PassageTick()
         return IndexMaintenance(state/"cycle.sqlite3",ChangeJournal(state/"changes.sqlite3"),
             canonical_checkpoint=state/"canonical.sqlite3",orphan_checkpoint=state/"orphans.sqlite3",
             canonical_root=root,index=index,authorize=authorize,profile_id=profile,
@@ -128,6 +157,8 @@ def main(argv=None):
     parser.add_argument("--policy",required=True,type=Path)
     parser.add_argument("--snapshot",type=Path)
     parser.add_argument("--activity",type=Path)
+    parser.add_argument("--activity-core-port", type=int)
+    parser.add_argument("--activity-token-file", type=Path)
     parser.add_argument("--runtime",type=Path)
     mode=parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--capture-only",action="store_true")
@@ -136,18 +167,27 @@ def main(argv=None):
     args=parser.parse_args(argv)
     if args.execute != (args.runtime is not None):
         parser.error("--execute requires --runtime; other modes forbid it")
-    if args.snapshot is not None and (args.activity is not None or args.capture_only):
+    if (args.activity_core_port is None) != (args.activity_token_file is None):
+        parser.error("remote activity requires both Core port and read token file")
+    if args.activity is not None and args.activity_core_port is not None:
+        parser.error("select either local or remote activity")
+    if args.snapshot is not None and (args.activity is not None or args.activity_core_port is not None or args.capture_only):
         parser.error("snapshot cannot be combined with capture or activity")
     try:
         policy=validate_host_policy(read_config(args.policy))
         now=datetime.now(timezone.utc)
+        from .activity import read_remote
+        activity_provider = ((lambda: read_remote(args.activity_core_port, args.activity_token_file))
+                             if args.activity_core_port is not None else
+                             (lambda: read_config(args.activity)) if args.activity else None)
         observation=read_config(args.snapshot) if args.snapshot else capture(policy,now=now,
-            activity=read_config(args.activity) if args.activity else None)
+            activity=activity_provider() if activity_provider else None)
         if args.capture_only:
             report=observation
         else:
             runtime=read_config(args.runtime) if args.execute else None
-            report=run_once(policy,observation,now=now,runtime=runtime)
+            report=run_once(policy,observation,now=now,runtime=runtime,
+                activity_provider=activity_provider)
         print(json.dumps(report,sort_keys=True))
         return 0
     except Exception:

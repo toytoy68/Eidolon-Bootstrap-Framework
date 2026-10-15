@@ -184,6 +184,76 @@
       "status": "NOT_RUN",
       "observed_at": null,
       "evidence": null
+    },
+    {
+      "id": "G01",
+      "criterion": "Chat : préparer, confirmer, recharger le reçu et reprendre sans doublon après coupure",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G02",
+      "criterion": "Deux profils réels : aucun souvenir, reçu ou fichier non autorisé accessible entre eux",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G03",
+      "criterion": "Pont Memory : liaison de racine et jetons lecture/écriture distincts contrôlés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G04",
+      "criterion": "Passages : ajout et modification sans ré-embedding des documents inchangés, alias atomique",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G05",
+      "criterion": "Activité Core lue depuis Memory : frais, périmé, service arrêté, reprise pendant maintenance",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G06",
+      "criterion": "SearXNG réel : requête exacte confirmée, résultat vide et panne explicites",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G07",
+      "criterion": "Internet : HTTPS/SSRF, quota partagé du profil persistant après redémarrage",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G08",
+      "criterion": "NAS et fichier PC : lecture UTF-8, liens/traversées refusés, changement après aperçu détecté",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G09",
+      "criterion": "Windows résident : artefact et SHA, icône, ouverture/fermeture, tunnel indisponible puis revenu",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G10",
+      "criterion": "Windows : démarrage à la connexion et suppression contrôlés sous le compte réel",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
     }
   ]
 }

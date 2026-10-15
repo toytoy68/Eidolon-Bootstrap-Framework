@@ -1,0 +1,8 @@
+{
+  "schema": "eidolon-maintenance-runtime/2",
+  "canonical_root": "/srv/eidolon-profiles/toytoy/memory/persistent",
+  "state_directory": "/srv/eidolon-private/maintenance-toytoy",
+  "index_config": "/srv/eidolon-private/index-toytoy.json",
+  "profile_id": "toytoy",
+  "scope": "isolated_profile_root"
+}

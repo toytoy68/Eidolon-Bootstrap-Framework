@@ -1,0 +1,50 @@
+name: Core Windows candidate
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/eidolon-core-v0.1]
+    paths:
+      - 'eidolon-core/desktop/tauri/**'
+      - 'eidolon-core/desktop/windows/**'
+      - '.github/workflows/core-windows.yml'
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: eidolon-core/desktop/tauri
+    steps:
+      - uses: actions/checkout@v4
+      - name: Native client tests and release build (locked dependencies)
+        run: |
+          cargo test --locked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo build --locked --release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Parse Windows scripts and exercise side-effect-free previews
+        shell: powershell
+        run: |
+          Get-ChildItem ../windows/*.ps1 | ForEach-Object {
+            $tokens=$null; $errors=$null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors)
+            if ($errors.Count) { throw ($errors | Out-String) }
+          }
+          $exe=(Resolve-Path target/release/eidolon-consultation.exe).Path
+          $hash=(Get-FileHash $exe -Algorithm SHA256).Hash
+          $script=(Resolve-Path ../windows/eidolon-resident.ps1).Path
+          $scriptHash=(Get-FileHash $script -Algorithm SHA256).Hash
+          powershell -NoProfile -STA -File $script -ClientExe $exe -ExpectedSha256 $hash
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell -NoProfile -File ../windows/eidolon-startup.ps1 -ResidentScript $script -ScriptSha256 $scriptHash -ClientExe $exe -ClientSha256 $hash
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "$hash  eidolon-consultation.exe" | Out-File -Encoding ascii target/release/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eidolon-windows-candidate
+          path: |
+            eidolon-core/desktop/tauri/target/release/eidolon-consultation.exe
+            eidolon-core/desktop/tauri/target/release/SHA256SUMS.txt
+            eidolon-core/desktop/windows/*.ps1

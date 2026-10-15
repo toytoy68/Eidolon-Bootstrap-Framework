@@ -1,3 +1,18 @@
+## Mise à jour G270 — raccordements de la bêta hors VM
+
+- [x] « Retenir ceci » dans le chat : aperçu, confirmation exacte, profil authentifié, reçu durable et reprise idempotente du pont Memory.
+- [x] Isolation du rappel/écriture par client lié, racine Memory liée explicitement et jetons/ports distincts ; changement de liaison sur état existant refusé.
+- [x] Activité Core automatique et point de lecture authentifié entre VM ; maintenance suspendue si activité récente, inconnue ou périmée.
+- [x] Synchronisation des passages par copie de vecteurs inchangés et embedding des seuls documents modifiés ; publication atomique, aucune suppression de génération.
+- [x] Internet raccordé à SearXNG et au lecteur HTTPS contrôlé : confirmation exacte, quota persistant par profil, reçus, aucun renvoi automatique incertain.
+- [x] Lecture bornée de dossiers locaux/NAS autorisés et sélection explicite de textes PC.
+- [x] Résident Windows avec icône native, contrôle du binaire par SHA, réouverture et démarrage HKCU explicite ; CI Windows ajoutée.
+- [x] Dossier PC/VM étendu : configurations, unités distinctes, 36 cas NOT_RUN, procédure et rollback.
+- [ ] Qualifier modèles/corpus, UID/montages, SearXNG, NAS et tunnels sur les VM ; recette Windows/WebView2 et matériel, restauration et endurance.
+- [ ] Activer les configurations privées et les trois profils réels après inventaire ; compte C187 toujours à décider.
+
+Le raccordement G270 couvre les profils par clés appairées. Reconnaissance biométrique, enrôlement matériel, import bureautique binaire/synchronisation automatique et moteurs média réels ne sont pas déclarés réalisés par ce lot. Voir le [rapport unique](weekend/2026-10-17/RAPPORT-UNIQUE.md) pour les preuves et limites.
+
 ## Mise à jour G269 — préparation PC/VM du 17–18 octobre 2026
 
 - [x] C191 intégré ; patch Memory 0067 reçu et sondes conservées.
@@ -6,9 +21,9 @@
 - [x] Mémorisation opérateur : aperçu exact, approbation par empreinte, écriture journalisée idempotente.
 - [x] Politique/lecteur hôte adoptés, collecteur et entrée `maintenance_host` pour un tick explicite.
 - [x] Dossier week-end, configuration, inventaires, 26 cas, rollback et générateur de paquet à deux SHA.
-- [ ] Parcours « retenir ceci » dans le chat Core, identité/autorisation et accusé de réception de bout en bout.
-- [ ] Producteur automatique et authentifié de reçus d'activité Core ; timer non activable sans lui.
-- [ ] Maintenance incrémentale des passages ; le worker actuel reste documentaire et les refuse.
+- [x] Parcours « retenir ceci » raccordé en G270 ; recette réelle ouverte.
+- [x] Producteur d'activité et lecture authentifiée livrés en G270 ; timer encore non installé.
+- [x] Passages synchronisés par delta d’embeddings et bascule atomique en G270 ; worker documentaire toujours séparé.
 - [ ] Qualification VM/Windows, corpus/modèles réels, isolation UID/montage, restauration/endurance et ressources.
 - [ ] Décision compte C187, seuils/chemins effectifs ; activation seulement après recette et revue.
 
