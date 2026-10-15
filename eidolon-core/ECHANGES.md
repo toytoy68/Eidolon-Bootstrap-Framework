@@ -2440,3 +2440,9 @@ Demande toytoy « attaque tout ça d’une traite ». Bases Core a55a7a6 / Memor
 ### G270 — publication des raccordements
 
 Core Python/UI 2c86b9d, Memory 76d6640 : mémorisation chat et reçu durable, profils appairés isolés, activité lue entre VM, passages par delta d'embeddings, Internet à quota persistant, fichiers PC/NAS et analyse de sources dans le dialogue. CI Core 2200/8/+1328, root 5 ; Chromium 208/0 ; Memory 3151/26/3/+12, worker 52, Qdrant ciblé 550/1 et serveur 19. Dossier de 36 cas de recette NOT_RUN, sources épinglées et client Windows candidat ; preuves finales dans le [rapport unique](weekend/2026-10-17/RAPPORT-UNIQUE.md). Dix contre-revues G270 proposées à Claude, aucune session prétendument lancée. Aucun déploiement/compte/corpus réel modifié.
+
+## G271 — Diagnostic avant lancement, Codex/GPT, 15/10/2026
+
+Demande toytoy à 23 h 07 Europe/Paris : continuer hors VM. Base Core c4f247cf26dee01c2d8382d58ce82ae8006a2f06, C191 toujours dernier message reçu après récupération distante. Codex réserve `beta_preflight.py`, ses tests et la documentation du week-end : validation de configuration sans instanciation du runtime, contrôles locaux explicites en lecture seule, distinction des preuves de service non exécutées. Aucun déploiement, accès VM ou changement du candidat Windows.
+
+G271 réalisé : configuration seule par défaut, option fichiers locaux, secrets effectivement distincts, diagnostic JSON/humain sans noms/chemins/secrets. 14 tests dédiés et sept tests de paquet/preuves réussis localement ; processus audité contre réseau, écritures, accès SQLite, sous-processus et listage des données. Exemple G270 reconnu CONFIG_VALID, contrôles machine NOT_RUN. Procédure et rapport unique actualisés. Ces preuves locales ne sont pas présentées comme une nouvelle CI complète ni une validation des VM.

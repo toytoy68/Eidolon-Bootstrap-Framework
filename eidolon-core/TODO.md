@@ -1,3 +1,10 @@
+## Mise à jour G271 — diagnostic avant lancement hors VM
+
+- [x] Commande `beta_preflight` : configuration seule par défaut ; fichiers et permissions locaux avec option explicite, sans démarrer le runtime.
+- [x] Détection d'un secret réutilisé entre profils/rôles, même sous des chemins distincts ; aucun secret ou chemin privé dans la sortie.
+- [x] 14 tests dédiés et sept tests paquet/preuves réussis ; audit bloquant réseau/écriture/SQLite/processus/listage des données. Procédure ajoutée au dossier.
+- [ ] Exécuter le diagnostic sous le compte Core réel puis la recette : les services, clients appairés, état existant et matériel ne sont pas validés par ce contrôle.
+
 ## Mise à jour G270 — raccordements de la bêta hors VM
 
 - [x] « Retenir ceci » dans le chat : aperçu, confirmation exacte, profil authentifié, reçu durable et reprise idempotente du pont Memory.

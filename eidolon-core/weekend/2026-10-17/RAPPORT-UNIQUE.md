@@ -6,6 +6,14 @@ Les raccordements logiciels demandés après G269 sont développés et publiés 
 
 ## Ce qui est livré
 
+**Complément G271, 15 octobre au soir :** diagnostic avant lancement disponible
+dans les sources G271, [procédure](DIAGNOSTIC-G271.md). Contrôle de configuration
+seul ou contrôle explicite des fichiers locaux, sans démarrage ni écriture ;
+détecte notamment un secret réutilisé sous des chemins distincts. 14 tests dédiés
+et sept tests de paquet/preuves réussis localement. La qualification CI G270
+ci-dessous reste attachée à ses révisions ; elle n'est pas attribuée à G271.
+Le client Windows reste exactement le candidat G270 déjà livré.
+
 | Parcours | Réalisation | Limite pour la recette |
 | --- | --- | --- |
 | Retenir ceci | Aperçu et confirmation dans le chat ; profil fixé par Core ; second jeton d'écriture Memory ; reçu durable et reprise sans doublon | Information OBSERVATION/UNVERIFIED ; une réponse perdue reste incertaine jusqu'à vérification ou reprise |

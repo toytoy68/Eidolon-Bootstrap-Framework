@@ -4,12 +4,12 @@
 
 ## 1. PC : contrôler et extraire les fichiers
 
-Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g270.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g270.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
+Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g271.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g271.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
 
 Depuis la racine extraite, avec Python disponible :
 
 ```powershell
-python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g270.zip
+python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g271.zip
 $EidolonKit = '.\sources\core\eidolon-core\weekend\2026-10-17'
 & "$EidolonKit\inventory_pc.ps1" -Port 8767 > .\pc-inventory.json
 Copy-Item "$EidolonKit\results.template.json" .\results-weekend.json

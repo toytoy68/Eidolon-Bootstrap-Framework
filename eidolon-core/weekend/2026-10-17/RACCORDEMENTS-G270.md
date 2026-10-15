@@ -40,6 +40,10 @@ privé fourni à systemd. Le mode lecture seule historique reste disponible, san
 
 ## 3. Core et profils
 
+Avant lancement, exécuter le [diagnostic G271](DIAGNOSTIC-G271.md) sur la
+configuration préparée, puis son mode `--local-files` sous le compte cible.
+Un résultat valide ne remplace pas les essais de service et d'isolation ci-dessous.
+
 Copier `beta-runtime.example.json` en fichier 0600, dans un répertoire privé.
 Créer son `state_directory` en 0700. Chaque profil utilise un port Memory et des
 fichiers de jetons distincts, puis le pont confirme son identité à chaque réponse.
