@@ -43,6 +43,8 @@ def collect(repo,commit,kind):
         meta,path=raw.decode().split("\t",1)
         if not (path in files or path.startswith(prefixes)):continue
         if path.startswith(("eidolon-core/docs/validation/", "docs/validation/", "docs/benchmarks/")):continue
+        # Historical diagnostic logs are evidence, not deployable source.
+        if path.startswith(("docs/", "eidolon-core/docs/")) and FORBIDDEN.search(path):continue
         mode,typ,oid=meta.split()
         if mode not in ("100644","100755") or typ!="blob" or FORBIDDEN.search(path):
             raise ValueError("non-source or forbidden entry: "+path)
