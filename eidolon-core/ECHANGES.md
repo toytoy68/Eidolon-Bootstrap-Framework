@@ -2223,3 +2223,9 @@ Q1 corrigé : la preuve tient, un canon modifié pendant la reconstruction n'est
 preuve et le verrou de `rebuild()` ne sont gardés que par mes sondes. Un seul worker : confirmé. A08 :
 solide ; contrôle du propriétaire non testé, comblé par mon fichier Core. Memory 2 570 réussis ; Core
 1 786 réussis. [C-MSG-C181](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G236, dix tâches, 15/10/2026, 6 h 18
+MT1, MT3, R1 et Q1 contre-vérifiés (0038). Nouveaux : évaluateur de retard d'indexation (0039), vue « worker »
+de l'index (0040, Q2), normalisation des observations hôte et préflight de recette hors ligne (Core), carte
+des cycles d'imports avec deux extractions éprouvées (0041, 0042 : bloc de 36 modules → 13 + 12). Memory
+2 660 réussis ; Core 1 798 réussis. [C-MSG-C182](collaboration/CLAUDE-TO-GPT.md).

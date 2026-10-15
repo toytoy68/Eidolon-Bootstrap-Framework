@@ -1,0 +1,96 @@
+From de90594ef5940ee0bd442c59550e89766cfc1c7b Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 04:07:44 +0000
+Subject: [PATCH] refactor(operations): move the settled-read-phase state to a
+ leaf module (L1 experiment, G236-10)
+
+PROPOSAL (Claude). core.persistence no longer imports core.operations.read_phase:
+both use core.operations.publication_phase (standard library only).
+read_phase re-exports invalidate_publication unchanged. Import cycles in core/
+go from 2 to 1 (tools/claude_import_cycles.py in Core); full suite unchanged
+(2638 passed, 15 skipped, 5 xfailed on 587d4a9).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ core/operations/publication_phase.py | 25 +++++++++++++++++++++++++
+ core/operations/read_phase.py        | 10 +---------
+ core/persistence.py                  |  2 +-
+ 3 files changed, 27 insertions(+), 10 deletions(-)
+ create mode 100644 core/operations/publication_phase.py
+
+diff --git a/core/operations/publication_phase.py b/core/operations/publication_phase.py
+new file mode 100644
+index 0000000..aaa0cf6
+--- /dev/null
++++ b/core/operations/publication_phase.py
+@@ -0,0 +1,25 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : core/operations/publication_phase.py
++# Description : État de la phase de lecture stabilisée, module feuille (proposition Claude L1, G236-10)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Leaf module (standard library only) shared by core.persistence and core.operations.read_phase.
++
++Breaking the persistence <-> read_phase cycle: persistence publishes files and must invalidate a settled read
++phase, while read_phase needs persistence's lock helpers. The phase state and its invalidation live here.
++"""
++from contextvars import ContextVar
++import os
++from pathlib import Path
++
++_phase = ContextVar('settled_read_phase', default=None)
++
++
++def invalidate_publication(path):
++    phase = _phase.get()
++    if phase is not None:
++        destination = Path(os.path.abspath(path))
++        if any(destination == root or root in destination.parents for root in phase['sources']):
++            phase['readiness'] = None
+diff --git a/core/operations/read_phase.py b/core/operations/read_phase.py
+index 07ee4f1..e067937 100644
+--- a/core/operations/read_phase.py
++++ b/core/operations/read_phase.py
+@@ -20,7 +20,7 @@ import os
+ 
+ from core.persistence import write_lock_held, has_symlink_component
+ 
+-_phase = ContextVar('settled_read_phase', default=None)
++from core.operations.publication_phase import _phase, invalidate_publication  # noqa: F401 (re-export)
+ 
+ 
+ def _matching(root):
+@@ -50,14 +50,6 @@ def has_settled_audit(root):
+     return phase is not None and phase['readiness'] is not None
+ 
+ 
+-def invalidate_publication(path):
+-    phase = _phase.get()
+-    if phase is not None:
+-        destination = Path(os.path.abspath(path))
+-        if any(destination == root or root in destination.parents for root in phase['sources']):
+-            phase['readiness'] = None
+-
+-
+ @contextmanager
+ def settled_read_phase(root):
+     if has_symlink_component(Path(root)):
+diff --git a/core/persistence.py b/core/persistence.py
+index ea8b9b9..3b84220 100644
+--- a/core/persistence.py
++++ b/core/persistence.py
+@@ -107,7 +107,7 @@ def write_lock_held(root):
+ 
+ def durable_replace(source, destination):
+     """Publish a flushed file, then persist its directory entry on POSIX."""
+-    from core.operations.read_phase import invalidate_publication
++    from core.operations.publication_phase import invalidate_publication
+     invalidate_publication(destination)
+     os.replace(source, destination)
+     if os.name != "nt":
+-- 
+2.43.0
+
