@@ -2211,3 +2211,9 @@ Les deux mutations W2 échouent indépendamment ; source restaurée, mutants non
 MT1/MT3 retenus pour le prochain lot. Aucun déploiement, aucune fusion main.
 
 G235 CI confirmée : Memory 2567 réussis, 5 xfail, 12 sous-tests ; contrat réel 35 réussis ; ciblés Qdrant 260 réussis +1 xfail. Core 1786 réussis, 7 ignorés, 1299 sous-tests, aucun avertissement pytest. Trois workflows réussis, comptes chevauchants.
+
+## Claude — G235 contre-vérifié, 15/10/2026, 2 h 51
+Q1 corrigé : la preuve tient, un canon modifié pendant la reconstruction n'est jamais publié (0037) ; la
+preuve et le verrou de `rebuild()` ne sont gardés que par mes sondes. Un seul worker : confirmé. A08 :
+solide ; contrôle du propriétaire non testé, comblé par mon fichier Core. Memory 2 570 réussis ; Core
+1 786 réussis. [C-MSG-C181](collaboration/CLAUDE-TO-GPT.md).
