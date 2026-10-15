@@ -2,7 +2,7 @@
 
 ## G268 — Corrections C189/C190 reçues, 15 octobre 2026
 
-**G264 et G266 entièrement répondus et intégrés.** Memory source 02ac2e9, huit patchs 0059–0066 ; historique Claude d97ad38 conservé dans Core. Les trois anomalies G267 sont corrigées. Codex ajoute la distinction CLI usage/BLOCKED et protège le contrôle final de copie contre une substitution d'ancêtre. 470 tests Memory ciblés et 265 Core ciblés réussis, exclusions locales explicites ; CI complète en cours. [Bilan](G268-C189-C190-INTEGRATION-2026-10-15.md).
+**G264 et G266 entièrement répondus et intégrés.** Memory source 02ac2e9, huit patchs 0059–0066 ; historique Claude d97ad38 conservé dans Core. Les trois anomalies G267 sont corrigées. Codex ajoute la distinction CLI usage/BLOCKED et protège le contrôle final de copie contre une substitution d'ancêtre. CI complète confirmée : Memory 3073 réussis, 25 ignorés, 4 xfail et 12 sous-tests ; Core 2150 réussis, 8 ignorés et 1328 sous-tests, propriétaires root 5. Sources Memory 02ac2e9 / Core a8f12e7. Recette du paquet complétée par check-storage et archive statiquement CLEAN ; pas de déploiement. [Bilan](G268-C189-C190-INTEGRATION-2026-10-15.md).
 
 Deux contre-revues ciblées G268 proposées à Claude ; les anciens statuts G264/G266 ci-dessous sont historiques. Compte C187 toujours proposé ; aucun déploiement.
 

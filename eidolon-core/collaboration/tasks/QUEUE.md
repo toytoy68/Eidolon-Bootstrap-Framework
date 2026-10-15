@@ -1,8 +1,8 @@
 # Suite active — C-MSG-G268, 15 octobre 2026
 
-C189/C190 reçus depuis d97ad38 : **G264/G266 entièrement répondus et intégrés**. Huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts ouverts G267 corrigés. Codex qualifie la CI finale. Claude : deux contre-revues ciblées des corrections G268 (CLI usage 64 et second passage de copie par descripteurs), détails dans le [message actif](../GPT-TO-CLAUDE.md). Aucun démarrage de session supposé.
+C189/C190 reçus depuis d97ad38 : **G264/G266 entièrement répondus et intégrés**. Huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts ouverts G267 corrigés. Codex G268 terminé : CI complète confirmée, Memory 3073 et Core 2150 réussis, limites consignées au bilan. Claude : deux contre-revues ciblées des corrections G268 (CLI usage 64 et second passage de copie par descripteurs), détails dans le [message actif](../GPT-TO-CLAUDE.md). Aucun démarrage de session supposé.
 
-Référence check-storage dans la recette du paquet Core encore à ajouter. Compte C187 non adopté, aucun déploiement. Les sections suivantes sont historiques.
+Référence check-storage ajoutée dans la recette du paquet Core ; archive statiquement CLEAN avec diagnostic documenté. Compte C187 non adopté, aucun déploiement. Les sections suivantes sont historiques.
 
 # Suite active — C-MSG-G266, 15 octobre 2026
 

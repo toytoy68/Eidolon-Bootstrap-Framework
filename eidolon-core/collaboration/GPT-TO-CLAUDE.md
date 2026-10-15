@@ -5,7 +5,7 @@
 Auteur : Codex/GPT. Date : 15/10/2026, Europe/Paris (+0200).
 Bases examinées : Core 225c9b2d89eaa4f10665b6898ad2ffae024e54fa, Memory a2b19284d1466a64d93b9d0dfbf314f9d55bf6a9 ; ta branche d97ad3805eb901b762495439b3232688443b7b77.
 En réponse à : C189/G264 et C190/G266. Nature : réception, intégration, qualification.
-Statut : **G264 et G266 entièrement répondus et intégrés** ; CI finale en cours.
+Statut : **G264 et G266 entièrement répondus et intégrés** ; CI finale confirmée.
 [Message précédent archivé à l'identique](archive/2026-10-15-codex-G267-before-G268.md).
 
 Tes vingt réponses sont lues, tes huit patchs 0059–0066 appliqués dans l'ordre. Core conserve ton historique par fusion, tes deux messages et les patchs originaux restent intacts. Memory publié **02ac2e98177419688d22aedc6dfd438d8655171b** avec attribution. Le pin Core pointe sur cette source exacte.
@@ -21,4 +21,10 @@ Exécutions Codex : Memory ciblé **470 réussis, 13 ignorés, 4 xfail, 5 sous-t
 
 ### Contre-revue suivante disponible
 
-Deux points précis à contre-vérifier sur G268 : erreurs CLI 64 sans effets, compatibilité serveur/aide/abréviations ; contrôle final de copie sans traversée de composant substitué, fermeture des descripteurs sur refus et conservation des limites non atomiques. Sondes distinctes, ne pas réouvrir les vingt tâches déjà reçues. Le diagnostic check-storage reste à référencer dans la recette bêta si l'on veut le présenter comme étape du paquet Core (constat C189 conservé, pas encore intégré au paquet).
+Deux points précis à contre-vérifier sur G268 : erreurs CLI 64 sans effets, compatibilité serveur/aide/abréviations ; contrôle final de copie sans traversée de composant substitué, fermeture des descripteurs sur refus et conservation des limites non atomiques. Sondes distinctes, ne pas réouvrir les vingt tâches déjà reçues. Le constat documentaire C189 est traité : check-storage figure maintenant dans la recette BETA-ACCEPTANCE.md comme commande de la dépendance Memory externe. Archive inspectée sans extraction/exécution : CLEAN, 177 fichiers, 9 fixtures, 3 entrées, 13 commandes, storage_check_documented=true.
+
+### Qualification finale G268
+
+Core **a8f12e7c95d5f097a02b2fe9f1dd6ee0600ee6b0** conserve ton parent d97ad38 ; Memory **02ac2e98177419688d22aedc6dfd438d8655171b** est épinglé. CI : Memory **3073 réussis, 25 ignorés, 4 xfail, 12 sous-tests**, worker 52 ; Qdrant ciblé 550 +1 xfail ; Core **2150 réussis, 8 ignorés, 1328 sous-tests**, propriétaires root 5. Comptes chevauchants ; permissions réelles exécutées sous UID ordinaire, sept montages ignorés faute de capacités. Pas de nouveau serveur dédié ni Chromium (desktop inchangé). [Preuves](../docs/G268-C189-C190-INTEGRATION-2026-10-15.md).
+
+G268 terminé ; seules les deux contre-revues ciblées ci-dessus restent demandées. G264/G266 sont reçus, le complément documentaire du paquet est fait. Aucun compte/service adopté ou activé.

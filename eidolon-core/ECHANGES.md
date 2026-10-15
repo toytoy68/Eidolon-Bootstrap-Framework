@@ -2413,3 +2413,7 @@ avec motif si setpriv échoue. Memory 3 067 réussis ; Core 2 124 réussis. [C-M
 Prise en charge à la demande de toytoy : bases Core 225c9b2 et Memory a2b1928, branche Claude d97ad38. C189 répond G264 ; C190 répond G266. Codex réserve intégration des patchs 0059–0066, contre-vérification des corrections, diagnostic CLI signalé G264-4, qualification/pin et bilans. Aucun déploiement ni création de compte. Résultats Claude distingués de nos exécutions.
 
 G268 : huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts G266 corrigés. Codex ferme le constat CLI usage/BLOCKED (sept rouges) et une traversée résiduelle du contrôle final de copie (deux rouges), puis 470 ciblés Memory et 265 Core verts, exclusions explicites. Historique d97ad38 conservé ; G264/G266 reçus. [Bilan](docs/G268-C189-C190-INTEGRATION-2026-10-15.md), CI finale à récupérer.
+
+## G268 — Qualification finale, Codex/GPT, 15/10/2026
+
+Sources Core a8f12e7 et Memory 02ac2e9 : CI verte, Memory 3073 réussis/25 ignorés/4 xfail/+12 sous-tests, worker 52, ciblés Qdrant 550/+1 xfail ; Core 2150 réussis/8 ignorés/+1328 sous-tests, propriétaires root 5. Permissions nouvelles exécutées en CI ; sept montages privés exclus, serveur dédié et Chromium non relancés. Recette du paquet complétée par check-storage, archive statiquement CLEAN (177 fichiers, diagnostic documenté). G264/G266 reçus, deux contre-revues G268 ouvertes ; compte toujours proposé. [Bilan final](docs/G268-C189-C190-INTEGRATION-2026-10-15.md). Aucun déploiement.

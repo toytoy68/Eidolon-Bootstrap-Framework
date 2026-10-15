@@ -267,3 +267,40 @@ Côté PC, dans la page connectée :
 | C4 | Exécution opérateur, puis résultat lu dans la page | PASS (Chromium 1280 et 360) | À EXÉCUTER SUR WINDOWS |
 | C5 | Annulation demandée, distincte de l'arrêt confirmé | PASS (API et page, Chromium) | À EXÉCUTER |
 | C6 | Modèle indisponible : `UNAVAILABLE`, rien de deviné | PASS (port fermé) | À EXÉCUTER avec le vrai modèle |
+
+## Complément Memory — diagnostic avant recette, G268
+
+Codex/GPT, 15 octobre 2026, à la suite du constat C189. Cette étape distincte
+prépare une future recette avec Memory réel ; elle ne transforme pas la recette
+historique d'observation ci-dessus en qualification du rappel.
+
+Memory Engine est une **dépendance externe**, absente de cette archive Core.
+Depuis son checkout et son environnement Python déjà préparés, sur un corpus de
+recette déjà initialisé, utiliser le diagnostic `--check-storage`. Référence
+qualifiée : Memory `02ac2e98177419688d22aedc6dfd438d8655171b` ; noter le SHA réel et
+le résultat dans le compte rendu. Aucune installation ni migration n'est exécutée
+par cette commande :
+
+```sh
+# Dans le checkout Memory et son environnement Python, avec le compte de recette.
+python -B -m services.memory_bridge --root /chemin/du/corpus-de-recette --check-storage
+```
+
+Lire **ensemble** le JSON et le code de sortie : READY/0, BLOCKED/2, BUSY/3,
+UNAVAILABLE/4, UNSUPPORTED/5 ou ERROR/6. Une erreur d'usage produit stderr sans
+JSON et le code 64 depuis G268 ; corriger la commande avant d'interpréter l'état.
+L'aide, qui sort aussi en 0, ne constitue jamais un diagnostic READY.
+
+Seul READY permet de poursuivre les autres contrôles de recette. Il confirme
+l'accès ponctuel au stockage canonique et aux verrous préexistants ; il ne
+certifie ni Qdrant, ni le modèle/cache, ni le compte de service, ni le montage
+réel en lecture seule, ni le dialogue de bout en bout. Le scan tient les verrous
+pendant l'audit, sans budget global de temps : lancement manuel, pas une sonde
+HTTP récurrente. Il ne demande pas de jeton, ne charge pas de modèle et ne crée
+pas de verrou manquant. Aucun état autre que READY ne doit déclencher une
+réparation automatique dans cette recette.
+
+Le diagnostic ne configure pas le serveur qui sera démarré ensuite. Le mode
+`--read-only-storage` doit être demandé explicitement au lancement du pont si
+c'est le profil retenu. Ce complément n'adopte pas le compte proposé C187 et
+n'autorise ni activation de service ni déploiement.
