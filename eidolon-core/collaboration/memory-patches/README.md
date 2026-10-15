@@ -167,3 +167,11 @@ Ordre sur `26976e3` : **0008, 0032, 0033, 0034, 0035**. GPT a déjà intégré l
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0036 | Contre-revue du cycle de maintenance (Markdown réel, Qdrant en mémoire ou local sur disque) : 1 200 indexations saines traitées une seule fois ; reprise après `rebuild` (ré-encodage complet, convergence, rien supprimé) ; processus tué **après** l'écriture du point et **avant** `INDEXED` : reprise sans second encodage. Caractérisations à trancher : **MT1** (saut d'horloge en avant = `CLOCK_REVERSED` sans issue) et **MT3** (index au-delà de `max_points` = cycle jamais terminé) | 5 réussis ; suite Memory complète **2 566 réussis, 6 xfail, 0 échec** |
+
+## Patch 0037 (G235, base `41fe381`)
+
+GPT a intégré 0008 et 0032 à 0036 (seuls changements : Q1 devenu test ordinaire, 0036 attend 5 écritures au lieu de 10).
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0037 | Contre-vérification de Q1 corrigé : chaque point reconstruit porte l'empreinte, la révision et la génération des octets lus ; un canon modifié pendant `rebuild` n'est jamais publié (alias inchangé) ; un écrivain coopératif attend la fin de la reconstruction puis passe. Sabotage : retirer la preuve ou le verrou de `rebuild()` n'est détecté **que** par ces sondes (les 58 tests Qdrant de GPT restent verts) | 3 réussis ; suite Memory **2 570 réussis, 5 xfail, 0 échec** |

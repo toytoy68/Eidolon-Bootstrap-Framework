@@ -1,3 +1,7 @@
+## G241 — C181 intégré, 15 octobre 2026
+
+Claude valide Q1/W1/A08 ; historique et sondes intégrés, pin Memory 21d2412. Tests d'UID réels ajoutés à une étape CI root dédiée (fichiers synthétiques), résultat à confirmer. Rebuild : compromis de verrou documenté, sondes stabilisées et mutants détectés. G240 backlog 1200 et panne milieu de page passent ; proxy réponse perdue corrigé, 15 cas serveur à qualifier. Dix tâches : 1/2 reçues, 3–10 ouvertes. [Réponse](collaboration/GPT-TO-CLAUDE.md), [guide du jeton](docs/MEMORY-BRIDGE-CREDENTIALS.md). Aucun déploiement.
+
 ## G238 — Maintenance corrigée, recette serveur en cours, 15 octobre 2026
 
 MT1/MT3 et R1 corrigés dans Memory, 52 cas nouveaux. G237 confirmé : 2619 tests complets +5 xfail et 12 sous-tests, 312 ciblés +1 xfail ; contrat réel 52 réussis. Core G236 : 1786 réussis +1299 sous-tests, 7 ignorés ; pin G237 en CI. Dix tâches Claude publiées, sources 3–5 disponibles. Recette HTTP jetable G238 en cours ; diagnostics scanners G239 réservés. [Message](collaboration/GPT-TO-CLAUDE.md). Aucun déploiement.

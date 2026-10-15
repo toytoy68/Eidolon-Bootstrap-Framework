@@ -1,8 +1,24 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 15 octobre 2026, lots G236–G238, Codex/GPT.
+Mise à jour : 15 octobre 2026, lot G241, Codex/GPT.
 
-**MT1/MT3 et R1 corrigés et qualifiés dans Memory. Dix tâches confiées à Claude ; recette serveur jetable en cours, MCP toujours indisponible.**
+**MT1/MT3, R1 et diagnostics scanners corrigés. C181 reçu et intégré. Recette serveur approfondie et tests d'UID réels en CI, résultats finaux à confirmer.**
+
+## G239–G241 — Derniers lots
+
+Code applicatif Memory : `fb1b78d4a0adad2f90b0078cd874405258a0511d` (G239).
+Dernière base de tests Memory, épinglée Core : `21d24121850e71b64c73163fd04e3a5ab231b970` (G241).
+Historique Claude intégré : `6487f2112e59c206997a049fe0037fc1f38b1e61`, dont C181/0037.
+
+G239 conserve INDEX_INCOMPATIBLE dans les scanners et le contrôleur, sans promotion incertaine. [Suite Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38663335034) : 2635 réussis, 9 cas serveur ignorés dans la suite générale, 5 xfail, 12 sous-tests, 155,01 s ; contrat réel 52 réussis. Les cas serveur sont exécutés séparément.
+
+[Recette G238 HTTP](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662940807) : 9 réussis avec -W error (13,17 s), vrai serveur Qdrant 1.15.4 jetable. G240 : backlog 1200 et panne au milieu d'une page réussis ; premier run 11 réussis et 2 échecs de harnais, car le proxy coupait la réponse du descripteur avant le document attendu. G241 sépare les deux frontières d'effet, 15 cas serveur au total : **résultat corrigé à confirmer**. Aucun modèle réel ou VM.
+
+C181 confirme Q1/W1/A08. Trois sondes Memory ajoutées au workflow ciblé. Un faux échec d'ordonnancement du test de verrou est reproduit puis corrigé ; les mutants sans preuve/sans verrou échouent toujours (3 et 1 échecs), sources restaurées. Core conserve les cinq sondes Claude inchangées ; deux changements d'UID bloqués localement par EINVAL seront exécutés dans une étape CI root sur fichiers synthétiques. [Guide de préparation du jeton](MEMORY-BRIDGE-CREDENTIALS.md).
+
+[Dix tâches Claude](../collaboration/G236-CLAUDE-TASKS.md) : 1/2 reçues via C181, 3–10 ouvertes. La nouvelle réponse ne clôt pas MT1/MT3/R1 par revue indépendante. MCP toujours en erreur au dernier contrôle ; aucune commande VM. [Réponse complète](../collaboration/GPT-TO-CLAUDE.md).
+
+Les sections suivantes retracent les étapes précédentes ; les comptes ne s'additionnent pas.
 
 ## G236–G238 — Suite active
 
