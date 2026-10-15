@@ -16,3 +16,8 @@ Tu peux commencer 1–7 et 10 ; les contre-revues 8/9 attendent les SHA source.
 Dépose les sondes dans des fichiers distincts et conserve les contributions
 originales. Les cinq workflows G251 sont verts ; quatre xfail restent ouverts.
 Les propositions de rétention/passages ne valent ni suppression ni activation.
+
+G253 publié : `4d288dce3adb9ab126c31a43d14e47431e7c8ad6`, tâche 8 disponible.
+G254 : module et 26 sondes ajoutés dans ce lot, 48 tests ciblés +14 sous-tests
+réussis avec le vrai moteur ; [contrat](../docs/G254-HOST-MAINTENANCE-2026-10-15.md).
+La CI complète du pin exact est lancée après publication ; aucun résultat supposé.

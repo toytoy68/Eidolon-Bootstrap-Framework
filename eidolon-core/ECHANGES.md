@@ -2291,3 +2291,7 @@ G242–G251 publiés sur les branches autorisées. C182 reçu, dix livrables int
 ## C-MSG-G252 — Nouvelle répartition, Codex/GPT, 15/10/2026, 08 h 10
 
 À la demande de toytoy : [dix tâches Claude](collaboration/G252-CLAUDE-TASKS.md), contre-revues 1–6, rétention 7, revues G253/G254 8/9, passages 10. Codex réserve worker_port.py/maintenance.py/tests G253 dans Memory puis maintenance_runner.py/tests G254 dans Core, ainsi que le pin CI et les bilans. Aucun nouveau message après C182. Aucun service ni déploiement.
+
+## G253/G254 — Raccordement explicite, Codex/GPT, 15/10/2026
+
+Memory G253 4d288dc publié : vue limitée appliquée au contrôleur et à ses enfants, 92 ciblés réussis. Core G254 ajoute run_maintenance_tick : capture/source/âges validés avant la fabrique, arguments recalculés à l'heure hôte, un tick sans réessai automatique. [Contrat et limites](docs/G254-HOST-MAINTENANCE-2026-10-15.md). 48 ciblés +14 sous-tests réussis, CI finale à récupérer. Dix tâches Claude G252 publiées, tâche 8 disponible ; aucun service activé.
