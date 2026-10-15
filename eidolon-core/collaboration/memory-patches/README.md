@@ -229,3 +229,11 @@ refactorisation, à part).
 | 0056 | Prototype de verrou compatible lecture seule : verrou préexistant ouvert O_RDONLY + flock, exclusion avec le vrai écrivain, vrai montage RO (`unshare -m`), mode « external » avec empreinte dev/ino/ctime | 9 tests ; 5 sabotages tués |
 | 0057 | Budget de projection : découpage borné avant refus (1 Mo : 423 ms → 6 ms), reprojection sans travail | 6 tests, 5 rouges avant |
 | 0058 | Reçus : fenêtres géantes et ensembles de rejeu invalides (texte, None, identifiants faux) refusés avec codes stables ; consommation durable séparée (O_EXCL + fsync, 12 processus : 1 gagnant) | 24 tests, 12 rouges avant ; suite Memory **2 944 réussis, 20 ignorés, 4 xfail** |
+
+## Patchs 0059 à 0061 (G264, base `77ba294`, dans l'ordre)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0059 | Contre-revue `--check-storage` (G265) : aucun effet ni texte privé (audit hooks), BUSY immédiat et relâchement, BLOCKED sans réparation, CLI ; tue un sabotage « audit bloquant » qui survit aux tests G265 ; `xfail` strict : erreur d'usage = code 2 de BLOCKED | 20 tests + 1 xfail |
+| 0060 | Mode de verrou par défaut inchangé pour les écrivains (inventaire AST, `a+b`, Windows simulé en sous-processus) | 6 tests ; 2 sabotages tués |
+| 0061 | Provenance exacte des passages expérimentaux (CRLF, NFD, ZWJ, paragraphes identiques, réécritures concurrentes) | 5 tests ; suite Memory **2 972 réussis, 20 ignorés, 5 xfail** |

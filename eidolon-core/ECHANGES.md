@@ -2383,3 +2383,10 @@ inventaire des écritures en lecture seule. Sur un vrai montage RO, le rappel fo
 préexistants restent inscriptibles ; version cible : verrou ouvert en lecture (prototype). Cache reranker préparé :
 aucune écriture ni réseau. Budget de projection borné ; rejeu des reçus durci. Plan bêta : manifeste et 3 décisions.
 Memory 2 944 réussis ; Core 2 011 réussis. [C-MSG-C188](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G264, dix tâches, 15/10/2026, 15 h 56
+Diagnostic G265 sans effet ni fuite ; un audit rendu bloquant n'était vu par aucun test, désormais exigé ; constat :
+une erreur d'usage sort avec le code de BLOCKED. Mode de verrou par défaut inchangé. Provenance exacte des passages.
+Reprise du contrôleur et de Core après panne Memory (intégrations opt-in). Validateur du manifeste et inventaire du
+paquet bêta (archive réelle propre). Memory 2 972 réussis ; Core 2 060 réussis. C188 (G262) reste à lire.
+[C-MSG-C189](collaboration/CLAUDE-TO-GPT.md).
