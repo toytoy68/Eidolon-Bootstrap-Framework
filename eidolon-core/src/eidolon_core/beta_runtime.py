@@ -21,12 +21,15 @@ import re
 import sqlite3
 import stat
 import uuid
+import base64
+import hashlib
 
 from .contracts import digest, encode, validate_context
 from .runtime_json import read_json_snapshot, _open_directory
 from .bridge_credentials import read_bridge_token
 from .activity import Activity
 from . import memory_bridge_client, profile_files
+from . import documents
 
 
 class ServiceError(ValueError):
@@ -45,7 +48,7 @@ def absolute(value):
 
 def validate_config(raw):
     fields = {"schema", "state_directory", "activity_source", "clients", "profiles", "searxng_url"}
-    if (type(raw) is not dict or set(raw) != fields or raw["schema"] != "eidolon-beta-runtime/1"
+    if (type(raw) is not dict or not fields <= set(raw) or set(raw) - fields - {"identity_config"} or raw["schema"] != "eidolon-beta-runtime/1"
             or not absolute(raw["state_directory"]) or (type(raw["activity_source"]) is not str or not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", raw["activity_source"]))
             or type(raw["profiles"]) is not dict or not 1 <= len(raw["profiles"]) <= 16
             or type(raw["clients"]) is not dict or not 1 <= len(raw["clients"]) <= 100):
@@ -76,6 +79,10 @@ def validate_config(raw):
         SearxngProvider(raw["searxng_url"])  # validation only, no network
     if any(p["web_enabled"] for p in raw["profiles"].values()) and raw["searxng_url"] is None:
         raise ValueError("web permission requires an explicit provider")
+    if "identity_config" in raw:
+        from .profile_plan import PROFILE_ID
+        if not absolute(raw["identity_config"]) or any(not PROFILE_ID.fullmatch(p) for p in raw["profiles"]):
+            raise ValueError("invalid identity configuration or profile identifier")
     return json.loads(encode(raw))
 
 
@@ -97,6 +104,7 @@ class BetaRuntime:
         self.clock = clock or (lambda: datetime.now(timezone.utc))
         self.path = Path(config["state_directory"]) / "actions.sqlite3"
         self.bridge = bridge or memory_bridge_client.request
+        self.identity = None
         self.activity = Activity(config["state_directory"], config["activity_source"], clock=self.clock)
         try:
             with self._db() as db:
@@ -116,6 +124,9 @@ class BetaRuntime:
             from .html_extract import ExtractLimits
             self.provider = provider or (SearxngProvider(config["searxng_url"]) if config["searxng_url"] else None)
             self.reader = reader or WebReader(system_resolver, html_limits=ExtractLimits())
+            if config.get("identity_config"):
+                from .identity_runtime import IdentityRuntime, load
+                self.identity = IdentityRuntime(load(config["identity_config"]), self._db, self.profile, clock=self.clock)
         except BaseException:
             self.activity.close()
             raise
@@ -157,7 +168,23 @@ class BetaRuntime:
         name, p = self.profile(client)
         return {"profile_id": name, "remember": p["write_token_file"] is not None,
                 "web": p["web_enabled"], "daily_web_limit": p["daily_web_limit"],
-                "file_roots": sorted(p["file_roots"])}
+                "file_roots": sorted(p["file_roots"]), "document_formats": list(documents.FORMATS),
+                "document_upload_bytes": documents.UPLOAD_BYTES, "identity_enrolment": self.identity is not None}
+
+    @staticmethod
+    def _upload(parameters):
+        if (type(parameters) is not dict or set(parameters) != {"name", "data_base64"}
+                or type(parameters["data_base64"]) is not str
+                or len(parameters["data_base64"]) > 4 * ((documents.UPLOAD_BYTES + 2) // 3)):
+            raise ServiceError("INVALID_DOCUMENT_UPLOAD")
+        documents.extension(parameters["name"])
+        try:
+            raw = base64.b64decode(parameters["data_base64"], validate=True)
+        except ValueError:
+            raise ServiceError("INVALID_DOCUMENT_UPLOAD") from None
+        if not 0 < len(raw) <= documents.UPLOAD_BYTES:
+            raise ServiceError("INVALID_DOCUMENT_UPLOAD")
+        return raw
 
     def recall_for(self, client, text):
         name, p = self.profile(client)
@@ -188,11 +215,19 @@ class BetaRuntime:
                 u = urlsplit(parameters[key])
                 if u.scheme != "https" or not u.hostname or u.username or u.password or u.fragment:
                     raise ServiceError("HTTPS_URL_REQUIRED")
-        elif action == "file.read":
+        elif action == "document.import":
+            raw = self._upload(parameters)
+            parameters = documents.extract(raw, parameters["name"])
+        elif action in ("file.read", "document.read"):
             if set(parameters) != {"root", "path"} or parameters["root"] not in p["file_roots"]:
                 raise ServiceError("FILE_ROOT_NOT_ALLOWED", 403)
-            observed = profile_files.read(p["file_roots"][parameters["root"]], parameters["path"])
-            parameters = dict(parameters, sha256=observed["sha256"], bytes=observed["bytes"])
+            if action == "file.read":
+                observed = profile_files.read(p["file_roots"][parameters["root"]], parameters["path"])
+                parameters = dict(parameters, sha256=observed["sha256"], bytes=observed["bytes"])
+            else:
+                raw = profile_files.read_bytes(p["file_roots"][parameters["root"]], parameters["path"], max_bytes=documents.MAX_BYTES)
+                observed = documents.extract(raw, parameters["path"].split("/")[-1])
+                parameters = dict(parameters, document=observed)
         else:
             raise ServiceError("ACTION_NOT_ALLOWED", 403)
         return parameters
@@ -205,9 +240,17 @@ class BetaRuntime:
             old = db.execute("SELECT * FROM actions WHERE client=? AND request_key=?", (client, key)).fetchone()
             if old is not None:
                 proposal = json.loads(old["proposal"])
+                if proposal["action"] != action or proposal["actor"] != actor:
+                    raise ServiceError("ACTION_KEY_REUSED", 409)
                 old_parameters = dict(proposal["parameters"])
                 if action == "file.read":
                     old_parameters.pop("sha256", None); old_parameters.pop("bytes", None)
+                if action == "document.read":
+                    old_parameters.pop("document", None)
+                if action == "document.import":
+                    raw = self._upload(parameters)
+                    old_parameters = {"name": old_parameters["name"], "sha256": old_parameters["sha256"]}
+                    parameters = {"name": parameters["name"], "sha256": hashlib.sha256(raw).hexdigest()}
                 if proposal["action"] != action or old_parameters != parameters or proposal["actor"] != actor:
                     raise ServiceError("ACTION_KEY_REUSED", 409)
                 return self._view(old)
@@ -230,6 +273,24 @@ class BetaRuntime:
         with self._db() as db:
             return [self._view(r) for r in db.execute(
                 "SELECT * FROM actions WHERE client=? ORDER BY rowid DESC LIMIT 20", (client,))]
+
+    def receipt_page(self, client, before=None):
+        self.profile(client)
+        if before is not None and (type(before) is not int or not 1 <= before <= 2**63-1):
+            raise ServiceError("INVALID_RECEIPT_CURSOR")
+        result, size, last = [], 0, None
+        with self._db() as db:
+            rows = db.execute("SELECT rowid AS sequence,* FROM actions WHERE client=? AND rowid<? ORDER BY rowid DESC LIMIT 20",
+                              (client, before if before is not None else 2**63-1))
+            for row in rows:
+                value = self._view(row)
+                length = len(encode(value).encode("utf-8"))
+                if size + length > 200000:
+                    if not result: raise ServiceError("RECEIPT_TOO_LARGE", 503)
+                    break
+                result.append(value); size += length; last = row["sequence"]
+            more = last is not None and db.execute("SELECT 1 FROM actions WHERE client=? AND rowid<? LIMIT 1", (client,last)).fetchone() is not None
+        return {"receipts":result, "next_before":last if more else None}
 
     def commit(self, client, identity, approved):
         name, p = self.profile(client)
@@ -266,6 +327,13 @@ class BetaRuntime:
 
     def _execute(self, p, proposal):
         action, parameters = proposal["action"], proposal["parameters"]
+        if action == "document.import":
+            return dict(parameters, status="EXTRACTED_NOT_REMEMBERED")
+        if action == "document.read":
+            raw = profile_files.read_bytes(p["file_roots"][parameters["root"]], parameters["path"], max_bytes=documents.MAX_BYTES)
+            if hashlib.sha256(raw).hexdigest() != parameters["document"]["sha256"]:
+                raise ValueError("document changed after preview")
+            return dict(parameters["document"], status="EXTRACTED_NOT_REMEMBERED")
         if action == "remember":
             command = {"schema": "eidolon-remember/1", "request_id": proposal["id"],
                        "actor": proposal["profile_id"], "timestamp": proposal["created_at"], "text": parameters["text"]}
@@ -319,10 +387,13 @@ class BetaRuntime:
             observation = None
             if action_id is not None:
                 row = db.execute("SELECT * FROM actions WHERE id=? AND client=?", (action_id, client)).fetchone()
-                if row is None or row["state"] != "COMMITTED" or row["action"] not in ("web.search", "web.fetch", "file.read"):
+                if row is None or row["state"] != "COMMITTED" or row["action"] not in ("web.search", "web.fetch", "file.read", "document.import", "document.read"):
                     raise ServiceError("SOURCE_ACTION_UNAVAILABLE", 404)
                 view = self._view(row); result = view["result"]
-                content = encode({"action": row["action"], "parameters": view["proposal"]["parameters"], "result": result})
+                parameters = view["proposal"]["parameters"]
+                if row["action"].startswith("document."):
+                    parameters = {"name": result["name"], "sha256": result["sha256"]}
+                content = encode({"action": row["action"], "parameters": parameters, "result": result})
                 observation = {"source": row["action"], "reference": "action-"+action_id,
                     "state": "UNVERIFIED", "observed_at": result.get("observed_at", view["proposal"]["created_at"]),
                     "text": "Source externe non vérifiée.\n"+content[:3600]+("\n[EXTRAIT TRONQUÉ]" if len(content)>3600 else "")}

@@ -1703,18 +1703,24 @@
     var value = doc.getElementById("service-value"), action = doc.getElementById("service-action");
     var folder = doc.getElementById("service-root"), output = doc.getElementById("service-output");
     var discuss = doc.getElementById("service-discuss");
+    var upload = doc.getElementById("service-document"), rememberSource = doc.getElementById("service-remember-source");
+    var selectedFile = null, canRemember = false;
     var confirm = doc.getElementById("service-confirm"), preview = null, session = null, busy = false;
     var labels = { PREVIEW: "À confirmer", COMMITTED: "Résultat enregistré", UNKNOWN: "Effet incertain — consulter les reçus" };
+    function forgetPreview() { preview=null;confirm.hidden=true;discuss.hidden=true;rememberSource.hidden=true; }
     function show(result) {
       preview = result && result.proposal ? result : null;
-      var names = { "remember": "Retenir ceci", "web.search": "Recherche Internet", "web.fetch": "Lecture Internet", "file.read": "Lecture de fichier" };
+      var names = { "remember": "Retenir ceci", "web.search": "Recherche Internet", "web.fetch": "Lecture Internet", "file.read": "Lecture de fichier", "document.import": "Document PC", "document.read": "Document autorisé" };
       if (preview) {
         var p = result.proposal, data = p.parameters, r = result.result;
-        var shown = data.text || data.query || data.url || (data.root + "/" + data.path);
+        var shown = data.name || data.text || data.query || data.url || (data.root + "/" + data.path);
         var text = (labels[result.state] || result.state) + "\nProfil : " + p.profile_id + "\n" + names[p.action] + "\n" + shown;
+        var extracted = p.action === "document.import" ? data : data.document;
+        if (extracted) text += "\nSHA-256 : " + extracted.sha256 + "\n" + extracted.limitations +
+          (extracted.truncated ? "\n[EXTRAIT TRONQUÉ À 16 000 CARACTÈRES]" : "") + "\n\n" + extracted.text + "\n\nExtrait non vérifié ; aucune mémorisation automatique.";
         if (r && result.state === "COMMITTED") {
           if (p.action === "remember") text += "\nInformation mémorisée, non vérifiée.";
-          else if (r.text) text += "\n\n" + r.text;
+          else if (r.text && !extracted) text += "\n\n" + r.text;
           else if (Array.isArray(r.results)) text += "\n\n" + r.results.map(function (hit) { return hit.title + "\n" + hit.url + "\n" + hit.snippet; }).join("\n\n");
           if (r.status) text += "\nÉtat de la source : " + r.status;
           if (r.url) text += "\nSource : " + r.url;
@@ -1724,6 +1730,7 @@
         output.textContent = result.entries.map(function (e) { return (e.kind === "directory" ? "Dossier : " : "Fichier : ") + e.name; }).join("\n") + (result.truncated ? "\nListe limitée à 100 entrées." : "");
       } else output.textContent = "Aucun résultat exploitable.";
       discuss.hidden = !preview || preview.state !== "COMMITTED" || preview.proposal.action === "remember";
+      rememberSource.hidden = !canRemember || !preview || preview.state !== "COMMITTED" || !preview.result || !preview.result.text;
       confirm.hidden = !preview || !(preview.state === "PREVIEW" ||
         preview.state === "UNKNOWN" && preview.proposal.action === "remember");
       confirm.textContent = preview && preview.state === "UNKNOWN" ? "Reprendre la même mémorisation" : "Confirmer cette action";
@@ -1735,7 +1742,7 @@
         var result = await conv.service(route, body);
         if (result.stale) return;
         if (result.ok) show(result.json);
-        else { output.textContent = "Action indisponible (" + result.code + "). Consultez les reçus avant de recommencer."; confirm.hidden = true; }
+        else { forgetPreview(); output.textContent = "Action indisponible (" + result.code + "). Consultez les reçus avant de recommencer."; }
       } finally { busy = false; confirm.disabled = false; }
     }
     doc.getElementById("service-preview").addEventListener("click", function () {
@@ -1754,13 +1761,17 @@
       var question = input.value.trim() || "Résume ce résultat en français en précisant les sources et les incertitudes.";
       if (await conv.send(question, null, preview.proposal.id)) input.value = "";
     });
-    doc.getElementById("service-receipts").addEventListener("click", async function () {
+    async function receiptPage(before) {
       if (busy) return;
-      var r = await conv.service("action_receipts", {});
+      var mine=session;busy=true;
+      var r;
+      try { r=await conv.service("action_receipts", before ? {before:before} : {}); }
+      finally { busy=false; }
+      if(mine!==session)return;
       if (r.stale) return;
-      if (!r.ok) { output.textContent = "Reçus indisponibles (" + r.code + ")."; return; }
+      if (!r.ok) { forgetPreview();output.textContent = "Reçus indisponibles (" + r.code + ")."; return; }
       var receipts = r.json.receipts || [];
-      output.textContent = ""; confirm.hidden = true; discuss.hidden = true; preview = null;
+      output.textContent = ""; confirm.hidden = true; discuss.hidden = true; rememberSource.hidden = true; preview = null;
       receipts.forEach(function (item) {
         var button = doc.createElement("button"); button.type = "button";
         button.textContent = (labels[item.state] || item.state) + " — " + item.proposal.action + " — " + item.proposal.created_at;
@@ -1768,25 +1779,49 @@
         output.appendChild(button);
       });
       if (!receipts.length) output.textContent = "Aucun reçu pour ce client.";
-    });
+      if (r.json.next_before) {
+        var older=doc.createElement("button");older.type="button";older.textContent="Reçus plus anciens";
+        older.addEventListener("click",function(){receiptPage(r.json.next_before);});output.appendChild(older);
+      }
+    }
+    doc.getElementById("service-receipts").addEventListener("click",function(){receiptPage(null);});
     doc.getElementById("service-files").addEventListener("click", function () {
       call("files", { root: folder.value, path: value.value });
     });
     doc.getElementById("service-use-draft").addEventListener("click", function () {
       value.value = doc.getElementById("conv-text").value; action.value = "remember"; value.focus();
     });
-    doc.getElementById("service-upload").addEventListener("change", async function (event) {
-      var file = event.target.files[0], epoch = session;
+    rememberSource.addEventListener("click", function () {
+      if (!preview || !preview.result || !preview.result.text || !canRemember) return;
+      var r = preview.result;
+      var text = "Source non vérifiée : " + (r.name || r.url || preview.proposal.id) +
+        (r.sha256 ? "\nSHA-256 : " + r.sha256 : "") + "\n" + r.text;
+      value.value = text.length > 16000 ? text.slice(0, 15900) + "\n[EXTRAIT TRONQUÉ POUR MÉMORISATION]" : text;
+      action.value = "remember"; value.focus();
+    });
+    doc.getElementById("service-upload").addEventListener("change", function (event) {
+      var file = event.target.files[0];
+      forgetPreview();
       event.target.value = "";
+      selectedFile = null; upload.disabled = true;
       if (!file) return;
-      if (file.size > 16000) { output.textContent = "Choisissez un fichier texte UTF-8 de 16 000 octets au maximum."; return; }
+      if (!file.size || file.size > 512 * 1024) { output.textContent = "Choisissez un document de 512 Kio au maximum."; return; }
+      selectedFile = file; upload.disabled = false;
+      output.textContent = "Sélection locale : " + file.name + " (" + file.size + " octets). Cliquez sur Envoyer à Core pour extraire le texte. Aucun envoi effectué.";
+    });
+    upload.addEventListener("click", async function () {
+      if (!selectedFile || busy || !session) return;
+      var file = selectedFile, epoch = session;
+      upload.disabled = true;
       try {
-        var text = new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer());
+        var bytes = new Uint8Array(await file.arrayBuffer());
         if (epoch !== session) return;
-        if (text.indexOf("\0") >= 0) throw new Error("binary");
-        value.value = text; action.value = "remember";
-        output.textContent = "Fichier ouvert sur le PC. Relisez le texte puis préparez sa mémorisation.";
-      } catch (_) { output.textContent = "Fichier texte UTF-8 requis."; }
+        var binary = "";
+        for (var i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+        var key = new Uint8Array(16); root.crypto.getRandomValues(key);
+        await call("document_preview", { request_key: Array.from(key, function (b) { return b.toString(16).padStart(2, "0"); }).join(""), name: file.name, data_base64: root.btoa(binary) });
+      } catch (_) { if (epoch === session) output.textContent = "Document indisponible ; aucune mémorisation effectuée."; }
+      finally { if (epoch === session) { selectedFile = null; upload.disabled = true; } }
     });
     var last = 0;
     function active(event) {
@@ -1797,8 +1832,9 @@
     return { update: function (state) {
       var next = state.phase === "open" && state.services ? state.conversationId : null;
       panel.hidden = !next;
-      if (next !== session) { session = next; preview = null; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
+      if (next !== session) { session = next; preview = null; selectedFile = null; canRemember=false; upload.disabled = true; rememberSource.hidden = true; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
       if (next) {
+        canRemember = state.services.remember === true;
         Array.from(action.options).forEach(function (option) {
           option.disabled = option.value === "remember" ? !state.services.remember :
             option.value.indexOf("web.") === 0 ? !state.services.web : !state.services.file_roots.length;
@@ -1817,6 +1853,178 @@
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.EidolonProfileServices = api;
 })(typeof window !== "undefined" ? window : this);
+
+/* ---- src/identity-panel.js ---- */
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : identity-panel.js
+ * Description : Enrôlement volontaire du profil connecté, sans changement de droits
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+(function (root) {
+  "use strict";
+  function mount(doc, conv, deps) {
+    var $ = function (id) { return doc.getElementById("identity-" + id); };
+    if (!$("panel")) return null;
+    var generation = 0, session = null, flow = null, status = null, busy = false;
+    var stream = null, recorder = null, timer = null, captureMode = null, deleteApproval = null;
+    function key() { var a = new Uint8Array(16); root.crypto.getRandomValues(a); return Array.from(a, function (b) { return b.toString(16).padStart(2,"0"); }).join(""); }
+    function stopStream(s) { if (s && s.getTracks) s.getTracks().forEach(function (t) { t.stop(); }); }
+    function config() { return status && status.modalities.find(function (m) { return m.modality === $("modality").value; }); }
+    function render() {
+      var c = config(), collecting = flow && flow.state === "COLLECTING";
+      $("begin").disabled = busy || !c || c.enrolled || collecting;
+      $("capture").disabled = busy || !collecting || !!flow.approval_sha256;
+      $("capture").textContent = recorder ? "Terminer la prise" : "Prendre un échantillon";
+      $("confirm").hidden = !collecting || !flow.approval_sha256;
+      $("confirm").disabled = busy;
+      $("cancel").hidden = !collecting && !stream && !busy;
+      $("probe").disabled = busy || !c || !c.enrolled;
+      $("delete").disabled = busy || !c || !c.enrolled;
+      $("delete-confirm").hidden = !deleteApproval;
+      $("modality").disabled = busy || !!collecting || !!stream;
+      $("indicator").textContent = stream ? "Capture en cours — capteur actif" : busy ? "Traitement en cours — capteur arrêté" : "Capteurs arrêtés";
+      $("indicator").className = stream ? "comm-indicator recording" : "comm-indicator off";
+      $("progress").textContent = flow ? flow.state + " · " + flow.samples + "/" + flow.required + " prises" : "";
+    }
+    function stopCapture() {
+      if (timer !== null) { deps.clearTimeout(timer); timer = null; }
+      if (recorder) { recorder.cancel(); recorder = null; }
+      stopStream(stream); stream = null;
+      if (deps.afterCapture) deps.afterCapture();
+    }
+    function reset() {
+      generation++; stopCapture(); busy = false; flow = status = deleteApproval = null;
+      $("output").textContent = ""; $("present").checked = $("consent").checked = false;
+      $("modality").textContent = ""; render();
+    }
+    async function post(route, body) {
+      var mine = generation;
+      var answer = await conv.service("identity_" + route, body);
+      if (mine !== generation || answer.stale) return null;
+      if (!answer.ok) { $("output").textContent = "Opération non confirmée : " + answer.code + ". Actualisez l’état avant de recommencer."; return null; }
+      return answer.json;
+    }
+    async function refresh() {
+      var result = await post("status", {});
+      if (!result) return;
+      status = result;
+      var selected = $("modality").value;
+      $("modality").textContent = "";
+      status.modalities.forEach(function (m) { var o = doc.createElement("option"); o.value=m.modality;
+        o.textContent=(m.modality === "voice" ? "Voix" : "Visage") + (m.enrolled ? " — enregistré" : " — non enregistré") + (m.calibrated ? "" : " — non calibré"); $("modality").appendChild(o); });
+      if (status.modalities.some(function (m) { return m.modality === selected; })) $("modality").value = selected;
+      flow = status.sessions.find(function (s) { return s.state === "COLLECTING" && s.modality === $("modality").value; }) || null;
+      render();
+    }
+    function consent() {
+      if (!$("present").checked || !$("consent").checked) {
+        $("output").textContent = "Confirmez votre présence et votre accord avant une capture."; return false;
+      }
+      return true;
+    }
+    async function submitCapture(bytes, mine, mode) {
+      if (mine !== generation) { bytes.fill(0); return; }
+      if (!bytes.length || bytes.length > 512*1024) { bytes.fill(0); $("output").textContent="Capture vide ou trop volumineuse."; return; }
+      var binary = "";
+      for (var i=0; i<bytes.length; i+=8192) binary += String.fromCharCode.apply(null,bytes.subarray(i,i+8192));
+      bytes.fill(0);
+      busy=true; render();
+      var body = {capture_base64:root.btoa(binary)};
+      binary="";
+      if (mode === "probe") body.modality=$("modality").value;
+      else { body.session_id=flow.session_id; body.sample_key=key(); }
+      var result=await post(mode === "probe" ? "probe" : "sample",body);
+      body.capture_base64="";
+      if (mine !== generation) return;
+      busy=false;
+      if (result) {
+        if (mode === "probe") $("output").textContent = result.authorizes_execution === false && Array.isArray(result.grants) && !result.grants.length ?
+          "Comparaison au seul profil connecté : " + result.state + ". Résultat non vérifié, aucun droit accordé." : "Résultat refusé : revendication de droits.";
+        else { flow=result; $("output").textContent=result.approval_sha256 ? "Prises reçues. Confirmez leur enregistrement, ou annulez." : "Prise reçue ; poursuivez avec une nouvelle prise."; }
+      }
+      render();
+    }
+    async function finishVoice() {
+      if (!recorder) return;
+      var active=recorder, mine=generation, mode=captureMode; recorder=null;
+      if (timer !== null) deps.clearTimeout(timer); timer=null;
+      stopStream(stream); stream=null; busy=true; render();
+      try {
+        var audio=await active.stop();
+        if (mine !== generation) { audio.samples.fill(0); return; }
+        var bytes=root.EidolonCommunication.encodeWav(audio.samples,audio.rate).slice(44);
+        audio.samples.fill(0); await submitCapture(bytes,mine,mode);
+      } catch (_) { if (mine === generation) $("output").textContent="Prise interrompue."; }
+      finally { if (mine === generation) { busy=false;if(deps.afterCapture)deps.afterCapture();render(); } }
+    }
+    async function capture(mode) {
+      if (recorder) { await finishVoice(); return; }
+      if (busy || !consent() || !config()) return;
+      var mine=generation, modality=$("modality").value;
+      captureMode=mode; busy=true; render();
+      if (deps.beforeCapture) deps.beforeCapture();
+      try {
+        var acquired=await deps.media.getUserMedia(modality === "voice" ? {audio:{channelCount:1}} : {video:{width:{max:1280},height:{max:720}}});
+        if (mine !== generation) { stopStream(acquired); return; }
+        stream=acquired; render();
+        if (modality === "voice") {
+          recorder=deps.recorder(stream); busy=false;
+          timer=deps.setTimeout(finishVoice,config().max_duration_s*1000);
+          $("output").textContent="Parlez distinctement, une seule personne. Minimum de parole configuré : " + config().min_speech_s + " s.";
+          render(); return;
+        }
+        var image;
+        try { image=await deps.grabFrame(stream); } finally { stopStream(acquired); if (stream === acquired) stream=null; }
+        await submitCapture(image,mine,mode);
+      } catch (_) { if (mine === generation) { stopCapture(); $("output").textContent="Capture indisponible ou permission refusée."; } }
+      finally { if (mine === generation && !recorder) { busy=false;if(deps.afterCapture)deps.afterCapture();render(); } }
+    }
+    $("refresh").addEventListener("click",function(){ if(!busy) refresh(); });
+    $("modality").addEventListener("change",function(){ flow=null;deleteApproval=null;render(); });
+    $("begin").addEventListener("click",async function(){
+      if(busy || !consent())return; var mine=generation;busy=true;render();
+      var result=await post("begin",{modality:$("modality").value,request_key:key(),present:true,consent:true});
+      if(mine!==generation)return;busy=false;if(result)flow=result;render();
+    });
+    $("capture").addEventListener("click",function(){capture("sample");});
+    $("probe").addEventListener("click",function(){capture("probe");});
+    $("cancel").addEventListener("click",async function(){
+      var old=flow;generation++;stopCapture();busy=false;flow=null;deleteApproval=null;render();
+      if(old && old.state==="COLLECTING")await post("cancel",{session_id:old.session_id});
+      await refresh();
+    });
+    $("confirm").addEventListener("click",async function(){
+      if(busy || !flow || !flow.approval_sha256)return;var mine=generation;busy=true;render();
+      var result=await post("confirm",{session_id:flow.session_id,sha256:flow.approval_sha256});
+      if(mine!==generation)return;busy=false;
+      if(result){flow=null;$("output").textContent="Gabarits enregistrés pour le profil connecté. Aucun droit accordé.";await refresh();}render();
+    });
+    $("delete").addEventListener("click",function(){
+      if(busy || !config() || !config().delete_sha256)return;
+      deleteApproval={modality:$("modality").value,sha256:config().delete_sha256};
+      $("output").textContent="Confirmer le retrait des gabarits actifs ? Les anciennes sauvegardes ne seront pas effacées.";render();
+    });
+    $("delete-confirm").addEventListener("click",async function(){
+      if(busy || !deleteApproval)return;var mine=generation;busy=true;render();
+      var result=await post("delete",deleteApproval);
+      if(mine!==generation)return;busy=false;deleteApproval=null;
+      if(result){$("output").textContent="Gabarits retirés du registre actif ; anciennes sauvegardes conservées.";await refresh();}render();
+    });
+    render();
+    return {beforeClose:function(){
+      if(flow && flow.state==="COLLECTING")conv.service("identity_cancel",{session_id:flow.session_id});
+      reset();
+    },update:function(state){
+      var next=state.phase==="open" && state.services && state.services.identity_enrolment ? state.conversationId : null;
+      $("panel").hidden=!next;
+      if(next!==session){reset();session=next;if(next)refresh();}
+    }};
+  }
+  var api={mount:mount};
+  if(typeof module==="object" && module.exports)module.exports=api;else root.EidolonIdentityPanel=api;
+})(typeof window!=="undefined"?window:this);
 
 /* ---- src/conversation.js ---- */
 /* ==========================================================
@@ -1987,11 +2195,13 @@
       try { res = await transport("POST", PREFIX + route, body, token); } catch (err) { res = null; }
       if (mine !== epoch) return { stale: true };                       // closed or reopened meanwhile
       if (!res) return { ok: false, network: true, code: "NETWORK" };
+      if (res.status === 401) { close(); state.error = errorOf(res); emit(); return { stale: true }; }
       if (res.status === 200 && res.json && typeof res.json === "object") return { ok: true, json: res.json };
       return { ok: false, network: false, code: errorOf(res), status: res.status };
     }
 
     async function open(key) {
+      if (options.beforeClose) options.beforeClose();
       if (typeof key !== "string" || !KEY.test(key)) {
         close(); state.error = "KEY_FORMAT"; emit(); return false;
       }
@@ -2048,6 +2258,7 @@
     }
 
     function close() {
+      if (options.beforeClose) options.beforeClose();
       epoch += 1; token = null;
       state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
       emit();
@@ -2598,13 +2809,21 @@
   }
 
   function mount(doc, deps) {
-    var services = null;
-    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
+    var services = null, identity = null;
+    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null,
+      beforeClose: function () { if (identity) identity.beforeClose(); }, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
       if (services) services.update(st);
+      if (identity) identity.update(st);
       if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
     if (root.EidolonProfileServices) services = root.EidolonProfileServices.mount(doc, conv);
+    if (root.EidolonIdentityPanel && root.EidolonCommunication) {
+      var captureDeps = root.EidolonCommunication.browserDeps(root, function () { return conv.authorization(); });
+      captureDeps.beforeCapture = deps.beforeIdentityCapture;
+      captureDeps.afterCapture = deps.afterIdentityCapture;
+      identity = root.EidolonIdentityPanel.mount(doc, conv, captureDeps);
+    }
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();
@@ -2738,6 +2957,8 @@
     var st = {};
     KINDS.forEach(function (k) { st[k] = { state: k === "speaker" ? "disabled" : "unavailable", devices: [], selected: null, reason: null }; });
     var listeners = [], talk = null, speakEpoch = 0, player = null, talkEpoch = 0;
+    var cameraEpoch = 0, cameraStream = null, permissionEpoch = {microphone:0, camera:0};
+    var sttKey = null, ttsKey = null;
 
     function emit() { listeners.forEach(function (fn) { fn(snapshotState()); }); }
     function set(kind, state, reason) { st[kind].state = state; st[kind].reason = reason || null; emit(); }
@@ -2779,26 +3000,32 @@
     async function enable(kind) {
       if (kind === "speaker") { set("speaker", "ready"); return snapshotState(); }
       var dev = st[kind];
+      var permission = ++permissionEpoch[kind];
       if (!dev.selected) { set(kind, "unavailable"); return snapshotState(); }
       var constraints = kind === "microphone" ? { audio: { deviceId: { exact: dev.selected } } }
         : { video: Object.assign({ deviceId: { exact: dev.selected } }, VIDEO) };
       try {
         stopTracks(await deps.media.getUserMedia(constraints));       // permission only: nothing kept open
+        if (permission !== permissionEpoch[kind]) return snapshotState();
         await refresh();
+        if (permission !== permissionEpoch[kind]) return snapshotState();
         set(kind, "ready");
-      } catch (e) { set(kind, errorState(e)); }
+      } catch (e) { if (permission === permissionEpoch[kind]) set(kind, errorState(e)); }
       return snapshotState();
     }
 
     function disable(kind) {
+      if (kind !== "speaker") permissionEpoch[kind]++;
       if (kind === "microphone") cancelTalk();
       if (kind === "speaker") stopSpeaking();
+      if (kind === "camera") { cameraEpoch++; stopTracks(cameraStream); cameraStream = null; }
       set(kind, st[kind].devices.length || kind === "speaker" ? "disabled" : "unavailable");
       return snapshotState();
     }
 
     function select(kind, id) {
       if (!st[kind].devices.some(function (d) { return d.id === id; })) return false;
+      disable(kind);
       st[kind].selected = id;
       if (st[kind].state === "ready") st[kind].state = "disabled";   // a new device needs its own permission
       emit();
@@ -2808,10 +3035,10 @@
     async function startTalk() {
       if (st.microphone.state !== "ready") return false;
       stopSpeaking();                                                 // anti-echo: never listen to ourselves
-      var stream;
+      var stream, epoch = ++talkEpoch;
       try { stream = await deps.media.getUserMedia({ audio: { deviceId: { exact: st.microphone.selected }, channelCount: 1 } }); }
-      catch (e) { set("microphone", errorState(e)); return false; }
-      var epoch = ++talkEpoch;
+      catch (e) { if (epoch === talkEpoch) set("microphone", errorState(e)); return false; }
+      if (epoch !== talkEpoch) { stopTracks(stream); return false; }
       talk = { stream: stream, recorder: deps.recorder(stream), epoch: epoch };
       // G165: a track that ends by itself (device unplugged, taken by the system) stops the capture.
       (stream.getTracks ? stream.getTracks() : []).forEach(function (track) {
@@ -2829,9 +3056,12 @@
       var t = talk; talk = null;
       deps.clearTimeout(t.timer);
       var audio;
+      stopTracks(t.stream);
       try { audio = await t.recorder.stop(); } finally { stopTracks(t.stream); }
+      if (t.epoch !== talkEpoch) { if (audio && audio.samples) audio.samples.fill(0); return null; }
       set("microphone", "processing");
       try {
+        sttKey = deps.key();
         var result = await call("POST", "/v1/comm/stt", encodeWav(audio.samples, audio.rate), "audio/wav");
         if (t.epoch !== talkEpoch) return null;                       // cancelled meanwhile: late answer dropped
         set("microphone", "ready");
@@ -2849,7 +3079,8 @@
     function cancelTalk() {
       talkEpoch++;
       if (talk) { deps.clearTimeout(talk.timer); talk.recorder.cancel(); stopTracks(talk.stream); talk = null; }
-      if (st.microphone.state === "processing") deps.transport("DELETE", "/v1/comm/stt", null, deps.key()).catch(function () {});
+      if (st.microphone.state === "processing" && sttKey) deps.transport("DELETE", "/v1/comm/stt", null, sttKey).catch(function () {});
+      sttKey = null;
       if (st.microphone.state === "capturing" || st.microphone.state === "processing") set("microphone", "ready", "annulé");
     }
 
@@ -2857,6 +3088,7 @@
       if (st.speaker.state !== "ready" && st.speaker.state !== "processing") return false;
       if (st.microphone.state === "capturing") return false;          // anti-echo
       var epoch = ++speakEpoch, index = 0, chunks = 1;
+      ttsKey = deps.key();
       set("speaker", "processing");
       try {
         while (index < chunks && epoch === speakEpoch) {
@@ -2879,29 +3111,37 @@
       speakEpoch++;
       if (player) { player.stop(); player = null; }
       if (wasSpeaking) {
-        deps.transport("DELETE", "/v1/comm/tts", null, deps.key()).catch(function () {});
+        if (ttsKey) deps.transport("DELETE", "/v1/comm/tts", null, ttsKey).catch(function () {});
+        ttsKey = null;
         set("speaker", "ready", "arrêté");
       }
     }
 
     async function snapshot(purpose) {
       if (st.camera.state !== "ready") return null;
-      var stream;
+      var stream, epoch = ++cameraEpoch;
       try { stream = await deps.media.getUserMedia({ video: Object.assign({ deviceId: { exact: st.camera.selected } }, VIDEO) }); }
-      catch (e) { set("camera", errorState(e)); return null; }
+      catch (e) { if (epoch === cameraEpoch) set("camera", errorState(e)); return null; }
+      if (epoch !== cameraEpoch) { stopTracks(stream); return null; }
+      cameraStream = stream;
       set("camera", "capturing");
       var image;
-      try { image = await deps.grabFrame(stream); } finally { stopTracks(stream); }   // one frame, camera off at once
+      try { image = await deps.grabFrame(stream); }
+      catch (e) { if (epoch === cameraEpoch) set("camera", "ready", "ERREUR"); return null; }
+      finally { stopTracks(stream); if (cameraStream === stream) cameraStream = null; }
+      if (epoch !== cameraEpoch) { if (image && image.fill) image.fill(0); return null; }
       set("camera", "processing");
       try {
         var result = await call("POST", "/v1/comm/vision/describe?purpose=" + (purpose === "scene" ? "scene" : "presence"), image, "image/jpeg");
+        if (epoch !== cameraEpoch) return null;
         set("camera", "ready");
         return result;
-      } catch (e) { set("camera", "ready", e.code || "ERREUR"); return null; }
+      } catch (e) { if (epoch === cameraEpoch) set("camera", "ready", e.code || "ERREUR"); return null; }
     }
 
     if (deps.media && deps.media.onDeviceChange) deps.media.onDeviceChange(function () { refresh(); });
     return { refresh: refresh, enable: enable, disable: disable, select: select, startTalk: startTalk,
+      reset: function () { KINDS.forEach(disable); },
       stopTalk: stopTalk, cancelTalk: cancelTalk, speak: speak, stopSpeaking: stopSpeaking, snapshot: snapshot,
       state: snapshotState, onChange: function (fn) { listeners.push(fn); } };
   }
@@ -3539,13 +3779,25 @@
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     var monitorPhase = null;
+    var privateConversation = null;
     // G176: frame (eye, DARME button, sections). Pure views of the existing states, no new request.
     var shellApi = root.EidolonShell, shell = shellApi ? shellApi.mount(document) : null;
     var eyeInput = { phase: "closed", pending: false, comm: null };
     function eye() { if (shell) shell.renderEye(eyeInput); }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
+      beforeIdentityCapture: function () { if (comm) comm.reset(); var block=document.getElementById("comm");if(block)block.inert=true; },
+      afterIdentityCapture: function () { var block=document.getElementById("comm");if(block)block.inert=false; },
       onPhase: function (phase, st) {
+        var nextPrivate = phase === "open" && st ? st.conversationId : null;
+        if (nextPrivate !== privateConversation) {
+          privateConversation = nextPrivate;
+          if (comm) comm.reset();
+          media.clear();
+          ["conv-text", "comm-note"].forEach(function (id) {
+            var n = document.getElementById(id); if (n) { if ("value" in n) n.value = ""; else n.textContent = ""; }
+          });
+        }
         eyeInput.phase = phase;
         eyeInput.pending = !!(st && st.items && st.items.some(function (i) { return i.status === "sent" || i.status === "pending"; }));
         var closed = phase !== "open";
@@ -3591,7 +3843,7 @@
       commApi.mount(document, comm, { observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });
-      window.addEventListener("pagehide", function () { comm.cancelTalk(); comm.stopSpeaking(); });
+      window.addEventListener("pagehide", function () { comm.reset(); });
     }
 
     function stopAuto() {

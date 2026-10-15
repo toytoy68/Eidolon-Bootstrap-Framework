@@ -56,13 +56,25 @@
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     var monitorPhase = null;
+    var privateConversation = null;
     // G176: frame (eye, DARME button, sections). Pure views of the existing states, no new request.
     var shellApi = root.EidolonShell, shell = shellApi ? shellApi.mount(document) : null;
     var eyeInput = { phase: "closed", pending: false, comm: null };
     function eye() { if (shell) shell.renderEye(eyeInput); }
     conversation = root.EidolonConversation.mount(document, {
       transport: transport,
+      beforeIdentityCapture: function () { if (comm) comm.reset(); var block=document.getElementById("comm");if(block)block.inert=true; },
+      afterIdentityCapture: function () { var block=document.getElementById("comm");if(block)block.inert=false; },
       onPhase: function (phase, st) {
+        var nextPrivate = phase === "open" && st ? st.conversationId : null;
+        if (nextPrivate !== privateConversation) {
+          privateConversation = nextPrivate;
+          if (comm) comm.reset();
+          media.clear();
+          ["conv-text", "comm-note"].forEach(function (id) {
+            var n = document.getElementById(id); if (n) { if ("value" in n) n.value = ""; else n.textContent = ""; }
+          });
+        }
         eyeInput.phase = phase;
         eyeInput.pending = !!(st && st.items && st.items.some(function (i) { return i.status === "sent" || i.status === "pending"; }));
         var closed = phase !== "open";
@@ -108,7 +120,7 @@
       commApi.mount(document, comm, { observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });
-      window.addEventListener("pagehide", function () { comm.cancelTalk(); comm.stopSpeaking(); });
+      window.addEventListener("pagehide", function () { comm.reset(); });
     }
 
     function stopAuto() {

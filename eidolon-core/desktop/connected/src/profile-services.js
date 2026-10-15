@@ -19,18 +19,24 @@
     var value = doc.getElementById("service-value"), action = doc.getElementById("service-action");
     var folder = doc.getElementById("service-root"), output = doc.getElementById("service-output");
     var discuss = doc.getElementById("service-discuss");
+    var upload = doc.getElementById("service-document"), rememberSource = doc.getElementById("service-remember-source");
+    var selectedFile = null, canRemember = false;
     var confirm = doc.getElementById("service-confirm"), preview = null, session = null, busy = false;
     var labels = { PREVIEW: "À confirmer", COMMITTED: "Résultat enregistré", UNKNOWN: "Effet incertain — consulter les reçus" };
+    function forgetPreview() { preview=null;confirm.hidden=true;discuss.hidden=true;rememberSource.hidden=true; }
     function show(result) {
       preview = result && result.proposal ? result : null;
-      var names = { "remember": "Retenir ceci", "web.search": "Recherche Internet", "web.fetch": "Lecture Internet", "file.read": "Lecture de fichier" };
+      var names = { "remember": "Retenir ceci", "web.search": "Recherche Internet", "web.fetch": "Lecture Internet", "file.read": "Lecture de fichier", "document.import": "Document PC", "document.read": "Document autorisé" };
       if (preview) {
         var p = result.proposal, data = p.parameters, r = result.result;
-        var shown = data.text || data.query || data.url || (data.root + "/" + data.path);
+        var shown = data.name || data.text || data.query || data.url || (data.root + "/" + data.path);
         var text = (labels[result.state] || result.state) + "\nProfil : " + p.profile_id + "\n" + names[p.action] + "\n" + shown;
+        var extracted = p.action === "document.import" ? data : data.document;
+        if (extracted) text += "\nSHA-256 : " + extracted.sha256 + "\n" + extracted.limitations +
+          (extracted.truncated ? "\n[EXTRAIT TRONQUÉ À 16 000 CARACTÈRES]" : "") + "\n\n" + extracted.text + "\n\nExtrait non vérifié ; aucune mémorisation automatique.";
         if (r && result.state === "COMMITTED") {
           if (p.action === "remember") text += "\nInformation mémorisée, non vérifiée.";
-          else if (r.text) text += "\n\n" + r.text;
+          else if (r.text && !extracted) text += "\n\n" + r.text;
           else if (Array.isArray(r.results)) text += "\n\n" + r.results.map(function (hit) { return hit.title + "\n" + hit.url + "\n" + hit.snippet; }).join("\n\n");
           if (r.status) text += "\nÉtat de la source : " + r.status;
           if (r.url) text += "\nSource : " + r.url;
@@ -40,6 +46,7 @@
         output.textContent = result.entries.map(function (e) { return (e.kind === "directory" ? "Dossier : " : "Fichier : ") + e.name; }).join("\n") + (result.truncated ? "\nListe limitée à 100 entrées." : "");
       } else output.textContent = "Aucun résultat exploitable.";
       discuss.hidden = !preview || preview.state !== "COMMITTED" || preview.proposal.action === "remember";
+      rememberSource.hidden = !canRemember || !preview || preview.state !== "COMMITTED" || !preview.result || !preview.result.text;
       confirm.hidden = !preview || !(preview.state === "PREVIEW" ||
         preview.state === "UNKNOWN" && preview.proposal.action === "remember");
       confirm.textContent = preview && preview.state === "UNKNOWN" ? "Reprendre la même mémorisation" : "Confirmer cette action";
@@ -51,7 +58,7 @@
         var result = await conv.service(route, body);
         if (result.stale) return;
         if (result.ok) show(result.json);
-        else { output.textContent = "Action indisponible (" + result.code + "). Consultez les reçus avant de recommencer."; confirm.hidden = true; }
+        else { forgetPreview(); output.textContent = "Action indisponible (" + result.code + "). Consultez les reçus avant de recommencer."; }
       } finally { busy = false; confirm.disabled = false; }
     }
     doc.getElementById("service-preview").addEventListener("click", function () {
@@ -70,13 +77,17 @@
       var question = input.value.trim() || "Résume ce résultat en français en précisant les sources et les incertitudes.";
       if (await conv.send(question, null, preview.proposal.id)) input.value = "";
     });
-    doc.getElementById("service-receipts").addEventListener("click", async function () {
+    async function receiptPage(before) {
       if (busy) return;
-      var r = await conv.service("action_receipts", {});
+      var mine=session;busy=true;
+      var r;
+      try { r=await conv.service("action_receipts", before ? {before:before} : {}); }
+      finally { busy=false; }
+      if(mine!==session)return;
       if (r.stale) return;
-      if (!r.ok) { output.textContent = "Reçus indisponibles (" + r.code + ")."; return; }
+      if (!r.ok) { forgetPreview();output.textContent = "Reçus indisponibles (" + r.code + ")."; return; }
       var receipts = r.json.receipts || [];
-      output.textContent = ""; confirm.hidden = true; discuss.hidden = true; preview = null;
+      output.textContent = ""; confirm.hidden = true; discuss.hidden = true; rememberSource.hidden = true; preview = null;
       receipts.forEach(function (item) {
         var button = doc.createElement("button"); button.type = "button";
         button.textContent = (labels[item.state] || item.state) + " — " + item.proposal.action + " — " + item.proposal.created_at;
@@ -84,25 +95,49 @@
         output.appendChild(button);
       });
       if (!receipts.length) output.textContent = "Aucun reçu pour ce client.";
-    });
+      if (r.json.next_before) {
+        var older=doc.createElement("button");older.type="button";older.textContent="Reçus plus anciens";
+        older.addEventListener("click",function(){receiptPage(r.json.next_before);});output.appendChild(older);
+      }
+    }
+    doc.getElementById("service-receipts").addEventListener("click",function(){receiptPage(null);});
     doc.getElementById("service-files").addEventListener("click", function () {
       call("files", { root: folder.value, path: value.value });
     });
     doc.getElementById("service-use-draft").addEventListener("click", function () {
       value.value = doc.getElementById("conv-text").value; action.value = "remember"; value.focus();
     });
-    doc.getElementById("service-upload").addEventListener("change", async function (event) {
-      var file = event.target.files[0], epoch = session;
+    rememberSource.addEventListener("click", function () {
+      if (!preview || !preview.result || !preview.result.text || !canRemember) return;
+      var r = preview.result;
+      var text = "Source non vérifiée : " + (r.name || r.url || preview.proposal.id) +
+        (r.sha256 ? "\nSHA-256 : " + r.sha256 : "") + "\n" + r.text;
+      value.value = text.length > 16000 ? text.slice(0, 15900) + "\n[EXTRAIT TRONQUÉ POUR MÉMORISATION]" : text;
+      action.value = "remember"; value.focus();
+    });
+    doc.getElementById("service-upload").addEventListener("change", function (event) {
+      var file = event.target.files[0];
+      forgetPreview();
       event.target.value = "";
+      selectedFile = null; upload.disabled = true;
       if (!file) return;
-      if (file.size > 16000) { output.textContent = "Choisissez un fichier texte UTF-8 de 16 000 octets au maximum."; return; }
+      if (!file.size || file.size > 512 * 1024) { output.textContent = "Choisissez un document de 512 Kio au maximum."; return; }
+      selectedFile = file; upload.disabled = false;
+      output.textContent = "Sélection locale : " + file.name + " (" + file.size + " octets). Cliquez sur Envoyer à Core pour extraire le texte. Aucun envoi effectué.";
+    });
+    upload.addEventListener("click", async function () {
+      if (!selectedFile || busy || !session) return;
+      var file = selectedFile, epoch = session;
+      upload.disabled = true;
       try {
-        var text = new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer());
+        var bytes = new Uint8Array(await file.arrayBuffer());
         if (epoch !== session) return;
-        if (text.indexOf("\0") >= 0) throw new Error("binary");
-        value.value = text; action.value = "remember";
-        output.textContent = "Fichier ouvert sur le PC. Relisez le texte puis préparez sa mémorisation.";
-      } catch (_) { output.textContent = "Fichier texte UTF-8 requis."; }
+        var binary = "";
+        for (var i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+        var key = new Uint8Array(16); root.crypto.getRandomValues(key);
+        await call("document_preview", { request_key: Array.from(key, function (b) { return b.toString(16).padStart(2, "0"); }).join(""), name: file.name, data_base64: root.btoa(binary) });
+      } catch (_) { if (epoch === session) output.textContent = "Document indisponible ; aucune mémorisation effectuée."; }
+      finally { if (epoch === session) { selectedFile = null; upload.disabled = true; } }
     });
     var last = 0;
     function active(event) {
@@ -113,8 +148,9 @@
     return { update: function (state) {
       var next = state.phase === "open" && state.services ? state.conversationId : null;
       panel.hidden = !next;
-      if (next !== session) { session = next; preview = null; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
+      if (next !== session) { session = next; preview = null; selectedFile = null; canRemember=false; upload.disabled = true; rememberSource.hidden = true; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
       if (next) {
+        canRemember = state.services.remember === true;
         Array.from(action.options).forEach(function (option) {
           option.disabled = option.value === "remember" ? !state.services.remember :
             option.value.indexOf("web.") === 0 ? !state.services.web : !state.services.file_roots.length;

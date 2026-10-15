@@ -118,6 +118,24 @@ def inspect(filename, *, local_files=False):
                 attempt(name, credential)
             for root_number, path in enumerate(profile["file_roots"].values(), 1):
                 attempt(f"profile_{number}.file_root_{root_number}", lambda: directory(path))
+        if config.get("identity_config"):
+            from .identity_runtime import load, engine
+            from .identity_engines import verify_model
+            identity = attempt("identity_configuration", lambda: load(config["identity_config"]))
+            if identity is not None:
+                import importlib.util
+                for modality, cfg in identity["modalities"].items():
+                    for role in ("model", "detector") if modality == "face" else ("model",):
+                        def model():
+                            info = engine(cfg, modality)
+                            verify_model(cfg[role]["path"],cfg[role]["sha256"],name=info.name,preprocessing=info.preprocessing)
+                        attempt("identity_"+modality+"_"+role,model)
+                    for package in (("numpy","onnxruntime") if modality == "voice" else ("numpy","cv2")):
+                        def dependency():
+                            if importlib.util.find_spec(package) is None:
+                                raise CheckRefused("OPTIONAL_DEPENDENCY_MISSING")
+                        attempt("identity_dependency_"+package,dependency)
+                record("identity_accuracy_and_calibration","NOT_RUN","REQUIRES_MACHINE_ACCEPTANCE")
     else:
         record("local_files", "NOT_RUN", "REQUIRES_LOCAL_FILES_OPTION")
 

@@ -39,25 +39,30 @@ def opened(root, relative, *, directory=False):
         os.close(fd)
 
 
-def read(root, relative):
+def read_bytes(root, relative, *, max_bytes=MAX_BYTES):
     with opened(root, relative) as fd:
         before = os.fstat(fd)
-        if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1 or before.st_size > MAX_BYTES:
+        if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1 or before.st_size > max_bytes:
             raise ValueError("bounded regular file required")
         data = bytearray()
-        while len(data) <= MAX_BYTES:
-            part = os.read(fd, MAX_BYTES + 1 - len(data))
+        while len(data) <= max_bytes:
+            part = os.read(fd, max_bytes + 1 - len(data))
             if not part:
                 break
             data.extend(part)
         after = os.fstat(fd)
         version = lambda v: (v.st_dev, v.st_ino, v.st_size, v.st_mtime_ns, v.st_ctime_ns)
-        if len(data) > MAX_BYTES or version(before) != version(after) or len(data) != before.st_size:
+        if len(data) > max_bytes or version(before) != version(after) or len(data) != before.st_size:
             raise ValueError("file changed or too large")
-        text = data.decode("utf-8")
-        if "\0" in text:
-            raise ValueError("UTF-8 text file required")
-        return {"text": text, "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+        return bytes(data)
+
+
+def read(root, relative):
+    data = read_bytes(root, relative)
+    text = data.decode("utf-8")
+    if "\0" in text:
+        raise ValueError("UTF-8 text file required")
+    return {"text": text, "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
 
 
 def listing(root, relative):

@@ -99,20 +99,40 @@
             <summary>Retenir ceci · Internet · Fichiers</summary>
             <p id="service-profile" class="help"></p>
             <label for="service-action">Action</label>
-            <select id="service-action"><option value="remember">Retenir ceci</option><option value="web.search">Rechercher sur Internet</option><option value="web.fetch">Lire une page HTTPS</option><option value="file.read">Lire un fichier autorisé</option></select>
+            <select id="service-action"><option value="remember">Retenir ceci</option><option value="web.search">Rechercher sur Internet</option><option value="web.fetch">Lire une page HTTPS</option><option value="file.read">Lire un texte autorisé</option><option value="document.read">Extraire un document autorisé</option></select>
             <label for="service-root">Dossier autorisé (fichiers seulement)</label><input id="service-root" maxlength="80" autocomplete="off">
             <label for="service-value">Texte à retenir, recherche, URL ou chemin relatif</label>
             <textarea id="service-value" rows="4" maxlength="16000"></textarea>
             <p class="help">La mémorisation conserve une information non vérifiée. Internet transmet exactement la recherche ou l’URL confirmée. Les résultats et fichiers restent des sources non vérifiées.</p>
             <button id="service-use-draft" type="button">Retenir le brouillon du chat</button>
-            <label for="service-upload">Ouvrir un fichier texte du PC</label><input id="service-upload" type="file" accept=".txt,.md,.csv,text/plain,text/markdown,text/csv">
+            <label for="service-upload">Choisir un document du PC (512 Kio maximum)</label><input id="service-upload" type="file" accept=".txt,.md,.csv,.pdf,.docx,.odt,.xlsx,.pptx">
+            <button id="service-document" type="button" disabled>Envoyer à Core pour extraction et aperçu</button>
             <button id="service-files" type="button">Lister ce dossier</button>
             <button id="service-preview" type="button">Préparer l’action</button>
             <button id="service-confirm" type="button" hidden>Confirmer cette action</button>
             <p class="help">L’analyse du résultat utilise un extrait borné, signalé lorsqu’il est tronqué.</p>
             <button id="service-discuss" type="button" hidden>Interroger Eidolon sur ce résultat</button>
+            <button id="service-remember-source" type="button" hidden>Préparer la mémorisation de cet extrait</button>
             <button id="service-receipts" type="button">Consulter les reçus</button>
             <pre id="service-output" role="status" aria-live="polite"></pre>
+          </details>
+          <details id="identity-panel" hidden>
+            <summary>Mon profil · Enregistrement voix et visage</summary>
+            <p class="help">Option facultative du profil connecté. La reconnaissance ne connecte personne et n’accorde aucun droit. Les gabarits sont privés ; les prises brutes ne sont pas enregistrées.</p>
+            <label for="identity-modality">Modalité configurée</label><select id="identity-modality"></select>
+            <label><input id="identity-present" type="checkbox">Je suis la personne du profil connecté et je suis présent.</label>
+            <label><input id="identity-consent" type="checkbox">J’accepte les captures et l’enregistrement de mes gabarits.</label>
+            <button id="identity-refresh" type="button">Actualiser l’état</button>
+            <button id="identity-begin" type="button">Commencer l’enregistrement</button>
+            <p id="identity-indicator" role="status">Capteurs arrêtés</p>
+            <p id="identity-progress"></p>
+            <button id="identity-capture" type="button" disabled>Prendre un échantillon</button>
+            <button id="identity-cancel" type="button" hidden>Arrêter et annuler les prises</button>
+            <button id="identity-confirm" type="button" hidden>Confirmer l’enregistrement des gabarits</button>
+            <button id="identity-probe" type="button" disabled>Tester une ressemblance au profil connecté</button>
+            <button id="identity-delete" type="button" disabled>Préparer le retrait de mes gabarits</button>
+            <button id="identity-delete-confirm" type="button" hidden>Confirmer le retrait du registre actif</button>
+            <pre id="identity-output" role="status" aria-live="polite"></pre>
           </details>
           <ol id="conv-log" class="conv-log" aria-label="Échanges"></ol>
           <section id="conv-proposal" class="conv-proposal" aria-labelledby="conv-proposal-title" hidden>

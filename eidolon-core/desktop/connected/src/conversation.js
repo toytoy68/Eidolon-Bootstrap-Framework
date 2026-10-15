@@ -166,11 +166,13 @@
       try { res = await transport("POST", PREFIX + route, body, token); } catch (err) { res = null; }
       if (mine !== epoch) return { stale: true };                       // closed or reopened meanwhile
       if (!res) return { ok: false, network: true, code: "NETWORK" };
+      if (res.status === 401) { close(); state.error = errorOf(res); emit(); return { stale: true }; }
       if (res.status === 200 && res.json && typeof res.json === "object") return { ok: true, json: res.json };
       return { ok: false, network: false, code: errorOf(res), status: res.status };
     }
 
     async function open(key) {
+      if (options.beforeClose) options.beforeClose();
       if (typeof key !== "string" || !KEY.test(key)) {
         close(); state.error = "KEY_FORMAT"; emit(); return false;
       }
@@ -227,6 +229,7 @@
     }
 
     function close() {
+      if (options.beforeClose) options.beforeClose();
       epoch += 1; token = null;
       state = { phase: "closed", error: null, conversationId: null, identity: null, items: [], proposal: null, proposalSha: null, submission: null, recent: [], cancel: null, cancels: [], media: null };
       emit();
@@ -777,13 +780,21 @@
   }
 
   function mount(doc, deps) {
-    var services = null;
-    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null, onChange: function (st) {
+    var services = null, identity = null;
+    var conv = createConversation({ transport: deps.transport, storage: deps.storage || null,
+      beforeClose: function () { if (identity) identity.beforeClose(); }, onChange: function (st) {
       render(doc, st, deps.missionStatus(st));
       if (services) services.update(st);
+      if (identity) identity.update(st);
       if (deps.onPhase) deps.onPhase(st.phase, st);       // G156: the machine dashboard follows the key
     } });
     if (root.EidolonProfileServices) services = root.EidolonProfileServices.mount(doc, conv);
+    if (root.EidolonIdentityPanel && root.EidolonCommunication) {
+      var captureDeps = root.EidolonCommunication.browserDeps(root, function () { return conv.authorization(); });
+      captureDeps.beforeCapture = deps.beforeIdentityCapture;
+      captureDeps.afterCapture = deps.afterIdentityCapture;
+      identity = root.EidolonIdentityPanel.mount(doc, conv, captureDeps);
+    }
     doc.getElementById("conv-connect").addEventListener("submit", function (event) {
       event.preventDefault();
       var input = doc.getElementById("conv-key"), value = input.value.trim();

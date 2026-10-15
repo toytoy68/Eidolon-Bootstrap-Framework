@@ -41,7 +41,7 @@ jobs:
       - name: Install test dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq age openssl ffmpeg
+          sudo apt-get install -y -qq age openssl ffmpeg poppler-utils
           python -m pip install pytest==9.1.1 "cryptography>=43,<51" -r ../memory-reference/requirements.txt -r ../memory-reference/requirements-qdrant.txt
       - name: Compile
         run: python -m compileall -q src tests

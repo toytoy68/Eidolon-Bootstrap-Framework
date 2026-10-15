@@ -290,7 +290,8 @@ class _Handler(BaseHTTPRequestHandler):
                                   None, b"", timeout=10.0, service=MONITOR)
             self._json(status, value)
             return
-        if size > (CONVERSATION_MAX_BODY if conversation else MAX_REQUEST):
+        from .conversation_api import body_limit
+        if size > (body_limit(self.path) if conversation else MAX_REQUEST):
             raise APIError(413, "REQUEST_TOO_LARGE")
         if conversation:
             # Paired conversation credential only; the read token is refused inside handle().

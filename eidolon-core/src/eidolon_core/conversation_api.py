@@ -16,6 +16,7 @@ receipt; it does not run it. Cancellation records a request, never a confirmed s
 """
 from contextlib import nullcontext
 from .beta_runtime import ServiceError
+from .documents import DocumentError
 import argparse
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -43,8 +44,16 @@ PREFIX = "/v1/conversations/"
 # An 8000-character turn in ANY valid JSON encoding: \uXXXX escapes of surrogate pairs take 12 bytes
 # per character (96 000), plus the envelope.
 MAX_BODY = 100_000
+DOCUMENT_MAX_BODY = 750_000
+
+
+def body_limit(path):
+    return DOCUMENT_MAX_BODY if path in {PREFIX + r for r in ("document_preview", "identity_sample", "identity_probe")} else MAX_BODY
+
+
 ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel_proposal", "cancel",
-          "cancel_receipt", "media_results", "action_preview", "action_commit", "action_receipts", "files", "activity"}
+          "cancel_receipt", "media_results", "action_preview", "action_commit", "action_receipts", "files", "activity", "document_preview",
+          "identity_status", "identity_begin", "identity_sample", "identity_confirm", "identity_cancel", "identity_delete", "identity_probe"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -132,6 +141,8 @@ class ConversationAPI:
             return 200, self._route(method, path, headers, body)
         except ServiceError as exc:
             return exc.status, self._error(exc.code)
+        except DocumentError as exc:
+            return 400, self._error(str(exc))
         except APIError as exc:
             return exc.status, self._error(exc.code)
         except CredentialError as exc:
@@ -200,7 +211,7 @@ class ConversationAPI:
         content_type = self._one(headers, "Content-Type")
         if content_type is None or content_type.lower() not in {"application/json", "application/json; charset=utf-8"}:
             raise APIError(415, "JSON_REQUIRED")
-        if not isinstance(body, bytes) or len(body) > MAX_BODY:
+        if not isinstance(body, bytes) or len(body) > body_limit(path):
             raise APIError(413, "REQUEST_TOO_LARGE")
         client = self._client(headers)
         data = _decode(body)
@@ -235,13 +246,56 @@ class ConversationAPI:
         return self._service().preview(client["client_id"], client["actor"], data["request_key"],
                                        data["action"], data["parameters"])
 
+    def _document_preview(self, client, data):
+        _fields(data, ("request_key", "name", "data_base64"))
+        return self._service().preview(client["client_id"], client["actor"], data["request_key"],
+                                       "document.import", {"name": data["name"], "data_base64": data["data_base64"]})
+
+    def _identity_call(self, client, operation, *args):
+        identity = self._service().identity
+        if identity is None:
+            raise APIError(503, "IDENTITY_NOT_CONFIGURED")
+        from .identity_runtime import IdentityError
+        try:
+            return getattr(identity, operation)(client["client_id"], *args)
+        except IdentityError as exc:
+            raise APIError(409, str(exc)) from None
+
+    def _identity_status(self, client, data):
+        _fields(data, ())
+        return self._identity_call(client,"status")
+
+    def _identity_begin(self, client, data):
+        _fields(data, ("modality","request_key","present","consent"))
+        return self._identity_call(client,"begin", data["modality"],data["request_key"],data["present"],data["consent"])
+
+    def _identity_sample(self, client, data):
+        _fields(data, ("session_id","sample_key","capture_base64"))
+        return self._identity_call(client,"sample",data["session_id"],data["sample_key"],data["capture_base64"])
+
+    def _identity_confirm(self, client, data):
+        _fields(data, ("session_id","sha256"))
+        return self._identity_call(client,"confirm",data["session_id"],data["sha256"])
+
+    def _identity_cancel(self, client, data):
+        _fields(data, ("session_id",))
+        return self._identity_call(client,"cancel",data["session_id"])
+
+    def _identity_delete(self, client, data):
+        _fields(data, ("modality","sha256"))
+        return self._identity_call(client,"delete",data["modality"],data["sha256"])
+
+    def _identity_probe(self, client, data):
+        _fields(data, ("modality","capture_base64"))
+        return self._identity_call(client,"probe",data["modality"],data["capture_base64"])
+
     def _action_commit(self, client, data):
         _fields(data, ("id", "sha256"))
         return self._service().commit(client["client_id"], data["id"], data["sha256"])
 
     def _action_receipts(self, client, data):
-        _fields(data, ())
-        return {"receipts": self._service().receipts(client["client_id"])}
+        _fields(data, (), ("before",))
+        return self._service().receipt_page(client["client_id"],data.get("before"))
 
     def _files(self, client, data):
         _fields(data, ("root", "path"))
@@ -399,7 +453,7 @@ class _Handler(BaseHTTPRequestHandler):
     def _dispatch(self):
         try:
             length = self.headers.get("Content-Length", "0")
-            if not re.fullmatch(r"[0-9]{1,9}", length) or int(length) > MAX_BODY:
+            if not re.fullmatch(r"[0-9]{1,9}", length) or int(length) > body_limit(self.path):
                 status, value = 413, ConversationAPI._error("REQUEST_TOO_LARGE")
             else:
                 body = self.rfile.read(int(length))

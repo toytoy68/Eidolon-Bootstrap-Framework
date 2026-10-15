@@ -410,3 +410,7 @@ input[type="password"] {
 #service-value { width: 100%; box-sizing: border-box; }
 #service-output { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; }
 #service-output button { display: block; margin: .4rem 0; }
+#identity-panel { margin: 1rem 0; padding: 1rem; border: 1px solid #586174; border-radius: .6rem; }
+#identity-panel label { display: block; margin-top: .75rem; }
+#identity-output { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; }
+#identity-panel button { margin: .3rem; max-width: 100%; white-space: normal; }

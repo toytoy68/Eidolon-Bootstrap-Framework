@@ -67,6 +67,8 @@
     var st = {};
     KINDS.forEach(function (k) { st[k] = { state: k === "speaker" ? "disabled" : "unavailable", devices: [], selected: null, reason: null }; });
     var listeners = [], talk = null, speakEpoch = 0, player = null, talkEpoch = 0;
+    var cameraEpoch = 0, cameraStream = null, permissionEpoch = {microphone:0, camera:0};
+    var sttKey = null, ttsKey = null;
 
     function emit() { listeners.forEach(function (fn) { fn(snapshotState()); }); }
     function set(kind, state, reason) { st[kind].state = state; st[kind].reason = reason || null; emit(); }
@@ -108,26 +110,32 @@
     async function enable(kind) {
       if (kind === "speaker") { set("speaker", "ready"); return snapshotState(); }
       var dev = st[kind];
+      var permission = ++permissionEpoch[kind];
       if (!dev.selected) { set(kind, "unavailable"); return snapshotState(); }
       var constraints = kind === "microphone" ? { audio: { deviceId: { exact: dev.selected } } }
         : { video: Object.assign({ deviceId: { exact: dev.selected } }, VIDEO) };
       try {
         stopTracks(await deps.media.getUserMedia(constraints));       // permission only: nothing kept open
+        if (permission !== permissionEpoch[kind]) return snapshotState();
         await refresh();
+        if (permission !== permissionEpoch[kind]) return snapshotState();
         set(kind, "ready");
-      } catch (e) { set(kind, errorState(e)); }
+      } catch (e) { if (permission === permissionEpoch[kind]) set(kind, errorState(e)); }
       return snapshotState();
     }
 
     function disable(kind) {
+      if (kind !== "speaker") permissionEpoch[kind]++;
       if (kind === "microphone") cancelTalk();
       if (kind === "speaker") stopSpeaking();
+      if (kind === "camera") { cameraEpoch++; stopTracks(cameraStream); cameraStream = null; }
       set(kind, st[kind].devices.length || kind === "speaker" ? "disabled" : "unavailable");
       return snapshotState();
     }
 
     function select(kind, id) {
       if (!st[kind].devices.some(function (d) { return d.id === id; })) return false;
+      disable(kind);
       st[kind].selected = id;
       if (st[kind].state === "ready") st[kind].state = "disabled";   // a new device needs its own permission
       emit();
@@ -137,10 +145,10 @@
     async function startTalk() {
       if (st.microphone.state !== "ready") return false;
       stopSpeaking();                                                 // anti-echo: never listen to ourselves
-      var stream;
+      var stream, epoch = ++talkEpoch;
       try { stream = await deps.media.getUserMedia({ audio: { deviceId: { exact: st.microphone.selected }, channelCount: 1 } }); }
-      catch (e) { set("microphone", errorState(e)); return false; }
-      var epoch = ++talkEpoch;
+      catch (e) { if (epoch === talkEpoch) set("microphone", errorState(e)); return false; }
+      if (epoch !== talkEpoch) { stopTracks(stream); return false; }
       talk = { stream: stream, recorder: deps.recorder(stream), epoch: epoch };
       // G165: a track that ends by itself (device unplugged, taken by the system) stops the capture.
       (stream.getTracks ? stream.getTracks() : []).forEach(function (track) {
@@ -158,9 +166,12 @@
       var t = talk; talk = null;
       deps.clearTimeout(t.timer);
       var audio;
+      stopTracks(t.stream);
       try { audio = await t.recorder.stop(); } finally { stopTracks(t.stream); }
+      if (t.epoch !== talkEpoch) { if (audio && audio.samples) audio.samples.fill(0); return null; }
       set("microphone", "processing");
       try {
+        sttKey = deps.key();
         var result = await call("POST", "/v1/comm/stt", encodeWav(audio.samples, audio.rate), "audio/wav");
         if (t.epoch !== talkEpoch) return null;                       // cancelled meanwhile: late answer dropped
         set("microphone", "ready");
@@ -178,7 +189,8 @@
     function cancelTalk() {
       talkEpoch++;
       if (talk) { deps.clearTimeout(talk.timer); talk.recorder.cancel(); stopTracks(talk.stream); talk = null; }
-      if (st.microphone.state === "processing") deps.transport("DELETE", "/v1/comm/stt", null, deps.key()).catch(function () {});
+      if (st.microphone.state === "processing" && sttKey) deps.transport("DELETE", "/v1/comm/stt", null, sttKey).catch(function () {});
+      sttKey = null;
       if (st.microphone.state === "capturing" || st.microphone.state === "processing") set("microphone", "ready", "annulé");
     }
 
@@ -186,6 +198,7 @@
       if (st.speaker.state !== "ready" && st.speaker.state !== "processing") return false;
       if (st.microphone.state === "capturing") return false;          // anti-echo
       var epoch = ++speakEpoch, index = 0, chunks = 1;
+      ttsKey = deps.key();
       set("speaker", "processing");
       try {
         while (index < chunks && epoch === speakEpoch) {
@@ -208,29 +221,37 @@
       speakEpoch++;
       if (player) { player.stop(); player = null; }
       if (wasSpeaking) {
-        deps.transport("DELETE", "/v1/comm/tts", null, deps.key()).catch(function () {});
+        if (ttsKey) deps.transport("DELETE", "/v1/comm/tts", null, ttsKey).catch(function () {});
+        ttsKey = null;
         set("speaker", "ready", "arrêté");
       }
     }
 
     async function snapshot(purpose) {
       if (st.camera.state !== "ready") return null;
-      var stream;
+      var stream, epoch = ++cameraEpoch;
       try { stream = await deps.media.getUserMedia({ video: Object.assign({ deviceId: { exact: st.camera.selected } }, VIDEO) }); }
-      catch (e) { set("camera", errorState(e)); return null; }
+      catch (e) { if (epoch === cameraEpoch) set("camera", errorState(e)); return null; }
+      if (epoch !== cameraEpoch) { stopTracks(stream); return null; }
+      cameraStream = stream;
       set("camera", "capturing");
       var image;
-      try { image = await deps.grabFrame(stream); } finally { stopTracks(stream); }   // one frame, camera off at once
+      try { image = await deps.grabFrame(stream); }
+      catch (e) { if (epoch === cameraEpoch) set("camera", "ready", "ERREUR"); return null; }
+      finally { stopTracks(stream); if (cameraStream === stream) cameraStream = null; }
+      if (epoch !== cameraEpoch) { if (image && image.fill) image.fill(0); return null; }
       set("camera", "processing");
       try {
         var result = await call("POST", "/v1/comm/vision/describe?purpose=" + (purpose === "scene" ? "scene" : "presence"), image, "image/jpeg");
+        if (epoch !== cameraEpoch) return null;
         set("camera", "ready");
         return result;
-      } catch (e) { set("camera", "ready", e.code || "ERREUR"); return null; }
+      } catch (e) { if (epoch === cameraEpoch) set("camera", "ready", e.code || "ERREUR"); return null; }
     }
 
     if (deps.media && deps.media.onDeviceChange) deps.media.onDeviceChange(function () { refresh(); });
     return { refresh: refresh, enable: enable, disable: disable, select: select, startTalk: startTalk,
+      reset: function () { KINDS.forEach(disable); },
       stopTalk: stopTalk, cancelTalk: cancelTalk, speak: speak, stopSpeaking: stopSpeaking, snapshot: snapshot,
       state: snapshotState, onChange: function (fn) { listeners.push(fn); } };
   }
