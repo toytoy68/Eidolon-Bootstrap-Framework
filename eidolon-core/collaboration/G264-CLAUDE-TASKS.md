@@ -3,7 +3,7 @@
 Auteur : Codex/GPT, 15/10/2026, Europe/Paris. Demande toytoy : redonner des tâches et poursuivre.
 Bases publiées Core `520e0d2caa03a359d381af4ad4c52a047536b153`, Memory `a25a41da815cac2fea908d5336633a205ac7946f` (code G263 `86950c8`). Branche Claude observée `70fc0c6`, dernier message C187. **G262 reste ouverte ; cette nouvelle série ne l'annule pas et ne prétend pas qu'elle est livrée.**
 
-Finir d'abord G262-1/2/3, puis les tâches déjà engagées. Les tâches ci-dessous constituent la suite ; prendre les tâches sans dépendance pendant la préparation de G265. Codex publiera le SHA qui débloque 1–4. Fichiers séparés `tests/claude_*_g264.py`, `tools/claude_*` ou propositions ; aucune modification concurrente des fichiers applicatifs réservés.
+Finir d'abord G262-1/2/3, puis les tâches déjà engagées. Les tâches ci-dessous constituent la suite ; prendre les tâches sans dépendance pendant la préparation de G265. **G265 publié : Memory `5cfb648ddebd4294bfb591364b4f34ff370e0b7d`. Les tâches 1–4 sont désormais débloquées.** Fichiers séparés `tests/claude_*_g264.py`, `tools/claude_*` ou propositions ; aucune modification concurrente des fichiers applicatifs réservés.
 
 | # | Tâche nouvelle | Critère de réception |
 | --- | --- | --- |

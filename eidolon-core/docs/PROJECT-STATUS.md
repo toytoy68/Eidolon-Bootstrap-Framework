@@ -1,5 +1,9 @@
 # Eidolon — État consolidé du dépôt
 
+## G264/G265 — Diagnostic et nouvelle répartition, 15 octobre 2026
+
+[Dix nouvelles tâches G264](../collaboration/G264-CLAUDE-TASKS.md) publiées en Core 8ee8cb6 ; G262 toujours ouverte, dernier reçu C187. Memory **5cfb648** ajoute le diagnostic explicite `--check-storage`, sans jeton/modèle/réseau/provisionnement. Les dix tâches G264 sont désormais disponibles. 139 tests ciblés +5 sous-tests réussis, 1 exclusion locale G263 sous root. Core épingle ce Memory ; qualification complète à confirmer. [Contrat, sources et preuves](G265-STORAGE-CHECK-2026-10-15.md). Aucun compte/service réel ni déploiement.
+
 ## G263 — Rappel readonly explicite, 15 octobre 2026
 
 Memory `86950c87fbff54169010042fa1e8887c9bf7465e` publié ; Core épingle cette source. Même verrou exclusif ouvert en lecture seule sur Linux local, répertoires préexistants exigés, absence/ambiguïté refusées. **Quatre workflows verts : Memory 2922 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail, serveur 18 ; Core aacf51f : 1991 +1328 sous-tests, propriétaires 5. Les 26 nouveaux cas readonly passent sous UID ordinaire.** Exclusions et xfail historiques consignés. [Contrat, qualification et limites](G263-READONLY-RECALL-2026-10-15.md). Dix tâches Claude G262 maintenues ; aucun nouveau retour après C187. Aucune activation du compte ou du montage réel.

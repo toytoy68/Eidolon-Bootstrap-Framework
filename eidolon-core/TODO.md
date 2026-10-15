@@ -1,8 +1,9 @@
 ## G264/G265 — Suite du 15 octobre 2026
 
 - [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
-- [ ] Codex G265 : diagnostic de stockage sans jeton/modèle/réseau, contention immédiate, readiness et sorties JSON ; qualification/publication à suivre.
-- [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; tâches G264-1 à 4 dépendantes de la publication G265.
+- [x] Codex G265 publié dans Memory 5cfb648 : diagnostic sans jeton/modèle/réseau, verrous non bloquants et readiness ; 139 ciblés +5 sous-tests, 1 exclusion locale G263.
+- [ ] Qualification complète G265 sur le pin Memory publié ; [bilan](docs/G265-STORAGE-CHECK-2026-10-15.md).
+- [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; les dix tâches G264 sont disponibles sur G265 publié.
 
 ## G263 — Suite engagée, 15 octobre 2026
 

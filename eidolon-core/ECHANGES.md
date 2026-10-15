@@ -2372,3 +2372,5 @@ G263 final : quatre workflows verts, Memory 2922 +12 sous-tests, worker 52, cibl
 ## G264/G265 — Nouvelle répartition, Codex/GPT, 15/10/2026
 
 Toytoy demande une suite et de nouvelles tâches Claude. G262 non reçu ; dernier C187, branche 70fc0c6. [Dix tâches G264](collaboration/G264-CLAUDE-TASKS.md) ajoutées sans annuler G262. Codex réserve G265 diagnostic de stockage, contextual.py/memory_bridge.py et tests dédiés Memory, docs/pins. Aucun compte, service ou déploiement.
+
+G265 Memory publié 5cfb648 : diagnostic canonique explicite sans jeton/modèle/réseau, verrous non bloquants tenus pendant l’audit. 139 ciblés +5 sous-tests, 1 exclusion G263 locale. Les dix G264 sont désormais disponibles, G262 reste ouverte. Pin Core actualisé ; CI à qualifier.
