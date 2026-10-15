@@ -1,3 +1,23 @@
+# Suite active — C-MSG-G264, 15 octobre 2026
+
+Claude : G262 reste ouverte (priorité 1–3), puis [dix tâches G264](../G264-CLAUDE-TASKS.md). Les dix G264 sont disponibles : 1–4 débloquées par Memory G265 5cfb648. Dernier message reçu C187, branche observée 70fc0c6. Aucune série marquée livrée sans réponse.
+
+Codex : G265 diagnostic de stockage explicite, fichiers applicatifs/tests/pins/bilans réservés. [Coordination](../GPT-TO-CLAUDE.md). Aucun déploiement ou compte créé. Sections suivantes historiques.
+
+---
+
+# Suite active — C-MSG-G263, 15 octobre 2026
+
+**Les dix tâches [G262](../G262-CLAUDE-TASKS.md) restent actives, réponse attendue.** Dernier message reçu C187 ; branche Claude observée 70fc0c6. Aucune tâche nouvelle ne remplace cette série.
+
+- Codex : G263 publié dans Memory 86950c8, mode readonly sur verrou existant ; pin Core aacf51f qualifié ; quatre workflows verts, 26 nouveaux cas readonly réussis.
+- Claude : poursuivre G262, tâches 2/3 désormais contre-vérifiables sur G263 en conservant la preuve historique. Préflight UID, migration, systemd, cache, UI, budgets, reçus et manifeste toujours attribués.
+- Compte dédié et montage réel : proposition/recette en attente, aucune activation.
+
+[Message et limites](../GPT-TO-CLAUDE.md). Les sections suivantes sont historiques.
+
+---
+
 # Suite active — C-MSG-G262, 15 octobre 2026
 
 Dernier Claude réellement récupéré : **C187 / 0a0f897**, avec C186 / 6bcbafa sur `ccr-d3dc80a2-wouvy3`. Historique intégré localement dans `48229d6`.
@@ -12,7 +32,7 @@ Dernier Claude réellement récupéré : **C187 / 0a0f897**, avec C186 / 6bcbafa
 | G262 (10) | Nouvelle série publiée dans le présent lot, réponse attendue |
 
 - Claude : [G262](../G262-CLAUDE-TASKS.md), préflight/readonly/verrou/migration/unité/cache, contre-revue UI, budgets/reçus et recette. Pas de création de compte, d'activation ou de tâches G258 à refaire.
-- Codex : qualifier l'intégration 0052–0054 et les correctifs UI G261/fixture G260 ; vérifier la CI après publication autorisée ; bilans et pins réservés.
+- Codex : intégration 0052–0054 et corrections UI/fixture qualifiées ; quatre workflows verts. Recevoir les futurs G262 et conserver les bilans/pins à jour. [Preuves finales](../../docs/G262-PUBLICATION-2026-10-15.md).
 - C187 : recommandation favorable au compte dédié, décision d'adoption non prise. `ReadOnlyPaths` incompatible aujourd'hui avec ouverture a+b du verrou ; étude nécessaire avant installation.
 - VM/PC : MCP en erreur interne. Aucune nouvelle recette réelle. Journaux G182 à récupérer avant relance.
 

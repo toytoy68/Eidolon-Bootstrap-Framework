@@ -1,3 +1,20 @@
+## G264/G265 — Suite du 15 octobre 2026
+
+- [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
+- [x] Codex G265 publié dans Memory 5cfb648 : diagnostic sans jeton/modèle/réseau, verrous non bloquants et readiness ; 139 ciblés +5 sous-tests, 1 exclusion locale G263.
+- [ ] Qualification complète G265 sur le pin Memory publié ; [bilan](docs/G265-STORAGE-CHECK-2026-10-15.md).
+- [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; les dix tâches G264 sont disponibles sur G265 publié.
+
+## G263 — Suite engagée, 15 octobre 2026
+
+- [x] Mode Memory `--read-only-storage` implémenté et publié en `86950c87fbff54169010042fa1e8887c9bf7465e` : mêmes inodes exclusifs, pas de création de répertoires/verrous, Linux local.
+- [x] 26 nouveaux cas readonly verts en CI, dont permissions réelles sous UID ordinaire ; 117 ciblés et 5 sous-tests localement.
+- [x] Quatre workflows G263 verts : Memory 2922, worker 52, Qdrant isolé 550 et serveur 18 ; Core 1991 +1328 sous-tests, propriétaires 5. Exclusions explicites dans le [bilan G263](docs/G263-READONLY-RECALL-2026-10-15.md).
+- [ ] Recevoir les dix tâches G262 ; C187 reste le dernier message reçu. Pas de réattribution des tâches déjà confiées.
+- [ ] Qualifier le montage cible et le cache reranker avant activation readonly ; compte C187 toujours proposé.
+
+Les bilans suivants décrivent leurs sources historiques. Aucun déploiement ni compte créé.
+
 ## G261/G262 — Bilan courant, 15 octobre 2026
 
 C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80a2-wouvy3`, intégrés localement avec leur historique (`48229d6`). **Les dix G258 sont répondues.** Le brouillon G260 qui les réattribuait est annulé. [Dix nouvelles tâches G262](collaboration/G262-CLAUDE-TASKS.md) publiées par le présent lot après confirmation de toytoy à 14 h 02 ; réponse G262 attendue.
@@ -17,8 +34,8 @@ C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80
 - [x] Corriger les deux affichages C186 : état inconnu générique et diagnostic malgré partial false/absent ; quatre rouges indépendants avant correction.
 - [x] Actualiser TODO et QUEUE demandés dans C187.
 - [x] Publication autorisée explicitement par toytoy ; Memory publié, Core et les dix tâches dans le présent lot.
-- [ ] Faire confirmer par CI le scénario non root et le nouveau bundle Chromium.
-- [ ] Recevoir/qualifier G262 après publication ; ne pas refaire G258.
+- [x] CI finale confirmée : Memory 2896, Core 1991 +1328 sous-tests, propriétaires root 5, Chromium 202 sans exclusion. Scénario non root et bundle validés ; quatre xfail Memory inchangés. [Preuves](docs/G262-PUBLICATION-2026-10-15.md).
+- [ ] Recevoir/qualifier G262, désormais publié ; ne pas refaire G258.
 - [ ] Décider l'adoption du compte dédié ; résoudre le verrou avant activation readonly. Le rappel ouvre encore `.write.lock` en a+b, même préexistant.
 - [ ] Politique hôte et source/âges/unité/limite explicitement configurés ; capteurs et lanceur réel restent à raccorder.
 - [ ] Recette VM/PC : vérifier VM110 Memory et VM100 Core, PC/fenêtre d'essai, emplacement/espace/sauvegarde et Internet OFF pour le premier parcours. Ce sont des prérequis de recette, pas des bloqueurs du travail local.

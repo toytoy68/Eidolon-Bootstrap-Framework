@@ -49,3 +49,7 @@ MCP en erreur -32603. Aucun compte créé, migration, déploiement, fusion main,
 ## Publication autorisée et effectuée via GitHub
 
 Confirmation explicite de toytoy le 15/10 à 14 h 02 Europe/Paris. Git CLI sans identifiants, publication par le connecteur GitHub avec contrôle du HEAD attendu et sans force. Memory publié `f534315a5cbc8e06cae2f9a3a3d575bec698bee6`, contenant les changements des commits locaux 2b9fb03/e8ccd2f et la confirmation. Core : parent de développement 216647d et second parent Claude 0a0f897, afin de conserver ses commits. Les SHA Codex locaux cités plus haut décrivent les préparations locales ; les références publiées font foi pour la reprise. Pin CI mis à jour sur Memory publié. G262 ouvert, résultats CI à récupérer. Aucun main ni déploiement.
+
+## Résultat final après publication
+
+Les quatre workflows sont verts sur Memory f534315 et Core 70fc0c6. [Bilan final et journaux](G262-PUBLICATION-2026-10-15.md) : 2896 Memory, 1991 Core, 202 Chromium et 5 contrôles root. Les limitations et échecs de l'exécution locale ci-dessus restent un historique exact ; ils ne remplacent pas les résultats CI ultérieurs.
