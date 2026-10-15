@@ -1,3 +1,15 @@
+## Mise à jour G272 — parcours explicites hors VM
+
+Vue de référence : [backlog actuel par priorité](docs/BACKLOG-BETA-ACTUEL-G272.md).
+Les sections plus anciennes ci-dessous sont un historique, pas une liste dédupliquée.
+
+- [x] Documents PC/NAS : PDF/Office/texte, extraction bornée, provenance, reçus paginés, analyse et mémorisation séparées.
+- [x] Enrôlement volontaire voix/visage du profil appairé ; confirmation/retrait, comparaison sans droit biométrique ; modèles réels non qualifiés.
+- [x] Fermeture/changement de session : remise à zéro des brouillons, arrêt des capteurs et rejet des résultats tardifs.
+- [x] Copie arrêtée des reçus/quotas/gabarits dans un nouvel état, source intacte, réattribution de droits refusée.
+- [x] Dossier et recette étendus à 44 cas ; exemples et limites explicites, aucun PASS machine inventé.
+- [ ] P0 machines/comptes/corpus/installation/endurance ; P1 calibration, identité multipersonne, automatisation et rétention selon le backlog actuel.
+
 ## Mise à jour G271 — diagnostic avant lancement hors VM
 
 - [x] Commande `beta_preflight` : configuration seule par défaut ; fichiers et permissions locaux avec option explicite, sans démarrer le runtime.
@@ -58,14 +70,14 @@ Le raccordement G270 couvre les profils par clés appairées. Reconnaissance bio
 - [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
 - [x] Codex G265 publié dans Memory 5cfb648 : diagnostic sans jeton/modèle/réseau, verrous non bloquants et readiness ; 139 ciblés +5 sous-tests, 1 exclusion locale G263.
 - [x] Quatre workflows G265 verts : Memory 2944 +12 sous-tests, worker 52, Qdrant isolé 550/1 xfail et serveur 18 ; Core 1991 +1328 sous-tests, propriétaires 5. [Sources et exclusions](docs/G265-STORAGE-CHECK-2026-10-15.md).
-- [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; les dix tâches G264 sont disponibles sur G265 publié.
+- [x] G262 reçu C188/G267 et G264 reçu C189/G268 ; résultats conservés dans les bilans correspondants.
 
 ## G263 — Suite engagée, 15 octobre 2026
 
 - [x] Mode Memory `--read-only-storage` implémenté et publié en `86950c87fbff54169010042fa1e8887c9bf7465e` : mêmes inodes exclusifs, pas de création de répertoires/verrous, Linux local.
 - [x] 26 nouveaux cas readonly verts en CI, dont permissions réelles sous UID ordinaire ; 117 ciblés et 5 sous-tests localement.
 - [x] Quatre workflows G263 verts : Memory 2922, worker 52, Qdrant isolé 550 et serveur 18 ; Core 1991 +1328 sous-tests, propriétaires 5. Exclusions explicites dans le [bilan G263](docs/G263-READONLY-RECALL-2026-10-15.md).
-- [ ] Recevoir les dix tâches G262 ; C187 reste le dernier message reçu. Pas de réattribution des tâches déjà confiées.
+- [x] Dix G262 reçues via C188 et intégrées G267 ; C191 est le dernier message observé en G272.
 - [ ] Qualifier le montage cible et le cache reranker avant activation readonly ; compte C187 toujours proposé.
 
 Les bilans suivants décrivent leurs sources historiques. Aucun déploiement ni compte créé.
@@ -90,7 +102,7 @@ C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80
 - [x] Actualiser TODO et QUEUE demandés dans C187.
 - [x] Publication autorisée explicitement par toytoy ; Memory publié, Core et les dix tâches dans le présent lot.
 - [x] CI finale confirmée : Memory 2896, Core 1991 +1328 sous-tests, propriétaires root 5, Chromium 202 sans exclusion. Scénario non root et bundle validés ; quatre xfail Memory inchangés. [Preuves](docs/G262-PUBLICATION-2026-10-15.md).
-- [ ] Recevoir/qualifier G262, désormais publié ; ne pas refaire G258.
+- [x] G262 reçu et intégré G267 ; G258 n’a pas été réattribué.
 - [ ] Décider l'adoption du compte dédié ; résoudre le verrou avant activation readonly. Le rappel ouvre encore `.write.lock` en a+b, même préexistant.
 - [ ] Politique hôte et source/âges/unité/limite explicitement configurés ; capteurs et lanceur réel restent à raccorder.
 - [ ] Recette VM/PC : vérifier VM110 Memory et VM100 Core, PC/fenêtre d'essai, emplacement/espace/sauvegarde et Internet OFF pour le premier parcours. Ce sont des prérequis de recette, pas des bloqueurs du travail local.
@@ -1182,8 +1194,8 @@ Demande explicite : un admin et deux casual.
 - [x] Contrat et trois profils privés préparés hors Git, non activés.
 - [ ] G170-A/B : activer les trois profils réels et achever les sessions/droits du plan ; liaison par clé appairée et isolation du rappel/écriture livrées en G270.
 - [ ] G170-C/D : reconnaissance du locuteur et liaison avec le visage.
-- [ ] G170-E : enrôlement local et UI des trois profils.
-- [ ] G170-F : tests permissions/isolation puis recette matérielle.
+- [x] G170-E logiciel : UI optionnelle d’enrôlement du profil connecté livrée G272 ; recette des trois profils réels ouverte.
+- [ ] G170-F : tests permissions/isolation logiciels livrés G270/G272 ; recette matérielle ouverte.
 
 STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
 

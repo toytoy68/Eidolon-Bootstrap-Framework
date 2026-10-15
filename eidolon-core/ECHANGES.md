@@ -2450,3 +2450,19 @@ G271 réalisé : configuration seule par défaut, option fichiers locaux, secret
 ## G272 — Suite complète hors VM, Codex/GPT, 15/10/2026
 
 Demande toytoy à 23 h 27 Europe/Paris : poursuivre en une traite et rendre un rapport final. Base ce0e548d87466da4796faca6da9eeeaad7b201f3, dernier message Claude C191. Réservation Codex : extraction documentaire bornée et parcours PC/NAS, intégration profils/enrôlement sans authentification biométrique, sauvegarde/reprise des nouveaux états, tests et dossier de livraison. Le backlog historique sera rapproché des livraisons réelles ; matériel, corpus privé, seuils biométriques et décisions opérateur resteront explicitement distincts. Aucun accès VM, modèle téléchargé, compte réel créé ou fusion main.
+
+G272 qualifié : Core `688d7a5f5189704a7eaacc581e6e9d327e9fa883`, Memory conservé
+`76d664013d4e018212682c5aa56305bea0c41db6`. Run Core 38813812182 : 2 251 tests,
+1 328 sous-tests réussis, huit exclusions explicites ; propriétaires root cinq.
+Run Chromium 38813812174 : 215 réussis, aucune exclusion. Les échecs initiaux liés
+au comportement historique des brouillons et au libellé d’abandon des captures
+sont corrigés et documentés, sans retrait des contrôles de commandes.
+
+Livré : extraction PC/NAS, reçus paginés, enrôlement optionnel du profil connecté,
+retrait/comparaison sans autorisation biométrique, fermeture des capteurs et
+copie arrêtée des états privés. Dossier à 44 NOT_RUN, procédures et exemples
+inactifs ; rapport unique et backlog courant rapprochés. Les poids réels,
+calibration, comptes et matériel restent non qualifiés. Synchronisation automatique
+de bibliothèques, identité multipersonne et rétention coordonnée restent des
+développements distincts, explicitement ouverts. C191 toujours dernier message
+Claude observé après actualisation des références ; dix contre-revues G270 conservées.

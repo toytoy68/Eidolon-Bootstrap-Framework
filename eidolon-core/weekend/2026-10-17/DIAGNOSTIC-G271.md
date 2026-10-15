@@ -2,7 +2,7 @@
 
 Ce diagnostic Linux permet de vérifier une configuration avant d'instancier Core.
 Il ne démarre aucun service et ne crée ni état, ni verrou, ni compte. Utiliser les
-sources G271 ; le paquet G270 précédent ne contient pas cette commande.
+sources G272 (commande introduite en G271) ; le paquet G270 précédent ne contient pas cette commande.
 
 Depuis `eidolon-core/`, contrôler d'abord le fichier JSON préparé :
 
@@ -29,7 +29,7 @@ lit les jetons. Il vérifie configuration 0600, état 0700, propriétaires, lect
 privée des jetons et absence de réutilisation d'un même secret entre profils ou
 entre lecture/écriture. Les jetons doivent être dans un parent 0700, être des
 fichiers 0600 uniques, sans lien. Les racines de fichiers doivent pouvoir être
-ouvertes sans suivre de lien. Aucun fichier de données n'est lu ou listé.
+ouvertes sans suivre de lien. Aucun corpus utilisateur n’est lu ou listé.
 
 Les lignes `profile_1`, `profile_2` suivent l'ordre des profils dans le JSON ;
 les racines suivent l'ordre de `file_roots`. Aucun nom de personne, chemin privé,
@@ -59,9 +59,19 @@ L'ouverture d'un dossier ne prouve pas la lisibilité de tous ses fichiers.
 
 Ce contrôle n'est pas un instantané atomique : les fichiers peuvent changer entre
 deux vérifications ou ensuite. Core conserve ses propres contrôles au lancement
-et pendant les accès. Aucun résultat n'est injecté dans les 36 preuves de recette.
+et pendant les accès. Aucun résultat n'est injecté dans les 44 preuves de recette.
 
 Validation locale du lot : 14 tests dédiés, dont un processus audité qui refuse
 réseau, écritures, lancement de processus, accès SQLite et listage des données.
 Sept tests du paquet et des preuves sont également rejoués : 21 réussis au total.
 Les chemins, jetons et fichiers utilisés sont synthétiques ; aucune VM consultée.
+
+## Extension G272 : identité optionnelle
+
+Avec `identity_config`, `--local-files` lit également cette configuration privée,
+vérifie les SHA des modèles déclarés et la présence des modules numpy/onnxruntime
+ou cv2 selon la modalité. Aucun moteur n’est lancé ni modèle téléchargé. Les poids
+sont lus pour leur empreinte ; les corpus utilisateurs ne sont toujours pas lus.
+Une dépendance trouvée n’est pas une preuve de compatibilité de son ABI ou du
+modèle. Précision et calibration restent explicitement NOT_RUN. Le mode configuration
+seule ne lit pas cette configuration secondaire et ne valide donc pas son contenu.

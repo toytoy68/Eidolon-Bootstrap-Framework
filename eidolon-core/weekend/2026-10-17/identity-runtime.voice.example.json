@@ -1,0 +1,16 @@
+{
+  "schema": "eidolon-identity-runtime/1",
+  "modalities": {
+    "voice": {
+      "samples": 3,
+      "model": {
+        "path": "/MODELES/REMPLACER-PAR-POIDS-VERIFIES.onnx",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "calibration": null,
+      "min_speech_s": 5,
+      "max_duration_s": 8,
+      "speech_rms": 500
+    }
+  }
+}

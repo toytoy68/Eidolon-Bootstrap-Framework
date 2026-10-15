@@ -1,3 +1,5 @@
+> **Actualisation G272 :** ce guide reste la base profils/Internet/maintenance. L’import PDF/Office et les copies privées sont désormais raccordés ; voir DOCUMENTS-G272, PROFILS-ENROLEMENT-G272 et ETAT-PRIVE-G272. La synchronisation automatique des bibliothèques reste distincte.
+
 # Recette des raccordements G270
 
 Les chemins et comptes ci-dessous sont des exemples à remplacer après inventaire.
@@ -82,8 +84,9 @@ Monter le dossier NAS de recette avec les droits minimums avant de le déclarer
 sous `file_roots`. Tester liste et lecture UTF-8 (64 000 octets maximum), chemins
 parents, liens et fichier modifié entre aperçu/confirmation. Aucun fichier NAS
 n'est écrit. Le sélecteur du navigateur ouvre un texte PC (16 000 octets maximum)
-sans envoi avant préparation/confirmation. Formats bureautiques binaires et
-synchronisation automatique de bibliothèques restent hors de ce raccordement.
+sans envoi avant préparation/confirmation. G272 ajoute un sélecteur documentaire
+binaire et l’extraction bureautique : voir DOCUMENTS-G272. La synchronisation
+automatique de bibliothèques reste hors de ce raccordement.
 
 ## 5. Activité et maintenance entre VM
 

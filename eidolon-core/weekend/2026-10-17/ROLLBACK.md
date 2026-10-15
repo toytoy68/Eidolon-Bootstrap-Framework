@@ -27,3 +27,13 @@ annulés par le retrait du service. Les anciennes générations Qdrant demeurent
 disponibles ; choisir un alias cohérent avec la copie canonique restaurée.
 Ne pas reprendre un quota Internet depuis un état plus ancien comme s'il n'avait
 pas été consommé.
+
+## Complément G272
+
+Suivre [ETAT-PRIVE-G272.md](ETAT-PRIVE-G272.md) pour une copie arrêtée vers un
+nouveau répertoire. Une configuration modifiée ne se raccorde pas arbitrairement
+à une ancienne base : seules les modifications documentées sont permises par
+l’outil. Conserver les reçus, quotas et incertitudes. Les gabarits retirés peuvent
+exister dans les sauvegardes anciennes ; réconcilier ces retraits avant restauration.
+Les extraits documentaires conservés sont privés. Désactiver le panneau ou revenir
+au code précédent ne supprime ni ces extraits ni les souvenirs déjà commis.
