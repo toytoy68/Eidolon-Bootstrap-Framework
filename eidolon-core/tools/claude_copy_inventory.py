@@ -57,6 +57,8 @@ def _open_root(path):
             except OSError as exc:
                 if exc.errno == 40:                                  # ELOOP: a symbolic link
                     raise InventoryRefused("INVENTORY_PATH", str(path)) from None
+                if exc.errno in _RESOURCE:
+                    raise InventoryRefused("INVENTORY_RESOURCE", str(path)) from None
                 raise InventoryRefused("INVENTORY_UNREADABLE", str(path)) from None
             os.close(fd)
             fd = child
@@ -80,53 +82,78 @@ def inventory(root, *, max_entries, max_bytes, chunk=1 << 20, final_check=True):
     entry's first visit and the final check (same entries, same versions). That needs a STOPPED tree;
     it is not an atomic snapshot and detects nothing that changes and changes back in between."""
     _budgets(max_entries, max_bytes, chunk)
-    top = _open_root(root)
     result, versions, read_total = {}, {}, 0
+    # G268 counter-review: depth-first, one descriptor per LEVEL (not per sibling directory), so a wide
+    # tree never exhausts descriptors; exhaustion (a pathologically deep tree) is INVENTORY_RESOURCE.
+    frames = [_frame("", _open_root(root), versions)]
     try:
-        pending = [("", top)]
-        while pending:
-            rel_dir, dfd = pending.pop()
+        while frames:
+            rel_dir, dfd, names = frames[-1]
+            name = next(names, None)
+            if name is None:
+                os.close(frames.pop()[1])
+                continue
+            rel = f"{rel_dir}/{name}" if rel_dir else name
+            if len(result) >= max_entries:
+                raise InventoryRefused("INVENTORY_ENTRY_BUDGET", rel)
             try:
-                names = sorted(os.listdir(dfd))
-                versions[rel_dir or "."] = ("dir", tuple(names), _version(os.fstat(dfd)))
-                for name in names:
-                    rel = f"{rel_dir}/{name}" if rel_dir else name
-                    if len(result) >= max_entries:
-                        raise InventoryRefused("INVENTORY_ENTRY_BUDGET", rel)
-                    try:
-                        st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
-                    except FileNotFoundError:
-                        raise InventoryRefused("INVENTORY_RACE", rel) from None
-                    meta = dict(uid=st.st_uid, mode=oct(stat.S_IMODE(st.st_mode)))
-                    if stat.S_ISDIR(st.st_mode):
-                        try:
-                            child = os.open(name, _DIR, dir_fd=dfd)
-                        except OSError as exc:
-                            raise InventoryRefused("INVENTORY_RACE" if exc.errno in (2, 20, 40)
-                                                   else "INVENTORY_UNREADABLE", rel) from None
-                        if (os.fstat(child).st_dev, os.fstat(child).st_ino) != (st.st_dev, st.st_ino):
-                            os.close(child)                         # replaced between listing and opening
-                            raise InventoryRefused("INVENTORY_RACE", rel)
-                        result[rel] = dict(type="dir", size=None, sha256=None, **meta)
-                        pending.append((rel, child))
-                        continue
-                    if not stat.S_ISREG(st.st_mode):
-                        raise InventoryRefused("INVENTORY_LINK_OR_SPECIAL", rel)
-                    digest, read = _hash(dfd, name, rel, st, chunk, max_bytes - read_total)
-                    read_total += read
-                    result[rel] = dict(type="file", size=st.st_size, sha256=digest, **meta)
-                    versions[rel] = ("file", None, _version(st))
-            finally:
-                os.close(dfd)
+                st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
+            except FileNotFoundError:
+                raise InventoryRefused("INVENTORY_RACE", rel) from None
+            meta = dict(uid=st.st_uid, mode=oct(stat.S_IMODE(st.st_mode)))
+            if stat.S_ISDIR(st.st_mode):
+                child = _open_dir(dfd, name, rel, "INVENTORY_RACE")
+                if (os.fstat(child).st_dev, os.fstat(child).st_ino) != (st.st_dev, st.st_ino):
+                    os.close(child)                         # replaced between listing and opening
+                    raise InventoryRefused("INVENTORY_RACE", rel)
+                result[rel] = dict(type="dir", size=None, sha256=None, **meta)
+                frames.append(_frame(rel, child, versions))
+                continue
+            if not stat.S_ISREG(st.st_mode):
+                raise InventoryRefused("INVENTORY_LINK_OR_SPECIAL", rel)
+            digest, read = _hash(dfd, name, rel, st, chunk, max_bytes - read_total)
+            read_total += read
+            result[rel] = dict(type="file", size=st.st_size, sha256=digest, **meta)
+            versions[rel] = ("file", None, _version(st))
         if final_check:
             if _before_final is not None:
                 _before_final()
             _final_check(root, versions)
-    except BaseException:
-        for _, dfd in pending:
+    finally:
+        for _, dfd, _ in frames:
             os.close(dfd)
-        raise
     return result
+
+
+_RESOURCE = (23, 24)                                     # ENFILE, EMFILE: out of descriptors, not a change
+
+
+def _open_dir(dfd, name, rel, vanished):
+    try:
+        return os.open(name, _DIR, dir_fd=dfd)
+    except OSError as exc:
+        if exc.errno in _RESOURCE:
+            raise InventoryRefused("INVENTORY_RESOURCE", rel) from None
+        raise InventoryRefused(vanished if exc.errno in (2, 20, 40) else "INVENTORY_UNREADABLE", rel) from None
+
+
+def _list(dfd, rel_dir):
+    try:
+        return os.listdir(dfd)                          # duplicates the descriptor internally
+    except OSError as exc:
+        raise InventoryRefused("INVENTORY_RESOURCE" if exc.errno in _RESOURCE else "INVENTORY_UNREADABLE",
+                               rel_dir) from None
+
+
+def _frame(rel_dir, dfd, versions):
+    """List a directory once and record its version; the caller owns `dfd` from here on."""
+    try:
+        names = sorted(_list(dfd, rel_dir))
+        versions[rel_dir or "."] = ("dir", tuple(names), _version(os.fstat(dfd)))
+    except BaseException:
+        os.close(dfd)
+        raise
+    return rel_dir, dfd, iter(names)
 
 
 def _hash(dfd, name, rel, st, chunk, remaining):
@@ -135,6 +162,8 @@ def _hash(dfd, name, rel, st, chunk, remaining):
     try:
         fd = os.open(name, _FILE, dir_fd=dfd)
     except OSError as exc:
+        if exc.errno in _RESOURCE:
+            raise InventoryRefused("INVENTORY_RESOURCE", rel) from None
         raise InventoryRefused("INVENTORY_RACE" if exc.errno in (2, 40) else "INVENTORY_UNREADABLE", rel) from None
     try:
         if _version(os.fstat(fd)) != _version(st):
@@ -171,36 +200,45 @@ def _final_check(root, versions):
     G268: O_NOFOLLOW protects only the LAST component. Never pass a nested relative
     path to stat/open: an already-checked ancestor could have become a link since.
     Validate directory identity before listing it, including substituted real dirs.
+    G268 counter-review: depth-first like the first pass (one descriptor per level); a directory's
+    version is checked again AFTER its whole subtree; descriptor exhaustion is INVENTORY_RESOURCE.
     """
-    pending = [("", _open_root(root))]
+    frames = []
     try:
-        while pending:
-            rel_dir, dfd = pending.pop()
+        frames.append(_checked_frame("", _open_root(root), versions))
+        while frames:
+            rel_dir, dfd, names = frames[-1]
+            name = next(names, None)
+            if name is None:
+                if _version(os.fstat(dfd)) != versions[rel_dir or "."][2]:
+                    raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
+                os.close(frames.pop()[1])
+                continue
+            rel = f"{rel_dir}/{name}" if rel_dir else name
+            kind, _, expected = versions[rel]
             try:
-                _, names, version = versions[rel_dir or "."]
-                if _version(os.fstat(dfd)) != version:
-                    raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
-                if tuple(sorted(os.listdir(dfd))) != names:
-                    raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
-                for name in names:
-                    rel = f"{rel_dir}/{name}" if rel_dir else name
-                    kind, _, expected = versions[rel]
-                    try:
-                        st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
-                        if _version(st) != expected:
-                            raise InventoryRefused("INVENTORY_CHANGED", rel)
-                        if kind == "dir":
-                            child = os.open(name, _DIR, dir_fd=dfd)
-                            pending.append((rel, child))
-                    except OSError:
-                        raise InventoryRefused("INVENTORY_CHANGED", rel) from None
-                if _version(os.fstat(dfd)) != version:
-                    raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
-            finally:
-                os.close(dfd)
+                st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
+            except OSError:
+                raise InventoryRefused("INVENTORY_CHANGED", rel) from None
+            if _version(st) != expected:
+                raise InventoryRefused("INVENTORY_CHANGED", rel)
+            if kind == "dir":
+                frames.append(_checked_frame(rel, _open_dir(dfd, name, rel, "INVENTORY_CHANGED"), versions))
     finally:
-        for _, dfd in pending:
+        for _, dfd, _ in frames:
             os.close(dfd)
+
+
+def _checked_frame(rel_dir, dfd, versions):
+    """Identity and version BEFORE listing (never list a substituted directory), then same names."""
+    try:
+        _, names, version = versions[rel_dir or "."]
+        if _version(os.fstat(dfd)) != version or tuple(sorted(_list(dfd, rel_dir))) != names:
+            raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
+    except BaseException:
+        os.close(dfd)
+        raise
+    return rel_dir, dfd, iter(names)
 
 
 def compare(source, copy):
@@ -231,7 +269,7 @@ def main(argv=None):
         b = inventory(args.copy, max_entries=args.max_entries, max_bytes=args.max_bytes)
     except InventoryRefused as exc:
         # Unreadable is not a refusal of the tree's shape: the state is unknown (G262 contract kept).
-        verdict = "UNKNOWN" if exc.code == "INVENTORY_UNREADABLE" else "REFUSED"
+        verdict = "UNKNOWN" if exc.code in ("INVENTORY_UNREADABLE", "INVENTORY_RESOURCE") else "REFUSED"
         print(json.dumps(dict(verdict=verdict, code=exc.code, path=exc.path), ensure_ascii=False))
         return 2
     except OSError as exc:                       # anything not mapped above: stable, content-free

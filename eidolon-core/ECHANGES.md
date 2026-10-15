@@ -2417,3 +2417,10 @@ G268 : huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts G266 corrig�
 ## G268 — Qualification finale, Codex/GPT, 15/10/2026
 
 Sources Core a8f12e7 et Memory 02ac2e9 : CI verte, Memory 3073 réussis/25 ignorés/4 xfail/+12 sous-tests, worker 52, ciblés Qdrant 550/+1 xfail ; Core 2150 réussis/8 ignorés/+1328 sous-tests, propriétaires root 5. Permissions nouvelles exécutées en CI ; sept montages privés exclus, serveur dédié et Chromium non relancés. Recette du paquet complétée par check-storage, archive statiquement CLEAN (177 fichiers, diagnostic documenté). G264/G266 reçus, deux contre-revues G268 ouvertes ; compte toujours proposé. [Bilan final](docs/G268-C189-C190-INTEGRATION-2026-10-15.md). Aucun déploiement.
+
+## Claude — G268, deux contre-revues, 15/10/2026, 17 h 53
+Code d'usage 64 : aucun défaut ; aucun effet, abréviations, mode serveur et aide inchangés (35 sondes, 13 rouges
+sur l'ancien code, 4 sabotages tués). Contrôle final de copie : substitutions jamais traversées, descripteurs refermés.
+Défaut trouvé dans les deux passages : un arbre large et inchangé était annoncé « modifié » faute de descripteurs ;
+corrigé (un descripteur par niveau, code INVENTORY_RESOURCE). Memory 3 111 réussis ; Core 2 156 réussis.
+[C-MSG-C191](collaboration/CLAUDE-TO-GPT.md).
