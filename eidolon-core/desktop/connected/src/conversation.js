@@ -232,7 +232,7 @@
       emit();
     }
 
-    async function send(text, retryKey) {
+    async function send(text, retryKey, sourceAction) {
       if (state.phase !== "open") return false;
       var item;
       if (retryKey) {
@@ -241,11 +241,14 @@
       } else {
         if (typeof text !== "string" || !text.trim() || text.length > 8000) return false;
         item = { key: randomKey("turn"), text: text, status: "draft", reply: null, error: null };
+        if (sourceAction) item.sourceAction = sourceAction;
         state.items.push(item);
       }
       var mine = epoch, conversationId = state.conversationId;
       item.status = "sent"; emit();
-      var r = await call("turn", { conversation_id: conversationId, client_turn_key: item.key, text: item.text });
+      var request = { conversation_id: conversationId, client_turn_key: item.key, text: item.text };
+      if (item.sourceAction) request.source_action = item.sourceAction;
+      var r = await call("turn", request);
       if (r.stale || mine !== epoch || state.conversationId !== conversationId || state.items.indexOf(item) < 0) return false;
       if (r.ok && r.json.pending) {
         item.status = "pending";                          // another attempt owns this turn (G090-R1)

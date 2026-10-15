@@ -64,6 +64,11 @@ clé/profil et son absence d'accès à la première mémoire.
 SearXNG doit déjà être installé/configuré en boucle locale, avec le format JSON
 activé. La configuration ne l'installe pas et ne choisit pas ses moteurs.
 Confirmer une recherche exacte ; vérifier ses sources et les erreurs de moteur.
+Le bouton « Interroger Eidolon sur ce résultat » transmet le reçu sélectionné
+au modèle comme observation non vérifiée, avec sa date ; aucun nouvel appel Web
+ou lecture de fichier n'est déclenché. Un extrait de 3 600 caractères est utilisé,
+avec marque explicite s'il est tronqué. La source est figée avec le tour et
+conservée lors d'une reprise.
 Tester la lecture d'une URL HTTPS publique, le refus des adresses privées et une
 page indisponible. Recherche et lecture consomment un quota durable commun par
 profil/jour UTC. Redémarrer Core puis vérifier que le quota n'a pas été remis à

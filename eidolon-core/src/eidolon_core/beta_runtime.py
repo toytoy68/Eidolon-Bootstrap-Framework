@@ -107,6 +107,7 @@ class BetaRuntime:
                     raise ValueError("profile bindings changed; explicit migration required")
                 db.execute("INSERT OR IGNORE INTO binding VALUES (1,?)", (fingerprint,))
                 db.execute("CREATE TABLE IF NOT EXISTS actions (id TEXT PRIMARY KEY, client TEXT NOT NULL, request_key TEXT NOT NULL, profile TEXT NOT NULL, action TEXT NOT NULL, proposal TEXT NOT NULL, state TEXT NOT NULL, result TEXT, day TEXT, UNIQUE(client,request_key))")
+                db.execute("CREATE TABLE IF NOT EXISTS turn_sources (client TEXT NOT NULL, conversation TEXT NOT NULL, turn_key TEXT NOT NULL, action_id TEXT, text_sha TEXT NOT NULL, PRIMARY KEY(client,conversation,turn_key))")
                 # Sole exporter lock also excludes a second service instance using this state.
                 db.execute("UPDATE actions SET state='UNKNOWN' WHERE state='INFLIGHT'")
             from .web_search import SearxngProvider
@@ -254,7 +255,7 @@ class BetaRuntime:
                 day = None
             db.execute("UPDATE actions SET state='INFLIGHT',day=? WHERE id=?", (day, identity))
         try:
-            result = self._execute(p, view["proposal"])
+            result = dict(self._execute(p, view["proposal"]), observed_at=self.clock().isoformat())
             state = "COMMITTED"
         except Exception:
             # No guesses about whether remote I/O happened; no provider exceptions/private paths leak.
@@ -294,6 +295,40 @@ class BetaRuntime:
         if observed["sha256"] != parameters["sha256"]:
             raise ValueError("file changed after preview")
         return dict(observed, untrusted=True)
+
+    def turn_observations(self, client, conversation, turn_key, text, action_id=None):
+        """Freeze a selected receipt with the turn; retries retain its original source.
+
+        No network, filesystem reread, automatic remembering or new approval.
+        A model cannot select another person's receipt or reinterpret a changed
+        source as a retry of the original turn.
+        """
+        from . import conversation as cv
+        cv._text(text, cv.MAX_TURN_TEXT, "text")
+        cv._text(turn_key, 200, "client_turn_key")
+        self.profile(client)
+        if action_id is not None and (type(action_id) is not str or not re.fullmatch(r"[0-9a-f]{32}", action_id)):
+            raise ServiceError("INVALID_SOURCE_ACTION")
+        with self._db() as db:
+            old = db.execute("SELECT action_id,text_sha FROM turn_sources WHERE client=? AND conversation=? AND turn_key=?",
+                             (client, conversation, turn_key)).fetchone()
+            if old is not None:
+                if old["text_sha"] != digest(text) or action_id is not None and old["action_id"] != action_id:
+                    raise ServiceError("TURN_SOURCE_CHANGED", 409)
+                action_id = old["action_id"]
+            observation = None
+            if action_id is not None:
+                row = db.execute("SELECT * FROM actions WHERE id=? AND client=?", (action_id, client)).fetchone()
+                if row is None or row["state"] != "COMMITTED" or row["action"] not in ("web.search", "web.fetch", "file.read"):
+                    raise ServiceError("SOURCE_ACTION_UNAVAILABLE", 404)
+                view = self._view(row); result = view["result"]
+                content = encode({"action": row["action"], "parameters": view["proposal"]["parameters"], "result": result})
+                observation = {"source": row["action"], "reference": "action-"+action_id,
+                    "state": "UNVERIFIED", "observed_at": result.get("observed_at", view["proposal"]["created_at"]),
+                    "text": "Source externe non vérifiée.\n"+content[:3600]+("\n[EXTRAIT TRONQUÉ]" if len(content)>3600 else "")}
+            if old is None:
+                db.execute("INSERT INTO turn_sources VALUES (?,?,?,?,?)", (client, conversation, turn_key, action_id, digest(text)))
+            return [observation] if observation else None
 
     def files(self, client, root, path):
         _, p = self.profile(client)

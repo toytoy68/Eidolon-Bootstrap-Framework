@@ -221,3 +221,36 @@ def test_live_activity_defers_passage_maintenance_and_scope_is_bound(tmp_path, m
         runtime['profile_id']='other'
         with pytest.raises(ValueError,match='identity mismatch'):run_once(policy,observation,now=now,runtime=runtime)
     finally:close()
+
+
+def test_selected_file_is_an_untrusted_tool_observation_and_retry_keeps_binding(tmp_path):
+    conf=config(tmp_path); services=BetaRuntime(conf)
+    runtime=synthetic_runtime(Store(tmp_path/'core'))
+    ConversationStore(runtime.store,create=True)
+    key=ClientCredentials(runtime.store,create=True).pair(client_id='pc0',actor='actor')['token']
+    class Model(SimulatedDialogueModel):
+        def reply(self,text,history,memory,observations=None,media=None,personality=None):
+            self.seen=observations
+            return super().reply(text,history,memory,observations,media,personality)
+    model=Model(runtime.catalog)
+    api=ConversationAPI(runtime,dialogue_model=model,services=services)
+    def call(route,body):
+        return api.handle('POST','/v1/conversations/'+route,{'Authorization':['Bearer '+key],
+            'Content-Type':['application/json']},json.dumps(body).encode())
+    try:
+        _,opened=call('open',{'client_key':'page'})
+        a=preview(services,action='file.read',parameters={'root':'nas','path':'note.txt'})
+        commit(services,a)
+        body=dict(conversation_id=opened['conversation_id'],client_turn_key='source-turn',text='Résume cette source.',source_action=a['proposal']['id'])
+        status,result=call('turn',body)
+        assert status==200 and result['model_called']
+        assert model.seen[0]['source']=='file.read' and model.seen[0]['state']=='UNVERIFIED'
+        assert 'NAS synthétique' in model.seen[0]['text'] and model.seen[0]['freshness']=='fresh'
+        status,replayed=call('turn',{k:v for k,v in body.items() if k!='source_action'})
+        assert status==200 and replayed['replayed'] and not replayed['model_called']
+        other=preview(services,key='second-file',action='file.read',parameters={'root':'nas','path':'note.txt'})
+        commit(services,other)
+        assert call('turn',dict(body,source_action=other['proposal']['id']))[0]==409
+        with pytest.raises(ServiceError,match='UNAVAILABLE'):
+            services.turn_observations('pc1','foreign','key','question',a['proposal']['id'])
+    finally:api.close()

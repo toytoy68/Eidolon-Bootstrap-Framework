@@ -18,6 +18,7 @@
     if (!panel) return null;
     var value = doc.getElementById("service-value"), action = doc.getElementById("service-action");
     var folder = doc.getElementById("service-root"), output = doc.getElementById("service-output");
+    var discuss = doc.getElementById("service-discuss");
     var confirm = doc.getElementById("service-confirm"), preview = null, session = null, busy = false;
     var labels = { PREVIEW: "À confirmer", COMMITTED: "Résultat enregistré", UNKNOWN: "Effet incertain — consulter les reçus" };
     function show(result) {
@@ -38,6 +39,7 @@
       } else if (result && Array.isArray(result.entries)) {
         output.textContent = result.entries.map(function (e) { return (e.kind === "directory" ? "Dossier : " : "Fichier : ") + e.name; }).join("\n") + (result.truncated ? "\nListe limitée à 100 entrées." : "");
       } else output.textContent = "Aucun résultat exploitable.";
+      discuss.hidden = !preview || preview.state !== "COMMITTED" || preview.proposal.action === "remember";
       confirm.hidden = !preview || !(preview.state === "PREVIEW" ||
         preview.state === "UNKNOWN" && preview.proposal.action === "remember");
       confirm.textContent = preview && preview.state === "UNKNOWN" ? "Reprendre la même mémorisation" : "Confirmer cette action";
@@ -62,13 +64,19 @@
     confirm.addEventListener("click", function () {
       if (preview) call("action_commit", { id: preview.proposal.id, sha256: preview.sha256 });
     });
+    discuss.addEventListener("click", async function () {
+      if (!preview || busy) return;
+      var input = doc.getElementById("conv-text");
+      var question = input.value.trim() || "Résume ce résultat en français en précisant les sources et les incertitudes.";
+      if (await conv.send(question, null, preview.proposal.id)) input.value = "";
+    });
     doc.getElementById("service-receipts").addEventListener("click", async function () {
       if (busy) return;
       var r = await conv.service("action_receipts", {});
       if (r.stale) return;
       if (!r.ok) { output.textContent = "Reçus indisponibles (" + r.code + ")."; return; }
       var receipts = r.json.receipts || [];
-      output.textContent = ""; confirm.hidden = true; preview = null;
+      output.textContent = ""; confirm.hidden = true; discuss.hidden = true; preview = null;
       receipts.forEach(function (item) {
         var button = doc.createElement("button"); button.type = "button";
         button.textContent = (labels[item.state] || item.state) + " — " + item.proposal.action + " — " + item.proposal.created_at;
@@ -105,7 +113,7 @@
     return { update: function (state) {
       var next = state.phase === "open" && state.services ? state.conversationId : null;
       panel.hidden = !next;
-      if (next !== session) { session = next; preview = null; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; doc.getElementById("service-profile").textContent = ""; }
+      if (next !== session) { session = next; preview = null; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
       if (next) {
         Array.from(action.options).forEach(function (option) {
           option.disabled = option.value === "remember" ? !state.services.remember :

@@ -68,6 +68,13 @@ test('Chromium: prepare, confirm, reload receipts and close clears profile data'
     assert.match(await page.textContent('#service-output'),/note.txt/);
     await page.click('#service-confirm'); await page.waitForFunction(()=>document.getElementById('service-output').textContent.includes('Un fichier synthétique'));
     assert.equal(await page.locator('#service-output script').count(),0);
+    const [turnResponse] = await Promise.all([
+      page.waitForResponse(r=>r.url().endsWith('/v1/conversations/turn')),
+      page.click('#service-discuss')
+    ]);
+    const turn = await turnResponse.json();
+    assert.equal(turn.reply.context.observations_sent,1);
+    assert.match(turnResponse.request().postDataJSON().source_action,/^[0-9a-f]{32}$/);
     await open(); await page.click('#service-receipts'); await page.waitForSelector('#service-output button');
     await page.click('#service-output button'); assert.match(await page.textContent('#service-output'),/Un fichier synthétique/);
     await page.click('#conv-close'); assert.equal(await page.textContent('#service-output'),'');

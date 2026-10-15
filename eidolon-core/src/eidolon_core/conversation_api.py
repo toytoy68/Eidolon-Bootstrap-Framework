@@ -261,10 +261,16 @@ class ConversationAPI:
                                                                                  limit=data.get("limit", 10))}
 
     def _turn(self, client, data):
-        _fields(data, {"conversation_id", "client_turn_key", "text"})
+        _fields(data, {"conversation_id", "client_turn_key", "text"}, {"source_action"})
         self._own(client, data["conversation_id"])
+        observations = None
+        if self.services is not None:
+            observations = self.services.turn_observations(client["client_id"], data["conversation_id"],
+                data["client_turn_key"], data["text"], data.get("source_action"))
+        elif "source_action" in data:
+            raise APIError(503, "PROFILE_SERVICES_NOT_CONFIGURED")
         result = self.dialogue.respond(data["conversation_id"], client_id=client["client_id"],
-                                       client_turn_key=data["client_turn_key"], text=data["text"])
+                                       client_turn_key=data["client_turn_key"], text=data["text"], observations=observations)
         # pending: another attempt for this very turn is still within its budget (G090-R1); ask again later.
         return {"protocol": PROTOCOL, "turn": result["turn"], "reply": result["reply"],
                 "pending": bool(result.get("pending")), "replayed": result["replayed"],
