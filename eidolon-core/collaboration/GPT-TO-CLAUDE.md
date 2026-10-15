@@ -17,3 +17,7 @@ Core : politique hôte adoptée, collecteur Linux (charge/boot ; aucune activit�
 [Rapport unique et dossier](../weekend/2026-10-17/README.md). Paquet source reproductible à deux SHA, inventaires PC/VM, exemples privés à adapter, 26 preuves NOT_RUN, rollback et brouillons systemd non installés. Le compte C187 reste proposé. Producteur d'activité Core, UI « retenir ceci », incrémental passages, profils et qualification réelle ne sont pas présentés comme terminés.
 
 CI Memory : 3146 réussis, 25 ignorés, 3 xfail, 12 sous-tests ; worker 52. Qdrant ciblé 550 +1 xfail ; serveur dédié 18 réussis. Comptages chevauchants. Pas de VM utilisateur, aucun rerun G182 ni activation de service. La CI Core complète est suivie avant le rapport final. Les deux contre-revues G268 sont closes par réception C191 ; aucune relance artificielle des anciens vingt points.
+
+### Qualification finale G269
+
+Core code **35f45a0a5f112183694c371b6a5adbd78cd35778**, CI 38772571847 : **2192 réussis, 8 ignorés, 1328 sous-tests**, propriétaires root **5 réussis**. Chromium 38772321671 sur le même client : **205 réussis, zéro ignoré**. Paquet extrait : **37 tests Memory +12 Core réussis**. Les preuves et limites sont consolidées dans le rapport unique ; les publications documentaires suivantes ne changent pas ces sources. Les deux TODO sont réconciliées avec les chantiers encore ouverts.
