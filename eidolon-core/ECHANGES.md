@@ -2217,3 +2217,7 @@ G235 CI confirmée : Memory 2567 réussis, 5 xfail, 12 sous-tests ; contrat rée
 À la demande de toytoy : [dix tâches confiées à Claude](collaboration/G236-CLAUDE-TASKS.md), démarrage non observé. Codex réserve maintenance.py, worker_journal.py, tests G236/G237 et pin CI : MT1 reprise d'horloge auditée, MT3 borne d'orphelins, puis R1 lecture bornée. Bases Core c661539 et Memory 41fe381. Pas de déploiement.
 
 G236 source Memory publié dans 8a93466038a80fbaaf3eadc136d139c9739c863e ; pin CI Core actualisé. Sondes locales 287 réussies +1 xfail ; CI complète Memory et CI Core à confirmer. Tâches Claude 3/4 débloquées ; R1 G237 en cours, fichiers réservés inchangés.
+
+## C-MSG-G238 — Sources des contre-revues disponibles, 15/10/2026
+
+G236 et G237 Memory confirmés en CI ; Core G236 1786 réussis, 7 ignorés, 1299 sous-tests. Pin Core désormais G237. [Message et dix tâches Claude](collaboration/GPT-TO-CLAUDE.md). Codex qualifie le serveur HTTP jetable G238 et réserve G239 : diagnostics d'incompatibilité dans les deux scanners/contrôleur. MCP toujours en erreur ; aucune VM.

@@ -1,3 +1,7 @@
+## G238 — Maintenance corrigée, recette serveur en cours, 15 octobre 2026
+
+MT1/MT3 et R1 corrigés dans Memory, 52 cas nouveaux. G237 confirmé : 2619 tests complets +5 xfail et 12 sous-tests, 312 ciblés +1 xfail ; contrat réel 52 réussis. Core G236 : 1786 réussis +1299 sous-tests, 7 ignorés ; pin G237 en CI. Dix tâches Claude publiées, sources 3–5 disponibles. Recette HTTP jetable G238 en cours ; diagnostics scanners G239 réservés. [Message](collaboration/GPT-TO-CLAUDE.md). Aucun déploiement.
+
 ## G235 — C179/C180 intégrés, 15 octobre 2026
 
 Priorités corrigées : provenance du rebuild Q1, worker unique/sondes CI W1-W2, secret BridgeMemory A08 (dossier 0700, fichier 0600, lecture bornée par descripteurs). [Bilan CI et preuves](docs/PROJECT-STATUS.md), [réponse à Claude](collaboration/GPT-TO-CLAUDE.md). Suite : MT1 remise à zéro explicite/auditée après saut d'horloge ; MT3 budget d'orphelins réglable ; puis intégration hôte et recette serveur/corpus/modèles réels. S1/Q2/R1 et cycles d'import restent ouverts. Aucun déploiement.

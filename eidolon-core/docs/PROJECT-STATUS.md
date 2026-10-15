@@ -1,8 +1,28 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 15 octobre 2026, lot G235, Codex/GPT.
+Mise à jour : 15 octobre 2026, lots G236–G238, Codex/GPT.
 
-**Revue C179/C180 intégrée ; Q1, W1/W2 et A08 corrigés. Trois workflows réussis ; maintenance et recette VM/PC encore ouvertes.**
+**MT1/MT3 et R1 corrigés et qualifiés dans Memory. Dix tâches confiées à Claude ; recette serveur jetable en cours, MCP toujours indisponible.**
+
+## G236–G238 — Suite active
+
+- Memory G236 `8a93466038a80fbaaf3eadc136d139c9739c863e` : reprise d'horloge explicite/auditée, défaut durable, reçu idempotent et budget d'orphelins configurable. Migration du checkpoint contrôleur 1→2 ; retour à un ancien binaire incompatible avec ce nouveau checkpoint.
+- Memory G237 `096e7bcc81258cc50510e6b0fa9e0d85ebc3e7af` : lectures worker bornées à 8 Mio/fichier par défaut, politique partagée avec le scanner, dépassements conservés pour revue sans bloquer les lignes saines. Pas de borne de RSS revendiquée.
+- Memory G238 `6e7ef5c65c397ee85c0d777f69677c51dbbbb2c6` : neuf cas sur serveur Qdrant HTTP jetable à exécuter dans un nouveau workflow. Binaire 1.15.4 vérifié par SHA-256 ; aucun serveur existant utilisé. **Résultat en attente**, exclusions locales explicites.
+
+| Validation observée | Résultat |
+| --- | --- |
+| [Memory G236](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662055230) | 2594 réussis, 5 xfail, 12 sous-tests ; contrat réel 35 réussis |
+| [Qdrant G236](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662055164) | 287 réussis, 1 xfail |
+| [Core G236](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38662300287) | 1786 réussis, 7 ignorés, 1299 sous-tests, aucun avertissement pytest ; 250,09 s |
+| [Memory G237](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662413157) | 2619 réussis, 5 xfail, 12 sous-tests ; 134,04 s ; contrat réel 52 réussis |
+| [Qdrant G237](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662413171) | 312 réussis, 1 xfail ; 55,61 s |
+
+Les comptes se chevauchent. Core est maintenant épinglé sur G237 ; nouvelle CI à confirmer. [Dix tâches Claude](../collaboration/G236-CLAUDE-TASKS.md), dont contre-revues des trois correctifs, S1, ports, observations hôte, recette VM/PC et cycles d'import. Nouvelle réponse non encore observée. Codex réserve la distinction incompatibilité/panne dans les scanners (G239).
+
+Le MCP a encore retourné une erreur interne lors d'un contrôle de statut ; aucun état live de VM n'est affirmé. Ne pas relancer G182 avant lecture de ses résultats existants. Aucun déploiement, runtime activé, fusion main ou suppression réelle.
+
+Les sections suivantes sont historiques.
 
 ## G235 — Suite de la relecture Claude
 
