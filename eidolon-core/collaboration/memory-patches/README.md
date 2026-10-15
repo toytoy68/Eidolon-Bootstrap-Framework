@@ -188,3 +188,10 @@ refactorisation, à part).
 | 0040 | Expérience Q2 : vue « worker » à six membres ; cycle complet sans accès à `rebuild`/`delete`/`upsert` | 2 réussis ; suite Memory **2 660 réussis, 15 ignorés, 5 xfail** avec 0038 à 0040 |
 | 0041 | Proposition L1 : module feuille `operations/publication_phase.py` ; cycles 2 → 1 | suite inchangée (2 638 réussis sur la base) |
 | 0042 | Proposition L1 : `persistence.atomic_write_bytes` ; bloc de 36 modules → 13 + 12 | suite inchangée |
+
+## Patchs 0043 et 0044 (contre-revue G242-G251, base `797e102`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0043 | Gardes du rappel sémantique : sabotage local de `core/retrieval/indexed.py` (10 mutants). Deux survivent aux 87 tests GPT et sont tués ici : contrôle « contenu renvoyé = contenu prouvé » (ABA entre `backend.get` et la lecture de preuve) ; archive de conversation sans référence de passage jamais citée entière. Doublons : mutant équivalent (dédoublonnage en aval) | 3 réussis |
+| 0044 | Saturation du pont mémoire : sabotage local de `services/memory_bridge.py` (8 mutants). Deux survivent aux 40 tests GPT et sont tués ici : un second rappel pendant un rappel bloqué reçoit `BUSY` aussitôt ; un échec de démarrage du traitement rend sa place | 2 réussis ; suite Memory **2 762 réussis, 18 ignorés, 4 xfail** |

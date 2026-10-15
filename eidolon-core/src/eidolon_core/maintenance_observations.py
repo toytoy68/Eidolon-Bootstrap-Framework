@@ -18,6 +18,8 @@ import math
 import re
 
 MAX_SKEW = timedelta(seconds=60)
+# Many tools report "unknown" as the Unix epoch (0). Dates before this floor are implausible for this host.
+PLAUSIBLE_FLOOR = datetime(2000, 1, 1, tzinfo=timezone.utc)
 _SOURCE = re.compile(r"[a-z][a-z0-9._-]{0,63}\Z")
 
 
@@ -59,6 +61,9 @@ def _optional_past(value, name, at, notes):
         notes.append(f"{name.upper()}_UNKNOWN")
         return at                                          # unknown = just now: the window will defer
     moment = _aware(value, name)
+    if moment < PLAUSIBLE_FLOOR:
+        notes.append(f"{name.upper()}_IMPLAUSIBLE")
+        return at                                          # an epoch sentinel is unknown, never "long ago"
     if moment - at > MAX_SKEW:
         raise ObservationRefused(f"{name} is in the future")
     return min(moment, at)
@@ -78,6 +83,8 @@ def normalize_host_observation(raw, *, max_load_age=timedelta(seconds=120)):
     if not isinstance(max_load_age, timedelta) or max_load_age <= timedelta(0):
         raise ObservationRefused("invalid load freshness limit")
     at = _aware(raw.get("at"), "at")
+    if at < PLAUSIBLE_FLOOR:
+        raise ObservationRefused("implausible host clock")
     notes = []
     last_activity = _optional_past(raw.get("last_activity"), "last_activity", at, notes)
     boot_at = _optional_past(raw.get("boot_at"), "boot_at", at, notes)
