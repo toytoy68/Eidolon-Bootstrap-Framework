@@ -48,7 +48,10 @@ def _aware(value, name):
             raise ObservationRefused(f"invalid {name}") from None
     if not isinstance(value, datetime) or value.tzinfo is None or value.utcoffset() is None:
         raise ObservationRefused(f"{name} needs a time zone")
-    return value.astimezone(timezone.utc)
+    try:
+        return value.astimezone(timezone.utc)
+    except (OverflowError, ValueError):
+        raise ObservationRefused(f"invalid {name}") from None
 
 
 def _optional_past(value, name, at, notes):
@@ -56,7 +59,7 @@ def _optional_past(value, name, at, notes):
         notes.append(f"{name.upper()}_UNKNOWN")
         return at                                          # unknown = just now: the window will defer
     moment = _aware(value, name)
-    if moment > at + MAX_SKEW:
+    if moment - at > MAX_SKEW:
         raise ObservationRefused(f"{name} is in the future")
     return min(moment, at)
 
@@ -87,9 +90,13 @@ def normalize_host_observation(raw, *, max_load_age=timedelta(seconds=120)):
             raise ObservationRefused("invalid load observation")
         observed = _aware(load["observed_at"], "load.observed_at")
         ratio, limit = load["ratio"], load["limit"]
-        if any(type(v) not in (int, float) or not math.isfinite(v) or v < 0 for v in (ratio, limit)) or limit == 0:
+        try:
+            invalid = any(type(v) not in (int, float) or not math.isfinite(v) or v < 0 for v in (ratio, limit))
+        except OverflowError:
+            invalid = True
+        if invalid or limit == 0:
             raise ObservationRefused("invalid load values")
-        if observed > at + MAX_SKEW:
+        if observed - at > MAX_SKEW:
             raise ObservationRefused("load observation is in the future")
         if at - observed > max_load_age:
             notes.append("LOAD_STALE")
