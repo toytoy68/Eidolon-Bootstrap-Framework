@@ -1,0 +1,201 @@
+From 7a8e408b0d980d6f0c5963710816bb3e7bda5609 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 04:01:06 +0000
+Subject: [PATCH] feat(indexing): pure index-lag evaluator with a
+ mandatory host threshold (S1, G236-6)
+
+New module, no I/O and no runtime activation; worker_status unchanged.
+Distinguishes index health, canonical coverage and ageing; unknown or future
+dates never yield an ageing verdict. 12 tests, including the S1 case on real
+journal rows (worker_status PENDING, evaluator LAGGING).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ core/indexing/index_lag.py | 84 ++++++++++++++++++++++++++++++++++++++
+ tests/test_index_lag.py    | 82 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 166 insertions(+)
+ create mode 100644 core/indexing/index_lag.py
+ create mode 100644 tests/test_index_lag.py
+
+diff --git a/core/indexing/index_lag.py b/core/indexing/index_lag.py
+new file mode 100644
+index 0000000..1773b75
+--- /dev/null
++++ b/core/indexing/index_lag.py
+@@ -0,0 +1,84 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : core/indexing/index_lag.py
++# Description : Évaluateur pur du retard d'indexation (S1, G236-6), seuil fourni par l'hôte
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Pure index-lag evaluator (Claude, G236-6). No I/O, no clock read, no runtime activation.
++
++The host supplies the current time, the pending intents (``ChangeIntent`` from ``ChangeJournal.pending``) and a
++MANDATORY lag threshold it calibrated itself: this module invents no business threshold. Three causes stay
++distinct and are never merged into one "stale" flag:
++
++- index health: unavailable or incompatible (model / projection);
++- canonical coverage: the canonical snapshot is incomplete or unknown;
++- ageing: the oldest pending intent is older than the threshold.
++
++``worker_status`` is not changed; a caller may show both summaries side by side.
++"""
++from dataclasses import dataclass
++import math
++
++STATES = ("INDEX_UNAVAILABLE", "INDEX_INCOMPATIBLE", "CANONICAL_INCOMPLETE", "INDEX_LAGGING",
++          "INDEX_PENDING", "INDEX_CURRENT")
++
++
++@dataclass(frozen=True)
++class LagReport:
++    state: str
++    pending: int
++    oldest_age_seconds: float | None
++    lagging: int
++    reasons: tuple
++
++
++def _finite(value, name, *, positive=False):
++    if type(value) not in (int, float) or not math.isfinite(value) or value < 0 or (positive and value == 0):
++        raise ValueError(f"invalid {name}")
++    return float(value)
++
++
++def evaluate_lag(pending, *, now, threshold_seconds, index_available, index_compatible, canonical_complete,
++                 clock_skew_seconds=60):
++    """Classify index lag from host-supplied facts only.
++
++    pending: iterable of objects with ``created`` (seconds since epoch, or None when unknown).
++    An intent dated in the future beyond ``clock_skew_seconds`` makes ages untrustworthy: CLOCK_AHEAD is reported
++    and no ageing verdict is given. A missing date is AGE_UNKNOWN, never "fresh".
++    """
++    now = _finite(now, "clock")
++    threshold = _finite(threshold_seconds, "lag threshold", positive=True)
++    skew = _finite(clock_skew_seconds, "clock skew")
++    if any(type(flag) is not bool for flag in (index_available, index_compatible, canonical_complete)):
++        raise ValueError("invalid health flags")
++    ages, reasons, count = [], set(), 0
++    for intent in pending:
++        count += 1
++        created = getattr(intent, "created", None)
++        if created is None:
++            reasons.add("AGE_UNKNOWN")
++            continue
++        created = _finite(created, "intent timestamp")
++        if created > now + skew:
++            reasons.add("CLOCK_AHEAD")
++            continue
++        ages.append(max(0.0, now - created))
++    clock_trusted = "CLOCK_AHEAD" not in reasons
++    oldest = max(ages) if ages and clock_trusted else None
++    lagging = sum(age > threshold for age in ages) if clock_trusted else 0
++    if not index_available:
++        state = "INDEX_UNAVAILABLE"
++    elif not index_compatible:
++        state = "INDEX_INCOMPATIBLE"
++    elif not canonical_complete:
++        state = "CANONICAL_INCOMPLETE"
++    elif lagging:
++        state = "INDEX_LAGGING"
++    elif count:
++        state = "INDEX_PENDING"
++    else:
++        state = "INDEX_CURRENT"
++    if lagging and state != "INDEX_LAGGING":
++        reasons.add("ALSO_LAGGING")                    # health wins the state; ageing is still reported
++    return LagReport(state, count, oldest, lagging, tuple(sorted(reasons)))
+diff --git a/tests/test_index_lag.py b/tests/test_index_lag.py
+new file mode 100644
+index 0000000..d34764a
+--- /dev/null
++++ b/tests/test_index_lag.py
+@@ -0,0 +1,82 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/test_index_lag.py
++# Description : Tests de l'évaluateur pur de retard d'indexation (Claude, G236-6)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++import hashlib
++
++import pytest
++
++from core.indexing.change_journal import ChangeJournal
++from core.indexing.index_lag import evaluate_lag
++from core.indexing.reconcile_plan import Canonical
++from core.indexing.reconcile_preview import preview_reconciliation
++from core.indexing.worker_prepare import prepare_work
++from core.indexing.worker_status import summarize_work
++
++
++class Intent:
++    def __init__(self, created):
++        self.created = created
++
++
++HEALTHY = dict(index_available=True, index_compatible=True, canonical_complete=True)
++
++
++def lag(pending, now=1000.0, threshold=120, **flags):
++    return evaluate_lag(pending, now=now, threshold_seconds=threshold, **{**HEALTHY, **flags})
++
++
++def test_current_pending_and_lagging_are_distinct():
++    assert lag([]).state == "INDEX_CURRENT"
++    assert lag([Intent(950)]).state == "INDEX_PENDING"
++    report = lag([Intent(950), Intent(500)])
++    assert (report.state, report.lagging, report.oldest_age_seconds) == ("INDEX_LAGGING", 1, 500.0)
++
++
++def test_exact_threshold_is_not_lagging():
++    assert lag([Intent(880)]).state == "INDEX_PENDING"          # 120 s == threshold
++    assert lag([Intent(879)]).state == "INDEX_LAGGING"
++
++
++def test_health_and_canonical_coverage_win_but_ageing_stays_visible():
++    old = [Intent(0)]
++    assert lag(old, index_available=False).state == "INDEX_UNAVAILABLE"
++    assert lag(old, index_compatible=False).state == "INDEX_INCOMPATIBLE"
++    report = lag(old, canonical_complete=False)
++    assert report.state == "CANONICAL_INCOMPLETE" and "ALSO_LAGGING" in report.reasons
++    assert lag([], canonical_complete=False).state == "CANONICAL_INCOMPLETE"
++
++
++def test_unknown_or_future_dates_never_produce_an_ageing_verdict():
++    unknown = lag([Intent(None)])
++    assert unknown.state == "INDEX_PENDING" and unknown.reasons == ("AGE_UNKNOWN",)
++    ahead = lag([Intent(5000), Intent(0)])
++    assert ahead.reasons == ("CLOCK_AHEAD",) and ahead.oldest_age_seconds is None and ahead.lagging == 0
++    assert lag([Intent(1050)]).state == "INDEX_PENDING"          # within 60 s of skew
++
++
++@pytest.mark.parametrize("bad", [dict(threshold=0), dict(threshold=-1), dict(threshold=float("inf")),
++                                 dict(threshold=True), dict(threshold="60"), dict(now=float("nan")),
++                                 dict(index_available=1)])
++def test_the_threshold_is_mandatory_and_inputs_are_checked(bad):
++    with pytest.raises(ValueError):
++        lag([Intent(950)], **bad)
++    with pytest.raises(TypeError):
++        evaluate_lag([], now=1.0, **HEALTHY)                       # no default threshold
++
++
++def test_works_on_real_journal_rows_and_complements_worker_status(tmp_path):
++    """The S1 case: a change unindexed for a week. worker_status says PENDING; the lag evaluator says LAGGING."""
++    journal = ChangeJournal(tmp_path / "changes.sqlite3")
++    digest = hashlib.sha256(b"a").hexdigest()
++    journal.published(journal.begin("doc", 2, "UPSERT", digest))
++    created = journal.pending()[0].created
++    week = created + 7 * 24 * 3600
++    preview = preview_reconciliation(journal, {"doc": Canonical(2, digest)}, {"doc": 1}, now=week)
++    status = summarize_work(prepare_work(preview, allow_upsert=True), index_available=True,
++                            canonical_complete=True, model_compatible=True)
++    report = evaluate_lag(journal.pending(), now=week, threshold_seconds=3600, **HEALTHY)
++    assert (status.state, report.state) == ("INDEX_PENDING", "INDEX_LAGGING")
+-- 
+2.43.0
+

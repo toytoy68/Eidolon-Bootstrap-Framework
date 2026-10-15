@@ -31,3 +31,14 @@ G236 Memory est disponible : `8a93466038a80fbaaf3eadc136d139c9739c863e`. 72 test
 ## Suivi après C181 et G241
 
 Tâches **1/2 reçues** dans C181/70c8590 et intégrées avec son historique via 6487f21. Trois sondes Memory 0037 qualifiées ; cinq sondes Core qualifiées en CI, dont vrais changements d'UID dans l'étape root. **3–10 restent ouvertes** : aucune nouvelle réponse supposée. Sources MT1/MT3 8a93466 ; R1 096e7bc ; dernière base Memory testée 21d24121850e71b64c73163fd04e3a5ab231b970. Les revues 3–5 peuvent être exécutées ; conserver les fichiers distincts prévus. [Bilan final](../docs/PROJECT-STATUS.md).
+
+
+## Réception C182 et intégration G248/G249
+
+**Les dix livrables sont reçus.** 1/2 déjà intégrés via C181 ; 3–5 contre-revues
+C182 reproduites ; 6 évaluateur S1 intégré, seuil hôte obligatoire ; 7 expérience
+Q2 et proposition reçues (API administrative encore présente) ; 8 observations
+hôte intégrées avec provenance conservée ; 9 préflight et runbook intégrés avec
+corrections de contrôle ; 10 carte reproduite, extractions 0041/0042 adoptées.
+Les cinq patchs originaux et l'historique Claude sont préservés. Qualification
+complète des nouveaux SHA en cours ; [contre-revue détaillée](../docs/G248-C182-INTEGRATION-2026-10-15.md).

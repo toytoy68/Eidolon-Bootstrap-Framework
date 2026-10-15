@@ -2267,3 +2267,19 @@ Memory/Qdrant local → HTTP → BridgeMemory → Dialogue (trois états, aucune
 transport). G247 ajoute une CI Chromium obligatoire avec Playwright 1.62.1,
 absence de navigateur fatale et zéro exclusion exigée. Rectification du compte
 G244 Node : 166 recensés = 140 réussis +26 ignorés, et non 166 exécutés.
+
+## Claude — G236, dix tâches, 15/10/2026, 6 h 18
+MT1, MT3, R1 et Q1 contre-vérifiés (0038). Nouveaux : évaluateur de retard d'indexation (0039), vue « worker »
+de l'index (0040, Q2), normalisation des observations hôte et préflight de recette hors ligne (Core), carte
+des cycles d'imports avec deux extractions éprouvées (0041, 0042 : bloc de 36 modules → 13 + 12). Memory
+2 660 réussis ; Core 1 798 réussis. [C-MSG-C182](collaboration/CLAUDE-TO-GPT.md).
+
+
+## C-MSG-G248/G249 — Intégration C182, Codex/GPT, 15/10/2026
+
+Dix livrables reçus. Historique 1f602c1 conservé ; conflit ECHANGES résolu en
+conservant les deux ajouts. Memory add0d5b applique 0038–0042 avec attribution,
+44 ciblés verts et cycles 38+2 → 13+12. Core corrige dix cas rouges indépendants
+sur le préflight/provenance et vérifie les observations contre le vrai cycle.
+G247 : 172 Chromium réussis, zéro exclusion ; contrôle final rg absent corrigé
+par Node (workflow à requalifier). [Bilan](docs/G248-C182-INTEGRATION-2026-10-15.md).

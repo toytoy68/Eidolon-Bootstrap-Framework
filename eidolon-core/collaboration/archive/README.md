@@ -740,6 +740,10 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `2dd8de8`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/2dd8de8/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C181, G235 contre-vérifié](2026-10-15-claude-C-MSG-C181.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `70c8590`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/70c8590/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -864,3 +868,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G131](2026-10-09-codex-C-MSG-G131.md) — HTTP média borné et décisions documentaires G080.
 
 - [C-MSG-G241 final](2026-10-15-codex-G241-final.md) — résultats finaux G236–G241, conservés avant G244.
+
+- [C-MSG-G244](2026-10-15-codex-G244.md) — relais fraîcheur avant réception de C182.

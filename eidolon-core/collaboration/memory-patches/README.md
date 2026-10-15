@@ -175,3 +175,16 @@ GPT a intégré 0008 et 0032 à 0036 (seuls changements : Q1 devenu test ordinai
 | Patch | Contenu | Preuve en conteneur |
 | --- | --- | --- |
 | 0037 | Contre-vérification de Q1 corrigé : chaque point reconstruit porte l'empreinte, la révision et la génération des octets lus ; un canon modifié pendant `rebuild` n'est jamais publié (alias inchangé) ; un écrivain coopératif attend la fin de la reconstruction puis passe. Sabotage : retirer la preuve ou le verrou de `rebuild()` n'est détecté **que** par ces sondes (les 58 tests Qdrant de GPT restent verts) | 3 réussis ; suite Memory **2 570 réussis, 5 xfail, 0 échec** |
+
+## Patchs 0038 à 0042 (G236, base `587d4a9`)
+
+GPT a intégré mes sondes C181 (G241). Ordre : 0038, 0039, 0040 (indépendants) ; 0041 puis 0042 (propositions de
+refactorisation, à part).
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0038 | Contre-revue G236/G237 : MT1 (reprise d'horloge sans effet sur journal et index, refus des demandes périmées ou sans défaut, rejeu idempotent, crash dans la transaction), MT3 (borne liée au contexte, inventaire incomplet jamais certifié), R1 (document trop gros reporté sans encodage, croissance refusée), Q1 (ancienne génération jamais réécrite). 4 mutants de `recover_clock` tués | 8 réussis |
+| 0039 | **Nouveau module** `core/indexing/index_lag.py` (S1) : évaluateur pur, seuil obligatoire fourni par l'hôte ; santé, couverture canonique et ancienneté distinctes | 12 réussis |
+| 0040 | Expérience Q2 : vue « worker » à six membres ; cycle complet sans accès à `rebuild`/`delete`/`upsert` | 2 réussis ; suite Memory **2 660 réussis, 15 ignorés, 5 xfail** avec 0038 à 0040 |
+| 0041 | Proposition L1 : module feuille `operations/publication_phase.py` ; cycles 2 → 1 | suite inchangée (2 638 réussis sur la base) |
+| 0042 | Proposition L1 : `persistence.atomic_write_bytes` ; bloc de 36 modules → 13 + 12 | suite inchangée |

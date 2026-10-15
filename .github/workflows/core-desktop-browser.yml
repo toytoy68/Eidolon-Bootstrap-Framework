@@ -46,7 +46,7 @@ jobs:
           node -e 'const h=require("./desktop/connected/tests/helpers.js"); if(h.chromiumUnavailable || h.noPython) throw new Error(h.chromiumUnavailable || h.noPython)'
           node desktop/connected/build.js --check
           node --test --test-concurrency=2 --test-reporter=tap desktop/connected/tests/*.test.js desktop/connected/tests/integration/*.test.js | tee "$RUNNER_TEMP/eidolon-browser-results.tap"
-          rg -qx '# skipped 0' "$RUNNER_TEMP/eidolon-browser-results.tap"
+          node -e 'const fs=require("node:fs"); const report=fs.readFileSync(process.argv[1], "utf8"); if(!/^# skipped 0$/m.test(report)) throw new Error("browser tests were skipped")' "$RUNNER_TEMP/eidolon-browser-results.tap"
       - name: Preserve synthetic desktop qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
