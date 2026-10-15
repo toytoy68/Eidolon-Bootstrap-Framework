@@ -1,0 +1,208 @@
+From 9cc09b770cb348916369b5267baff58a9c74fdd8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 14:52:45 +0000
+Subject: [PATCH] test(claude-eval): G266-6 failures after a durable receipt
+ mark
+
+A failure of fsync after the O_EXCL mark exists is reported as
+RECEIPT_CONSUMED_UNCONFIRMED; the mark is never removed, so a retry gets
+RECEIPT_REPLAYED. The store pins its directory identity at construction:
+a replaced directory or a link gives RECEIPT_STORE_CHANGED, widened
+rights RECEIPT_STORE_UNSAFE, at every operation.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../claude_memory_eval/receipt_seen_store.py  | 65 +++++++++++---
+ .../test_receipt_store_failures_g266.py       | 86 +++++++++++++++++++
+ 2 files changed, 139 insertions(+), 12 deletions(-)
+ create mode 100644 tests/claude_memory_eval/test_receipt_store_failures_g266.py
+
+diff --git a/tests/claude_memory_eval/receipt_seen_store.py b/tests/claude_memory_eval/receipt_seen_store.py
+index b63997e..fb137b1 100644
+--- a/tests/claude_memory_eval/receipt_seen_store.py
++++ b/tests/claude_memory_eval/receipt_seen_store.py
+@@ -16,35 +16,76 @@ from tests.claude_memory_eval.alias_switch_receipt import ReceiptRefused, verify
+ class DirectorySeenStore:
+     """EXPERIMENTAL durable consumption of switch ids: one empty file per id, created with O_EXCL.
+ 
+-    What it guarantees, and only that: on one local POSIX filesystem, among processes using this same
+-    directory, at most one consume() of an id succeeds, and a success survives a crash once it returned
+-    (file and directory fsync-ed). Not guaranteed: network filesystems, a directory that someone edits
+-    or deletes, ordering between different ids. Validation (verify_*) stays pure; consumption is this."""
++    Guaranteed, and only that: on one local POSIX filesystem, among processes using this same directory
++    (same inode as at construction), at most one consume() of an id succeeds; a returned success has the
++    mark and the directory entry fsync-ed. Not guaranteed: network filesystems, ordering between ids, a
++    directory that someone edits by hand. G266-6: a failure AFTER the mark was created is reported as
++    RECEIPT_CONSUMED_UNCONFIRMED (consumed, durability unknown); the mark is never removed, so any retry
++    sees RECEIPT_REPLAYED and the id can never be consumed twice."""
++
++    _DIR = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+ 
+     def __init__(self, directory):
+         self.directory = os.fspath(directory)
+-        st = os.lstat(self.directory)
++        try:
++            fd = os.open(self.directory, self._DIR)
++        except OSError:
++            raise ReceiptRefused("RECEIPT_STORE_UNSAFE") from None    # absent, not a directory, or a link
++        try:
++            st = os.fstat(fd)
++            self._check(st)
++            self.identity = (st.st_dev, st.st_ino)
++        finally:
++            os.close(fd)
++
++    @staticmethod
++    def _check(st):
+         if not stat.S_ISDIR(st.st_mode) or stat.S_IMODE(st.st_mode) & 0o022:
+             raise ReceiptRefused("RECEIPT_STORE_UNSAFE")
+ 
++    def _open(self):
++        try:
++            fd = os.open(self.directory, self._DIR)
++        except OSError:
++            raise ReceiptRefused("RECEIPT_STORE_CHANGED") from None
++        st = os.fstat(fd)
++        if (st.st_dev, st.st_ino) != self.identity:
++            os.close(fd)
++            raise ReceiptRefused("RECEIPT_STORE_CHANGED")           # replaced since construction
++        try:
++            self._check(st)                                         # rights may have changed since
++        except ReceiptRefused:
++            os.close(fd)
++            raise
++        return fd
++
+     def consumed(self):
+-        return frozenset(n for n in os.listdir(self.directory) if re.fullmatch(r"[0-9a-f]{32}", n))
++        fd = self._open()
++        try:
++            return frozenset(n for n in os.listdir(fd) if re.fullmatch(r"[0-9a-f]{32}", n))
++        finally:
++            os.close(fd)
+ 
+     def consume(self, receipt):
+         """Verify (pure) against the durable set, then claim the id atomically. Returns the switch id."""
+-        switch_id = verify_receipt(receipt, seen_switch_ids=self.consumed())
+-        dir_fd = os.open(self.directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
++        dir_fd = self._open()
+         try:
++            seen = frozenset(n for n in os.listdir(dir_fd) if re.fullmatch(r"[0-9a-f]{32}", n))
++            switch_id = verify_receipt(receipt, seen_switch_ids=seen)
+             try:
+                 fd = os.open(switch_id, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+                              0o600, dir_fd=dir_fd)
+             except FileExistsError:
+                 raise ReceiptRefused("RECEIPT_REPLAYED") from None   # lost a concurrent race
++            # From here the mark EXISTS. Any failure is ambiguous, never a plain error, never undone.
+             try:
+-                os.fsync(fd)
+-            finally:
+-                os.close(fd)
+-            os.fsync(dir_fd)
++                try:
++                    os.fsync(fd)
++                finally:
++                    os.close(fd)
++                os.fsync(dir_fd)
++            except OSError:
++                raise ReceiptRefused("RECEIPT_CONSUMED_UNCONFIRMED") from None
+         finally:
+             os.close(dir_fd)
+         return switch_id
+diff --git a/tests/claude_memory_eval/test_receipt_store_failures_g266.py b/tests/claude_memory_eval/test_receipt_store_failures_g266.py
+new file mode 100644
+index 0000000..fa1f86a
+--- /dev/null
++++ b/tests/claude_memory_eval/test_receipt_store_failures_g266.py
+@@ -0,0 +1,86 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_receipt_store_failures_g266.py
++# Description : Consommation durable de reçu : échecs après création, répertoire substitué ou élargi (Claude, G266-6)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic receipts and temporary directories. Failures are injected; nothing real is deleted."""
++import os
++
++import pytest
++
++import tests.claude_memory_eval.receipt_seen_store as store_module
++from tests.claude_memory_eval.alias_switch_receipt import ReceiptRefused
++from tests.claude_memory_eval.receipt_seen_store import DirectorySeenStore
++from tests.claude_memory_eval.test_receipt_replay_state_g262 import R
++
++ID = "1" * 32
++
++
++def code(call):
++    with pytest.raises(ReceiptRefused) as caught:
++        call()
++    return caught.value.code
++
++
++@pytest.mark.parametrize("failing", [1, 2])                       # 1: fsync of the mark, 2: of the directory
++def test_a_failure_after_creation_is_ambiguous_keeps_the_mark_and_blocks_reuse(tmp_path, monkeypatch, failing):
++    store = DirectorySeenStore(tmp_path)
++    calls = []
++    real = os.fsync
++
++    def flaky(fd):
++        calls.append(fd)
++        if len(calls) == failing:
++            raise OSError(5, "synthetic EIO")
++        return real(fd)
++    monkeypatch.setattr(store_module.os, "fsync", flaky)
++    assert code(lambda: store.consume(R)) == "RECEIPT_CONSUMED_UNCONFIRMED"
++    monkeypatch.undo()
++    assert (tmp_path / ID).exists()                                # never removed
++    assert code(lambda: store.consume(R)) == "RECEIPT_REPLAYED"     # a retry cannot consume it twice
++    assert store.consumed() == {ID}
++
++
++def test_a_directory_replaced_after_construction_is_refused(tmp_path):
++    directory = tmp_path / "seen"
++    directory.mkdir(mode=0o700)
++    store = DirectorySeenStore(directory)
++    directory.rename(tmp_path / "old")
++    directory.mkdir(mode=0o700)                                    # same path, other inode: empty history
++    assert code(lambda: store.consume(R)) == "RECEIPT_STORE_CHANGED"
++    assert code(lambda: store.consumed()) == "RECEIPT_STORE_CHANGED"
++    assert not (directory / ID).exists()
++
++
++def test_a_directory_replaced_by_a_link_is_refused(tmp_path):
++    directory = tmp_path / "seen"
++    directory.mkdir(mode=0o700)
++    store = DirectorySeenStore(directory)
++    directory.rename(tmp_path / "old")
++    directory.symlink_to(tmp_path / "old")                          # even pointing at the original
++    assert code(lambda: store.consume(R)) == "RECEIPT_STORE_CHANGED"
++
++
++def test_rights_widened_after_construction_are_refused(tmp_path):
++    directory = tmp_path / "seen"
++    directory.mkdir(mode=0o700)
++    store = DirectorySeenStore(directory)
++    directory.chmod(0o777)
++    assert code(lambda: store.consume(R)) == "RECEIPT_STORE_UNSAFE"
++    directory.chmod(0o700)
++    assert store.consume(R) == ID
++
++
++def test_construction_refuses_links_and_missing_directories(tmp_path):
++    (tmp_path / "alias").symlink_to(tmp_path)
++    assert code(lambda: DirectorySeenStore(tmp_path / "alias")) == "RECEIPT_STORE_UNSAFE"
++    assert code(lambda: DirectorySeenStore(tmp_path / "absent")) == "RECEIPT_STORE_UNSAFE"
++
++
++def test_a_planted_file_with_an_id_name_counts_as_consumed(tmp_path):
++    """Documented limit: anyone able to write in the directory can block an id (never unblock one)."""
++    store = DirectorySeenStore(tmp_path)
++    (tmp_path / ID).touch()
++    assert code(lambda: store.consume(R)) == "RECEIPT_REPLAYED"
+-- 
+2.43.0
+

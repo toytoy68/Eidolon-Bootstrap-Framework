@@ -15,6 +15,7 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import stat
@@ -108,118 +109,204 @@ def _lookup_account(name):
         return None, "service account not found"
 
 
-def check_canonical_owner(root, account, *, max_entries=100_000, lookup=_lookup_account, lstat=os.lstat,
-                          scandir=os.scandir):
-    """G262-1, opt-in: every entry under --root/memory/{persistent,history} belongs to the EXPECTED service
-    account (explicitly given, never inferred from who runs the acceptance), is private and is no link.
-    Metadata only: nothing is opened, changed or chown-ed. An unknown account or platform is UNKNOWN."""
-    name = "memory.canonical_owner"
-    if root is None or account is None:
-        return {"check": name, "result": "UNKNOWN", "detail": "root or expected account not given"}
-    if (type(account) is not str or not account or len(account) > 32
-            or not all(c.isalnum() or c in "._-" for c in account)):
-        return {"check": name, "result": "FAIL", "detail": "invalid account name"}
-    uid, why = lookup(account)
-    if uid is None:
-        return {"check": name, "result": "UNKNOWN", "detail": why}
-    if uid == 0:
-        return {"check": name, "result": "FAIL", "detail": "the service account must not be root"}
-    try:
-        base = Path(root)
-        if not base.is_absolute() or ".." in base.parts:
-            raise ValueError("relative or traversing root")
-        for ancestor in [*reversed(base.parents), base]:
-            if not stat.S_ISDIR(lstat(ancestor).st_mode):
-                return {"check": name, "result": "FAIL", "detail": "root or an ancestor is not a plain directory"}
-        seen, pending = 0, [base / part for part in MEMORY_LAYOUT]
-        for top in pending[:len(MEMORY_LAYOUT)]:
-            if not stat.S_ISDIR(lstat(top).st_mode):
-                return {"check": name, "result": "FAIL", "detail": "expected memory/persistent and memory/history"}
-        parent = lstat(base / "memory")
-        if parent.st_uid != uid or stat.S_IMODE(parent.st_mode) & 0o077:
-            return {"check": name, "result": "FAIL", "detail": "memory/ has another owner or is shared"}
-        while pending:
-            directory = pending.pop()
-            st = lstat(directory)
-            if st.st_uid != uid or stat.S_IMODE(st.st_mode) & 0o077:
-                return {"check": name, "result": "FAIL", "detail": "a directory has another owner or is shared"}
-            with scandir(directory) as entries:
-                for entry in entries:
-                    seen += 1
-                    if seen > max_entries:
-                        return {"check": name, "result": "UNKNOWN", "detail": "entry budget exceeded"}
-                    est = lstat(entry.path)
-                    if stat.S_ISDIR(est.st_mode):
-                        pending.append(Path(entry.path))
-                    elif not stat.S_ISREG(est.st_mode):
-                        return {"check": name, "result": "FAIL", "detail": "link or special file in the memory"}
-                    elif est.st_uid != uid or stat.S_IMODE(est.st_mode) & 0o077:
-                        return {"check": name, "result": "FAIL", "detail": "a file has another owner or is shared"}
-    except FileNotFoundError:
-        return {"check": name, "result": "FAIL", "detail": "expected memory/persistent and memory/history"}
-    except (OSError, ValueError):
-        return {"check": name, "result": "UNKNOWN", "detail": "metadata unreadable"}
-    return {"check": name, "result": "PASS",
-            "detail": f"{seen} entries owned by the expected account, private, no link; content not read"}
-
-
 RERANKER_REPO = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 # Minimal set; the exact list must be taken from the real cache on the VM (G262-6), not invented here.
 RERANKER_REQUIRED = ("config.json", "tokenizer_config.json", ("model.safetensors", "pytorch_model.bin"))
 
 
-def check_reranker_cache(cache, *, repo=RERANKER_REPO, required=RERANKER_REQUIRED, lstat=os.lstat):
-    """G262-6, opt-in, metadata only: the offline cache is complete and PREPARED, so the service under a
-    reduced account never writes into it nor reports a misleading "could not connect" error."""
+_DIRFLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+_BLOB_LINK = re.compile(r"\.\./\.\./blobs/([A-Za-z0-9._-]{1,128})")
+
+
+class _Refused(Exception):
+    def __init__(self, result, detail):
+        super().__init__(detail)
+        self.result, self.detail = result, detail
+
+
+def _walk(path):
+    """Open an absolute directory from '/' without following ANY link (G266-4)."""
+    base = Path(path)
+    if not base.is_absolute() or ".." in base.parts:
+        raise _Refused("UNKNOWN", "cache path must be absolute, without '..'")
+    fd = os.open("/", _DIRFLAGS)
+    try:
+        for part in base.parts[1:]:
+            child = _open_child(fd, part, "cache path")
+            os.close(fd)
+            fd = child
+        return fd
+    except BaseException:
+        os.close(fd)
+        raise
+
+
+def _open_child(fd, name, what):
+    try:
+        return os.open(name, _DIRFLAGS, dir_fd=fd)
+    except FileNotFoundError:
+        raise _Refused("FAIL", f"incomplete cache: {what} missing") from None
+    except OSError as exc:
+        if exc.errno in (40, 20):                    # ELOOP (a link) or ENOTDIR
+            raise _Refused("FAIL", f"{what} is a link or not a directory") from None
+        raise _Refused("UNKNOWN", "cache metadata unreadable") from None
+
+
+def _regular(fd, name):
+    try:
+        return stat.S_ISREG(os.stat(name, dir_fd=fd, follow_symlinks=False).st_mode)
+    except FileNotFoundError:
+        return False
+
+
+def check_reranker_cache(cache, *, repo=RERANKER_REPO, required=RERANKER_REQUIRED):
+    """G262-6/G266-4, opt-in, metadata only. Every directory (cache, model, refs, snapshots, the commit,
+    blobs) is opened by descriptor without following links; refs/main is read with a hard bound; snapshot
+    links must be exactly ../../blobs/<name> and resolve to a regular blob of THIS model. A PASS states
+    which metadata were checked: it does not certify that a model loads (nothing is loaded here)."""
     name = "reranker.cache"
     if cache is None:
         return {"check": name, "result": "UNKNOWN", "detail": "cache not given"}
+    fds = []
     try:
-        base = Path(cache)
-        if not base.is_absolute() or ".." in base.parts:
-            raise ValueError
-        if not stat.S_ISDIR(lstat(base).st_mode):
-            return {"check": name, "result": "FAIL", "detail": "cache is not a plain directory"}
-        if not stat.S_ISREG(lstat(base / "version.txt").st_mode):
-            raise FileNotFoundError
-    except FileNotFoundError:
-        return {"check": name, "result": "FAIL",
-                "detail": "cache not prepared: version.txt missing, transformers would try to write it"}
-    except (OSError, ValueError):
-        return {"check": name, "result": "UNKNOWN", "detail": "cache metadata unreadable"}
-    model = base / ("models--" + repo.replace("/", "--"))
-    try:
-        ref = (model / "refs" / "main")
-        if not stat.S_ISREG(lstat(ref).st_mode) or lstat(ref).st_size != 40:
+        base = _walk(cache)
+        fds.append(base)
+        if not _regular(base, "version.txt"):
+            return {"check": name, "result": "FAIL",
+                    "detail": "cache not prepared: version.txt missing, transformers would try to write it"}
+        model = _open_child(base, "models--" + repo.replace("/", "--"), "model directory")
+        fds.append(model)
+        refs = _open_child(model, "refs", "refs directory")
+        fds.append(refs)
+        try:
+            ref = os.open("main", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=refs)
+        except OSError:
             return {"check": name, "result": "FAIL", "detail": "refs/main missing or malformed"}
-        commit = ref.read_text(encoding="ascii")
-        if not all(c in "0123456789abcdef" for c in commit):
+        try:
+            if not stat.S_ISREG(os.fstat(ref).st_mode):
+                return {"check": name, "result": "FAIL", "detail": "refs/main missing or malformed"}
+            commit = os.read(ref, 41)                    # bounded: never more than 41 bytes, whatever stat said
+        finally:
+            os.close(ref)
+        if len(commit) != 40 or not all(c in b"0123456789abcdef" for c in commit):
             return {"check": name, "result": "FAIL", "detail": "refs/main missing or malformed"}
-        snapshot = model / "snapshots" / commit
+        snapshots = _open_child(model, "snapshots", "snapshots directory")
+        fds.append(snapshots)
+        snapshot = _open_child(snapshots, commit.decode("ascii"), "snapshot of refs/main")
+        fds.append(snapshot)
+        blobs = _open_child(model, "blobs", "blobs directory")
+        fds.append(blobs)
         for item in required:
             names = item if isinstance(item, tuple) else (item,)
-            if not any(_cached_file(model, snapshot / n, lstat) for n in names):
+            if not any(_cached_file(snapshot, blobs, n) for n in names):
                 return {"check": name, "result": "FAIL", "detail": "incomplete cache: missing " + " or ".join(names)}
-    except (OSError, UnicodeError):
-        return {"check": name, "result": "FAIL", "detail": "incomplete cache: snapshot unreadable"}
-    return {"check": name, "result": "PASS", "detail": f"{repo} snapshot complete and prepared; content not read"}
+    except _Refused as exc:
+        return {"check": name, "result": exc.result, "detail": exc.detail}
+    except OSError:
+        return {"check": name, "result": "UNKNOWN", "detail": "cache metadata unreadable"}
+    finally:
+        for fd in reversed(fds):
+            os.close(fd)
+    return {"check": name, "result": "PASS",
+            "detail": f"{repo}: prepared marker, refs/main and required snapshot entries present as regular "
+                      f"blobs; metadata only, model NOT loaded"}
 
 
-def _cached_file(model, path, lstat):
-    """A snapshot entry is a regular file, or a RELATIVE link to a regular blob inside this model."""
+def _cached_file(snapshot, blobs, name):
     try:
-        st = lstat(path)
+        st = os.stat(name, dir_fd=snapshot, follow_symlinks=False)
     except FileNotFoundError:
         return False
     if stat.S_ISREG(st.st_mode):
         return True
     if not stat.S_ISLNK(st.st_mode):
         return False
-    target = os.readlink(path)
-    resolved = (path.parent / target).resolve()
-    if os.path.isabs(target) or (model / "blobs").resolve() not in resolved.parents:
-        return False
-    return stat.S_ISREG(lstat(resolved).st_mode)
+    match = _BLOB_LINK.fullmatch(os.readlink(name, dir_fd=snapshot))
+    return bool(match) and _regular(blobs, match.group(1))
+
+
+def check_canonical_owner(root, account, *, max_entries=100_000, lookup=_lookup_account, lstat=None):
+    """G262-1/G266-5, opt-in: every entry under --root/memory/{persistent,history} belongs to the EXPECTED
+    service account (explicitly given, never inferred from who runs the acceptance; running the check AS
+    that account is fine), is private and is no link. The tree is walked by descriptors without following
+    any link; a directory replaced between its listing and its visit is a race, never followed. Nothing
+    is opened for content, changed or chown-ed. `lstat(path)` may override owner/mode for simulations."""
+    name = "memory.canonical_owner"
+    if root is None or account is None:
+        return {"check": name, "result": "UNKNOWN", "detail": "root or expected account not given"}
+    if type(max_entries) is not int or max_entries < 1:
+        return {"check": name, "result": "UNKNOWN", "detail": "invalid entry budget"}   # never a silent PASS
+    if (type(account) is not str or not account or len(account) > 32
+            or not all(c.isalnum() or c in "._-" for c in account)):
+        return {"check": name, "result": "FAIL", "detail": "invalid account name"}
+    uid, why = lookup(account)
+    if uid is None:
+        return {"check": name, "result": "UNKNOWN", "detail": why}
+    if type(uid) is not int or uid < 0:
+        return {"check": name, "result": "UNKNOWN", "detail": "invalid UID from the account database"}
+    if uid == 0:
+        return {"check": name, "result": "FAIL", "detail": "the service account must not be root"}
+
+    def owner_mode(path, st):
+        meta = lstat(path) if lstat is not None else st
+        return meta.st_uid, stat.S_IMODE(meta.st_mode)
+
+    def private(path, st):
+        owner, mode = owner_mode(path, st)
+        return owner == uid and not mode & 0o077
+
+    fds = []
+    try:
+        base = _walk(root)
+        fds.append(base)
+        memory = _open_child(base, "memory", "memory/")
+        fds.append(memory)
+        if not private(Path(root) / "memory", os.fstat(memory)):
+            return {"check": name, "result": "FAIL", "detail": "memory/ has another owner or is shared"}
+        seen, pending = 0, []
+        for part in ("persistent", "history"):
+            fd = _open_child(memory, part, "memory/" + part)
+            pending.append((Path(root) / "memory" / part, fd))
+            fds.append(fd)
+        while pending:
+            path, dfd = pending.pop()
+            if not private(path, os.fstat(dfd)):
+                return {"check": name, "result": "FAIL", "detail": "a directory has another owner or is shared"}
+            for entry in sorted(os.listdir(dfd)):
+                seen += 1
+                if seen > max_entries:
+                    return {"check": name, "result": "UNKNOWN", "detail": "entry budget exceeded"}
+                try:
+                    st = os.stat(entry, dir_fd=dfd, follow_symlinks=False)
+                except FileNotFoundError:
+                    return {"check": name, "result": "UNKNOWN", "detail": "the tree changed during the check"}
+                if stat.S_ISDIR(st.st_mode):
+                    try:
+                        child = os.open(entry, _DIRFLAGS, dir_fd=dfd)
+                    except OSError:
+                        return {"check": name, "result": "UNKNOWN", "detail": "the tree changed during the check"}
+                    fds.append(child)
+                    if (os.fstat(child).st_dev, os.fstat(child).st_ino) != (st.st_dev, st.st_ino):
+                        return {"check": name, "result": "UNKNOWN", "detail": "the tree changed during the check"}
+                    pending.append((path / entry, child))
+                elif not stat.S_ISREG(st.st_mode):
+                    return {"check": name, "result": "FAIL", "detail": "link or special file in the memory"}
+                elif not private(path / entry, st):
+                    return {"check": name, "result": "FAIL", "detail": "a file has another owner or is shared"}
+    except _Refused as exc:
+        detail = exc.detail.replace("cache path", "root").replace("incomplete cache: ", "")
+        if exc.result == "FAIL" and "missing" in exc.detail:
+            detail = "expected memory/persistent and memory/history"
+        elif exc.result == "FAIL":
+            detail = "root or an ancestor is a link or not a plain directory"
+        return {"check": name, "result": exc.result, "detail": detail}
+    except OSError:
+        return {"check": name, "result": "UNKNOWN", "detail": "metadata unreadable"}
+    finally:
+        for fd in reversed(fds):
+            os.close(fd)
+    return {"check": name, "result": "PASS",
+            "detail": f"{seen} entries owned by the expected account, private, no link; content not read"}
 
 
 def run(args):

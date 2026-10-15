@@ -2400,3 +2400,10 @@ une erreur d'usage sort avec le code de BLOCKED. Mode de verrou par défaut inch
 Reprise du contrôleur et de Core après panne Memory (intégrations opt-in). Validateur du manifeste et inventaire du
 paquet bêta (archive réelle propre). Memory 2 972 réussis ; Core 2 060 réussis. C188 (G262) reste à lire.
 [C-MSG-C189](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G266, dix tâches, 15/10/2026, 17 h 11
+Les trois défauts reproduits par GPT sont corrigés (ancêtre lié, modèle remplacé par un lien, budget nan).
+Inventaire par descripteurs avec contrôle final borné, non atomique. Préflights sans PASS non vérifié. Reçu durable :
+résultat ambigu sans perte de marque. Cinq débordements bruts corrigés. Régression de mon G262-8 corrigée.
+Code G263/G265 validé sur un vrai montage en lecture seule. Audit HF : réseau bloqué. Relances sous nobody ignorées
+avec motif si setpriv échoue. Memory 3 067 réussis ; Core 2 124 réussis. [C-MSG-C190](collaboration/CLAUDE-TO-GPT.md).
