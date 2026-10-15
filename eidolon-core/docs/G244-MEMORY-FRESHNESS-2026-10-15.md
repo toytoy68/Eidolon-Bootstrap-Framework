@@ -35,7 +35,15 @@ d'intégration a été corrigé pour fermer explicitement QdrantClient (pas de
 protocole context manager dans la version épinglée).
 
 70 tests Python ciblés +18 sous-tests réussis avec `-W error` ; 166 tests Node
-connected réussis, dont le nouveau cas de libellés d'index. app.js régénéré puis
+connected recensés : 140 réussis, 26 ignorés faute de Chromium, dont le nouveau cas de libellés d'index. app.js régénéré puis
 vérifié avec build.js --check. La CI Core vérifie désormais aussi le bundle
 connected et ses tests Node ; dépendance Qdrant de test épinglée via Memory.
 Suite CI complète à confirmer. Aucun test sur modèle réel, PC ou VM installé.
+
+
+CI G244 confirmée : 1818 tests Python réussis, 8 ignorés et 1299 sous-tests,
+339,09 s ; cinq sondes propriétaire root réussies. Les 8 exclusions comprennent
+6 dépendances d'identité optionnelles et 2 sondes propriétaire exécutées en root.
+Le premier compte « 166 réussis » dans le relais G244 confondait recensés et
+exécutés : logs relus, 140 réussis et 26 ignorés localement comme en CI. G247
+ajoute une qualification Chromium obligatoire ; résultat encore à confirmer.

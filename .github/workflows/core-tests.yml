@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: toytoy68/Eidolon-Memory-Engine
-          ref: 22f6a70e674da1b9c3291806e7d9d88cf1da779b
+          ref: 2b64d1e48ecc7b0769c5e724ea94f831c0d3fb6b
           path: memory-reference
       - uses: actions/setup-python@v5
         with:

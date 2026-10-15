@@ -1,0 +1,59 @@
+name: Core desktop Chromium qualification
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/eidolon-core-v0.1]
+    paths:
+      - 'eidolon-core/src/**'
+      - 'eidolon-core/desktop/connected/**'
+      - 'eidolon-core/desktop/prototype/**'
+      - '.github/workflows/core-desktop-browser.yml'
+concurrency:
+  group: core-desktop-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: eidolon-core
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated test dependencies and Chromium
+        run: |
+          python -m pip install 'cryptography>=43,<51'
+          npm install --prefix "$RUNNER_TEMP/eidolon-browser" --no-save --ignore-scripts playwright@1.62.1
+          node "$RUNNER_TEMP/eidolon-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/eidolon-browser/node_modules" >> "$GITHUB_ENV"
+          echo "CAPTURES=$RUNNER_TEMP/eidolon-browser-captures" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/eidolon-browser-captures"
+      - name: Require browser and Python, then qualify the committed desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const h=require("./desktop/connected/tests/helpers.js"); if(h.chromiumUnavailable || h.noPython) throw new Error(h.chromiumUnavailable || h.noPython)'
+          node desktop/connected/build.js --check
+          node --test --test-concurrency=2 --test-reporter=tap desktop/connected/tests/*.test.js desktop/connected/tests/integration/*.test.js | tee "$RUNNER_TEMP/eidolon-browser-results.tap"
+          rg -qx '# skipped 0' "$RUNNER_TEMP/eidolon-browser-results.tap"
+      - name: Preserve synthetic desktop qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-desktop-chromium
+          path: |
+            ${{ runner.temp }}/eidolon-browser-results.tap
+            ${{ runner.temp }}/eidolon-browser-captures/
+          if-no-files-found: ignore
+          retention-days: 7

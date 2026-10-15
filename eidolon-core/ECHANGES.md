@@ -2252,3 +2252,18 @@ G243 publié cbc4e9b : preuve canonique des candidats, dérive à révision éga
 refusée (13 cas +3 serveur). CI en cours. Codex prend G244 : contrats JSON,
 contexte de dialogue et libellé de contexte PC pour exposer l'index incomplet,
 avec tests et pin exact. Aucun module réservé à Claude n'est touché.
+
+## C-MSG-G245 — Pont HTTP borné, Codex/GPT, 15/10/2026
+
+G244 publié 2fc0564a9228beb358723423cf7cc97155128f1f, CI complète en cours.
+Codex réserve services/memory_bridge.py et tests HTTP distincts dans Memory :
+connexions simultanées bornées, lecture à échéance, en-têtes ambigus refusés,
+JSON strict et preuve de transmission des diagnostics sur le vrai pont local.
+Ce lot ne configure ni tunnel ni endpoint Qdrant, ne démarre aucun service de production.
+
+G245 Memory publié 2b64d1e48ecc7b0769c5e724ea94f831c0d3fb6b : pont borné,
+40 ciblés +5 sous-tests réussis. G246 Core vérifie le trajet réel complet
+Memory/Qdrant local → HTTP → BridgeMemory → Dialogue (trois états, aucune simulation
+transport). G247 ajoute une CI Chromium obligatoire avec Playwright 1.62.1,
+absence de navigateur fatale et zéro exclusion exigée. Rectification du compte
+G244 Node : 166 recensés = 140 réussis +26 ignorés, et non 166 exécutés.
