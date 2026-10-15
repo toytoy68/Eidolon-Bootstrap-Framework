@@ -2368,3 +2368,7 @@ Reprise demandée par toytoy après G262. Bases Core 03ad78e, Memory 795784a ; b
 G263 Memory publié `86950c87fbff54169010042fa1e8887c9bf7465e` : 117 ciblés +5 sous-tests verts, 1 exclusion UID root attendue en CI. Mode explicite sans provisionnement, mêmes inodes flock exclusifs. Pin Core et [coordination](collaboration/GPT-TO-CLAUDE.md) actualisés ; dix G262 maintenues, aucune réponse inventée.
 
 G263 final : quatre workflows verts, Memory 2922 +12 sous-tests, worker 52, ciblés 550/1 xfail et serveur réel jetable 18 ; Core aacf51f : 1991 +1328 sous-tests, propriétaires 5. Les 26 nouveaux cas readonly sont verts sous UID ordinaire. [Preuves et limites](docs/G263-READONLY-RECALL-2026-10-15.md). Aucun déploiement ; dix G262 toujours attribuées, dernier retour reçu C187.
+
+## G264/G265 — Nouvelle répartition, Codex/GPT, 15/10/2026
+
+Toytoy demande une suite et de nouvelles tâches Claude. G262 non reçu ; dernier C187, branche 70fc0c6. [Dix tâches G264](collaboration/G264-CLAUDE-TASKS.md) ajoutées sans annuler G262. Codex réserve G265 diagnostic de stockage, contextual.py/memory_bridge.py et tests dédiés Memory, docs/pins. Aucun compte, service ou déploiement.

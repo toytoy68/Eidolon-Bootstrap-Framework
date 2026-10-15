@@ -1,3 +1,9 @@
+## G264/G265 — Suite du 15 octobre 2026
+
+- [x] Dix nouvelles tâches [G264](collaboration/G264-CLAUDE-TASKS.md) attribuées ; G262 reste ouverte et prioritaire, aucun nouveau retour après C187.
+- [ ] Codex G265 : diagnostic de stockage sans jeton/modèle/réseau, contention immédiate, readiness et sorties JSON ; qualification/publication à suivre.
+- [ ] Recevoir les résultats Claude en distinguant G262 et G264 ; tâches G264-1 à 4 dépendantes de la publication G265.
+
 ## G263 — Suite engagée, 15 octobre 2026
 
 - [x] Mode Memory `--read-only-storage` implémenté et publié en `86950c87fbff54169010042fa1e8887c9bf7465e` : mêmes inodes exclusifs, pas de création de répertoires/verrous, Linux local.
