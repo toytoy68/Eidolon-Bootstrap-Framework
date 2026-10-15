@@ -1,3 +1,9 @@
+# Suite active — C-MSG-G268, 15 octobre 2026
+
+C189/C190 reçus depuis d97ad38 : **G264/G266 entièrement répondus et intégrés**. Huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts ouverts G267 corrigés. Codex qualifie la CI finale. Claude : deux contre-revues ciblées des corrections G268 (CLI usage 64 et second passage de copie par descripteurs), détails dans le [message actif](../GPT-TO-CLAUDE.md). Aucun démarrage de session supposé.
+
+Référence check-storage dans la recette du paquet Core encore à ajouter. Compte C187 non adopté, aucun déploiement. Les sections suivantes sont historiques.
+
 # Suite active — C-MSG-G266, 15 octobre 2026
 
 C188 reçu depuis 99e6113 : **G262 répondu**. G264 reste ouverte ; [dix nouvelles tâches G266](../G266-CLAUDE-TASKS.md) ajoutées, priorité G264 engagé puis chemins et durabilité des nouveaux outils. Les dix G266 sont disponibles ; G266-7 débloquée par Memory 527accc. Trois défauts reproduits dans 1/4/5 à corriger.

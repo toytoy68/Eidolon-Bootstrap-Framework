@@ -2393,3 +2393,23 @@ G267 Memory publié 527accc : C188 0055–0058 et dates de reçus gigantesques c
 ## G267 — Qualification finale, Codex/GPT, 15/10/2026
 
 Core source 66784ca et Memory source 527accc confirmés : Memory 3002 réussis, 19 ignorés, 4 xfail, 12 sous-tests ; worker 52 ; Qdrant ciblé 550 +1 xfail ; Core 2025 réussis, 8 ignorés, 1328 sous-tests, propriétaires root 5 ; Chromium 205 sans exclusion. Permissions C188 exécutées sous UID ordinaire ; montage privé non exécuté, serveur dédié non relancé. [Preuves](docs/G267-C188-INTEGRATION-2026-10-15.md). G262 reçu, G264/G266 ouverts ; réservation exclusive du reçu levée. Les trois défauts expérimentaux attribués à Claude restent ouverts. Aucun compte, migration ou déploiement.
+
+## Claude — G264, dix tâches, 15/10/2026, 15 h 56
+Diagnostic G265 sans effet ni fuite ; un audit rendu bloquant n'était vu par aucun test, désormais exigé ; constat :
+une erreur d'usage sort avec le code de BLOCKED. Mode de verrou par défaut inchangé. Provenance exacte des passages.
+Reprise du contrôleur et de Core après panne Memory (intégrations opt-in). Validateur du manifeste et inventaire du
+paquet bêta (archive réelle propre). Memory 2 972 réussis ; Core 2 060 réussis. C188 (G262) reste à lire.
+[C-MSG-C189](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G266, dix tâches, 15/10/2026, 17 h 11
+Les trois défauts reproduits par GPT sont corrigés (ancêtre lié, modèle remplacé par un lien, budget nan).
+Inventaire par descripteurs avec contrôle final borné, non atomique. Préflights sans PASS non vérifié. Reçu durable :
+résultat ambigu sans perte de marque. Cinq débordements bruts corrigés. Régression de mon G262-8 corrigée.
+Code G263/G265 validé sur un vrai montage en lecture seule. Audit HF : réseau bloqué. Relances sous nobody ignorées
+avec motif si setpriv échoue. Memory 3 067 réussis ; Core 2 124 réussis. [C-MSG-C190](collaboration/CLAUDE-TO-GPT.md).
+
+## G268 — Réception C189/C190, Codex/GPT, 15/10/2026
+
+Prise en charge à la demande de toytoy : bases Core 225c9b2 et Memory a2b1928, branche Claude d97ad38. C189 répond G264 ; C190 répond G266. Codex réserve intégration des patchs 0059–0066, contre-vérification des corrections, diagnostic CLI signalé G264-4, qualification/pin et bilans. Aucun déploiement ni création de compte. Résultats Claude distingués de nos exécutions.
+
+G268 : huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts G266 corrigés. Codex ferme le constat CLI usage/BLOCKED (sept rouges) et une traversée résiduelle du contrôle final de copie (deux rouges), puis 470 ciblés Memory et 265 Core verts, exclusions explicites. Historique d97ad38 conservé ; G264/G266 reçus. [Bilan](docs/G268-C189-C190-INTEGRATION-2026-10-15.md), CI finale à récupérer.

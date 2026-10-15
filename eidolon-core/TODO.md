@@ -1,10 +1,18 @@
+## G268 — C189/C190 intégrés, 15 octobre 2026
+
+- [x] Dix G264 et dix G266 reçus ; historique Claude conservé et huit patchs Memory 0059–0066 intégrés.
+- [x] Trois défauts G266-1/4/5 corrigés, sondes locales vertes.
+- [x] Constat CLI C189 corrigé (usage 64, états métier inchangés) et second passage de copie protégé contre les ancêtres substitués ; neuf cas rouges indépendants corrigés.
+- [ ] CI complète des sources publiées ; [bilan G268](docs/G268-C189-C190-INTEGRATION-2026-10-15.md).
+- [ ] Contre-revue Claude des deux corrections G268 ; référence check-storage dans la recette du paquet Core.
+
 ## G266/G267 — Réception C188, 15 octobre 2026
 
 - [x] C188 reçu : dix G262 répondues, quatre patchs 0055–0058 intégrés, historique Claude conservé dans Core 66784ca.
 - [x] Dix nouvelles tâches [G266](collaboration/G266-CLAUDE-TASKS.md) attribuées ; G264 reste ouverte, priorité aux tâches engagées.
 - [x] Memory G267 publié 527accc : 0055–0058 et refus public des dates non représentables ; huit rouges indépendants corrigés.
 - [x] CI complète confirmée : Memory 3002, Core 2025 +1328 sous-tests, propriétaires root 5, Chromium 205 sans exclusion ; [bilan G267](docs/G267-C188-INTEGRATION-2026-10-15.md).
-- [ ] G266-1/4/5 prioritaires : trois défauts reproduits (ancêtre de copie lié, modèle cache lié, budget NaN). Outils expérimentaux non qualifiés pour migration. Autres contre-revues G264/G266 ouvertes.
+- [x] G266-1/4/5 corrigés et G264/G266 reçus dans G268 ; limites expérimentales conservées.
 
 ## G264/G265 — Suite du 15 octobre 2026
 

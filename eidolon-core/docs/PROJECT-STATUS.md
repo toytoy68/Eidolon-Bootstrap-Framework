@@ -1,5 +1,11 @@
 # Eidolon — État consolidé du dépôt
 
+## G268 — Corrections C189/C190 reçues, 15 octobre 2026
+
+**G264 et G266 entièrement répondus et intégrés.** Memory source 02ac2e9, huit patchs 0059–0066 ; historique Claude d97ad38 conservé dans Core. Les trois anomalies G267 sont corrigées. Codex ajoute la distinction CLI usage/BLOCKED et protège le contrôle final de copie contre une substitution d'ancêtre. 470 tests Memory ciblés et 265 Core ciblés réussis, exclusions locales explicites ; CI complète en cours. [Bilan](G268-C189-C190-INTEGRATION-2026-10-15.md).
+
+Deux contre-revues ciblées G268 proposées à Claude ; les anciens statuts G264/G266 ci-dessous sont historiques. Compte C187 toujours proposé ; aucun déploiement.
+
 ## G266/G267 — C188 reçu et contre-vérifié, 15 octobre 2026
 
 **G262 entièrement répondu**, C188 2e0a9d7 reçu sur 99e6113 ; historique intégré. [Dix nouvelles tâches G266](../collaboration/G266-CLAUDE-TASKS.md), G264 encore ouverte. Memory 527accc publie 0055–0058 et corrige switched_at non représentable (huit rouges, neuf verts). 312 expérimentaux locaux verts avec limites explicites ; 142 outils Core verts, une exclusion UID ; CI complète confirmée : Memory 3002 réussis (19 ignorés, 4 xfail, 12 sous-tests), Core 2025 réussis (8 ignorés, 1328 sous-tests), propriétaires root 5, Chromium 205 sans exclusion. Core source 66784ca, Memory source 527accc ; comptes chevauchants. [Sources et preuves](G267-C188-INTEGRATION-2026-10-15.md).
