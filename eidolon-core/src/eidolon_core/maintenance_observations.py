@@ -105,9 +105,11 @@ def normalize_host_observation(raw, *, max_load_age=timedelta(seconds=120)):
             raise ObservationRefused("invalid load values")
         if observed - at > MAX_SKEW:
             raise ObservationRefused("load observation is in the future")
+        if observed < PLAUSIBLE_FLOOR:
+            notes.append("LOAD_IMPLAUSIBLE")
         if at - observed > max_load_age:
             notes.append("LOAD_STALE")
-        else:
+        elif observed >= PLAUSIBLE_FLOOR:
             load_ok = ratio <= limit
             if not load_ok:
                 notes.append("LOAD_HIGH")

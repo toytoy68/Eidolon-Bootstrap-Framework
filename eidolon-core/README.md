@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-**État courant — G251, 15 octobre 2026** : fraîcheur mémoire transmise au dialogue et visible dans le contexte PC, trajet HTTP complet testé, dix livrables Claude reçus et intégrés. Qualification Chromium : 172 réussis, aucun ignoré. [Bilan exact, CI et points ouverts](docs/PROJECT-STATUS.md). Aucun déploiement.
+**État courant — G254, 15 octobre 2026** : dix nouvelles tâches Claude G252 publiées. Vue d’index limitée dans la maintenance Memory et point d’entrée hôte explicite livrés ; les observations périmées sont refusées avant création du contrôleur. [Bilan exact, CI et limites](docs/PROJECT-STATUS.md). Aucun service ou déploiement activé.
 
 Les repères suivants sont historiques ; consulter le bilan courant pour les statuts actualisés.
 
