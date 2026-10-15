@@ -1,8 +1,67 @@
 # Eidolon — État consolidé du dépôt
 
-Mise à jour : 15 octobre 2026, lot G235, Codex/GPT.
+Mise à jour : 15 octobre 2026, lot G241, Codex/GPT.
 
-**Revue C179/C180 intégrée ; Q1, W1/W2 et A08 corrigés. Trois workflows réussis ; maintenance et recette VM/PC encore ouvertes.**
+**Lots G236–G241 publiés, C181 intégré et quatre workflows finaux verts. Dix tâches confiées à Claude : 1/2 reçues, 3–10 ouvertes.**
+
+## Validation finale G241
+
+Source Memory testée : `21d24121850e71b64c73163fd04e3a5ab231b970`.
+Source Core testée : `799377c49e21fd4d0aab3e018b86b33db94d17ad`, avec ce pin Memory.
+[Rapport Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/587d4a9b50357401d9150c46d977b2d72648835a/docs/G241-C181-INTEGRATION-2026-10-15.md).
+
+| Validation publiée | Résultat réel |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190711) | **2638 réussis, 15 ignorés, 5 xfail, 12 sous-tests**, 167,64 s |
+| Contrat réel du worker, même workflow | **52 réussis**, 2,71 s |
+| [Qdrant ciblé et sondes Claude](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190616) | **331 réussis, 1 xfail Q2**, 25,31 s |
+| [Serveur HTTP et backlog 1200](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190548) | **15 réussis, aucun ignoré, -W error**, 71,42 s |
+| [Core avec Memory G241](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38664324275) | **1789 réussis, 9 ignorés, 1299 sous-tests**, 270,37 s, aucun avertissement pytest |
+| Propriétaires/bornes/liens, étape root du même workflow Core | **5 réussis, aucun ignoré, -W error**, 0,11 s |
+
+Les 15 exclusions Memory sont les cas serveur exécutés séparément. Les 9 exclusions Core comprennent 7 dépendances d'identité optionnelles et 2 propriétaires vérifiés avec succès dans l'étape root. Comptes chevauchants, non additionnés. Les 5 xfail historiques restent ouverts ; les avertissements Node des actions GitHub sont distincts de pytest.
+
+Livré : reprise d'horloge auditée/idempotente, borne d'orphelins configurable, lectures worker bornées, diagnostic d'incompatibilité préservé, recettes HTTP avec pertes réelles de réponse et reprise d'un arriéré de 1200 documents. C181 et son historique sont intégrés, sondes supplémentaires en CI. Le défaut initial du proxy et le faux échec d'ordonnancement de la sonde Claude sont documentés, corrigés et requalifiés.
+
+Suite : contre-revues MT1/MT3/R1, ancienneté S1, séparation des ports, observations hôte, proposition sur les cycles d'import et recette VM/PC. Le canal MCP renvoie toujours une erreur interne au dernier contrôle. Aucun runtime activé, corpus privé, nouveau benchmark sémantique, suppression de production, déploiement ou fusion main.
+
+Les sections suivantes détaillent les étapes précédentes ; les mentions d'attente y sont historiques.
+
+## G239–G241 — Derniers lots
+
+Code applicatif Memory : `fb1b78d4a0adad2f90b0078cd874405258a0511d` (G239).
+Dernière base de tests Memory, épinglée Core : `21d24121850e71b64c73163fd04e3a5ab231b970` (G241).
+Historique Claude intégré : `6487f2112e59c206997a049fe0037fc1f38b1e61`, dont C181/0037.
+
+G239 conserve INDEX_INCOMPATIBLE dans les scanners et le contrôleur, sans promotion incertaine. [Suite Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38663335034) : 2635 réussis, 9 cas serveur ignorés dans la suite générale, 5 xfail, 12 sous-tests, 155,01 s ; contrat réel 52 réussis. Les cas serveur sont exécutés séparément.
+
+[Recette G238 HTTP](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662940807) : 9 réussis avec -W error (13,17 s), vrai serveur Qdrant 1.15.4 jetable. G240 : backlog 1200 et panne au milieu d'une page réussis ; premier run 11 réussis et 2 échecs de harnais, car le proxy coupait la réponse du descripteur avant le document attendu. G241 sépare les deux frontières d'effet, 15 cas serveur au total : **résultat corrigé à confirmer**. Aucun modèle réel ou VM.
+
+C181 confirme Q1/W1/A08. Trois sondes Memory ajoutées au workflow ciblé. Un faux échec d'ordonnancement du test de verrou est reproduit puis corrigé ; les mutants sans preuve/sans verrou échouent toujours (3 et 1 échecs), sources restaurées. Core conserve les cinq sondes Claude inchangées ; deux changements d'UID bloqués localement par EINVAL seront exécutés dans une étape CI root sur fichiers synthétiques. [Guide de préparation du jeton](MEMORY-BRIDGE-CREDENTIALS.md).
+
+[Dix tâches Claude](../collaboration/G236-CLAUDE-TASKS.md) : 1/2 reçues via C181, 3–10 ouvertes. La nouvelle réponse ne clôt pas MT1/MT3/R1 par revue indépendante. MCP toujours en erreur au dernier contrôle ; aucune commande VM. [Réponse complète](../collaboration/GPT-TO-CLAUDE.md).
+
+Les sections suivantes retracent les étapes précédentes ; les comptes ne s'additionnent pas.
+
+## G236–G238 — Suite active
+
+- Memory G236 `8a93466038a80fbaaf3eadc136d139c9739c863e` : reprise d'horloge explicite/auditée, défaut durable, reçu idempotent et budget d'orphelins configurable. Migration du checkpoint contrôleur 1→2 ; retour à un ancien binaire incompatible avec ce nouveau checkpoint.
+- Memory G237 `096e7bcc81258cc50510e6b0fa9e0d85ebc3e7af` : lectures worker bornées à 8 Mio/fichier par défaut, politique partagée avec le scanner, dépassements conservés pour revue sans bloquer les lignes saines. Pas de borne de RSS revendiquée.
+- Memory G238 `6e7ef5c65c397ee85c0d777f69677c51dbbbb2c6` : neuf cas sur serveur Qdrant HTTP jetable à exécuter dans un nouveau workflow. Binaire 1.15.4 vérifié par SHA-256 ; aucun serveur existant utilisé. **Résultat en attente**, exclusions locales explicites.
+
+| Validation observée | Résultat |
+| --- | --- |
+| [Memory G236](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662055230) | 2594 réussis, 5 xfail, 12 sous-tests ; contrat réel 35 réussis |
+| [Qdrant G236](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662055164) | 287 réussis, 1 xfail |
+| [Core G236](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38662300287) | 1786 réussis, 7 ignorés, 1299 sous-tests, aucun avertissement pytest ; 250,09 s |
+| [Memory G237](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662413157) | 2619 réussis, 5 xfail, 12 sous-tests ; 134,04 s ; contrat réel 52 réussis |
+| [Qdrant G237](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38662413171) | 312 réussis, 1 xfail ; 55,61 s |
+
+Les comptes se chevauchent. Core est maintenant épinglé sur G237 ; nouvelle CI à confirmer. [Dix tâches Claude](../collaboration/G236-CLAUDE-TASKS.md), dont contre-revues des trois correctifs, S1, ports, observations hôte, recette VM/PC et cycles d'import. Nouvelle réponse non encore observée. Codex réserve la distinction incompatibilité/panne dans les scanners (G239).
+
+Le MCP a encore retourné une erreur interne lors d'un contrôle de statut ; aucun état live de VM n'est affirmé. Ne pas relancer G182 avant lecture de ses résultats existants. Aucun déploiement, runtime activé, fusion main ou suppression réelle.
+
+Les sections suivantes sont historiques.
 
 ## G235 — Suite de la relecture Claude
 

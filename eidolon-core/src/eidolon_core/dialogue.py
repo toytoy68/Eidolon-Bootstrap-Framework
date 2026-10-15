@@ -57,7 +57,11 @@ SYSTEM_PROMPT = (
     "and never present it as current. "
     "When a factual answer relies on MEMORY, cite the supporting source as its exact "
     "information_id@revision from that MEMORY. Never invent a source identifier or cite "
-    "an unrelated source. For an absent fact, say the information is absent."
+    "an unrelated source. An empty result never proves the absence of a fact from memory: "
+    "retrieval is bounded and may be incomplete. If MEMORY.index_status is INDEX_STALE or "
+    "INDEX_UNVERIFIED, say that recall may miss information; do not claim a complete search. "
+    "INDEX_SNAPSHOT_MATCH only compares a source snapshot, not factual truth or semantic relevance. "
+    "For an unsupported fact, say it was not found in the provided context."
 )
 
 
@@ -409,9 +413,12 @@ class Dialogue:
         given = len(observations or [])
         used = diagnostics.get("observations_used", given)
         used = used if isinstance(used, int) and 0 <= used <= given else given
-        return {"history_sent": sent, "history_excluded": turn["sequence"] - 1 - sent, "memory": state,
+        note = {"history_sent": sent, "history_excluded": turn["sequence"] - 1 - sent, "memory": state,
                 "memory_items": len(items), "memory_truncated_items": sum(1 for i in items if i.get("truncated")),
                 "observations_sent": used, "observations_excluded": given - used}
+        if state == "sent" and memory is not None and memory.get("index_status") is not None:
+            note["memory_index"] = memory["index_status"]["state"]
+        return note
 
     def _close_interrupted(self, conversation_id, turn, client_id, client_turn_key, text):
         reply = cv.decide_reply(turn, None, self.catalog)

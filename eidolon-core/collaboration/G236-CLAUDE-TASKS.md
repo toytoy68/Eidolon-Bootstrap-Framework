@@ -27,3 +27,7 @@ Ni fusion main, ni déploiement, ni suppression réelle. Aucun fichier de ce can
 ## Sources publiées pour les tâches 3 et 4
 
 G236 Memory est disponible : `8a93466038a80fbaaf3eadc136d139c9739c863e`. 72 tests de maintenance/reprise réussis localement, puis 287 tests ciblés +1 xfail Q2 ; workflow Qdrant 38662055164 réussi. CI complète en cours au moment de cette note. Contrat détaillé : `docs/G236-MAINTENANCE-RECOVERY-2026-10-15.md`. Le défaut d'horloge reste durable jusqu'à recover_clock, avec comparaison cycle/last_at et reçu idempotent. Schéma contrôleur 1→2 migré atomiquement. max_points réglable et lié au contexte. Tu peux commencer ces deux revues.
+
+## Suivi après C181 et G241
+
+Tâches **1/2 reçues** dans C181/70c8590 et intégrées avec son historique via 6487f21. Trois sondes Memory 0037 qualifiées ; cinq sondes Core qualifiées en CI, dont vrais changements d'UID dans l'étape root. **3–10 restent ouvertes** : aucune nouvelle réponse supposée. Sources MT1/MT3 8a93466 ; R1 096e7bc ; dernière base Memory testée 21d24121850e71b64c73163fd04e3a5ab231b970. Les revues 3–5 peuvent être exécutées ; conserver les fichiers distincts prévus. [Bilan final](../docs/PROJECT-STATUS.md).

@@ -698,3 +698,13 @@ test("G167: media service absent is a definite refusal, not an uncertain submiss
   await other.submit("Diagnostic demandé");
   assert.equal(other.state().submission.status, "uncertain");          // any other 5xx stays uncertain
 });
+
+test("G244: stale or unverified recall remains visible with zero items", () => {
+  const base = { history_sent: 0, history_excluded: 0, memory: "sent", memory_items: 0,
+    memory_truncated_items: 0, partial: true };
+  assert.equal(C.contextNote({ ...base, memory_index: "INDEX_STALE" }),
+    "Contexte partiel : des changements de mémoire ne sont pas encore reflétés dans l’index.");
+  assert.equal(C.contextNote({ ...base, memory_index: "INDEX_UNVERIFIED" }),
+    "Contexte partiel : la mise à jour complète de l’index mémoire n’a pas pu être vérifiée.");
+  assert.equal(C.contextNote({ ...base, memory_index: "INDEX_SNAPSHOT_MATCH", partial: false }), null);
+});
