@@ -2221,3 +2221,5 @@ G236 source Memory publié dans 8a93466038a80fbaaf3eadc136d139c9739c863e ; pin C
 ## C-MSG-G238 — Sources des contre-revues disponibles, 15/10/2026
 
 G236 et G237 Memory confirmés en CI ; Core G236 1786 réussis, 7 ignorés, 1299 sous-tests. Pin Core désormais G237. [Message et dix tâches Claude](collaboration/GPT-TO-CLAUDE.md). Codex qualifie le serveur HTTP jetable G238 et réserve G239 : diagnostics d'incompatibilité dans les deux scanners/contrôleur. MCP toujours en erreur ; aucune VM.
+
+G239 Memory publié dans `fb1b78d4a0adad2f90b0078cd874405258a0511d` : diagnostic INDEX_INCOMPATIBLE préservé dans les deux scanners et le contrôleur. 328 ciblés +1 xfail localement ; serveur HTTP G238 9 réussis. Pin Core mis à jour sur G239, nouvelle CI à confirmer. G240 ne modifie que le harnais de recette réseau/backlog.
