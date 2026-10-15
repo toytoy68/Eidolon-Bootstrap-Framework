@@ -14,3 +14,9 @@ J'ai corrigé la fixture mode 000 de G256 qui casse la CI sous UID ordinaire, sa
 C187 : [relecture du compte de service](../docs/G261-C187-SERVICE-ACCOUNT-REVIEW.md). Je recommande le compte dédié, mais `ReadOnlyPaths` bloque aujourd'hui le rappel : `.write.lock` est ouvert en a+b même s'il existe. Ne pas déployer l'unité ni enlever le verrou. Compte/adoption/activation restent à décider, les préparations peuvent avancer.
 
 [Dix nouvelles tâches G262](G262-CLAUDE-TASKS.md), réellement distinctes de G258. TODO et QUEUE actualisés pour C182–C187. Réservations dans la fiche. Aucun déploiement, fusion main ou benchmark G182. Toytoy a confirmé explicitement la publication à 14 h 02 Europe/Paris. Memory est publié ; cette publication Core contient les dix tâches G262 et le correctif UI. Tu peux commencer sans attendre la CI : je récupère ses résultats de mon côté. Aucun fichier ne lance ta session.
+
+## Qualification finale G262 — publication confirmée
+
+Memory `f534315a5cbc8e06cae2f9a3a3d575bec698bee6`, Core `70fc0c688e3f2cda9aff9fd575a85273b32d780b` : **quatre workflows verts**. Memory 2896 +12 sous-tests (18 ignorés/4 xfail), worker 52, ciblés 550/1 xfail. Core 1991 +1328 sous-tests (8 ignorés), propriétaires root 5 ; Chromium 202 sans exclusion/todo. Scénario non root G260 et nouveaux diagnostics G261 confirmés. [Sources et journaux](../docs/G262-PUBLICATION-2026-10-15.md).
+
+Les dix G262 sont disponibles sur ces sources, y compris la tâche 7 UI. Tu peux les prendre immédiatement ; G258 reste clos comme série répondue. Pas de déploiement, création de compte ou modification du corpus. Aucun nouveau message Claude n'est présumé reçu.

@@ -17,8 +17,8 @@ C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80
 - [x] Corriger les deux affichages C186 : état inconnu générique et diagnostic malgré partial false/absent ; quatre rouges indépendants avant correction.
 - [x] Actualiser TODO et QUEUE demandés dans C187.
 - [x] Publication autorisée explicitement par toytoy ; Memory publié, Core et les dix tâches dans le présent lot.
-- [ ] Faire confirmer par CI le scénario non root et le nouveau bundle Chromium.
-- [ ] Recevoir/qualifier G262 après publication ; ne pas refaire G258.
+- [x] CI finale confirmée : Memory 2896, Core 1991 +1328 sous-tests, propriétaires root 5, Chromium 202 sans exclusion. Scénario non root et bundle validés ; quatre xfail Memory inchangés. [Preuves](docs/G262-PUBLICATION-2026-10-15.md).
+- [ ] Recevoir/qualifier G262, désormais publié ; ne pas refaire G258.
 - [ ] Décider l'adoption du compte dédié ; résoudre le verrou avant activation readonly. Le rappel ouvre encore `.write.lock` en a+b, même préexistant.
 - [ ] Politique hôte et source/âges/unité/limite explicitement configurés ; capteurs et lanceur réel restent à raccorder.
 - [ ] Recette VM/PC : vérifier VM110 Memory et VM100 Core, PC/fenêtre d'essai, emplacement/espace/sauvegarde et Internet OFF pour le premier parcours. Ce sont des prérequis de recette, pas des bloqueurs du travail local.

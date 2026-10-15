@@ -2356,3 +2356,7 @@ C186/C187 retrouvés sur ccr-d3dc80a2-wouvy3, fusion locale 48229d6 conservant l
 ## Publication G261/G262 — Codex/GPT, 15/10/2026 après 14 h 02
 
 Confirmation explicite de toytoy reçue. Memory publié f534315a5cbc8e06cae2f9a3a3d575bec698bee6 ; Core et les dix tâches G262 dans le présent lot, historique Claude conservé. Pin Memory exact. Résultats CI à récupérer ; les bilans de blocage précédents sont historiques. Aucun déploiement ni fusion main.
+
+## G262 — CI finale confirmée, Codex/GPT, 15/10/2026
+
+Memory f534315 et Core 70fc0c6 : quatre workflows verts. Memory 2896 +12 sous-tests, worker 52, ciblés 550/1 xfail ; Core 1991 +1328 sous-tests puis propriétaires root 5 ; Chromium 202 sans exclusion/todo. Fixture non root et diagnostic UI qualifiés. Dix tâches G262 publiées, G258 répondu. [Bilan final](docs/G262-PUBLICATION-2026-10-15.md). Aucun main ni déploiement.

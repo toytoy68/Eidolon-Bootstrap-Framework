@@ -1,16 +1,23 @@
 # Eidolon — État consolidé du dépôt
 
-## G261/G262 — Point courant, 15 octobre 2026
+## G261/G262 — Publication et qualification finales, 15 octobre 2026
 
-Auteur : Codex/GPT. C186 et C187 retrouvés sur `ccr-d3dc80a2-wouvy3` (`0a0f897`) et intégrés avec leur historique Claude conservé par second parent `0a0f897`. **G258 entièrement répondu.** Le lot G260 est annulé ; [dix nouvelles tâches G262](../collaboration/G262-CLAUDE-TASKS.md) publiées dans le présent lot.
+Auteur : Codex/GPT. **Quatre workflows verts ; dix nouvelles tâches Claude G262 publiées.** [Bilan, sources exactes et liens de preuve](G262-PUBLICATION-2026-10-15.md).
 
-- **Memory** : patchs Claude 0052–0054 publiés dans `f534315`, sources originales conservées dans Core. 23 nouvelles sondes vertes ; compte complet local : 2890 réussis, six échecs (cinq AF_UNIX refusés par le runtime ; un socksio absent, ensuite recontrôlé vert), 18 ignorés, quatre xfail, 12 sous-tests. Aucun total entièrement vert revendiqué. [Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/refactor/architecture-v1/docs/G261-C186-INTEGRATION-2026-10-15.md) publié.
-- **Core** : 130 ciblés Python verts avec Memory activée. Nettoyage de fixture non root G260 corrigé, validation effective non root encore à obtenir. Diagnostic UI G261 : quatre cas rouges avant correction, état INDEX_ futur générique et STALE/UNVERIFIED visibles même si partial manque/false. Suite Core locale : 1928 réussis, 22 échecs de primitives système refusées (20 AF_UNIX, 2 chown), 51 ignorés, 1317 sous-tests. Les 160 tests Node exécutables passent, 36 tests navigateur ignorés ici ; bundle synchronisé. Chromium indisponible (échec de téléchargement), nouvelle qualification navigateur requise en CI.
-- **Compte dédié C187** : recommandé, pas adopté ni activé. [Blocage reproduit et revue](G261-C187-SERVICE-ACCOUNT-REVIEW.md) : le rappel ouvre `.write.lock` en a+b, incompatible avec le montage readonly même si le verrou est précréé.
-- **Suivi actualisé** : TODO.md et collaboration/tasks/QUEUE.md ; G236/C182, G252/C184, G256/C185, G258/C186 et proposition C187 distingués. [Rapport G261](G261-C186-QUALIFICATION-2026-10-15.md).
-- **Publication autorisée explicitement à 14 h 02** : Memory `f534315` publié, Core et les dix tâches G262 dans le présent lot ; pin CI Memory exact. Les résultats des nouveaux workflows restent à récupérer, sans leur attribuer ceux de G259.
+| Source qualifiée | Résultat |
+| --- | --- |
+| Memory f534315 | 2896 réussis, 18 ignorés, 4 xfail, 12 sous-tests ; worker 52 réussis |
+| Contrat Qdrant ciblé f534315 | 550 réussis, 1 xfail |
+| Core 70fc0c6 avec pin Memory f534315 | 1991 réussis, 8 ignorés, 1328 sous-tests ; propriétaires root 5 réussis |
+| Chromium 70fc0c6 | 202 réussis, aucun échec, ignoré ou todo |
 
-MCP toujours en erreur interne. Aucune VM touchée, aucun compte créé, aucune migration, aucun déploiement ni fusion main. Aucune relance G182. Les sections suivantes sont historiques.
+C186/C187 intégrés en conservant les commits Claude et les trois patchs originaux 0052–0054. G258 entièrement répondu ; G260 annulé. [Dix tâches G262](../collaboration/G262-CLAUDE-TASKS.md) disponibles, aucune nouvelle réponse supposée.
+
+Fixture de permissions G260 confirmée sous utilisateur ordinaire. Diagnostic UI G261 et bundle qualifiés dans Chromium : état futur générique et STALE/UNVERIFIED visibles malgré partial faux/absent, uniquement pour la mémoire envoyée. Les limites du runtime local restent consignées dans [le rapport d'intégration](G261-C186-QUALIFICATION-2026-10-15.md), complété par la CI réelle.
+
+Compte dédié C187 recommandé, pas adopté ni activé : [blocage readonly](G261-C187-SERVICE-ACCOUNT-REVIEW.md), ouverture a+b de .write.lock même préexistant. Préparations et contre-revues G262 en attente de Claude. TODO et QUEUE actualisés.
+
+Les exclusions et xfail restent explicites ; aucune nouvelle recette serveur Qdrant/VM/PC/modèle réel. Aucun main, déploiement, compte créé, migration ou relance G182. MCP indisponible au dernier contrôle. Les bilans ci-dessous sont historiques.
 
 ## Historique — G260 avant récupération de la branche Claude
 
