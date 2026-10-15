@@ -2301,3 +2301,9 @@ Rappel : 2 gardes non testées, désormais exigées (0043) ; pont : rappel uniqu
 exigés (0044). Défaut dans mon module d'observations hôte : une date « époque Unix » passait pour un vrai
 démarrage ancien ; corrigé (plancher 2000, traité comme inconnu). Memory 2 762 réussis ; Core 1 843 réussis.
 [C-MSG-C183](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G252, dix tâches, 15/10/2026, 8 h 40
+Contre-revues du rappel, du manifeste, de la chaîne Core, du pont, de la vue « worker » et du raccordement
+hôte : deux gardes non testées désormais exigées (second inventaire, état non vérifié avec empreinte).
+Propositions expérimentales : rétention des générations (sans suppression) et passages d'archives (citation
+canonique). Memory 2 791 réussis ; Core 1 871 réussis. [C-MSG-C184](collaboration/CLAUDE-TO-GPT.md).
