@@ -1,6 +1,11 @@
 # Compte de service dédié pour Memory (Claude, demande de toytoy)
 
-Auteur : Claude. Date : 15/10/2026, Europe/Paris. Statut : **proposition**.
+Auteur : Claude. Date : 15/10/2026, Europe/Paris. Statut : **proposition, révisée en G262-5**.
+
+> **Révision G262-5.** Le § 2.3 d'origine (canon entier en `ReadOnlyPaths=`) **bloque le rappel** :
+> le verrou `.write.lock` est ouvert en `a+b`, même s'il existe (relecture GPT G261, confirmé par les
+> sondes G262-2 et par un vrai montage en lecture seule). La [section 6](#6-révision-g262-5--profil-corrigé)
+> remplace les § 2.2 et 2.3. Les autres sections restent valables, sauf mention contraire.
 Rien n'est exécuté par ce document. Les commandes sont à relire par GPT et à
 lancer par toytoy sur la VM, **après** une sauvegarde vérifiée.
 
@@ -157,3 +162,102 @@ explicite de toytoy.
 - Elle ne change pas les comptes des autres services (Core, tunnels,
   tableau de bord) : ce sera une décision séparée, sur le même modèle.
 - Elle ne supprime aucune donnée.
+
+## 6. Révision G262-5 : profil corrigé
+
+### 6.1 Ce qui a été établi (G262-2, G262-3, G262-6)
+
+| Constat | Preuve |
+| --- | --- |
+| Le `--root` du pont contient **`memory/persistent` et `memory/history`** (`history/pending-delete` compris) ; la copie doit garder cette structure. | code de `services/memory_bridge.py` ; relecture GPT G261 |
+| Les constructeurs (`FilesystemBackend`, `ContextualRecall`) tentent des `mkdir(exist_ok=True)`, sans effet si l'arborescence **existe déjà**, même en lecture seule. | sonde G262-2 ; vrai montage RO : `mkdir` d'un dossier existant donne `EEXIST` |
+| Un rappel ouvre en `a+b` `persistent/.write.lock` et, si `threads/` existe, `threads/.write.lock`. Il **crée** un verrou absent et ne modifie aucun autre octet. | trace G262-2 (verrou présent ou absent) |
+| Canon entier en lecture seule : le rappel échoue en `EROFS` sur le verrou, **qu'il existe ou non**. | EROFS simulé et vrai montage RO (`unshare -m`) |
+| Canon en lecture seule **sauf les deux fichiers de verrou**, préexistants et rendus inscriptibles : le rappel **fonctionne**, aucune autre création n'est possible, et le verrou reste le même inode que celui des écrivains. | vrai montage RO avec deux montages de fichiers en écriture, code Memory inchangé |
+| Variante sans écriture du tout : verrou préexistant ouvert en `O_RDONLY` puis `flock`. L'exclusion avec le vrai écrivain fonctionne, y compris à travers le montage RO. **Demande un changement de code** côté lecteur. | prototype G262-3 (`lock_contract.py`), 9 tests |
+| Reranker : avec un cache complet et **préparé** (`version.txt` présent), le chargement n'écrit rien et n'ouvre aucune connexion. Sans préparation, il tente `mkdir $HF_HOME/hub` puis d'écrire `version.txt`. Si le cache est incomplet, il annonce à tort « impossible de se connecter à huggingface.co ». | audit G262-6, sous l'UID `nobody`, transformers 4.44.2 sans torch |
+
+### 6.2 Matrice besoins / directives
+
+| Besoin | Pont (lecture) | Worker et tick (écriture, même UID) | Directive systemd |
+| --- | --- | --- | --- |
+| Lire le canon | oui | oui | `ReadOnlyPaths=<root>/memory` (pont) ; `ReadWritePaths=<root>/memory` (worker) |
+| Verrou d'écriture partagé | **ouvrir en écriture les 2 fichiers existants** | créer et ouvrir | pont : `ReadWritePaths=<root>/memory/persistent/.write.lock <root>/memory/persistent/threads/.write.lock` |
+| Créer un verrou manquant | **non** : à préparer avant | oui | — |
+| Écrire le canon, `history/pending-delete` | non | oui | worker seulement |
+| État Qdrant, journal, curseurs | non | oui | `StateDirectory=eidolon-memory` (worker) |
+| Cache des modèles | lecture | lecture ou aucun | `ReadOnlyPaths=/var/cache/eidolon-memory/models` ; `Environment=HF_HOME=… HF_HUB_CACHE=…` ; variables hors ligne |
+| Jeton du pont | lu au démarrage | non | `EnvironmentFile=` root 0600 (systemd le lit avant de changer de compte) |
+| Réseau | écoute sur `127.0.0.1` | client Qdrant local | `RestrictAddressFamilies=AF_INET AF_UNIX` |
+| Dossier personnel | non | non | `ProtectHome=yes` |
+
+**Même UID, protections différentes.** Les restrictions systemd s'appliquent **par unité**. Le pont
+est protégé contre ses propres écritures dans le canon. Le worker, lui, peut écrire, et un processus
+du même UID qui contournerait systemd n'est pas confiné. Ce n'est pas une isolation entre processus
+(relecture GPT G261). Un second compte ne sera proposé que si un besoin est démontré.
+
+### 6.3 Profil du pont, version intermédiaire (sans changement de code)
+
+```ini
+User=eidolon-memory
+Group=eidolon-memory
+ExecStart=/opt/eidolon-memory-engine/.venv/bin/python -B -m services.memory_bridge \
+  --root /var/lib/eidolon-memory --port 18765 --reranker-cache /var/cache/eidolon-memory/models
+Environment=HF_HOME=/var/cache/eidolon-memory/models HF_HUB_CACHE=/var/cache/eidolon-memory/models
+Environment=HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false
+ProtectSystem=strict
+ProtectHome=yes
+ReadOnlyPaths=/var/lib/eidolon-memory/memory /var/cache/eidolon-memory/models
+ReadWritePaths=/var/lib/eidolon-memory/memory/persistent/.write.lock
+ReadWritePaths=/var/lib/eidolon-memory/memory/persistent/threads/.write.lock
+# + NoNewPrivileges, CapabilityBoundingSet=, PrivateTmp, PrivateDevices, Protect*, RestrictSUIDSGID,
+#   RestrictAddressFamilies=AF_INET AF_UNIX, UMask=0077 (inchangés par rapport au § 2.3)
+```
+
+**Ce qui reste à vérifier sur la VM**, car je n'ai pas pu exécuter systemd ici. Mon essai a reproduit
+le mécanisme (montages *bind* RO, plus un fichier RW par-dessus) avec `unshare -m`.
+
+1. `systemd-analyze verify` accepte des **fichiers** dans `ReadWritePaths=` imbriqués sous un
+   `ReadOnlyPaths=` (la règle la plus précise l'emporte) ;
+2. l'unité démarre ;
+3. un rappel réel réussit ;
+4. `touch` dans le canon échoue sous l'unité.
+
+**Préconditions de démarrage**, ajoutées au § 3 :
+
+- les **deux** verrous existent ;
+- `threads/` existe, sinon le second chemin `ReadWritePaths=` empêche le démarrage ;
+- `history/pending-delete` existe ;
+- le cache des modèles est complet **et préparé** : un premier chargement est fait avec les droits
+  d'écriture, avant de réduire les droits.
+
+Le préflight vérifie tout cela :
+
+- `--memory-root` et `--service-account` (G262-1) ;
+- `--reranker-cache` (G262-6).
+
+**Limite de la version intermédiaire.** Un écrivain qui crée plus tard `threads/` et son verrou après le
+démarrage du pont crée un fichier que le pont ne peut pas ouvrir en `a+b` : le rappel échouerait en
+`EROFS`. Il faut donc créer `threads/` et ses verrous **à la préparation**, ou adopter la version cible.
+
+### 6.4 Version cible (changement de code, à décider par GPT)
+
+Le lecteur ouvre le verrou existant en `O_RDONLY`, sans le créer, puis le verrouille avec `flock`
+(G262-3, mode « legacy » du prototype).
+
+- Le pont n'a alors **plus aucun** `ReadWritePaths=` dans le canon.
+- Les écrivains gardent leur code, et il y a **un seul** verrou.
+- Un verrou absent donne `LOCK_ABSENT` : refus explicite, jamais de rappel sans verrou.
+- Une substitution est refusée.
+
+Le mode « external » du prototype (verrou déclaré dans un manifeste du canon) n'est utile que si l'on
+veut un jour sortir le verrou du canon. Il n'est pas nécessaire pour le compte de service.
+
+### 6.5 Ordre révisé (complète le § 3)
+
+Insérer entre les étapes 5 et 7 :
+
+- **5 bis** : créer, avec le compte de service, `threads/`, les deux `.write.lock` et `history/pending-delete` ;
+- **6 bis** : préparer le cache (un chargement avec écriture, puis passage du cache en propriété root et lecture seule) ;
+- **6 ter** : préflight avec `--memory-root`, `--service-account` et `--reranker-cache`, tout en `PASS` ;
+- **6 quater** : comparer la copie avec `tools/claude_copy_inventory.py` (G262-4) : `IDENTICAL`, code 0.

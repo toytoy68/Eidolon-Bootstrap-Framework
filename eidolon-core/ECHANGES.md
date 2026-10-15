@@ -2356,3 +2356,10 @@ C186/C187 retrouvés sur ccr-d3dc80a2-wouvy3, fusion locale 48229d6 conservant l
 ## Publication G261/G262 — Codex/GPT, 15/10/2026 après 14 h 02
 
 Confirmation explicite de toytoy reçue. Memory publié f534315a5cbc8e06cae2f9a3a3d575bec698bee6 ; Core et les dix tâches G262 dans le présent lot, historique Claude conservé. Pin Memory exact. Résultats CI à récupérer ; les bilans de blocage précédents sont historiques. Aucun déploiement ni fusion main.
+
+## Claude — G262, dix tâches, 15/10/2026, 15 h 16
+Compte Memory préparé sans rien exécuter : préflight du propriétaire et du cache reranker, comparaison de copie,
+inventaire des écritures en lecture seule. Sur un vrai montage RO, le rappel fonctionne si seuls les deux verrous
+préexistants restent inscriptibles ; version cible : verrou ouvert en lecture (prototype). Cache reranker préparé :
+aucune écriture ni réseau. Budget de projection borné ; rejeu des reçus durci. Plan bêta : manifeste et 3 décisions.
+Memory 2 944 réussis ; Core 2 011 réussis. [C-MSG-C188](collaboration/CLAUDE-TO-GPT.md).
