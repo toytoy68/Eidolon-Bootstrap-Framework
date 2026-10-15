@@ -60,7 +60,7 @@ function Show-Eidolon {
     }
 }
 $EidolonOpen = $EidolonMenu.Items.Add('Ouvrir Eidolon')
-$EidolonOpen.add_Click({ try { Show-Eidolon } catch { [void][Windows.Forms.MessageBox]::Show('Vérifiez le tunnel Core et l’empreinte du client, puis réessayez.', 'Eidolon') } })
+$EidolonOpen.add_Click({ try { Show-Eidolon } catch { [void][Windows.Forms.MessageBox]::Show("Vérifiez le tunnel Core et l'empreinte du client, puis réessayez.", 'Eidolon') } })
 $EidolonClose = $EidolonMenu.Items.Add('Fermer la conversation')
 $EidolonClose.add_Click({ if ($null -ne $script:EidolonProcess -and -not $script:EidolonProcess.HasExited) { [void]$script:EidolonProcess.CloseMainWindow() } })
 $EidolonQuit = $EidolonMenu.Items.Add('Quitter Eidolon')
@@ -68,7 +68,7 @@ $EidolonQuit.add_Click({
     if ($null -ne $script:EidolonProcess -and -not $script:EidolonProcess.HasExited) {
         [void]$script:EidolonProcess.CloseMainWindow()
         if (-not $script:EidolonProcess.WaitForExit(2000)) {
-            [void][Windows.Forms.MessageBox]::Show('Fermez la fenêtre Eidolon avant de quitter. Aucun processus n’a été forcé.', 'Eidolon')
+            [void][Windows.Forms.MessageBox]::Show("Fermez la fenêtre Eidolon avant de quitter. Aucun processus n'a été forcé.", 'Eidolon')
             return
         }
     }

@@ -18,6 +18,14 @@ jobs:
         working-directory: eidolon-core/desktop/tauri
     steps:
       - uses: actions/checkout@v4
+      - name: Parse Windows scripts before compilation
+        shell: powershell
+        run: |
+          Get-ChildItem ../windows/*.ps1 | ForEach-Object {
+            $tokens=$null; $errors=$null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors)
+            if ($errors.Count) { throw ($errors | Out-String) }
+          }
       - name: Native client tests and release build (locked dependencies)
         run: |
           cargo test --locked
@@ -27,11 +35,6 @@ jobs:
       - name: Parse Windows scripts and exercise side-effect-free previews
         shell: powershell
         run: |
-          Get-ChildItem ../windows/*.ps1 | ForEach-Object {
-            $tokens=$null; $errors=$null
-            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors)
-            if ($errors.Count) { throw ($errors | Out-String) }
-          }
           $exe=(Resolve-Path target/release/eidolon-consultation.exe).Path
           $hash=(Get-FileHash $exe -Algorithm SHA256).Hash
           $script=(Resolve-Path ../windows/eidolon-resident.ps1).Path
