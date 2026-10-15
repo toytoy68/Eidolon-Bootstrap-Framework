@@ -1,3 +1,19 @@
+## Mise à jour G269 — préparation PC/VM du 17–18 octobre 2026
+
+- [x] C191 intégré ; patch Memory 0067 reçu et sondes conservées.
+- [x] Pont Memory raccordable à un index Qdrant configuré explicitement et modèle Ollama épinglé.
+- [x] Index durable de passages, alias/projection distincts, reconstruction complète et citations canoniques.
+- [x] Mémorisation opérateur : aperçu exact, approbation par empreinte, écriture journalisée idempotente.
+- [x] Politique/lecteur hôte adoptés, collecteur et entrée `maintenance_host` pour un tick explicite.
+- [x] Dossier week-end, configuration, inventaires, 26 cas, rollback et générateur de paquet à deux SHA.
+- [ ] Parcours « retenir ceci » dans le chat Core, identité/autorisation et accusé de réception de bout en bout.
+- [ ] Producteur automatique et authentifié de reçus d'activité Core ; timer non activable sans lui.
+- [ ] Maintenance incrémentale des passages ; le worker actuel reste documentaire et les refuse.
+- [ ] Qualification VM/Windows, corpus/modèles réels, isolation UID/montage, restauration/endurance et ressources.
+- [ ] Décision compte C187, seuils/chemins effectifs ; activation seulement après recette et revue.
+
+[Rapport unique G269 et dossier](weekend/2026-10-17/README.md). Les cases de développement cochées ne qualifient pas la bêta ; Web, profils actifs, biométrie, NAS et moteurs média restent dans le backlog antérieur.
+
 ## G268 — C189/C190 intégrés, 15 octobre 2026
 
 - [x] Dix G264 et dix G266 reçus ; historique Claude conservé et huit patchs Memory 0059–0066 intégrés.

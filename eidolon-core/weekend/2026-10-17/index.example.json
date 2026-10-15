@@ -1,0 +1,14 @@
+{
+  "schema": "eidolon-index-runtime/1",
+  "alias": "eidolon_weekend_archive",
+  "model": "qwen3-embedding:0.6b",
+  "model_digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+  "dimensions": 1024,
+  "query_instruction": "Given a question, retrieve relevant passages from a personal memory archive that answer the question",
+  "ollama_port": 11434,
+  "qdrant_port": 6333,
+  "timeout_seconds": 30,
+  "max_input_chars": 16000,
+  "num_ctx": 2048,
+  "projection": "archive_passages"
+}

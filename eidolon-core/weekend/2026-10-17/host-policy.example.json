@@ -1,0 +1,8 @@
+{
+  "schema": "eidolon-host-maintenance-policy/1",
+  "expected_source": "host.eidolon",
+  "max_observation_age_seconds": 120,
+  "max_load_age_seconds": 120,
+  "load_unit": "load1_per_cpu",
+  "load_limit": 0.7
+}

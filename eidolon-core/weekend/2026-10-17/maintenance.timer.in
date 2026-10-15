@@ -1,0 +1,10 @@
+# Candidate only. No automatic enablement. A killed tick must be reviewed/replayed explicitly.
+[Unit]
+Description=Eidolon candidate maintenance observation
+[Timer]
+OnCalendar=*-*-* 04..07:*:00 Europe/Paris
+AccuracySec=15s
+Persistent=false
+Unit=__REVIEWED_SERVICE_NAME__.service
+[Install]
+WantedBy=timers.target

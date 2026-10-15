@@ -1,0 +1,189 @@
+{
+  "schema": "eidolon-weekend-evidence/1",
+  "core_commit": null,
+  "memory_commit": null,
+  "checks": [
+    {
+      "id": "V01",
+      "criterion": "Inventaire PC/VM et SHA exacts enregistrés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V02",
+      "criterion": "Sauvegarde arrêtée et restauration sur copie vérifiées",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V03",
+      "criterion": "Dépendances, modèles hors ligne et empreintes contrôlés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V04",
+      "criterion": "Stockage canonique check-storage READY sous le compte prévu",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V05",
+      "criterion": "Montage/permissions readonly : écriture interdite, rappel possible",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V06",
+      "criterion": "Reconstruction passages sur copie et alias de recette distinct",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V07",
+      "criterion": "Rappel vrai/paraphrase/hors sujet avec citations et fraîcheur correctes",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V08",
+      "criterion": "Qdrant/Ollama absents : erreur explicite, aucun succès lexical masqué",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V09",
+      "criterion": "Remember aperçu/appliquer/rejouer : un seul souvenir, UNVERIFIED",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V10",
+      "criterion": "Maintenance : charge haute, activité récente, boot récent et absence activité différés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V11",
+      "criterion": "Maintenance documentaire : un tick et reprise durables, aucune suppression",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V12",
+      "criterion": "Redémarrage/retour ancienne version sur copie sans perte",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P01",
+      "criterion": "Tunnel SSH local, empreinte hôte et authentification vérifiés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P02",
+      "criterion": "Dialogue réel, historique et relance du client",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P03",
+      "criterion": "Coupure réseau et retour : état périmé, pas de double action",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P04",
+      "criterion": "Micro réel : permissions, dictée, silence et refus de permission",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P05",
+      "criterion": "Haut-parleurs/casque : voix réelle, arrêt et feedback",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P06",
+      "criterion": "Webcam réelle : permission, aperçu, arrêt, débranchement",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P07",
+      "criterion": "Échelles 100/125/150 %, clavier et lecture erreurs",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P08",
+      "criterion": "Concurrence voix/modèle : CPU/RAM/VRAM et délai observés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P09",
+      "criterion": "Session prolongée et redémarrage Windows sans jeton dans URL/logs",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P10",
+      "criterion": "Guide WINDOWS-WEEKEND W1–W21 rempli avec réserves",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O01",
+      "criterion": "Compte de service, chemins et autorisations décidés explicitement",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O02",
+      "criterion": "Logs de démarrage/arrêt et supervision vérifiés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O03",
+      "criterion": "Fenêtre 04–08 Europe/Paris et seuils de charge approuvés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O04",
+      "criterion": "Go/no-go humain sur preuves, blocages et périmètre bêta",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    }
+  ]
+}

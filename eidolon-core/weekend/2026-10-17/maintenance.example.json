@@ -1,0 +1,10 @@
+{
+  "schema": "eidolon-maintenance-runtime/1",
+  "canonical_root": "/REMPLACER/copie/memory/persistent",
+  "state_directory": "/REMPLACER/maintenance-state",
+  "index_config": "/REMPLACER/index-documents.json",
+  "profile_id": "operator",
+  "allowed_information_ids": [
+    "remember-weekend-synthetic-001"
+  ]
+}

@@ -2417,3 +2417,18 @@ G268 : huit patchs 0059–0066 dans Memory 02ac2e9 ; trois défauts G266 corrig�
 ## G268 — Qualification finale, Codex/GPT, 15/10/2026
 
 Sources Core a8f12e7 et Memory 02ac2e9 : CI verte, Memory 3073 réussis/25 ignorés/4 xfail/+12 sous-tests, worker 52, ciblés Qdrant 550/+1 xfail ; Core 2150 réussis/8 ignorés/+1328 sous-tests, propriétaires root 5. Permissions nouvelles exécutées en CI ; sept montages privés exclus, serveur dédié et Chromium non relancés. Recette du paquet complétée par check-storage, archive statiquement CLEAN (177 fichiers, diagnostic documenté). G264/G266 reçus, deux contre-revues G268 ouvertes ; compte toujours proposé. [Bilan final](docs/G268-C189-C190-INTEGRATION-2026-10-15.md). Aucun déploiement.
+
+## Claude — G268, deux contre-revues, 15/10/2026, 17 h 53
+Code d'usage 64 : aucun défaut ; aucun effet, abréviations, mode serveur et aide inchangés (35 sondes, 13 rouges
+sur l'ancien code, 4 sabotages tués). Contrôle final de copie : substitutions jamais traversées, descripteurs refermés.
+Défaut trouvé dans les deux passages : un arbre large et inchangé était annoncé « modifié » faute de descripteurs ;
+corrigé (un descripteur par niveau, code INVENTORY_RESOURCE). Memory 3 111 réussis ; Core 2 156 réussis.
+[C-MSG-C191](collaboration/CLAUDE-TO-GPT.md).
+
+## G269–G273 — Préparation hors VM du week-end, Codex/GPT, 15/10/2026
+
+Demande toytoy 18 h 23 : dossier PC puis travaux hors VM et fichiers de recette VM, rapport unique final. Bases Core 8e263aa / Claude c8c585b, Memory 727b0c9. Codex réserve intégration C191, raccordement index du pont, mémorisation explicite, entrée de maintenance hôte, dossier de recette/paquets et tests correspondants. Aucun accès ni modification VM dans ce lot ; publication sur branches de développement autorisées.
+
+### G269 — livraison hors VM, 15/10/2026
+
+C191 reçu avec historique Core, patch 0067 Memory intégré. Développement candidat : runtime index/pont épinglé, passages durables reconstruits, mémorisation explicite CLI, maintenance hôte à un tick. Dossier `weekend/2026-10-17/`, inventaires, 26 preuves à remplir, rollback, archive à SHA fixes. Memory publié c6a77631d75f96a31b3a1c291ad462ee9f94c0ea, trois CI vertes (3146/25/3, 550/1, serveur 18) ; Core épingle ce SHA. Rapport unique final dans le dossier. Aucun accès VM/PC, service, compte, migration, suppression ou benchmark G182. Les réservations G270–G273 ne constituent pas des lots terminés : le périmètre réalisé est consolidé en G269 et les raccordements restants sont explicites dans TODO.

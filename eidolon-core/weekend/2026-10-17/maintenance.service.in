@@ -1,0 +1,20 @@
+# Candidate only; placeholders must be reviewed before installation.
+# Eidolon Core Technologies (ECT) — Local AI • Modular • Reliable • Reproducible
+[Unit]
+Description=Eidolon explicit maintenance tick (candidate)
+
+[Service]
+Type=oneshot
+User=__ACCOUNT_TO_APPROVE__
+Group=__GROUP_TO_APPROVE__
+WorkingDirectory=__CORE_SOURCE__
+Environment=PYTHONPATH=__CORE_SOURCE__/src:__MEMORY_SOURCE__
+ExecStart=__PYTHON__ -m eidolon_core.maintenance_host --policy __POLICY_JSON__ --activity __FRESH_ACTIVITY_JSON__ --runtime __RUNTIME_JSON__ --execute
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__PRIVATE_STATE_DIRECTORY__ __CANONICAL_ROOT__/.write.lock
+ReadOnlyPaths=__CANONICAL_ROOT__ __MODEL_CACHE__
+TimeoutStartSec=120

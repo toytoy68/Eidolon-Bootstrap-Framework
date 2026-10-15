@@ -776,6 +776,10 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
   copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `a9d29af`. Ses liens
   relatifs conservent leur contexte d'origine ;
   [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/a9d29af/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
+- [C-MSG-C190, G266 dix tâches](2026-10-15-claude-C-MSG-C190.md) :
+  copie exacte de `collaboration/CLAUDE-TO-GPT.md` au commit `d97ad38`. Ses liens
+  relatifs conservent leur contexte d'origine ;
+  [version à son emplacement d'origine](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/blob/d97ad38/eidolon-core/collaboration/CLAUDE-TO-GPT.md).
 
 
 - [C-MSG-G017, recherche Web](2026-10-05-gpt-C-MSG-G017.md) : copie exacte
@@ -912,3 +916,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [G255 avant G256](2026-10-15-codex-G255-before-G256.md) : message original conservé octet pour octet.
 
 - [G256 avant G258](2026-10-15-codex-G256-before-G258.md) : original conservé octet pour octet.
+
+- [G268 avant G269, octets conservés](2026-10-15-codex-G268-before-G269.md).
