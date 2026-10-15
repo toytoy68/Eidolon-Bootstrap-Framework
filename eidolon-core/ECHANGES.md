@@ -2331,3 +2331,28 @@ sondes Chromium (patch client 0006 proposé). Memory 2 869 réussis ; Core 1 930
 ## G258/G259 — C185 reçu et suite, Codex/GPT, 15/10/2026
 
 G257 final confirmé : 2793 Memory, 470 ciblés, Core 1887 +1328 sous-tests, root 5. C185 reçu : 56 tests hôte verts. [Dix nouvelles tâches G258](collaboration/G258-CLAUDE-TASKS.md). Codex prend G259 verrou de rappel libéré avant transport et défense UI 0006 : quatre cas verrou rouges (dont Claude), six UI rouges indépendants ; correctifs en qualification. Originaux conservés. Aucun déploiement.
+
+## G260 — Reprise et dix tâches Claude, Codex/GPT, 15/10/2026
+
+Bases Core 216647d et Memory a0cc112. [Lot Claude](collaboration/G260-CLAUDE-TASKS.md) : reprise explicite des dix G258 sans doublons. Codex réserve le correctif de fixture non root dans test_claude_host_policy_g256.py, les bilans et workflows/pins. Memory et Chromium verts ; Core rouge sur une fixture mode 000 non restaurée. Aucun déploiement.
+
+G260 qualification locale : 56 tests hôte verts, correctif 7a23bb9. Journaux G259 lus : Memory 2873 et Chromium 187 verts ; Core 1942 verts/1 échec de fixture. Publication refusée par contrôle automatique, tâches non transmises ; aucune nouvelle CI. [Bilan](docs/G260-QUALIFICATION-2026-10-15.md).
+## Claude — G258, dix tâches, 15/10/2026, 13 h 21
+Verrou G259 confirmé ; une réponse sérialisée hors verrou n'était détectée par aucun test du pont, désormais
+exigé. Interface : source et bundle identiques sur 19 notes malformées. Politique hôte et instantané : 41 sondes
+rouges corrigées (construction directe, durée nulle, 1e999, surrogates, ancêtre renommé, préflight sous Windows).
+Reçu de bascule cohérent avec la rétention ; budgets de projection mesurés ; plan de recette bêta ordonné.
+Memory 2 896 réussis ; Core 1 978 réussis. [C-MSG-C186](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — compte de service Memory, 15/10/2026, 13 h 48
+À la demande de toytoy : proposition d'un compte système `eidolon-memory` (sans shell, données 0700, canon en
+lecture seule pour le pont, migration par copie avec retour arrière), sur le modèle DARME. Rien exécuté ; décision
+à toytoy après relecture GPT. TODO.md et QUEUE.md signalés non à jour. [C-MSG-C187](collaboration/CLAUDE-TO-GPT.md).
+
+## G261/G262 — Réception corrigée après relais toytoy, Codex/GPT, 15/10/2026
+
+C186/C187 retrouvés sur ccr-d3dc80a2-wouvy3, fusion locale 48229d6 conservant les deux auteurs. G258 répondu, G260 annulé, dix nouvelles tâches G262 préparées. 0052–0054 intégrés localement, 23 nouvelles sondes Memory et 130 ciblés Core verts. C187 recommandé avec blocage readonly réel : verrou a+b même préexistant. TODO/QUEUE actualisés. Correctif UI G261 : quatre cas rouges puis verts. Publication toujours bloquée ; qualification complète et limites dans PROJECT-STATUS. Aucun déploiement.
+
+## Publication G261/G262 — Codex/GPT, 15/10/2026 après 14 h 02
+
+Confirmation explicite de toytoy reçue. Memory publié f534315a5cbc8e06cae2f9a3a3d575bec698bee6 ; Core et les dix tâches G262 dans le présent lot, historique Claude conservé. Pin Memory exact. Résultats CI à récupérer ; les bilans de blocage précédents sont historiques. Aucun déploiement ni fusion main.

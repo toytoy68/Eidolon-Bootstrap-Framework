@@ -1,0 +1,193 @@
+From 4e368bb43cc8372f37bb0e62d8855426152a622e Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 15 Oct 2026 11:19:53 +0000
+Subject: [PATCH 3/3] test(claude-eval): G258-9 cumulative budgets for the
+ passage projection
+
+Optional operator budgets (passages per archive, total stored points
+including superseded ones) refuse a projection before any change, so the
+previous projection stays served. stats() reports served and superseded
+points for a separate, reviewed compaction decision. Nothing is deleted.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Rv89UzspoLREq2u9UkZssh
+---
+ .../archive_passage_projection.py             | 46 +++++++--
+ .../test_archive_projection_budget_g258.py    | 93 +++++++++++++++++++
+ 2 files changed, 130 insertions(+), 9 deletions(-)
+ create mode 100644 tests/claude_memory_eval/test_archive_projection_budget_g258.py
+
+diff --git a/tests/claude_memory_eval/archive_passage_projection.py b/tests/claude_memory_eval/archive_passage_projection.py
+index c8a1b6c..0076d32 100644
+--- a/tests/claude_memory_eval/archive_passage_projection.py
++++ b/tests/claude_memory_eval/archive_passage_projection.py
+@@ -36,11 +36,28 @@ def point_id(information_id, revision, digest, reference):
+     return str(uuid.uuid5(_NAMESPACE, key))
+ 
+ 
++class ProjectionBudgetExceeded(ValueError):
++    def __init__(self, code):
++        super().__init__(code)
++        self.code = code
++
++
++def _budget(value):
++    if value is not None and (type(value) is not int or value < 1):
++        raise ValueError("invalid projection budget")
++    return value
++
++
+ class ArchivePassageProjection:
+-    """Index side: project one canonical archive into passage points (payload = proof + offsets)."""
++    """Index side: project one canonical archive into passage points (payload = proof + offsets).
++
++    G258-9 budgets, both optional and supplied by the operator: max_passages_per_archive bounds one
++    projection; max_points bounds everything STORED, superseded points included, because nothing here
++    deletes them. A refused projection changes nothing: the previous projection stays served."""
+ 
+-    def __init__(self, persistent_root, *, score):
++    def __init__(self, persistent_root, *, score, max_points=None, max_passages_per_archive=None):
+         self.root, self.score, self.points = persistent_root, score, {}
++        self.max_points, self.max_passages = _budget(max_points), _budget(max_passages_per_archive)
+         # information_id -> (revision, digest) of its last successful projection, or None when the last
+         # attempt could not read it (revoked, absent, unreadable). Older points are kept, never served.
+         self.current = {}
+@@ -51,18 +68,29 @@ class ArchivePassageProjection:
+         except Exception:
+             self.current[information_id] = None
+             raise
+-        added = []
++        staged = {}
+         for chunk in chunk_messages(memory.content, max_chars=1200, overlap=160):
+             if not chunk.text.strip():
+                 continue  # whitespace carries no evidence to rank
+             pid = point_id(information_id, memory.revision, digest, chunk.reference)
+-            self.points[pid] = dict(kind="passage", information_id=information_id, revision=memory.revision,
+-                                    canonical_sha256=digest, projection_id=PROJECTION_ID,
+-                                    passage=dict(chunk.reference),
+-                                    _vector_text=sha256(chunk.text.encode()).hexdigest())  # stand-in, no text
+-            added.append(pid)
++            staged[pid] = dict(kind="passage", information_id=information_id, revision=memory.revision,
++                               canonical_sha256=digest, projection_id=PROJECTION_ID,
++                               passage=dict(chunk.reference),
++                               _vector_text=sha256(chunk.text.encode()).hexdigest())  # stand-in, no text
++            if self.max_passages is not None and len(staged) > self.max_passages:
++                raise ProjectionBudgetExceeded("PASSAGES_PER_ARCHIVE")
++        new = sum(1 for pid in staged if pid not in self.points)  # re-projecting the same bytes costs nothing
++        if self.max_points is not None and len(self.points) + new > self.max_points:
++            raise ProjectionBudgetExceeded("POINTS")
++        self.points.update(staged)
+         self.current[information_id] = (memory.revision, digest)
+-        return tuple(added)
++        return tuple(staged)
++
++    def stats(self):
++        """What the operator needs to decide a (reviewed, separate) compaction; nothing is removed here."""
++        served = sum(1 for p in self.points.values() if self._served(p))
++        return dict(points=len(self.points), served=served, superseded=len(self.points) - served,
++                    archives=len(self.current), unservable=sum(1 for v in self.current.values() if v is None))
+ 
+     def _served(self, point):
+         return self.current.get(point["information_id"]) == (point["revision"], point["canonical_sha256"])
+diff --git a/tests/claude_memory_eval/test_archive_projection_budget_g258.py b/tests/claude_memory_eval/test_archive_projection_budget_g258.py
+new file mode 100644
+index 0000000..a465c70
+--- /dev/null
++++ b/tests/claude_memory_eval/test_archive_projection_budget_g258.py
+@@ -0,0 +1,93 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/claude_memory_eval/test_archive_projection_budget_g258.py
++# Description : Projection de passages : limites cumulées, archives et révisions multiples (Claude, G258-9)
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++"""Synthetic archives only, in-memory; no model, no private corpus, no deletion."""
++from dataclasses import replace
++
++import pytest
++
++from core.backend.models import Memory
++from core.retrieval.contextual import ContextualRecall
++from tests.claude_memory_eval.archive_passage_projection import ArchivePassageProjection, ProjectionBudgetExceeded
++from tests.test_archive_chunks import archive
++from tests.test_contextual_recall import backend
++
++
++def store(data, name, texts):
++    memory = Memory(name, content=archive(texts),
++                    metadata={'archive_kind': 'conversation', 'epistemic_status': 'UNVERIFIED'},
++                    provenance={'importer': 'chatgpt-archive-v1'})
++    data.store(memory)
++    return memory
++
++
++def revise(data, memory, texts):
++    new = replace(memory, content=archive(texts), revision=memory.revision + 1)
++    data.update(memory.information_id, new, previous_revision=memory.revision)
++    return new
++
++
++def words(n, tag):
++    return " ".join(f"{tag}{i:04d}" for i in range(n))     # 8 characters + space per word
++
++
++def test_points_accumulate_with_revisions_and_are_reported(tmp_path):
++    data = backend(tmp_path)
++    archives = {f"a{n}": store(data, f"a{n}", ["q", words(300, f"r1m{n}")]) for n in range(5)}
++    index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0)
++    per_revision = [sum(len(index.project(name)) for name in archives)]
++    assert index.stats() == dict(points=per_revision[0], served=per_revision[0], superseded=0, archives=5,
++                                 unservable=0)
++    for r in (2, 3):
++        for name in archives:
++            archives[name] = revise(data, archives[name], ["q", words(300, f"r{r}m{name}")])
++        per_revision.append(sum(len(index.project(name)) for name in archives))
++    stats = index.stats()
++    assert stats["served"] == per_revision[-1]
++    assert stats["superseded"] == sum(per_revision[:-1]) and stats["points"] == sum(per_revision)
++    assert all(index.project(name) for name in archives) and index.stats() == stats   # same bytes: no growth
++
++
++def test_the_per_archive_budget_refuses_before_any_change(tmp_path):
++    data = backend(tmp_path)
++    small = store(data, "small", ["q", "réponse courte"])
++    store(data, "large", ["q", words(1000, "x")])                     # ~9 000 chars: several passages
++    index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0, max_passages_per_archive=3)
++    assert len(index.project("small")) == 2
++    before = (dict(index.points), dict(index.current))
++    with pytest.raises(ProjectionBudgetExceeded) as caught:
++        index.project("large")
++    assert caught.value.code == "PASSAGES_PER_ARCHIVE" and (index.points, index.current) == before
++    revise(data, small, ["q", words(1000, "y")])                      # the new revision is too large too
++    with pytest.raises(ProjectionBudgetExceeded):
++        index.project("small")
++    hits = index.query("q", limit=10)
++    assert hits and all(h.ranking["revision"] == 1 for h in hits)    # the previous projection stays served
++
++
++def test_the_total_budget_counts_superseded_points_and_a_refusal_changes_nothing(tmp_path):
++    data = backend(tmp_path)
++    memory = store(data, "a", ["q", words(300, "v1")])
++    index = ArchivePassageProjection(data.persistent_root, score=lambda t, p: 1.0, max_points=5)
++    first = len(index.project("a"))
++    assert first == 3
++    revise(data, memory, ["q", words(300, "v2")])
++    before = (dict(index.points), dict(index.current))
++    with pytest.raises(ProjectionBudgetExceeded) as caught:            # 3 stored + 3 new > 5
++        index.project("a")
++    assert caught.value.code == "POINTS" and (index.points, index.current) == before
++    # Stale but served: recall refuses the old revision instead of citing it.
++    result = ContextualRecall(data, index=index).recall("v10001")
++    assert result.items == () and result.excluded_counts.get("INDEX_REVISION_MISMATCH", 0) >= 1
++
++
++@pytest.mark.parametrize("bad", [0, -1, True, 1.5, "10"])
++def test_invalid_budgets_are_refused(tmp_path, bad):
++    with pytest.raises(ValueError):
++        ArchivePassageProjection(tmp_path, score=lambda t, p: 1.0, max_points=bad)
++    with pytest.raises(ValueError):
++        ArchivePassageProjection(tmp_path, score=lambda t, p: 1.0, max_passages_per_archive=bad)
+-- 
+2.43.0
+

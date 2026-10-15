@@ -15,11 +15,13 @@
 Not wired to any launcher. Proposal: docs/proposals/2026-10-15-host-policy-and-snapshot.md.
 """
 import json
+import math
 import os
 import re
 import stat
 
 MAX_SNAPSHOT_BYTES = 1024 * 1024   # hard ceiling of this reader; the caller chooses a lower budget
+MAX_INTEGER_DIGITS = 18             # a host measure never needs more; far below int parsing limits
 _NAME = re.compile(r"[A-Za-z0-9_-][A-Za-z0-9._-]{0,127}\.json\Z")
 _after_read = None                 # test hook: runs between the read and the final identity check
 
@@ -30,8 +32,28 @@ class SnapshotRefused(ValueError):
         self.code = code
 
 
+def missing_primitives():
+    """G258-7: the POSIX features this reader relies on. Any absence is an explicit refusal, never a fallback.
+
+    Linux server: all present. Windows PC: no O_NOFOLLOW/O_DIRECTORY/O_NONBLOCK and no dir_fd support,
+    so this reader refuses there; host observations are meant to be produced on the Linux server."""
+    missing = [flag for flag in ("O_NOFOLLOW", "O_DIRECTORY", "O_NONBLOCK", "O_CLOEXEC")
+               if not hasattr(os, flag)]
+    if os.open not in os.supports_dir_fd:
+        missing.append("dir_fd:open")
+    if os.stat not in os.supports_dir_fd:
+        missing.append("dir_fd:stat")
+    if os.stat not in os.supports_follow_symlinks:
+        missing.append("follow_symlinks:stat")
+    return tuple(missing)
+
+
 def _version(st):
     return (st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+
+
+def _identity(st):
+    return (st.st_dev, st.st_ino)
 
 
 def _open_directory(path):
@@ -68,10 +90,35 @@ def _constant(name):
     raise SnapshotRefused("SNAPSHOT_INVALID_JSON")
 
 
+def _float(text):
+    value = float(text)
+    if not math.isfinite(value):          # 1e999 overflows to infinity without calling parse_constant
+        raise SnapshotRefused("SNAPSHOT_INVALID_JSON")
+    return value
+
+
+def _int(text):
+    if len(text.lstrip("-")) > MAX_INTEGER_DIGITS:
+        raise SnapshotRefused("SNAPSHOT_INVALID_JSON")
+    return int(text)
+
+
+def _encodable(text):
+    try:
+        text.encode("utf-8")              # "\\ud800" escapes decode to lone surrogates
+    except UnicodeEncodeError:
+        raise SnapshotRefused("SNAPSHOT_ENCODING") from None
+
+
 def _depth(value, limit):
     stack = [(value, 1)]
     while stack:
         item, depth = stack.pop()
+        if isinstance(item, str):
+            _encodable(item)
+        if isinstance(item, dict):
+            for key in item:
+                _encodable(key)
         if isinstance(item, (dict, list)):
             if depth > limit:
                 raise SnapshotRefused("SNAPSHOT_TOO_DEEP")
@@ -85,6 +132,8 @@ def read_json_snapshot(directory, name, *, max_bytes, max_depth=4):
         raise SnapshotRefused("SNAPSHOT_BUDGET")
     if type(max_depth) is not int or not 1 <= max_depth <= 16:
         raise SnapshotRefused("SNAPSHOT_BUDGET")
+    if missing_primitives():
+        raise SnapshotRefused("SNAPSHOT_PLATFORM_UNSUPPORTED")
     dir_fd = _open_directory(directory)
     try:
         try:
@@ -120,6 +169,17 @@ def read_json_snapshot(directory, name, *, max_bytes, max_depth=4):
                 raise SnapshotRefused("SNAPSHOT_CHANGED") from None
             if not (_version(before) == _version(after) == _version(current)) or len(data) != before.st_size:
                 raise SnapshotRefused("SNAPSHOT_CHANGED")
+            # G258-6: the file is the same, but does the PATH still name this directory? An ancestor renamed,
+            # replaced or turned into a link means the bytes no longer come from the path the host trusts.
+            try:
+                again = _open_directory(directory)
+            except SnapshotRefused:
+                raise SnapshotRefused("SNAPSHOT_PATH_CHANGED") from None
+            try:
+                if _identity(os.fstat(again)) != _identity(os.fstat(dir_fd)):
+                    raise SnapshotRefused("SNAPSHOT_PATH_CHANGED")
+            finally:
+                os.close(again)
         finally:
             os.close(fd)
     finally:
@@ -131,10 +191,13 @@ def read_json_snapshot(directory, name, *, max_bytes, max_depth=4):
     except UnicodeDecodeError:
         raise SnapshotRefused("SNAPSHOT_ENCODING") from None
     try:
-        value = json.loads(text, object_pairs_hook=_unique, parse_constant=_constant)
+        value = json.loads(text, object_pairs_hook=_unique, parse_constant=_constant,
+                           parse_float=_float, parse_int=_int)
     except RecursionError:
         raise SnapshotRefused("SNAPSHOT_TOO_DEEP") from None
-    except json.JSONDecodeError:
+    except SnapshotRefused:
+        raise
+    except ValueError:                     # JSONDecodeError and any number conversion error
         raise SnapshotRefused("SNAPSHOT_INVALID_JSON") from None
     if not isinstance(value, dict):
         raise SnapshotRefused("SNAPSHOT_INVALID_JSON")

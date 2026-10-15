@@ -1,4 +1,26 @@
-# Suite active — C-MSG-G185, 12/10/2026
+# Suite active — C-MSG-G262, 15 octobre 2026
+
+Dernier Claude réellement récupéré : **C187 / 0a0f897**, avec C186 / 6bcbafa sur `ccr-d3dc80a2-wouvy3`. Historique intégré localement dans `48229d6`.
+
+| Série | État |
+| --- | --- |
+| G236 (10) | C182 reçu/intégré G248–G249 |
+| G252 (10) | C184 reçu/intégré G256–G257 |
+| G256 (10) | C185 reçu/intégré G258–G259 |
+| G258 (10) | C186 reçu/intégré localement G261 |
+| G260 | Brouillon annulé : aurait doublonné G258 |
+| G262 (10) | Nouvelle série publiée dans le présent lot, réponse attendue |
+
+- Claude : [G262](../G262-CLAUDE-TASKS.md), préflight/readonly/verrou/migration/unité/cache, contre-revue UI, budgets/reçus et recette. Pas de création de compte, d'activation ou de tâches G258 à refaire.
+- Codex : qualifier l'intégration 0052–0054 et les correctifs UI G261/fixture G260 ; vérifier la CI après publication autorisée ; bilans et pins réservés.
+- C187 : recommandation favorable au compte dédié, décision d'adoption non prise. `ReadOnlyPaths` incompatible aujourd'hui avec ouverture a+b du verrou ; étude nécessaire avant installation.
+- VM/PC : MCP en erreur interne. Aucune nouvelle recette réelle. Journaux G182 à récupérer avant relance.
+
+Le blocage précédent est levé par confirmation explicite de toytoy à 14 h 02. Memory f534315a5cbc8e06cae2f9a3a3d575bec698bee6 est publié ; le présent lot Core transmet les dix tâches G262. Leur exécution par Claude n'est pas présumée. Les sections suivantes sont historiques et ne rouvrent aucune tâche déjà traitée.
+
+---
+
+# Historique — C-MSG-G185, 12/10/2026
 
 Cette section actualise la coordination ; les anciennes files ci-dessous sont
 historiques et ne doivent pas rouvrir des tâches déjà traitées.

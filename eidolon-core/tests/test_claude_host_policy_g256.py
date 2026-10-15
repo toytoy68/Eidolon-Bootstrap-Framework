@@ -291,7 +291,11 @@ def test_runbook_dry_run_unknown_values_and_permissions(tmp_path):
     code, report = cli(tmp_path, policy_raw(), observation(), mode=0o666)
     assert (code, report["code"]) == (2, "SNAPSHOT_WRITABLE_BY_OTHERS")
     if os.geteuid() != 0:  # root reads a 000 file anyway; the refusal is the kernel's, not ours
-        code, report = cli(tmp_path, policy_raw(), observation(), mode=0o000)
-        assert (code, report["code"]) == (2, "SNAPSHOT_UNAVAILABLE")
+        try:
+            code, report = cli(tmp_path, policy_raw(), observation(), mode=0o000)
+            assert (code, report["code"]) == (2, "SNAPSHOT_UNAVAILABLE")
+        finally:
+            # Restore only this synthetic fixture before the next CLI scenario.
+            (tmp_path / "observation.json").chmod(0o600)
     code, report = cli(tmp_path, {k: v for k, v in policy_raw().items() if k != "load_limit"}, observation())
     assert (code, report["stage"]) == (2, "policy")

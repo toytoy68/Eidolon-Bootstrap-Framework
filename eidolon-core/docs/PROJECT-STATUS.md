@@ -1,5 +1,31 @@
 # Eidolon — État consolidé du dépôt
 
+## G261/G262 — Point courant, 15 octobre 2026
+
+Auteur : Codex/GPT. C186 et C187 retrouvés sur `ccr-d3dc80a2-wouvy3` (`0a0f897`) et intégrés avec leur historique Claude conservé par second parent `0a0f897`. **G258 entièrement répondu.** Le lot G260 est annulé ; [dix nouvelles tâches G262](../collaboration/G262-CLAUDE-TASKS.md) publiées dans le présent lot.
+
+- **Memory** : patchs Claude 0052–0054 publiés dans `f534315`, sources originales conservées dans Core. 23 nouvelles sondes vertes ; compte complet local : 2890 réussis, six échecs (cinq AF_UNIX refusés par le runtime ; un socksio absent, ensuite recontrôlé vert), 18 ignorés, quatre xfail, 12 sous-tests. Aucun total entièrement vert revendiqué. [Rapport Memory](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/refactor/architecture-v1/docs/G261-C186-INTEGRATION-2026-10-15.md) publié.
+- **Core** : 130 ciblés Python verts avec Memory activée. Nettoyage de fixture non root G260 corrigé, validation effective non root encore à obtenir. Diagnostic UI G261 : quatre cas rouges avant correction, état INDEX_ futur générique et STALE/UNVERIFIED visibles même si partial manque/false. Suite Core locale : 1928 réussis, 22 échecs de primitives système refusées (20 AF_UNIX, 2 chown), 51 ignorés, 1317 sous-tests. Les 160 tests Node exécutables passent, 36 tests navigateur ignorés ici ; bundle synchronisé. Chromium indisponible (échec de téléchargement), nouvelle qualification navigateur requise en CI.
+- **Compte dédié C187** : recommandé, pas adopté ni activé. [Blocage reproduit et revue](G261-C187-SERVICE-ACCOUNT-REVIEW.md) : le rappel ouvre `.write.lock` en a+b, incompatible avec le montage readonly même si le verrou est précréé.
+- **Suivi actualisé** : TODO.md et collaboration/tasks/QUEUE.md ; G236/C182, G252/C184, G256/C185, G258/C186 et proposition C187 distingués. [Rapport G261](G261-C186-QUALIFICATION-2026-10-15.md).
+- **Publication autorisée explicitement à 14 h 02** : Memory `f534315` publié, Core et les dix tâches G262 dans le présent lot ; pin CI Memory exact. Les résultats des nouveaux workflows restent à récupérer, sans leur attribuer ceux de G259.
+
+MCP toujours en erreur interne. Aucune VM touchée, aucun compte créé, aucune migration, aucun déploiement ni fusion main. Aucune relance G182. Les sections suivantes sont historiques.
+
+## Historique — G260 avant récupération de la branche Claude
+
+Auteur : Codex/GPT. [Bilan, preuves et limites](G260-QUALIFICATION-2026-10-15.md).
+
+- G259 Memory confirmé : **2873 tests réussis**, 18 ignorés, 4 xfail, 12 sous-tests ; contrat ciblé 550 réussis/1 xfail et worker 52 réussis.
+- G259 Chromium confirmé : **187 réussis**, aucun ignoré/todo.
+- Core G259 : **1942 réussis et un échec** de préparation de fixture non root. Correctif local G260 `7a23bb9` : restauration des droits de l'instantané synthétique après le scénario mode 000, assertion du refus conservée. **56 tests ciblés verts sous root** ; validation non root après correctif encore requise.
+- **Dix tâches Claude réattribuées** dans [G260](../collaboration/G260-CLAUDE-TASKS.md), reprenant G258 sans doublons. Dernier retour distant C185.
+- **Publication bloquée par contrôle automatique**, correctif et tâches seulement locaux à ce point. Attente de confirmation explicite de la destination avant publication et CI. Aucun déploiement ni fusion main ; MCP toujours en erreur interne.
+
+## Historique — G256–G259
+
+Les états ci-dessous sont les bilans précédents ; le point courant figure ci-dessus.
+
 Bilan G256–G257, 15 octobre 2026. Auteur : Codex/GPT. Reprise demandée par toytoy à 10 h 33 Europe/Paris.
 
 ## Livré

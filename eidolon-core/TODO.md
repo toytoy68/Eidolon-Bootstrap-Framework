@@ -1,4 +1,32 @@
-## G255 — Bilan courant, 15 octobre 2026
+## G261/G262 — Bilan courant, 15 octobre 2026
+
+C186 (`6bcbafa`) et C187 (`0a0f897`) reçus depuis la branche Claude `ccr-d3dc80a2-wouvy3`, intégrés localement avec leur historique (`48229d6`). **Les dix G258 sont répondues.** Le brouillon G260 qui les réattribuait est annulé. [Dix nouvelles tâches G262](collaboration/G262-CLAUDE-TASKS.md) publiées par le présent lot après confirmation de toytoy à 14 h 02 ; réponse G262 attendue.
+
+| Lot | Réponse et état réel |
+| --- | --- |
+| G236 | C182 reçu et intégré, correctifs G248/G249 |
+| G252 | C184 reçu et intégré G256/G257 ; C183 était une contre-revue indépendante |
+| G256 | C185 reçu et intégré G258/G259 |
+| G258 | C186 reçu, 0052–0054 appliqués localement, politique/instantané et tests UI reçus |
+| C187 | Compte dédié recommandé ; proposition non adoptée ni déployée ; incompatibilité readonly documentée |
+| G262 | Nouvelle série de dix tâches après C186, ouverte sur GitHub |
+
+- [x] Récupérer les résultats CI G259 : Memory 2873 et Chromium 187 verts ; Core 1942 verts +1 échec de fixture non root.
+- [x] Corriger localement le nettoyage de droits de la fixture (assertions conservées).
+- [x] Intégrer C186/C187 et les trois patchs Memory, préserver les originaux.
+- [x] Corriger les deux affichages C186 : état inconnu générique et diagnostic malgré partial false/absent ; quatre rouges indépendants avant correction.
+- [x] Actualiser TODO et QUEUE demandés dans C187.
+- [x] Publication autorisée explicitement par toytoy ; Memory publié, Core et les dix tâches dans le présent lot.
+- [ ] Faire confirmer par CI le scénario non root et le nouveau bundle Chromium.
+- [ ] Recevoir/qualifier G262 après publication ; ne pas refaire G258.
+- [ ] Décider l'adoption du compte dédié ; résoudre le verrou avant activation readonly. Le rappel ouvre encore `.write.lock` en a+b, même préexistant.
+- [ ] Politique hôte et source/âges/unité/limite explicitement configurés ; capteurs et lanceur réel restent à raccorder.
+- [ ] Recette VM/PC : vérifier VM110 Memory et VM100 Core, PC/fenêtre d'essai, emplacement/espace/sauvegarde et Internet OFF pour le premier parcours. Ce sont des prérequis de recette, pas des bloqueurs du travail local.
+- [ ] Récupérer les journaux G182 avant toute relance ; quatre xfail historiques encore suivis.
+
+[Relecture C187](docs/G261-C187-SERVICE-ACCOUNT-REVIEW.md), [état consolidé](docs/PROJECT-STATUS.md). Aucun compte créé, aucune migration, aucun déploiement ni fusion main.
+
+## G255 — Bilan historique, 15 octobre 2026
 
 Dix nouvelles tâches Claude G252 publiées et toutes disponibles ; leur réponse reste à recevoir. G253 adopte une vue limitée dans la maintenance Memory, G254 ajoute un appel hôte explicite qui valide la capture avant construction et conserve les permissions du moteur. G255 intègre C183 : cinq sondes Memory et dates hôte sentinelles corrigées, avec trois sondes indépendantes. [Contrats, sources et preuves finales](docs/PROJECT-STATUS.md).
 

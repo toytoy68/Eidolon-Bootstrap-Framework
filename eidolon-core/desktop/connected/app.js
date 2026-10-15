@@ -1799,7 +1799,13 @@
 
   // G091 presentation rule: a partial context is always said, in words, before the sources.
   function contextNote(context) {
-    if (!context || !context.partial) return null;
+    if (!context || typeof context !== "object" || Array.isArray(context)) return null;
+    // G261: a diagnostic must survive a contradictory aggregate `partial` flag.
+    // Only well-formed protocol states qualify; never echo arbitrary server text.
+    var indexed = context.memory === "sent" && typeof context.memory_index === "string"
+      && /^INDEX_[A-Z0-9_]{1,64}$/.test(context.memory_index) ? context.memory_index : null;
+    var indexWarning = indexed && indexed !== "INDEX_SNAPSHOT_MATCH";
+    if (!context.partial && !indexWarning) return null;
     var parts = [];
     if (context.history_excluded > 0) {
       parts.push(context.history_excluded + (context.history_excluded > 1 ? " échanges plus anciens non transmis au modèle"
@@ -1808,9 +1814,11 @@
     if (context.memory === "dropped_for_budget") parts.push("mémoire non transmise (taille)");
     if (context.memory === "unavailable") parts.push("mémoire indisponible");
     // An index state describes memory the model received; Core refuses it otherwise (G256-9 defence in depth).
-    var indexed = context.memory === "sent" ? context.memory_index : null;
     if (indexed === "INDEX_STALE") parts.push("des changements de mémoire ne sont pas encore reflétés dans l’index");
     if (indexed === "INDEX_UNVERIFIED") parts.push("la mise à jour complète de l’index mémoire n’a pas pu être vérifiée");
+    if (indexWarning && indexed !== "INDEX_STALE" && indexed !== "INDEX_UNVERIFIED") {
+      parts.push("l’état de l’index mémoire n’est pas reconnu");
+    }
     if (context.memory_truncated_items > 0) parts.push(context.memory_truncated_items + " extrait(s) de mémoire déjà tronqué(s)");
     return parts.length ? "Contexte partiel : " + parts.join(" ; ") + "." : null;
   }

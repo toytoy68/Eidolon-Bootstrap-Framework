@@ -84,6 +84,8 @@ def check_credential(path):
         parent, leaf = os.lstat(path.parent), os.lstat(path)
     except (OSError, ValueError):
         return {"check": "bridge.credential", "result": "FAIL", "detail": "missing or unreadable metadata"}
+    if not hasattr(os, "geteuid"):  # G258-7: no POSIX owner (Windows PC): unknown, never a pass or a crash
+        return {"check": "bridge.credential", "result": "UNKNOWN", "detail": "POSIX ownership unavailable on this platform"}
     euid = os.geteuid()
     ok = (stat.S_ISDIR(parent.st_mode) and parent.st_uid == euid and stat.S_IMODE(parent.st_mode) == 0o700
           and stat.S_ISREG(leaf.st_mode) and leaf.st_uid == euid and stat.S_IMODE(leaf.st_mode) == 0o600
