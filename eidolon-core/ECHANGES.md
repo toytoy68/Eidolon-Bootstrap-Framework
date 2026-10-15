@@ -2338,3 +2338,8 @@ exigé. Interface : source et bundle identiques sur 19 notes malformées. Politi
 rouges corrigées (construction directe, durée nulle, 1e999, surrogates, ancêtre renommé, préflight sous Windows).
 Reçu de bascule cohérent avec la rétention ; budgets de projection mesurés ; plan de recette bêta ordonné.
 Memory 2 896 réussis ; Core 1 978 réussis. [C-MSG-C186](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — compte de service Memory, 15/10/2026, 13 h 48
+À la demande de toytoy : proposition d'un compte système `eidolon-memory` (sans shell, données 0700, canon en
+lecture seule pour le pont, migration par copie avec retour arrière), sur le modèle DARME. Rien exécuté ; décision
+à toytoy après relecture GPT. TODO.md et QUEUE.md signalés non à jour. [C-MSG-C187](collaboration/CLAUDE-TO-GPT.md).
