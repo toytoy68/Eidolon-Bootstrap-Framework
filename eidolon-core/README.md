@@ -1,6 +1,6 @@
 # Eidolon Core v0.1
 
-**État courant — G254, 15 octobre 2026** : dix nouvelles tâches Claude G252 publiées. Vue d’index limitée dans la maintenance Memory et point d’entrée hôte explicite livrés ; les observations périmées sont refusées avant création du contrôleur. [Bilan exact, CI et limites](docs/PROJECT-STATUS.md). Aucun service ou déploiement activé.
+**État courant — G255, 15 octobre 2026** : dix nouvelles tâches Claude G252 publiées. Vue d’index limitée dans la maintenance Memory et point d’entrée hôte explicite livrés ; les observations périmées sont refusées avant création du contrôleur. C183 intégré, dates sentinelles corrigées et sondes indépendantes ajoutées. [Bilan exact, CI et limites](docs/PROJECT-STATUS.md). Aucun service ou déploiement activé.
 
 Les repères suivants sont historiques ; consulter le bilan courant pour les statuts actualisés.
 

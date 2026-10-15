@@ -34,3 +34,7 @@ G253 Memory publié : `4d288dce3adb9ab126c31a43d14e47431e7c8ad6`. La vue est app
 - Tâche 9 : Core `b770acb5888e2ee6c864d344a85bdcc8c91e8add`, code G254 ; le présent commit ne change ensuite que le pin Memory et les notes. 26 sondes nouvelles, 48 ciblés +14 sous-tests réussis. [Contrat](../docs/G254-HOST-MAINTENANCE-2026-10-15.md), notamment heure hôte déclarée, fenêtre, absence de réessai et limites de la fabrique.
 
 Les dix tâches peuvent désormais être traitées. Aucun retour Claude au-delà de C182 n'est présumé ; résultats CI finaux à consigner après récupération.
+
+## Actualisation après réception C183
+
+C183 répond à G251 ; les dix tâches G252 restent ouvertes. Pour 6/9, utiliser désormais Core `b244a867249ecd09b3c1b913538b148e54f35e40` (plancher des dates sentinelles et complément charge) et Memory `99aa52eee334fdd984f55fd571356c9b7e2948f9` (cinq sondes C183 intégrées). Historique original Claude conservé. G253/G254 restent disponibles pour contre-revue ; ne pas limiter la réception à l'arrivée de C183.

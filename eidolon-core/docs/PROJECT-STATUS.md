@@ -1,5 +1,52 @@
 # Eidolon — État consolidé du dépôt
 
+Bilan G252–G255, 15 octobre 2026, Codex/GPT. Demande de toytoy à 08 h 10 Europe/Paris : nouvelle série Claude et poursuite des travaux.
+
+**Dix nouvelles tâches Claude publiées ; deux lots Codex livrés et réception C183 intégrée.** Les dix livrables reçus précédemment via C181/C182 appartenaient à la série G236. C183 est arrivé pendant la qualification : il répond à G251 et ne clôt pas cette nouvelle série.
+
+## Travail livré
+
+- **G252 : [dix tâches Claude](../collaboration/G252-CLAUDE-TASKS.md)** avec bases exactes, fichiers réservés et critères de réception. Six contre-revues des nouveaux contrats, étude de rétention sans suppression, contre-revues G253/G254 et tranche expérimentale pour les passages d'archives. Toutes les sources nécessaires sont publiées. Le fichier ne lance pas une session Claude.
+- **G253 : [port limité de maintenance](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/9a61648d48550a3cf2df92f4126d81de4a732994/docs/G253-WORKER-PORT-2026-10-15.md)**. Le contrôleur, le worker et les scanners partagent une vue qui expose six membres, sans méthode d'administration. Les sous-classes étendues sont à nouveau restreintes. L'hôte garde son adaptateur séparé ; permissions, preuves et reprise durable restent appliquées.
+- **G254 : [appel hôte explicite](G254-HOST-MAINTENANCE-2026-10-15.md)**. Capture, provenance déclarée et âges sont validés avant la fabrique. La charge et la fenêtre sont évaluées à l'heure fournie pour l'appel. Un appel produit un tick ; aucune répétition automatique après erreur. Les heures de capture/d'appel et la provenance sont conservées.
+
+Huit sondes G253 et 26 sondes G254 ajoutées. Vérification ciblée : 93 tests Memory ; 48 tests Core et 14 sous-tests. Les tests d'intégration utilisent le vrai contrôleur, journal et Qdrant local : indexation autorisée, refus de permission et reports pour charge inconnue/haute/périmée ou sortie de fenêtre. Le premier tick enregistre la borne de passe ; l'indexation est vérifiée sur un second appel hôte explicite.
+
+## G255 — Réception C183 et contrôle indépendant
+
+Les contributions Claude `e55ef954faf7f24d393811a108fbe9a2b8cdf928` sont fusionnées avec leurs deux parents et conservées dans leur forme originale. Patchs Memory 0043/0044 : cinq sondes supplémentaires du rappel et de la saturation HTTP, toutes réussies localement. Les sabotages décrits dans C183 sont des résultats rapportés par Claude, non réexécutés ici.
+
+Deux des quatre sondes Core de Claude échouaient avant son correctif : une date de démarrage/activité à l'époque Unix paraissait ancienne, et une horloge hôte en 1970 était acceptée. Un plancher de validité opérationnelle au 1er janvier 2000 UTC évite ces sentinelles ; ce n'est pas un seuil de retard métier. Un troisième défaut a été reproduit indépendamment : une charge datée de 1970 restait acceptable si l'hôte autorisait cent ans d'ancienneté. Elle reste désormais inconnue quelle que soit cette limite. Trois sondes indépendantes complètent les quatre originales ; 40 ciblés +14 sous-tests réussis avec `-W error`.
+
+## Qualification finale
+
+Memory source `99aa52eee334fdd984f55fd571356c9b7e2948f9` ; Core source `b244a867249ecd09b3c1b913538b148e54f35e40`, épinglée sur ce Memory. Les quatre workflows déclenchés sur ces sources sont verts ; résultats vérifiés dans leurs journaux. Chromium porte sur ce même Core. Le serveur Qdrant n'est pas relancé par ces seuls ajouts de tests : sa dernière preuve porte sur `42117af68e33ad36ea47e6112b12420147fd03bf`, avec code applicatif et harnais serveur identiques. Les commits de bilan ultérieurs sont documentaires.
+
+| Validation | Résultat observé |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38693753319) | 2770 réussis, 18 ignorés, 4 xfail, 12 sous-tests ; 173,53 s |
+| Contrat worker, même workflow | 52 réussis ; 2,78 s |
+| [Qdrant ciblé](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38693753521) | 447 réussis, 1 xfail ; 32,13 s |
+| [Serveur Qdrant HTTP](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38692288647) | 18 réussis, aucun ignoré ; 77,35 s |
+| [Core et pin final](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38693852771) | 1879 réussis, 8 ignorés, 1313 sous-tests ; 334,18 s |
+| Propriétaires du jeton, étape root du même workflow | 5 réussis, aucun ignoré ; 0,08 s |
+| [Chromium](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38693852896) | 172 réussis, 0 échec, 0 ignoré ; workflow vert |
+
+Les comptes se chevauchent. Les 18 exclusions Memory sont exécutées séparément sur serveur ; les 8 exclusions Core couvrent 6 dépendances d'identité optionnelles et 2 sondes de propriétaire exécutées en root. Le workflow Core ordinaire conserve 140 tests Node réussis et 26 ignorés ; Chromium est qualifié séparément sans exclusion.
+
+## Limites et suite
+
+La vue n'est pas un sandbox contre du Python malveillant dans le même processus ; l'adaptateur administratif garde ses anciennes API. La source d'observation est une étiquette de provenance, pas une authentification. L'heure est déclarée par l'hôte : aucune borne murale n'est garantie si la fabrique ou le tick se bloque. Une erreur après construction peut laisser des effets ; elle n'est pas rejouée automatiquement.
+
+La livraison ajoute un point d'entrée de code, pas un service installé. Le choix des capteurs, des politiques hôte, de leurs délais et le raccordement au lanceur réel restent à réaliser puis à qualifier sur VM/PC. Aucun corpus privé ni modèle réel utilisé, aucun seuil métier de retard calibré, aucune suppression ou fusion main. L'échéance d'écriture d'une réponse HTTP n'est pas encore éprouvée avec un récepteur réellement bloqué ; les réponses de test tiennent dans les tampons du noyau. Les quatre xfail historiques (passages, rétention, ancien worker_status S1 et API administrative Q2) restent suivis.
+
+MCP recontrôlé vers 08 h 27 Europe/Paris : erreur interne -32603. Suite : contre-revues G252, choix explicite de la politique/source hôte puis recette VM/PC ; récupérer les résultats G182 existants avant toute nouvelle mesure. Les estimations globales ne sont pas modifiées.
+
+## Historique — bilan G251 et lots antérieurs
+
+Les statuts ci-dessous décrivent les lots précédents. Le bilan courant figure au-dessus.
+
+
 Bilan G242–G251, 15 octobre 2026.
 
 Auteur : Codex/GPT, avec intégration attribuée des livrables Claude C182.

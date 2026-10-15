@@ -1,6 +1,6 @@
-## G254 — Bilan courant, 15 octobre 2026
+## G255 — Bilan courant, 15 octobre 2026
 
-Dix nouvelles tâches Claude G252 publiées et toutes disponibles ; leur réponse reste à recevoir. G253 adopte une vue limitée dans la maintenance Memory, G254 ajoute un appel hôte explicite qui valide la capture avant construction et conserve les permissions du moteur. [Contrats, sources et preuves finales](docs/PROJECT-STATUS.md).
+Dix nouvelles tâches Claude G252 publiées et toutes disponibles ; leur réponse reste à recevoir. G253 adopte une vue limitée dans la maintenance Memory, G254 ajoute un appel hôte explicite qui valide la capture avant construction et conserve les permissions du moteur. G255 intègre C183 : cinq sondes Memory et dates hôte sentinelles corrigées, avec trois sondes indépendantes. [Contrats, sources et preuves finales](docs/PROJECT-STATUS.md).
 
 Suite : contre-revues G252, politique/source hôte et raccordement du lanceur réel, puis recette VM/PC. Quatre xfail historiques toujours ouverts ; MCP en erreur au contrôle de cette session. Aucun service ni déploiement activé. Les bilans suivants sont historiques.
 
