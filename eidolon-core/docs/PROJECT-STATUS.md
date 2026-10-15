@@ -2,7 +2,30 @@
 
 Mise à jour : 15 octobre 2026, lot G241, Codex/GPT.
 
-**MT1/MT3, R1 et diagnostics scanners corrigés. C181 reçu et intégré. Recette serveur approfondie et tests d'UID réels en CI, résultats finaux à confirmer.**
+**Lots G236–G241 publiés, C181 intégré et quatre workflows finaux verts. Dix tâches confiées à Claude : 1/2 reçues, 3–10 ouvertes.**
+
+## Validation finale G241
+
+Source Memory testée : `21d24121850e71b64c73163fd04e3a5ab231b970`.
+Source Core testée : `799377c49e21fd4d0aab3e018b86b33db94d17ad`, avec ce pin Memory.
+[Rapport Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/blob/587d4a9b50357401d9150c46d977b2d72648835a/docs/G241-C181-INTEGRATION-2026-10-15.md).
+
+| Validation publiée | Résultat réel |
+| --- | --- |
+| [Memory complet](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190711) | **2638 réussis, 15 ignorés, 5 xfail, 12 sous-tests**, 167,64 s |
+| Contrat réel du worker, même workflow | **52 réussis**, 2,71 s |
+| [Qdrant ciblé et sondes Claude](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190616) | **331 réussis, 1 xfail Q2**, 25,31 s |
+| [Serveur HTTP et backlog 1200](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38664190548) | **15 réussis, aucun ignoré, -W error**, 71,42 s |
+| [Core avec Memory G241](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38664324275) | **1789 réussis, 9 ignorés, 1299 sous-tests**, 270,37 s, aucun avertissement pytest |
+| Propriétaires/bornes/liens, étape root du même workflow Core | **5 réussis, aucun ignoré, -W error**, 0,11 s |
+
+Les 15 exclusions Memory sont les cas serveur exécutés séparément. Les 9 exclusions Core comprennent 7 dépendances d'identité optionnelles et 2 propriétaires vérifiés avec succès dans l'étape root. Comptes chevauchants, non additionnés. Les 5 xfail historiques restent ouverts ; les avertissements Node des actions GitHub sont distincts de pytest.
+
+Livré : reprise d'horloge auditée/idempotente, borne d'orphelins configurable, lectures worker bornées, diagnostic d'incompatibilité préservé, recettes HTTP avec pertes réelles de réponse et reprise d'un arriéré de 1200 documents. C181 et son historique sont intégrés, sondes supplémentaires en CI. Le défaut initial du proxy et le faux échec d'ordonnancement de la sonde Claude sont documentés, corrigés et requalifiés.
+
+Suite : contre-revues MT1/MT3/R1, ancienneté S1, séparation des ports, observations hôte, proposition sur les cycles d'import et recette VM/PC. Le canal MCP renvoie toujours une erreur interne au dernier contrôle. Aucun runtime activé, corpus privé, nouveau benchmark sémantique, suppression de production, déploiement ou fusion main.
+
+Les sections suivantes détaillent les étapes précédentes ; les mentions d'attente y sont historiques.
 
 ## G239–G241 — Derniers lots
 

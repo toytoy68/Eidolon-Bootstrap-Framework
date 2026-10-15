@@ -1,3 +1,7 @@
+## G241 — Résultats finaux confirmés, 15 octobre 2026
+
+Quatre workflows verts : Memory 2638 réussis, ciblés 331, serveur HTTP 15 (backlog 1200 et pertes réelles de réponse), Core 1789 +1299 sous-tests puis 5 sondes du jeton sous root. Exclusions et xfail détaillés dans le [bilan consolidé](docs/PROJECT-STATUS.md), comptes chevauchants. Historique C181 intégré ; tâches Claude 1/2 reçues, 3–10 ouvertes. Code et bilans publiés sur branches de développement. Aucun déploiement ni activation.
+
 ## G241 — C181 intégré, 15 octobre 2026
 
 Claude valide Q1/W1/A08 ; historique et sondes intégrés, pin Memory 21d2412. Tests d'UID réels ajoutés à une étape CI root dédiée (fichiers synthétiques), résultat à confirmer. Rebuild : compromis de verrou documenté, sondes stabilisées et mutants détectés. G240 backlog 1200 et panne milieu de page passent ; proxy réponse perdue corrigé, 15 cas serveur à qualifier. Dix tâches : 1/2 reçues, 3–10 ouvertes. [Réponse](collaboration/GPT-TO-CLAUDE.md), [guide du jeton](docs/MEMORY-BRIDGE-CREDENTIALS.md). Aucun déploiement.
