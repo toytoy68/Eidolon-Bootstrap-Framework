@@ -31,15 +31,6 @@ class PolicyRefused(ValueError):
     """The host policy is absent, incomplete, ambiguous or of an unknown version; nothing may run."""
 
 
-@dataclass(frozen=True)
-class HostPolicy:
-    expected_source: str
-    max_observation_age: timedelta
-    max_load_age: timedelta
-    load_unit: str
-    load_limit: float
-
-
 def _positive(value, name):
     try:
         if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
@@ -51,9 +42,37 @@ def _positive(value, name):
 
 def _seconds(value, name):
     try:
-        return timedelta(seconds=_positive(value, name))
+        duration = timedelta(seconds=_positive(value, name))
     except OverflowError:
         raise PolicyRefused(f"invalid {name}") from None
+    if duration <= timedelta(0):
+        raise PolicyRefused(f"{name} rounds to zero")   # below the microsecond resolution of timedelta
+    return duration
+
+
+@dataclass(frozen=True)
+class HostPolicy:
+    """Every construction path is validated (G258-4): direct construction, validator, or copy."""
+    expected_source: str
+    max_observation_age: timedelta
+    max_load_age: timedelta
+    load_unit: str
+    load_limit: float
+
+    def __post_init__(self):
+        _check_policy(self)
+
+
+def _check_policy(policy):
+    if type(policy.expected_source) is not str or _SOURCE.fullmatch(policy.expected_source) is None:
+        raise PolicyRefused("invalid expected_source")
+    if type(policy.load_unit) is not str or _UNIT.fullmatch(policy.load_unit) is None:
+        raise PolicyRefused("invalid load_unit")
+    for name in ("max_observation_age", "max_load_age"):
+        value = getattr(policy, name)
+        if type(value) is not timedelta or value <= timedelta(0):
+            raise PolicyRefused(f"invalid {name}")
+    _positive(policy.load_limit, "load_limit")
 
 
 def validate_host_policy(raw):
@@ -77,6 +96,7 @@ def observation_for_policy(raw, policy):
     """Return a copy shaped for normalize_host_observation, the limit taken from the policy only."""
     if not isinstance(policy, HostPolicy):
         raise PolicyRefused("a validated host policy is required")
+    _check_policy(policy)  # again: a frozen dataclass can still be altered with object.__setattr__
     if not isinstance(raw, dict):
         raise ObservationRefused("invalid host observation")
     value = deepcopy(raw)

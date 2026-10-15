@@ -212,3 +212,11 @@ refactorisation, à part).
 | 0049 | Reçu pur **expérimental** de bascule d'alias : rejeu, reçu incomplet, bascule non observée, chaîne ; faits de retrait pour la rétention | 6 réussis ; 10 sabotages, 9 tués, 1 équivalent retiré |
 | 0050 | Passages G256-4/5 : identité sans ambiguïté de séparateur, projection servie = dernière lue (rien supprimé), messages vides ; tue un sabotage survivant de `core/retrieval/indexed.py` (point hors bornes = rappel entier en échec) | 27 réussis, 20 rouges avant |
 | 0051 | Contre-revue G257 : écriture ≠ reste de l'échéance de lecture (tue un sabotage survivant), rappel long, en-tête/corps lents, borne de l'écriture ; `xfail` strict : verrou de rappel tenu pendant l'écriture (proposition) | 6 réussis + 1 xfail, 5 passages ; suite Memory **2 869 réussis, 18 ignorés, 5 xfail** |
+
+## Patchs 0052 à 0054 (G258, base `a0cc112`, dans l'ordre)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0052 | Contre-revue du verrou G259 : rappel servi pendant deux écritures bloquées (réponse normale, erreur, réponse trop grande), capacité bornée, calculs un par un, client coupé ; réponse figée sous verrou (tue un sabotage qui survit aux 57 tests du pont) | 7 réussis, 3 passages |
+| 0053 | Reçu de bascule : ancres validées, rejeu entre vérifications, même `epoch_window` que la rétention, verdicts monotones | 8 réussis, 5 rouges avant |
+| 0054 | Budgets optionnels de la projection de passages (par archive, total avec points dépassés), refus sans effet, `stats()` | 8 réussis ; suite Memory **2 896 réussis, 18 ignorés, 4 xfail** |
