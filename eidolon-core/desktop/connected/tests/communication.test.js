@@ -240,3 +240,33 @@ test("G165: the selected microphone disappears from the list during capture (dev
   assert.equal(media.live(), 0);
   assert.deepEqual(sent.filter((c) => c.path === "/v1/comm/stt"), []);
 });
+
+
+test("G281: explicit permission reveals devices hidden before consent, then closes tracks", async () => {
+  for (const [kind, deviceKind] of [["microphone", "audioinput"], ["camera", "videoinput"]]) {
+    const devices = [], media = fakeMedia(devices);
+    const get = media.getUserMedia;
+    media.getUserMedia = async (constraints) => {
+      const stream = await get(constraints);
+      devices.push({kind: deviceKind, deviceId: "revealed", label: "Device"});
+      return stream;
+    };
+    const {comm, sent} = setup({media});
+    await comm.refresh();
+    assert.equal(media.calls.length, 0);
+    const state = await comm.enable(kind);
+    assert.equal(state[kind].state, "ready");
+    assert.equal(state[kind].selected, "revealed");
+    assert.equal(media.calls[0][kind === "microphone" ? "audio" : "video"].deviceId, undefined);
+    assert.equal(media.live(), 0);
+    assert.equal(sent.length, 0);
+  }
+});
+
+test("G281: permission rejection with an empty list stays a rejection", async () => {
+  const {comm, media} = setup({media: fakeMedia([], {error: "NotAllowedError"})});
+  await comm.refresh();
+  assert.equal((await comm.enable("camera")).camera.state, "permission_denied");
+  assert.equal(media.calls.length, 1);
+  assert.equal(media.live(), 0);
+});

@@ -2574,3 +2574,9 @@ G279 implémenté : lanceur DPAPI, remise éphémère au client sans IPC, formul
 Demande toytoy à 23 h 47 Europe/Paris : affichage des messages trop laborieux. Base distante 704a7d8 ; C193 inchangé. Lot pris : présentation connected, détails techniques et gestion de session repliables, messages lisibles, suppression du défilement imbriqué. Authentification, erreurs et confirmations conservées.
 
 G280 : messages Vous/Eidolon, provenance repliée, gestion de session et historique repliés, défilement unique sans repositionnement forcé. 45 tests conversation réussis ; bundle régénéré et contrôlé. Chromium local absent : rendu visuel PC à confirmer. Alertes de contexte/citations et confirmations conservées visibles.
+
+## G281 — amorçage permissions micro/caméra, 16/10/2026
+
+Signalement toytoy à 23 h 56 : périphériques branchés mais indisponibles. Base f8a9cc8 ; C193 inchangé. Lot pris : permettre la demande explicite getUserMedia avant une énumération complète ; aucune capture automatique. Refus et absence distingués, pistes relâchées.
+
+G281 : 18 tests communication réussis, dont périphériques masqués avant consentement et refus sans inventaire. Bundle régénéré. Validation matérielle Windows requise ; cause sur le PC non encore confirmée.

@@ -111,15 +111,16 @@
       if (kind === "speaker") { set("speaker", "ready"); return snapshotState(); }
       var dev = st[kind];
       var permission = ++permissionEpoch[kind];
-      if (!dev.selected) { set(kind, "unavailable"); return snapshotState(); }
-      var constraints = kind === "microphone" ? { audio: { deviceId: { exact: dev.selected } } }
-        : { video: Object.assign({ deviceId: { exact: dev.selected } }, VIDEO) };
+      // A browser may hide devices and identifiers until the first explicit permission request.
+      var selection = dev.selected ? { deviceId: { exact: dev.selected } } : {};
+      var constraints = kind === "microphone" ? { audio: dev.selected ? selection : true }
+        : { video: Object.assign({}, selection, VIDEO) };
       try {
         stopTracks(await deps.media.getUserMedia(constraints));       // permission only: nothing kept open
         if (permission !== permissionEpoch[kind]) return snapshotState();
         await refresh();
         if (permission !== permissionEpoch[kind]) return snapshotState();
-        set(kind, "ready");
+        set(kind, dev.selected ? "ready" : "unavailable");
       } catch (e) { if (permission === permissionEpoch[kind]) set(kind, errorState(e)); }
       return snapshotState();
     }
@@ -357,7 +358,8 @@
         line.className = "comm-indicator " + dev.indicator.tone + (dev.indicator.recording ? " recording" : "");
         var box = $("comm-" + pair[0] + "-on");
         box.checked = ["ready", "capturing", "processing"].indexOf(dev.state) !== -1;
-        box.disabled = dev.state === "unavailable" && pair[1] !== "speaker";
+        // Keep the user's permission gesture reachable even before enumeration exposes a device.
+        box.disabled = false;
       });
       fill($("comm-mic-select"), s.microphone);
       fill($("comm-camera-select"), s.camera);
