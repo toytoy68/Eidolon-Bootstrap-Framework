@@ -75,7 +75,7 @@ def main(argv=None):
     try:
         from .runtime_json import read_json_snapshot
         from pathlib import Path
-        f=Path(a.input).absolute();data=read_json_snapshot(str(f.parent),f.name,max_bytes=4*1024*1024,max_depth=6)
+        f=Path(a.input).absolute();data=read_json_snapshot(str(f.parent),f.name,max_bytes=1024*1024,max_depth=6)
         print(json.dumps(evaluate(data,max_far=a.max_far),ensure_ascii=False,allow_nan=False));return 0
     except (OSError,ValueError,TypeError): print('{"state":"EVALUATION_REFUSED","activated":false}');return 2
 

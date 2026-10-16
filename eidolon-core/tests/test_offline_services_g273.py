@@ -256,3 +256,22 @@ def test_real_measurement_pipeline_synthetic_encoder_no_vectors_in_report(tmp_pa
     with pytest.raises(ValueError,match='DUPLICATE_CAPTURE'):measure(settings(),manifest,str(tmp_path),observer=synthetic)
     manifest['consented']=False
     with pytest.raises(ValueError,match='CONSENT'):measure(settings(),manifest,str(tmp_path),observer=synthetic)
+
+
+def test_operator_cli_entry_points_on_real_private_files(tmp_path):
+    import json
+    import subprocess
+    import sys
+    lib,_=library(tmp_path)
+    def run(module,*args):
+        result=subprocess.run([sys.executable,'-B','-m','eidolon_core.'+module,*args],capture_output=True,text=True,timeout=15)
+        assert result.returncode==0,(result.stdout,result.stderr)
+        return json.loads(result.stdout)
+    cfg=tmp_path/'runtime.json';cfg.write_text(json.dumps(lib.config));cfg.chmod(0o600)
+    report=run('library_sync','--config',str(cfg),'--directory',lib.directory,'--client','pc0','--root','nas','--sync')
+    assert report['state']=='SYNCED_EXCERPTS_ONLY'
+    assert run('retention_preview','--directory',lib.directory,'--older-than-days','90')['deleted'] is False
+    data=tmp_path/'trials.json';data.write_text(json.dumps(dataset()))
+    assert run('identity_evaluation','--input',str(data),'--max-far','0')['state']=='SYNTHETIC_ONLY'
+    queue=gpu(tmp_path);configfile=tmp_path/'gpu.json';configfile.write_text(json.dumps(queue.config))
+    assert run('gpu_queue','--config',str(configfile),'status')['hardware_measured'] is False
