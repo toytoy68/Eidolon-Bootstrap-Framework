@@ -46,8 +46,9 @@ function setup(over) {
   });
   const players = [];
   const comm = M.createCommunication({
+    createGate: require("../src/auto-voice.js").createGate,
     media, transport, key: () => "ecc_" + "A".repeat(43),
-    recorder: () => ({ stop: async () => ({ samples: new Float32Array(48000).fill(0.1), rate: 48000 }), cancel() { this.cancelled = true; } }),
+    recorder: over.recorder || (() => ({ stop: async () => ({ samples: new Float32Array(48000).fill(0.1), rate: 48000 }), cancel() { this.cancelled = true; } })),
     grabFrame: async () => new Uint8Array([0xff, 0xd8, 0xff, 0xd9]),
     player: (b64) => {
       let finish; const p = { b64, stopped: false, stop() { this.stopped = true; finish(); } };
@@ -269,4 +270,26 @@ test("G281: permission rejection with an empty list stays a rejection", async ()
   assert.equal((await comm.enable("camera")).camera.state, "permission_denied");
   assert.equal(media.calls.length, 1);
   assert.equal(media.live(), 0);
+});
+
+
+test("G282: automatic segmentation releases the microphone before STT; silence never leaves PC", async () => {
+  let sample;
+  const recorder = (stream, callback) => { sample = callback; return {stop: async () => ({samples:new Float32Array(16000).fill(.1),rate:16000}),cancel(){}}; };
+  const f=setup({recorder}); await f.comm.refresh(); await f.comm.enable("microphone");
+  let result=f.comm.listenAutomatic(); await new Promise(r=>setImmediate(r));
+  for(let i=0;i<100;i++)sample(new Float32Array(1600),16000);
+  assert.equal((await result).empty,true);assert.equal(f.sent.length,0);assert.equal(f.media.live(),0);
+  result=f.comm.listenAutomatic(); await new Promise(r=>setImmediate(r));
+  for(let i=0;i<3;i++)sample(new Float32Array(1600).fill(.1),16000);
+  for(let i=0;i<15;i++)sample(new Float32Array(1600),16000);
+  assert.equal((await result).text,"Diagnostique le NAS.");assert.equal(f.media.live(),0);assert.equal(f.sent.length,1);
+});
+
+test("G282: stopping while permission is pending releases late tracks and drops capture", async () => {
+  const f=setup();await f.comm.refresh();await f.comm.enable("microphone");
+  const get=f.media.getUserMedia;let release;
+  f.media.getUserMedia=async c=>{await new Promise(r=>release=r);return get(c);};
+  const result=f.comm.listenAutomatic();f.comm.cancelTalk();release();
+  assert.equal(await result,null);await new Promise(r=>setImmediate(r));assert.equal(f.media.live(),0);assert.equal(f.sent.length,0);
 });

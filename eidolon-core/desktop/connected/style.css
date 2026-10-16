@@ -436,3 +436,8 @@ input[type="password"] {
   .conv-user { max-width: 95%; }
   .conv-reply { padding: .75rem; }
 }
+
+.voice-auto { margin: 1rem 0; padding: .8rem; border: 1px solid var(--accent); border-radius: 8px; }
+.voice-auto h4 { margin: 0 0 .5rem; }
+.voice-auto label { display: block; margin: .5rem 0; }
+#voice-auto-stop { background: #a3231b; color: white; }

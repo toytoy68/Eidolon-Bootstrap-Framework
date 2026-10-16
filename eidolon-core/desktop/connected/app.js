@@ -2949,6 +2949,89 @@
   else root.EidolonConversation = api;
 })(typeof window !== "undefined" ? window : this);
 
+/* ---- src/auto-voice.js ---- */
+/* ==========================================================
+ * Projet      : Eidolon Core
+ * Organisation: Eidolon Core Technologies (ECT)
+ * Fichier     : auto-voice.js
+ * Description : Veille vocale sur VM locale, segmentation et envoi conversationnel
+ * Standard    : Eidolon Presentation Standard v1
+ * ========================================================== */
+(function (root) {
+  "use strict";
+  // Energy gate only: this is not a speech recognizer. Whisper performs recognition on the local VM.
+  function createGate() {
+    var elapsed = 0, voiced = 0, quiet = 0;
+    return { feed: function (samples, rate) {
+      var ms = samples.length * 1000 / rate, sum = 0;
+      for (var i = 0; i < samples.length; i++) sum += samples[i] * samples[i];
+      elapsed += ms;
+      if (Math.sqrt(sum / Math.max(1, samples.length)) >= 0.015) { voiced += ms; quiet = 0; }
+      else quiet += ms;
+      if (voiced >= 250 && quiet >= 1500) return "speech";
+      // Long continuous speech is discarded, never silently submitted as a truncated command.
+      if (elapsed >= 28000 || (voiced < 250 && elapsed >= 10000)) return "silence";
+      return null;
+    } };
+  }
+  function wake(text, calls) {
+    var match = /^\s*[«"“]*\s*(eidolon|dis[\s-]+moi|dit[\s-]+moi)(?=$|[\s!?,.:;»"”])/i.exec(text || "");
+    if (!match || !(match[1].toLowerCase() === "eidolon" ? calls.eidolon : calls.disMoi)) return null;
+    return text.slice(match[0].length).replace(/^[\s!?,.:;»"”]+/, "").trim();
+  }
+  function create(deps) {
+    var generation = 0, running = false;
+    var pause = deps.pause || function () { return new Promise(function (resolve) { setTimeout(resolve, 400); }); };
+    function change(state, note) { if (deps.change) deps.change(state, note); }
+    function stop(note) {
+      generation++; running = false; deps.cancel();
+      change("off", note || "Vocal automatique arrêté. Micro relâché.");
+    }
+    async function start() {
+      if (running) return;
+      var calls = deps.calls();
+      if (!calls.eidolon && !calls.disMoi) { change("off", "Choisissez au moins un appel vocal."); return; }
+      var mine = ++generation, waiting = false;
+      running = true;
+      function current() { return running && mine === generation; }
+      try {
+        change("starting", "Autorisation du micro…");
+        await deps.prepare();
+        while (current()) {
+          change(waiting ? "listening" : "standby", waiting ? "Je vous écoute — envoi après une pause de 1,5 s." : "Veille vocale active — dites « Eidolon » ou « Dis-moi ». Micro ouvert.");
+          var result = await deps.listen();
+          if (!current()) break;
+          if (!result) throw new Error("Capture interrompue ou transcription indisponible. Relancez le vocal.");
+          if (result.empty || !result.text || !result.text.trim()) { waiting = false; continue; }
+          var text = waiting ? result.text.trim() : wake(result.text, calls);
+          if (text === null) continue;
+          if (!text) {
+            change("speaking", "Eidolon : Oui ? — micro en pause.");
+            if (!await deps.speak("Oui ?")) throw new Error("Voix indisponible : vérifiez la sortie audio.");
+            if (!current()) break;
+            await pause(); waiting = true; continue;
+          }
+          waiting = false;
+          change("sending", "Message envoyé — micro en pause pendant la réponse.");
+          var reply = await deps.send(text);
+          if (!current()) break;
+          if (typeof reply !== "string" || !reply.trim()) throw new Error("Réponse vocale indisponible : consultez la conversation.");
+          change("speaking", "Eidolon répond — micro en pause.");
+          if (!await deps.speak(reply.slice(0, 2000))) throw new Error("Lecture vocale interrompue ou indisponible.");
+          if (!current()) break;
+          await pause();
+        }
+      } catch (error) {
+        if (current()) stop(error.message || "Vocal interrompu.");
+      }
+    }
+    return { start: start, stop: stop, active: function () { return running; } };
+  }
+  var api = { createGate: createGate, wake: wake, create: create };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.EidolonAutoVoice = api;
+})(typeof window !== "undefined" ? window : this);
+
 /* ---- src/communication.js ---- */
 /* ==========================================================
  * Projet      : Eidolon Core
@@ -2959,7 +3042,7 @@
  * ========================================================== */
 // Browser APIs are injected (deps), so every rule here is tested without a real device.
 // deps.player(wavBase64) returns {done: Promise, stop()}; stop() must end playback at once AND resolve done.
-// Rules (docs/COMMUNICATION.md §2): everything is OFF until the user switches it on; capture only while
+// Manual mode rules (automatic mode is explicitly started separately): everything is OFF until the user switches it on; capture only while
 // the user holds "talk" or asks one snapshot; the capture indicator is on for exactly that time; the
 // transcript is returned to the page as editable text, never sent as a turn by itself; speaking stops
 // when the user talks (anti-echo); no recording is kept; a missing device never blocks typed text.
@@ -3020,7 +3103,7 @@
     KINDS.forEach(function (k) { st[k] = { state: k === "speaker" ? "disabled" : "unavailable", devices: [], selected: null, reason: null }; });
     var listeners = [], talk = null, speakEpoch = 0, player = null, talkEpoch = 0;
     var cameraEpoch = 0, cameraStream = null, permissionEpoch = {microphone:0, camera:0};
-    var sttKey = null, ttsKey = null;
+    var sttKey = null, ttsKey = null, automaticDone = null, resetListeners = [];
 
     function emit() { listeners.forEach(function (fn) { fn(snapshotState()); }); }
     function set(kind, state, reason) { st[kind].state = state; st[kind].reason = reason || null; emit(); }
@@ -3095,21 +3178,23 @@
       return true;
     }
 
-    async function startTalk() {
+    async function startTalk(options) {
+      options = options || {};
       if (st.microphone.state !== "ready") return false;
       stopSpeaking();                                                 // anti-echo: never listen to ourselves
       var stream, epoch = ++talkEpoch;
       try { stream = await deps.media.getUserMedia({ audio: { deviceId: { exact: st.microphone.selected }, channelCount: 1 } }); }
       catch (e) { if (epoch === talkEpoch) set("microphone", errorState(e)); return false; }
       if (epoch !== talkEpoch) { stopTracks(stream); return false; }
-      talk = { stream: stream, recorder: deps.recorder(stream), epoch: epoch };
+      try { talk = { stream: stream, recorder: deps.recorder(stream, options.onSamples), epoch: epoch }; }
+      catch (error) { stopTracks(stream); set("microphone", "unavailable"); throw error; }
       // G165: a track that ends by itself (device unplugged, taken by the system) stops the capture.
       (stream.getTracks ? stream.getTracks() : []).forEach(function (track) {
         if (track.addEventListener) track.addEventListener("ended", function () {
           if (talk && talk.epoch === epoch) { cancelTalk(); set("microphone", "disabled", "débranché"); refresh(); }
         });
       });
-      talk.timer = deps.setTimeout(function () { if (talk && talk.epoch === epoch) stopTalk(); }, max);
+      talk.timer = deps.setTimeout(function () { if (talk && talk.epoch === epoch) { if (options.onLimit) options.onLimit(); else stopTalk(); } }, max);
       set("microphone", "capturing");
       return true;
     }
@@ -3140,11 +3225,40 @@
     }
 
     function cancelTalk() {
+      if (automaticDone) { var done = automaticDone; automaticDone = null; done(null); }
       talkEpoch++;
       if (talk) { deps.clearTimeout(talk.timer); talk.recorder.cancel(); stopTracks(talk.stream); talk = null; }
       if (st.microphone.state === "processing" && sttKey) deps.transport("DELETE", "/v1/comm/stt", null, sttKey).catch(function () {});
       sttKey = null;
       if (st.microphone.state === "capturing" || st.microphone.state === "processing") set("microphone", "ready", "annulé");
+    }
+
+    function listenAutomatic() {
+      return new Promise(function (resolve, reject) {
+        if (automaticDone || st.microphone.state !== "ready") { reject(new Error("Micro indisponible")); return; }
+        var finished = false;
+        automaticDone = resolve;
+        function finish(discard) {
+          if (finished) return;
+          finished = true;
+          if (discard) { automaticDone = null; cancelTalk(); resolve({empty: true, text: ""}); return; }
+          stopTalk().then(function (result) {
+            if (automaticDone === resolve) { automaticDone = null; resolve(result); }
+          }, function (error) {
+            if (automaticDone === resolve) { automaticDone = null; reject(error); }
+          });
+        }
+        var gate = (deps.createGate || root.EidolonAutoVoice.createGate)();
+        startTalk({ onSamples: function (samples, rate) {
+          if (finished) return;
+          var end = gate.feed(samples, rate);
+          if (end) finish(end === "silence");
+        }, onLimit: function () { finish(true); } }).then(function (started) {
+          if (!started && automaticDone === resolve) { automaticDone = null; reject(new Error("Micro indisponible")); }
+        }).catch(function (error) {
+          cancelTalk(); reject(error);
+        });
+      });
     }
 
     async function speak(text) {
@@ -3204,7 +3318,8 @@
 
     if (deps.media && deps.media.onDeviceChange) deps.media.onDeviceChange(function () { refresh(); });
     return { refresh: refresh, enable: enable, disable: disable, select: select, startTalk: startTalk,
-      reset: function () { KINDS.forEach(disable); },
+      reset: function () { resetListeners.forEach(function (fn) { fn(); }); KINDS.forEach(disable); },
+      onReset: function (fn) { resetListeners.push(fn); }, listenAutomatic: listenAutomatic,
       stopTalk: stopTalk, cancelTalk: cancelTalk, speak: speak, stopSpeaking: stopSpeaking, snapshot: snapshot,
       state: snapshotState, onChange: function (fn) { listeners.push(fn); } };
   }
@@ -3227,12 +3342,13 @@
       } : { enumerateDevices: function () { return Promise.resolve([]); },
             getUserMedia: function () { var e = new Error("no media"); e.name = "NotFoundError"; return Promise.reject(e); } },
       // Microphone samples kept in memory only until "stop"; nothing is written anywhere.
-      recorder: function (stream) {
+      recorder: function (stream, onSamples) {
         var ctx = new AudioCtx(), source = ctx.createMediaStreamSource(stream);
         var node = ctx.createScriptProcessor(4096, 1, 1), parts = [], length = 0, done = false;
         node.onaudioprocess = function (ev) {
           if (done) return;
           var chunk = new Float32Array(ev.inputBuffer.getChannelData(0)); parts.push(chunk); length += chunk.length;
+          if (onSamples) onSamples(chunk, ctx.sampleRate);
         };
         source.connect(node); node.connect(ctx.destination);
         function finish() { done = true; try { source.disconnect(); node.disconnect(); } catch (e) { /* closed */ } return ctx.close(); }
@@ -3263,14 +3379,15 @@
       },
       // Web Audio from memory: no data:/blob: URL, so the page CSP stays unchanged. stop() resolves done.
       player: function (b64) {
-        var ctx = new AudioCtx(), source = null, finish;
+        var ctx = new AudioCtx(), source = null, finish, stopped = false;
         var done = new Promise(function (resolve) { finish = resolve; });
         ctx.decodeAudioData(bytes(b64).buffer).then(function (buffer) {
+          if (stopped) return;
           source = ctx.createBufferSource(); source.buffer = buffer; source.connect(ctx.destination);
           source.onended = function () { ctx.close(); finish(); };
           source.start();
         }, function () { ctx.close(); finish(); });
-        return { done: done, stop: function () { try { if (source) source.stop(); } catch (e) { /* ended */ } ctx.close(); finish(); } };
+        return { done: done, stop: function () { stopped = true; try { if (source) source.stop(); } catch (e) { /* ended */ } ctx.close(); finish(); } };
       },
       transport: function (method, path, body, token, type) {
         var headers = { "Authorization": "Bearer " + token }, init = { method: method, headers: headers, cache: "no-store",
@@ -3293,7 +3410,36 @@
   // ---- Binding to the "Voix et caméra" block of index.html ----
   function mount(doc, comm, hooks) {
     function $(id) { return doc.getElementById(id); }
-    var spoken = 0;
+    var spoken = 0, voicePending = 0;
+    var auto = root.EidolonAutoVoice && hooks && hooks.voiceSend ? root.EidolonAutoVoice.create({
+      prepare: async function () {
+        var state = await comm.enable("microphone");
+        if (state.microphone.state !== "ready") throw new Error("Autorisez le micro avant de démarrer.");
+        await comm.enable("speaker");
+        spoken = doc.querySelectorAll("#conv-log .conv-reply").length;
+      },
+      listen: function () { return comm.listenAutomatic(); },
+      cancel: function () { comm.cancelTalk(); comm.stopSpeaking(); },
+      speak: function (text) { return comm.speak(text); },
+      send: async function (text) {
+        voicePending++;
+        try { return await hooks.voiceSend(text); }
+        finally { voicePending--; }
+      },
+      calls: function () { return { eidolon: $("voice-wake-eidolon").checked, disMoi: $("voice-wake-dis-moi").checked }; },
+      change: function (state, note) {
+        $("voice-auto-state").textContent = note;
+        $("voice-auto-start").hidden = state !== "off";
+        $("voice-auto-stop").hidden = state === "off";
+        $("voice-wake-eidolon").disabled = $("voice-wake-dis-moi").disabled = state !== "off";
+      }
+    }) : null;
+    if (auto) {
+      $("voice-auto-start").addEventListener("click", function () { auto.start(); });
+      $("voice-auto-stop").addEventListener("click", function () { auto.stop(); });
+      comm.onReset(function () { auto.stop(); });
+    }
+
     function fill(select, dev) {
       var keep = select.value;
       while (select.firstChild) select.removeChild(select.firstChild);
@@ -3326,6 +3472,7 @@
     comm.onChange(render);
     function toggle(id, kind) {
       $(id).addEventListener("change", function (ev) {
+        if (auto) auto.stop();
         if (ev.target.checked) {
           if (kind === "speaker") spoken = doc.querySelectorAll("#conv-log .conv-reply").length;   // never read history
           comm.enable(kind);
@@ -3333,9 +3480,10 @@
       });
     }
     toggle("comm-mic-on", "microphone"); toggle("comm-speaker-on", "speaker"); toggle("comm-camera-on", "camera");
-    $("comm-mic-select").addEventListener("change", function (ev) { comm.select("microphone", ev.target.value); });
+    $("comm-mic-select").addEventListener("change", function (ev) { if (auto) auto.stop(); comm.select("microphone", ev.target.value); });
     $("comm-camera-select").addEventListener("change", function (ev) { comm.select("camera", ev.target.value); });
     $("comm-talk").addEventListener("click", function () {
+      if (auto && auto.active()) { auto.stop(); return; }
       if (comm.state().microphone.state === "capturing") {
         comm.stopTalk().then(function (r) {
           if (!r) return;
@@ -3345,8 +3493,8 @@
         });
       } else comm.startTalk();
     });
-    $("comm-talk-cancel").addEventListener("click", function () { comm.cancelTalk(); });
-    $("comm-voice-stop").addEventListener("click", function () { comm.stopSpeaking(); });
+    $("comm-talk-cancel").addEventListener("click", function () { if (auto) auto.stop(); comm.cancelTalk(); });
+    $("comm-voice-stop").addEventListener("click", function () { if (auto) auto.stop(); comm.stopSpeaking(); });
     function look(purpose) {
       comm.snapshot(purpose).then(function (r) {
         if (!r) return;
@@ -3363,6 +3511,7 @@
       if (replies.length <= spoken) { spoken = Math.min(spoken, replies.length); return; }
       var last = replies[replies.length - 1];
       spoken = replies.length;
+      if (voicePending || (auto && auto.active())) return;
       var text = last.querySelector(".conv-text, .conv-note");
       if (text && text.textContent.trim()) comm.speak(text.textContent.trim().slice(0, 2000));
     });
@@ -3908,7 +4057,17 @@
         return conversation.conversation.authorization();
       }));
       comm.onChange(function (state) { eyeInput.comm = state; eye(); });
-      commApi.mount(document, comm, { observe: function (node, fn) {
+      commApi.mount(document, comm, { voiceSend: async function (text) {
+        var engine = conversation.conversation, before = engine.state();
+        if (document.getElementById("conv-text").value.trim()) throw new Error("Un brouillon est présent : envoyez-le ou effacez-le avant le vocal.");
+        if (before.phase !== "open" || before.items.some(function (item) { return ["sent", "pending", "uncertain"].includes(item.status); })) throw new Error("Un message attend une réponse ou une vérification.");
+        var count = before.items.length, id = before.conversationId;
+        await engine.send(text);
+        var after = engine.state(), item = after.items[count];
+        if (after.conversationId !== id || !item || item.status !== "received" || !item.reply) throw new Error("Envoi non confirmé : consultez la conversation, aucun renvoi automatique.");
+        var reply = item.reply;
+        return reply.core_note ? (root.EidolonConversation.NOTES[reply.core_note] || "Consultez la réponse dans la conversation.") : reply.model_text;
+      }, observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });
       window.addEventListener("pagehide", function () { comm.reset(); });

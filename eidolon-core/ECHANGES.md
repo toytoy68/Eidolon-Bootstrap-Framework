@@ -2580,3 +2580,9 @@ G280 : messages Vous/Eidolon, provenance repliée, gestion de session et histori
 Signalement toytoy à 23 h 56 : périphériques branchés mais indisponibles. Base f8a9cc8 ; C193 inchangé. Lot pris : permettre la demande explicite getUserMedia avant une énumération complète ; aucune capture automatique. Refus et absence distingués, pistes relâchées.
 
 G281 : 18 tests communication réussis, dont périphériques masqués avant consentement et refus sans inventaire. Bundle régénéré. Validation matérielle Windows requise ; cause sur le PC non encore confirmée.
+
+## G282 — vocal automatique avec appel, 17/10/2026
+
+Demande toytoy à 00 h 13 Europe/Paris : ajouter Eidolon/Dis-moi, réponse Oui ?, fin par silence et envoi automatique. Base e51fd86. Lot pris : contrôleur vocal, segmentation locale, UI, tests et recette voix synthétique. Détection lexicale par Whisper sur la VM locale (parole de veille transmise à la VM, explicite dans l'interface), aucune reconnaissance cloud ni promesse de mot-clé entièrement sur PC. Aucun accord de mission automatique.
+
+G282 : 75 tests Node réussis ; Piper→Whisper réel reconnaît les deux appels (5,4 s et 4,9 s avec audio synthétique). UI explicite la transcription de veille sur VM. Contrôles arrêt, anti-écho, retour tardif, aucune relance réseau automatique. [Guide et limites](docs/VOICE-AUTO-G282.md). PC acoustique et rendu restent à confirmer ; aucune nouvelle compilation EXE.

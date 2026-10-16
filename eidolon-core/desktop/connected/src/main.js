@@ -121,7 +121,17 @@
         return conversation.conversation.authorization();
       }));
       comm.onChange(function (state) { eyeInput.comm = state; eye(); });
-      commApi.mount(document, comm, { observe: function (node, fn) {
+      commApi.mount(document, comm, { voiceSend: async function (text) {
+        var engine = conversation.conversation, before = engine.state();
+        if (document.getElementById("conv-text").value.trim()) throw new Error("Un brouillon est présent : envoyez-le ou effacez-le avant le vocal.");
+        if (before.phase !== "open" || before.items.some(function (item) { return ["sent", "pending", "uncertain"].includes(item.status); })) throw new Error("Un message attend une réponse ou une vérification.");
+        var count = before.items.length, id = before.conversationId;
+        await engine.send(text);
+        var after = engine.state(), item = after.items[count];
+        if (after.conversationId !== id || !item || item.status !== "received" || !item.reply) throw new Error("Envoi non confirmé : consultez la conversation, aucun renvoi automatique.");
+        var reply = item.reply;
+        return reply.core_note ? (root.EidolonConversation.NOTES[reply.core_note] || "Consultez la réponse dans la conversation.") : reply.model_text;
+      }, observe: function (node, fn) {
         if (window.MutationObserver) new MutationObserver(fn).observe(node, { childList: true });
       } });
       window.addEventListener("pagehide", function () { comm.reset(); });

@@ -359,7 +359,7 @@
     <p id="comm-closed-note" class="help">Ouvrez une conversation pour utiliser le micro, la voix d'Eidolon ou la caméra. Tout reste éteint par défaut.</p>
     <section id="comm" class="conv-proposal comm" aria-labelledby="comm-title" hidden>
           <h3 id="comm-title">Voix et caméra</h3>
-          <p class="help">Tout est éteint par défaut. Rien n'est enregistré ; le texte reste toujours disponible.</p>
+          <p class="help">Micro et caméra activés à votre demande. Le mode vocal automatique garde le micro ouvert en veille ; le texte reste disponible.</p>
           <div class="comm-devices">
             <div class="comm-device">
               <label><input id="comm-mic-on" type="checkbox"> Micro</label>
@@ -375,6 +375,15 @@
               <select id="comm-camera-select" aria-label="Choisir la caméra" disabled></select>
               <span id="comm-camera-state" class="comm-indicator" role="status" aria-live="polite"></span>
             </div>
+          </div>
+          <div class="voice-auto">
+            <h4>Conversation vocale automatique</h4>
+            <p class="help">Le micro reste ouvert en veille. Les passages parlés sont transcrits sur votre serveur Eidolon, sans service cloud. Une pause de 1,5 seconde termine la phrase. Après l’appel, le message est envoyé automatiquement. Les actions restent à confirmer.</p>
+            <label><input type="checkbox" id="voice-wake-eidolon" checked> Appel « Eidolon »</label>
+            <label><input type="checkbox" id="voice-wake-dis-moi" checked> Appel « Dis-moi »</label>
+            <button id="voice-auto-start" type="button">Démarrer le vocal auto</button>
+            <button id="voice-auto-stop" type="button" hidden>Arrêter l’écoute</button>
+            <p id="voice-auto-state" role="status" aria-live="polite">Vocal automatique arrêté.</p>
           </div>
           <div class="comm-actions">
             <button id="comm-talk" type="button" aria-pressed="false" disabled>Parler</button>
