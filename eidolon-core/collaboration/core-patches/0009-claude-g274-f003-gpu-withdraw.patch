@@ -1,0 +1,56 @@
+diff --git a/eidolon-core/src/eidolon_core/gpu_queue.py b/eidolon-core/src/eidolon_core/gpu_queue.py
+index 9a15ff4..f0d9e77 100644
+--- a/eidolon-core/src/eidolon_core/gpu_queue.py
++++ b/eidolon-core/src/eidolon_core/gpu_queue.py
+@@ -81,15 +81,32 @@ class Queue:
+         return {'schema':'eidolon-gpu-queue-report/1','jobs':rows,'capacity_mib':self.config['capacity_mib'],'resident_mib':self.config['resident_mib'],'hardware_measured':False,'preemption':False,'automatic_expiry':False}
+ 
++    def _withdraw(self,key):
++        """Best effort: cancel only a still-WAITING request, never an admitted one."""
++        for attempt in range(3):
++            try:
++                with self.db(True) as db:
++                    db.execute("UPDATE jobs SET state='CANCELLED',ended=? WHERE id=? AND state='WAITING'",(self.clock(),key))
++                return True
++            except sqlite3.Error:
++                if attempt<2: time.sleep(.5)
++        return False
++
+     def wait(self,key,kind,seconds=30,stopped=None):
+         self.enqueue(key,kind);deadline=time.monotonic()+seconds
+-        while True:
+-            if stopped is not None and stopped.is_set():
+-                self.cancel_waiting(key);raise ContractError("GPU_ADMISSION_CANCELLED: no engine started")
+-            row=self.acquire(key)
+-            if row['state']=='ACTIVE': return row['lease']
+-            if row['state']!='WAITING': raise ValueError('GPU_JOB_NOT_WAITING')
+-            if time.monotonic()>=deadline:
+-                self.cancel_waiting(key);raise ContractError('GPU_ADMISSION_TIMEOUT: no engine started')
+-            time.sleep(min(.05,max(0,deadline-time.monotonic())))
++        # G274-F003: any exit without a lease (stop, timeout, SQLite busy, error)
++        # withdraws the request; an orphan WAITING head would block every later turn.
++        try:
++            while True:
++                if stopped is not None and stopped.is_set():
++                    raise ContractError("GPU_ADMISSION_CANCELLED: no engine started")
++                row=self.acquire(key)
++                if row['state']=='ACTIVE': return row['lease']
++                if row['state']!='WAITING': raise ValueError('GPU_JOB_NOT_WAITING')
++                if time.monotonic()>=deadline:
++                    raise ContractError('GPU_ADMISSION_TIMEOUT: no engine started')
++                time.sleep(min(.05,max(0,deadline-time.monotonic())))
++        except BaseException:
++            self._withdraw(key)
++            raise
+ 
+ 
+diff --git a/eidolon-core/tests/test_claude_audit_g274.py b/eidolon-core/tests/test_claude_audit_g274.py
+index 7ff2582..ccd80be 100644
+--- a/eidolon-core/tests/test_claude_audit_g274.py
++++ b/eidolon-core/tests/test_claude_audit_g274.py
+@@ -186,5 +186,4 @@ def _gpu(tmp_path):
+ 
+ 
+-@F003
+ def test_f003_transient_lock_during_admission_leaves_no_orphan_head(tmp_path, monkeypatch):
+     """G274-F003: an exception between enqueue and admission leaves a WAITING row.

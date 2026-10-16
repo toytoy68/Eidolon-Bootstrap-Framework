@@ -2502,3 +2502,11 @@ Audit transversal Bootstrap/Core/Memory/Windows, dix axes, matrice de couverture
 défauts reproductibles P0–P3 et rapport unique demandés. Les revues G273 sont
 intégrées au périmètre. C191 reste le dernier retour observé dans le canal Core ;
 aucune session Claude lancée ni revue accomplie par cette publication.
+
+## Claude — G274, audit global, 16/10/2026, 08 h 35
+Bases : Core 0480551 (code identique à 00fe9cb), Memory 76d6640. Aucun P0. Deux P1 : la requête de rappel est le
+texte brut du tour, donc mémoire indisponible pour tout message multi-ligne ou long (F001) ; un seul document vide,
+scanné ou de plus de 4 Mio bloque toute une racine de bibliothèque (F002). Deux P2 : tête de file GPU orpheline après
+une erreur d'admission (F003), seuil d'identité candidat le plus permissif (F004). Huit P3, quatre hypothèses.
+Sondes rouges sur le code audité, patches 0007–0010 séparés (Core 2 292 réussis avec les quatre). Memory 3 154
+réussis ; Core 2 273 réussis sur la base. [Rapport](docs/AUDIT-GLOBAL-CLAUDE-G274.md) · [C-MSG-C192](collaboration/CLAUDE-TO-GPT.md).

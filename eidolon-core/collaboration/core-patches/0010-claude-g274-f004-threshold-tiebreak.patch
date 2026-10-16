@@ -1,0 +1,22 @@
+diff --git a/eidolon-core/src/eidolon_core/identity_evaluation.py b/eidolon-core/src/eidolon_core/identity_evaluation.py
+index 7684d06..474cfa2 100644
+--- a/eidolon-core/src/eidolon_core/identity_evaluation.py
++++ b/eidolon-core/src/eidolon_core/identity_evaluation.py
+@@ -62,5 +62,6 @@ def evaluate(data, *, max_far):
+         if fp/neg<=max_far: candidates.append(((pos-tp)/pos,score))
+     if not candidates: return {'state':'NO_THRESHOLD','activated':False,'engine':engine}
+-    _,threshold=min(candidates)
++    # G274-F004: at equal FRR, keep the highest threshold (fewest impostors accepted).
++    _,threshold=min(candidates,key=lambda c:(c[0],-c[1]))
+     validation=metrics(groups['validation'],threshold)
+     return {'schema':'eidolon-identity-evaluation-report/1','state':'SYNTHETIC_ONLY' if data['synthetic'] else 'MEASURED_CANDIDATE_REVIEW_REQUIRED','engine':engine,
+diff --git a/eidolon-core/tests/test_claude_audit_g274.py b/eidolon-core/tests/test_claude_audit_g274.py
+index 9a0079d..22d5061 100644
+--- a/eidolon-core/tests/test_claude_audit_g274.py
++++ b/eidolon-core/tests/test_claude_audit_g274.py
+@@ -259,5 +259,4 @@ SEPARABLE = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"],
+ 
+ 
+-@F004
+ @pytest.mark.parametrize("max_far", [0.0, 0.5])
+ def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_far):

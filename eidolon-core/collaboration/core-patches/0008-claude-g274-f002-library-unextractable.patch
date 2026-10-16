@@ -1,0 +1,91 @@
+diff --git a/eidolon-core/src/eidolon_core/library_sync.py b/eidolon-core/src/eidolon_core/library_sync.py
+index 52d9309..bc90f7a 100644
+--- a/eidolon-core/src/eidolon_core/library_sync.py
++++ b/eidolon-core/src/eidolon_core/library_sync.py
+@@ -92,6 +92,13 @@ class Library:
+             known={(r[0],r[1]) for r in db.execute("SELECT sha,json_extract(excerpt,'$.format') FROM versions WHERE profile=?",(profile,))}
+             count=db.execute("SELECT count(*) FROM versions").fetchone()[0]
++        skipped={}
+         for relative in names:
+             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
++            # G274-F002: a file above the extraction bound is listed (no hash, no excerpt)
++            # instead of aborting the root. Links, changes and budgets still abort.
++            with profile_files.opened(path,relative) as fd: size=os.fstat(fd).st_size
++            if size>documents.MAX_BYTES:
++                skipped["FILE_TOO_LARGE"]=skipped.get("FILE_TOO_LARGE",0)+1
++                batch.append((relative,None,size,None));continue
+             raw=profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES);total+=len(raw)
+             if total>MAX_BYTES: raise ValueError("LIBRARY_SCAN_BUDGET")
+@@ -101,11 +108,23 @@ class Library:
+             cache_key=(sha,documents.extension(Path(relative).name))
+             if cache_key not in known:
+-                if cache_key not in cache: cache[cache_key]=documents.extract(raw,Path(relative).name)
++                if cache_key not in cache:
++                    try: cache[cache_key]=documents.extract(raw,Path(relative).name)
++                    except documents.DocumentError as exc:
++                        # Empty, image-only, protected or malformed: present, not extracted,
++                        # retried at the next pass (no error is cached as a version).
++                        cache[cache_key]=str(exc)
++                if type(cache[cache_key]) is str:
++                    skipped[cache[cache_key]]=skipped.get(cache[cache_key],0)+1
++                    batch.append((relative,sha,len(raw),False));continue
+                 excerpt=dict(cache[cache_key],name=Path(relative).name)
+             batch.append((relative,sha,len(raw),excerpt))
+         if inventory(path,deadline=deadline)!=names: raise ValueError("LIBRARY_CHANGED")
+         # A second content pass detects changes during extraction (not an atomic filesystem snapshot).
+-        for relative,sha,_,_ in batch:
++        for relative,sha,size,_ in batch:
+             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
++            if sha is None:
++                with profile_files.opened(path,relative) as fd:
++                    if os.fstat(fd).st_size!=size: raise ValueError("LIBRARY_CHANGED")
++                continue
+             if hashlib.sha256(profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES)).hexdigest()!=sha:
+                 raise ValueError("LIBRARY_CHANGED")
+@@ -113,8 +132,11 @@ class Library:
+         with database(self.directory,'library.sqlite3',write=True) as db:
+             self._schema(db)
+-            missing=sum(not db.execute("SELECT 1 FROM versions WHERE profile=? AND root=? AND path=? AND sha=?",(profile,root,p,s)).fetchone() for p,s,_,_ in batch)
++            missing=sum(not db.execute("SELECT 1 FROM versions WHERE profile=? AND root=? AND path=? AND sha=?",(profile,root,p,s)).fetchone() for p,s,_,e in batch if s is not None and e is not False)
+             if db.execute("SELECT count(*) FROM versions").fetchone()[0]+missing>MAX_VERSIONS: raise ValueError("LIBRARY_STORAGE_BUDGET")
+             db.execute("UPDATE files SET present=0 WHERE profile=? AND root=?",(profile,root))
+             for relative,sha,size,excerpt in batch:
++                if sha is None or excerpt is False:
++                    db.execute("INSERT INTO files VALUES (?,?,?,?,1,?) ON CONFLICT(profile,root,path) DO UPDATE SET sha=excluded.sha,present=1,seen_at=excluded.seen_at",(profile,root,relative,sha,now))
++                    continue
+                 if excerpt is None:
+                     row=db.execute("SELECT excerpt FROM versions WHERE profile=? AND sha=? AND json_extract(excerpt,'$.format')=? LIMIT 1",(profile,sha,documents.extension(Path(relative).name))).fetchone()
+@@ -124,5 +146,5 @@ class Library:
+                 db.execute("INSERT INTO files VALUES (?,?,?,?,1,?) ON CONFLICT(profile,root,path) DO UPDATE SET sha=excluded.sha,present=1,seen_at=excluded.seen_at",(profile,root,relative,sha,now))
+             db.execute("INSERT INTO scans VALUES (?,?,?,?) ON CONFLICT(profile,root) DO UPDATE SET completed_at=excluded.completed_at,files=excluded.files",(profile,root,now,len(batch)))
+-        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":total*2,"memory_written":False,"source_deleted":False}
++        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":total*2,"not_extracted":dict(sorted(skipped.items())),"memory_written":False,"source_deleted":False}
+ 
+     def page(self, client, root, after=''):
+diff --git a/eidolon-core/tests/test_claude_audit_g274.py b/eidolon-core/tests/test_claude_audit_g274.py
+index 7ff2582..2cfe98a 100644
+--- a/eidolon-core/tests/test_claude_audit_g274.py
++++ b/eidolon-core/tests/test_claude_audit_g274.py
+@@ -152,8 +152,8 @@ def _image_only_pdf():
+ 
+ @pytest.mark.parametrize("name,payload", [
+-    pytest.param("vide.txt", b"", id="empty", marks=F002),
+-    pytest.param("blanc.md", b"   \n", id="blank", marks=F002),
+-    pytest.param("gros.pdf", b"%PDF-1.4\n" + b"0" * (5 * 1024 * 1024), id="over-4MiB", marks=F002),
+-    pytest.param("scan.pdf", None, id="image-only-pdf", marks=F002),   # no text layer
++    pytest.param("vide.txt", b"", id="empty"),
++    pytest.param("blanc.md", b"   \n", id="blank"),
++    pytest.param("gros.pdf", b"%PDF-1.4\n" + b"0" * (5 * 1024 * 1024), id="over-4MiB"),
++    pytest.param("scan.pdf", None, id="image-only-pdf"),   # no text layer
+     pytest.param("autre.txt", b"Un second fichier lisible.", id="control-readable"),
+ ])
+@@ -174,5 +174,8 @@ def test_f002_one_unextractable_document_does_not_block_the_whole_root(tmp_path,
+     assert result["files"] >= 1
+     paths = {entry["path"] for entry in library.page("pc0", "nas")["entries"]}
+-    assert "note.txt" in paths
++    assert "note.txt" in paths and name in paths
++    # Re-scan: unchanged result, nothing cached as a version for the skipped file.
++    again = library.scan("pc0", "nas")
++    assert again["new_versions"] == 0 and again["not_extracted"] == result["not_extracted"]
+ 
+ 
