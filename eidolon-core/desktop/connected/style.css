@@ -417,3 +417,22 @@ input[type="password"] {
 
 /* G273: untrusted library filenames remain readable on narrow screens. */
 #service-library-list button { display: block; max-width: 100%; overflow-wrap: anywhere; text-align: left; margin: .4rem 0; }
+
+/* G280: reading-first conversation, one page scroll, optional provenance. */
+.conversation .conv-log { max-height: none; overflow: visible; gap: 2rem; margin: 1.5rem auto; max-width: 68rem; }
+.conv-turn { border: 0; padding: 0; }
+.conv-speaker { margin: 0 0 .35rem auto; width: fit-content; color: var(--muted); font-size: .85rem; }
+.conv-user { margin-left: auto; width: fit-content; max-width: 85%; background: #304563; border-radius: 16px 16px 4px 16px; padding: .8rem 1.1rem; font-weight: 400; line-height: 1.65; }
+.conv-reply { margin-top: 1rem; padding: 1rem 1.2rem; border-radius: 4px 16px 16px; }
+.conv-text { font-size: 1.05rem; line-height: 1.75; margin: .6rem 0; }
+.conv-kind { color: var(--accent); font-size: .9rem; }
+.conv-details { margin-top: .8rem; color: var(--muted); font-size: .85rem; }
+.conv-details summary, .conv-options summary, .conv-recent summary { cursor: pointer; padding: .4rem 0; }
+.conv-options { margin-left: auto; max-width: 34rem; }
+.conv-options button { margin: .4rem .3rem .4rem 0; }
+.conv-recent { margin: .5rem 0; }
+#profile-services { padding: .5rem .8rem; margin: .5rem 0; }
+@media (max-width: 600px) {
+  .conv-user { max-width: 95%; }
+  .conv-reply { padding: .75rem; }
+}

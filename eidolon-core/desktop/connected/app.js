@@ -2681,8 +2681,9 @@
     var previousReply = null;
     st.items.forEach(function (item) {
       var li = el(doc, "li", "conv-turn");
+      li.appendChild(el(doc, "p", "conv-speaker", "Vous"));
       li.appendChild(el(doc, "p", "conv-user", item.text));
-      li.appendChild(el(doc, "p", "conv-state state-" + item.status, LABELS[item.status] + (item.error ? " — " + (busyNote(item.error) || item.error) : "")));
+      if (item.status !== "received" || item.error) li.appendChild(el(doc, "p", "conv-state state-" + item.status, LABELS[item.status] + (item.error ? " — " + (busyNote(item.error) || item.error) : "")));
       if (item.status === "uncertain" || item.status === "pending") {
         var retry = el(doc, "button", "media-secondary", item.status === "pending" ? "Vérifier la réponse" : "Renvoyer le même message");
         retry.type = "button"; retry.dataset.retry = item.key;
@@ -2691,7 +2692,7 @@
       var reply = item.reply;
       if (reply) {
         var box = el(doc, "div", "conv-reply kind-" + reply.kind.toLowerCase());
-        box.appendChild(el(doc, "p", "conv-kind", REPLY_KINDS[reply.kind] || reply.kind));
+        box.appendChild(el(doc, "p", "conv-kind", reply.kind === "ANSWER" ? "Eidolon" : (REPLY_KINDS[reply.kind] || reply.kind)));
         if (reply.core_note) {
           // Core decided; the model's own words are secondary and labelled as such.
           box.appendChild(el(doc, "p", "conv-note", NOTES[reply.core_note] || "Note de Core : " + reply.core_note));
@@ -2708,17 +2709,20 @@
         var partial = contextNote(reply.context);
         if (partial) box.appendChild(el(doc, "p", "help conv-context", partial));
         if (reply.candidates && reply.candidates.length) box.appendChild(el(doc, "p", "help", "Choix possibles : " + reply.candidates.join(", ")));
-        if (reply.sources && reply.sources.length) box.appendChild(el(doc, "p", "help", "Sources : " + reply.sources.join(", ")));
+        var details = el(doc, "details", "conv-details");
+        details.appendChild(el(doc, "summary", "", "Sources et détails"));
+        if (reply.sources && reply.sources.length) details.appendChild(el(doc, "p", "help", "Sources : " + reply.sources.join(", ")));
         var label = modelLabel(reply, previousReply);
-        if (label) box.appendChild(el(doc, "p", "help conv-model-id", label));
+        if (label) details.appendChild(el(doc, "p", "help conv-model-id", label));
         var persona = personalityLabel(reply, previousReply);
-        if (persona) box.appendChild(el(doc, "p", "help conv-personality", persona));
+        if (persona) details.appendChild(el(doc, "p", "help conv-personality", persona));
+        box.appendChild(details);
         previousReply = reply;
         li.appendChild(box);
       }
       log.appendChild(li);
     });
-    log.scrollTop = log.scrollHeight;                   // the newest exchange stays in view
+    // The page owns scrolling; rendering must not move a reader away from an older message.
     var card = doc.getElementById("conv-proposal");
     var p = st.proposal;
     card.hidden = !p || closed;

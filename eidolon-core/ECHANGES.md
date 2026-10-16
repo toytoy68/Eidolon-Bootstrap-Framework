@@ -2568,3 +2568,9 @@ G278 : prompt clarifié, délai POST turn 150 s, erreur NETWORK effacée au reje
 Demande toytoy, 16/10/2026 à 23 h 01 : retirer la saisie de clé au lancement. Base 91271d83d4351afc1a2e6467dc2dddd97cc61812. Lot pris : lanceur avec appairage SSH et conservation DPAPI par compte Windows, passage éphémère au client natif, ouverture de la page sans saisie. Authentification serveur inchangée, aucun secret dans URL/arguments/artefacts. Nouveau candidat Windows à construire et vérifier.
 
 G279 implémenté : lanceur DPAPI, remise éphémère au client sans IPC, formulaire existant ouvert automatiquement sur origine/racine exacte. Trois tests JS locaux réussis ; tests Rust/DPAPI et build verrouillé ajoutés au workflow Windows. [Guide](docs/WINDOWS-AUTO-PAIRING-G279.md). Validation physique PC à effectuer ; clé serveur jamais publiée et droits inchangés.
+
+## G280 — conversation lisible, 16/10/2026
+
+Demande toytoy à 23 h 47 Europe/Paris : affichage des messages trop laborieux. Base distante 704a7d8 ; C193 inchangé. Lot pris : présentation connected, détails techniques et gestion de session repliables, messages lisibles, suppression du défilement imbriqué. Authentification, erreurs et confirmations conservées.
+
+G280 : messages Vous/Eidolon, provenance repliée, gestion de session et historique repliés, défilement unique sans repositionnement forcé. 45 tests conversation réussis ; bundle régénéré et contrôlé. Chromium local absent : rendu visuel PC à confirmer. Alertes de contexte/citations et confirmations conservées visibles.

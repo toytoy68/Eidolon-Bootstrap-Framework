@@ -86,19 +86,21 @@
       <section id="conversation" class="panel conversation" aria-labelledby="conv-title">
         <div class="panel-head">
           <h2 id="conv-title" tabindex="-1">Conversation</h2>
+          <details class="conv-options"><summary>Gérer la conversation</summary>
           <button id="conv-close" class="media-secondary" type="button" hidden>Fermer la conversation</button>
           <button id="conv-revoke" type="button" hidden>Préparer le retrait de cette clé</button>
           <button id="conv-revoke-confirm" type="button" hidden>Confirmer le retrait de cette clé</button>
           <p id="conv-session-note" class="help" hidden>Fermer verrouille cette session et vide sa clé. Pour changer de profil, ouvrir avec sa propre clé. Retirer la clé exige un renouvellement par l’opérateur.</p>
-
+          </details>
         </div>
         <p id="conv-status" class="status" role="status" aria-live="polite"></p>
         <p id="conv-welcome" class="help">Saisissez votre clé de conversation dans la barre du haut. Elle est distincte du jeton de lecture et gardée en mémoire de cette page uniquement.</p>
         <div id="conv-body" hidden>
-          <div id="conv-recent" class="conv-recent" hidden>
+          <details id="conv-recent" class="conv-recent" hidden>
+          <summary>Conversations précédentes</summary>
           <p class="help">Reprendre une conversation précédente (rien n'est renvoyé automatiquement) :</p>
           <ul id="conv-recent-list" class="conv-recent-list"></ul>
-        </div>
+        </details>
           <details id="profile-services" hidden>
             <summary>Retenir ceci · Internet · Fichiers</summary>
             <p id="service-profile" class="help"></p>
