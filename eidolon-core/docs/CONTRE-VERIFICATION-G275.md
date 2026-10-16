@@ -62,3 +62,14 @@ rouge n’est présentée comme réussie.
 Les zones non examinées en profondeur par Claude restent identifiées dans son
 rapport. Cet audit ne certifie pas l’absence de défaut sur tout Eidolon.
 Les 50 contrôles PC/VM restent NOT_RUN. Aucun déploiement, compte, purge ou fusion main.
+
+## Clôture de qualification
+
+Code Core `48c5735079d33cab82ba2ce5a82f2f54820f97aa` : 2 306 réussis, huit
+exclusions, 1 328 sous-tests ; contrôles UID cinq ; job identité quatre sans
+exclusion (run 38866869488). Chromium 216 sans exclusion (38866869465).
+Memory `b36ada1ff4f505fa2c5d2778f74f3b0c836d2f4c` : 3 156 réussis, 26 exclusions,
+trois xfail historiques, 12 sous-tests ; worker 52 (38866368387), Qdrant ciblé
+550/1 (38866368336) et serveur réel jetable 19 (38866368454).
+Les deux dépôts sont publiés sur leurs branches de développement. Le commit final
+de bilan ne change pas le code qualifié. Windows reste inchangé.

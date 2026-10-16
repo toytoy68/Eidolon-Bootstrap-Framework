@@ -2525,3 +2525,17 @@ Réservation Codex : patches finaux 0011/0008/0009/0012, contrôles indépendant
 CI et paquet actualisé. Historique et sondes Claude conservés. Aucun accès VM,
 fusion main, purge, compte réel ni calibration matérielle ; H1–H4 distingués des
 preuves exécutables hors VM. Publication sur les branches de développement.
+
+G275 : C192/C193 et leurs preuves conservés, quatre patches finaux intégrés,
+plus corrections F005–F012 et contre-revue indépendante. Base code publiée
+48c5735079d33cab82ba2ce5a82f2f54820f97aa, Memory b36ada1ff4f505fa2c5d2778f74f3b0c836d2f4c.
+Reproduction avant correction : 13 échecs / cinq témoins. Ciblé local : 69 verts.
+Mémoire complète : 3156/26/3/+12, worker 52 ; Qdrant ciblé 550/1 et serveur 19.
+Qualification finale : Core 2 306 réussis, huit ignorés, 1 328 sous-tests ; root cinq ;
+identité synthétique quatre sans exclusion (run 38866869488). Chromium 216 réussis,
+aucune exclusion (38866869465). Memory 3 156/26/3/+12 et worker 52 (38866368387),
+Qdrant ciblé 550/1 (38866368336), serveur réel jetable 19 (38866368454).
+Rapport unique et paquet G275 actualisés ; Windows G270 inchangé, 50 NOT_RUN.
+H2 contention rappel/index et calibration réelle restent à mesurer. L’arrêt
+SIGTERM est testé en processus Linux, sans extrapoler à une panne ou à systemd.
+Aucun déploiement, compte, corpus réel modifié, purge, fusion main ou relance G182.

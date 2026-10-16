@@ -4,7 +4,7 @@
 - [x] Rappel normalisé en gardant la fin ; documents inexploités inventoriés sans bloquer les lisibles ; retrait des attentes GPU ; seuil candidat avec marge de 15 % côté authentiques.
 - [x] Contre-vérification : gros fichiers remplacés/réécrits/liés, anciens états, retrait incertain, réservations conservées, calibration exhaustive, vrai SIGTERM.
 - [x] F005–F012 traités : docs cohérentes, refus Memory explicites, import Any, Bootstrap, arrêt, limite Windows documentée et job ONNX synthétique.
-- [ ] Qualification CI finale et rapport consolidé (voir rapport unique courant).
+- [x] Qualification CI finale : Core 2306 + 1328 sous-tests, root 5, Chromium 216, identité synthétique 4 ; Memory 3156 + 12 sous-tests, worker 52, Qdrant 550/1 et serveur 19. Rapport unique consolidé.
 - [ ] H1/H2 : mesurer premier scan et rappel pendant sync sur machines ; H3 panne/kill et H4 calibration réelle restent à qualifier.
 
 ## G273 — cinq compléments hors VM, 16 octobre 2026

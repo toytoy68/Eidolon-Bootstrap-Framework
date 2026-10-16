@@ -1,142 +1,150 @@
-> G275 en qualification : les corrections de l’audit sont décrites dans [CONTRE-VERIFICATION-G275.md](../../docs/CONTRE-VERIFICATION-G275.md). Le bilan G273 ci-dessous est conservé jusqu’au remplacement par le rapport final G275 ; il ne qualifie pas les modifications G275.
+# Eidolon — rapport unique G275, audit corrigé et contre-vérifié
 
-# Eidolon — rapport unique G273 et dossier PC/VM
+**16 octobre 2026 · Codex/GPT · dossier PC/VM des 17–18 octobre.**
 
-**16 octobre 2026 · Codex/GPT · recette prévue les 17–18 octobre.**
+G275 intègre l’audit indépendant de Claude (C192/C193), les quatre patches finaux
+et les écarts d’exploitation/documentation. Les preuves ci-dessous concernent les
+sources et des environnements jetables. **Les 50 validations sur PC/VM restent
+NOT_RUN ; aucun service utilisateur n’a été déployé.**
 
-Les cinq chantiers hors VM demandés sont implémentés et publiés sur la branche
-`feat/eidolon-core-v0.1`. Ils complètent le socle G269–G272. Aucun service n’a été
-installé sur les machines de toytoy, aucun corpus réel migré et aucun modèle
-biométrique ou budget GPU réputé mesuré. Le dossier rassemble **50 cas de recette,
-tous NOT_RUN sur les machines cibles**.
+## Résultat de l’audit et décisions appliquées
 
-## Ce qui a été développé dans G273
+Claude a reproduit deux P1 et deux P2. Son absence de P0 trouvé ne prouve pas une
+absence de défaut sur tout le projet. Son rapport distingue les parties lues,
+testées, non examinées en profondeur et bloquées faute de matériel.
 
-| Chantier | Réalisation et intégration | Limite conservée |
-| --- | --- | --- |
-| Bibliothèques | Suivi périodique de racines autorisées, hachage, versions, cache des doublons, reprise et génération conservée si échec ; consultation paginée via API appairée et interface | Extraits privés uniquement, aucune écriture Memory automatique ; racines Linux/NAS ou partage PC monté, pas d’agent Windows natif |
-| Conservation | Inventaire des volumes, reçus/gabarits et racines protégées ; aperçu des anciens extraits devenus candidats, avec empreintes | Aucun exécuteur de purge ; durées métier à fixer ; clés de reprise/provenance protégées ; octets logiques différents d’espace disque récupérable |
-| Profils/sessions | Fermeture locale avec clé/brouillons/captures retirés, changement par clé explicite ; retrait de sa propre clé en deux étapes ; inventaire et rotation opérateur atomique | La rotation garde le même client et son profil ; aucun administrateur Web ni connexion biométrique ; effets déjà admis non annulés par révocation |
-| Calibration | Mesure d’images/PCM existants avec modèles épinglés, étiquettes et consentement ; refus des captures réutilisées et des sessions mélangées ; choix du seuil sur calibration, FAR/FRR sur validation et intervalles indicatifs | Les données synthétiques ne qualifient pas une personne ; seuil candidat jamais activé ; aucun droit biométrique, test du vivant ou résistance à l’usurpation établi |
-| GPU partagé | File SQLite durable, budgets déclarés, priorité dialogue/vieillissement ; raccordement au dialogue réellement sélectionné et au lancement explicite du worker média ; refus d’admission tardive après abandon | Coopératif, sans mesure GPU ni préemption ; clients externes/STT/TTS hors file ; exceptions et médias asynchrones gardent une réservation jusqu’à revue |
+| Priorité / constat | Correction intégrée |
+| --- | --- |
+| P1 — rappel refusé sur messages longs ou multilignes | Seule la requête de rappel est nettoyée et limitée à 500 caractères, en gardant **la fin**, depuis une limite de mot. Historique et message au modèle inchangés. |
+| P1 — un document inexploitable bloque sa bibliothèque | Document inventorié avec diagnostic, autres fichiers traités ; nouvel essai au passage suivant. Au-delà de 4 Mio : métadonnées seulement, pas de SHA ou d’extrait inventé. |
+| P2 — attente GPU orpheline après erreur | Retrait conditionnel des seules attentes, trois tentatives si stockage occupé ; effets incertains et réservations actives conservés. Retrait non confirmé explicitement signalé. |
+| P2 — seuil de calibration trop permissif à résultat égal | À faux rejets égaux, seuil le plus haut, puis marge relative de **15 % côté authentiques**. Exemple : scores 0,50/0,90 → seuil 0,84. Aucun seuil activé. |
 
-La synchronisation relit le contenu, pas seulement les dates. Ajout et modification
-créent des versions ; disparition signale une absence, sans effacer les sources ou
-anciens extraits. Un verrou évite deux scans concurrents dans le même état. Une
-seconde passe contrôle les octets, sans prétendre constituer un snapshot atomique.
-Le budget limite taille, profondeur, fichiers et versions ; une racine trop grande
-est refusée et doit être répartie. Le suivi peut s’arrêter proprement et reprendre.
+Les choix de fin de message et de marge sont les décisions de toytoy rapportées
+par Claude dans C193. La marge est relative à l’écart entre scores de calibration :
+ce n’est pas une réduction absolue de 0,15 ni une garantie de précision réelle.
+Patches retenus : **0011, 0008, 0009 et 0012**. Les versions 0007/0010 restent historiques.
 
-La conservation distingue les données encore nécessaires à la reprise et les
-extraits anciens. Historiques, Memory, médias, sauvegardes et clés peuvent être
-inventoriés par métadonnées sans lecture de leur contenu ; ils restent protégés.
-Les durées d’exemple ne sont pas adoptées à la place de l’utilisateur.
+## Contre-vérification et compléments
 
-La file GPU conserve les réservations après perte de réponse ou décès du processus.
-Une réponse dialogue synchrone rend sa place ; une réponse média peut seulement
-accuser réception d’un travail asynchrone, donc requiert une revue. Les réservations
-média historiques restent à libérer séparément. Les modèles résidents doivent être
-comptés dans les budgets, et les VRAM de plusieurs GPU ne sont pas additionnées
-implicitement. Une attente orpheline peut nécessiter une annulation opérateur.
+Avant correction, les sondes Claude exécutées avec `--runxfail` reproduisent
+**13 échecs et cinq témoins réussis**. Après correction, ces marques d’échec attendu
+sont retirées. Les tests restent dans la suite normale.
 
-## Socle précédent conservé
+La contre-revue a renforcé le patch bibliothèque : comparer seulement la taille
+d’un gros fichier ne suffisait pas. Identité, taille et dates sont maintenant
+revérifiées ; remplacement, réécriture de même taille, liens physiques et fichiers
+spéciaux sont testés. Un fichier sans extrait apparaît comme tel dans l’interface ;
+un ancien extrait ne devient pas silencieusement son extrait courant.
 
-G269–G272 fournissent déjà le chat, la mémorisation avec aperçu/confirmation/reçu,
-les profils liés aux clés, les ponts Memory isolés, l’index Qdrant et les passages
-incrémentaux, la maintenance conditionnée à l’activité/charge, SearXNG/HTTPS avec
-quotas, les fichiers PC/NAS, l’extraction PDF/Office/texte, l’enrôlement volontaire
-du profil connecté, le diagnostic et la copie arrêtée des reçus/quotas/gabarits.
-Le binaire Windows résident G270 reste conservé à l’identique.
+Autres compléments livrés :
 
-Les imports G272 restent bornés à 512 Kio depuis le navigateur, 4 Mio depuis une
-racine autorisée et 16 000 caractères extraits. Aucun OCR ni calcul de formules.
-L’analyse et la mémorisation d’un extrait sont séparées ; les observations restent
-UNVERIFIED. Les gabarits retirés du registre actif peuvent subsister dans d’anciennes
-sauvegardes : aucune promesse d’effacement physique général.
+- **Arrêt propre :** SIGTERM suit la fermeture du serveur. Les attentes GPU créées
+  par cette instance sont retirées avant la fin ; demandes héritées et réservations
+  ACTIVE/UNKNOWN restent conservées. Un processus réellement arrêté par signal
+  vérifie cette distinction. Aucun calcul distant n’est présumé annulé.
+- **Diagnostic GPU :** au démarrage, signalement des demandes préexistantes. Le
+  statut donne les comptes complets et les MiB réservés, même si la liste des
+  identifiants est tronquée. Aucun propriétaire n’est présumé mort.
+- **Memory :** un rejet connu avant writer renvoie 400 REMEMBER_INVALID_REQUEST,
+  effects NONE ; une erreur pendant/après exécution reste 503 REMEMBER_UNAVAILABLE,
+  effects UNKNOWN. Une erreur injectée après écriture puis une reprise de la même
+  commande vérifient l’idempotence. Core conserve son comportement prudent.
+- **Documentation et Bootstrap :** passages incrémentaux, mémorisation et maintenance
+  alignés ; import Any corrigé ; bannière absente retirée, scripts existants reconnus,
+  variables réseau inutilisées retirées. Dépendances PDF/média rattachées au runtime
+  Core, sans exécution d’installateur ni modification du réseau.
+- **Windows :** limite de confiance du démarrage explicitée. Le résident est vérifié
+  à l’inscription, le binaire à chaque lancement ; le compte possède script et HKCU.
+  Aucune protection contre ce même compte n’est promise. Sous-paquet G270 inchangé.
+- **Identité en CI :** job dédié avec ONNX Runtime réellement exécuté sur un modèle
+  généré et audio synthétique, plus parité fbank. Cela ne qualifie ni YuNet/SFace
+  avec leurs poids réels, ni la reconnaissance d’une personne.
+
+Deux erreurs d’édition ont été détectées dans les essais intermédiaires : appel
+incorrect d’un constructeur dans une nouvelle sonde, et substitution trop large
+dans l’annulation GPU. Elles ont été corrigées en conservant les assertions ;
+les campagnes rouges ne sont pas comptées parmi les réussites.
 
 ## Révisions et preuves
 
-- **Code G273 qualifié :** `00fe9cbfa59ef31fa6b245c87e05cb843a17829d`.
-- **Memory conservé :** `76d664013d4e018212682c5aa56305bea0c41db6`, branche `refactor/architecture-v1`.
+- **Code Core G275 qualifié :** `48c5735079d33cab82ba2ce5a82f2f54820f97aa`, branche `feat/eidolon-core-v0.1`.
+- **Memory G275 :** `b36ada1ff4f505fa2c5d2778f74f3b0c836d2f4c`, branche `refactor/architecture-v1` ; référence exacte épinglée dans la CI Core.
+- **Audit Claude préservé :** `508db0a5aa8922acec7bf8a29fbc67184b0d2a4e`, inclus dans l’ascendance Core.
 - **Windows conservé :** source `fe7261826eb26e6b4f2c92a6f55636330cd3df1f`.
-- Le manifeste du paquet indique le commit documentaire final. Le code, tests,
-  interface et configurations de recette sont comparés au commit qualifié ; les
-  mises à jour finales de bilan ne sont pas assimilées à une autre campagne.
+- Le manifeste de livraison indique le commit documentaire final ; son delta par
+  rapport au code qualifié est contrôlé et ne remplace pas une campagne de tests.
 
 | Campagne | Résultat | Preuve |
 | --- | --- | --- |
-| Core complet G273, Python 3.13 | **2 274 réussis, 8 ignorés, 1 328 sous-tests** | [Run 38842661447](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38842661447) |
-| Propriétaires de jetons, vrais changements d’UID | **5 réussis** | Étape distincte du run Core |
-| Desktop/Chromium G273 | **216 réussis, aucune exclusion** | [Run 38842661515](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38842661515) |
-| Nouveaux scénarios locaux G273 | **23 réussis**, dont véritables commandes CLI | `tests/test_offline_services_g273.py` |
-| Dialogue, API et nouveaux services locaux | **66 réussis, 24 sous-tests** | Après correction du chemin d’arrêt ; inclut les tests G273 |
-| Dossier et manifeste local | **7 réussis** ; modèle de recette **50 NOT_RUN, 0 PASS** | `test_weekend_bundle_g269.py`, `check_results.py` |
-| Memory au SHA conservé | **3 151 réussis, 26 ignorés, 3 xfail, 12 sous-tests** ; worker **52 réussis** | [Run 38779839256](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839256) |
-| Qdrant ciblé / serveur jetable 1.15.4 | **550 réussis, 1 xfail** / **19 réussis** | [Ciblé](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839389) · [Serveur](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839262) |
-| Windows G270 | **5 tests Rust**, compilation, contrôles PowerShell, résident sans Core et inscription/retrait HKCU réussis | [Run 38782802182](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38782802182) |
+| Core complet, Python 3.13 | **2 306 réussis, 8 ignorés, 1 328 sous-tests** | [Run 38866869488](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38866869488) |
+| Propriétaires de jetons avec changements réels d’UID | **5 réussis** | Étape distincte du run Core |
+| Nouveau job identité synthétique | **4 réussis, aucune exclusion** | Job distinct du même run Core |
+| Chromium, parcours réels navigateur/serveur | **216 réussis, aucune exclusion** | [Run 38866869465](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38866869465) |
+| Core ciblé local, corrections et contre-revue | **69 réussis** | Claude G274, services G273, contre-revue G275 et disponibilité HTTP |
+| Dossier, manifestes et preuves | **7 réussis** | `test_weekend_bundle_g269.py` ; **50 NOT_RUN, 0 PASS** machine |
+| Memory complet | **3 156 réussis, 26 ignorés, 3 xfail historiques, 12 sous-tests** | [Run 38866368387](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38866368387) |
+| Worker réel, journal Markdown/index isolé | **52 réussis** | Étape séparée du run Memory |
+| Contrat Qdrant ciblé | **550 réussis, 1 xfail historique** | [Run 38866368336](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38866368336) |
+| Serveur Qdrant jetable 1.15.4 | **19 réussis** | [Run 38866368454](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38866368454) |
+| Windows G270, preuve conservée | **5 tests Rust**, compilation, PowerShell, résident sans Core et inscription/retrait HKCU réussis | [Run 38782802182](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38782802182) |
 
-Les nombres se recouvrent : ne pas les additionner. Memory et Windows ne sont pas
-réexécutés pour G273 ; leurs révisions/octets sont conservés. La CI ne valide pas
-le rendu physique du PC, le matériel ni la précision des modèles d’identité.
+Les huit exclusions Core correspondent à deux contrôles d’UID rejoués sous root,
+trois tests exécutés dans le nouveau job identité et trois tests YuNet/SFace encore
+sans poids réels. Le quatrième test du job identité recouvre déjà la suite principale.
+L’avertissement pytest provient du ZIP volontairement dupliqué d’un test de refus.
 
-La qualification complète a détecté une régression introduite dans le chemin
-« appel après arrêt de Core » : le signal d’annulation GPU était référencé dans
-deux méthodes où il n’existait pas. Les références ont été retirées ; le signal
-reste limité à l’attente qu’il commande. Le test existant est conservé et rejoué.
-Le contrôle des exemples a également détecté une limite JSON demandée au-delà du
-plafond du lecteur commun ; corrigée à 1 Mio, avec test des véritables entrées CLI.
-Les campagnes initiales rouges restent consultables, sans les présenter comme des
-réussites. Le contrôle des captures réutilisées et celui des racines API mal typées
-ont aussi été ajoutés avant clôture.
+Les campagnes ciblées recouvrent les suites complètes : **ne pas additionner** les
+comptes. Windows n’a pas été recompilé pour G275. Les exclusions et xfail ne sont
+pas des validations réussies. Les essais matériels et montages privés restent ouverts.
 
-Les exclusions attendues Core concernent deux tests de propriétaire rejoués sous
-root et six essais de dépendances/modèles biométriques indisponibles. Le ZIP à noms
-dupliqués est construit volontairement par un test de refus et produit un avertissement.
-Le job Chromium dédié doit rester sans exclusion. Les exclusions de montage privé
-et xfail historiques Memory restent explicitement ouvertes.
+## Livraison PC/VM
 
-## Dossier et transfert
+Le paquet **eidolon-weekend-2026-10-17-g275.zip** remplace G273 pour les sources et
+le dossier. Il contient `eidolon-sources-g275.zip`, le sous-paquet Windows G270
+inchangé, les procédures, manifestes et SHA-256. Extraire dans un dossier neuf,
+contrôler les empreintes, puis lire [README](README.md), [RECETTE](RECETTE.md) et
+[SERVICES-HORS-VM-G273](SERVICES-HORS-VM-G273.md), actualisé pour G275.
 
-Commencer par [README.md](README.md), [RECETTE.md](RECETTE.md), puis
-[SERVICES-HORS-VM-G273.md](SERVICES-HORS-VM-G273.md). Les guides G270/G271/G272
-restent applicables à leurs fonctions. Le nouveau guide fournit les commandes,
-les limites et G19–G24. Les exemples GPU et conservation sont illustratifs ; le
-manifeste de captures est inactif (`consented: false`). Aucun poids ni compte réel
-n’est inclus. Le service de suivi `.in` reste un brouillon à adapter et valider.
-
-Le paquet `eidolon-weekend-2026-10-17-g273.zip` contient les sources Core/Memory
-épinglées, le sous-paquet Windows G270 inchangé, le dossier complet, le manifeste
-et les sommes SHA-256. Les sources sont extraites des objets Git publiés ; leur
-vérificateur inventorie les octets, pas une autorisation de déployer.
-
-SHA de l’exécutable Windows :
+SHA de l’exécutable Windows conservé :
 `3f7439082422469967df57b683cc43ded83510acbd1e65371a2b8f96fefae09b`.
-Ses scripts conservent les octets CRLF du runner qualifié. Le paquet ne contient
-ni dépendances natives, modèles, secrets, corpus, état privé ni image VM. Certains
-anciens tests documentaires nécessitent un checkout Git complet, les historiques
-volumineux étant exclus de la livraison.
+SHA du sous-paquet Windows :
+`d61083dd3e9a97dfb037a79ab39a1ad462b25e40b76e28b32991188f9978f0d7`.
 
-Pour les sauvegardes, ajouter désormais `library.sqlite3` et `gpu-queue.sqlite3`
-aux composants à inventorier séparément : `beta_state` ne les copie pas. Ne pas
-restaurer une ancienne base de clés sans réconcilier révocations/rotations, ni
-remplacer une file GPU par une file vide tant qu’un moteur peut encore travailler.
-Le [rollback](ROLLBACK.md) couvre ces précautions de reprise.
+Les sources sont extraites des objets Git publiés. Le paquet n’inclut ni secrets,
+corpus, gabarits privés, modèles, dépendances natives ni image VM. Il ne constitue
+pas une autorisation automatique de déployer. Le binaire Windows est une candidate
+non signée ; aucun comportement physique sur le PC de toytoy n’est déduit de la CI.
 
-## Reste à faire
+Sauvegarder séparément bibliothèque et file GPU, en plus des états déjà couverts
+par `beta_state`. L’ajout de la table de diagnostics bibliothèque se fait au prochain
+scan explicite ; une simple consultation d’un ancien état reste sans migration.
+Consulter [ROLLBACK](ROLLBACK.md) avant remplacement de code ou d’états privés.
 
-**P0 :** compte C187 et inventaire réel ; sauvegardes/restauration cohérentes ;
-profils privés, permissions, tunnels et services ; corpus et modèles réels ; PC,
-WebView2 et capteurs ; mesures de charge/VRAM/latence et endurance. Les 50 preuves
-demandent une exécution réelle et une observation datée.
+## Ce qui reste réellement ouvert
 
-**P1 après recette :** adoption des durées de conservation et des budgets mesurés ;
-calibration représentative consentie. Les extensions encore non livrées sont la
-purge coordonnée, un agent de surveillance Windows natif autonome, la connexion
-biométrique multipersonne, la participation de tous les moteurs au planificateur,
-et les médias avancés. Elles ne sont pas maquillées en simples essais VM.
+**P0 — recette machines :** comptes C187, permissions, tunnels et services ;
+sauvegardes/restauration cohérentes ; corpus et modèles réels ; PC/WebView2/capteurs ;
+latence, charge, VRAM et endurance. Les 50 contrôles requièrent des observations datées.
 
-Le [backlog G273](../../docs/BACKLOG-BETA-ACTUEL-G273.md) remplace la vue courante
-G272 en conservant son historique. C191 reste le dernier message Claude observé ;
-les dix contre-revues G273 publiées ne prouvent pas une réponse nouvelle ou le lancement
-de sa session. Aucun accès VM utilisateur, activation, création de compte,
-suppression de génération, fusion main ni relance G182 dans ce lot.
+**Hypothèses de l’audit :**
+
+- H1 : le quota CPU fixe de 10 % a été retiré du brouillon. Mesurer le premier scan
+  avant de fixer un quota compatible avec les bornes ; Nice=10 reste proposé.
+- H2 : la synchronisation des passages garde le verrou canonique pendant les
+  embeddings. Le risque de rappel retardé reste à mesurer ; aucun changement de
+  transaction n’est annoncé comme qualifié. Maintenance et reprise d’activité
+  restent à vérifier ensemble sur la machine.
+- H3 : arrêt Linux propre testé ; SIGKILL, panne et stockage durablement bloqué
+  imposent encore inventaire/revue. Pas d’expiration automatique de réservations.
+- H4 : marge de calibration à mesurer sur captures consenties représentatives.
+
+**Développements distincts non livrés :** purge coordonnée, agent Windows natif de
+surveillance des fichiers, connexion biométrique multipersonne, tous les moteurs
+participants à la file GPU et médias avancés. Aucun de ces points n’est maquillé
+en simple case de recette.
+
+Voir [la contre-vérification détaillée](../../docs/CONTRE-VERIFICATION-G275.md),
+[le rapport de Claude](../../docs/AUDIT-GLOBAL-CLAUDE-G274.md) et le
+[backlog courant](../../docs/BACKLOG-BETA-ACTUEL-G273.md). C193 est le dernier retour
+Claude reçu dans ce lot ; aucune nouvelle exécution de sa session n’est supposée.
