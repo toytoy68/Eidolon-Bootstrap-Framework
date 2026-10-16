@@ -2491,3 +2491,14 @@ C191 demeure son dernier retour observé. Dossier de 50 preuves NOT_RUN ; paquet
 source épinglé et Windows G270 inchangé. Aucun déploiement, mesure matérielle,
 compte réel, seuil installé, purge ou fusion main. Les extensions non livrées
 restent distinguées des validations VM dans le backlog courant.
+
+## G274 — demande d’audit global à Claude, 16/10/2026
+
+À 07 h 42 Europe/Paris, toytoy demande à Claude l’analyse de tout le projet et la
+recherche d’incohérences et d’erreurs de code. Bases actualisées : Core 940616c,
+Memory 76d6640. Codex prend en charge uniquement la transmission du mandat :
+GPT-TO-CLAUDE, G274-AUDIT-GLOBAL et archivage exact du message G273.
+Audit transversal Bootstrap/Core/Memory/Windows, dix axes, matrice de couverture,
+défauts reproductibles P0–P3 et rapport unique demandés. Les revues G273 sont
+intégrées au périmètre. C191 reste le dernier retour observé dans le canal Core ;
+aucune session Claude lancée ni revue accomplie par cette publication.
