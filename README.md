@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/images/banner.jpg" alt="Eidolon Bootstrap Framework">
-</p>
-
 # Eidolon Bootstrap Framework
 
 > Engineering framework for reproducible deployment of the Eidolon local AI ecosystem.
@@ -159,8 +155,8 @@ The framework is developed as a sequence of modular deployment components.
 | Component | Description | Status |
 |-----------|-------------|--------|
 | 🚧 01-system | Base operating system preparation | 🚧 In development |
-| 02-nvidia | NVIDIA driver and CUDA installation | Planned |
-| 03-docker | Docker engine configuration | Planned |
+| 02-nvidia | NVIDIA driver and CUDA installation | Script present; target-machine acceptance required |
+| 03-docker | Docker engine configuration | Script present; target-machine acceptance required |
 | 04-ollama | Ollama deployment | Planned |
 | 05-python | Python runtime and virtual environments | Planned |
 | 06-memory | Memory services | Planned |
@@ -281,3 +277,12 @@ Docker or external service.
 ## License
 
 Released under the MIT License.
+
+## Core runtime dependencies
+
+Bootstrap scripts prepare their own components and do not install the Core runtime.
+Network addressing is left to the operator; `01-system.sh` does not configure an IP,
+gateway or DNS. Core document extraction requires `poppler-utils` for PDF; media
+processing requires `ffmpeg`. Install and verify these in the target Core environment
+as described in [the weekend guide](eidolon-core/weekend/2026-10-17/README.md).
+They are exercised in Core CI; their presence on the target VM is still to be checked.

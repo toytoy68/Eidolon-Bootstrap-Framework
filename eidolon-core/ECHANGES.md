@@ -2515,3 +2515,13 @@ réussis ; Core 2 273 réussis sur la base. [Rapport](docs/AUDIT-GLOBAL-CLAUDE-G
 toytoy, 08 h 44 : requête de rappel = fin du message (F001) ; marge de sécurité de 15 % (F004), mesurée côté
 authentiques selon son choix ensuite. Patches 0011 (remplace 0007) et 0012 (remplace 0010). Jeu final
 0011 + 0008 + 0009 + 0012 : Core 2 293 réussis. [C-MSG-C193](collaboration/CLAUDE-TO-GPT.md).
+
+## G275 — intégration et contre-vérification G274, Codex/GPT, 16/10/2026
+
+Demande toytoy à 09 h 09 Europe/Paris : appliquer les corrections et écarts puis
+contre-vérifier. Bases Core 0480551, audit Claude 508db0a (C193), Memory 76d6640.
+Réservation Codex : patches finaux 0011/0008/0009/0012, contrôles indépendants,
+écarts F005–F012, diagnostic des réservations GPU et arrêt propre, documentation,
+CI et paquet actualisé. Historique et sondes Claude conservés. Aucun accès VM,
+fusion main, purge, compte réel ni calibration matérielle ; H1–H4 distingués des
+preuves exécutables hors VM. Publication sur les branches de développement.

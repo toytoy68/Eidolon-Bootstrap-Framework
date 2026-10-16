@@ -141,3 +141,13 @@ refusé. Ne pas lancer ces modes pendant une simple inspection du paquet.
 Recette physique indispensable : WebView2, icône 16/32 px, double-clic, fermeture,
 réouverture, tunnel absent/revenu, démarrage après connexion Windows, microphone
 et caméra explicitement autorisés, arrêt de la capture et sortie du résident.
+
+### Limite de confiance du démarrage Windows (audit G274-F011)
+
+Le script d’inscription vérifie les empreintes du résident et du binaire lors de
+l’inscription. À chaque lancement, le résident vérifie le binaire ; son propre
+script n’est pas revérifié par une amorce indépendante. Le compte Windows possède
+le script et sa clé HKCU : ce mécanisme ne protège pas contre une modification
+par ce même compte. Après mise à jour, retirer puis réinscrire la commande avec
+les nouvelles empreintes. Le sous-paquet Windows G270 reste inchangé. Une protection
+contre le propriétaire du compte exigerait un autre domaine de confiance.

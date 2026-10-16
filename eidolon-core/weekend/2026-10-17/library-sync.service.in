@@ -10,7 +10,7 @@ Environment=PYTHONPATH=/SOURCE/CORE/eidolon-core/src
 ExecStart=/VENV/bin/python -B -m eidolon_core.library_sync --config /CONFIG/runtime.json --directory /ETAT/PROFILE-SERVICES --client pc-toytoy --root documents --sync --watch --interval 300
 UMask=0077
 Nice=10
-CPUQuota=10%
+# CPUQuota à fixer après mesure du premier scan (budget mural de 30 s).
 MemoryMax=768M
 NoNewPrivileges=true
 ProtectSystem=strict

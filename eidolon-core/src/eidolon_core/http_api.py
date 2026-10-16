@@ -463,6 +463,7 @@ class ReadServer(HTTPServer):
                                                     personality_sha256=personality[2] if len(personality) > 2 else None,
                                                      memory=memory, services=services)
             self.conversation_api.dialogue.gpu_queue = gpu_queue
+        self.gpu_queue = gpu_queue
         if comm_port is not None and (type(comm_port) is not int or not 1024 <= comm_port <= 65535):
             raise ValueError("INVALID_COMM_PORT")
         self.comm_port = comm_port          # C147: /v1/comm/* relayed to 127.0.0.1:<comm_port> when set
@@ -524,6 +525,9 @@ class ReadServer(HTTPServer):
         if self.conversation_api is not None:
             # G088-R2: stop waiting for models FIRST; workers then finish within their join below.
             self.conversation_api.close()
+        queue = getattr(self, "gpu_queue", None)
+        if queue is not None and not queue.close():
+            print(message("ATTENTION", "GPU_WAITING_REVIEW_REQUIRED : retrait des attentes non confirmé."), file=sys.stderr, flush=True)
         with self._worker_lock:
             self._closing = True
             active = list(self._workers.items())
@@ -539,6 +543,18 @@ class ReadServer(HTTPServer):
 
     def handle_error(self, request, client_address):
         pass  # No request/exception dump; public server monitoring is out of scope.
+
+
+def serve_until_stopped(server):
+    """SIGTERM follows the same context-managed cleanup as Ctrl+C (main thread only)."""
+    import signal
+    def stop(_signum, _frame):
+        raise KeyboardInterrupt
+    previous = signal.signal(signal.SIGTERM, stop)
+    try:
+        server.serve_forever()
+    finally:
+        signal.signal(signal.SIGTERM, previous)
 
 
 def main(argv=None):
@@ -628,6 +644,12 @@ def main(argv=None):
         services = BetaRuntime.load(args.beta_runtime) if args.beta_runtime else None
         from .gpu_queue import load as load_gpu_queue
         gpu_queue = load_gpu_queue(args.gpu_queue_config) if args.gpu_queue_config else None
+        if gpu_queue is not None:
+            pending = gpu_queue.inspect()
+            if pending['review_required']:
+                print(message("ATTENTION", "GPU_QUEUE_REVIEW_REQUIRED : demandes préexistantes "
+                              + json.dumps(pending['counts'], sort_keys=True)
+                              + "; propriétaires actifs non vérifiés, aucune libération automatique."), file=sys.stderr, flush=True)
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
                         media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
@@ -645,7 +667,7 @@ def main(argv=None):
             mode = ("lecture seule ; conversations ACTIVES sur /v1/conversations/ (clé appairée, création de missions)"
                     if conversations is not None else "lecture seule")
             print(message("INFO", f"Écoute sur http://127.0.0.1:{server.server_port} — {mode}."), flush=True)
-            server.serve_forever()
+            serve_until_stopped(server)
     except KeyboardInterrupt:
         return 0
     except (OSError, ValueError, sqlite3.Error, ContractError):

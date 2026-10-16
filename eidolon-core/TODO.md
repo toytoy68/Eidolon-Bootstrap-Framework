@@ -1,3 +1,12 @@
+## G275 — corrections et contre-vérification de l’audit G274
+
+- [x] Rapport/sondes C192–C193 conservés ; patches finaux 0011, 0008, 0009 et 0012 intégrés.
+- [x] Rappel normalisé en gardant la fin ; documents inexploités inventoriés sans bloquer les lisibles ; retrait des attentes GPU ; seuil candidat avec marge de 15 % côté authentiques.
+- [x] Contre-vérification : gros fichiers remplacés/réécrits/liés, anciens états, retrait incertain, réservations conservées, calibration exhaustive, vrai SIGTERM.
+- [x] F005–F012 traités : docs cohérentes, refus Memory explicites, import Any, Bootstrap, arrêt, limite Windows documentée et job ONNX synthétique.
+- [ ] Qualification CI finale et rapport consolidé (voir rapport unique courant).
+- [ ] H1/H2 : mesurer premier scan et rappel pendant sync sur machines ; H3 panne/kill et H4 calibration réelle restent à qualifier.
+
 ## G273 — cinq compléments hors VM, 16 octobre 2026
 
 Vue courante : [backlog G273](docs/BACKLOG-BETA-ACTUEL-G273.md).

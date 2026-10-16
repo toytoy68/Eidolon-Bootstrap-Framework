@@ -53,11 +53,22 @@ def inventory(root, *, deadline):
                         if entry.name.rsplit('.',1)[-1].lower() in documents.FORMATS:
                             if info.st_nlink!=1: raise ValueError("LIBRARY_LINK_REFUSED")
                             result.append(path)
+                    elif entry.name.rsplit('.',1)[-1].lower() in documents.FORMATS:
+                        raise ValueError("LIBRARY_SPECIAL_REFUSED")
             after=os.fstat(fd)
             if (before.st_ino,before.st_mtime_ns,before.st_ctime_ns)!=(after.st_ino,after.st_mtime_ns,after.st_ctime_ns):
                 raise ValueError("LIBRARY_CHANGED")
     visit('',0)
     return sorted(result)
+
+def file_version(root, relative):
+    """Metadata for a no-follow regular file, including files too large to read."""
+    with profile_files.opened(root, relative) as fd:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+            raise ValueError("LIBRARY_LINK_OR_SPECIAL_REFUSED")
+        return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
 
 class Library:
     def __init__(self, config, directory):
@@ -70,6 +81,7 @@ class Library:
         if not row: db.execute("INSERT INTO binding VALUES (?)",(self.binding,))
         db.execute("CREATE TABLE IF NOT EXISTS versions (profile TEXT, root TEXT, path TEXT, sha TEXT, bytes INTEGER, excerpt TEXT, created_at TEXT, PRIMARY KEY(profile,root,path,sha))")
         db.execute("CREATE TABLE IF NOT EXISTS files (profile TEXT, root TEXT, path TEXT, sha TEXT, present INTEGER, seen_at TEXT, PRIMARY KEY(profile,root,path))")
+        db.execute("CREATE TABLE IF NOT EXISTS extraction_errors (profile TEXT, root TEXT, path TEXT, code TEXT, bytes INTEGER, PRIMARY KEY(profile,root,path))")
         db.execute("CREATE TABLE IF NOT EXISTS scans (profile TEXT, root TEXT, completed_at TEXT, files INTEGER, PRIMARY KEY(profile,root))")
 
     def _scope(self, client, root):
@@ -90,9 +102,16 @@ class Library:
         with database(self.directory,'library.sqlite3',write=True) as db:
             self._schema(db)
             known={(r[0],r[1]) for r in db.execute("SELECT sha,json_extract(excerpt,'$.format') FROM versions WHERE profile=?",(profile,))}
-            count=db.execute("SELECT count(*) FROM versions").fetchone()[0]
+        skipped={}; observed={}; errors={}
         for relative in names:
             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
+            # G274-F002: a file above the extraction bound is listed (no hash, no excerpt)
+            # instead of aborting the root. Links, changes and budgets still abort.
+            observed[relative]=file_version(path,relative);size=observed[relative][2]
+            if size>documents.MAX_BYTES:
+                skipped["FILE_TOO_LARGE"]=skipped.get("FILE_TOO_LARGE",0)+1
+                errors[relative]="FILE_TOO_LARGE"
+                batch.append((relative,None,size,None));continue
             raw=profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES);total+=len(raw)
             if total>MAX_BYTES: raise ValueError("LIBRARY_SCAN_BUDGET")
             sha=hashlib.sha256(raw).hexdigest()
@@ -100,22 +119,39 @@ class Library:
             excerpt=None
             cache_key=(sha,documents.extension(Path(relative).name))
             if cache_key not in known:
-                if cache_key not in cache: cache[cache_key]=documents.extract(raw,Path(relative).name)
+                if cache_key not in cache:
+                    try: cache[cache_key]=documents.extract(raw,Path(relative).name)
+                    except documents.DocumentError as exc:
+                        # Empty, image-only, protected or malformed: present, not extracted,
+                        # retried at the next pass (no error is cached as a version).
+                        cache[cache_key]=str(exc)
+                if type(cache[cache_key]) is str:
+                    errors[relative]=cache[cache_key]
+                    skipped[cache[cache_key]]=skipped.get(cache[cache_key],0)+1
+                    batch.append((relative,sha,len(raw),False));continue
                 excerpt=dict(cache[cache_key],name=Path(relative).name)
             batch.append((relative,sha,len(raw),excerpt))
         if inventory(path,deadline=deadline)!=names: raise ValueError("LIBRARY_CHANGED")
         # A second content pass detects changes during extraction (not an atomic filesystem snapshot).
-        for relative,sha,_,_ in batch:
+        for relative,sha,size,_ in batch:
             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
+            if file_version(path,relative)!=observed[relative]: raise ValueError("LIBRARY_CHANGED")
+            if sha is None: continue
             if hashlib.sha256(profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES)).hexdigest()!=sha:
                 raise ValueError("LIBRARY_CHANGED")
         now=datetime.now(timezone.utc).isoformat();added=0;duplicates=0
         with database(self.directory,'library.sqlite3',write=True) as db:
             self._schema(db)
-            missing=sum(not db.execute("SELECT 1 FROM versions WHERE profile=? AND root=? AND path=? AND sha=?",(profile,root,p,s)).fetchone() for p,s,_,_ in batch)
+            missing=sum(not db.execute("SELECT 1 FROM versions WHERE profile=? AND root=? AND path=? AND sha=?",(profile,root,p,s)).fetchone() for p,s,_,e in batch if s is not None and e is not False)
             if db.execute("SELECT count(*) FROM versions").fetchone()[0]+missing>MAX_VERSIONS: raise ValueError("LIBRARY_STORAGE_BUDGET")
             db.execute("UPDATE files SET present=0 WHERE profile=? AND root=?",(profile,root))
+            db.execute("DELETE FROM extraction_errors WHERE profile=? AND root=?",(profile,root))
             for relative,sha,size,excerpt in batch:
+                if relative in errors:
+                    db.execute("INSERT INTO extraction_errors VALUES (?,?,?,?,?)",(profile,root,relative,errors[relative],size))
+                if sha is None or excerpt is False:
+                    db.execute("INSERT INTO files VALUES (?,?,?,?,1,?) ON CONFLICT(profile,root,path) DO UPDATE SET sha=excluded.sha,present=1,seen_at=excluded.seen_at",(profile,root,relative,sha,now))
+                    continue
                 if excerpt is None:
                     row=db.execute("SELECT excerpt FROM versions WHERE profile=? AND sha=? AND json_extract(excerpt,'$.format')=? LIMIT 1",(profile,sha,documents.extension(Path(relative).name))).fetchone()
                     if row is None: raise ValueError("LIBRARY_SOURCE_CHANGED")
@@ -123,14 +159,17 @@ class Library:
                 added+=db.execute("INSERT OR IGNORE INTO versions VALUES (?,?,?,?,?,?,?)",(profile,root,relative,sha,size,encode(excerpt),now)).rowcount
                 db.execute("INSERT INTO files VALUES (?,?,?,?,1,?) ON CONFLICT(profile,root,path) DO UPDATE SET sha=excluded.sha,present=1,seen_at=excluded.seen_at",(profile,root,relative,sha,now))
             db.execute("INSERT INTO scans VALUES (?,?,?,?) ON CONFLICT(profile,root) DO UPDATE SET completed_at=excluded.completed_at,files=excluded.files",(profile,root,now,len(batch)))
-        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":total*2,"memory_written":False,"source_deleted":False}
+        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":total*2,"not_extracted":dict(sorted(skipped.items())),"memory_written":False,"source_deleted":False}
 
     def page(self, client, root, after=''):
         profile,_=self._scope(client,root)
         if type(after) is not str or len(after)>1024: raise ValueError("INVALID_CURSOR")
         with database(self.directory,'library.sqlite3') as db:
             if db.execute("SELECT fingerprint FROM binding").fetchone()[0]!=self.binding: raise ValueError("LIBRARY_BINDING_CHANGED")
-            rows=db.execute("SELECT path,sha,present,seen_at FROM files WHERE profile=? AND root=? AND path>? ORDER BY path LIMIT 51",(profile,root,after)).fetchall()
+            # Read old G273 state without migrating it; the next explicit scan adds diagnostics.
+            has_errors=db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='extraction_errors'").fetchone()
+            error_sql="(SELECT code FROM extraction_errors e WHERE e.profile=f.profile AND e.root=f.root AND e.path=f.path)" if has_errors else "NULL"
+            rows=db.execute("SELECT path,sha,present,seen_at,"+error_sql+" AS extraction_error, EXISTS(SELECT 1 FROM versions v WHERE v.profile=f.profile AND v.root=f.root AND v.path=f.path AND v.sha=f.sha) AS excerpt_available FROM files f WHERE profile=? AND root=? AND path>? ORDER BY path LIMIT 51",(profile,root,after)).fetchall()
             scan=db.execute("SELECT completed_at,files FROM scans WHERE profile=? AND root=?",(profile,root)).fetchone()
         return {"entries":[dict(r) for r in rows[:50]],"next_after":rows[49]['path'] if len(rows)>50 else None,"last_scan":dict(scan) if scan else None,"memory_written":False}
 

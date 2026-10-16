@@ -16,6 +16,10 @@ import json
 import math
 from .contracts import digest
 
+# Decision of toytoy, 16/10/2026: 15 % safety margin, measured from the genuine
+# side of the gap that leaves the calibration decisions unchanged.
+GENUINE_SIDE_MARGIN = 0.15
+
 
 def wilson(errors,total):
     if not total: return None
@@ -61,10 +65,18 @@ def evaluate(data, *, max_far):
         tp+=bins[score][0];fp+=bins[score][1]
         if fp/neg<=max_far: candidates.append(((pos-tp)/pos,score))
     if not candidates: return {'state':'NO_THRESHOLD','activated':False,'engine':engine}
-    _,threshold=min(candidates)
+    # G274-F004: at equal FRR, keep the highest threshold (fewest impostors accepted),
+    # then move it down by GENUINE_SIDE_MARGIN of the gap to the next lower score.
+    # Every calibration decision is unchanged; genuine scores slightly below the
+    # lowest accepted one keep a tolerance, impostors keep most of the distance.
+    _,threshold=min(candidates,key=lambda c:(c[0],-c[1]))
+    if threshold in bins:
+        lower=max([s for s in bins if s<threshold],default=-1.0)
+        margined=threshold-GENUINE_SIDE_MARGIN*(threshold-lower)
+        threshold=margined if lower<margined<=threshold else threshold
     validation=metrics(groups['validation'],threshold)
     return {'schema':'eidolon-identity-evaluation-report/1','state':'SYNTHETIC_ONLY' if data['synthetic'] else 'MEASURED_CANDIDATE_REVIEW_REQUIRED','engine':engine,
-            'dataset_sha256':digest(data),'target_far':max_far,'candidate_threshold':threshold,'calibration':metrics(groups['calibration'],threshold),'validation':validation,
+            'dataset_sha256':digest(data),'target_far':max_far,'candidate_threshold':threshold,'genuine_side_margin':GENUINE_SIDE_MARGIN,'calibration':metrics(groups['calibration'],threshold),'validation':validation,
             'validation_meets_empirical_target':validation['far']<=max_far,'activated':False,'authorizes_execution':False,
             'limits':['Correlated trials: Wilson intervals are indicative, not independent-population guarantees.','No liveness, spoof resistance or multimodal calibration established.','Review labels, sample coverage and separate acquisition sessions before use.']}
 

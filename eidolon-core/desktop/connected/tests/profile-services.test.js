@@ -139,6 +139,7 @@ test('G273 Chromium: synchronized library, session locking and explicit key revo
   const fx=makeFixture();let server,browser;
   try{
     const cfg=prepare(fx), conf=JSON.parse(fs.readFileSync(cfg.config,'utf8'));
+    fs.writeFileSync(path.join(conf.profiles.person.file_roots.nas,'empty.txt'),'');
     const sync=spawnSync(PYTHON,['-m','eidolon_core.library_sync','--config',cfg.config,'--directory',conf.state_directory,'--client','pc-ui','--root','nas','--sync'],{cwd:CORE,env:ENV,encoding:'utf8'});
     assert.equal(sync.status,0,sync.stderr+sync.stdout);
     server=await startServer(fx,WEB_ROOT,{spawnServer:(cmd,args,opts)=>spawn(cmd,args.concat(['--conversations','simulated','--beta-runtime',cfg.config]),opts)});
@@ -147,7 +148,8 @@ test('G273 Chromium: synchronized library, session locking and explicit key revo
     await page.waitForSelector('#profile-services:not([hidden])');await page.click('#profile-services summary');
     await page.fill('#service-root','nas');await page.click('#service-library');
     await page.waitForSelector('#service-library-list button');assert.match(await page.textContent('#service-library-list'),/note.txt/);
-    await page.click('#service-library-list button');assert.equal(await page.inputValue('#service-value'),'note.txt');
+    assert.match(await page.textContent('#service-library-list'),/empty.txt.*sans extrait.*DOCUMENT_SIZE_INVALID/);
+    await page.locator('#service-library-list button').filter({hasText:'note.txt'}).click();assert.equal(await page.inputValue('#service-value'),'note.txt');
     await page.click('#conv-close');assert.equal(await page.textContent('#service-library-list'),'');
     await page.fill('#conv-key',cfg.key);await page.press('#conv-key','Enter');await page.waitForSelector('#conv-revoke:not([hidden])');
     await page.click('#conv-revoke');await page.waitForSelector('#conv-revoke-confirm:not([hidden])');

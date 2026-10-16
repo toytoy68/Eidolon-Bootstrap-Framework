@@ -1835,10 +1835,10 @@
         libraryList.textContent = ""; libraryCursor = null; libraryMore.hidden = true;
         if (!r.ok) { output.textContent = "Bibliothèque indisponible : vérifier le premier passage de synchronisation et le dossier choisi."; return; }
         libraryRoot = selectedRoot; libraryCursor = r.json.next_after; libraryMore.hidden = !libraryCursor;
-        output.textContent = "Extraits synchronisés, sans écriture Memory. Dernier passage : " + (r.json.last_scan ? r.json.last_scan.completed_at : "aucun") + ".";
+        output.textContent = "Bibliothèque inventoriée, sans écriture Memory. Dernier passage : " + (r.json.last_scan ? r.json.last_scan.completed_at : "aucun") + ".";
         r.json.entries.forEach(function (entry) {
           var button = doc.createElement("button"); button.type = "button";
-          button.textContent = entry.path + (entry.present ? " — préparer la lecture actuelle" : " — absent au dernier passage");
+          button.textContent = entry.path + (!entry.present ? " — absent au dernier passage" : entry.extraction_error ? " — sans extrait (" + entry.extraction_error + "), préparer un nouvel essai" : " — préparer la lecture actuelle");
           button.disabled = !entry.present;
           button.addEventListener("click", function () {
             if (current !== session) return;

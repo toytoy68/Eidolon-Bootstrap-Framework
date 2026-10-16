@@ -52,18 +52,8 @@ readonly TIMEZONE="Europe/Paris"
 readonly LOCALE="fr_FR.UTF-8"
 
 # ----------------------------------------------------------
-# Configuration réseau (Profil Eidolon Lab)
+# Réseau : configuration existante conservée ; aucun adressage statique appliqué.
 # ----------------------------------------------------------
-
-readonly STATIC_IP="${EIDOLON_STATIC_IP:-192.168.1.101/24}"
-readonly GATEWAY="192.168.1.254"
-
-readonly DNS_SERVERS=(
-    "192.168.1.254"
-    "1.1.1.1"
-    "8.8.8.8"
-)
-
 
 # ----------------------------------------------------------
 # Répertoires

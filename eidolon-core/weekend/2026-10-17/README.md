@@ -4,10 +4,11 @@ Eidolon Core Technologies (ECT) • Local AI • Modular • Reliable • Reprod
 
 **Dossier candidat préparé hors VM.** Lire [RACCORDEMENTS-G270.md](RACCORDEMENTS-G270.md) pour les nouveaux parcours et [RECETTE.md](RECETTE.md) pour la recette initiale, puis remplir [MACHINE-INVENTORY.md](MACHINE-INVENTORY.md). Le rapport unique final est [RAPPORT-UNIQUE.md](RAPPORT-UNIQUE.md).
 
-La livraison G273 actualise les sources et ce dossier, avec le même sous-paquet Windows G270 prêt à extraire. Dans le ZIP source, les fichiers sont sous `sources/core/eidolon-core` et `sources/memory`. Les SHA exacts et empreintes de chaque fichier sont dans `MANIFEST.json` à la racine. Le sous-paquet source ne contient pas de binaire ; le sous-paquet Windows joint contient l'exécutable et les deux lanceurs vérifiés. Aucune image VM n'est fournie. Dépendances, modèles, secrets, données et journaux privés ne sont pas inclus. Les historiques de validation volumineux sont exclus ; certains anciens tests documentaires demandent un checkout Git complet.
+La livraison G275 actualise les sources et ce dossier, avec le même sous-paquet Windows G270 prêt à extraire. Dans le ZIP source, les fichiers sont sous `sources/core/eidolon-core` et `sources/memory`. Les SHA exacts et empreintes de chaque fichier sont dans `MANIFEST.json` à la racine. Le sous-paquet source ne contient pas de binaire ; le sous-paquet Windows joint contient l'exécutable et les deux lanceurs vérifiés. Aucune image VM n'est fournie. Dépendances, modèles, secrets, données et journaux privés ne sont pas inclus. Les historiques de validation volumineux sont exclus ; certains anciens tests documentaires demandent un checkout Git complet.
 
 | Fichier | Utilisation |
 | --- | --- |
+| `../../docs/CONTRE-VERIFICATION-G275.md` | Résolution de l’audit Claude, preuves et limites |
 | `RECETTE.md` | Ordre de validation PC/VM, commandes et critères d'arrêt |
 | `DIAGNOSTIC-G271.md` | Configuration et fichiers locaux contrôlés avant lancement, sans service ni écriture |
 | `SERVICES-HORS-VM-G273.md` | Synchronisation, conservation, sessions/clés, mesure biométrique et file GPU partagée |

@@ -306,3 +306,17 @@ Le parcours simulé, en un test :
     d'habitude ;
   - changer la version exigée demande un redémarrage avec la nouvelle
     empreinte.
+
+### Requête mémoire et arrêt du service (G275)
+
+Le tour complet reste dans l’historique et pour le modèle. Seule la requête de
+rappel est normalisée sur une ligne, limitée à 500 caractères et conserve la fin
+du message depuis une limite de mot. Une requête sans texte exploitable n’est pas
+envoyée au pont. Un long mot est coupé à la borne.
+
+La CLI HTTP traite SIGTERM comme Ctrl+C : sortie de la boucle serveur et passage
+par `server_close()`. Les réponses tardives restent abandonnées. Cela n’annule pas
+un calcul distant ni ne libère les réservations GPU ACTIVE/UNKNOWN. SIGKILL, panne
+et arrêt pendant un nettoyage SQLite peuvent encore imposer une revue opérateur.
+Au démarrage avec file GPU, les demandes préexistantes sont signalées par compte
+d’état ; leur propriétaire n’est pas déclaré mort et aucune ligne n’est libérée.

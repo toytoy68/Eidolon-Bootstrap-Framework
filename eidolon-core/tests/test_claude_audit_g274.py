@@ -68,9 +68,9 @@ def _api(tmp_path, services):
 
 TURNS = [
     pytest.param("Que sais-tu de la V100 ?", id="control-one-line"),       # green on the audited code
-    pytest.param("Bonjour,\nque sais-tu de la V100 ?", id="multiline", marks=F001),
-    pytest.param("Que sais-tu de la V100 ? " + "contexte " * 70, id="long", marks=F001),  # 600+ chars
-    pytest.param("Que sais-tu de la V100 ?\t(tabulation)", id="tab", marks=F001),
+    pytest.param("Bonjour,\nque sais-tu de la V100 ?", id="multiline"),
+    pytest.param("contexte " * 70 + "Que sais-tu de la V100 ?", id="long-subject-at-end"),  # 600+ chars
+    pytest.param("Que sais-tu de la V100 ?\t(tabulation)", id="tab"),
 ]
 
 
@@ -129,6 +129,28 @@ def test_f001_shared_bridge_memory_path(tmp_path, text):
         server.server_close()
 
 
+def test_f001_recall_query_matches_the_bridge_contract():
+    """Unit bounds of the correction; the bridge validator is the reference."""
+    pytest.importorskip("services.memory_bridge")
+    from services.memory_bridge import validate_request
+    from eidolon_core.dialogue import recall_query, RECALL_QUERY_CHARS
+    cases = ["a\nb", "\x7fx\x1fy", " x  \t\r\n y ", "é" * 600, "mot " * 200, "bcd " + ("a" * 499),
+             "x" * 501, "🙂" * 501, "a" * 500]
+    for text in cases:
+        query = recall_query(text)
+        assert 0 < len(query) <= RECALL_QUERY_CHARS
+        validate_request({"query": query, "mode": "operational", "max_items": 5,
+                          "max_chars": 4000, "max_item_chars": 800})
+    assert recall_query("a\nb") == "a b"
+    assert recall_query("bcd " + "a" * 499) == "a" * 499              # keeps the end, word boundary
+    assert recall_query("x" * 501) == "x" * 500                        # one long word: hard cut
+    assert recall_query("a" * 500) == "a" * 500                        # exact bound unchanged
+    long = "Contexte. " * 80 + "Que sais-tu de la V100 ?"
+    assert recall_query(long).endswith("Que sais-tu de la V100 ?")     # subject at the end survives
+    assert recall_query(long).startswith("Contexte.")                   # cut on a word boundary
+    assert recall_query("\n\t") == ""                                 # caller keeps the raw text
+
+
 # --------------------------------------------------------------------------- F002
 def _library(tmp_path):
     from eidolon_core.library_sync import Library
@@ -152,10 +174,10 @@ def _image_only_pdf():
 
 
 @pytest.mark.parametrize("name,payload", [
-    pytest.param("vide.txt", b"", id="empty", marks=F002),
-    pytest.param("blanc.md", b"   \n", id="blank", marks=F002),
-    pytest.param("gros.pdf", b"%PDF-1.4\n" + b"0" * (5 * 1024 * 1024), id="over-4MiB", marks=F002),
-    pytest.param("scan.pdf", None, id="image-only-pdf", marks=F002),   # no text layer
+    pytest.param("vide.txt", b"", id="empty"),
+    pytest.param("blanc.md", b"   \n", id="blank"),
+    pytest.param("gros.pdf", b"%PDF-1.4\n" + b"0" * (5 * 1024 * 1024), id="over-4MiB"),
+    pytest.param("scan.pdf", None, id="image-only-pdf"),   # no text layer
     pytest.param("autre.txt", b"Un second fichier lisible.", id="control-readable"),
 ])
 def test_f002_one_unextractable_document_does_not_block_the_whole_root(tmp_path, name, payload):
@@ -174,7 +196,10 @@ def test_f002_one_unextractable_document_does_not_block_the_whole_root(tmp_path,
     result = library.scan("pc0", "nas")
     assert result["files"] >= 1
     paths = {entry["path"] for entry in library.page("pc0", "nas")["entries"]}
-    assert "note.txt" in paths
+    assert "note.txt" in paths and name in paths
+    # Re-scan: unchanged result, nothing cached as a version for the skipped file.
+    again = library.scan("pc0", "nas")
+    assert again["new_versions"] == 0 and again["not_extracted"] == result["not_extracted"]
 
 
 # --------------------------------------------------------------------------- F003
@@ -186,7 +211,6 @@ def _gpu(tmp_path):
                   "resident_mib": 2000, "dialogue_mib": 6000, "media_mib": 9000})
 
 
-@F003
 def test_f003_transient_lock_during_admission_leaves_no_orphan_head(tmp_path, monkeypatch):
     """G274-F003: an exception between enqueue and admission leaves a WAITING row.
 
@@ -258,7 +282,6 @@ SEPARABLE = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"], 
              ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .55)]
 
 
-@F004
 @pytest.mark.parametrize("max_far", [0.0, 0.5])
 def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_far):
     """G274-F004: ties on FRR are broken by the LOWEST threshold (min of tuples).
@@ -271,7 +294,9 @@ def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_f
     report = evaluate(_dataset(SEPARABLE), max_far=max_far)
     assert report["calibration"]["frr"] == 0
     assert report["calibration"]["far"] == 0
-    assert report["candidate_threshold"] == 0.9
+    # Highest equivalent threshold 0.9, minus 15 % of the gap to 0.5 (toytoy, 16/10): 0.84.
+    assert report["candidate_threshold"] == pytest.approx(0.84)
+    assert report["genuine_side_margin"] == 0.15
     assert report["validation"]["false_accepts"] == 0
 
 
@@ -283,3 +308,14 @@ def test_f004_control_frr_stays_the_first_criterion():
             ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .2)]
     report = evaluate(_dataset(rows), max_far=0.5)
     assert report["calibration"]["frr"] == 0.5 and report["calibration"]["far"] <= 0.5
+
+
+def test_f004_margin_never_changes_a_calibration_decision():
+    """The margined threshold stays strictly above the next lower calibration score."""
+    from eidolon_core.identity_evaluation import evaluate
+    rows = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"], True, .8999999),
+            ("calibration", ["b", "c"], False, .8999998), ("calibration", ["a", "d"], False, -1.0),
+            ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .1)]
+    report = evaluate(_dataset(rows), max_far=0.0)
+    assert .8999998 < report["candidate_threshold"] <= .8999999
+    assert report["calibration"]["far"] == 0 and report["calibration"]["frr"] == 0

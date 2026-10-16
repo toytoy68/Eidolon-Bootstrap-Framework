@@ -1,4 +1,4 @@
-> **G273 :** le dossier comporte maintenant 50 cas. Compléter G19–G24 selon SERVICES-HORS-VM-G273.md après la recette du socle. Aucun résultat machine n’est prérempli comme réussi.
+> **G275 :** le dossier comporte maintenant 50 cas. Compléter G19–G24 selon SERVICES-HORS-VM-G273.md après la recette du socle. Aucun résultat machine n’est prérempli comme réussi.
 
 > **Complément G272 :** après les raccordements ci-dessous, suivre DOCUMENTS-G272, PROFILS-ENROLEMENT-G272 et ETAT-PRIVE-G272. Les preuves comprennent maintenant G11–G18, soit 44 cas. Tous restent NOT_RUN dans le modèle.
 
@@ -8,12 +8,12 @@
 
 ## 1. PC : contrôler et extraire les fichiers
 
-Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g273.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g273.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
+Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g275.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g275.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
 
 Depuis la racine extraite, avec Python disponible :
 
 ```powershell
-python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g273.zip
+python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g275.zip
 $EidolonKit = '.\sources\core\eidolon-core\weekend\2026-10-17'
 & "$EidolonKit\inventory_pc.ps1" -Port 8767 > .\pc-inventory.json
 Copy-Item "$EidolonKit\results.template.json" .\results-weekend.json
@@ -82,7 +82,7 @@ Vérifier une question directe, une paraphrase et une question sans réponse att
 
 ## 6. « Retenir ceci » : parcours opérateur candidat
 
-Cette tranche est une CLI, pas encore un bouton de conversation. Utiliser d'abord `remember.example.json` sur la copie. Lire l'aperçu, vérifier le texte, l'acteur, la date et l'identifiant stable :
+La CLI ci-dessous vérifie le socle opérateur. Depuis G270, le bouton de conversation est également raccordé : suivre RACCORDEMENTS-G270.md pour son aperçu, sa confirmation et son reçu. Utiliser d'abord `remember.example.json` sur la copie. Lire l'aperçu, vérifier le texte, l'acteur, la date et l'identifiant stable :
 
 ```sh
 python -m core.information.remember --input /CONFIG/remember.json
@@ -104,7 +104,7 @@ python -m eidolon_core.maintenance_host --policy /CONFIG/host-policy.json --chec
 
 Sans reçu d'activité authentique et récent, `LAST_ACTIVITY_UNKNOWN` doit apparaître ; le contrôleur traitera l'activité comme récente et différera. `CHECK_ONLY` / `NOT_EXECUTED` ne signifie pas qu'un tick serait éligible. L'observation CPU est load1/nombre de CPU, pas un pourcentage d'occupation. La source doit couvrir l'activité des utilisateurs de Core : ne pas confondre absence de frappe locale sur VM et inactivité de l'assistant.
 
-Pour un tick explicite **sur la copie**, préparer un second alias `projection=documents`, sa configuration et sa reconstruction. Préparer un dossier d'état privé 0700 **hors du corpus** et `maintenance.json` avec chemins absolus et liste exacte des Information autorisées. L'index `archive_passages` est refusé par ce worker.
+Pour un tick explicite **sur la copie**, préparer un second alias `projection=documents`, sa configuration et sa reconstruction. Préparer un dossier d'état privé 0700 **hors du corpus** et `maintenance.json` avec chemins absolus et liste exacte des Information autorisées. Le worker documentaire refuse `archive_passages`. Depuis G270, `maintenance_host` dispose aussi de `PassageTick`, qui sélectionne explicitement la synchronisation de cette projection ; suivre RACCORDEMENTS-G270.md avec sa configuration dédiée.
 
 ```sh
 python -m eidolon_core.maintenance_host --policy /CONFIG/host-policy.json --activity /CONFIG/activity.json --runtime /CONFIG/maintenance.json --execute

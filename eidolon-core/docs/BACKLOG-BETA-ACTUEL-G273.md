@@ -1,3 +1,5 @@
+> Mise à jour G275 : audit G274 et corrections intégrées ; consulter [la contre-vérification](CONTRE-VERIFICATION-G275.md). Les validations PC/VM et extensions ci-dessous restent ouvertes.
+
 # Backlog bêta actuel — G273, 16 octobre 2026
 
 G273 réalise les cinq compléments hors VM demandés : bibliothèque versionnée avec

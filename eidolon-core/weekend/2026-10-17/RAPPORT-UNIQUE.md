@@ -1,3 +1,5 @@
+> G275 en qualification : les corrections de l’audit sont décrites dans [CONTRE-VERIFICATION-G275.md](../../docs/CONTRE-VERIFICATION-G275.md). Le bilan G273 ci-dessous est conservé jusqu’au remplacement par le rapport final G275 ; il ne qualifie pas les modifications G275.
+
 # Eidolon — rapport unique G273 et dossier PC/VM
 
 **16 octobre 2026 · Codex/GPT · recette prévue les 17–18 octobre.**

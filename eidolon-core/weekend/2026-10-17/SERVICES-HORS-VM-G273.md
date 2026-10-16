@@ -38,12 +38,12 @@ la commande lit la première page existante. L’intervalle doit être entre 60 
 peut travailler dans ce dossier à la fois. Plusieurs racines peuvent être suivies
 par des processus distincts ; un passage occupé est différé au prochain intervalle.
 
-Chaque passage relit et hache les fichiers : ajout/modification produit une
+Chaque passage relit et hache les fichiers dans la limite d’extraction de 4 Mio : ajout/modification produit une
 version, contenu inchangé réutilisé, doublons reconnus au sein du même profil et
 format. Le cache du passage évite de réextraire les doublons nouveaux. Aucune
 mutualisation d’extraits entre profils. Une disparition est marquée après un
 passage complet ; **aucune source ni ancienne version n’est supprimée**. Une
-modification détectée, un lien, une erreur, une interruption ou un dépassement
+modification détectée, un lien, une erreur d’accès, une interruption ou un dépassement
 conserve la génération précédente. Reprise : nouveaux inventaire/hachages, pas
 une confiance aveugle dans les dates. Aucun transfert de fichiers vers Internet.
 
@@ -55,6 +55,21 @@ bloquée dans le noyau : ce budget n’est pas une garantie de délai dur NFS/SM
 L’inventaire reste O(N), sans journal natif de changements. Une arborescence trop
 grosse doit être répartie en racines plus petites ; rien n’est ignoré pour fabriquer
 une synchronisation complète. Deux lectures ne constituent pas un snapshot atomique.
+
+Depuis G275, un document vide, illisible par l’extracteur ou sans texte ne bloque
+plus les autres fichiers : `not_extracted` donne les nombres par code et chaque
+entrée porte `extraction_error`/`excerpt_available`. Le document est retenté au
+passage suivant ; aucun extrait d’erreur n’est enregistré comme version. Au-delà
+de 4 Mio, seules les métadonnées sont inventoriées (`sha: null`), avec identité,
+taille et dates revérifiées ; aucun hachage du contenu trop grand n’est revendiqué.
+Ces fichiers comptent dans les bornes d’inventaire. Les liens, fichiers spéciaux et
+changements détectés restent fatals. Une ancienne version ne devient pas l’extrait
+courant d’un fichier aujourd’hui inexploitable. Le schéma diagnostique est ajouté
+au prochain scan explicite ; une consultation seule ne migre pas l’ancienne base.
+
+Le brouillon systemd ne fixe plus de quota CPU de 10 % avant mesure : `Nice=10`
+reste proposé. Fixer ensuite un quota compatible avec le premier passage et son
+budget mural ; une racine trop grande reste à partitionner.
 
 Dans la conversation : choisir la racine, **Consulter la bibliothèque synchronisée**,
 puis une source. Le bouton prépare son chemin dans le formulaire de lecture
@@ -169,7 +184,11 @@ Les vecteurs restent en mémoire et ne sont pas exportés ; aucun effacement phy
 complet de la RAM native n’est promis.
 
 Le seuil est choisi uniquement sur l’ensemble de calibration pour respecter le
-FAR empirique demandé et réduire les faux rejets. L’ensemble de validation fournit
+FAR empirique demandé et réduire les faux rejets. À faux rejets égaux, retenir le
+seuil le plus haut, puis l’abaisser de 15 % de l’écart au score de calibration
+immédiatement inférieur (choix toytoy, côté authentiques). Les décisions de
+calibration ne changent pas. Exemple 0,50/0,90 : 0,84 ; ce n’est ni 0,15 absolu ni
+une garantie statistique de 15 %. Le rapport porte `genuine_side_margin: 0.15`. L’ensemble de validation fournit
 ensuite faux positifs/négatifs, FAR/FRR et intervalles de Wilson à 95 %. Zéro erreur
 sur trois essais ne signifie pas zéro risque ; les comparaisons partageant des
 captures sont corrélées et ces intervalles ne constituent pas une garantie de
@@ -213,8 +232,16 @@ laissées explicitement dans la file via la CLI, pas un appel déjà retiré apr
 Une réponse synchrone dialogue rend sa réservation ; une exception conserve un
 état `UNKNOWN`. Une réponse HTTP média peut seulement confirmer une mise en file
 chez ComfyUI : sa réservation est donc conservée jusqu’à vérification opérateur.
-Un processus tué ne fait pas expirer les réservations. Une attente orpheline en tête
-peut bloquer la file ; l’inspecter puis utiliser `cancel-waiting` sur son identifiant.
+Les exceptions d’admission retirent une attente sans libérer une réservation
+ACTIVE/UNKNOWN ; le retrait est retenté trois fois en cas de blocage SQLite.
+Si le stockage reste indisponible, le retrait reste non confirmé et exige une revue.
+L’arrêt propre Core (SIGTERM/Ctrl+C) retire les attentes créées par cette instance,
+sans annuler les attentes héritées ni libérer les moteurs admis. Un processus tué
+brutalement ne fait pas expirer les réservations. Une attente orpheline en tête
+peut bloquer la file ; les états préexistants sont signalés au démarrage Core.
+`status` fournit les comptes complets et les MiB réservés, même si la liste des
+identifiants est tronquée à 1 000 ; aucun propriétaire n’est déclaré mort.
+L’inspecter puis utiliser `cancel-waiting` sur son identifiant.
 
 ```sh
 PYTHONPATH=src python -B -m eidolon_core.gpu_queue --config /CONFIG/gpu.json \

@@ -96,6 +96,29 @@ def prompt_fingerprint(catalog):
 
 
 MAX_OBSERVATIONS = 5
+# Memory recall contract (eidolon-memory-recall/1, bridge and client): one line of
+# at most 500 characters, no control character. A turn may be 8000 characters.
+RECALL_QUERY_CHARS = 500
+
+
+def recall_query(text):
+    """G274-F001: the recall query derived from a turn, never the raw turn text.
+
+    Control characters (newline, tab...) become spaces and whitespace runs are
+    collapsed. A longer turn keeps its END, where the subject usually is
+    (decision of toytoy, 16/10/2026): the last 500 characters, starting at a
+    word boundary (hard cut if a single word is longer). The turn is unchanged.
+    """
+    value = " ".join("".join(" " if ord(c) < 32 or ord(c) == 127 else c for c in text).split())
+    if len(value) > RECALL_QUERY_CHARS:
+        tail = value[-RECALL_QUERY_CHARS:]
+        if value[-RECALL_QUERY_CHARS - 1] != " ":
+            space = tail.find(" ")
+            tail = tail[space + 1:] if 0 <= space < len(tail) - 1 else tail
+        value = tail
+    return value
+
+
 OBSERVATION_MAX_AGE = 300
 OBSERVATION_MAX_AGE_BY_SOURCE = {"darme": 60}
 OBSERVATION_CLOCK_SKEW = 60
@@ -336,8 +359,11 @@ class Dialogue:
     def _recall(self, text, client_id=None):
         if self.memory is None:
             return None, [], None
+        query = recall_query(text)
+        if not query:
+            return None, [], "EMPTY_RECALL_QUERY"
         try:
-            context = validate_context(self.memory.recall_for(client_id, text) if hasattr(self.memory, "recall_for") else self.memory.recall(text))
+            context = validate_context(self.memory.recall_for(client_id, query) if hasattr(self.memory, "recall_for") else self.memory.recall(query))
         except Exception as exc:  # noqa: BLE001 - recall is optional: no memory is better than a guessed one
             return None, [], type(exc).__name__
         return context, [reference(item) for item in context["items"]], None

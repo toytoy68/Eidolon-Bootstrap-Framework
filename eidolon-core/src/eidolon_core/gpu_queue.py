@@ -16,6 +16,7 @@ import json
 import re
 import sqlite3
 import time
+import threading
 import uuid
 from .contracts import digest, ContractError
 from .offline_state import database
@@ -30,6 +31,7 @@ class Queue:
             if type(config[k]) is not int or not 0<=config[k]<=1048576: raise ValueError('INVALID_GPU_BUDGET')
         if not 0<=config['resident_mib']<config['capacity_mib'] or any(not 0<config[k]<=config['capacity_mib']-config['resident_mib'] for k in ('dialogue_mib','media_mib')): raise ValueError('INVALID_GPU_BUDGET')
         self.config,self.clock=json.loads(json.dumps(config)),clock
+        self._pending=set();self._pending_lock=threading.Lock();self._closing=threading.Event()
         with self.db(True) as db:
             db.execute('CREATE TABLE IF NOT EXISTS binding (sha TEXT)')
             row=db.execute('SELECT sha FROM binding').fetchone()
@@ -78,19 +80,59 @@ class Queue:
     def inspect(self):
         with self.db() as db:
             rows=[dict(r) for r in db.execute("SELECT * FROM jobs WHERE state IN ('WAITING','ACTIVE','UNKNOWN') ORDER BY created,id LIMIT 1001")]
-        return {'schema':'eidolon-gpu-queue-report/1','jobs':rows,'capacity_mib':self.config['capacity_mib'],'resident_mib':self.config['resident_mib'],'hardware_measured':False,'preemption':False,'automatic_expiry':False}
+            counts={r[0]:r[1] for r in db.execute("SELECT state,count(*) FROM jobs WHERE state IN ('WAITING','ACTIVE','UNKNOWN') GROUP BY state")}
+            reserved=db.execute("SELECT coalesce(sum(mib),0) FROM jobs WHERE state IN ('ACTIVE','UNKNOWN')").fetchone()[0]
+        return {'schema':'eidolon-gpu-queue-report/1','jobs':rows[:1000],'jobs_truncated':len(rows)>1000,
+                'counts':{s:counts.get(s,0) for s in ('WAITING','ACTIVE','UNKNOWN')},
+                'reserved_mib':reserved,'available_mib':self.config['capacity_mib']-self.config['resident_mib']-reserved,
+                'review_required':bool(counts),'live_owners_checked':False,'capacity_mib':self.config['capacity_mib'],'resident_mib':self.config['resident_mib'],'hardware_measured':False,'preemption':False,'automatic_expiry':False}
+
+    def _withdraw(self,key):
+        return self._withdraw_many((key,))
+
+    def _withdraw_many(self,keys):
+        """Best effort: cancel only still-WAITING requests, never admitted ones."""
+        if not keys: return True
+        for attempt in range(3):
+            try:
+                with self.db(True) as db:
+                    db.execute("UPDATE jobs SET state='CANCELLED',ended=? WHERE id IN ("+",".join("?" for _ in keys)+") AND state='WAITING'",(self.clock(),*keys))
+                return True
+            except (sqlite3.Error, OSError, ValueError):
+                if attempt<2: time.sleep(.5)
+        return False
+
+    def close(self):
+        """Drain this process's pending admissions only; preserve inherited/active jobs."""
+        with self._pending_lock:
+            self._closing.set()
+            keys=tuple(self._pending)
+        return self._withdraw_many(keys)
 
     def wait(self,key,kind,seconds=30,stopped=None):
-        self.enqueue(key,kind);deadline=time.monotonic()+seconds
-        while True:
-            if stopped is not None and stopped.is_set():
-                self.cancel_waiting(key);raise ContractError("GPU_ADMISSION_CANCELLED: no engine started")
-            row=self.acquire(key)
-            if row['state']=='ACTIVE': return row['lease']
-            if row['state']!='WAITING': raise ValueError('GPU_JOB_NOT_WAITING')
-            if time.monotonic()>=deadline:
-                self.cancel_waiting(key);raise ContractError('GPU_ADMISSION_TIMEOUT: no engine started')
-            time.sleep(min(.05,max(0,deadline-time.monotonic())))
+        with self._pending_lock:
+            if self._closing.is_set(): raise ContractError("GPU_ADMISSION_CANCELLED: queue closing")
+            self.enqueue(key,kind)
+            self._pending.add(key)
+        deadline=time.monotonic()+seconds
+        # G274-F003: any exit without a lease (stop, timeout, SQLite busy, error)
+        # withdraws the request; an orphan WAITING head would block every later turn.
+        try:
+            while True:
+                if self._closing.is_set() or stopped is not None and stopped.is_set():
+                    raise ContractError("GPU_ADMISSION_CANCELLED: no engine started")
+                row=self.acquire(key)
+                if row['state']=='ACTIVE': return row['lease']
+                if row['state']!='WAITING': raise ValueError('GPU_JOB_NOT_WAITING')
+                if time.monotonic()>=deadline:
+                    raise ContractError('GPU_ADMISSION_TIMEOUT: no engine started')
+                time.sleep(min(.05,max(0,deadline-time.monotonic())))
+        except BaseException as exc:
+            if not self._withdraw(key):
+                exc.add_note("GPU_WAITING_REVIEW_REQUIRED: withdrawal could not be confirmed")
+            raise
+        finally:
+            with self._pending_lock: self._pending.discard(key)
 
 
 def load(filename):
