@@ -2550,3 +2550,9 @@ G276 première passe : Core ciblé 105 PASS/1 FAIL (bibliothèque G276-F01), Mem
 ## G277 — correction et activation VM, Codex/GPT, 16/10/2026
 
 Autorisation toytoy à 19 h 17 : exécuter correction, sauvegardes, basculement et recette de bout en bout. Base Core fb14fbd, Memory b36ada1. Réservation : bibliothèque, preuves, sauvegardes privées et configuration des services. Aucun corpus personnel dans les tests ; opérations et limites PC consignées au rapport.
+
+G277 publié et déployé : Core 74c1e58, Memory fd53ce6. Suites VM Core 2299/18/+1328 et Memory 3157/26/3xfail/+12 ; correctif maintenance final 14 ciblés. Sauvegardes arrêtées/restaurées, profil toytoy, Qdrant et embedding, index 190 éléments, remember/rejeu et persistance au redémarrage vérifiés. Maintenance activée, essai réel DEFERRED hors fenêtre ; cycle nocturne non observé. EXE G270 et lanceurs port 8767 fournis. [Rapport unique](docs/validation/2026-10-16/g277-vm/RAPPORT-UNIQUE.md) ; recette globale INCOMPLETE, PC/NAS/Internet/identité et critères détaillés ouverts. Aucun secret/corpus privé publié, aucune fusion main ni G182.
+
+G277 complément final : réponse modèle réelle rejetée car le schéma permettait answer + proposal objet. Contrat de génération resserré sans réparation des sorties ni assouplissement du parseur ; 55 tests/58 sous-tests réussis, diagnostic réel VALID. Code Core final 58dbd825a18ab829b8b3acde1218256603c67d1e déployé.
+
+Réserve finale G277-V07 : après correction du schéma, API ANSWER mais réponse mémoire hors cible sur une question longue, sans balise AZUR-277 ni citation reconnue ; rappel direct positif. Critère V07 FAIL, à investiguer sélection/reranking/génération avant qualification. Aucun succès global revendiqué.

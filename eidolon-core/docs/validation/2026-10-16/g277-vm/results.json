@@ -1,0 +1,357 @@
+{
+  "schema": "eidolon-weekend-evidence/1",
+  "core_commit": "58dbd825a18ab829b8b3acde1218256603c67d1e",
+  "memory_commit": "fd53ce6afa78f26ad0d79642242b69177326f17c",
+  "checks": [
+    {
+      "id": "V01",
+      "criterion": "Inventaire PC/VM et SHA exacts enregistrés",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "VM inventoriées ; PC non accessible à cette session."
+    },
+    {
+      "id": "V02",
+      "criterion": "Sauvegarde arrêtée et restauration sur copie vérifiées",
+      "status": "PASS",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Sauvegardes arrêtées Core/Memory restaurées sur copies, contenus et droits identiques ; rapport unique."
+    },
+    {
+      "id": "V03",
+      "criterion": "Dépendances, modèles hors ligne et empreintes contrôlés",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Inférence et embedding disponibles ; ensemble des modèles matériels/identité non qualifié."
+    },
+    {
+      "id": "V04",
+      "criterion": "Stockage canonique check-storage READY sous le compte prévu",
+      "status": "PASS",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "CLI du pont sur la racine active : READY, issues=0, warnings=0, read_only_locks=true."
+    },
+    {
+      "id": "V05",
+      "criterion": "Montage/permissions readonly : écriture interdite, rappel possible",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V06",
+      "criterion": "Reconstruction passages sur copie et alias de recette distinct",
+      "status": "PASS",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Reconstruction distincte de 189 éléments puis ajout synthétique 190, INDEX_SNAPSHOT_MATCH."
+    },
+    {
+      "id": "V07",
+      "criterion": "Rappel vrai/paraphrase/hors sujet avec citations et fraîcheur correctes",
+      "status": "FAIL",
+      "observed_at": "2026-10-16T20:25:00+02:00",
+      "evidence": "Rappel direct AZUR-277 réussi ; question longue via chat : ANSWER mais balise absente, zéro citation reconnue, réponse sur une autre note. core-evidence.json. Qualité conversationnelle non validée."
+    },
+    {
+      "id": "V08",
+      "criterion": "Qdrant/Ollama absents : erreur explicite, aucun succès lexical masqué",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V09",
+      "criterion": "Remember aperçu/appliquer/rejouer : un seul souvenir, UNVERIFIED",
+      "status": "PASS",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Aperçu/commit/rejeu COMMITTED ; balise unique dans le rappel, UNVERIFIED ; reçus identiques après redémarrage."
+    },
+    {
+      "id": "V10",
+      "criterion": "Maintenance : charge haute, activité récente, boot récent et absence activité différés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V11",
+      "criterion": "Maintenance documentaire : un tick et reprise durables, aucune suppression",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V12",
+      "criterion": "Redémarrage/retour ancienne version sur copie sans perte",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P01",
+      "criterion": "Tunnel SSH local, empreinte hôte et authentification vérifiés",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P02",
+      "criterion": "Dialogue réel, historique et relance du client",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P03",
+      "criterion": "Coupure réseau et retour : état périmé, pas de double action",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P04",
+      "criterion": "Micro réel : permissions, dictée, silence et refus de permission",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P05",
+      "criterion": "Haut-parleurs/casque : voix réelle, arrêt et feedback",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P06",
+      "criterion": "Webcam réelle : permission, aperçu, arrêt, débranchement",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P07",
+      "criterion": "Échelles 100/125/150 %, clavier et lecture erreurs",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P08",
+      "criterion": "Concurrence voix/modèle : CPU/RAM/VRAM et délai observés",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P09",
+      "criterion": "Session prolongée et redémarrage Windows sans jeton dans URL/logs",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "P10",
+      "criterion": "Guide WINDOWS-WEEKEND W1–W21 rempli avec réserves",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "O01",
+      "criterion": "Compte de service, chemins et autorisations décidés explicitement",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O02",
+      "criterion": "Logs de démarrage/arrêt et supervision vérifiés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O03",
+      "criterion": "Fenêtre 04–08 Europe/Paris et seuils de charge approuvés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O04",
+      "criterion": "Go/no-go humain sur preuves, blocages et périmètre bêta",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G01",
+      "criterion": "Chat : préparer, confirmer, recharger le reçu et reprendre sans doublon après coupure",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G02",
+      "criterion": "Deux profils réels : aucun souvenir, reçu ou fichier non autorisé accessible entre eux",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Un seul profil réel fourni et configuré."
+    },
+    {
+      "id": "G03",
+      "criterion": "Pont Memory : liaison de racine et jetons lecture/écriture distincts contrôlés",
+      "status": "PASS",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Racine liée à toytoy ; jetons distincts ; usages croisés et invalide HTTP 401 ; core-evidence.json."
+    },
+    {
+      "id": "G04",
+      "criterion": "Passages : ajout et modification sans ré-embedding des documents inchangés, alias atomique",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G05",
+      "criterion": "Activité Core lue depuis Memory : frais, périmé, service arrêté, reprise pendant maintenance",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G06",
+      "criterion": "SearXNG réel : requête exacte confirmée, résultat vide et panne explicites",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Aucun serveur SearXNG configuré."
+    },
+    {
+      "id": "G07",
+      "criterion": "Internet : HTTPS/SSRF, quota partagé du profil persistant après redémarrage",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Internet désactivé sur le profil."
+    },
+    {
+      "id": "G08",
+      "criterion": "NAS et fichier PC : lecture UTF-8, liens/traversées refusés, changement après aperçu détecté",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Dossier synthétique vérifié ; chemins NAS et PC non fournis."
+    },
+    {
+      "id": "G09",
+      "criterion": "Windows résident : artefact et SHA, icône, ouverture/fermeture, tunnel indisponible puis revenu",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "G10",
+      "criterion": "Windows : démarrage à la connexion et suppression contrôlés sous le compte réel",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "G11",
+      "criterion": "PC/NAS : PDF textuel et Office réels, scan sans OCR et troncature explicités",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "DOCX synthétique vérifié ; fichiers réels NAS/PC non fournis."
+    },
+    {
+      "id": "G12",
+      "criterion": "Documents : macros, XML dangereux, archive excessive et chiffrement refusés sans écriture Memory",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G13",
+      "criterion": "Document modifié, reçus volumineux paginés et mémorisation séparée confirmée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G14",
+      "criterion": "Fermeture/changement de profil pendant permission, capture et lecture : aucun résultat tardif ni capteur actif",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Validation réelle sur le PC Windows nécessaire ; accès non disponible dans cette session."
+    },
+    {
+      "id": "G15",
+      "criterion": "Modèles identité : empreintes et dépendances réelles contrôlées, absence/calibration manquante explicites",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Modèles identité réels non raccordés/calibrés."
+    },
+    {
+      "id": "G16",
+      "criterion": "Enrôlement volontaire : présence, consentement, annulation, redémarrage et isolation entre profils",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Enrôlement volontaire et matériel réels nécessaires."
+    },
+    {
+      "id": "G17",
+      "criterion": "Retrait/réenrôlement des gabarits ; anciennes sauvegardes et limites de ressemblance consignées",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Aucun enrôlement réel à retirer."
+    },
+    {
+      "id": "G18",
+      "criterion": "Copie arrêtée de l’état : source intacte, quotas/reçus conservés, incertitudes préservées et réattribution refusée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G19",
+      "criterion": "Bibliothèque réelle : première synchronisation, modification, doublons, interruption et source absente sans suppression",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G20",
+      "criterion": "Bibliothèque : refus interprofil, pagination, fichier changé et arrêt/reprise du service de suivi",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G21",
+      "criterion": "Conservation : inventaire des historiques/médias/sauvegardes et aperçu sans suppression ni modification des sources",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G22",
+      "criterion": "Sessions : fermeture, changement de clé, retrait, rotation opérateur et ancien jeton refusé",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G23",
+      "criterion": "Calibration : captures consenties distinctes, séparation des sessions, faux positifs/négatifs et aucune activation automatique",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T20:10:00+02:00",
+      "evidence": "Captures consenties et sessions matérielles distinctes nécessaires."
+    },
+    {
+      "id": "G24",
+      "criterion": "File GPU partagée : budgets mesurés, priorité et vieillissement, panne incertaine et libération des deux réservations après vérification",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "g277-e2e.json": {
+    "state": "COMPLETED",
+    "reply_kind": "ANSWER",
+    "reply_fields": [
+      "authorizes_execution",
+      "candidates",
+      "citations",
+      "context",
+      "conversation_id",
+      "core_note",
+      "in_reply_to",
+      "kind",
+      "model",
+      "model_text",
+      "model_text_is_evidence",
+      "personality",
+      "proposal",
+      "proposal_sha256",
+      "protocol",
+      "sources",
+      "store_id",
+      "turn_sha256"
+    ],
+    "model_called": true,
+    "replay_model_called": false,
+    "replayed": true,
+    "same_reply": true,
+    "page_fields": [
+      "protocol",
+      "store_id",
+      "conversation_id",
+      "items",
+      "has_more",
+      "next_after"
+    ],
+    "elapsed_seconds": 11.487
+  },
+  "g277-profile-e2e.json": {
+    "remember_http": 200,
+    "remember_state": "COMMITTED",
+    "remember_replay_identical": true,
+    "changed_request_status": 409,
+    "file_read_state": "COMMITTED",
+    "traversal_status": 503,
+    "symlink_status": 503,
+    "docx_state": "COMMITTED",
+    "docx_result": "EXTRACTED_NOT_REMEMBERED",
+    "macro_status": 400
+  },
+  "g277-restart.json": {
+    "receipt_identical": true,
+    "page_identical": true,
+    "replayed": true,
+    "model_called": false,
+    "same_reply": true
+  },
+  "g277-access-recall.json": {
+    "tokens_distinct": true,
+    "read_cannot_write": 401,
+    "write_cannot_read": 401,
+    "invalid_token": 401,
+    "profile_id": "toytoy",
+    "marker_count": 1,
+    "index_state": "INDEX_SNAPSHOT_MATCH",
+    "marker_status": "UNVERIFIED",
+    "reference_present": false,
+    "freshness": "CANONICAL_AT_READ"
+  },
+  "g277-verified-tests.status.json": {
+    "exit_code": 0
+  },
+  "g277-profile-dialogue.json": {
+    "state": null,
+    "model_called": true,
+    "reply_kind": "ANSWER",
+    "marker_found": false,
+    "citations_count": 0,
+    "replayed": true,
+    "replay_model_called": false
+  }
+}

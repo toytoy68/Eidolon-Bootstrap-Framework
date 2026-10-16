@@ -16,3 +16,5 @@ Core Python 3.13.5 : 2 299 réussis, 18 ignorés, 1 avertissement attendu de fix
 Sauvegardes réelles arrêtées/restaurées : Core 50 entrées, Memory 604 entrées, contenus et droits comparés, sources inchangées. Les cinq services API/communication/monitoring/pont/dashboard ont redémarré. Dialogue réel : ANSWER, historique présent, rejeu sans second appel au modèle.
 
 L'activation du profil, de l'index et de la maintenance fait l'objet de la suite du lot. Ce document de qualification du code ne signifie pas que ces raccordements ou les essais Windows sont terminés. Rapport opérationnel consolidé à suivre.
+
+Suite opérationnelle terminée dans la limite des accès disponibles : [rapport unique G277](validation/2026-10-16/g277-vm/RAPPORT-UNIQUE.md). Profil, index et maintenance activés ; recette globale INCOMPLETE.
