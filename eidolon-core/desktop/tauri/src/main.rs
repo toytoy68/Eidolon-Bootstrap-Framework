@@ -9,10 +9,12 @@
 //! (`http://127.0.0.1:<port>/`). The page keeps Core's same-origin contract: it talks
 //! to Core with fetch, never through Tauri. No command handler, plugin or capability
 //! is registered, so the remote page has no IPC permission. The shell does not start
-//! the tunnel, store the token, autostart or install anything.
+//! the tunnel, autostart or install anything. An optional launcher-provided key
+//! opens the conversation once, only in the selected top-level Core page.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod origin;
+mod pairing;
 
 use tauri::webview::{NewWindowResponse, PermissionKind, PermissionResponse};
 use tauri::{WebviewUrl, WebviewWindowBuilder};
@@ -27,10 +29,19 @@ fn main() {
             std::process::exit(2);
         }
     };
+    let raw_key = std::env::var_os(pairing::ENV_KEY);
+    std::env::remove_var(pairing::ENV_KEY); // never inherited by WebView helper processes
+    let auto_open = match pairing::script(raw_key.as_deref(), port) {
+        Ok(script) => script,
+        Err(error) => { eprintln!("eidolon-consultation : {error}"); std::process::exit(2); }
+    };
+    drop(raw_key);
     let start = origin::start_url(port);
     tauri::Builder::default()
         .setup(move |app| {
-            WebviewWindowBuilder::new(app, "main", WebviewUrl::External(start.clone()))
+            let mut window = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(start.clone()));
+            if let Some(script) = &auto_open { window = window.initialization_script(script); }
+            window
                 .title(format!("Eidolon — consultation (127.0.0.1:{port})"))
                 .inner_size(1100.0, 800.0)
                 .devtools(false)

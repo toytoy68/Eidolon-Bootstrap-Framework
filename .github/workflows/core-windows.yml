@@ -26,6 +26,13 @@ jobs:
             [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors)
             if ($errors.Count) { throw ($errors | Out-String) }
           }
+      - name: Automatic pairing tests (synthetic credentials only)
+        shell: powershell
+        run: |
+          powershell -NoProfile -File ../windows/test-pairing.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node --test tests/pairing.test.js
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Native client tests and release build (locked dependencies)
         run: |
           cargo test --locked

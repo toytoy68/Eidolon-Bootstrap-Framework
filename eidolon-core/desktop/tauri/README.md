@@ -23,9 +23,15 @@ contrat de Core (Host, Origin, CSP) reste inchangé et n'est pas contourné.
 | Diagnostics sans écho (G054) | messages **constants** : aucun argument, aucune valeur de variable ni aucune URL refusée n'est réaffiché (un jeton ou une adresse privée pourrait s'y trouver) |
 | Pas d'installation | `bundle.active=false` ; aucun démarrage automatique, aucun raccourci, aucune écriture système |
 
-La coquille **ne lance pas** le tunnel, ne lit ni ne stocke le jeton, et ne
-fait aucun appairage. Le jeton est saisi dans la page et gardé en mémoire de
-la page, comme dans le navigateur.
+La coquille **ne lance pas** le tunnel. Depuis G279, le lanceur optionnel
+`../windows/eidolon-open.ps1` récupère la clé par SSH lors du premier appairage
+et la conserve chiffrée par DPAPI pour le compte Windows courant. Il la transmet
+uniquement dans l'environnement du processus enfant (jamais dans ses arguments).
+La coquille retire cette variable avant de créer WebView2 et ouvre la conversation
+sur la seule page racine, origine et port choisis. Aucun IPC ou accès aux fichiers
+n'est accordé à la page. La clé reste en mémoire de la page comme après saisie
+manuelle ; aucun localStorage, cookie ou URL ne la conserve. Sans lanceur,
+le mode manuel reste disponible. Voir [le guide G279](../../docs/WINDOWS-AUTO-PAIRING-G279.md).
 
 ## Construire et lancer (développement)
 
