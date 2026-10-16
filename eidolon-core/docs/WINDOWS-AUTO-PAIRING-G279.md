@@ -9,6 +9,8 @@ Demande toytoy du 16 octobre 2026 à 23 h 01. L'authentification serveur reste a
 3. Lancer `Lancer-Eidolon.cmd`. La première fois uniquement, SSH demande le mot de passe du serveur afin de récupérer la clé existante. La confiance dans l'empreinte SSH doit déjà avoir été établie avec le tunnel ; le lanceur ne l'accepte pas à l'aveugle.
 4. La conversation s'ouvre automatiquement. Aux lancements suivants, la clé est relue depuis son stockage chiffré Windows ; aucune copie dans le presse-papiers ni saisie dans l'application.
 
+Les anciens scripts résident/démarrage qui lancent directement l’EXE ne passent pas par ce nouveau lanceur et restent en ouverture manuelle.
+
 Le mot de passe SSH du tunnel reste distinct. Ce lot ne crée pas de clé SSH ni d'ouverture automatique du tunnel.
 
 Si Windows bloque le script téléchargé, vérifier la provenance du ZIP et utiliser Propriétés → Débloquer sur ce ZIP avant extraction. Le lanceur utilise `RemoteSigned` seulement pour son processus PowerShell ; aucune politique Windows permanente n'est modifiée et les stratégies d'organisation restent prioritaires.
