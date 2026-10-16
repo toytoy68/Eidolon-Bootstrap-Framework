@@ -2475,3 +2475,19 @@ calibration et coordination GPU. Base b73323db6ecd31f274e2213f701dc9bec8cb4652 ;
 C191 dernier retour observé. Réservation Codex : modules, raccordements API/UI/CLI,
 tests synthétiques et guides. Aucun déploiement, effacement automatique ou seuil
 biométrique réputé mesuré. Publication sur feat/eidolon-core-v0.1 autorisée.
+
+G273 qualifié et publié : code `00fe9cbfa59ef31fa6b245c87e05cb843a17829d`,
+Memory inchangé `76d664013d4e018212682c5aa56305bea0c41db6`. CI Core
+38842661447 : 2 274 réussis, huit exclusions, 1 328 sous-tests ; contrôles root cinq.
+Chromium 38842661515 : 216 réussis, aucune exclusion. La régression de portée du
+signal d’arrêt détectée par la suite complète est corrigée, test historique conservé.
+
+Livré : synchronisation périodique versionnée et consultation UI des bibliothèques,
+aperçu de conservation sans purge, révocation/rotation des clés, mesure/calibration
+de captures existantes et admission GPU durable raccordée au dialogue/worker média.
+Rapport unique, backlog G273, commandes et exemples inactifs consolidés ; dix
+contre-revues G273 proposées à Claude, précédent message actif archivé à l’identique.
+C191 demeure son dernier retour observé. Dossier de 50 preuves NOT_RUN ; paquet
+source épinglé et Windows G270 inchangé. Aucun déploiement, mesure matérielle,
+compte réel, seuil installé, purge ou fusion main. Les extensions non livrées
+restent distinguées des validations VM dans le backlog courant.

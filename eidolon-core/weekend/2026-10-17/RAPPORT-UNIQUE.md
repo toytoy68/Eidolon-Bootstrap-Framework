@@ -1,139 +1,140 @@
-# Eidolon — rapport unique G272 et livraison PC/VM
+# Eidolon — rapport unique G273 et dossier PC/VM
 
-**15–16 octobre 2026 · Codex/GPT · recette prévue les 17–18 octobre.**
+**16 octobre 2026 · Codex/GPT · recette prévue les 17–18 octobre.**
 
-Le lot hors VM est développé et publié sur la branche de travail Core. Il complète
-G269–G271 avec l’extraction documentaire, l’enrôlement volontaire du profil connecté,
-la remise à zéro des sessions et la copie arrêtée des états privés. Le dossier de
-transfert est actualisé. **Aucune installation sur ton PC ou tes VM n’a été faite.**
-La bêta opérationnelle reste conditionnée à la recette réelle. Les développements
-historiques encore ouverts sont explicités en fin de rapport ; ils ne sont pas
-assimilés à des tâches terminées.
+Les cinq chantiers hors VM demandés sont implémentés et publiés sur la branche
+`feat/eidolon-core-v0.1`. Ils complètent le socle G269–G272. Aucun service n’a été
+installé sur les machines de toytoy, aucun corpus réel migré et aucun modèle
+biométrique ou budget GPU réputé mesuré. Le dossier rassemble **50 cas de recette,
+tous NOT_RUN sur les machines cibles**.
 
-## Livraison cumulée
+## Ce qui a été développé dans G273
 
-| Fonction | Disponible dans les sources livrées | Limite importante |
+| Chantier | Réalisation et intégration | Limite conservée |
 | --- | --- | --- |
-| Dialogue et mémoire | « Retenir ceci », aperçu exact, confirmation et reçu durable ; reprise idempotente du pont Memory | Information UNVERIFIED, aucune vérité déduite de la mémorisation |
-| Profils | Clé appairée liée côté Core au profil, racines et droits ; isolation du rappel, des fichiers et reçus | Authentifie une clé ; trois profils réels et compte C187 à activer sur place |
-| Index et maintenance | Passages incrémentaux, réemploi des vecteurs inchangés, bascule atomique ; activité Core authentifiée entre VM et report si charge/activité inconnue | Inventaire O(N), un écrivain d’alias ; aucun nettoyage de génération |
-| Internet | SearXNG et lecteur HTTPS contrôlé, confirmation précise, quota persistant par profil | Services et réseau réels à qualifier ; aucune répétition automatique d’une tentative incertaine |
-| Documents G272 | TXT/MD/CSV, PDF textuel, DOCX/ODT/XLSX/PPTX depuis PC ou racines NAS ; extrait, SHA, limites visibles et reçus paginés | PC 512 Kio, NAS 4 Mio, extrait 16 000 caractères ; aucun OCR ni calcul de formules |
-| Documents vers dialogue/Memory | Analyse d’une source choisie ; mémorisation explicite séparée avec provenance | Un extrait n’est pas le fichier complet ; observation de dialogue bornée à 3 600 caractères |
-| Enrôlement G272 | Présence/consentement, captures explicites, confirmation, annulation, reprise/refus, retrait et comparaison au profil connecté | Modèles non fournis ; sans calibration résultat non calibré ; aucun login, changement de profil ou droit biométrique |
-| Confidentialité des sessions | Arrêt des capteurs, abandon des permissions/résultats tardifs et remise à zéro des brouillons à la fermeture/changement de session | Annulation distante au mieux si réseau coupé ; expiration des sessions vérifiée à l’accès ou au redémarrage |
-| État privé G272 | Aperçu puis copie arrêtée vers un nouveau répertoire ; reçus/quotas/gabarits conservés, actions en vol UNKNOWN ; refus de réattribution | Ne sauvegarde pas conversations, appairages, corpus, secrets ou modèles ; aucune restauration aveugle |
-| Diagnostic | Configuration seule ou contrôle explicite fichiers/permissions/secrets distincts ; modèles identité et modules optionnels | Ni démarrage ni réseau ; la présence d’un module ne prouve pas sa compatibilité effective |
-| Windows | Binaire Tauri G270, résident/icône, réouverture, contrôle SHA et démarrage HKCU explicite | Même binaire testé précédemment, non signé ; WebView2 et matériel à essayer sur le PC |
-| Exploitation | Configurations candidates, inventaires, unités séparées, reprise/rollback et **44 contrôles de recette** | Les 44 résultats de machines réelles restent **NOT_RUN**, aucun service activé |
+| Bibliothèques | Suivi périodique de racines autorisées, hachage, versions, cache des doublons, reprise et génération conservée si échec ; consultation paginée via API appairée et interface | Extraits privés uniquement, aucune écriture Memory automatique ; racines Linux/NAS ou partage PC monté, pas d’agent Windows natif |
+| Conservation | Inventaire des volumes, reçus/gabarits et racines protégées ; aperçu des anciens extraits devenus candidats, avec empreintes | Aucun exécuteur de purge ; durées métier à fixer ; clés de reprise/provenance protégées ; octets logiques différents d’espace disque récupérable |
+| Profils/sessions | Fermeture locale avec clé/brouillons/captures retirés, changement par clé explicite ; retrait de sa propre clé en deux étapes ; inventaire et rotation opérateur atomique | La rotation garde le même client et son profil ; aucun administrateur Web ni connexion biométrique ; effets déjà admis non annulés par révocation |
+| Calibration | Mesure d’images/PCM existants avec modèles épinglés, étiquettes et consentement ; refus des captures réutilisées et des sessions mélangées ; choix du seuil sur calibration, FAR/FRR sur validation et intervalles indicatifs | Les données synthétiques ne qualifient pas une personne ; seuil candidat jamais activé ; aucun droit biométrique, test du vivant ou résistance à l’usurpation établi |
+| GPU partagé | File SQLite durable, budgets déclarés, priorité dialogue/vieillissement ; raccordement au dialogue réellement sélectionné et au lancement explicite du worker média ; refus d’admission tardive après abandon | Coopératif, sans mesure GPU ni préemption ; clients externes/STT/TTS hors file ; exceptions et médias asynchrones gardent une réservation jusqu’à revue |
 
-Le module documentaire utilise un processus jetable avec limites de temps/mémoire,
-contrôles d’archives et XML ; cela ne constitue pas une isolation noyau complète.
-Les binaires importés et captures biométriques ne sont pas persistés par ces parcours.
-Les extraits, reçus et gabarits sont des données privées dans l’état local. Le retrait
-des gabarits du registre actif ne promet pas l’effacement de sauvegardes ou de pages
-physiques. Les modèles biométriques ne sont pas téléchargés ni calibrés dans ce lot.
+La synchronisation relit le contenu, pas seulement les dates. Ajout et modification
+créent des versions ; disparition signale une absence, sans effacer les sources ou
+anciens extraits. Un verrou évite deux scans concurrents dans le même état. Une
+seconde passe contrôle les octets, sans prétendre constituer un snapshot atomique.
+Le budget limite taille, profondeur, fichiers et versions ; une racine trop grande
+est refusée et doit être répartie. Le suivi peut s’arrêter proprement et reprendre.
+
+La conservation distingue les données encore nécessaires à la reprise et les
+extraits anciens. Historiques, Memory, médias, sauvegardes et clés peuvent être
+inventoriés par métadonnées sans lecture de leur contenu ; ils restent protégés.
+Les durées d’exemple ne sont pas adoptées à la place de l’utilisateur.
+
+La file GPU conserve les réservations après perte de réponse ou décès du processus.
+Une réponse dialogue synchrone rend sa place ; une réponse média peut seulement
+accuser réception d’un travail asynchrone, donc requiert une revue. Les réservations
+média historiques restent à libérer séparément. Les modèles résidents doivent être
+comptés dans les budgets, et les VRAM de plusieurs GPU ne sont pas additionnées
+implicitement. Une attente orpheline peut nécessiter une annulation opérateur.
+
+## Socle précédent conservé
+
+G269–G272 fournissent déjà le chat, la mémorisation avec aperçu/confirmation/reçu,
+les profils liés aux clés, les ponts Memory isolés, l’index Qdrant et les passages
+incrémentaux, la maintenance conditionnée à l’activité/charge, SearXNG/HTTPS avec
+quotas, les fichiers PC/NAS, l’extraction PDF/Office/texte, l’enrôlement volontaire
+du profil connecté, le diagnostic et la copie arrêtée des reçus/quotas/gabarits.
+Le binaire Windows résident G270 reste conservé à l’identique.
+
+Les imports G272 restent bornés à 512 Kio depuis le navigateur, 4 Mio depuis une
+racine autorisée et 16 000 caractères extraits. Aucun OCR ni calcul de formules.
+L’analyse et la mémorisation d’un extrait sont séparées ; les observations restent
+UNVERIFIED. Les gabarits retirés du registre actif peuvent subsister dans d’anciennes
+sauvegardes : aucune promesse d’effacement physique général.
 
 ## Révisions et preuves
 
-- **Core qualifié :** `688d7a5f5189704a7eaacc581e6e9d327e9fa883`, branche `feat/eidolon-core-v0.1`.
-- **Memory inchangé :** `76d664013d4e018212682c5aa56305bea0c41db6`, branche `refactor/architecture-v1`, épinglé dans la CI Core.
-- Le commit documentaire final figure dans `MANIFEST.json` du paquet source et
-  `LIVRAISON.json` du paquet extérieur. Les ajouts finaux sont les guides,
-  exemples inactifs, TODO et bilan ; les preuves ci-dessous restent attachées
-  au commit de code qualifié, sans attribution rétroactive à un autre SHA.
+- **Code G273 qualifié :** `00fe9cbfa59ef31fa6b245c87e05cb843a17829d`.
+- **Memory conservé :** `76d664013d4e018212682c5aa56305bea0c41db6`, branche `refactor/architecture-v1`.
+- **Windows conservé :** source `fe7261826eb26e6b4f2c92a6f55636330cd3df1f`.
+- Le manifeste du paquet indique le commit documentaire final. Le code, tests,
+  interface et configurations de recette sont comparés au commit qualifié ; les
+  mises à jour finales de bilan ne sont pas assimilées à une autre campagne.
 
-| Campagne réellement exécutée | Résultat | Référence |
+| Campagne | Résultat | Preuve |
 | --- | --- | --- |
-| Core complet G272, Python 3.13 | **2 251 réussis, 8 ignorés, 1 328 sous-tests** | [Run 38813812182](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38813812182) |
-| Propriétaires de jetons, vrais changements d’UID | **5 réussis** | Étape root distincte du même run |
-| Desktop/Chromium G272 | **215 réussis, aucun ignoré** | [Run 38813812174](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38813812174) |
-| Tests locaux ciblés G272/G271, API et dossier | **69 réussis, 6 sous-tests** ; ensuite 7 tests dossier réussis après passage à 44 cas | Linux local, données temporaires synthétiques |
-| Exemples d’identité | Deux configurations validées au schéma ; poids/modèles **NOT_RUN** | Validateur réel `identity_runtime.validate` |
-| Memory complet déjà qualifié au SHA conservé | **3 151 réussis, 26 ignorés, 3 xfail, 12 sous-tests** ; worker **52 réussis** | [Run 38779839256](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839256) |
+| Core complet G273, Python 3.13 | **2 274 réussis, 8 ignorés, 1 328 sous-tests** | [Run 38842661447](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38842661447) |
+| Propriétaires de jetons, vrais changements d’UID | **5 réussis** | Étape distincte du run Core |
+| Desktop/Chromium G273 | **216 réussis, aucune exclusion** | [Run 38842661515](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38842661515) |
+| Nouveaux scénarios locaux G273 | **23 réussis**, dont véritables commandes CLI | `tests/test_offline_services_g273.py` |
+| Dialogue, API et nouveaux services locaux | **66 réussis, 24 sous-tests** | Après correction du chemin d’arrêt ; inclut les tests G273 |
+| Dossier et manifeste local | **7 réussis** ; modèle de recette **50 NOT_RUN, 0 PASS** | `test_weekend_bundle_g269.py`, `check_results.py` |
+| Memory au SHA conservé | **3 151 réussis, 26 ignorés, 3 xfail, 12 sous-tests** ; worker **52 réussis** | [Run 38779839256](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839256) |
 | Qdrant ciblé / serveur jetable 1.15.4 | **550 réussis, 1 xfail** / **19 réussis** | [Ciblé](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839389) · [Serveur](https://github.com/toytoy68/Eidolon-Memory-Engine/actions/runs/38779839262) |
-| Windows G270 conservé | **5 tests Rust**, compilation release, parsing/aperçus PowerShell, résident sans Core, inscription/retrait HKCU réussis | [Run 38782802182](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38782802182) |
+| Windows G270 | **5 tests Rust**, compilation, contrôles PowerShell, résident sans Core et inscription/retrait HKCU réussis | [Run 38782802182](https://github.com/toytoy68/Eidolon-Bootstrap-Framework/actions/runs/38782802182) |
 
-Les huit exclusions Core sont deux tests de changement de propriétaire (rejoués
-dans l’étape root), un comparatif kaldi-native-fbank, deux essais ONNX synthétiques
-sans leurs dépendances et trois essais OpenCV/YuNet/SFace sans les poids. Les
-41 tests navigateur ignorés dans le job Python sont couverts par le job Chromium
-dédié, sans exclusion. L’unique avertissement Python provient de la construction
-volontaire d’une archive ZIP à noms dupliqués pour tester son refus.
+Les nombres se recouvrent : ne pas les additionner. Memory et Windows ne sont pas
+réexécutés pour G273 ; leurs révisions/octets sont conservés. La CI ne valide pas
+le rendu physique du PC, le matériel ni la précision des modèles d’identité.
 
-Les comptages se recouvrent : ne pas les additionner. Memory et Windows n’ont pas
-été réexécutés dans G272 ; leurs fichiers concernés et leurs octets livrés sont
-conservés. La CI Windows ne prouve pas le rendu visuel, le fonctionnement physique
-du matériel ni une longue session réelle. Les sept exclusions de montage privé
-Memory et trois xfail historiques restent des dettes de qualification ; les 19
-exclusions serveur de sa suite générale sont couvertes par le job Qdrant dédié.
+La qualification complète a détecté une régression introduite dans le chemin
+« appel après arrêt de Core » : le signal d’annulation GPU était référencé dans
+deux méthodes où il n’existait pas. Les références ont été retirées ; le signal
+reste limité à l’attente qu’il commande. Le test existant est conservé et rejoué.
+Le contrôle des exemples a également détecté une limite JSON demandée au-delà du
+plafond du lecteur commun ; corrigée à 1 Mio, avec test des véritables entrées CLI.
+Les campagnes initiales rouges restent consultables, sans les présenter comme des
+réussites. Le contrôle des captures réutilisées et celui des racines API mal typées
+ont aussi été ajoutés avant clôture.
 
-Les premiers runs G272 ont signalé une ancienne attente qui conservait les
-brouillons média après fermeture, désormais remplacée par le test de leur remise
-à zéro et de leur absence après réouverture. Quatre autres échecs venaient du
-contrôle lexical des commandes de mission qui prenait le libellé « annuler les
-prises » pour une commande de mission ; le bouton indique maintenant précisément
-« Abandonner les prises et arrêter les capteurs ». Ces contrôles restent actifs.
-Les runs corrigés figurent ci-dessus ; les échecs initiaux ne sont pas cachés.
+Les exclusions attendues Core concernent deux tests de propriétaire rejoués sous
+root et six essais de dépendances/modèles biométriques indisponibles. Le ZIP à noms
+dupliqués est construit volontairement par un test de refus et produit un avertissement.
+Le job Chromium dédié doit rester sans exclusion. Les exclusions de montage privé
+et xfail historiques Memory restent explicitement ouvertes.
 
-Les nouvelles preuves couvrent extraction native d’un PDF synthétique, ZIP/XML
-malformés, changements NAS, pagination de gros reçus, isolation/rejeu/expiration
-d’enrôlement, annulation pendant inférence, copie arrêtée, refus interprofils et
-permissions accordées après fermeture. L’essai navigateur d’enrôlement injecte un
-encodeur synthétique dans le serveur de test : **aucune précision biométrique réelle
-n’est démontrée**. L’absence d’un modèle est également testée avec le vrai worker.
+## Dossier et transfert
 
-## Paquet à transférer
+Commencer par [README.md](README.md), [RECETTE.md](RECETTE.md), puis
+[SERVICES-HORS-VM-G273.md](SERVICES-HORS-VM-G273.md). Les guides G270/G271/G272
+restent applicables à leurs fonctions. Le nouveau guide fournit les commandes,
+les limites et G19–G24. Les exemples GPU et conservation sont illustratifs ; le
+manifeste de captures est inactif (`consented: false`). Aucun poids ni compte réel
+n’est inclus. Le service de suivi `.in` reste un brouillon à adapter et valider.
 
-L’archive **`eidolon-weekend-2026-10-17-g272.zip`** contient :
+Le paquet `eidolon-weekend-2026-10-17-g273.zip` contient les sources Core/Memory
+épinglées, le sous-paquet Windows G270 inchangé, le dossier complet, le manifeste
+et les sommes SHA-256. Les sources sont extraites des objets Git publiés ; leur
+vérificateur inventorie les octets, pas une autorisation de déployer.
 
-- `eidolon-sources-g272.zip`, construit depuis deux commits Git publiés, avec
-  inventaire SHA-256 fichier par fichier ;
-- `eidolon-windows-g270.zip`, octets conservés du candidat Windows qualifié ;
-- `dossier-weekend/`, les guides, exemples, inventaires, 44 cas et ce rapport ;
-- `LIRE-D-ABORD.md`, `LIVRAISON.json` et `SHA256SUMS.txt`.
-
-Commencer par [README.md](README.md), puis [RECETTE.md](RECETTE.md) et
-[RACCORDEMENTS-G270.md](RACCORDEMENTS-G270.md). Nouveaux parcours :
-[documents](DOCUMENTS-G272.md), [enrôlement](PROFILS-ENROLEMENT-G272.md),
-[copie d’état](ETAT-PRIVE-G272.md). Le diagnostic et le rollback restent dans le
-même dossier. Les `.service.in` ne sont jamais installées telles quelles.
-
-SHA de l’exécutable Windows conservé :
+SHA de l’exécutable Windows :
 `3f7439082422469967df57b683cc43ded83510acbd1e65371a2b8f96fefae09b`.
-Ses scripts conservent les octets CRLF du runner, comparés au Git après
-normalisation des seules fins de ligne. Le paquet n’inclut ni modèle, dépendance
-native, secret, corpus, état privé ou image VM. Les historiques volumineux sont
-exclus ; certains anciens tests documentaires exigent un checkout Git complet.
+Ses scripts conservent les octets CRLF du runner qualifié. Le paquet ne contient
+ni dépendances natives, modèles, secrets, corpus, état privé ni image VM. Certains
+anciens tests documentaires nécessitent un checkout Git complet, les historiques
+volumineux étant exclus de la livraison.
 
-`check_results.py` exige 44 preuves datées et les SHA exacts ; même un dossier
-complet ne positionne jamais `beta_authorized` à vrai. Les empreintes de livraison
-vérifient les octets, pas une signature d’éditeur ni la disponibilité des services.
+Pour les sauvegardes, ajouter désormais `library.sqlite3` et `gpu-queue.sqlite3`
+aux composants à inventorier séparément : `beta_state` ne les copie pas. Ne pas
+restaurer une ancienne base de clés sans réconcilier révocations/rotations, ni
+remplacer une file GPU par une file vide tant qu’un moteur peut encore travailler.
+Le [rollback](ROLLBACK.md) couvre ces précautions de reprise.
 
-## Reste à faire, par priorité
+## Reste à faire
 
-| Priorité | Travail | Dépendance |
-| --- | --- | --- |
-| **P0** | Inventaire, compte C187, sauvegarde complète et restauration sur copie | Accès machines et décision d’exploitation |
-| **P0** | Trois profils réels, droits UID/montages, secrets/tunnels, services et corpus de recette | VM100/VM110, PC et configurations privées |
-| **P0** | Rejouer chat/mémoire/Web/documents, coupures et refus croisés ; qualifier Windows/capteurs | Recette physique, modèles et services réels |
-| **P0** | Mesurer latences, RAM/VRAM, maintenance, endurance, redémarrage et rollback | Observation dans l’environnement cible |
-| **P1** | Qualifier poids/calibration et conservation des gabarits | Personnes consentantes, matériel et politique d’usage ; option désactivable pour la bêta initiale |
-| **P1 — développement restant** | Identité multipersonne/authentification, synchronisation automatique de bibliothèques, rétention coordonnée | Contrats/politiques à arrêter avant effets automatiques ; ces fonctions ne sont pas livrées par G272 |
-| **P1/P2** | Médias/GPU avancés, vidéo longue, galerie et arbitrage commun des ressources | Moteurs retenus, mesures réelles et développements complémentaires |
-| **P2** | Mobile, robotique, OS/DARME et extensions de la vision | Chantiers distincts du premier périmètre bêta serveur/PC |
+**P0 :** compte C187 et inventaire réel ; sauvegardes/restauration cohérentes ;
+profils privés, permissions, tunnels et services ; corpus et modèles réels ; PC,
+WebView2 et capteurs ; mesures de charge/VRAM/latence et endurance. Les 50 preuves
+demandent une exécution réelle et une observation datée.
 
-Le [backlog actuel consolidé](../../docs/BACKLOG-BETA-ACTUEL-G272.md) rapproche les
-anciennes cases TODO des livraisons. G262/G264/G266 et C191 ne sont plus en attente
-d’intégration. **Tout le backlog historique n’est pas terminé.** Les fonctions
-explicites de ce lot sont prêtes pour recette ; l’absence de VM n’est pas utilisée
-pour déclarer artificiellement finis les autres développements.
+**P1 après recette :** adoption des durées de conservation et des budgets mesurés ;
+calibration représentative consentie. Les extensions encore non livrées sont la
+purge coordonnée, un agent de surveillance Windows natif autonome, la connexion
+biométrique multipersonne, la participation de tous les moteurs au planificateur,
+et les médias avancés. Elles ne sont pas maquillées en simples essais VM.
 
-## Collaboration et garde de reprise
-
-C191 reste le dernier message Claude observé. Les dix contre-revues G270 restent
-publiées ; aucune nouvelle réponse ni session Claude n’est inventée. Le canal et
-l’historique sont conservés. Aucun accès aux VM utilisateur, compte créé, service
-activé, corpus migré, génération supprimée, fusion main ou relance G182.
-Pour toute reprise, conserver les reçus et réconcilier les effets avant restauration :
-retirer la configuration n’annule pas un souvenir déjà écrit.
+Le [backlog G273](../../docs/BACKLOG-BETA-ACTUEL-G273.md) remplace la vue courante
+G272 en conservant son historique. C191 reste le dernier message Claude observé ;
+les dix contre-revues G273 publiées ne prouvent pas une réponse nouvelle ou le lancement
+de sa session. Aucun accès VM utilisateur, activation, création de compte,
+suppression de génération, fusion main ni relance G182 dans ce lot.
