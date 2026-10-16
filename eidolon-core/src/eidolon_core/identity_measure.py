@@ -11,6 +11,7 @@ Input is an operator-labelled corpus of existing face images or PCM16 mono 16kHz
 Consent is an attestation, not proof. Captures remain private; no device is opened.
 """
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -35,10 +36,14 @@ def measure(config, manifest, root, *, observer=observe_isolated):
         ids.add(row['id'])
         old=session_splits.setdefault(row['session'],row['split'])
         if old!=row['split']: raise ValueError('SESSION_LEAKAGE')
-    cfg=config['modalities'][modality]
+    cfg=config['modalities'][modality];capture_hashes=set()
     for row in rows:
         raw=bytearray(read_bytes(root,row['path'],max_bytes=MAX_CAPTURE))
-        try: observation=observer(cfg,modality,raw)
+        try:
+            fingerprint=hashlib.sha256(raw).hexdigest()
+            if fingerprint in capture_hashes: raise ValueError('DUPLICATE_CAPTURE')
+            capture_hashes.add(fingerprint)
+            observation=observer(cfg,modality,raw)
         finally: raw[:]=bytes(len(raw))
         if observation.error is not None or observation.engine!=engine(cfg,modality) or observation.modality!=modality: raise ValueError('OBSERVATION_UNAVAILABLE')
         if modality=='face' and observation.faces!=1: raise ValueError('ONE_FACE_REQUIRED')
@@ -63,8 +68,12 @@ def main(argv=None):
     p.add_argument('--max-far',required=True,type=float);a=p.parse_args(argv)
     try:
         f=Path(a.manifest).absolute();manifest=read_json_snapshot(str(f.parent),f.name,max_bytes=65536,max_depth=5)
-        data=measure(load(a.identity_config),manifest,a.capture_root)
-        print(json.dumps(evaluate(data,max_far=a.max_far),allow_nan=False));return 0
+        config=load(a.identity_config)
+        data=measure(config,manifest,a.capture_root)
+        from .contracts import digest
+        report=evaluate(data,max_far=a.max_far)
+        report["measurement_config_sha256"]=digest(config)
+        print(json.dumps(report,allow_nan=False));return 0
     except (OSError,ValueError,TypeError):print('{"state":"MEASUREMENT_REFUSED","activated":false}');return 2
 
 if __name__=='__main__':raise SystemExit(main())

@@ -310,6 +310,48 @@
       "status": "NOT_RUN",
       "observed_at": null,
       "evidence": null
+    },
+    {
+      "id": "G19",
+      "criterion": "Bibliothèque réelle : première synchronisation, modification, doublons, interruption et source absente sans suppression",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G20",
+      "criterion": "Bibliothèque : refus interprofil, pagination, fichier changé et arrêt/reprise du service de suivi",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G21",
+      "criterion": "Conservation : inventaire des historiques/médias/sauvegardes et aperçu sans suppression ni modification des sources",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G22",
+      "criterion": "Sessions : fermeture, changement de clé, retrait, rotation opérateur et ancien jeton refusé",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G23",
+      "criterion": "Calibration : captures consenties distinctes, séparation des sessions, faux positifs/négatifs et aucune activation automatique",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G24",
+      "criterion": "File GPU partagée : budgets mesurés, priorité et vieillissement, panne incertaine et libération des deux réservations après vérification",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
     }
   ]
 }

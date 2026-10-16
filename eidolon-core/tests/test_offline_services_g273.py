@@ -245,12 +245,14 @@ def test_real_measurement_pipeline_synthetic_encoder_no_vectors_in_report(tmp_pa
     rows=[]
     for split in ('calibration','validation'):
         for i,subject in enumerate(('one','one','two')):
-            name=split+str(i);(tmp_path/name).write_bytes(b'fake image')
+            name=split+str(i);(tmp_path/name).write_bytes(('fake image '+name).encode())
             rows.append(dict(id=name,subject=subject,session=name,split=split,path=name))
     manifest=dict(schema='eidolon-identity-captures/1',modality='face',synthetic=True,consented=True,samples=rows)
     data=measure(settings(),manifest,str(tmp_path),observer=synthetic)
     assert len(data['trials'])==6 and 'embedding' not in json.dumps(data)
     report=evaluate(data,max_far=0)
     assert not report['activated']
+    (tmp_path/rows[-1]['path']).write_bytes((tmp_path/rows[0]['path']).read_bytes())
+    with pytest.raises(ValueError,match='DUPLICATE_CAPTURE'):measure(settings(),manifest,str(tmp_path),observer=synthetic)
     manifest['consented']=False
     with pytest.raises(ValueError,match='CONSENT'):measure(settings(),manifest,str(tmp_path),observer=synthetic)
