@@ -2307,7 +2307,7 @@
         state.items.push(item);
       }
       var mine = epoch, conversationId = state.conversationId;
-      item.status = "sent"; emit();
+      item.status = "sent"; item.error = null; emit();
       var request = { conversation_id: conversationId, client_turn_key: item.key, text: item.text };
       if (item.sourceAction) request.source_action = item.sourceAction;
       var r = await call("turn", request);
@@ -3788,15 +3788,16 @@
  * ========================================================== */
 (function (root) {
   "use strict";
-  if (typeof document === "undefined") return;
   var C = root.EidolonConnected, V = root.EidolonConnectedView;
-  var TIMEOUT_MS = 10000, AUTO_MS = 10000;
+  var TIMEOUT_MS = 10000, TURN_TIMEOUT_MS = 150000, AUTO_MS = 10000;
 
   // Same-origin, relative "/v1/..." paths only; no credentials, cache or redirect followed.
   function transport(method, path, body, token) {
     if (typeof path !== "string" || path.indexOf("/v1/") !== 0) return Promise.reject(new Error("PATH_REFUSED"));
     var controller = new AbortController();
-    var timer = setTimeout(function () { controller.abort(); }, TIMEOUT_MS);
+    // A model turn can legitimately exceed the short read/control deadline.
+    var timeout = method === "POST" && path === "/v1/conversations/turn" ? TURN_TIMEOUT_MS : TIMEOUT_MS;
+    var timer = setTimeout(function () { controller.abort(); }, timeout);
     var headers = { "Authorization": "Bearer " + token };
     var init = { method: method, headers: headers, cache: "no-store", credentials: "omit",
       redirect: "error", referrerPolicy: "no-referrer", signal: controller.signal };
@@ -3809,6 +3810,9 @@
       });
     }).finally(function () { clearTimeout(timer); });
   }
+
+  if (typeof module !== "undefined" && module.exports) module.exports = { transport: transport };
+  if (typeof document === "undefined") return;
 
   // The logo is an optional asset: a server that does not serve it keeps the text name (G078).
   function showLogo() {

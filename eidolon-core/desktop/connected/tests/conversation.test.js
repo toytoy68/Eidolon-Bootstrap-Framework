@@ -708,3 +708,19 @@ test("G244: stale or unverified recall remains visible with zero items", () => {
     "Contexte partiel : la mise à jour complète de l’index mémoire n’a pas pu être vérifiée.");
   assert.equal(C.contextNote({ ...base, memory_index: "INDEX_SNAPSHOT_MATCH", partial: false }), null);
 });
+
+
+test("G278: a successful explicit retry clears the previous network error", async () => {
+  const s = scripted([opened, new Error("lost response"), turnReply(reply)]);
+  const conv = C.createConversation({ transport: s.transport });
+  await conv.open(KEY);
+  await conv.send("bonjour");
+  const first = conv.state().items[0];
+  assert.equal(first.status, "uncertain");
+  assert.equal(first.error, "NETWORK");
+  await conv.send(null, first.key);
+  const final = conv.state().items[0];
+  assert.equal(final.status, "received");
+  assert.equal(final.error, null);
+  assert.equal(s.calls[1].body.client_turn_key, s.calls[2].body.client_turn_key);
+});

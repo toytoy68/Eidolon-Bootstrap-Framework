@@ -2556,3 +2556,9 @@ G277 publié et déployé : Core 74c1e58, Memory fd53ce6. Suites VM Core 2299/18
 G277 complément final : réponse modèle réelle rejetée car le schéma permettait answer + proposal objet. Contrat de génération resserré sans réparation des sorties ni assouplissement du parseur ; 55 tests/58 sous-tests réussis, diagnostic réel VALID. Code Core final 58dbd825a18ab829b8b3acde1218256603c67d1e déployé.
 
 Réserve finale G277-V07 : après correction du schéma, API ANSWER mais réponse mémoire hors cible sur une question longue, sans balise AZUR-277 ni citation reconnue ; rappel direct positif. Critère V07 FAIL, à investiguer sélection/reranking/génération avant qualification. Aucun succès global revendiqué.
+
+## G278 — salutation classée hors capacités, 16/10/2026
+
+Signalement direct toytoy à 21 h 03 : bonjour reçoit un texte de salutation mais OUT_OF_SCOPE. Base 2b8a172e8211bef2173e416919f061e0863090e8. Lot pris : clarifier la distinction conversation/action dans le prompt de dialogue, vérifier sur le modèle réel, publier et déployer dans la continuité de la recette autorisée. Aucun élargissement des outils ni correction automatique des sorties modèle.
+
+G278 : prompt clarifié, délai POST turn 150 s, erreur NETWORK effacée au rejeu. Cause principale reproduite : contexte 4096 tronqué avec mémoire ; 8192 puis 32768 corrigent les deux phrases. Configuration retenue 32768 / max_prompt_bytes 24000 / sortie 512. Essais réels ANSWER pour salutation et présentation, OUT_OF_SCOPE pour suppression shell ; 55 tests Python/+58 sous-tests et 47 JS réussis. [Preuves](docs/VM-CONVERSATION-G278.md). V07 reste ouvert.

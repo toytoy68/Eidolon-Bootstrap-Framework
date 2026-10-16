@@ -248,7 +248,7 @@
         state.items.push(item);
       }
       var mine = epoch, conversationId = state.conversationId;
-      item.status = "sent"; emit();
+      item.status = "sent"; item.error = null; emit();
       var request = { conversation_id: conversationId, client_turn_key: item.key, text: item.text };
       if (item.sourceAction) request.source_action = item.sourceAction;
       var r = await call("turn", request);
