@@ -1,0 +1,65 @@
+diff --git a/eidolon-core/src/eidolon_core/identity_evaluation.py b/eidolon-core/src/eidolon_core/identity_evaluation.py
+index 7684d06..4b100e6 100644
+--- a/eidolon-core/src/eidolon_core/identity_evaluation.py
++++ b/eidolon-core/src/eidolon_core/identity_evaluation.py
+@@ -17,4 +17,8 @@ import math
+ from .contracts import digest
+ 
++# Decision of toytoy, 16/10/2026: 15 % safety margin, measured from the genuine
++# side of the gap that leaves the calibration decisions unchanged.
++GENUINE_SIDE_MARGIN = 0.15
++
+ 
+ def wilson(errors,total):
+@@ -62,8 +66,16 @@ def evaluate(data, *, max_far):
+         if fp/neg<=max_far: candidates.append(((pos-tp)/pos,score))
+     if not candidates: return {'state':'NO_THRESHOLD','activated':False,'engine':engine}
+-    _,threshold=min(candidates)
++    # G274-F004: at equal FRR, keep the highest threshold (fewest impostors accepted),
++    # then move it down by GENUINE_SIDE_MARGIN of the gap to the next lower score.
++    # Every calibration decision is unchanged; genuine scores slightly below the
++    # lowest accepted one keep a tolerance, impostors keep most of the distance.
++    _,threshold=min(candidates,key=lambda c:(c[0],-c[1]))
++    if threshold in bins:
++        lower=max([s for s in bins if s<threshold],default=-1.0)
++        margined=threshold-GENUINE_SIDE_MARGIN*(threshold-lower)
++        threshold=margined if lower<margined<=threshold else threshold
+     validation=metrics(groups['validation'],threshold)
+     return {'schema':'eidolon-identity-evaluation-report/1','state':'SYNTHETIC_ONLY' if data['synthetic'] else 'MEASURED_CANDIDATE_REVIEW_REQUIRED','engine':engine,
+-            'dataset_sha256':digest(data),'target_far':max_far,'candidate_threshold':threshold,'calibration':metrics(groups['calibration'],threshold),'validation':validation,
++            'dataset_sha256':digest(data),'target_far':max_far,'candidate_threshold':threshold,'genuine_side_margin':GENUINE_SIDE_MARGIN,'calibration':metrics(groups['calibration'],threshold),'validation':validation,
+             'validation_meets_empirical_target':validation['far']<=max_far,'activated':False,'authorizes_execution':False,
+             'limits':['Correlated trials: Wilson intervals are indicative, not independent-population guarantees.','No liveness, spoof resistance or multimodal calibration established.','Review labels, sample coverage and separate acquisition sessions before use.']}
+diff --git a/eidolon-core/tests/test_claude_audit_g274.py b/eidolon-core/tests/test_claude_audit_g274.py
+index 9a0079d..b60bca4 100644
+--- a/eidolon-core/tests/test_claude_audit_g274.py
++++ b/eidolon-core/tests/test_claude_audit_g274.py
+@@ -259,5 +259,4 @@ SEPARABLE = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"],
+ 
+ 
+-@F004
+ @pytest.mark.parametrize("max_far", [0.0, 0.5])
+ def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_far):
+@@ -272,5 +271,7 @@ def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_f
+     assert report["calibration"]["frr"] == 0
+     assert report["calibration"]["far"] == 0
+-    assert report["candidate_threshold"] == 0.9
++    # Highest equivalent threshold 0.9, minus 15 % of the gap to 0.5 (toytoy, 16/10): 0.84.
++    assert report["candidate_threshold"] == pytest.approx(0.84)
++    assert report["genuine_side_margin"] == 0.15
+     assert report["validation"]["false_accepts"] == 0
+ 
+@@ -284,2 +285,13 @@ def test_f004_control_frr_stays_the_first_criterion():
+     report = evaluate(_dataset(rows), max_far=0.5)
+     assert report["calibration"]["frr"] == 0.5 and report["calibration"]["far"] <= 0.5
++
++
++def test_f004_margin_never_changes_a_calibration_decision():
++    """The margined threshold stays strictly above the next lower calibration score."""
++    from eidolon_core.identity_evaluation import evaluate
++    rows = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"], True, .8999999),
++            ("calibration", ["b", "c"], False, .8999998), ("calibration", ["a", "d"], False, -1.0),
++            ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .1)]
++    report = evaluate(_dataset(rows), max_far=0.0)
++    assert .8999998 < report["candidate_threshold"] <= .8999999
++    assert report["calibration"]["far"] == 0 and report["calibration"]["frr"] == 0

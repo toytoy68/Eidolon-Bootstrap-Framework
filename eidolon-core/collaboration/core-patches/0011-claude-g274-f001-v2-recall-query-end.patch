@@ -1,0 +1,83 @@
+diff --git a/eidolon-core/src/eidolon_core/dialogue.py b/eidolon-core/src/eidolon_core/dialogue.py
+index f5c00d3..0bb1882 100644
+--- a/eidolon-core/src/eidolon_core/dialogue.py
++++ b/eidolon-core/src/eidolon_core/dialogue.py
+@@ -97,4 +97,27 @@ def prompt_fingerprint(catalog):
+ 
+ MAX_OBSERVATIONS = 5
++# Memory recall contract (eidolon-memory-recall/1, bridge and client): one line of
++# at most 500 characters, no control character. A turn may be 8000 characters.
++RECALL_QUERY_CHARS = 500
++
++
++def recall_query(text):
++    """G274-F001: the recall query derived from a turn, never the raw turn text.
++
++    Control characters (newline, tab...) become spaces and whitespace runs are
++    collapsed. A longer turn keeps its END, where the subject usually is
++    (decision of toytoy, 16/10/2026): the last 500 characters, starting at a
++    word boundary (hard cut if a single word is longer). The turn is unchanged.
++    """
++    value = " ".join("".join(" " if ord(c) < 32 or ord(c) == 127 else c for c in text).split())
++    if len(value) > RECALL_QUERY_CHARS:
++        tail = value[-RECALL_QUERY_CHARS:]
++        if value[-RECALL_QUERY_CHARS - 1] != " ":
++            space = tail.find(" ")
++            tail = tail[space + 1:] if 0 <= space < len(tail) - 1 else tail
++        value = tail
++    return value
++
++
+ OBSERVATION_MAX_AGE = 300
+ OBSERVATION_MAX_AGE_BY_SOURCE = {"darme": 60}
+@@ -337,6 +360,7 @@ class Dialogue:
+         if self.memory is None:
+             return None, [], None
++        query = recall_query(text) or text
+         try:
+-            context = validate_context(self.memory.recall_for(client_id, text) if hasattr(self.memory, "recall_for") else self.memory.recall(text))
++            context = validate_context(self.memory.recall_for(client_id, query) if hasattr(self.memory, "recall_for") else self.memory.recall(query))
+         except Exception as exc:  # noqa: BLE001 - recall is optional: no memory is better than a guessed one
+             return None, [], type(exc).__name__
+diff --git a/eidolon-core/tests/test_claude_audit_g274.py b/eidolon-core/tests/test_claude_audit_g274.py
+index 9a0079d..3093022 100644
+--- a/eidolon-core/tests/test_claude_audit_g274.py
++++ b/eidolon-core/tests/test_claude_audit_g274.py
+@@ -69,7 +69,7 @@ def _api(tmp_path, services):
+ TURNS = [
+     pytest.param("Que sais-tu de la V100 ?", id="control-one-line"),       # green on the audited code
+-    pytest.param("Bonjour,\nque sais-tu de la V100 ?", id="multiline", marks=F001),
+-    pytest.param("Que sais-tu de la V100 ? " + "contexte " * 70, id="long", marks=F001),  # 600+ chars
+-    pytest.param("Que sais-tu de la V100 ?\t(tabulation)", id="tab", marks=F001),
++    pytest.param("Bonjour,\nque sais-tu de la V100 ?", id="multiline"),
++    pytest.param("contexte " * 70 + "Que sais-tu de la V100 ?", id="long-subject-at-end"),  # 600+ chars
++    pytest.param("Que sais-tu de la V100 ?\t(tabulation)", id="tab"),
+ ]
+ 
+@@ -130,4 +130,26 @@ def test_f001_shared_bridge_memory_path(tmp_path, text):
+ 
+ 
++def test_f001_recall_query_matches_the_bridge_contract():
++    """Unit bounds of the correction; the bridge validator is the reference."""
++    pytest.importorskip("services.memory_bridge")
++    from services.memory_bridge import validate_request
++    from eidolon_core.dialogue import recall_query, RECALL_QUERY_CHARS
++    cases = ["a\nb", "\x7fx\x1fy", " x  \t\r\n y ", "é" * 600, "mot " * 200, "bcd " + ("a" * 499),
++             "x" * 501, "🙂" * 501, "a" * 500]
++    for text in cases:
++        query = recall_query(text)
++        assert 0 < len(query) <= RECALL_QUERY_CHARS
++        validate_request({"query": query, "mode": "operational", "max_items": 5,
++                          "max_chars": 4000, "max_item_chars": 800})
++    assert recall_query("a\nb") == "a b"
++    assert recall_query("bcd " + "a" * 499) == "a" * 499              # keeps the end, word boundary
++    assert recall_query("x" * 501) == "x" * 500                        # one long word: hard cut
++    assert recall_query("a" * 500) == "a" * 500                        # exact bound unchanged
++    long = "Contexte. " * 80 + "Que sais-tu de la V100 ?"
++    assert recall_query(long).endswith("Que sais-tu de la V100 ?")     # subject at the end survives
++    assert recall_query(long).startswith("Contexte.")                   # cut on a word boundary
++    assert recall_query("\n\t") == ""                                 # caller keeps the raw text
++
++
+ # --------------------------------------------------------------------------- F002
+ def _library(tmp_path):

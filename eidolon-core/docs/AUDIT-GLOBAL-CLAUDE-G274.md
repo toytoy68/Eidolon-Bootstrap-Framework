@@ -2,7 +2,7 @@
 
 Auteur : Claude (Claude Code), 16 octobre 2026, Europe/Paris (+0200).
 Mandat : [G274-AUDIT-GLOBAL](../collaboration/G274-AUDIT-GLOBAL.md), relayé par Codex/GPT
-à la demande de toytoy (07 h 42). Réponse : C-MSG-C192 dans
+à la demande de toytoy (07 h 42). Réponses : C-MSG-C192 puis C-MSG-C193 (décisions de toytoy intégrées) dans
 [CLAUDE-TO-GPT](../collaboration/CLAUDE-TO-GPT.md).
 
 ## 1. Verdict
@@ -131,11 +131,14 @@ inattendu fait échouer la suite. Chaque patch retire ses propres marques.
   « Bonjour,\nque sais-tu de la V100 ? ». Résultat réel : `{'memory': 'unavailable',
   'memory_items': 0}` ; la même question sur une ligne donne `sent` (témoin vert).
 - **Cause** : aucune préparation de requête entre le tour et le contrat de rappel.
-- **Correction minimale** ([0007](../collaboration/core-patches/0007-claude-g274-f001-recall-query.patch)) :
-  `recall_query(text)` dans `dialogue.py` — contrôles remplacés par des espaces, espaces
-  regroupés, coupe au dernier espace avant 500 caractères (coupe franche pour un mot plus
-  long). Le texte du tour, l'historique et le modèle sont inchangés. Le choix « début du
-  message » est une décision produit possible ; la fin du message pourrait porter la question.
+- **Correction minimale** ([0011](../collaboration/core-patches/0011-claude-g274-f001-v2-recall-query-end.patch),
+  qui remplace [0007](../collaboration/core-patches/0007-claude-g274-f001-recall-query.patch)) :
+  `recall_query(text)` dans `dialogue.py`. Les caractères de contrôle deviennent des espaces
+  et les espaces sont regroupés. Au-delà de 500 caractères, la requête garde **la fin** du
+  message, depuis une limite de mot (coupe franche pour un mot plus long). Le texte du tour,
+  l'historique et le modèle sont inchangés.
+- **Décision de toytoy**, 16/10/2026 08 h 44 : « Pour les souvenirs de la fin (le sujet est
+  souvent a la fin..) ». 0007 gardait le début ; il est conservé pour l'historique seulement.
 
 ### G274-F002 — un seul document non extractible bloque toute la racine
 
@@ -201,9 +204,16 @@ inattendu fait échouer la suite. Chaque patch retire ses propres marques.
   `validation_meets_empirical_target` signale l'écart ; d'où **P2**, confiance élevée sur le
   comportement.
 - **Reproduction** : `pytest tests/test_claude_audit_g274.py -k f004 --runxfail`.
-- **Correction minimale** ([0010](../collaboration/core-patches/0010-claude-g274-f004-threshold-tiebreak.patch)) :
-  départage par le seuil le plus **haut** à FRR égal. Le choix d'une marge (milieu entre classes)
-  reste une décision de calibration à prendre avec de vraies captures.
+- **Correction minimale** ([0012](../collaboration/core-patches/0012-claude-g274-f004-v2-threshold-margin.patch),
+  qui remplace [0010](../collaboration/core-patches/0010-claude-g274-f004-threshold-tiebreak.patch)) :
+  à FRR égal, le seuil le plus **haut** est retenu. Il est ensuite abaissé de **15 % de
+  l'écart** avec le score de calibration immédiatement inférieur. Aucune décision de
+  calibration ne change. L'exemple donne 0,84 : très loin des imposteurs (0,50), avec une
+  tolérance pour les authentiques. Le rapport indique `genuine_side_margin: 0.15`.
+- **Décision de toytoy**, 16/10/2026 08 h 44 : « Marge de sécurité de 15% ! ». Il a ensuite
+  choisi la mesure **côté authentiques**, parmi trois options présentées : côté authentiques,
+  côté imposteurs, ou 0,15 absolu. Cette marge vaut pour le seuil candidat ; aucun seuil
+  n'est activé. La validation sur vraies captures reste à faire.
 
 ### Constats P3
 
@@ -235,8 +245,8 @@ inattendu fait échouer la suite. Chaque patch retire ses propres marques.
 - **H3 — Arrêt pendant une attente d'admission.** L'annulation d'une attente se fait dans le
   fil du tour, qui est un fil démon. Si le processus se termine avant, la ligne `WAITING`
   reste. F003 n'y change rien. À observer avec un vrai arrêt de service.
-- **H4 — Marge de calibration.** Au-delà de F004, aucun écart entre seuil et classes n'est
-  imposé. À traiter avec de vraies captures, pas sur données synthétiques.
+- **H4 — Marge de calibration.** La marge de 15 % (0012) est relative à l'écart observé en
+  calibration. Sa pertinence se vérifie sur vraies captures, pas sur données synthétiques.
 
 ## 8. Observations de conception et limites connues
 
@@ -273,10 +283,10 @@ inattendu fait échouer la suite. Chaque patch retire ses propres marques.
 
 ## 10. Ordre de correction proposé pour la bêta
 
-1. **F001** (0007) : chaque conversation réelle en dépend.
+1. **F001** (0011) : chaque conversation réelle en dépend.
 2. **F002** (0008) : sans lui, la bibliothèque ne synchronise aucun dossier réel.
 3. **F003** (0009) et l'inventaire des réservations héritées (§8).
-4. **F004** (0010), avant toute calibration sur captures réelles.
+4. **F004** (0012), avant toute calibration sur captures réelles.
 5. P3 de documentation (F005, F008, F010), puis F006, F009, F011, F012.
 6. Mesurer H1/H2/H3 lors de la recette du week-end.
 
@@ -288,14 +298,15 @@ Depuis `eidolon-core/`, Memory cloné à côté :
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../../eidolon-memory-engine EIDOLON_MEMORY_INTEGRATION=1 \
   python -m pytest -q -rxs -p no:cacheprovider tests/test_claude_audit_g274.py   # sondes
 ... --runxfail                                                                   # voir les défauts
-git apply collaboration/core-patches/0007-…patch 0008-…patch 0009-…patch 0010-…patch
+git apply collaboration/core-patches/0011-…patch 0008-…patch 0009-…patch 0012-…patch   # jeu final
 ```
 
 | Exécution | Résultat réel |
 | --- | --- |
 | Core, code audité, sans les sondes G274 (base) | **2 273 réussis**, 9 ignorés (UID root, moteurs d'identité absents), 1 328 sous-tests |
 | Core, code audité + sondes G274 | 2 278 réussis, 9 ignorés, **13 xfail** (les défauts), 1 328 sous-tests |
-| Core + patches 0007–0010 | **2 292 réussis**, 9 ignorés, 0 xfail, 0 échec, 1 328 sous-tests |
+| Core + jeu final 0008, 0009, 0011, 0012 | **2 293 réussis**, 9 ignorés, 0 xfail, 0 échec |
+| Core + patches 0007–0010 (première version) | 2 292 réussis, 9 ignorés, 0 xfail, 0 échec, 1 328 sous-tests |
 | Core + patches 0007–0009 (avant F004) | 2 289 réussis, 9 ignorés |
 | Memory `76d6640` | **3 154 réussis**, 23 ignorés, 3 xfail historiques, 12 sous-tests |
 | Client navigateur | `build.js --check` à jour ; **210** tests Node réussis |
@@ -311,8 +322,10 @@ Sabotages des corrections, chacun appliqué puis restauré (vérifié par `cmp` 
 | F002 : sans contrôle de taille | 1 (> 4 Mio) |
 | F003 : sans `_withdraw` | 2 |
 | F004 : ancien départage `min(candidates)` | 2 |
+| F001 v2 (0011) : début gardé / sans limite de mot | 3 / 1 |
+| F004 v2 (0012) : sans marge / marge côté imposteurs / ancien départage | 2 / 2 / 2 |
 
-Les fichiers de Codex/GPT (`dialogue.py`, `library_sync.py`, `gpu_queue.py`,
+Les deux décisions de toytoy sont tracées en §6. Les fichiers de Codex/GPT (`dialogue.py`, `library_sync.py`, `gpu_queue.py`,
 `identity_evaluation.py`) sont identiques à `0480551` sur ma branche : les corrections ne
 vivent que dans les patches. Commits de la branche `claude/g274-audit` : sondes, puis
 rapport, patches et réponse.

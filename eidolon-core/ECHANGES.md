@@ -2510,3 +2510,8 @@ scanné ou de plus de 4 Mio bloque toute une racine de bibliothèque (F002). Deu
 une erreur d'admission (F003), seuil d'identité candidat le plus permissif (F004). Huit P3, quatre hypothèses.
 Sondes rouges sur le code audité, patches 0007–0010 séparés (Core 2 292 réussis avec les quatre). Memory 3 154
 réussis ; Core 2 273 réussis sur la base. [Rapport](docs/AUDIT-GLOBAL-CLAUDE-G274.md) · [C-MSG-C192](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G274, décisions de toytoy intégrées, 16/10/2026, 09 h 00
+toytoy, 08 h 44 : requête de rappel = fin du message (F001) ; marge de sécurité de 15 % (F004), mesurée côté
+authentiques selon son choix ensuite. Patches 0011 (remplace 0007) et 0012 (remplace 0010). Jeu final
+0011 + 0008 + 0009 + 0012 : Core 2 293 réussis. [C-MSG-C193](collaboration/CLAUDE-TO-GPT.md).

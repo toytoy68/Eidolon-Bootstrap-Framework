@@ -15,6 +15,8 @@ visé appartient à GPT. GPT les relit et les applique, ou les refuse.
 | 0008 | `src/eidolon_core/library_sync.py` | **G274-F002 (P1)** : un fichier de plus de 4 Mio est inventorié sans hachage ni extrait (taille revérifiée) ; une `DocumentError` n'est plus fatale (pas de version en cache, nouvel essai au passage suivant). Compteur `not_extracted` par code. Liens, modifications et budgets restent fatals | sondes vide/blanc/> 4 Mio/PDF sans texte vertes, témoin lisible vert. Sabotages : erreur d'extraction fatale 3 rouges, sans contrôle de taille 1 rouge |
 | 0009 | `src/eidolon_core/gpu_queue.py` | **G274-F003 (P2)** : toute sortie de `Queue.wait` sans bail retire la demande encore `WAITING` (`_withdraw`, trois essais). Une ligne `ACTIVE` n'est jamais libérée par ce chemin | vrai verrou SQLite de 2,5 s : plus de tête orpheline. Sabotage sans retrait : 2 rouges |
 | 0010 | `src/eidolon_core/identity_evaluation.py` | **G274-F004 (P2)** : à FRR égal, le seuil candidat le plus haut est retenu (moins d'imposteurs acceptés) | jeu séparable : seuil 0,9, FAR 0. Sabotage (ancien `min`) : 2 rouges |
+| 0011 | `src/eidolon_core/dialogue.py` | **G274-F001 v2, remplace 0007** (décision de toytoy, 16/10/2026 08 h 44 : « Pour les souvenirs de la fin (le sujet est souvent a la fin..) ») : la requête garde les **500 derniers caractères**, depuis une limite de mot (coupe franche pour un mot plus long) | jeu final 0008 + 0009 + 0011 + 0012 : suite Core **2 293 réussis**, 9 ignorés. Sabotages : début gardé 3 rouges, sans limite de mot 1 rouge |
+| 0012 | `src/eidolon_core/identity_evaluation.py` | **G274-F004 v2, remplace 0010** (décision de toytoy, 16/10/2026 08 h 44 : « Marge de sécurité de 15% ! », côté authentiques choisi ensuite) : seuil le plus haut à FRR égal, puis abaissé de 15 % de l'écart avec le score de calibration immédiatement inférieur. Aucune décision de calibration ne change. Rapport : `genuine_side_margin` | jeu séparable 0,5/0,9 : seuil 0,84, imposteur de validation 0,55 refusé. Sabotages : sans marge, marge côté imposteurs, ancien départage : 2 rouges chacun |
 
 ```sh
 git apply eidolon-core/collaboration/core-patches/0001-claude-registry-r1-r2.patch
@@ -22,9 +24,9 @@ git apply eidolon-core/collaboration/core-patches/0001-claude-registry-r1-r2.pat
 git apply eidolon-core/collaboration/core-patches/0005-claude-i1-v2-per-source-freshness.patch   # pas 0003
 git apply eidolon-core/collaboration/core-patches/0004-claude-w1-v2-capped-resolver-threads.patch   # pas 0002
 # les sondes I1 et W1 sont mises à jour par les patchs eux-mêmes
-git apply eidolon-core/collaboration/core-patches/0007-claude-g274-f001-recall-query.patch
+git apply eidolon-core/collaboration/core-patches/0011-claude-g274-f001-v2-recall-query-end.patch   # pas 0007
 git apply eidolon-core/collaboration/core-patches/0008-claude-g274-f002-library-unextractable.patch
 git apply eidolon-core/collaboration/core-patches/0009-claude-g274-f003-gpu-withdraw.patch
-git apply eidolon-core/collaboration/core-patches/0010-claude-g274-f004-threshold-tiebreak.patch
+git apply eidolon-core/collaboration/core-patches/0012-claude-g274-f004-v2-threshold-margin.patch   # pas 0010
 # G274 : chacun s'applique seul ou avec les autres, sur la branche claude/g274-audit (sondes)
 ```
