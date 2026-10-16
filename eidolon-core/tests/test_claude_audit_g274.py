@@ -24,6 +24,7 @@ from tests.test_beta_runtime_g270 import config
 F001 = pytest.mark.xfail(strict=True, reason="G274-F001: raw turn text sent as recall query")
 F002 = pytest.mark.xfail(strict=True, reason="G274-F002: one unextractable file aborts the root")
 F003 = pytest.mark.xfail(strict=True, reason="G274-F003: failed admission leaves a WAITING head")
+F004 = pytest.mark.xfail(strict=True, reason="G274-F004: equal-FRR tie broken by the lowest threshold")
 
 
 # --------------------------------------------------------------------------- F001
@@ -238,3 +239,47 @@ def test_f003_control_operator_cancel_restores_admission(tmp_path):
         ScheduledModel(Model(), queue, seconds=0.3).reply("blocked")
     queue.cancel_waiting("dialogue-orphan")
     assert ScheduledModel(Model(), queue, seconds=0.3).reply("free") == "ok"
+
+
+# --------------------------------------------------------------------------- F004
+def _trials(rows):
+    return [{"id": f"t{i}", "split": split, "sessions": sessions, "genuine": genuine, "score": score}
+            for i, (split, sessions, genuine, score) in enumerate(rows, 1)]
+
+
+def _dataset(rows):
+    return {"schema": "eidolon-identity-evaluation/1", "synthetic": True, "trials": _trials(rows),
+            "engine": {"name": "synthetic", "modality": "voice", "model_sha256": "a" * 64,
+                       "preprocessing": "synthetic"}}
+
+
+SEPARABLE = [("calibration", ["a", "b"], True, .9), ("calibration", ["a", "c"], True, .9),
+             ("calibration", ["b", "c"], False, .3), ("calibration", ["a", "d"], False, .5),
+             ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .55)]
+
+
+@F004
+@pytest.mark.parametrize("max_far", [0.0, 0.5])
+def test_f004_equal_frr_prefers_the_threshold_that_accepts_fewer_impostors(max_far):
+    """G274-F004: ties on FRR are broken by the LOWEST threshold (min of tuples).
+
+    Calibration genuine 0.9/0.9, impostors 0.3/0.5: 0.9 separates perfectly (FRR 0, FAR 0).
+    Observed on 940616c: 0.5+eps (target 0) or 0.3+eps (target 0.5), and the validation
+    impostor at 0.55 is accepted.
+    """
+    from eidolon_core.identity_evaluation import evaluate
+    report = evaluate(_dataset(SEPARABLE), max_far=max_far)
+    assert report["calibration"]["frr"] == 0
+    assert report["calibration"]["far"] == 0
+    assert report["candidate_threshold"] == 0.9
+    assert report["validation"]["false_accepts"] == 0
+
+
+def test_f004_control_frr_stays_the_first_criterion():
+    """Control (green on 940616c and with the patch): FRR first, FAR within target."""
+    from eidolon_core.identity_evaluation import evaluate
+    rows = [("calibration", ["a", "b"], True, .8), ("calibration", ["a", "c"], True, .6),
+            ("calibration", ["b", "c"], False, .7), ("calibration", ["c", "d"], False, .65),
+            ("validation", ["x", "y"], True, .9), ("validation", ["x", "z"], False, .2)]
+    report = evaluate(_dataset(rows), max_far=0.5)
+    assert report["calibration"]["frr"] == 0.5 and report["calibration"]["far"] <= 0.5
