@@ -1,0 +1,70 @@
+{
+  "reports": {
+    "qualification.status.json": {
+      "exit_code": 1
+    },
+    "qualification-private.status.json": {
+      "exit_code": 1
+    },
+    "inference-evidence.json": {
+      "state": "COMPLETED",
+      "model": "gemma4:12b",
+      "elapsed_seconds": 5.833,
+      "eval_count": 5,
+      "response_nonempty": true,
+      "marker_received": true,
+      "loaded_models": [
+        {
+          "name": "gemma4:12b",
+          "size_vram": 1083829124
+        }
+      ]
+    }
+  },
+  "logs": {
+    "qualification.log": {
+      "sha256": "c91206490d77439847fe47309398d53f361a5c13f46434cd394d19dbd55e47be",
+      "bytes": 13802,
+      "tail": [
+        ">       assert result.returncode==0,(result.stdout,result.stderr)",
+        "E       AssertionError: ('{\"state\":\"EVALUATION_REFUSED\",\"activated\":false}",
+        "E         ', '')",
+        "E       assert 2 == 0",
+        "E        +  where 2 = CompletedProcess(args=['/home/toytoy/eidolon-recette-g276-20261016/venv/bin/python', '-B', '-m', 'eidolon_core.identit.../trials.json', '--max-far', '0'], returncode=2, stdout='{\"state\":\"EVALUATION_REFUSED\",\"activated\":false}\\n', stderr='').returncode",
+        "",
+        "tests/test_offline_services_g273.py:269: AssertionError",
+        "=========================== short test summary info ============================",
+        "FAILED tests/test_audit_counterreview_g275.py::test_real_sigterm_runs_context_cleanup_and_keeps_gpu_reservations",
+        "FAILED tests/test_documents_g272.py::test_archive_xml_and_bomb_refused[entries1]",
+        "FAILED tests/test_offline_services_g273.py::test_operator_cli_entry_points_on_real_private_files",
+        "3 failed, 103 passed in 3.67s"
+      ]
+    },
+    "qualification-private.log": {
+      "sha256": "b411fdb17c75998f880e00bee6f9588d2d041a8ae71eda5f829410238f22b0c2",
+      "bytes": 6900,
+      "tail": [
+        "E       Failed: DID NOT RAISE ValueError",
+        "",
+        "tests/test_audit_counterreview_g275.py:57: Failed",
+        "=============================== warnings summary ===============================",
+        "tests/test_documents_g272.py::test_archive_xml_and_bomb_refused[entries1]",
+        "  /usr/lib/python3.13/zipfile/__init__.py:1655: UserWarning: Duplicate name: 'word/document.xml'",
+        "    return self._open_to_write(zinfo, force_zip64=force_zip64)",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ============================",
+        "FAILED tests/test_audit_counterreview_g275.py::test_large_file_changed_during_scan_preserves_previous_generation[rewrite]",
+        "1 failed, 105 passed, 1 warning in 3.56s"
+      ]
+    },
+    "socle.log": {
+      "sha256": "39b38fe355e883eca508f9b63523a2a639eb1dfe041a280938020e25e4123cfb",
+      "bytes": 99,
+      "tail": [
+        "............                                                             [100%]",
+        "12 passed in 0.58s"
+      ]
+    }
+  }
+}

@@ -1,0 +1,357 @@
+{
+  "schema": "eidolon-weekend-evidence/1",
+  "core_commit": "278e551b3413fbd8ebef6bdff7401f7f9cbf2c44",
+  "memory_commit": "b36ada1ff4f505fa2c5d2778f74f3b0c836d2f4c",
+  "checks": [
+    {
+      "id": "V01",
+      "criterion": "Inventaire PC/VM et SHA exacts enregistrés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V02",
+      "criterion": "Sauvegarde arrêtée et restauration sur copie vérifiées",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "Sauvegarde/restauration synthétique vérifiée (6 fichiers SHA identiques). La sauvegarde arrêtée du corpus privé installé reste à réaliser avant basculement ; aucun PASS global."
+    },
+    {
+      "id": "V03",
+      "criterion": "Dépendances, modèles hors ligne et empreintes contrôlés",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "Venv de recette et modèles Ollama inventoriés ; inférence distante réussie. Modèles biométrie/voix et ensemble des empreintes hors ligne non qualifiés."
+    },
+    {
+      "id": "V04",
+      "criterion": "Stockage canonique check-storage READY sous le compte prévu",
+      "status": "PASS",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "check-storage du corpus installé sous toytoy UID 1000 avec code G275 : READY, issues=0, warnings=0 ; contrôle non destructif."
+    },
+    {
+      "id": "V05",
+      "criterion": "Montage/permissions readonly : écriture interdite, rappel possible",
+      "status": "PASS",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "Copie synthétique restaurée, root propriétaire, fichiers 0444/répertoires 0555 : écriture refusée sous UID 1000 et rappel lexical AZUR réussi. Portée copie uniquement, pas le service installé."
+    },
+    {
+      "id": "V06",
+      "criterion": "Reconstruction passages sur copie et alias de recette distinct",
+      "status": "BLOCKED",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "Pont installé sans index-config ; alias et modèle de la recette intégrée restent à configurer. 19 tests réussis sur serveur Qdrant jetable séparé, sans qualifier cette intégration."
+    },
+    {
+      "id": "V07",
+      "criterion": "Rappel vrai/paraphrase/hors sujet avec citations et fraîcheur correctes",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V08",
+      "criterion": "Qdrant/Ollama absents : erreur explicite, aucun succès lexical masqué",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V09",
+      "criterion": "Remember aperçu/appliquer/rejouer : un seul souvenir, UNVERIFIED",
+      "status": "PASS",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "CLI réelle sur copie synthétique : PREVIEW puis COMMITTED, rejeu identique, texte modifié avec même identifiant refusé, original conservé et UNVERIFIED. memory-evidence.json."
+    },
+    {
+      "id": "V10",
+      "criterion": "Maintenance : charge haute, activité récente, boot récent et absence activité différés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V11",
+      "criterion": "Maintenance documentaire : un tick et reprise durables, aucune suppression",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "V12",
+      "criterion": "Redémarrage/retour ancienne version sur copie sans perte",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P01",
+      "criterion": "Tunnel SSH local, empreinte hôte et authentification vérifiés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P02",
+      "criterion": "Dialogue réel, historique et relance du client",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P03",
+      "criterion": "Coupure réseau et retour : état périmé, pas de double action",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P04",
+      "criterion": "Micro réel : permissions, dictée, silence et refus de permission",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P05",
+      "criterion": "Haut-parleurs/casque : voix réelle, arrêt et feedback",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P06",
+      "criterion": "Webcam réelle : permission, aperçu, arrêt, débranchement",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P07",
+      "criterion": "Échelles 100/125/150 %, clavier et lecture erreurs",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P08",
+      "criterion": "Concurrence voix/modèle : CPU/RAM/VRAM et délai observés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P09",
+      "criterion": "Session prolongée et redémarrage Windows sans jeton dans URL/logs",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "P10",
+      "criterion": "Guide WINDOWS-WEEKEND W1–W21 rempli avec réserves",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O01",
+      "criterion": "Compte de service, chemins et autorisations décidés explicitement",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O02",
+      "criterion": "Logs de démarrage/arrêt et supervision vérifiés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O03",
+      "criterion": "Fenêtre 04–08 Europe/Paris et seuils de charge approuvés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "O04",
+      "criterion": "Go/no-go humain sur preuves, blocages et périmètre bêta",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G01",
+      "criterion": "Chat : préparer, confirmer, recharger le reçu et reprendre sans doublon après coupure",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G02",
+      "criterion": "Deux profils réels : aucun souvenir, reçu ou fichier non autorisé accessible entre eux",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G03",
+      "criterion": "Pont Memory : liaison de racine et jetons lecture/écriture distincts contrôlés",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G04",
+      "criterion": "Passages : ajout et modification sans ré-embedding des documents inchangés, alias atomique",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G05",
+      "criterion": "Activité Core lue depuis Memory : frais, périmé, service arrêté, reprise pendant maintenance",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G06",
+      "criterion": "SearXNG réel : requête exacte confirmée, résultat vide et panne explicites",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G07",
+      "criterion": "Internet : HTTPS/SSRF, quota partagé du profil persistant après redémarrage",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G08",
+      "criterion": "NAS et fichier PC : lecture UTF-8, liens/traversées refusés, changement après aperçu détecté",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G09",
+      "criterion": "Windows résident : artefact et SHA, icône, ouverture/fermeture, tunnel indisponible puis revenu",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G10",
+      "criterion": "Windows : démarrage à la connexion et suppression contrôlés sous le compte réel",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G11",
+      "criterion": "PC/NAS : PDF textuel et Office réels, scan sans OCR et troncature explicités",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G12",
+      "criterion": "Documents : macros, XML dangereux, archive excessive et chiffrement refusés sans écriture Memory",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G13",
+      "criterion": "Document modifié, reçus volumineux paginés et mémorisation séparée confirmée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G14",
+      "criterion": "Fermeture/changement de profil pendant permission, capture et lecture : aucun résultat tardif ni capteur actif",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G15",
+      "criterion": "Modèles identité : empreintes et dépendances réelles contrôlées, absence/calibration manquante explicites",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G16",
+      "criterion": "Enrôlement volontaire : présence, consentement, annulation, redémarrage et isolation entre profils",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G17",
+      "criterion": "Retrait/réenrôlement des gabarits ; anciennes sauvegardes et limites de ressemblance consignées",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G18",
+      "criterion": "Copie arrêtée de l’état : source intacte, quotas/reçus conservés, incertitudes préservées et réattribution refusée",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G19",
+      "criterion": "Bibliothèque réelle : première synchronisation, modification, doublons, interruption et source absente sans suppression",
+      "status": "FAIL",
+      "observed_at": "2026-10-16T19:11:37+02:00",
+      "evidence": "G276-F01 : changement rapide de contenu à taille/mtime/ctime identiques sur gros fichier exclu non détecté ; test G275 rewrite échoue sur Core. Autres sous-parcours non tous exécutés."
+    },
+    {
+      "id": "G20",
+      "criterion": "Bibliothèque : refus interprofil, pagination, fichier changé et arrêt/reprise du service de suivi",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G21",
+      "criterion": "Conservation : inventaire des historiques/médias/sauvegardes et aperçu sans suppression ni modification des sources",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G22",
+      "criterion": "Sessions : fermeture, changement de clé, retrait, rotation opérateur et ancien jeton refusé",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G23",
+      "criterion": "Calibration : captures consenties distinctes, séparation des sessions, faux positifs/négatifs et aucune activation automatique",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    },
+    {
+      "id": "G24",
+      "criterion": "File GPU partagée : budgets mesurés, priorité et vieillissement, panne incertaine et libération des deux réservations après vérification",
+      "status": "NOT_RUN",
+      "observed_at": null,
+      "evidence": null
+    }
+  ]
+}
