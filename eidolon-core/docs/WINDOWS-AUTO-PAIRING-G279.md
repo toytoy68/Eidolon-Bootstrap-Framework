@@ -35,3 +35,11 @@ Cela ne révoque pas la clé serveur. Relancer ensuite demande un nouvel appaira
 ## Qualification
 
 Trois tests JavaScript exécutés localement : origine/port/page/fenêtre principale, attente de fin de chargement, ouverture unique et effacement du champ même en cas d'erreur. La CI Windows exécute les tests Rust, le chiffrement/déchiffrement DPAPI avec une clé synthétique, le refus d'une autre destination et des entrées invalides, puis la compilation verrouillée du client. Les résultats du candidat et son empreinte sont à conserver avec le paquet. La validation du clic réel sur le PC de toytoy reste à effectuer après téléchargement.
+
+### Candidat vérifié et livré
+
+Workflow Windows `38967030522`, job `117195927758`, code `fd973a16176a0b5435becc33cc512dc5f597db5f` : succès. Sept tests Rust, trois tests JS d’ouverture automatique et tests DPAPI réussis ; compilation release verrouillée, vérifications résident/démarrage existantes réussies. Aucun test n'a utilisé la clé personnelle de toytoy.
+
+EXE SHA-256 : `bf99f0c75f9e6bedd28fd6db279de9e1f10b9c120dfa6d5db307b7136af0a372`. ZIP utilisateur `eidolon-pc-g279.zip` : `163bd508b9b8f149e78f69860270425fefbdaf03c211e189d1078f9fe930e85a`. Archive CI téléchargée et empreinte contrôlée ; EXE comparé au manifeste produit sur Windows ; intégrité ZIP vérifiée. Les scripts PS de la CI conservent leurs fins de ligne Windows, avec contenu normalisé identique au dépôt.
+
+Le serveur Core a été synchronisé sans redémarrage : aucune modification de son authentification. Reste à valider sur le PC réel : premier appairage SSH, ouverture automatique et relance depuis l'appairage chiffré.
