@@ -53,7 +53,7 @@ def body_limit(path):
 
 ROUTES = {"open", "recent", "turn", "page", "submit", "receipt", "resolve", "cancel_proposal", "cancel",
           "cancel_receipt", "media_results", "action_preview", "action_commit", "action_receipts", "files", "activity", "document_preview",
-          "identity_status", "identity_begin", "identity_sample", "identity_confirm", "identity_cancel", "identity_delete", "identity_probe"}
+          "library_page", "session_status", "session_revoke", "identity_status", "identity_begin", "identity_sample", "identity_confirm", "identity_cancel", "identity_delete", "identity_probe"}
 CONFLICTS = ("PROPOSAL_STALE", "PROPOSAL_CHANGED", "PROPOSAL_ALREADY_SUBMITTED", "COMMAND_KEY_REUSED",
              "TURN_KEY_REUSED", "REPLY_ALREADY_RECORDED", "STORE_CHANGED", "NOT_UNCERTAIN", "NOT_A_CANDIDATE",
              "TURN_OUT_OF_ORDER", "CONVERSATION_FULL")
@@ -235,6 +235,26 @@ class ConversationAPI:
         if self.services is None:
             raise APIError(503, "PROFILE_SERVICES_NOT_CONFIGURED")
         return self.services
+
+    def _library_page(self, client, data):
+        _fields(data, {"root"}, {"after"})
+        from .library_sync import Library
+        service=self._service()
+        try: return Library(service.config,service.path.parent).page(client["client_id"],data["root"],data.get("after", ""))
+        except (ValueError,OSError,sqlite3.Error): raise APIError(409,"LIBRARY_UNAVAILABLE") from None
+
+    def _session_status(self, client, data):
+        _fields(data, set())
+        return {"client_id":client["client_id"],"actor":client["actor"],"authentication":"paired_key",
+                "profile_id":self.services.profile(client["client_id"])[0] if self.services else None,
+                "other_profiles_disclosed":False}
+
+    def _session_revoke(self, client, data):
+        _fields(data, {"client_id","confirmation"})
+        if data["client_id"]!=client["client_id"] or data["confirmation"]!="REVOKE_THIS_KEY":
+            raise APIError(409,"REVOCATION_CONFIRMATION_REQUIRED")
+        self.credentials.revoke(client["client_id"])
+        return {"state":"REVOKED","client_id":client["client_id"],"running_effects_cancelled":False}
 
     def _activity(self, client, data):
         _fields(data, ())
@@ -497,6 +517,10 @@ def main(argv=None):
     pair.add_argument("--actor", required=True)
     revoke = sub.add_parser("revoke")
     revoke.add_argument("--client-id", required=True)
+    sub.add_parser("clients", help="Inventaire opérateur des clés, sans secret")
+    rotate = sub.add_parser("rotate-key", help="Remplacer la clé du même client ; ancienne clé invalidée")
+    rotate.add_argument("--client-id", required=True)
+    rotate.add_argument("--replace-key", action="store_true", required=True)
     migrate = sub.add_parser("migrate", help="Sauvegarde vérifiée puis migration explicite vers la version courante")
     migrate.add_argument("--backup", required=True, help="nouveau fichier de sauvegarde (jamais écrasé)")
     migrate.add_argument("--encrypt-to", metavar="DESTINATAIRES",
@@ -548,6 +572,10 @@ def main(argv=None):
         if args.command == "pair":
             ConversationStore(store, create=True)
             print(json.dumps(ClientCredentials(store, create=True).pair(client_id=args.client_id, actor=args.actor)))
+        elif args.command == "clients":
+            print(json.dumps({"clients":ClientCredentials(store).inventory()}))
+        elif args.command == "rotate-key":
+            print(json.dumps(ClientCredentials(store).rotate(args.client_id)))
         elif args.command == "migrate":
             print(json.dumps(conversation_storage.migrate_with_backup(store, args.backup, encrypt_to=args.encrypt_to,
                                                                     sign_with=args.sign_with)))

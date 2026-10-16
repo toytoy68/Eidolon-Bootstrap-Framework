@@ -414,3 +414,6 @@ input[type="password"] {
 #identity-panel label { display: block; margin-top: .75rem; }
 #identity-output { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; }
 #identity-panel button { margin: .3rem; max-width: 100%; white-space: normal; }
+
+/* G273: untrusted library filenames remain readable on narrow screens. */
+#service-library-list button { display: block; max-width: 100%; overflow-wrap: anywhere; text-align: left; margin: .4rem 0; }

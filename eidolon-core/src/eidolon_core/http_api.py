@@ -437,7 +437,7 @@ def read_assets(web_root):
 class ReadServer(HTTPServer):
     """Local server with four slots, no unbounded thread/connection queue."""
     def __init__(self, state, token, *, port=8765, web_root=None, research_archives=None, conversations=None,
-                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None, monitor_port=None, services=None):
+                 media_workspace=None, personality=("none", None, None), memory=None, comm_port=None, monitor_port=None, services=None, gpu_queue=None):
         """personality: (mode, private file or None, expected sha256 or None), C-070; only with conversations."""
         if type(token) is not str or not re.fullmatch(TOKEN_PATTERN, token):
             raise ValueError("INVALID_TOKEN")
@@ -462,6 +462,7 @@ class ReadServer(HTTPServer):
                                                     personality_mode=personality[0], personality_file=personality[1],
                                                     personality_sha256=personality[2] if len(personality) > 2 else None,
                                                      memory=memory, services=services)
+            self.conversation_api.dialogue.gpu_queue = gpu_queue
         if comm_port is not None and (type(comm_port) is not int or not 1024 <= comm_port <= 65535):
             raise ValueError("INVALID_COMM_PORT")
         self.comm_port = comm_port          # C147: /v1/comm/* relayed to 127.0.0.1:<comm_port> when set
@@ -562,6 +563,7 @@ def main(argv=None):
                         help="none (défaut sans fichier), last-valid (défaut avec fichier) ou required")
     parser.add_argument("--personality-sha256", metavar="EMPREINTE",
                         help="Version exacte exigée (64 caractères hexadécimaux), avec --personality-mode required")
+    parser.add_argument("--gpu-queue-config", help="File GPU coopérative, budgets opérateur explicites")
     parser.add_argument("--beta-runtime", metavar="FICHIER", help="Configuration privée des profils, mémoire, Internet et fichiers")
     parser.add_argument("--memory-bridge-token-file", metavar="FICHIER",
                         help="Active explicitement le rappel mémoire via tunnel SSH localhost")
@@ -573,6 +575,8 @@ def main(argv=None):
                         help="Port local du tunnel SSH Memory Bridge (défaut 18765)")
     parser.add_argument("--format", choices=("json", "human"), help="Format du diagnostic --check")
     args = parser.parse_args(argv)
+    if args.gpu_queue_config and (not args.conversations or args.check):
+        parser.error("--gpu-queue-config exige --conversations et exclut --check")
     if args.beta_runtime and (not args.conversations or args.memory_bridge_token_file or args.check):
         parser.error("--beta-runtime exige --conversations et exclut --memory-bridge-token-file et --check")
     if args.memory_bridge_token_file and not args.conversations:
@@ -622,11 +626,13 @@ def main(argv=None):
                   if args.memory_bridge_token_file else None)
         from .beta_runtime import BetaRuntime
         services = BetaRuntime.load(args.beta_runtime) if args.beta_runtime else None
+        from .gpu_queue import load as load_gpu_queue
+        gpu_queue = load_gpu_queue(args.gpu_queue_config) if args.gpu_queue_config else None
         with ReadServer(args.state, token, port=args.port, web_root=args.web_root,
                         research_archives=args.research_archives, conversations=conversations,
                         media_workspace=media, personality=(mode, args.personality, args.personality_sha256),
                         memory=memory, comm_port=args.comm_port,
-                        monitor_port=args.monitor_port, services=services) as server:
+                        monitor_port=args.monitor_port, services=services, gpu_queue=gpu_queue) as server:
             print(header(title="API de consultation locale"), flush=True)
             if server.conversation_api is not None:
                 state = server.conversation_api.personality

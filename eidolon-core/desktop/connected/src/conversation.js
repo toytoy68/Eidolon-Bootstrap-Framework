@@ -594,6 +594,11 @@
     if (form) form.hidden = closed;
     if (welcome) welcome.hidden = !closed;
     doc.getElementById("conv-close").hidden = closed;
+    if (doc.getElementById("conv-revoke")) {
+      doc.getElementById("conv-revoke").hidden = closed;
+      doc.getElementById("conv-session-note").hidden = closed;
+      if (closed) doc.getElementById("conv-revoke-confirm").hidden = true;
+    }
     var status = doc.getElementById("conv-status");
     status.textContent = st.phase === "opening" ? "Ouverture…" :
       st.phase === "open" ? "Conversation ouverte (" + st.identity.actor + ")." :
@@ -802,6 +807,29 @@
       conv.open(value).then(function (ok) { (ok ? doc.getElementById("conv-text") : input).focus(); });
     });
     doc.getElementById("conv-close").addEventListener("click", function () { conv.close(); doc.getElementById("conv-key").focus(); });
+    var revokeApproval = null;
+    if (doc.getElementById("conv-revoke")) {
+      doc.getElementById("conv-revoke").addEventListener("click", async function () {
+        revokeApproval = null;
+        var result = await conv.service("session_status", {});
+        if (!result.stale && result.ok) {
+          revokeApproval = {client: result.json.client_id, conversation: conv.state().conversationId};
+          doc.getElementById("conv-revoke-confirm").hidden = false;
+        }
+      });
+      doc.getElementById("conv-revoke-confirm").addEventListener("click", async function () {
+        if (!revokeApproval) return;
+        var approval = revokeApproval; revokeApproval = null;
+        if (approval.conversation !== conv.state().conversationId) return;
+        var target = approval.client;
+        doc.getElementById("conv-revoke-confirm").hidden = true;
+        var result = await conv.service("session_revoke", {client_id: target, confirmation: "REVOKE_THIS_KEY"});
+        if (!result.stale) {
+          conv.close();
+          doc.getElementById("conv-status").textContent = result.ok ? "Clé retirée. Un renouvellement opérateur est nécessaire." : "Session fermée ; retrait de clé non confirmé. Vérifier avec l’opérateur.";
+        }
+      });
+    }
     // G176: Enter sends from the top bar, Shift+Enter keeps a new line (IME composition never sends).
     doc.getElementById("conv-text").addEventListener("keydown", function (event) {
       if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;

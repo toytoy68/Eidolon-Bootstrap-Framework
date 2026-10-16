@@ -134,3 +134,27 @@ test('Chromium: prepare, confirm, reload receipts and close clears profile data'
     assert.deepEqual(errors,[]);
   } finally { await cleanup({browser,servers:[server],dirs:[fx.dir]}); }
 });
+
+test('G273 Chromium: synchronized library, session locking and explicit key revocation', {skip:noPython || chromiumUnavailable}, async()=>{
+  const fx=makeFixture();let server,browser;
+  try{
+    const cfg=prepare(fx), conf=JSON.parse(fs.readFileSync(cfg.config,'utf8'));
+    const sync=spawnSync(PYTHON,['-m','eidolon_core.library_sync','--config',cfg.config,'--directory',conf.state_directory,'--client','pc-ui','--root','nas','--sync'],{cwd:CORE,env:ENV,encoding:'utf8'});
+    assert.equal(sync.status,0,sync.stderr+sync.stdout);
+    server=await startServer(fx,WEB_ROOT,{spawnServer:(cmd,args,opts)=>spawn(cmd,args.concat(['--conversations','simulated','--beta-runtime',cfg.config]),opts)});
+    browser=await chromium.launch();const page=await browser.newPage();
+    await page.goto(server.base+'/');await page.fill('#conv-key',cfg.key);await page.press('#conv-key','Enter');
+    await page.waitForSelector('#profile-services:not([hidden])');await page.click('#profile-services summary');
+    await page.fill('#service-root','nas');await page.click('#service-library');
+    await page.waitForSelector('#service-library-list button');assert.match(await page.textContent('#service-library-list'),/note.txt/);
+    await page.click('#service-library-list button');assert.equal(await page.inputValue('#service-value'),'note.txt');
+    await page.click('#conv-close');assert.equal(await page.textContent('#service-library-list'),'');
+    await page.fill('#conv-key',cfg.key);await page.press('#conv-key','Enter');await page.waitForSelector('#conv-revoke:not([hidden])');
+    await page.click('#conv-revoke');await page.waitForSelector('#conv-revoke-confirm:not([hidden])');
+    const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/session_revoke')),page.click('#conv-revoke-confirm')]);
+    assert.equal(response.status(),200);await page.waitForSelector('#conv-key:visible');
+    await page.fill('#conv-key',cfg.key);await page.press('#conv-key','Enter');
+    await page.waitForFunction(()=>document.querySelector('#conv-close').hidden);
+    assert.equal(await page.textContent('#service-library-list'),'');
+  }finally{await cleanup({browser,servers:[server],dirs:[fx.dir]});}
+});

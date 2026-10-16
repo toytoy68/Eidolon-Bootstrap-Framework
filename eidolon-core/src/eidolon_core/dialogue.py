@@ -327,6 +327,7 @@ class Dialogue:
         self.media_proposals = media_proposals
         self.personality = personality
         self._closing = threading.Event()
+        self.gpu_queue = None
 
     def close(self):
         """Shutdown policy: stop waiting for models now; never record a reply after this point."""
@@ -368,6 +369,10 @@ class Dialogue:
     def _bounded_reply(self, model, budget, text, history, memory, observations=None, media=None, personality=None):
         """The model call in a daemon thread, waited for at most the attempt budget."""
         outcome = {}
+        admission_cancel = threading.Event()
+        if self.gpu_queue is not None:
+            from .gpu_queue import ScheduledModel
+            model = ScheduledModel(model, self.gpu_queue, stopped=admission_cancel, seconds=min(30, budget))
 
         def attempt():
             try:
@@ -389,8 +394,10 @@ class Dialogue:
         while worker.is_alive() and not self._closing.is_set() and time.monotonic() < deadline:
             worker.join(0.05)
         if self._closing.is_set():
+            admission_cancel.set()
             raise ContractError("SERVER_STOPPING: the attempt was abandoned; nothing was recorded")
         if worker.is_alive():
+            admission_cancel.set()
             raise ContractError("MODEL_TIMEOUT: no answer within the attempt budget; a late answer is discarded")
         if "error" in outcome:
             raise outcome["error"]
@@ -427,6 +434,7 @@ class Dialogue:
 
     def _record(self, conversation_id, reply, client_id, client_turn_key, text):
         if self._closing.is_set():
+            admission_cancel.set()
             raise ContractError("SERVER_STOPPING: nothing is recorded during shutdown")
         try:
             return self.conversations.record_reply(reply)
@@ -439,6 +447,7 @@ class Dialogue:
 
     def respond(self, conversation_id, *, client_id, client_turn_key, text, observations=None):
         if self._closing.is_set():
+            admission_cancel.set()
             raise ContractError("SERVER_STOPPING: no new turn during shutdown")
         observations = validate_observations(observations)
         recorded = self.conversations.append_turn(conversation_id, client_id=client_id,

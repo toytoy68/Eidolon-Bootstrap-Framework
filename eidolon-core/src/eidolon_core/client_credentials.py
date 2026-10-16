@@ -163,3 +163,18 @@ class ClientCredentials:
             row = db.execute("SELECT client_id, actor FROM clients WHERE token_sha256=? AND revoked_at IS NULL",
                              (_hash(token),)).fetchone()
         return {"client_id": row[0], "actor": row[1]} if row else None
+
+    def inventory(self):
+        """Operator-only listing, no token or token hash returned."""
+        with self._db() as db:
+            rows=db.execute("SELECT client_id,actor,created_at,revoked_at FROM clients ORDER BY client_id").fetchall()
+        return [{"client_id":r[0],"actor":r[1],"created_at":r[2],"revoked_at":r[3]} for r in rows]
+
+    def rotate(self, client_id):
+        """Operator replaces one key atomically, retaining its profile-bound ID."""
+        token="ecc_"+secrets.token_urlsafe(32)
+        with self._db(write=True) as db:
+            row=db.execute("SELECT actor FROM clients WHERE client_id=?",(client_id,)).fetchone()
+            if row is None: raise CredentialError("CLIENT_UNKNOWN: no client with this id")
+            db.execute("UPDATE clients SET token_sha256=?,created_at=?,revoked_at=NULL WHERE client_id=?",(_hash(token),now(),client_id))
+        return {"client_id":client_id,"actor":row[0],"token":token,"previous_key_valid":False}

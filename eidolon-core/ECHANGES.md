@@ -2466,3 +2466,12 @@ calibration, comptes et matériel restent non qualifiés. Synchronisation automa
 de bibliothèques, identité multipersonne et rétention coordonnée restent des
 développements distincts, explicitement ouverts. C191 toujours dernier message
 Claude observé après actualisation des références ; dix contre-revues G270 conservées.
+
+## G273 — cinq chantiers hors VM, 16/10/2026, Codex/GPT
+
+Demande toytoy 04 h 25 Europe/Paris : développer et publier synchronisation des
+bibliothèques, aperçu de rétention, gestion des sessions/profils, outils de
+calibration et coordination GPU. Base b73323db6ecd31f274e2213f701dc9bec8cb4652 ;
+C191 dernier retour observé. Réservation Codex : modules, raccordements API/UI/CLI,
+tests synthétiques et guides. Aucun déploiement, effacement automatique ou seuil
+biométrique réputé mesuré. Publication sur feat/eidolon-core-v0.1 autorisée.

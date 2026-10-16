@@ -1823,6 +1823,36 @@
       } catch (_) { if (epoch === session) output.textContent = "Document indisponible ; aucune mémorisation effectuée."; }
       finally { if (epoch === session) { selectedFile = null; upload.disabled = true; } }
     });
+    var libraryCursor = null, libraryRoot = null;
+    var libraryList = doc.getElementById("service-library-list"), libraryMore = doc.getElementById("service-library-more");
+    async function libraryPage(more) {
+      var current = session, selectedRoot = folder.value;
+      if (!current || busy) return;
+      busy = true; forgetPreview();
+      try {
+        var r = await conv.service("library_page", {root: selectedRoot, after: more && selectedRoot === libraryRoot ? libraryCursor || "" : ""});
+        if (r.stale || current !== session) return;
+        libraryList.textContent = ""; libraryCursor = null; libraryMore.hidden = true;
+        if (!r.ok) { output.textContent = "Bibliothèque indisponible : vérifier le premier passage de synchronisation et le dossier choisi."; return; }
+        libraryRoot = selectedRoot; libraryCursor = r.json.next_after; libraryMore.hidden = !libraryCursor;
+        output.textContent = "Extraits synchronisés, sans écriture Memory. Dernier passage : " + (r.json.last_scan ? r.json.last_scan.completed_at : "aucun") + ".";
+        r.json.entries.forEach(function (entry) {
+          var button = doc.createElement("button"); button.type = "button";
+          button.textContent = entry.path + (entry.present ? " — préparer la lecture actuelle" : " — absent au dernier passage");
+          button.disabled = !entry.present;
+          button.addEventListener("click", function () {
+            if (current !== session) return;
+            folder.value = selectedRoot; value.value = entry.path; action.value = "document.read";
+            forgetPreview(); value.focus();
+          });
+          libraryList.appendChild(button);
+        });
+      } finally { busy = false; }
+    }
+    if (doc.getElementById("service-library")) {
+      doc.getElementById("service-library").addEventListener("click", function () { libraryPage(false); });
+      libraryMore.addEventListener("click", function () { libraryPage(true); });
+    }
     var last = 0;
     function active(event) {
       if (!event.isTrusted || panel.hidden || Date.now() - last < 10000) return;
@@ -1832,7 +1862,7 @@
     return { update: function (state) {
       var next = state.phase === "open" && state.services ? state.conversationId : null;
       panel.hidden = !next;
-      if (next !== session) { session = next; preview = null; selectedFile = null; canRemember=false; upload.disabled = true; rememberSource.hidden = true; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
+      if (next !== session) { if (libraryList) { libraryList.textContent=""; libraryMore.hidden=true; libraryCursor=libraryRoot=null; } session = next; preview = null; selectedFile = null; canRemember=false; upload.disabled = true; rememberSource.hidden = true; output.textContent = ""; value.value = ""; folder.value = ""; confirm.hidden = true; discuss.hidden = true; doc.getElementById("service-profile").textContent = ""; }
       if (next) {
         canRemember = state.services.remember === true;
         Array.from(action.options).forEach(function (option) {
@@ -2623,6 +2653,11 @@
     if (form) form.hidden = closed;
     if (welcome) welcome.hidden = !closed;
     doc.getElementById("conv-close").hidden = closed;
+    if (doc.getElementById("conv-revoke")) {
+      doc.getElementById("conv-revoke").hidden = closed;
+      doc.getElementById("conv-session-note").hidden = closed;
+      if (closed) doc.getElementById("conv-revoke-confirm").hidden = true;
+    }
     var status = doc.getElementById("conv-status");
     status.textContent = st.phase === "opening" ? "Ouverture…" :
       st.phase === "open" ? "Conversation ouverte (" + st.identity.actor + ")." :
@@ -2831,6 +2866,29 @@
       conv.open(value).then(function (ok) { (ok ? doc.getElementById("conv-text") : input).focus(); });
     });
     doc.getElementById("conv-close").addEventListener("click", function () { conv.close(); doc.getElementById("conv-key").focus(); });
+    var revokeApproval = null;
+    if (doc.getElementById("conv-revoke")) {
+      doc.getElementById("conv-revoke").addEventListener("click", async function () {
+        revokeApproval = null;
+        var result = await conv.service("session_status", {});
+        if (!result.stale && result.ok) {
+          revokeApproval = {client: result.json.client_id, conversation: conv.state().conversationId};
+          doc.getElementById("conv-revoke-confirm").hidden = false;
+        }
+      });
+      doc.getElementById("conv-revoke-confirm").addEventListener("click", async function () {
+        if (!revokeApproval) return;
+        var approval = revokeApproval; revokeApproval = null;
+        if (approval.conversation !== conv.state().conversationId) return;
+        var target = approval.client;
+        doc.getElementById("conv-revoke-confirm").hidden = true;
+        var result = await conv.service("session_revoke", {client_id: target, confirmation: "REVOKE_THIS_KEY"});
+        if (!result.stale) {
+          conv.close();
+          doc.getElementById("conv-status").textContent = result.ok ? "Clé retirée. Un renouvellement opérateur est nécessaire." : "Session fermée ; retrait de clé non confirmé. Vérifier avec l’opérateur.";
+        }
+      });
+    }
     // G176: Enter sends from the top bar, Shift+Enter keeps a new line (IME composition never sends).
     doc.getElementById("conv-text").addEventListener("keydown", function (event) {
       if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;

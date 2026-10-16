@@ -52,6 +52,7 @@ def render(value):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Eidolon Core — file média, opérations explicites sur le serveur")
+    parser.add_argument("--gpu-queue-config", help="Même file GPU coopérative que Core")
     parser.add_argument("--root", required=True, help="dossier privé de la file média")
     parser.add_argument("--state", required=True, help="état Core existant ; jamais créé ou migré ici")
     parser.add_argument("--worker-id", help="identité exacte, requise sauf pour init")
@@ -90,8 +91,16 @@ def main(argv=None):
                 value = worker.check(args.ticket, client_id=args.client_id, conversations=conversations,
                                      config=load_json(args.config))
             elif args.command == "run":
-                value = worker.run_once(args.ticket, client_id=args.client_id, conversations=conversations,
-                                        config=load_json(args.config), execute_local=args.execute_local)
+                from .gpu_queue import load as load_gpu_queue
+                queue=load_gpu_queue(args.gpu_queue_config) if args.gpu_queue_config else None
+                lease=queue.wait(args.ticket,'media') if queue else None
+                try:
+                    value = worker.run_once(args.ticket, client_id=args.client_id, conversations=conversations,
+                                            config=load_json(args.config), execute_local=args.execute_local)
+                finally:
+                    # A media HTTP return may only acknowledge asynchronous work.
+                    # Keep the GPU reservation until the operator verifies engine completion.
+                    if queue: queue.finish(args.ticket,lease,uncertain=True)
             elif args.command == "poll":
                 value = worker.poll_once(args.ticket, client_id=args.client_id)
             else:
