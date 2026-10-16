@@ -283,6 +283,16 @@ class HttpServerTests(Base):
                 self.assertEqual(path, "/api/chat" if flavor == "ollama" else "/v1/chat/completions")
                 schema = body["format"] if flavor == "ollama" else body["response_format"]["schema"]
                 self.assertEqual(schema, dg.DIALOGUE_SCHEMA)
+                branches = schema["anyOf"]
+                self.assertEqual(len(branches), 2)
+                for branch in branches:
+                    props = branch["properties"]
+                    kinds = props["kind"]["enum"]
+                    self.assertEqual(props["proposal"]["type"],
+                                     "object" if kinds == ["proposal"] else "null")
+                    self.assertFalse(branch["additionalProperties"])
+                self.assertEqual(set().union(*(set(b["properties"]["kind"]["enum"]) for b in branches)),
+                                 set(cv.OUTPUT_KINDS))
                 self.assertNotIn("tools", body)
                 self.assertIn("TRUSTED CAPABILITIES", body["messages"][0]["content"])
                 self.assertIn("untrusted", body["messages"][1]["content"])

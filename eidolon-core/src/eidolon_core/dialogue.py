@@ -26,17 +26,35 @@ from .contracts import ContractError, digest, encode, reference, validate_contex
 
 SIMULATED_MODEL_ID = "simulated-dialogue/1"
 
+# Keep the generated grammar aligned with parse_dialogue_output: an answer
+# cannot carry a proposal. The parser remains authoritative after generation.
 DIALOGUE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "version": {"type": "integer", "enum": [1]},
-        "kind": {"type": "string", "enum": list(cv.OUTPUT_KINDS)},
-        "text": {"type": "string"},
-        "proposal": {"anyOf": [{"type": "null"}, {"type": "object", "properties": {
-            "template": {"type": "string"}, "parameters": {"type": "object"}},
-            "required": ["template", "parameters"]}]},
-    },
-    "required": ["version", "kind", "text", "proposal"],
+    "anyOf": [
+        {
+            "type": "object",
+            "properties": {
+                "version": {"type": "integer", "enum": [1]},
+                "kind": {"type": "string", "enum": ["answer", "clarification", "out_of_scope"]},
+                "text": {"type": "string"},
+                "proposal": {"type": "null"},
+            },
+            "required": ["version", "kind", "text", "proposal"],
+            "additionalProperties": False,
+        },
+        {
+            "type": "object",
+            "properties": {
+                "version": {"type": "integer", "enum": [1]},
+                "kind": {"type": "string", "enum": ["proposal"]},
+                "text": {"type": "string"},
+                "proposal": {"type": "object", "properties": {
+                    "template": {"type": "string"}, "parameters": {"type": "object"}},
+                    "required": ["template", "parameters"], "additionalProperties": False},
+            },
+            "required": ["version", "kind", "text", "proposal"],
+            "additionalProperties": False,
+        },
+    ],
 }
 
 SYSTEM_PROMPT = (
