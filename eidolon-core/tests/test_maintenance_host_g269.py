@@ -75,3 +75,25 @@ def test_execute_one_real_tick_and_close_client(tmp_path,monkeypatch):
     result=run_once(policy(),obs,now=NOW,runtime=runtime)
     assert result["mode"]=="EXECUTE" and result["report"]["state"]=="ACTIVE"
     assert (state/"cycle.sqlite3").is_file() and closed==[True]
+
+
+def test_remote_receipt_is_observed_after_network_response(monkeypatch, capsys):
+    import json
+    import eidolon_core.maintenance_host as host
+    import eidolon_core.activity as activity
+    clock = [NOW]
+    class Clock:
+        @staticmethod
+        def now(zone):
+            return clock[0]
+    def remote(*args):
+        clock[0] += timedelta(seconds=1)
+        return dict(schema="eidolon-activity-receipt/1", source="host.eidolon",
+                    observed_at=clock[0].isoformat(), last_activity=NOW.isoformat())
+    monkeypatch.setattr(host, "datetime", Clock)
+    monkeypatch.setattr(host, "read_config", lambda _: {})
+    monkeypatch.setattr(host, "validate_host_policy", lambda _: policy())
+    monkeypatch.setattr(activity, "read_remote", remote)
+    assert host.main(["--policy", "/unused", "--activity-core-port", "8767",
+                      "--activity-token-file", "/unused-token", "--capture-only"]) == 0
+    assert json.loads(capsys.readouterr().out)["at"] == clock[0].isoformat()

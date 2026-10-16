@@ -218,6 +218,21 @@ def test_live_activity_defers_passage_maintenance_and_scope_is_bound(tmp_path, m
         observation['last_activity']=(now-timedelta(hours=1)).isoformat()
         assert run_once(policy,observation,now=now,runtime=runtime)['report']['state']=='PUBLISHED'
         assert index.status().points==1
+        # Each live receipt is timestamped during the request, after its start.
+        import eidolon_core.maintenance_host as host
+        clock = [now]
+        class Clock:
+            @staticmethod
+            def now(zone):
+                return clock[0]
+        monkeypatch.setattr(host, 'datetime', Clock)
+        def live_activity():
+            clock[0] += timedelta(seconds=1)
+            return dict(schema='eidolon-activity-receipt/1',source='host.eidolon',
+                        observed_at=clock[0].isoformat(),last_activity=(now-timedelta(hours=1)).isoformat())
+        result=run_once(policy,observation,now=now,runtime=runtime,activity_provider=live_activity)
+        assert result['report']['state'] in ('PUBLISHED', 'UNCHANGED')
+        assert clock[0] > now
         runtime['profile_id']='other'
         with pytest.raises(ValueError,match='identity mismatch'):run_once(policy,observation,now=now,runtime=runtime)
     finally:close()

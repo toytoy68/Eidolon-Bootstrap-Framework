@@ -130,8 +130,9 @@ def run_once(policy, observation, *, now, runtime=None, activity_provider=None):
                     def idle():
                         if activity_provider is None:
                             return True  # explicit snapshot invocation; no live observation claimed
+                        activity = activity_provider()
                         current = datetime.now(timezone.utc)
-                        fresh = capture(policy, now=current, activity=activity_provider())
+                        fresh = capture(policy, now=current, activity=activity)
                         previous = _aware(fresh["last_activity"], "activity")
                         return (current-previous).total_seconds() >= 1800
                     return index.sync(root, authorize=lambda ident: authorize(profile, ident, "index.upsert"),
@@ -175,13 +176,13 @@ def main(argv=None):
         parser.error("snapshot cannot be combined with capture or activity")
     try:
         policy=validate_host_policy(read_config(args.policy))
-        now=datetime.now(timezone.utc)
         from .activity import read_remote
         activity_provider = ((lambda: read_remote(args.activity_core_port, args.activity_token_file))
                              if args.activity_core_port is not None else
                              (lambda: read_config(args.activity)) if args.activity else None)
-        observation=read_config(args.snapshot) if args.snapshot else capture(policy,now=now,
-            activity=activity_provider() if activity_provider else None)
+        activity=activity_provider() if activity_provider else None
+        now=datetime.now(timezone.utc)
+        observation=read_config(args.snapshot) if args.snapshot else capture(policy,now=now,activity=activity)
         if args.capture_only:
             report=observation
         else:
