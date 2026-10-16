@@ -118,7 +118,7 @@ def inventory(root, *, max_entries, max_bytes, chunk=1 << 20, final_check=True):
         if final_check:
             if _before_final is not None:
                 _before_final()
-            _final_check(root, versions)
+            _final_check(root, versions, result, chunk, max_bytes)
     finally:
         for _, dfd, _ in frames:
             os.close(dfd)
@@ -156,7 +156,7 @@ def _frame(rel_dir, dfd, versions):
     return rel_dir, dfd, iter(names)
 
 
-def _hash(dfd, name, rel, st, chunk, remaining):
+def _hash(dfd, name, rel, st, chunk, remaining, *, run_hook=True):
     if st.st_size > remaining:
         raise InventoryRefused("INVENTORY_BYTE_BUDGET", rel)
     try:
@@ -178,8 +178,16 @@ def _hash(dfd, name, rel, st, chunk, remaining):
             if read > st.st_size:
                 raise InventoryRefused("INVENTORY_RACE", rel)        # grew while read
             digest.update(part)
-        if _after_hash is not None:
+        if run_hook and _after_hash is not None:
             _after_hash(rel)
+        os.lseek(fd, 0, os.SEEK_SET)
+        repeated, repeated_bytes = hashlib.sha256(), 0
+        while repeated_bytes <= st.st_size:
+            part = os.read(fd, min(chunk, st.st_size + 1 - repeated_bytes))
+            if not part: break
+            repeated_bytes += len(part); repeated.update(part)
+        if repeated_bytes != read or repeated.digest() != digest.digest():
+            raise InventoryRefused("INVENTORY_RACE", rel)
         if read != st.st_size or _version(os.fstat(fd)) != _version(st):
             raise InventoryRefused("INVENTORY_RACE", rel)
     except PermissionError:
@@ -194,8 +202,8 @@ def _hash(dfd, name, rel, st, chunk, remaining):
     return digest.hexdigest(), read
 
 
-def _final_check(root, versions):
-    """Metadata-only second pass, using single-component opens just like the hash pass.
+def _final_check(root, versions, result, chunk, max_bytes):
+    """Content and identity second pass, using single-component opens like the hash pass.
 
     G268: O_NOFOLLOW protects only the LAST component. Never pass a nested relative
     path to stat/open: an already-checked ancestor could have become a link since.
@@ -203,7 +211,7 @@ def _final_check(root, versions):
     G268 counter-review: depth-first like the first pass (one descriptor per level); a directory's
     version is checked again AFTER its whole subtree; descriptor exhaustion is INVENTORY_RESOURCE.
     """
-    frames = []
+    frames = []; remaining = max_bytes
     try:
         frames.append(_checked_frame("", _open_root(root), versions))
         while frames:
@@ -212,6 +220,17 @@ def _final_check(root, versions):
             if name is None:
                 if _version(os.fstat(dfd)) != versions[rel_dir or "."][2]:
                     raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
+                # Open from the trusted path again: an already-open ancestor may
+                # have been renamed while its timestamps remained unchanged.
+                try:
+                    current = _open_root(str(Path(root) / rel_dir))
+                    try:
+                        if _version(os.fstat(current)) != versions[rel_dir or "."][2]:
+                            raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
+                    finally: os.close(current)
+                except InventoryRefused as exc:
+                    if exc.code == "INVENTORY_RESOURCE": raise
+                    raise InventoryRefused("INVENTORY_CHANGED", rel_dir) from None
                 os.close(frames.pop()[1])
                 continue
             rel = f"{rel_dir}/{name}" if rel_dir else name
@@ -224,6 +243,16 @@ def _final_check(root, versions):
                 raise InventoryRefused("INVENTORY_CHANGED", rel)
             if kind == "dir":
                 frames.append(_checked_frame(rel, _open_dir(dfd, name, rel, "INVENTORY_CHANGED"), versions))
+            else:
+                try:
+                    digest, count = _hash(dfd, name, rel, st, chunk, remaining, run_hook=False)
+                except InventoryRefused as exc:
+                    if exc.code == "INVENTORY_RACE":
+                        raise InventoryRefused("INVENTORY_CHANGED", rel) from None
+                    raise
+                remaining -= count
+                if digest != result[rel]["sha256"]:
+                    raise InventoryRefused("INVENTORY_CHANGED", rel)
     finally:
         for _, dfd, _ in frames:
             os.close(dfd)

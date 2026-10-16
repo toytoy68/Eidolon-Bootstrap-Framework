@@ -219,3 +219,18 @@ raise SystemExit(http_api.main(sys.argv[2:]))
     assert q.inspect()['counts']['ACTIVE']==1
     assert [r['id'] for r in q.inspect()['jobs'] if r['state']=='WAITING']==['inherited']
     with q.db() as db:assert db.execute("SELECT state FROM jobs WHERE id='owned'").fetchone()[0]=='CANCELLED'
+
+
+def test_excluded_integrity_budget_does_not_block_other_documents(tmp_path, monkeypatch):
+    lib, root = library(tmp_path)
+    big = root/'large.pdf'
+    with big.open('wb') as stream: stream.truncate(L.documents.MAX_BYTES + 1)
+    monkeypatch.setattr(L, 'MAX_EXCLUDED_HASH_BYTES', 1)
+    def refused(*args, **kwargs): raise AssertionError('unbudgeted file read')
+    monkeypatch.setattr(L, 'excluded_fingerprint', refused)
+    result = lib.scan('pc0', 'nas')
+    assert result['new_versions'] == 1
+    assert result['not_extracted'] == {'FILE_TOO_LARGE_CONTENT_UNVERIFIED': 1}
+    row = next(r for r in lib.page('pc0', 'nas')['entries'] if r['path']=='large.pdf')
+    assert row['sha'] is None and not row['excerpt_available']
+    assert row['extraction_error'] == 'FILE_TOO_LARGE_CONTENT_UNVERIFIED'

@@ -202,8 +202,8 @@ def test_a_substitution_at_any_depth_during_the_final_pass_is_never_traversed(tm
 
 # --- 4. the non-atomic limit is still real, and still stated ---------------------------------------
 
-def test_the_documented_limit_a_change_behind_the_final_pass_is_not_seen(tmp_path, monkeypatch):
-    """Documented, not fixed: an entry changed AFTER the final pass re-checked it is not detected."""
+def test_change_after_final_metadata_is_caught_by_content_check(tmp_path, monkeypatch):
+    """G277 now re-reads content after the final metadata check."""
     assert "not an atomic snapshot" in inv.inventory.__doc__
     root = nested(tmp_path)
     real_stat, active, done = os.stat, [], []
@@ -216,8 +216,8 @@ def test_the_documented_limit_a_change_behind_the_final_pass_is_not_seen(tmp_pat
             (root / "top").write_text("changed behind the check")
         return result
     monkeypatch.setattr(inv.os, "stat", stat_then_change)
-    result = inv.inventory(root, max_entries=100, max_bytes=10**6)
-    assert done and result["top"]["size"] == 3                         # the old state is reported
+    assert refused(lambda: inv.inventory(root, max_entries=100, max_bytes=10**6)) == "INVENTORY_CHANGED"
+    assert done
 
 
 def test_a_directory_changed_while_its_subtree_is_rechecked_is_caught_after_the_visit(tmp_path, monkeypatch):
@@ -235,3 +235,15 @@ def test_a_directory_changed_while_its_subtree_is_rechecked_is_caught_after_the_
     monkeypatch.setattr(inv.os, "stat", stat_then_add)
     assert refused(lambda: inv.inventory(root, max_entries=100, max_bytes=10**6)) == "INVENTORY_CHANGED"
     assert done
+
+
+def test_change_after_completed_final_pass_still_requires_stopped_tree(tmp_path, monkeypatch):
+    root = nested(tmp_path)
+    final = inv._final_check
+    def changed_after_completion(*args):
+        final(*args)
+        (root/'top').write_text('changed after completed checks')
+    monkeypatch.setattr(inv, '_final_check', changed_after_completion)
+    result = inv.inventory(root, max_entries=100, max_bytes=10**6)
+    assert result['top']['size'] == 3
+    assert 'not an atomic snapshot' in inv.inventory.__doc__

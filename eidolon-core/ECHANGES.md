@@ -2546,3 +2546,7 @@ Aucun déploiement, compte, corpus réel modifié, purge, fusion main ou relance
 Autorisation directe toytoy : lancement de la recette VM. Bases Core 278e551b3413fbd8ebef6bdff7401f7f9cbf2c44, Memory b36ada1ff4f505fa2c5d2778f74f3b0c836d2f4c. Lot réservé : inventaire, environnements et copies isolés, essais réels, preuves et rapport dans docs/validation/2026-10-16/g276-vm/. Corpus privé exclu des fixtures ; aucune fusion main ni relance G182.
 
 G276 première passe : Core ciblé 105 PASS/1 FAIL (bibliothèque G276-F01), Memory ciblé 47 PASS, Qdrant réel jetable 19 PASS. Socle strict séparé Core 12/Memory 37. Tunnel GPU rétabli après redémarrage toytoy, inférence gemma4:12b réussie en 5,833 s. Remember/readonly/sauvegarde sur copie synthétique vérifiés. Services installés non redémarrés ; recette complète INCOMPLETE. [Rapport unique](docs/validation/2026-10-16/g276-vm/RAPPORT-UNIQUE.md).
+
+## G277 — correction et activation VM, Codex/GPT, 16/10/2026
+
+Autorisation toytoy à 19 h 17 : exécuter correction, sauvegardes, basculement et recette de bout en bout. Base Core fb14fbd, Memory b36ada1. Réservation : bibliothèque, preuves, sauvegardes privées et configuration des services. Aucun corpus personnel dans les tests ; opérations et limites PC consignées au rapport.

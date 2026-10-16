@@ -30,6 +30,7 @@ from .beta_state import configuration
 MAX_FILES = 1000
 MAX_BYTES = 32 * 1024 * 1024
 MAX_VERSIONS = 10000
+MAX_EXCLUDED_HASH_BYTES = 32 * 1024 * 1024
 
 def binding(config):
     return digest({"clients":config["clients"], "roots":{p:c["file_roots"] for p,c in config["profiles"].items()}})
@@ -70,6 +71,26 @@ def file_version(root, relative):
         return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
+def excluded_fingerprint(root, relative, *, expected_size, deadline, stopped=None):
+    """Bounded streaming integrity check only; oversized documents are never extracted."""
+    with profile_files.opened(root, relative) as fd:
+        before = os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1 or before.st_size != expected_size:
+            raise ValueError("LIBRARY_CHANGED")
+        digest = hashlib.sha256(); count = 0
+        while count <= expected_size:
+            if time.monotonic() > deadline or stopped and stopped.is_set():
+                raise ValueError("LIBRARY_SCAN_INTERRUPTED")
+            chunk = os.read(fd, min(1024 * 1024, expected_size + 1 - count))
+            if not chunk: break
+            count += len(chunk); digest.update(chunk)
+        after = os.fstat(fd)
+        version = lambda v: (v.st_dev, v.st_ino, v.st_size, v.st_mtime_ns, v.st_ctime_ns, v.st_nlink)
+        if count != expected_size or version(before) != version(after):
+            raise ValueError("LIBRARY_CHANGED")
+        return digest.hexdigest()
+
+
 class Library:
     def __init__(self, config, directory):
         self.config, self.directory, self.binding = config, str(directory), binding(config)
@@ -102,15 +123,20 @@ class Library:
         with database(self.directory,'library.sqlite3',write=True) as db:
             self._schema(db)
             known={(r[0],r[1]) for r in db.execute("SELECT sha,json_extract(excerpt,'$.format') FROM versions WHERE profile=?",(profile,))}
-        skipped={}; observed={}; errors={}
+        skipped={}; observed={}; errors={}; excluded_hashes={}; excluded_bytes=0
         for relative in names:
             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
             # G274-F002: a file above the extraction bound is listed (no hash, no excerpt)
             # instead of aborting the root. Links, changes and budgets still abort.
             observed[relative]=file_version(path,relative);size=observed[relative][2]
             if size>documents.MAX_BYTES:
-                skipped["FILE_TOO_LARGE"]=skipped.get("FILE_TOO_LARGE",0)+1
-                errors[relative]="FILE_TOO_LARGE"
+                error="FILE_TOO_LARGE_CONTENT_UNVERIFIED"
+                if size <= MAX_EXCLUDED_HASH_BYTES - excluded_bytes:
+                    excluded_hashes[relative]=excluded_fingerprint(path,relative,expected_size=size,deadline=deadline,stopped=stopped)
+                    excluded_bytes+=size
+                    error="FILE_TOO_LARGE"
+                skipped[error]=skipped.get(error,0)+1
+                errors[relative]=error
                 batch.append((relative,None,size,None));continue
             raw=profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES);total+=len(raw)
             if total>MAX_BYTES: raise ValueError("LIBRARY_SCAN_BUDGET")
@@ -136,7 +162,10 @@ class Library:
         for relative,sha,size,_ in batch:
             if time.monotonic()>deadline or stopped and stopped.is_set(): raise ValueError("LIBRARY_SCAN_INTERRUPTED")
             if file_version(path,relative)!=observed[relative]: raise ValueError("LIBRARY_CHANGED")
-            if sha is None: continue
+            if sha is None:
+                if relative in excluded_hashes and excluded_fingerprint(path,relative,expected_size=size,deadline=deadline,stopped=stopped)!=excluded_hashes[relative]:
+                    raise ValueError("LIBRARY_CHANGED")
+                continue
             if hashlib.sha256(profile_files.read_bytes(path,relative,max_bytes=documents.MAX_BYTES)).hexdigest()!=sha:
                 raise ValueError("LIBRARY_CHANGED")
         now=datetime.now(timezone.utc).isoformat();added=0;duplicates=0
@@ -159,7 +188,7 @@ class Library:
                 added+=db.execute("INSERT OR IGNORE INTO versions VALUES (?,?,?,?,?,?,?)",(profile,root,relative,sha,size,encode(excerpt),now)).rowcount
                 db.execute("INSERT INTO files VALUES (?,?,?,?,1,?) ON CONFLICT(profile,root,path) DO UPDATE SET sha=excluded.sha,present=1,seen_at=excluded.seen_at",(profile,root,relative,sha,now))
             db.execute("INSERT INTO scans VALUES (?,?,?,?) ON CONFLICT(profile,root) DO UPDATE SET completed_at=excluded.completed_at,files=excluded.files",(profile,root,now,len(batch)))
-        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":total*2,"not_extracted":dict(sorted(skipped.items())),"memory_written":False,"source_deleted":False}
+        return {"state":"SYNCED_EXCERPTS_ONLY","files":len(batch),"new_versions":added,"reused_excerpts":duplicates,"bytes_read":(total+excluded_bytes)*2,"not_extracted":dict(sorted(skipped.items())),"memory_written":False,"source_deleted":False}
 
     def page(self, client, root, after=''):
         profile,_=self._scope(client,root)
