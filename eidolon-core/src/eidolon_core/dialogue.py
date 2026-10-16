@@ -434,7 +434,6 @@ class Dialogue:
 
     def _record(self, conversation_id, reply, client_id, client_turn_key, text):
         if self._closing.is_set():
-            admission_cancel.set()
             raise ContractError("SERVER_STOPPING: nothing is recorded during shutdown")
         try:
             return self.conversations.record_reply(reply)
@@ -447,7 +446,6 @@ class Dialogue:
 
     def respond(self, conversation_id, *, client_id, client_turn_key, text, observations=None):
         if self._closing.is_set():
-            admission_cancel.set()
             raise ContractError("SERVER_STOPPING: no new turn during shutdown")
         observations = validate_observations(observations)
         recorded = self.conversations.append_turn(conversation_id, client_id=client_id,

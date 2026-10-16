@@ -37,3 +37,13 @@ l’outil. Conserver les reçus, quotas et incertitudes. Les gabarits retirés p
 exister dans les sauvegardes anciennes ; réconcilier ces retraits avant restauration.
 Les extraits documentaires conservés sont privés. Désactiver le panneau ou revenir
 au code précédent ne supprime ni ces extraits ni les souvenirs déjà commis.
+
+## Complément G273
+
+Arrêter le suivi documentaire avant toute copie de `library.sqlite3`. Cette base
+reconstruisible et les réservations `gpu-queue.sqlite3` ne sont pas copiées par
+`beta_state`. Une ancienne sauvegarde de clés peut réactiver une clé révoquée :
+réconcilier les retraits et rotations avant remise en service. Pour un rollback
+GPU, inspecter les moteurs et réservations en cours ; ne pas démarrer une nouvelle
+file vide tant qu’un travail ancien peut encore tourner. L’aperçu de conservation
+ne supprime rien et aucun effacement n’est nécessaire pour revenir au code G272.

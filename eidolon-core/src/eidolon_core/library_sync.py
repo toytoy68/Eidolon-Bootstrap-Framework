@@ -73,6 +73,7 @@ class Library:
         db.execute("CREATE TABLE IF NOT EXISTS scans (profile TEXT, root TEXT, completed_at TEXT, files INTEGER, PRIMARY KEY(profile,root))")
 
     def _scope(self, client, root):
+        if type(client) is not str or type(root) is not str: raise ValueError("LIBRARY_SCOPE_REFUSED")
         profile=self.config['clients'].get(client)
         if profile is None or root not in self.config['profiles'][profile]['file_roots']:
             raise ValueError("LIBRARY_SCOPE_REFUSED")

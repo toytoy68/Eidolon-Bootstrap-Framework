@@ -59,7 +59,7 @@ L'ouverture d'un dossier ne prouve pas la lisibilité de tous ses fichiers.
 
 Ce contrôle n'est pas un instantané atomique : les fichiers peuvent changer entre
 deux vérifications ou ensuite. Core conserve ses propres contrôles au lancement
-et pendant les accès. Aucun résultat n'est injecté dans les 44 preuves de recette.
+et pendant les accès. Aucun résultat n'est injecté dans les 50 preuves de recette.
 
 Validation locale du lot : 14 tests dédiés, dont un processus audité qui refuse
 réseau, écritures, lancement de processus, accès SQLite et listage des données.

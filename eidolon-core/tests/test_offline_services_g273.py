@@ -218,6 +218,7 @@ def test_real_api_session_revoke_rotation_and_library_ownership(tmp_path):
         Library(cfg,cfg['state_directory']).scan('pc0','nas')
         assert call('library_page',{'root':'nas'},keys['pc0'])[1]['entries']
         assert call('library_page',{'root':'nas'},keys['pc1'])[1]['entries']==[]
+        assert call('library_page',{'root':[]},keys['pc0'])[0]==409
         assert call('session_status',{},keys['pc0'])[1]['profile_id']=='user0'
         assert call('session_revoke',{'client_id':'pc1','confirmation':'REVOKE_THIS_KEY'},keys['pc0'])[0]==409
         assert call('session_revoke',{'client_id':'pc0','confirmation':'REVOKE_THIS_KEY'},keys['pc0'])[0]==200

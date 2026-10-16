@@ -1,0 +1,92 @@
+{
+  "schema": "eidolon-identity-evaluation/1",
+  "engine": {
+    "name": "synthetic-only",
+    "modality": "face",
+    "model_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "preprocessing": "synthetic-cosine-v1"
+  },
+  "synthetic": true,
+  "trials": [
+    {
+      "id": "calibration0",
+      "split": "calibration",
+      "sessions": [
+        "calibrationa0",
+        "calibrationb0"
+      ],
+      "genuine": true,
+      "score": 0.8
+    },
+    {
+      "id": "calibration1",
+      "split": "calibration",
+      "sessions": [
+        "calibrationa1",
+        "calibrationb1"
+      ],
+      "genuine": true,
+      "score": 0.7
+    },
+    {
+      "id": "calibration2",
+      "split": "calibration",
+      "sessions": [
+        "calibrationa2",
+        "calibrationb2"
+      ],
+      "genuine": false,
+      "score": 0.2
+    },
+    {
+      "id": "calibration3",
+      "split": "calibration",
+      "sessions": [
+        "calibrationa3",
+        "calibrationb3"
+      ],
+      "genuine": false,
+      "score": 0.4
+    },
+    {
+      "id": "validation0",
+      "split": "validation",
+      "sessions": [
+        "validationa0",
+        "validationb0"
+      ],
+      "genuine": true,
+      "score": 0.8
+    },
+    {
+      "id": "validation1",
+      "split": "validation",
+      "sessions": [
+        "validationa1",
+        "validationb1"
+      ],
+      "genuine": true,
+      "score": 0.7
+    },
+    {
+      "id": "validation2",
+      "split": "validation",
+      "sessions": [
+        "validationa2",
+        "validationb2"
+      ],
+      "genuine": false,
+      "score": 0.2
+    },
+    {
+      "id": "validation3",
+      "split": "validation",
+      "sessions": [
+        "validationa3",
+        "validationb3"
+      ],
+      "genuine": false,
+      "score": 0.4
+    }
+  ]
+}

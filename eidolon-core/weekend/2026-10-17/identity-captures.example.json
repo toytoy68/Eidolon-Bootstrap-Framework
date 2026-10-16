@@ -1,0 +1,50 @@
+{
+  "schema": "eidolon-identity-captures/1",
+  "modality": "face",
+  "synthetic": false,
+  "consented": false,
+  "samples": [
+    {
+      "id": "calibration0",
+      "subject": "person-a",
+      "session": "calibration0",
+      "split": "calibration",
+      "path": "calibration0.jpg"
+    },
+    {
+      "id": "calibration1",
+      "subject": "person-a",
+      "session": "calibration1",
+      "split": "calibration",
+      "path": "calibration1.jpg"
+    },
+    {
+      "id": "calibration2",
+      "subject": "person-b",
+      "session": "calibration2",
+      "split": "calibration",
+      "path": "calibration2.jpg"
+    },
+    {
+      "id": "validation0",
+      "subject": "person-a",
+      "session": "validation0",
+      "split": "validation",
+      "path": "validation0.jpg"
+    },
+    {
+      "id": "validation1",
+      "subject": "person-a",
+      "session": "validation1",
+      "split": "validation",
+      "path": "validation1.jpg"
+    },
+    {
+      "id": "validation2",
+      "subject": "person-b",
+      "session": "validation2",
+      "split": "validation",
+      "path": "validation2.jpg"
+    }
+  ]
+}

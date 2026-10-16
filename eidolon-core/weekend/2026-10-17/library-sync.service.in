@@ -1,0 +1,24 @@
+# Eidolon Core Technologies (ECT) — candidat G273, jamais installé automatiquement.
+[Unit]
+Description=Eidolon Core — bibliothèque d'extraits autorisée
+After=network-online.target
+
+[Service]
+Type=simple
+User=@CORE_USER@
+Environment=PYTHONPATH=/SOURCE/CORE/eidolon-core/src
+ExecStart=/VENV/bin/python -B -m eidolon_core.library_sync --config /CONFIG/runtime.json --directory /ETAT/PROFILE-SERVICES --client pc-toytoy --root documents --sync --watch --interval 300
+UMask=0077
+Nice=10
+CPUQuota=10%
+MemoryMax=768M
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/ETAT/PROFILE-SERVICES
+ReadOnlyPaths=/RACINE/DOCUMENTS
+Restart=on-failure
+RestartSec=60
+TimeoutStopSec=45
+
+[Install]
+WantedBy=multi-user.target

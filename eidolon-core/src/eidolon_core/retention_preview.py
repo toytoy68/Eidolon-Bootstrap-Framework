@@ -57,8 +57,8 @@ def preview(directory, *, days, now=None, protected_roots=None):
             with database(directory,name) as db:
                 stores.append(name)
                 if name=='library.sqlite3':
-                    rows=db.execute("SELECT v.rowid,v.*,EXISTS(SELECT 1 FROM files f WHERE f.profile=v.profile AND f.root=v.root AND f.path=v.path AND f.sha=v.sha) AS current FROM versions v LIMIT 10001").fetchall()
-                    if len(rows)>10000: raise ValueError("RETENTION_BUDGET")
+                    if db.execute("SELECT count(*) FROM versions").fetchone()[0]>10000: raise ValueError("RETENTION_BUDGET")
+                    rows=db.execute("SELECT v.rowid,v.*,EXISTS(SELECT 1 FROM files f WHERE f.profile=v.profile AND f.root=v.root AND f.path=v.path AND f.sha=v.sha) AS current FROM versions v")
                     for r in rows:
                         size=len(r['excerpt'].encode());logical+=size
                         at=datetime.fromisoformat(r['created_at'])
@@ -67,8 +67,8 @@ def preview(directory, *, days, now=None, protected_roots=None):
                             items.append({'store':name,'row':r['rowid'],'operation':'REVIEW_EXCERPT_REDACTION','bytes':size,'payload_sha256':hashlib.sha256(r['excerpt'].encode()).hexdigest()})
                         else: protected+=1
                 else:
-                    rows=db.execute("SELECT id,proposal,result,state FROM actions LIMIT 10001").fetchall()
-                    if len(rows)>10000: raise ValueError("RETENTION_BUDGET")
+                    if db.execute("SELECT count(*) FROM actions").fetchone()[0]>10000: raise ValueError("RETENTION_BUDGET")
+                    rows=db.execute("SELECT id,proposal,result,state FROM actions")
                     for r in rows:
                         logical+=len(r['proposal'].encode())+len((r['result'] or '').encode());protected+=1
                     # Receipts preserve idempotence and effects; never select by age alone.

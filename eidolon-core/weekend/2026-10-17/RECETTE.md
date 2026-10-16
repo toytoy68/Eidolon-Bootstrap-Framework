@@ -1,3 +1,5 @@
+> **G273 :** le dossier comporte maintenant 50 cas. Compléter G19–G24 selon SERVICES-HORS-VM-G273.md après la recette du socle. Aucun résultat machine n’est prérempli comme réussi.
+
 > **Complément G272 :** après les raccordements ci-dessous, suivre DOCUMENTS-G272, PROFILS-ENROLEMENT-G272 et ETAT-PRIVE-G272. Les preuves comprennent maintenant G11–G18, soit 44 cas. Tous restent NOT_RUN dans le modèle.
 
 > **G270 :** cette recette conserve les contrôles initiaux du socle G269. Le parcours complet profils/chat/Internet/fichiers/activité entre VM et résident Windows est dans [RACCORDEMENTS-G270.md](RACCORDEMENTS-G270.md). Les options `--memory-bridge-token-file` du socle et `--beta-runtime` du parcours profils sont exclusives.
@@ -6,12 +8,12 @@
 
 ## 1. PC : contrôler et extraire les fichiers
 
-Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g272.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g272.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
+Télécharger le ZIP et sa somme SHA-256 depuis le rapport de livraison. Comparer avec `Get-FileHash .\eidolon-weekend-2026-10-17-g273.zip -Algorithm SHA256`, puis extraire dans un **nouveau dossier**. Ne pas écraser une installation existante. Extraire ensuite `eidolon-sources-g273.zip` dans ce nouveau dossier pour obtenir `sources/`. Le sous-paquet `eidolon-windows-g270.zip` contient le binaire et les deux scripts à placer dans un dossier Windows privé stable.
 
 Depuis la racine extraite, avec Python disponible :
 
 ```powershell
-python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g272.zip
+python .\sources\core\eidolon-core\tools\build_weekend_bundle.py --verify C:\CHEMIN\eidolon-sources-g273.zip
 $EidolonKit = '.\sources\core\eidolon-core\weekend\2026-10-17'
 & "$EidolonKit\inventory_pc.ps1" -Port 8767 > .\pc-inventory.json
 Copy-Item "$EidolonKit\results.template.json" .\results-weekend.json

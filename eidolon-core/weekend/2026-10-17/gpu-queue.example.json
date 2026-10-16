@@ -1,0 +1,8 @@
+{
+  "schema": "eidolon-gpu-queue/1",
+  "directory": "/ETAT/GPU-QUEUE",
+  "capacity_mib": 8192,
+  "resident_mib": 4096,
+  "dialogue_mib": 2048,
+  "media_mib": 4096
+}

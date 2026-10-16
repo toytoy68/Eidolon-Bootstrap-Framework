@@ -1,3 +1,5 @@
+> Vue actualisée après les cinq compléments : [BACKLOG-BETA-ACTUEL-G273.md](BACKLOG-BETA-ACTUEL-G273.md). Ce document conserve le constat G272.
+
 # Backlog bêta actuel — G272, 15 octobre 2026
 
 Cette vue rapproche les livraisons G269–G272 du besoin serveur/PC. La TODO longue

@@ -1,3 +1,16 @@
+## G273 — cinq compléments hors VM, 16 octobre 2026
+
+Vue courante : [backlog G273](docs/BACKLOG-BETA-ACTUEL-G273.md).
+
+- [x] Synchronisation périodique de racines autorisées, versions/extraits, doublons, reprise et consultation isolée par profil ; aucune écriture Memory implicite.
+- [x] Aperçu de conservation : volumes, protections et candidats d’anciens extraits ; aucun exécuteur de purge.
+- [x] Session fermée/verrouillée localement, changement explicite de clé, retrait de sa propre clé et rotation/inventaire opérateur.
+- [x] Mesure de captures existantes consenties et évaluation séparant calibration/validation, faux positifs/négatifs et incertitude ; aucun seuil activé.
+- [x] File GPU coopérative partagée avec dialogue et worker média, budgets déclarés, priorité/vieillissement, réservations incertaines conservées.
+- [x] Procédures et exemples, recette portée à 50 cas NOT_RUN sur les machines cibles.
+- [ ] Installation et qualification PC/VM, modèles/corpus/captures réels, budgets mesurés, durées de conservation et compte C187.
+- [ ] Extensions distinctes : purge coordonnée, agent de suivi Windows natif, connexion biométrique multipersonne, moteurs non participants et médias avancés.
+
 ## Mise à jour G272 — parcours explicites hors VM
 
 Vue de référence : [backlog actuel par priorité](docs/BACKLOG-BETA-ACTUEL-G272.md).
