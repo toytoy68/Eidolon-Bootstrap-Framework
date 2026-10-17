@@ -35,6 +35,14 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node --test tests/pairing.test.js
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Safe launch failure diagnostic
+        shell: powershell
+        run: |
+          powershell -NoProfile -File ../windows/eidolon-open.ps1 -ClientExe missing-fixture.exe
+          if ($LASTEXITCODE -ne 2) { throw 'Missing client was not refused' }
+          $report=Get-Content (Join-Path $env:LOCALAPPDATA 'Eidolon/last-launch-error.txt') -Raw
+          if ($report -notmatch 'Etape=fichiers-du-paquet ; Code=CLIENT_EXE_MISSING') { throw 'Safe diagnostic missing' }
+          if ($report -match 'ecc_|dpapi|password') { throw 'Unexpected credential in diagnostic' }
       - name: Native client tests and release build (locked dependencies)
         run: |
           cargo test --locked
