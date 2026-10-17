@@ -7,7 +7,7 @@
 # ==========================================================
 [CmdletBinding()]
 param(
-    [string]$ClientExe = (Join-Path $PSScriptRoot 'eidolon-consultation.exe'),
+    [string]$ClientExe,
     [string]$Server = '192.168.1.101',
     [string]$User = 'toytoy',
     [ValidateRange(1024,65535)][int]$Port = 8767,
@@ -42,6 +42,10 @@ if ($MyInvocation.InvocationName -eq '.') { return }
 
 $stage='initialisation'
 try {
+    # Resolve only after parameter binding: PSScriptRoot can be empty in a param default.
+    $scriptDirectory=[IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Path)
+    if ([string]::IsNullOrWhiteSpace($scriptDirectory)) { throw 'LAUNCHER_DIRECTORY_MISSING' }
+    if ([string]::IsNullOrWhiteSpace($ClientExe)) { $ClientExe=Join-Path $scriptDirectory 'eidolon-consultation.exe' }
     if ($env:OS -ne 'Windows_NT') { throw 'WINDOWS_REQUIRED' }
     if ($Server -notmatch '\A[A-Za-z0-9][A-Za-z0-9.-]{0,251}\z' -or
         $User -notmatch '\A[A-Za-z_][A-Za-z0-9_.-]{0,31}\z' -or
@@ -60,7 +64,7 @@ try {
     $stage='fichiers-du-paquet'
     if (-not (Test-Path -LiteralPath $ClientExe -PathType Leaf)) { throw 'CLIENT_EXE_MISSING' }
     $stage='chargement-du-tunnel'
-    . (Join-Path $PSScriptRoot 'eidolon-auto-tunnel.ps1')
+    . (Join-Path $scriptDirectory 'eidolon-auto-tunnel.ps1')
     $stage='connexion-SSH'
     Start-EidolonTunnel $Server $User $Port
     if (Test-Path -LiteralPath $file) {
@@ -98,7 +102,7 @@ try {
     Write-Host '[INFO] Eidolon lance : ouverture automatique de la conversation.'
 } catch {
     # Only fixed codes/stages and a source line number: never raw exceptions or credentials.
-    $known=@('WINDOWS_REQUIRED','PAIRING_TARGET_INVALID','CLIENT_EXE_MISSING','PAIRING_KEY_INVALID',
+    $known=@('LAUNCHER_DIRECTORY_MISSING','WINDOWS_REQUIRED','PAIRING_TARGET_INVALID','CLIENT_EXE_MISSING','PAIRING_KEY_INVALID',
         'PAIRING_BINDING_INVALID','PAIRING_SSH_FAILED','TUNNEL_PORT_OCCUPIED','TUNNEL_TARGET_INVALID',
         'TUNNEL_BUSY','TUNNEL_CONNECTION_FAILED')
     $code='WINDOWS_OPERATION_FAILED'

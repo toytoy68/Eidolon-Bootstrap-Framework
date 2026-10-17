@@ -43,7 +43,12 @@ jobs:
           $report=Get-Content (Join-Path $env:LOCALAPPDATA 'Eidolon/last-launch-error.txt') -Raw
           if ($report -notmatch 'Etape=fichiers-du-paquet ; Code=CLIENT_EXE_MISSING') { throw 'Safe diagnostic missing' }
           if ($report -match 'ecc_|dpapi|password') { throw 'Unexpected credential in diagnostic' }
-          exit 0 # expected child exit 2 was checked above; do not propagate it to the runner
+          # Exact native launcher invocation: no ClientExe parameter, from another directory.
+          powershell -NoProfile -File ../windows/eidolon-open.ps1
+          if ($LASTEXITCODE -ne 2) { throw 'Default path binding failed before the controlled diagnostic' }
+          $report=Get-Content (Join-Path $env:LOCALAPPDATA 'Eidolon/last-launch-error.txt') -Raw
+          if ($report -notmatch 'Etape=fichiers-du-paquet ; Code=CLIENT_EXE_MISSING') { throw 'Default client was not resolved from the script directory' }
+          exit 0 # expected child failures above are test outcomes
       - name: Native client tests and release build (locked dependencies)
         run: |
           cargo test --locked
