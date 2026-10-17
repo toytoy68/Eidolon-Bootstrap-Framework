@@ -37,11 +37,12 @@ $script:waitResults=@()
 $script:windowStyles=@()
 function Test-EidolonTunnelReady { return $script:reuse }
 function Start-Process {
-    param($FilePath,$ArgumentList,$WindowStyle,[switch]$PassThru)
+    param([string]$FilePath,[string[]]$ArgumentList,[string]$WindowStyle,[switch]$PassThru)
     $script:created++
     $script:windowStyles+=@($WindowStyle)
-    if ($FilePath -ne $ssh -or $ArgumentList -notcontains 'StrictHostKeyChecking=yes' -or
-        $ArgumentList -notcontains '127.0.0.1:18767:127.0.0.1:18767') { throw 'Incorrect SSH command' }
+    if ($FilePath -ne $ssh) { throw ('Incorrect SSH path: '+$FilePath+' expected '+$ssh) }
+    if ($ArgumentList -notcontains 'StrictHostKeyChecking=yes') { throw ('Host checking missing: '+($ArgumentList -join '|')) }
+    if ($ArgumentList -notcontains '127.0.0.1:18767:127.0.0.1:18767') { throw ('Forward missing: '+($ArgumentList -join '|')) }
     if ($script:created -eq 1 -and $ArgumentList -notcontains 'BatchMode=yes') { throw 'Silent key authentication missing' }
     $fake=[pscustomobject]@{HasExited=$false; Id=12345}
     $fake | Add-Member ScriptMethod Kill { $script:killed++; $this.HasExited=$true }
