@@ -31,6 +31,8 @@ jobs:
         run: |
           powershell -NoProfile -File ../windows/test-pairing.ps1
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell -NoProfile -File ../windows/test-auto-tunnel.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node --test tests/pairing.test.js
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Native client tests and release build (locked dependencies)
@@ -89,19 +91,19 @@ jobs:
       - name: Prepare the user ZIP
         shell: powershell
         run: |
-          $package=Join-Path $env:RUNNER_TEMP 'eidolon-pc-g283'
+          $package=Join-Path $env:RUNNER_TEMP 'eidolon-pc-g284'
           New-Item -ItemType Directory -Path $package | Out-Null
           Copy-Item target/release/Eidolon.exe,target/release/eidolon-consultation.exe -Destination $package
-          Copy-Item ../windows/eidolon-open.ps1 -Destination $package
-          Copy-Item ../../weekend/2026-10-17/windows-g283/* -Destination $package
+          Copy-Item ../windows/eidolon-open.ps1,../windows/eidolon-auto-tunnel.ps1 -Destination $package
+          Copy-Item ../../weekend/2026-10-17/windows-g284/* -Destination $package
           Get-ChildItem $package -File | ForEach-Object { ((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()+'  '+$_.Name) } | Set-Content -Encoding ascii (Join-Path $package 'SHA256SUMS.txt')
-          Compress-Archive -Path (Join-Path $package '*') -DestinationPath target/release/eidolon-pc-g283.zip
+          Compress-Archive -Path (Join-Path $package '*') -DestinationPath target/release/eidolon-pc-g284.zip
       - uses: actions/upload-artifact@v4
         with:
           name: eidolon-windows-candidate
           path: |
             eidolon-core/desktop/tauri/target/release/eidolon-consultation.exe
             eidolon-core/desktop/tauri/target/release/Eidolon.exe
-            eidolon-core/desktop/tauri/target/release/eidolon-pc-g283.zip
+            eidolon-core/desktop/tauri/target/release/eidolon-pc-g284.zip
             eidolon-core/desktop/tauri/target/release/SHA256SUMS.txt
             eidolon-core/desktop/windows/*.ps1

@@ -57,11 +57,13 @@ try {
         exit 0
     }
     if (-not (Test-Path -LiteralPath $ClientExe -PathType Leaf)) { throw 'CLIENT_EXE_MISSING' }
+    . (Join-Path $PSScriptRoot 'eidolon-auto-tunnel.ps1')
+    Start-EidolonTunnel $Server $User $Port
     if (Test-Path -LiteralPath $file) {
         $key = Read-EidolonPairing (Get-Content -LiteralPath $file -Raw) $binding
     } else {
         Write-Host '[INFO] Premier appairage : authentification SSH requise une seule fois pour recuperer la cle.'
-        Write-Host '[INFO] Le tunnel doit avoir deja valide la cle SSH du serveur.'
+        Write-Host '[INFO] Le tunnel automatique a verifie le serveur SSH connu.'
         # Host key must already be trusted by the existing tunnel. No key on stdout.
         $lines = @(& ssh -o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-ed25519 "$User@$Server" "cat -- $RemoteKey")
         if ($LASTEXITCODE -ne 0 -or $lines.Count -ne 1) { throw 'PAIRING_SSH_FAILED' }
