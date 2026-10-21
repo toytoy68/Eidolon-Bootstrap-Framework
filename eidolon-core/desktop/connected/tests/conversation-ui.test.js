@@ -14,7 +14,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const { spawn, spawnSync } = require("node:child_process");
 const path = require("node:path");
-const { WEB_ROOT, PYTHON, ENV, CORE, CAPTURES, chromium, chromiumUnavailable, noPython, makeFixture, startServer, cleanup } =
+const { WEB_ROOT, PYTHON, ENV, CORE, CAPTURES, chromium, chromiumUnavailable, noPython, makeFixture, startServer, openDisclosure, cleanup } =
   require("./helpers.js");
 
 const SKIP = noPython || chromiumUnavailable;
@@ -81,12 +81,13 @@ test("keyboard only: open, send, focus returns to the message, visible focus on 
       await say(page, "Diagnostique le nas.");
       assert.equal(await page.evaluate(() => document.activeElement.id), "conv-text");
       assert.match(await page.textContent("#conv-log .conv-model-id"), /^Modèle : simulated/);   // G098
+      await openDisclosure(page, ".conv-options");
       for (const id of ["conv-text", "conv-send", "conv-reason", "conv-submit", "conv-close"]) {
         await page.focus("#" + id);
         const outline = await page.evaluate((i) => parseFloat(getComputedStyle(document.getElementById(i)).outlineWidth), id);
         assert.ok(outline >= 2, id + " has no visible focus indicator");
       }
-      await page.click("#conv-close");
+      await openDisclosure(page, ".conv-options"); await page.click("#conv-close");
       assert.equal(await page.evaluate(() => document.activeElement.id), "conv-key");
       assert.equal(await page.textContent("#mode-badge"), "Consultation seule");
     });
@@ -121,7 +122,7 @@ test("an answer arriving after the conversation was closed is ignored", { skip: 
     await page.fill("#conv-text", "Diagnostique le nas.");
     await page.click("#conv-send");
     await page.waitForFunction(() => /Envoyé/.test(document.getElementById("conv-log").textContent));
-    await page.click("#conv-close");
+    await openDisclosure(page, ".conv-options"); await page.click("#conv-close");
     release();
     await page.waitForTimeout(800);
     assert.equal(await page.locator("#conv-log li").count(), 0);
@@ -161,6 +162,7 @@ test("reload then resume: earlier turns and proposal come back, nothing is resen
     const writes = [];
     page.on("request", (r) => { if (/\/v1\/conversations\/(turn|submit|cancel|resolve)$/.test(r.url())) writes.push(r.url()); });
     await openByKeyboard(page, fx.key);
+    await openDisclosure(page, "#conv-recent");
     await page.waitForSelector("#conv-recent:not([hidden]) button[data-resume]");
     await page.click("#conv-recent-list button[data-resume]");
     await page.waitForFunction(() => document.querySelectorAll("#conv-log li").length === 2);
@@ -180,7 +182,7 @@ test("G272: session boundaries clear media drafts before another profile can see
     await page.click("#image-prepare");
     await page.waitForSelector("#image-draft:not([hidden])");
     await openByKeyboard(page, fx.key);
-    await page.click("#conv-close");
+    await openDisclosure(page, ".conv-options"); await page.click("#conv-close");
     assert.equal(await page.locator("#image-draft").isHidden(), true);
     assert.equal(await page.inputValue("#image-prompt"), "");
     await openByKeyboard(page, fx.key);
@@ -319,7 +321,8 @@ test("G122/G123: a media request from the real dialogue becomes a queue ticket; 
       if (CAPTURES) await page.locator("#conversation").screenshot({ path: path.join(CAPTURES, "page-demande-media-360.png") });
       await page.reload();
       await openByKeyboard(page, fx.key);
-      await page.waitForSelector("#conv-recent:not([hidden]) button[data-resume]");
+      await openDisclosure(page, "#conv-recent");
+    await page.waitForSelector("#conv-recent:not([hidden]) button[data-resume]");
       await page.click("#conv-recent-list button[data-resume]");
       await page.waitForFunction(() => /Image — création/.test(document.getElementById("conv-proposal-request").textContent));
     }, { media: true });

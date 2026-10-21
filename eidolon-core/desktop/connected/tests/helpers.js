@@ -162,5 +162,15 @@ async function cleanup({ browser, servers = [], dirs = [] }) {
   if (errors.length) throw errors[0];
 }
 
+// Exercise the real keyboard disclosure control; do not force-click hidden children.
+async function openDisclosure(page, selector) {
+  const details = page.locator(selector);
+  await details.waitFor({ state: "visible" });
+  if (!(await details.evaluate(element => element.open))) {
+    await details.locator(":scope > summary").focus();
+    await page.keyboard.press("Enter");
+  }
+}
+
 module.exports = { CORE, WEB_ROOT, PYTHON, CAPTURES, ENV, chromium, chromiumUnavailable, hasPython, noPython,
-  cli, makeState, makeFixture, makeArchiveFixture, bulkCreate, startServer, stop, nodeTransport, cleanup };
+  cli, makeState, makeFixture, makeArchiveFixture, bulkCreate, startServer, stop, nodeTransport, cleanup, openDisclosure };

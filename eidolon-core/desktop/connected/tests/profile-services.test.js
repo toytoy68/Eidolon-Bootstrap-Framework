@@ -12,7 +12,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawn, spawnSync } = require('node:child_process');
 const S = require('../src/profile-services.js');
-const { CORE, ENV, PYTHON, WEB_ROOT, chromium, chromiumUnavailable, noPython, makeFixture, startServer, cleanup, nodeTransport } = require('./helpers.js');
+const { CORE, ENV, PYTHON, WEB_ROOT, chromium, chromiumUnavailable, noPython, makeFixture, startServer, openDisclosure, cleanup, nodeTransport } = require('./helpers.js');
 
 test('service payloads never include client identity, actor or absolute root', () => {
   assert.deepEqual(S.parameters('remember', 'exact text', ''), { text: 'exact text' });
@@ -75,7 +75,7 @@ test('Chromium: selected PC document is only uploaded on request, confirmed and 
     await page.click('#service-confirm');await page.waitForSelector('#service-discuss:not([hidden])');
     const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/turn')),page.click('#service-discuss')]);
     assert.equal((await response.json()).reply.context.observations_sent,1);
-    await page.fill('#conv-text','Brouillon privé');await page.click('#conv-close');
+    await page.fill('#conv-text','Brouillon privé');await openDisclosure(page, ".conv-options"); await page.click('#conv-close');
     assert.equal(await page.inputValue('#conv-text'),'');assert.equal(await page.textContent('#service-output'),'');
   }finally{await cleanup({browser,servers:[server],dirs:[fx.dir]});}
 });
@@ -100,7 +100,7 @@ test('Chromium: voluntary enrolment uses real paired routes with synthetic encod
     await page.click('#identity-delete');await page.click('#identity-delete-confirm');
     await page.waitForFunction(()=>document.getElementById('identity-output').textContent.includes('retirés du registre actif'));
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
-    await page.click('#conv-close');assert.equal(await page.textContent('#identity-output'),'');
+    await openDisclosure(page, ".conv-options"); await page.click('#conv-close');assert.equal(await page.textContent('#identity-output'),'');
     assert.equal(await page.isChecked('#identity-consent'),false);assert.deepEqual(errors,[]);
   }finally{await cleanup({browser,servers:[server],dirs:[fx.dir]});}
 });
@@ -130,7 +130,7 @@ test('Chromium: prepare, confirm, reload receipts and close clears profile data'
     assert.match(turnResponse.request().postDataJSON().source_action,/^[0-9a-f]{32}$/);
     await open(); await page.click('#service-receipts'); await page.waitForSelector('#service-output button');
     await page.click('#service-output button'); assert.match(await page.textContent('#service-output'),/Un fichier synthétique/);
-    await page.click('#conv-close'); assert.equal(await page.textContent('#service-output'),'');
+    await openDisclosure(page, ".conv-options"); await page.click('#conv-close'); assert.equal(await page.textContent('#service-output'),'');
     assert.deepEqual(errors,[]);
   } finally { await cleanup({browser,servers:[server],dirs:[fx.dir]}); }
 });
@@ -150,7 +150,7 @@ test('G273 Chromium: synchronized library, session locking and explicit key revo
     await page.waitForSelector('#service-library-list button');assert.match(await page.textContent('#service-library-list'),/note.txt/);
     assert.match(await page.textContent('#service-library-list'),/empty.txt.*sans extrait.*DOCUMENT_SIZE_INVALID/);
     await page.locator('#service-library-list button').filter({hasText:'note.txt'}).click();assert.equal(await page.inputValue('#service-value'),'note.txt');
-    await page.click('#conv-close');assert.equal(await page.textContent('#service-library-list'),'');
+    await openDisclosure(page, ".conv-options"); await page.click('#conv-close');assert.equal(await page.textContent('#service-library-list'),'');
     await page.fill('#conv-key',cfg.key);await page.press('#conv-key','Enter');await page.waitForSelector('#conv-revoke:not([hidden])');
     await page.click('#conv-revoke');await page.waitForSelector('#conv-revoke-confirm:not([hidden])');
     const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/session_revoke')),page.click('#conv-revoke-confirm')]);

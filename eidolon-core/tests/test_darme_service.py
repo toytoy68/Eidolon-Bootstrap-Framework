@@ -93,3 +93,41 @@ class ServiceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 validate_config(data)
         self.assertEqual(validate_config({'units':[UNIT], 'interval':10})['interval'], 10)
+
+    def test_retirement_preserves_alert_without_probing_retired_source(self):
+        self.healthy = False
+        self.collector.sample()
+        calls = []
+        def probe(unit):
+            calls.append(unit)
+            return True
+        collector = Collector(self.journal, ['ollama.service'], self.temp.name,
+                              probe, lambda _: self.disk, retired_units=[UNIT])
+        collector.sample()
+        state = collector.status()
+        self.assertEqual(calls, ['ollama.service'])
+        self.assertEqual(state['unacknowledged_alerts'], 1)
+        self.assertEqual(state['badge'], 'red')
+        self.assertNotIn(UNIT, state['sources'])
+        self.assertEqual(state['retired_sources'], [UNIT])
+        identity = next(iter(collector.monitor.events))
+        self.journal.acknowledge(identity, 'test-operator', 'source retired after migration')
+        collector.sample()
+        self.assertEqual(collector.status()['unacknowledged_alerts'], 0)
+        self.assertEqual(self.journal.db.execute('SELECT count(*) FROM events').fetchone()[0], 1)
+        restarted = Collector(self.journal, ['ollama.service'], self.temp.name,
+                              probe, lambda _: self.disk, retired_units=[UNIT])
+        restarted.sample()
+        self.assertEqual(restarted.status()['unacknowledged_alerts'], 0)
+
+    def test_retired_allowlist_rejects_overlap_duplicates_and_unknown(self):
+        for retired in ([UNIT], ['sshd.service'], ['ollama.service']*2, 'ollama.service', [{}]):
+            with self.assertRaises(ValueError):
+                validate_config({'units':[UNIT], 'interval':10, 'retired_units':retired})
+
+    def test_retirement_does_not_accept_unknown_historical_sources(self):
+        self.healthy = False
+        self.collector.sample()
+        with self.assertRaises(ValueError):
+            Collector(self.journal, ['ollama.service'], self.temp.name,
+                      lambda _: True, lambda _: self.disk)

@@ -2618,3 +2618,12 @@ réussis ; compilation Mono, pas de validation physique ni de build Tauri Window
 Publication publique refusée par la revue automatique, donc aucun push et aucune
 CI Windows déclenchée. Autorisation publique explicite à demander à toytoy.
 [Résultats et limites](docs/G286-ONE-CLICK-VOICE-PIXY-GEMMA.md).
+
+## G287 — qualification Eva Hermes, contrôle DARME et livraison Windows
+
+22/10/2026, Codex/GPT. Base publique `33e093c`, G286 publié après autorisation
+explicite de toytoy dans cette session ; compilation Windows déclenchée.
+Lot réservé : évaluation Qwen3-4B Element8 Eva Hermes Heretic avec Core, contrôle
+du service DARME et correction de sa surveillance GPU obsolète, suivi CI Windows.
+Historique retrouvé : Qwen préféré pour le chat le 18/10 ; DARME conservé en
+règles CPU, aucun modèle dédié adopté. Les essais n'accordent aucun droit au LLM.

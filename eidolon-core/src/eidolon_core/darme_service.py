@@ -24,10 +24,12 @@ from .darme_machine import MachineMetrics
 
 ALLOWED_UNITS = frozenset(('eidolon-core-api.service', 'eidolon-gpu-tunnel.service',
                           'eidolon-memory-tunnel.service', 'eidolon-memory-bridge.service',
-                          'eidolon-collaboration.service', 'eidolon-darme-ssh.service'))
+                          'eidolon-collaboration.service', 'eidolon-darme-ssh.service',
+                          'ollama.service', 'eidolon-comm.service', 'eidolon-monitor.service'))
 
 def validate_config(data):
-    if not isinstance(data, dict) or set(data) not in ({'units', 'interval'}, {'units', 'interval', 'ssh_feed'}):
+    if (not isinstance(data, dict) or not {'units', 'interval'} <= set(data)
+            or set(data) - {'units', 'interval', 'ssh_feed', 'retired_units'}):
         raise ValueError('invalid configuration')
     units = data['units']
     if (not isinstance(units, list) or not units or len(set(units)) != len(units)
@@ -37,6 +39,10 @@ def validate_config(data):
         raise ValueError('invalid polling interval')
     if 'ssh_feed' in data and type(data['ssh_feed']) is not bool:
         raise ValueError('invalid SSH feed setting')
+    retired = data.get('retired_units', [])
+    if (not isinstance(retired, list) or any(type(unit) is not str or unit not in ALLOWED_UNITS for unit in retired)
+            or len(set(retired)) != len(retired) or set(retired) & set(units)):
+        raise ValueError('invalid retired unit allowlist')
     return data
 
 def probe(unit):
@@ -50,11 +56,15 @@ def probe(unit):
 
 class Collector:
     def __init__(self, journal, units, directory, service_probe=probe, disk_probe=shutil.disk_usage,
-                 *, ssh_feed=False):
+                 *, ssh_feed=False, retired_units=()):
         self.journal, self.units, self.directory = journal, units, directory
         self.service_probe, self.disk_probe = service_probe, disk_probe
         self.previous = {}
-        self.sources = list(units) + ['journal-disk', 'security-telemetry']
+        # Retired sources remain trusted for historical replay, never for new probing.
+        # Retirement neither deletes nor acknowledges their existing alerts.
+        self.retired_units = tuple(retired_units)
+        validate_config({'units':list(units),'interval':10,'retired_units':list(retired_units)})
+        self.sources = list(units) + list(retired_units) + ['journal-disk', 'security-telemetry']
         self.feed = None
         if ssh_feed:
             from .darme_ssh import FeedVerifier
@@ -121,6 +131,13 @@ class Collector:
     def status(self):
         result = self.monitor.snapshot()
         result.pop('events')  # Read endpoint never discloses raw event subjects.
+        for source in self.retired_units:
+            result['sources'].pop(source, None)
+        result['retired_sources'] = list(self.retired_units)
+        # Retired sources are not claimed healthy and do not count as active coverage.
+        result['visibility'] = 'complete' if all(result['sources'].values()) and not result['ingestion_paused'] else 'partial'
+        if result['badge'] not in ('red', 'blue'):
+            result['badge'] = 'gold' if result['visibility'] == 'complete' else 'grey'
         result.update(service_schema='eidolon-darme-service/1',
                       scope='local_service_availability_and_journal_disk',
                       security_telemetry_installed=False, advisor='fixed',
@@ -132,7 +149,8 @@ class Collector:
 def serve(config, state, runtime):
     units = validate_config(json.loads(Path(config).read_text()))
     journal = DarmeJournal(Path(state) / 'journal.sqlite')
-    collector = Collector(journal, units['units'], state, ssh_feed=units.get('ssh_feed', False))
+    collector = Collector(journal, units['units'], state, ssh_feed=units.get('ssh_feed', False),
+                          retired_units=units.get('retired_units', ()))
     endpoint = Path(runtime) / 'status.sock'
     # RuntimeDirectory is owned by the dedicated account; refuse unexpected objects.
     if endpoint.exists() or endpoint.is_symlink():
