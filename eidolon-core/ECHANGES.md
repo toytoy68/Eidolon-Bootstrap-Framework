@@ -2597,3 +2597,24 @@ appairage G279 conservé. Aucun redémarrage de service.
 ## G284 — tunnel automatique Windows, 17/10/2026
 
 Codex prend en charge le module tunnel, raccordement au lanceur, tests Windows et ZIP G284. Base distante a94f851. Appairage et client Tauri conserves ; aucune configuration SSH serveur modifiee.
+
+
+## G286 — ouverture en un clic, vocal au lancement et Gemma3, 22/10/2026
+
+Codex/GPT, base 3a48da4f986ec2cfa8713a1f3a92a994f2eefe59 ; C193 lu, déjà intégré.
+Autorisation directe toytoy : améliorer et déployer sur VM, préparer le client sans
+accès physique Windows, puis tester/améliorer Gemma3 4B. Réservation : lanceur
+Windows, coquille Tauri, démarrage vocal/périphériques, banc dialogue et réglage
+modèle. Connexion protégée automatique, profil toytoy existant ; aucun secret
+dans Git. Essais matériels Windows restent distincts des essais CI/VM.
+
+G286 réalisé côté sources et déployé sur Core (`5be99bd`) : connexion native
+supervisée, compte SSH restreint, vocal au lancement avec choix des périphériques,
+panneau Windows HID EMEET PIXY, adaptation Gemma3 4B. Réglage synthétique 4/10 →
+9/10, six cas supplémentaires réussis avec réserve de citation non pertinente.
+Rappel réel G277 : AZUR-277 retrouvé et cité après, absent avant ; santé API 200.
+Tests : 4 adaptation, 45 dialogue, 155 conversation, 38 JS et protocole natif
+réussis ; compilation Mono, pas de validation physique ni de build Tauri Windows.
+Publication publique refusée par la revue automatique, donc aucun push et aucune
+CI Windows déclenchée. Autorisation publique explicite à demander à toytoy.
+[Résultats et limites](docs/G286-ONE-CLICK-VOICE-PIXY-GEMMA.md).

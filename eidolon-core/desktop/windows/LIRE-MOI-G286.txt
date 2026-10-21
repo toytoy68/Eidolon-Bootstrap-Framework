@@ -1,0 +1,13 @@
+Eidolon Core — ouverture en un clic
+
+Le paquet personnel contient connection.json et une identité de connexion privée.
+Extrayez tout dans un dossier permanent, puis ouvrez Eidolon.exe. Aucun script
+PowerShell, mot de passe SSH ou tunnel manuel. Ne partagez pas le paquet personnel.
+Eidolon.exe --shortcut crée le raccourci Bureau si aucun raccourci n'existe.
+
+Le vocal démarre à l'ouverture de la conversation : Eidolon / Dis-moi, puis votre
+demande. Arrêter l'écoute coupe le micro jusqu'au prochain lancement/conversation.
+Les phrases de veille sont transcrites sur votre VM locale ; elles ne sont pas
+envoyées au dialogue sans appel reconnu. Caméra préparée, sans enregistrement.
+Windows doit autoriser les applications de bureau à accéder au micro et à la caméra.
+Le paquet générique CI ne contient aucun identifiant et ne peut pas se connecter.

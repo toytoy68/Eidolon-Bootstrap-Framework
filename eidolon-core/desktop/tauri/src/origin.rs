@@ -104,14 +104,14 @@ pub enum Device {
 pub enum Decision {
     /// WebView2 shows its own prompt: the person decides (Windows privacy settings still apply).
     AskUser,
+    Allow,
     Deny,
 }
 
-/// Microphone and camera: never granted by the shell itself, always asked to the person, and the page
-/// only asks after its switch is ticked. Autoplay keeps WebView2's default (the voice plays after a
-/// click). Everything else (location, notifications, clipboard, files, MIDI, sensors…) is refused.
-pub fn device_permission(device: Device) -> Decision {
+/// Operator-authorized paired desktop only; unpaired windows keep the browser prompt.
+pub fn device_permission(device: Device, trusted_paired: bool) -> Decision {
     match device {
+        Device::Microphone | Device::Camera | Device::Autoplay if trusted_paired => Decision::Allow,
         Device::Microphone | Device::Camera | Device::Autoplay => Decision::AskUser,
         Device::Other => Decision::Deny,
     }
@@ -122,11 +122,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn devices_are_asked_never_granted_and_the_rest_refused() {
-        assert_eq!(device_permission(Device::Microphone), Decision::AskUser);
-        assert_eq!(device_permission(Device::Camera), Decision::AskUser);
-        assert_eq!(device_permission(Device::Autoplay), Decision::AskUser);
-        assert_eq!(device_permission(Device::Other), Decision::Deny);
+    fn only_paired_desktop_devices_are_allowed() {
+        assert_eq!(device_permission(Device::Microphone, false), Decision::AskUser);
+        assert_eq!(device_permission(Device::Camera, false), Decision::AskUser);
+        assert_eq!(device_permission(Device::Autoplay, false), Decision::AskUser);
+        assert_eq!(device_permission(Device::Other, false), Decision::Deny);
+        for kind in [Device::Microphone, Device::Camera, Device::Autoplay] {
+            assert_eq!(device_permission(kind, true), Decision::Allow);
+        }
+        assert_eq!(device_permission(Device::Other, true), Decision::Deny);
     }
 
     fn os(v: &[&str]) -> Vec<OsString> {

@@ -36,13 +36,16 @@ fn main() {
         Err(error) => { eprintln!("eidolon-consultation : {error}"); std::process::exit(2); }
     };
     drop(raw_key);
+    let paired = auto_open.is_some();
     let start = origin::start_url(port);
     tauri::Builder::default()
         .setup(move |app| {
             let mut window = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(start.clone()));
-            if let Some(script) = &auto_open { window = window.initialization_script(script); }
+            if let Some(script) = &auto_open {
+                window = window.initialization_script("Object.defineProperty(window, '__EIDOLON_DESKTOP_AUTOSTART', {value:true});").initialization_script(script);
+            }
             window
-                .title(format!("Eidolon — consultation (127.0.0.1:{port})"))
+                .title("Eidolon")
                 .inner_size(1100.0, 800.0)
                 .devtools(false)
                 .on_navigation(move |url| {
@@ -57,16 +60,18 @@ fn main() {
                     eprintln!("eidolon-consultation : {}", origin::NEW_WINDOW_REFUSED);
                     NewWindowResponse::Deny
                 })
-                // G165: microphone/camera are asked to the person by WebView2, never granted here;
-                // every other permission (location, notifications, clipboard, files…) is refused.
-                .on_permission_request(|_, kind| {
+                // G286: operator-authorized paired desktop startup. OS privacy controls still apply.
+                // Navigation is origin-locked and Core CSP excludes external frames.
+                .on_permission_request(move |webview, kind| {
                     let device = match kind {
                         PermissionKind::Microphone => origin::Device::Microphone,
                         PermissionKind::Camera => origin::Device::Camera,
                         PermissionKind::Autoplay => origin::Device::Autoplay,
                         _ => origin::Device::Other,
                     };
-                    match origin::device_permission(device) {
+                    let trusted = paired && webview.url().map(|u| origin::allowed(&u, port)).unwrap_or(false);
+                    match origin::device_permission(device, trusted) {
+                        origin::Decision::Allow => PermissionResponse::Allow,
                         origin::Decision::AskUser => PermissionResponse::Default,
                         origin::Decision::Deny => PermissionResponse::Deny,
                     }

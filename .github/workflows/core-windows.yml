@@ -60,6 +60,11 @@ jobs:
         run: |
           powershell -NoProfile -File ../windows/build-launcher.ps1 -OutputDirectory target/release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+          & $compiler /nologo /target:exe /main:NativeProtocolTests /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Security.dll /reference:System.Web.Extensions.dll /out:target/release/native-tests.exe ../windows/EidolonLauncher.cs ../windows/PixyControl.cs ../windows/NativeProtocolTests.cs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & ./target/release/native-tests.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           powershell -NoProfile -File ../windows/test-launcher.ps1 -LauncherExe target/release/Eidolon.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Parse Windows scripts and exercise side-effect-free previews
@@ -105,19 +110,19 @@ jobs:
       - name: Prepare the user ZIP
         shell: powershell
         run: |
-          $package=Join-Path $env:RUNNER_TEMP 'eidolon-pc-g284'
+          $package=Join-Path $env:RUNNER_TEMP 'eidolon-pc-g286'
           New-Item -ItemType Directory -Path $package | Out-Null
-          Copy-Item target/release/Eidolon.exe,target/release/eidolon-consultation.exe -Destination $package
-          Copy-Item ../windows/eidolon-open.ps1,../windows/eidolon-auto-tunnel.ps1 -Destination $package
-          Copy-Item ../../weekend/2026-10-17/windows-g284/* -Destination $package
+          Copy-Item target/release/Eidolon.exe,target/release/eidolon-consultation.exe,target/release/Eidolon-camera.exe -Destination $package
+          Copy-Item ../windows/LIRE-MOI-G286.txt -Destination $package
           Get-ChildItem $package -File | ForEach-Object { ((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()+'  '+$_.Name) } | Set-Content -Encoding ascii (Join-Path $package 'SHA256SUMS.txt')
-          Compress-Archive -Path (Join-Path $package '*') -DestinationPath target/release/eidolon-pc-g284.zip
+          Compress-Archive -Path (Join-Path $package '*') -DestinationPath target/release/eidolon-pc-g286.zip
       - uses: actions/upload-artifact@v4
         with:
           name: eidolon-windows-candidate
           path: |
             eidolon-core/desktop/tauri/target/release/eidolon-consultation.exe
             eidolon-core/desktop/tauri/target/release/Eidolon.exe
-            eidolon-core/desktop/tauri/target/release/eidolon-pc-g284.zip
+            eidolon-core/desktop/tauri/target/release/Eidolon-camera.exe
+            eidolon-core/desktop/tauri/target/release/eidolon-pc-g286.zip
             eidolon-core/desktop/tauri/target/release/SHA256SUMS.txt
             eidolon-core/desktop/windows/*.ps1

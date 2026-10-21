@@ -293,3 +293,23 @@ test("G282: stopping while permission is pending releases late tracks and drops 
   const result=f.comm.listenAutomatic();f.comm.cancelTalk();release();
   assert.equal(await result,null);await new Promise(r=>setImmediate(r));assert.equal(f.media.live(),0);assert.equal(f.sent.length,0);
 });
+
+test('G286: stale selected microphone falls back once to OS default; refusal never retries', async()=>{
+  let calls=0;
+  const media=fakeMedia([{kind:'audioinput',deviceId:'default',label:'Windows default'}]);
+  const get=media.getUserMedia;
+  media.getUserMedia=async c=>{calls++;if(calls===1){const e=Error();e.name='OverconstrainedError';throw e;}return get(c);};
+  const {comm}=setup({media});await comm.refresh();await comm.enable('microphone');
+  assert.equal(calls,2);assert.equal(comm.state().microphone.state,'ready');assert.equal(media.live(),0);
+});
+
+test('G286: default Windows microphone takes precedence over enumeration order',async()=>{
+ const {comm}=setup({media:fakeMedia([{kind:'audioinput',deviceId:'other',label:'Other'}, {kind:'audioinput',deviceId:'default',label:'Default'}])});
+ await comm.refresh();assert.equal(comm.state().microphone.selected,'default');
+});
+
+test('G286: PIXY preferred when available, explicit camera choice is respected',async()=>{
+ const media=fakeMedia([{kind:'videoinput',deviceId:'other',label:'Other webcam'},{kind:'videoinput',deviceId:'pixy',label:'EMEET PIXY 4K'}]);
+ const {comm}=setup({media});await comm.refresh();assert.equal(comm.state().camera.selected,'pixy');
+ comm.select('camera','other');await comm.refresh();assert.equal(comm.state().camera.selected,'other');
+});

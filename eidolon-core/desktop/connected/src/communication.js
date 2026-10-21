@@ -69,6 +69,7 @@
     var listeners = [], talk = null, speakEpoch = 0, player = null, talkEpoch = 0;
     var cameraEpoch = 0, cameraStream = null, permissionEpoch = {microphone:0, camera:0};
     var sttKey = null, ttsKey = null, automaticDone = null, resetListeners = [];
+    var manualDevice = { microphone:false, camera:false };
 
     function emit() { listeners.forEach(function (fn) { fn(snapshotState()); }); }
     function set(kind, state, reason) { st[kind].state = state; st[kind].reason = reason || null; emit(); }
@@ -99,7 +100,11 @@
         var lost = !found.some(function (d) { return d.id === dev.selected; });
         // G165: the microphone unplugged while talking: capture dropped at once, nothing transcribed.
         if (lost && dev.selected !== null && kind === "microphone" && dev.state === "capturing") { cancelTalk(); dev.state = "disabled"; dev.reason = "débranché"; }
-        if (lost) dev.selected = found.length ? found[0].id : null;
+        if (kind === "camera" && !manualDevice.camera) {
+          var pixy = found.find(function (d) { return /pixy/i.test(d.label); });
+          if (pixy) { dev.selected = pixy.id; lost = false; }
+        }
+        if (lost) dev.selected = found.length ? (found.find(function (d) { return d.id === "default"; }) || found[0]).id : null;
         if (!found.length && dev.state !== "permission_denied") { dev.state = "unavailable"; dev.reason = null; }
         else if (found.length && dev.state === "unavailable") { dev.state = "disabled"; dev.reason = null; }
       });
@@ -116,7 +121,15 @@
       var constraints = kind === "microphone" ? { audio: dev.selected ? selection : true }
         : { video: Object.assign({}, selection, VIDEO) };
       try {
-        stopTracks(await deps.media.getUserMedia(constraints));       // permission only: nothing kept open
+        var stream;
+        try { stream = await deps.media.getUserMedia(constraints); }
+        catch (error) {
+          // A remembered/just-enumerated device can disappear before capture. Try OS default once.
+          if (!dev.selected || !["NotFoundError", "OverconstrainedError"].includes(error.name)) throw error;
+          stream = await deps.media.getUserMedia(kind === "microphone" ? {audio:true} : {video:VIDEO});
+          dev.selected = null;
+        }
+        stopTracks(stream); // permission/discovery only: nothing kept open
         if (permission !== permissionEpoch[kind]) return snapshotState();
         await refresh();
         if (permission !== permissionEpoch[kind]) return snapshotState();
@@ -137,7 +150,7 @@
     function select(kind, id) {
       if (!st[kind].devices.some(function (d) { return d.id === id; })) return false;
       disable(kind);
-      st[kind].selected = id;
+      st[kind].selected = id; manualDevice[kind] = true;
       if (st[kind].state === "ready") st[kind].state = "disabled";   // a new device needs its own permission
       emit();
       return true;
@@ -309,6 +322,7 @@
       // Microphone samples kept in memory only until "stop"; nothing is written anywhere.
       recorder: function (stream, onSamples) {
         var ctx = new AudioCtx(), source = ctx.createMediaStreamSource(stream);
+        if (ctx.state === "suspended") ctx.resume().catch(function () {});
         var node = ctx.createScriptProcessor(4096, 1, 1), parts = [], length = 0, done = false;
         node.onaudioprocess = function (ev) {
           if (done) return;
@@ -344,14 +358,14 @@
       },
       // Web Audio from memory: no data:/blob: URL, so the page CSP stays unchanged. stop() resolves done.
       player: function (b64) {
-        var ctx = new AudioCtx(), source = null, finish, stopped = false;
-        var done = new Promise(function (resolve) { finish = resolve; });
-        ctx.decodeAudioData(bytes(b64).buffer).then(function (buffer) {
+        var ctx = new AudioCtx(), source = null, finish, fail, stopped = false;
+        var done = new Promise(function (resolve, reject) { finish = resolve; fail = reject; });
+        Promise.resolve(ctx.resume()).then(function () { return ctx.decodeAudioData(bytes(b64).buffer); }).then(function (buffer) {
           if (stopped) return;
           source = ctx.createBufferSource(); source.buffer = buffer; source.connect(ctx.destination);
           source.onended = function () { ctx.close(); finish(); };
           source.start();
-        }, function () { ctx.close(); finish(); });
+        }, function () { ctx.close(); fail(new Error("Lecture audio indisponible")); });
         return { done: done, stop: function () { stopped = true; try { if (source) source.stop(); } catch (e) { /* ended */ } ctx.close(); finish(); } };
       },
       transport: function (method, path, body, token, type) {
@@ -375,7 +389,7 @@
   // ---- Binding to the "Voix et caméra" block of index.html ----
   function mount(doc, comm, hooks) {
     function $(id) { return doc.getElementById(id); }
-    var spoken = 0, voicePending = 0;
+    var spoken = 0, voicePending = 0, activeConversation = null;
     var auto = root.EidolonAutoVoice && hooks && hooks.voiceSend ? root.EidolonAutoVoice.create({
       prepare: async function () {
         var state = await comm.enable("microphone");
@@ -482,7 +496,17 @@
     });
     render(comm.state());
     comm.refresh();
-    return { render: render };
+    return { render: render, conversationChanged: function (id) {
+      if (id === activeConversation) return;
+      activeConversation = id;
+      if (!id || !auto || !hooks.autoStart) return;
+      // No auto-retry after Stop, device refusal or an uncertain send. One start per conversation.
+      Promise.resolve().then(function () {
+        if (activeConversation !== id) return;
+        comm.enable("camera"); // permission/discovery only; tracks immediately released
+        auto.start();          // voice failure does not block typed conversation
+      });
+    } };
   }
 
   var api = { createCommunication: createCommunication, browserDeps: browserDeps, mount: mount, encodeWav: encodeWav, indicator: indicator,

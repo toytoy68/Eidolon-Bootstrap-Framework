@@ -60,7 +60,7 @@
     var cancelStorage = null;
     try { cancelStorage = window.sessionStorage; } catch (e) { cancelStorage = null; }
     var monitorPhase = null;
-    var privateConversation = null;
+    var privateConversation = null, commUi = null;
     // G176: frame (eye, DARME button, sections). Pure views of the existing states, no new request.
     var shellApi = root.EidolonShell, shell = shellApi ? shellApi.mount(document) : null;
     var eyeInput = { phase: "closed", pending: false, comm: null };
@@ -86,6 +86,7 @@
         var note = document.getElementById("comm-closed-note"); if (note) note.hidden = !closed;
         var darmeNote = document.getElementById("darme-closed-note"); if (darmeNote) darmeNote.hidden = !closed;
         eye();
+        if (commUi) commUi.conversationChanged(nextPrivate);
         if (!monitoring || phase === monitorPhase) return;
         monitorPhase = phase;
         if (phase === "open") monitoring.ready(); else if (phase === "closed") monitoring.stop();
@@ -121,7 +122,7 @@
         return conversation.conversation.authorization();
       }));
       comm.onChange(function (state) { eyeInput.comm = state; eye(); });
-      commApi.mount(document, comm, { voiceSend: async function (text) {
+      commUi = commApi.mount(document, comm, { autoStart: root.__EIDOLON_DESKTOP_AUTOSTART === true, voiceSend: async function (text) {
         var engine = conversation.conversation, before = engine.state();
         if (document.getElementById("conv-text").value.trim()) throw new Error("Un brouillon est présent : envoyez-le ou effacez-le avant le vocal.");
         if (before.phase !== "open" || before.items.some(function (item) { return ["sent", "pending", "uncertain"].includes(item.status); })) throw new Error("Un message attend une réponse ou une vérification.");

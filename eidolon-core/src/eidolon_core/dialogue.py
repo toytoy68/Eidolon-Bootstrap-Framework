@@ -259,10 +259,16 @@ class ChatDialogueModel:
 
     @property
     def model_id(self):
-        return f"dialogue/{self.adapter.model_id}@{prompt_fingerprint(self.catalog)[:16]}"
+        from . import gemma_dialogue
+        adaptation = ("/" + digest({"version": gemma_dialogue.VERSION, "examples": gemma_dialogue.EXAMPLES})[:16]
+                      if self.ollama and gemma_dialogue.supported(self.adapter.config.model) else "")
+        return f"dialogue/{self.adapter.model_id}@{prompt_fingerprint(self.catalog)[:16]}{adaptation}"
 
     def _wrap(self, messages):
+        from . import gemma_dialogue
         config = self.adapter.config
+        if self.ollama and gemma_dialogue.supported(config.model):
+            messages = gemma_dialogue.messages(messages)
         if self.ollama:
             body = {"model": config.model, "messages": messages, "stream": False, "format": DIALOGUE_SCHEMA,
                     "options": dict(sorted(config.options.items()))}
@@ -274,7 +280,10 @@ class ChatDialogueModel:
         return encode(body).encode("utf-8")
 
     def reply(self, text, history, memory, observations=None, media=None, personality=None):
+        from . import gemma_dialogue
         config = self.adapter.config
+        if self.ollama and gemma_dialogue.supported(config.model):
+            memory = gemma_dialogue.memory_best_last(memory)
         body, info = fit_messages(text, history, memory, self.catalog, config.max_prompt_bytes, self._wrap,
                                   observations, media, personality)
         if self.ollama:

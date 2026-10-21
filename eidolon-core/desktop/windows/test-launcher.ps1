@@ -18,16 +18,15 @@ $link=$null
 try {
     $exe=Join-Path $directory 'Eidolon.exe'
     Copy-Item -LiteralPath $LauncherExe -Destination $exe
-    # A fake pairing script verifies working directory and invocation only.
-    [IO.File]::WriteAllText((Join-Path $directory 'eidolon-open.ps1'), 'Set-Content -LiteralPath (Join-Path $PSScriptRoot ''invoked.txt'') -Value (Get-Location).Path; exit 0')
-    [IO.File]::WriteAllText((Join-Path $directory 'eidolon-consultation.exe'),'synthetic placeholder')
-    $process=Start-Process -FilePath $exe -PassThru
+    # The native launcher must fail safely without a personalized config: no PowerShell or network.
+    $process=Start-Process -FilePath $exe -ArgumentList '--diagnostic' -PassThru
     $null=$process.Handle
     try {
-        if (-not $process.WaitForExit(20000)) { $process.Kill(); throw 'LAUNCHER_TIMEOUT' }
-        if ($process.ExitCode -ne 0) { throw 'LAUNCHER_EXIT_FAILED' }
+        if (-not $process.WaitForExit(10000)) { $process.Kill(); throw 'LAUNCHER_TIMEOUT' }
+        if ($process.ExitCode -ne 2) { throw 'MISSING_CONFIG_ACCEPTED' }
     } finally { $process.Dispose() }
-    if ((Get-Content -LiteralPath (Join-Path $directory 'invoked.txt') -Raw).Trim() -ne $directory) { throw 'LAUNCHER_WORKING_DIRECTORY_FAILED' }
+    $report=Get-Content (Join-Path $env:LOCALAPPDATA 'Eidolon/last-launch-error.txt') -Raw
+    if ($report -notmatch 'CONNECTION_CONFIG_MISSING') { throw 'NATIVE_DIAGNOSTIC_MISSING' }
     $process=Start-Process -FilePath $exe -ArgumentList '--shortcut' -PassThru
     $null=$process.Handle
     try {
