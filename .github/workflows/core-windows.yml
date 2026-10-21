@@ -61,7 +61,9 @@ jobs:
           powershell -NoProfile -File ../windows/build-launcher.ps1 -OutputDirectory target/release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-          & $compiler /nologo /target:exe /main:NativeProtocolTests /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Security.dll /reference:System.Web.Extensions.dll /out:target/release/native-tests.exe ../windows/EidolonLauncher.cs ../windows/PixyControl.cs ../windows/NativeProtocolTests.cs
+          $nativeSources=@('EidolonLauncher.cs','PixyControl.cs','NativeProtocolTests.cs') | ForEach-Object { (Resolve-Path (Join-Path '../windows' $_)).Path }
+          $nativeTests=Join-Path (Resolve-Path 'target/release').Path 'native-tests.exe'
+          & $compiler /nologo /target:exe /main:NativeProtocolTests /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Security.dll /reference:System.Web.Extensions.dll "/out:$nativeTests" $nativeSources
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           & ./target/release/native-tests.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
