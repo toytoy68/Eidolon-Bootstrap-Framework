@@ -1,5 +1,10 @@
 # G286 — ouverture, vocal, PIXY et Gemma3
 
+**Suite G287 :** toytoy a réaffirmé son autorisation permanente du projet en
+réponse à la demande de publication publique. Le blocage décrit plus bas est
+historique et résolu ; G286 est publié en `33e093c`. Voir le
+[bilan G287](G287-MODELES-DARME-WINDOWS.md) pour la qualification Windows et DARME.
+
 22 octobre 2026, Codex/GPT. Base GitHub `3a48da4`. Autorisation directe de toytoy :
 modifications et déploiement sur ses VM, amélioration du client pendant son absence.
 Ajout explicite de la mobilité de sa caméra EMEET PIXY sous Windows.

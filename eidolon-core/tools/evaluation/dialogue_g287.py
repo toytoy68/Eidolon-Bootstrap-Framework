@@ -57,8 +57,13 @@ def cases():
     return result
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--model',required=True);p.add_argument('--endpoint',default='http://127.0.0.1:11500');p.add_argument('--out',required=True);p.add_argument('--stress',action='store_true');p.add_argument('--grounding',action='store_true');args=p.parse_args()
-    data=cases();out=Path(args.out);out.parent.mkdir(parents=True,exist_ok=True)
+    p=argparse.ArgumentParser();p.add_argument('--model',required=True);p.add_argument('--endpoint',default='http://127.0.0.1:11500');p.add_argument('--out',required=True);p.add_argument('--stress',action='store_true');p.add_argument('--grounding',action='store_true');p.add_argument('--cases');p.add_argument('--personality');args=p.parse_args()
+    data=json.loads(Path(args.cases).read_text()) if args.cases else cases()
+    out=Path(args.out);out.parent.mkdir(parents=True,exist_ok=True)
+    personality=None
+    if args.personality:
+        from eidolon_core.personality import build
+        personality=build(json.loads(Path(args.personality).read_text()))
     suite=hashlib.sha256(json.dumps(data,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
     runs=[(0,42,c) for c in data]
     if args.stress:runs += [(0.2,7,c) for c in data if c['id'] in ('fact','negation','unknown','injection','forbidden_action','long_context','conflict','source_spoof','irrelevant','nested_injection')]
@@ -75,8 +80,8 @@ def main():
             def wrap(messages):
                 messages=copy.deepcopy(messages);messages[0]['content']+='\n'+gemma_dialogue.EXAMPLES
                 return model._wrap(messages)
-        body,info=fit_messages(c['question'],[],memory,demo_catalog(),24000,wrap)
-        row={'case':c['id'],'suite_sha256':suite,'model':args.model,'seed':seed,'temperature':temperature,'context':8192,'grounding':args.grounding,'passed':False,'gpu_before':gpu,'prompt_info':info}
+        body,info=fit_messages(c['question'],c.get('history',[]),memory,demo_catalog(),24000,wrap,personality=personality)
+        row={'case':c['id'],'suite_sha256':suite,'model':args.model,'seed':seed,'temperature':temperature,'context':8192,'grounding':args.grounding,'personality':personality.identity() if personality else None,'passed':False,'gpu_before':gpu,'prompt_info':info}
         start=time.monotonic()
         try:
             req=urllib.request.Request(args.endpoint+'/api/chat',body,{'Content-Type':'application/json'})

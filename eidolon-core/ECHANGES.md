@@ -2627,3 +2627,17 @@ Lot réservé : évaluation Qwen3-4B Element8 Eva Hermes Heretic avec Core, cont
 du service DARME et correction de sa surveillance GPU obsolète, suivi CI Windows.
 Historique retrouvé : Qwen préféré pour le chat le 18/10 ; DARME conservé en
 règles CPU, aucun modèle dédié adopté. Les essais n'accordent aucun droit au LLM.
+
+G287 : 134 réponses synthétiques + 2 sondes de rappel réel. Qwen passe de 10/40
+à 35/40 avec exemples/citations ; comparaison principale 27/30 contre Gemma 25/30,
+puis SOUL/historique indépendant 11/12 contre 8/12. AZUR-277 retrouvé et cité sur
+une source contenant effectivement la balise. Limites calculs/citations conservées.
+Gemma reste actif ; aucun entraînement des poids ni changement automatique de
+modèle. DARME : 80 tests + recettes VM/SSH réussis, tunnel GPU obsolète retiré de
+la surveillance avec historique préservé ; 1703 alertes acquittées avec motif.
+Reste 1 ancienne alerte Core et 9 sur Memory, services surveillés actifs. Aucun
+LLM conseiller ni IDS complet actif. [Bilan](docs/G287-MODELES-DARME-WINDOWS.md).
+
+Windows G286 : construction `1173f46` réussie, 7 tests Rust et DPAPI/ACL natifs
+passés ; CI Chromium et Core vertes. Paquet personnel remis en privé, aucun secret
+dans GitHub ; pas de déploiement physique PC ni de recette acoustique/PTZ déclarée.
