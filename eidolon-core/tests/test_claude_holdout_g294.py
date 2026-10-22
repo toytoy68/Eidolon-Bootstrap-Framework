@@ -109,3 +109,15 @@ def test_production_prompt_adaptation_per_model(tmp_path, model, adapted):
     assert (gemma_dialogue.EXAMPLES in content) is adapted
     first, second = content.find("hermes-agent"), content.find("hermes-sac")
     assert (second < first) is adapted          # best-ranked note last for both validated small models
+
+
+def test_qwen_grounding_preserves_system_role_and_scope(tmp_path):
+    from eidolon_core import gemma_dialogue
+    from eidolon_core.dialogue import _qwen_g294_grounding
+    case = CASES['homonym']
+    factory, seen = canned_model({case['question']: ('answer', '0.22.3 [hermes-agent@1]')}, model=QWEN)
+    holdout.run_case(case, factory, tmp_path)
+    assert [m['role'] for m in seen[0]['messages']] == ['system', 'user']
+    assert gemma_dialogue.EXAMPLES in seen[0]['messages'][0]['content']
+    assert _qwen_g294_grounding(QWEN)
+    assert not _qwen_g294_grounding('qwen3.5:4b')
