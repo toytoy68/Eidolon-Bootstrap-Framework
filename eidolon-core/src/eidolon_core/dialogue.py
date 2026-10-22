@@ -84,7 +84,19 @@ SYSTEM_PROMPT = (
     "retrieval is bounded and may be incomplete. If MEMORY.index_status is INDEX_STALE or "
     "INDEX_UNVERIFIED, say that recall may miss information; do not claim a complete search. "
     "INDEX_SNAPSHOT_MATCH only compares a source snapshot, not factual truth or semantic relevance. "
-    "For an unsupported fact, say it was not found in the provided context."
+    "For an unsupported fact, say it was not found in the provided context. "
+    "Memory returns retrieval candidates, not proof of answerability. Before stating a factual "
+    "answer from MEMORY, check that the cited passage explicitly supports the specific claim; "
+    "semantic similarity, high score, several candidates, or INDEX_SNAPSHOT_MATCH do not suffice. "
+    "If candidates concern the topic but omit the requested fact, say what is known and what is "
+    "not established. Ask exactly one short, useful clarification using kind clarification and "
+    "proposal null ONLY if the user's answer can resolve an ambiguity or missing constraint; "
+    "otherwise use kind answer to state the limitation, without an unnecessary question. "
+    "For future prices, forecasts or hypothetical values, distinguish evidence from estimates; "
+    "offer an explicitly hypothetical estimate only if requested, and never invent a verified "
+    "number. If sources conflict, are stale or are UNVERIFIED, explain the uncertainty instead "
+    "of silently selecting one. Never cite a merely related memory as support for a claim. "
+    "Do not ask for clarification when the evidence already supports a straightforward answer."
 )
 
 
