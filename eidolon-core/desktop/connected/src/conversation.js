@@ -37,6 +37,8 @@
     MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin.",
     DIALOGUE_PROFILE_NOT_SELECTED: "Aucun modèle de dialogue n'est choisi sur le serveur : aucun autre n'est pris à sa place.",
     DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place.",
+    CITATION_UNSUPPORTED: "Le modèle cite une source qui ne lui a pas été transmise : réponse à vérifier.",
+    NUMBER_NOT_IN_SOURCES: "Un chiffre de la réponse ne figure dans aucune source transmise (calcul, connaissance générale ou invention) : à vérifier.",
     PERSONALITY_REQUIRED_UNAVAILABLE: "La personnalité exigée par le serveur n'est pas disponible : la conversation est suspendue, les missions ne le sont pas."
   };
   // G098: which profile and model produced this reply; a change from the previous reply is said in words.
