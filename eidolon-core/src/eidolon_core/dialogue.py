@@ -366,6 +366,39 @@ def _model_id(model):
     return value if isinstance(value, str) and 1 <= len(value) <= 300 else None
 
 
+# G294 (Claude): deterministic evidence flags on a reply, never a verdict of truth.
+# A number written by the model that appears neither in the user's message, the
+# history sent, the memory items sent nor the observations sent is shown to the
+# user as unverified (calculation, general knowledge or invention). Semantic
+# relevance of a cited note to the question is NOT checked here.
+_EVIDENCE_NUMBER = re.compile(r"(?<![\w.,])\d+(?:[.,]\d+)?(?![\w])")
+_EVIDENCE_CITATION = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,120}@[0-9]{1,9}")
+
+
+def _evidence_numbers(text):
+    return {n.replace(",", ".") for n in _EVIDENCE_NUMBER.findall(_EVIDENCE_CITATION.sub(" ", text or ""))}
+
+
+def evidence_check(reply, *, text, history, memory, observations):
+    """Annotate an ANSWER/CLARIFICATION in place; other kinds are left unchanged."""
+    if reply.get("kind") not in ("ANSWER", "CLARIFICATION") or not reply.get("model_text"):
+        return reply
+    # Earlier user messages count; earlier MODEL replies do not (no laundering of a guess).
+    sent = [text] + [t.get("user") or "" for t in history or ()]
+    sent += [str(i.get("content", "")) for i in (memory or {}).get("items", ())] if memory else []
+    sent += [o.get("text") or "" for o in observations or ()]
+    known = set().union(*(_evidence_numbers(s) for s in sent))
+    missing = sorted(_evidence_numbers(reply["model_text"]) - known, key=lambda n: (len(n), n))[:20]
+    reply["evidence_check"] = {"policy": "lexical-number-grounding/1", "numbers_not_in_sources": missing,
+                               "semantic_relevance_checked": False}
+    if reply.get("core_note") is None:
+        if (reply.get("citations") or {}).get("unsupported"):
+            reply["core_note"] = "CITATION_UNSUPPORTED"
+        elif missing:
+            reply["core_note"] = "NUMBER_NOT_IN_SOURCES"
+    return reply
+
+
 class Dialogue:
     """Turn → (history, optional memory) → model → Core decision → recorded reply.
 
@@ -581,5 +614,7 @@ class Dialogue:
                                 personality=personality.identity() if personality is not None else None)
         if diagnostics["model_error"] == "MODEL_TIMEOUT":
             reply["core_note"] = "MODEL_TIMEOUT"
+        evidence_check(reply, text=text, history=history, memory=memory if sources else None,
+                       observations=observations)
         reply = self._record(conversation_id, reply, client_id, client_turn_key, text)
         return {"turn": turn, "reply": reply, "replayed": False, "model_called": True, "diagnostics": diagnostics}
