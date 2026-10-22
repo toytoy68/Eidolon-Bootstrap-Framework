@@ -1,0 +1,242 @@
+{
+  "1": {
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Wan 2.2 14B - High Noise (GGUF)"
+    },
+    "inputs": {
+      "unet_name": "Wan2.2-T2V-A14B-HighNoise-Q4_K_M.gguf"
+    }
+  },
+  "2": {
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Wan 2.2 14B - Low Noise (GGUF)"
+    },
+    "inputs": {
+      "unet_name": "Wan2.2-T2V-A14B-LowNoise-Q4_K_M.gguf"
+    }
+  },
+  "3": {
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Encodeur texte UMT5"
+    },
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "VAE Wan 2.1"
+    },
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Shift High"
+    },
+    "inputs": {
+      "model": [
+        "15",
+        0
+      ],
+      "shift": 8.0
+    }
+  },
+  "6": {
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "Shift Low"
+    },
+    "inputs": {
+      "model": [
+        "16",
+        0
+      ],
+      "shift": 8.0
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive"
+    },
+    "inputs": {
+      "clip": [
+        "3",
+        0
+      ],
+      "text": "A red fox walks through a snowy pine forest at dawn, soft golden light, slow tracking shot, cinematic, detailed fur"
+    }
+  },
+  "8": {
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative"
+    },
+    "inputs": {
+      "clip": [
+        "3",
+        0
+      ],
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走"
+    }
+  },
+  "9": {
+    "class_type": "EmptyHunyuanLatentVideo",
+    "_meta": {
+      "title": "Latent vidéo"
+    },
+    "inputs": {
+      "width": 832,
+      "height": 480,
+      "length": 81,
+      "batch_size": 1
+    }
+  },
+  "10": {
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "Sampler High Noise"
+    },
+    "inputs": {
+      "model": [
+        "5",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "8",
+        0
+      ],
+      "latent_image": [
+        "9",
+        0
+      ],
+      "add_noise": "enable",
+      "noise_seed": 42,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "11": {
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "Sampler Low Noise"
+    },
+    "inputs": {
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "8",
+        0
+      ],
+      "latent_image": [
+        "10",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 42,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "12": {
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "Décodage VAE"
+    },
+    "inputs": {
+      "samples": [
+        "11",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Assemblage vidéo"
+    },
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ],
+      "fps": 16.0
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Sortie"
+    },
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "eidolon/wan22-14b-4steps",
+      "format": "mp4",
+      "format.codec": "auto"
+    }
+  },
+  "15": {
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA lightx2v High"
+    },
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "lora_name": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "16": {
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA lightx2v Low"
+    },
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "lora_name": "wan2.2_t2v_lightx2v_4steps_lora_v1.1_low_noise.safetensors",
+      "strength_model": 1.0
+    }
+  }
+}
