@@ -97,11 +97,10 @@ def test_holdout_shape():
 QWEN = "hf.co/mradermacher/Qwen3-4B-Element8-Eva-Hermes-Heretic-GGUF:Q4_K_M"
 
 
-@pytest.mark.parametrize("model,adapted", [("gemma3:4b", True), (QWEN, False)])
+@pytest.mark.parametrize("model,adapted", [("gemma3:4b", True), (QWEN, True)])
 def test_production_prompt_adaptation_per_model(tmp_path, model, adapted):
-    """G294-F05 (fact, not a defect by itself): production applies the G286 grounding examples
-    and best-last ordering to gemma3 only. G293 measured Qwen WITH --grounding (bench-only), so
-    its 57/62 is not the configuration a Qwen profile would get in Core today."""
+    """G295: both validated small models receive grounding examples and best-last ordering.
+    Qwen retains its separate system role; no other Qwen model is changed."""
     from eidolon_core import gemma_dialogue
     case = CASES["homonym"]
     factory, seen = canned_model({case["question"]: ("answer", "0.22.3 [hermes-agent@1]")}, model=model)
@@ -109,4 +108,4 @@ def test_production_prompt_adaptation_per_model(tmp_path, model, adapted):
     content = "\n".join(m["content"] for m in seen[0]["messages"])
     assert (gemma_dialogue.EXAMPLES in content) is adapted
     first, second = content.find("hermes-agent"), content.find("hermes-sac")
-    assert (second < first) is adapted          # best-ranked note last only for gemma3
+    assert (second < first) is adapted          # best-ranked note last for both validated small models
