@@ -2650,3 +2650,11 @@ Codex réserve la revue G286/G287 (voix, lanceur, caméra, dialogue, DARME), les
 correctifs reproductibles, suites isolées Core/Memory et bilan de synchronisation.
 Les idées locales Memory sont conservées. Aucun corpus privé ni identité du ZIP
 Windows dans Git ; aucune qualification matérielle PC sans accès au matériel.
+
+G288 : cinq défauts reproduits et corrigés (trois cycles audio, inventaire de
+copie, prototype de verrou Memory). Suites VM finales : Core 2318/8 ignorés/
+1328 sous-tests ; Memory 3158/26 ignorés/3 xfail historiques/12 sous-tests.
+Chromium 243 sans ignoré, Qdrant jetable 19, propriétaires UID 5. Core `a6edf04`,
+Memory `deda5b6` alignés sur GitHub ; historique local Core archivé, idées vidéo
+préservées. API redémarrée, octets du client corrigé et santé HTTP 200 vérifiés.
+[Rapport complet et réserves](docs/AUDIT-G288-2026-10-22.md).
