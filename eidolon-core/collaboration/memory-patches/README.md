@@ -243,3 +243,10 @@ refactorisation, à part).
 | 0065 | G266-9 : code publié G263/G265 sur un VRAI montage bind en lecture seule (`unshare -m`) : READY, mode par défaut EROFS, verrou disparu = UNAVAILABLE, écrivain = BUSY ; SKIP motivé si espaces de noms refusés | 6 tests |
 | 0066 | Robustesse : les relances sous `nobody` sondent `setpriv … id -u` et sont **ignorées avec le motif** (ex. `setresuid: Invalid argument`) au lieu d'échouer. À appliquer après 0059 | 2 tests ; suite Memory **3 067 réussis, 22 ignorés, 5 xfail** |
 | 0067 | G268 : contre-revue du code d'usage 64 — aucun effet (socket, écriture, import lourd, ni ouverture ou listage sous la racine), abréviations uniques conservées, erreurs serveur toujours 2 sans démarrage, aide 0. Sur Memory `727b0c9` | 35 tests ; 13 rouges sur `a2b1928` ; 4 sabotages tués, 1 équivalent ; suite Memory **3 111 réussis, 22 ignorés, 4 xfail** |
+
+## Patch 0068 (G294, base `dae7b50`)
+
+| Patch | Contenu | Preuve en conteneur |
+| --- | --- | --- |
+| 0068 | Nouveaux fichiers seulement : `tests/evaluation/memory-holdout-g294.json` (12 questions pièges annotées avec leur note voisine qui ne répond pas, 8 paraphrases sans mot-clé), `tools/evaluation/run_memory_holdout.py` (lecture seule, même point local que `run_memory_50`, résumé `score_is_proof: false`), `tests/test_memory_holdout_g294.py` | 7 tests. Réplique lexicale des 15 fiches publiques via un vrai pont : pièges en tête 10/12, dans les cinq premiers 12/12 ; paraphrases 4/8 et 7/8 ; scores des pièges jusqu'à 0,556, paraphrases dès 0,180. À rejouer sur l'index sémantique VM110 |
+
