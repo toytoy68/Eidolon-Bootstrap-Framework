@@ -124,10 +124,11 @@
         var stream;
         try { stream = await deps.media.getUserMedia(constraints); }
         catch (error) {
+          if (permission !== permissionEpoch[kind]) return snapshotState();
           // A remembered/just-enumerated device can disappear before capture. Try OS default once.
           if (!dev.selected || !["NotFoundError", "OverconstrainedError"].includes(error.name)) throw error;
           stream = await deps.media.getUserMedia(kind === "microphone" ? {audio:true} : {video:VIDEO});
-          dev.selected = null;
+          if (permission === permissionEpoch[kind]) dev.selected = null;
         }
         stopTracks(stream); // permission/discovery only: nothing kept open
         if (permission !== permissionEpoch[kind]) return snapshotState();
@@ -183,7 +184,11 @@
       deps.clearTimeout(t.timer);
       var audio;
       stopTracks(t.stream);
-      try { audio = await t.recorder.stop(); } finally { stopTracks(t.stream); }
+      try { audio = await t.recorder.stop(); }
+      catch (error) {
+        if (t.epoch === talkEpoch) set("microphone", "ready", "ERREUR");
+        return null;
+      } finally { stopTracks(t.stream); }
       if (t.epoch !== talkEpoch) { if (audio && audio.samples) audio.samples.fill(0); return null; }
       set("microphone", "processing");
       try {
@@ -205,7 +210,13 @@
     function cancelTalk() {
       if (automaticDone) { var done = automaticDone; automaticDone = null; done(null); }
       talkEpoch++;
-      if (talk) { deps.clearTimeout(talk.timer); talk.recorder.cancel(); stopTracks(talk.stream); talk = null; }
+      if (talk) {
+        var cancelled = talk; talk = null;
+        deps.clearTimeout(cancelled.timer);
+        try { Promise.resolve(cancelled.recorder.cancel()).catch(function () {}); }
+        catch (error) { /* Device release must survive recorder cleanup failure. */ }
+        finally { stopTracks(cancelled.stream); }
+      }
       if (st.microphone.state === "processing" && sttKey) deps.transport("DELETE", "/v1/comm/stt", null, sttKey).catch(function () {});
       sttKey = null;
       if (st.microphone.state === "capturing" || st.microphone.state === "processing") set("microphone", "ready", "annulé");
@@ -338,7 +349,7 @@
             parts = [];
             return finish().then(function () { return { samples: all, rate: rate }; });
           },
-          cancel: function () { parts = []; finish(); }
+          cancel: function () { parts = []; return finish(); }
         };
       },
       // One frame, scaled within 1280x720, encoded as JPEG in memory.

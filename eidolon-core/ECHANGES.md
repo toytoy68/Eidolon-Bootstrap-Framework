@@ -2641,3 +2641,12 @@ LLM conseiller ni IDS complet actif. [Bilan](docs/G287-MODELES-DARME-WINDOWS.md)
 Windows G286 : construction `1173f46` réussie, 7 tests Rust et DPAPI/ACL natifs
 passés ; CI Chromium et Core vertes. Paquet personnel remis en privé, aucun secret
 dans GitHub ; pas de déploiement physique PC ni de recette acoustique/PTZ déclarée.
+
+## G288 — contrôle complet et synchronisation, 22/10/2026
+
+Demande directe toytoy : rechercher les erreurs de code et synchroniser GitHub.
+Base publique Core `0eb5d901fb54d4565b4706936e3e166d470eb1b9`, Memory `fd53ce6`.
+Codex réserve la revue G286/G287 (voix, lanceur, caméra, dialogue, DARME), les
+correctifs reproductibles, suites isolées Core/Memory et bilan de synchronisation.
+Les idées locales Memory sont conservées. Aucun corpus privé ni identité du ZIP
+Windows dans Git ; aucune qualification matérielle PC sans accès au matériel.

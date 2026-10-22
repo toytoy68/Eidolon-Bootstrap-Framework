@@ -148,6 +148,70 @@ test("double press does not start two captures", async () => {
   assert.equal(media.calls.length, 2);                                // permission + one capture only
 });
 
+test("recorder stop failure releases capture and permits another attempt", async () => {
+  const { comm, media, sent } = setup({ recorder: () => ({
+    stop: async () => { throw new Error("audio context closed"); }, cancel() {}
+  }) });
+  await comm.refresh(); await comm.enable("microphone"); await comm.startTalk();
+  assert.equal(await comm.stopTalk(), null);
+  assert.equal(media.live(), 0);
+  assert.equal(comm.state().microphone.state, "ready");
+  assert.equal(comm.state().microphone.reason, "ERREUR");
+  assert.equal(sent.length, 0);
+  assert.equal(await comm.startTalk(), true);
+  comm.cancelTalk();
+});
+
+test("recorder cancellation failure still releases microphone and timer", async () => {
+  const { comm, media } = setup({ recorder: () => ({
+    stop: async () => ({}), cancel() { throw new Error("audio context closed"); }
+  }) });
+  await comm.refresh(); await comm.enable("microphone"); await comm.startTalk();
+  assert.doesNotThrow(() => comm.disable("microphone"));
+  assert.equal(media.live(), 0);
+  assert.equal(comm.state().microphone.state, "disabled");
+});
+
+test("late recorder stop failure cannot reenable a disabled microphone", async () => {
+  let reject;
+  const { comm, media, sent } = setup({ recorder: () => ({
+    stop: () => new Promise((_, r) => { reject = r; }), cancel() {}
+  }) });
+  await comm.refresh(); await comm.enable("microphone"); await comm.startTalk();
+  const pending = comm.stopTalk();
+  comm.disable("microphone"); reject(new Error("late device failure"));
+  assert.equal(await pending, null);
+  assert.equal(comm.state().microphone.state, "disabled");
+  assert.equal(media.live(), 0);
+  assert.equal(sent.length, 0);
+});
+
+test("asynchronous cancellation failure is handled with tracks already released", async () => {
+  const { comm, media } = setup({ recorder: () => ({
+    stop: async () => ({}), cancel: async () => { throw new Error("already closed"); }
+  }) });
+  await comm.refresh(); await comm.enable("microphone"); await comm.startTalk();
+  comm.disable("microphone");
+  await new Promise(r => setImmediate(r));
+  assert.equal(media.live(), 0);
+  assert.equal(comm.state().microphone.state, "disabled");
+});
+
+test("cancelling a pending permission prevents the fallback from opening another device", async () => {
+  const media = fakeMedia([{ kind: "audioinput", deviceId: "mic1", label: "Micro" }]);
+  let reject, calls = 0;
+  media.getUserMedia = () => { calls++; return new Promise((_, r) => { reject = r; }); };
+  const { comm } = setup({ media });
+  await comm.refresh();
+  const pending = comm.enable("microphone");
+  comm.disable("microphone");
+  const error = new Error("device gone"); error.name = "NotFoundError"; reject(error);
+  await new Promise(r => setImmediate(r));
+  assert.equal(calls, 1);
+  await pending;
+  assert.equal(comm.state().microphone.state, "disabled");
+});
+
 test("speech is chunk by chunk, and talking stops it at once (anti-echo)", async () => {
   const ctx = setup({ slowPlayer: true });
   const { comm, sent, players } = ctx;
