@@ -258,6 +258,11 @@ def fit_messages(text, history, memory, catalog, max_bytes, wrap, observations=N
             raise ContractError("PROMPT_TOO_LARGE: the message alone exceeds the prompt budget")
 
 
+def _qwen_g294_grounding(model):
+    """Explicitly tested Qwen 4B variant only; keep system/user roles separate."""
+    return model.startswith("hf.co/mradermacher/Qwen3-4B-Element8-Eva-Hermes-Heretic-GGUF:")
+
+
 class ChatDialogueModel:
     """Dialogue over an already configured planner adapter (see model_config.load_model)."""
 
@@ -273,7 +278,8 @@ class ChatDialogueModel:
     def model_id(self):
         from . import gemma_dialogue
         adaptation = ("/" + digest({"version": gemma_dialogue.VERSION, "examples": gemma_dialogue.EXAMPLES})[:16]
-                      if self.ollama and gemma_dialogue.supported(self.adapter.config.model) else "")
+                      if self.ollama and (gemma_dialogue.supported(self.adapter.config.model)
+                                          or _qwen_g294_grounding(self.adapter.config.model)) else "")
         return f"dialogue/{self.adapter.model_id}@{prompt_fingerprint(self.catalog)[:16]}{adaptation}"
 
     def _wrap(self, messages):
@@ -281,6 +287,9 @@ class ChatDialogueModel:
         config = self.adapter.config
         if self.ollama and gemma_dialogue.supported(config.model):
             messages = gemma_dialogue.messages(messages)
+        elif self.ollama and _qwen_g294_grounding(config.model):
+            messages = [dict(messages[0], content=messages[0]["content"] + "\n" + gemma_dialogue.EXAMPLES),
+                        *messages[1:]]
         if self.ollama:
             body = {"model": config.model, "messages": messages, "stream": False, "format": DIALOGUE_SCHEMA,
                     "options": dict(sorted(config.options.items()))}
@@ -294,7 +303,7 @@ class ChatDialogueModel:
     def reply(self, text, history, memory, observations=None, media=None, personality=None):
         from . import gemma_dialogue
         config = self.adapter.config
-        if self.ollama and gemma_dialogue.supported(config.model):
+        if self.ollama and (gemma_dialogue.supported(config.model) or _qwen_g294_grounding(config.model)):
             memory = gemma_dialogue.memory_best_last(memory)
         body, info = fit_messages(text, history, memory, self.catalog, config.max_prompt_bytes, self._wrap,
                                   observations, media, personality)
