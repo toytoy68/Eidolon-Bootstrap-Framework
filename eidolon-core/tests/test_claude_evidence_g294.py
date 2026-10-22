@@ -16,7 +16,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_claude_holdout_g294 import CASES, canned_model, holdout  # noqa: E402
 
-F02 = pytest.mark.xfail(strict=True, reason="G294-F02: no Core evidence flag on an unsupported answer")
 
 
 def turn(tmp_path, case_id, kind, text):
@@ -45,7 +44,6 @@ def turn(tmp_path, case_id, kind, text):
         api.close()
 
 
-@F02
 @pytest.mark.parametrize("case_id,text", [
     ("future-price", "Une V100 coûtera 900 euros en 2030."),
     ("missing-date", "Les V100 arrivent le 28 octobre [livraison@1]."),
@@ -58,13 +56,11 @@ def test_invented_figure_is_flagged(tmp_path, case_id, text):
     assert reply["evidence_check"]["semantic_relevance_checked"] is False
 
 
-@F02
 def test_unsupported_citation_sets_a_core_note(tmp_path):
     reply, _ = turn(tmp_path, "invented-ref-in-memory", "answer", "La grappe compte 3 disques [fiche-xyz@4].")
     assert reply["core_note"] == "CITATION_UNSUPPORTED"
 
 
-@F02
 def test_flag_is_durable_and_replayed(tmp_path):
     reply, page = turn(tmp_path, "future-price", "answer", "Une V100 coûtera 900 euros en 2030.")
     recorded = [t for t in page["items"] if t.get("reply")][-1]["reply"]
@@ -82,7 +78,6 @@ def test_control_grounded_answers_carry_no_note(tmp_path, case_id, text):
     assert reply["core_note"] is None
 
 
-@F02
 def test_known_limit_calculation_is_flagged_not_blocked(tmp_path):
     """600 = 2 x 300 is correct but absent from the note: flagged for review, still an ANSWER."""
     reply, _ = turn(tmp_path, "calculation", "answer", "Ensemble, 600 W [gpu-tdp@1].")
@@ -96,7 +91,6 @@ def test_known_limit_related_but_wrong_evidence_is_not_detected(tmp_path):
     assert reply["kind"] == "ANSWER" and reply["core_note"] is None
 
 
-@F02
 def test_history_user_numbers_count_but_model_guesses_do_not():
     from eidolon_core.dialogue import evidence_check
     reply = {"kind": "ANSWER", "model_text": "Donc 42 et 7.", "core_note": None, "citations": {"unsupported": []}}
