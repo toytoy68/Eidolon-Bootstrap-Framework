@@ -218,7 +218,11 @@ def _final_check(root, versions, result, chunk, max_bytes):
             rel_dir, dfd, names = frames[-1]
             name = next(names, None)
             if name is None:
-                if _version(os.fstat(dfd)) != versions[rel_dir or "."][2]:
+                _, expected_names, expected_version = versions[rel_dir or "."]
+                # Directory timestamps may be unchanged across a fast mutation.
+                # Recheck names after visiting descendants as well as before them.
+                if (_version(os.fstat(dfd)) != expected_version
+                        or tuple(sorted(_list(dfd, rel_dir))) != expected_names):
                     raise InventoryRefused("INVENTORY_CHANGED", rel_dir)
                 # Open from the trusted path again: an already-open ancestor may
                 # have been renamed while its timestamps remained unchanged.

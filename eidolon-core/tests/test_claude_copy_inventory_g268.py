@@ -7,6 +7,7 @@
 # ==========================================================
 """Synthetic trees under tmp_path only. Descriptor limits are lowered inside a CHILD process, never here."""
 import os
+import stat
 from pathlib import Path
 import subprocess
 import sys
@@ -220,10 +221,15 @@ def test_change_after_final_metadata_is_caught_by_content_check(tmp_path, monkey
     assert done
 
 
-def test_a_directory_changed_while_its_subtree_is_rechecked_is_caught_after_the_visit(tmp_path, monkeypatch):
+@pytest.mark.parametrize("coarse_timestamps", [False, True])
+def test_a_directory_changed_while_its_subtree_is_rechecked_is_caught_after_the_visit(tmp_path, monkeypatch, coarse_timestamps):
     """`a/b` is listed (same names), then gains an entry while `a/b/c` is visited: only the version check
     AFTER the subtree sees it."""
     root = nested(tmp_path)
+    if coarse_timestamps:
+        real_version = inv._version
+        monkeypatch.setattr(inv, "_version", lambda value: (
+            (*real_version(value)[:3], 0, 0, 0) if stat.S_ISDIR(value.st_mode) else real_version(value)))
     real_stat, active, done = os.stat, [], []
     monkeypatch.setattr(inv, "_before_final", lambda: active.append(True))
 
