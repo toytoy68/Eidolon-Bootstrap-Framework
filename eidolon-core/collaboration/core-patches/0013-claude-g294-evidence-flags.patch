@@ -1,0 +1,126 @@
+diff --git a/eidolon-core/desktop/connected/app.js b/eidolon-core/desktop/connected/app.js
+index 0fbbfaa..1978f85 100644
+--- a/eidolon-core/desktop/connected/app.js
++++ b/eidolon-core/desktop/connected/app.js
+@@ -2096,6 +2096,8 @@
+     MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin.",
+     DIALOGUE_PROFILE_NOT_SELECTED: "Aucun modèle de dialogue n'est choisi sur le serveur : aucun autre n'est pris à sa place.",
+     DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place.",
++    CITATION_UNSUPPORTED: "Le modèle cite une source qui ne lui a pas été transmise : réponse à vérifier.",
++    NUMBER_NOT_IN_SOURCES: "Un chiffre de la réponse ne figure dans aucune source transmise (calcul, connaissance générale ou invention) : à vérifier.",
+     PERSONALITY_REQUIRED_UNAVAILABLE: "La personnalité exigée par le serveur n'est pas disponible : la conversation est suspendue, les missions ne le sont pas."
+   };
+   // G098: which profile and model produced this reply; a change from the previous reply is said in words.
+diff --git a/eidolon-core/desktop/connected/src/conversation.js b/eidolon-core/desktop/connected/src/conversation.js
+index e59cb18..d964bc4 100644
+--- a/eidolon-core/desktop/connected/src/conversation.js
++++ b/eidolon-core/desktop/connected/src/conversation.js
+@@ -37,6 +37,8 @@
+     MODEL_ATTEMPT_INTERRUPTED: "La tentative de réponse a été interrompue : elle n'est pas relancée. Renvoyez le message si besoin.",
+     DIALOGUE_PROFILE_NOT_SELECTED: "Aucun modèle de dialogue n'est choisi sur le serveur : aucun autre n'est pris à sa place.",
+     DIALOGUE_PROFILE_UNAVAILABLE: "Le modèle de dialogue choisi n'est pas disponible : aucun autre n'est pris à sa place.",
++    CITATION_UNSUPPORTED: "Le modèle cite une source qui ne lui a pas été transmise : réponse à vérifier.",
++    NUMBER_NOT_IN_SOURCES: "Un chiffre de la réponse ne figure dans aucune source transmise (calcul, connaissance générale ou invention) : à vérifier.",
+     PERSONALITY_REQUIRED_UNAVAILABLE: "La personnalité exigée par le serveur n'est pas disponible : la conversation est suspendue, les missions ne le sont pas."
+   };
+   // G098: which profile and model produced this reply; a change from the previous reply is said in words.
+diff --git a/eidolon-core/src/eidolon_core/dialogue.py b/eidolon-core/src/eidolon_core/dialogue.py
+index 652a42f..841197b 100644
+--- a/eidolon-core/src/eidolon_core/dialogue.py
++++ b/eidolon-core/src/eidolon_core/dialogue.py
+@@ -366,6 +366,39 @@ def _model_id(model):
+     return value if isinstance(value, str) and 1 <= len(value) <= 300 else None
+ 
+ 
++# G294 (Claude): deterministic evidence flags on a reply, never a verdict of truth.
++# A number written by the model that appears neither in the user's message, the
++# history sent, the memory items sent nor the observations sent is shown to the
++# user as unverified (calculation, general knowledge or invention). Semantic
++# relevance of a cited note to the question is NOT checked here.
++_EVIDENCE_NUMBER = re.compile(r"(?<![\w.,])\d+(?:[.,]\d+)?(?![\w])")
++_EVIDENCE_CITATION = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,120}@[0-9]{1,9}")
++
++
++def _evidence_numbers(text):
++    return {n.replace(",", ".") for n in _EVIDENCE_NUMBER.findall(_EVIDENCE_CITATION.sub(" ", text or ""))}
++
++
++def evidence_check(reply, *, text, history, memory, observations):
++    """Annotate an ANSWER/CLARIFICATION in place; other kinds are left unchanged."""
++    if reply.get("kind") not in ("ANSWER", "CLARIFICATION") or not reply.get("model_text"):
++        return reply
++    # Earlier user messages count; earlier MODEL replies do not (no laundering of a guess).
++    sent = [text] + [t.get("user") or "" for t in history or ()]
++    sent += [str(i.get("content", "")) for i in (memory or {}).get("items", ())] if memory else []
++    sent += [o.get("text") or "" for o in observations or ()]
++    known = set().union(*(_evidence_numbers(s) for s in sent))
++    missing = sorted(_evidence_numbers(reply["model_text"]) - known, key=lambda n: (len(n), n))[:20]
++    reply["evidence_check"] = {"policy": "lexical-number-grounding/1", "numbers_not_in_sources": missing,
++                               "semantic_relevance_checked": False}
++    if reply.get("core_note") is None:
++        if (reply.get("citations") or {}).get("unsupported"):
++            reply["core_note"] = "CITATION_UNSUPPORTED"
++        elif missing:
++            reply["core_note"] = "NUMBER_NOT_IN_SOURCES"
++    return reply
++
++
+ class Dialogue:
+     """Turn → (history, optional memory) → model → Core decision → recorded reply.
+ 
+@@ -581,5 +614,7 @@ class Dialogue:
+                                 personality=personality.identity() if personality is not None else None)
+         if diagnostics["model_error"] == "MODEL_TIMEOUT":
+             reply["core_note"] = "MODEL_TIMEOUT"
++        evidence_check(reply, text=text, history=history, memory=memory if sources else None,
++                       observations=observations)
+         reply = self._record(conversation_id, reply, client_id, client_turn_key, text)
+         return {"turn": turn, "reply": reply, "replayed": False, "model_called": True, "diagnostics": diagnostics}
+--- a/eidolon-core/tests/test_claude_evidence_g294.py
++++ b/eidolon-core/tests/test_claude_evidence_g294.py
+@@ -16,7 +16,6 @@
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from test_claude_holdout_g294 import CASES, canned_model, holdout  # noqa: E402
+ 
+-F02 = pytest.mark.xfail(strict=True, reason="G294-F02: no Core evidence flag on an unsupported answer")
+ 
+ 
+ def turn(tmp_path, case_id, kind, text):
+@@ -45,7 +44,6 @@
+         api.close()
+ 
+ 
+-@F02
+ @pytest.mark.parametrize("case_id,text", [
+     ("future-price", "Une V100 coûtera 900 euros en 2030."),
+     ("missing-date", "Les V100 arrivent le 28 octobre [livraison@1]."),
+@@ -58,13 +56,11 @@
+     assert reply["evidence_check"]["semantic_relevance_checked"] is False
+ 
+ 
+-@F02
+ def test_unsupported_citation_sets_a_core_note(tmp_path):
+     reply, _ = turn(tmp_path, "invented-ref-in-memory", "answer", "La grappe compte 3 disques [fiche-xyz@4].")
+     assert reply["core_note"] == "CITATION_UNSUPPORTED"
+ 
+ 
+-@F02
+ def test_flag_is_durable_and_replayed(tmp_path):
+     reply, page = turn(tmp_path, "future-price", "answer", "Une V100 coûtera 900 euros en 2030.")
+     recorded = [t for t in page["items"] if t.get("reply")][-1]["reply"]
+@@ -82,7 +78,6 @@
+     assert reply["core_note"] is None
+ 
+ 
+-@F02
+ def test_known_limit_calculation_is_flagged_not_blocked(tmp_path):
+     """600 = 2 x 300 is correct but absent from the note: flagged for review, still an ANSWER."""
+     reply, _ = turn(tmp_path, "calculation", "answer", "Ensemble, 600 W [gpu-tdp@1].")
+@@ -96,7 +91,6 @@
+     assert reply["kind"] == "ANSWER" and reply["core_note"] is None
+ 
+ 
+-@F02
+ def test_history_user_numbers_count_but_model_guesses_do_not():
+     from eidolon_core.dialogue import evidence_check
+     reply = {"kind": "ANSWER", "model_text": "Donc 42 et 7.", "core_note": None, "citations": {"unsupported": []}}

@@ -1,0 +1,179 @@
+diff --git a/tests/evaluation/memory-holdout-g294.json b/tests/evaluation/memory-holdout-g294.json
+new file mode 100644
+index 0000000..d7742d2
+--- /dev/null
++++ b/tests/evaluation/memory-holdout-g294.json
+@@ -0,0 +1,27 @@
++{
++  "schema": "eidolon-memory-holdout/1",
++  "author": "Claude, G294, 22/10/2026",
++  "scope": "Written against the public text of docs/VEILLE-IA-15-SUJETS-2026-10-22.md before any run. 'trap_id' names the related note a retriever is expected to return although it does NOT answer; it is an annotation, not an expected answer.",
++  "cases": [
++    {"id": "nn-mlperf-score", "kind": "near_negative", "query": "Quel score avons-nous obtenu sur MLPerf Agents ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-10"},
++    {"id": "nn-nemotron-v100", "kind": "near_negative", "query": "Quel débit Nemotron Bolt atteint-il sur nos V100 ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-01"},
++    {"id": "nn-liquid-volta", "kind": "near_negative", "query": "Combien de tokens par seconde LFM2.5 fait-il sur Volta ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-02"},
++    {"id": "nn-granite-fr", "kind": "near_negative", "query": "Quel taux d'erreur la transcription française de Granite Switch obtient-elle ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-03"},
++    {"id": "nn-vllm-installed", "kind": "near_negative", "query": "Quelle version de vLLM est installée sur VM100 ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-06"},
++    {"id": "nn-hermes-023", "kind": "near_negative", "query": "Que corrige Hermes Agent 0.23 ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-07"},
++    {"id": "nn-cve-llamacpp", "kind": "near_negative", "query": "Quel est le score CVSS de la faille de llama.cpp ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-11"},
++    {"id": "nn-dcgm-vm100", "kind": "near_negative", "query": "VM100 est-elle affectée par la faille DCGM ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-11"},
++    {"id": "nn-bitnet-recall", "kind": "near_negative", "query": "De combien BitNet Embeddings améliore-t-il notre rappel ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-09"},
++    {"id": "nn-mojo-13", "kind": "near_negative", "query": "Quand Mojo 1.3 est-il sorti ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-13"},
++    {"id": "nn-kata-price", "kind": "near_negative", "query": "Combien coûte une licence Kata Containers ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-15"},
++    {"id": "nn-otari-deployed", "kind": "near_negative", "query": "Depuis quand Otari route-t-il nos requêtes ?", "expected_id": null, "trap_id": "remember-veille-ia-20261022-08"},
++    {"id": "pk-01", "kind": "paraphrase_no_keyword", "query": "Quel grand modèle mélange couches à état et attention, compressé à deux bits ?", "expected_id": "remember-veille-ia-20261022-01"},
++    {"id": "pk-02", "kind": "paraphrase_no_keyword", "query": "Quel modèle n'active que deux milliards de paramètres sur vingt-quatre ?", "expected_id": "remember-veille-ia-20261022-02"},
++    {"id": "pk-04", "kind": "paraphrase_no_keyword", "query": "Quel outil écrit la parole au fil de l'eau et distingue qui parle ?", "expected_id": "remember-veille-ia-20261022-04"},
++    {"id": "pk-08", "kind": "paraphrase_no_keyword", "query": "Quelle passerelle gère des clés révocables et des budgets pour plusieurs fournisseurs ?", "expected_id": "remember-veille-ia-20261022-08"},
++    {"id": "pk-11", "kind": "paraphrase_no_keyword", "query": "Quel exportateur de métriques GPU expose un point de profilage vulnérable ?", "expected_id": "remember-veille-ia-20261022-11"},
++    {"id": "pk-12", "kind": "paraphrase_no_keyword", "query": "Quelle analyse automatique des demandes de fusion complète l'outil de requêtes de code ?", "expected_id": "remember-veille-ia-20261022-12"},
++    {"id": "pk-14", "kind": "paraphrase_no_keyword", "query": "Quels travaux relient vision, pointage et prédiction d'actions robotiques ?", "expected_id": "remember-veille-ia-20261022-14"},
++    {"id": "pk-15", "kind": "paraphrase_no_keyword", "query": "Quelle technologie isole des conteneurs dans de petites machines virtuelles ?", "expected_id": "remember-veille-ia-20261022-15"}
++  ]
++}
+diff --git a/tests/test_memory_holdout_g294.py b/tests/test_memory_holdout_g294.py
+new file mode 100644
+index 0000000..4f95b9a
+--- /dev/null
++++ b/tests/test_memory_holdout_g294.py
+@@ -0,0 +1,36 @@
++import json
++from pathlib import Path
++import pytest
++from tools.evaluation.run_memory_holdout import validate, summarize
++
++FIXTURE = Path(__file__).parent / "evaluation/memory-holdout-g294.json"
++
++
++def test_fixture_is_valid_and_separates_traps_from_answers():
++    cases = validate(json.loads(FIXTURE.read_text()))
++    assert sum(c["kind"] == "near_negative" for c in cases) == 12
++    assert sum(c["kind"] == "paraphrase_no_keyword" for c in cases) == 8
++    assert all(c["expected_id"] is None and c["trap_id"] for c in cases if c["kind"] == "near_negative")
++
++
++@pytest.mark.parametrize("mutation", ["expected", "duplicate", "kind", "target"])
++def test_invalid_holdouts_are_refused(mutation):
++    data = json.loads(FIXTURE.read_text())
++    if mutation == "expected":
++        data["cases"][0]["expected_id"] = data["cases"][0]["trap_id"]
++    elif mutation == "duplicate":
++        data["cases"][1]["id"] = data["cases"][0]["id"]
++    elif mutation == "kind":
++        data["cases"][0]["kind"] = "unknown"
++    else:
++        data["cases"][-1]["expected_id"] = None
++    with pytest.raises(ValueError):
++        validate(data)
++
++
++def test_summary_never_claims_proof():
++    rows = [{"kind": "near_negative", "candidates": 5, "target_rank": 1, "first_score": .5, "duration_ms": 1},
++            {"kind": "paraphrase_no_keyword", "candidates": 5, "target_rank": None, "first_score": .2, "duration_ms": 3}]
++    s = summarize(rows)
++    assert s["near_negative"]["target_top1"] == 1 and s["paraphrase_no_keyword"]["target_top5"] == 0
++    assert s["score_is_proof"] is False and s["threshold_calibrated"] is False
+diff --git a/tools/evaluation/run_memory_holdout.py b/tools/evaluation/run_memory_holdout.py
+new file mode 100644
+index 0000000..7ef1404
+--- /dev/null
++++ b/tools/evaluation/run_memory_holdout.py
+@@ -0,0 +1,98 @@
++"""Read-only Memory holdout (Claude, G294): near-negatives and keywordless paraphrases.
++
++For a near-negative, ``trap_id`` names the related note that does NOT answer. Its rank
++measures how often Core receives plausible but insufficient evidence; it is never an
++expected answer. Same local endpoint and limits as run_memory_50. No writes.
++"""
++import argparse
++import json
++from pathlib import Path
++from statistics import median
++from time import monotonic
++from urllib.request import Request, urlopen
++
++KINDS = {"near_negative", "paraphrase_no_keyword"}
++
++
++def validate(payload):
++    if payload.get("schema") != "eidolon-memory-holdout/1":
++        raise ValueError("unknown holdout schema")
++    cases = payload.get("cases")
++    if not isinstance(cases, list) or not 1 <= len(cases) <= 200 or len({c["id"] for c in cases}) != len(cases):
++        raise ValueError("invalid or duplicate cases")
++    for c in cases:
++        if c.get("kind") not in KINDS or not isinstance(c.get("query"), str) or not 1 <= len(c["query"]) <= 500:
++            raise ValueError("invalid case")
++        if (c["kind"] == "near_negative") != (c.get("expected_id") is None):
++            raise ValueError("near-negatives alone have no expected answer")
++        target = c.get("expected_id") or c.get("trap_id")
++        if not isinstance(target, str) or not target:
++            raise ValueError("expected_id or trap_id required")
++    return cases
++
++
++def summarize(rows):
++    out = {}
++    for kind in sorted(KINDS):
++        sub = [r for r in rows if r["kind"] == kind and "error" not in r]
++        scores = [r["first_score"] for r in sub if r["first_score"] is not None]
++        out[kind] = {"cases": len(sub), "target_top1": sum(r["target_rank"] == 1 for r in sub),
++                     "target_top5": sum(r["target_rank"] is not None for r in sub),
++                     "with_candidates": sum(r["candidates"] > 0 for r in sub),
++                     "first_score_min": min(scores) if scores else None,
++                     "first_score_max": max(scores) if scores else None}
++    out["errors"] = sum("error" in r for r in rows)
++    out["median_ms"] = median(r["duration_ms"] for r in rows) if rows else None
++    out["score_is_proof"] = False
++    out["threshold_calibrated"] = False
++    return out
++
++
++def run(cases, *, url, token, timeout):
++    rows = []
++    for c in cases:
++        start = monotonic()
++        body = json.dumps({"query": c["query"], "mode": "operational", "max_items": 5,
++                           "max_chars": 4000, "max_item_chars": 800}).encode()
++        try:
++            with urlopen(Request(url, data=body, headers={"Authorization": "Bearer " + token,
++                                                           "Content-Type": "application/json"}), timeout=timeout) as r:
++                data = json.load(r)
++            if data.get("schema") != "eidolon-memory-recall/1":
++                raise ValueError("wrong response schema")
++            items = data["result"]["items"]
++            ids = [i["information_id"] for i in items]
++            target = c.get("expected_id") or c["trap_id"]
++            row = {"id": c["id"], "kind": c["kind"], "candidates": len(ids),
++                   "target_rank": ids.index(target) + 1 if target in ids else None,
++                   "first_score": items[0].get("score") if items else None}
++        except Exception as exc:
++            row = {"id": c["id"], "kind": c["kind"], "error": type(exc).__name__}
++        row["duration_ms"] = round((monotonic() - start) * 1000, 1)
++        rows.append(row)
++        print(json.dumps(row, ensure_ascii=False), flush=True)
++    return {"schema": "eidolon-memory-holdout-report/1", "summary": summarize(rows), "rows": rows}
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--fixture", required=True, type=Path)
++    ap.add_argument("--env-file", required=True, type=Path)
++    ap.add_argument("--output", required=True, type=Path)
++    ap.add_argument("--url", default="http://127.0.0.1:18765/v1/recall")
++    ap.add_argument("--timeout", type=float, default=20)
++    args = ap.parse_args()
++    if args.url != "http://127.0.0.1:18765/v1/recall":
++        ap.error("only local read-only recall endpoint permitted")
++    cases = validate(json.loads(args.fixture.read_text()))
++    values = dict(line.split("=", 1) for line in args.env_file.read_text().splitlines() if "=" in line)
++    report = run(cases, url=args.url, token=values["EIDOLON_MEMORY_BRIDGE_TOKEN"].strip().strip("\"'"),
++                 timeout=args.timeout)
++    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
++    print("SUMMARY", json.dumps(report["summary"]), flush=True)
++    if report["summary"]["errors"]:
++        raise SystemExit(2)
++
++
++if __name__ == "__main__":
++    main()

@@ -2658,3 +2658,11 @@ Chromium 243 sans ignoré, Qdrant jetable 19, propriétaires UID 5. Core `a6edf0
 Memory `deda5b6` alignés sur GitHub ; historique local Core archivé, idées vidéo
 préservées. API redémarrée, octets du client corrigé et santé HTTP 200 vérifiés.
 [Rapport complet et réserves](docs/AUDIT-G288-2026-10-22.md).
+
+## Claude — G294, contre-audit Memory et dialogue, 22/10/2026, 21 h 15
+Bases : Core 07092e0, Memory dae7b50. Aucun P0. Memory complet sous deux comptes (root, et UID ordinaire avec
+Qdrant 1.15.4 jetable) : aucun test non exécuté, 3 190 réussis comme G291. Core 2 318 réussis (code GPT).
+P1 : le banc G287 accepte des réponses inventées dès qu'elles contiennent « pas » (F01). Une réponse non étayée
+est enregistrée sans signal (F02, patch 0013). La note voisine qui ne répond pas arrive en tête dans 10 cas sur 12
+des questions pièges (F03, holdout Memory 0068 ; correction de fond proposée). Holdout dialogue de 22 cas
+à lancer sur VM100. [Rapport](docs/AUDIT-CLAUDE-G294-MEMORY-DIALOGUE.md) · [C-MSG-C194](collaboration/CLAUDE-TO-GPT.md).
