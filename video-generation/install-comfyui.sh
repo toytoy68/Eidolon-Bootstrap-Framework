@@ -32,15 +32,19 @@ readonly PRIMARY_USER="${PRIMARY_USER:-toytoy}"
 readonly EIDOLON_HOME="${EIDOLON_HOME:-/opt/eidolon}"
 readonly COMFY_DIR="${COMFY_DIR:-$EIDOLON_HOME/comfyui}"
 readonly VENV_DIR="$COMFY_DIR/venv"
-readonly LOGFILE="/var/log/eidolon-comfyui-install.log"
+readonly LOGFILE="${LOGFILE:-/var/log/eidolon-comfyui-install.log}"
 
 readonly COMFY_REPO="https://github.com/comfyanonymous/ComfyUI.git"
+readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# Révisions fixées, sans mise à jour implicite au prochain lancement.
+# shellcheck source=sources.lock
+source "$SCRIPT_DIR/sources.lock"
 
 # Volta (sm_70) : PyTorch 2.14 est la dernière version publiée
 # avec des binaires Volta, sur l'index CUDA 12.6.
 # CUDA 13 ne prend plus en charge les GPU antérieurs à Turing.
 readonly TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu126}"
-readonly TORCH_SPEC="${TORCH_SPEC:-torch<2.15}"
+readonly TORCH_SPEC="torch==2.14.0+cu126"
 
 readonly COMFY_PORT="${COMFY_PORT:-8188}"
 readonly COMFY_LISTEN="${COMFY_LISTEN:-0.0.0.0}"
@@ -58,12 +62,12 @@ readonly APT_PACKAGES=(
     curl
 )
 
-# Nœuds personnalisés : nom|dépôt
+# Nœuds personnalisés : nom|dépôt|révision
 readonly CUSTOM_NODES=(
-    "ComfyUI-Manager|https://github.com/Comfy-Org/ComfyUI-Manager.git"
-    "ComfyUI-GGUF|https://github.com/city96/ComfyUI-GGUF.git"
-    "ComfyUI-VideoHelperSuite|https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
-    "ComfyUI-MultiGPU|https://github.com/pollockjj/ComfyUI-MultiGPU.git"
+    "ComfyUI-Manager|https://github.com/Comfy-Org/ComfyUI-Manager.git|$MANAGER_REV"
+    "ComfyUI-GGUF|https://github.com/city96/ComfyUI-GGUF.git|$GGUF_REV"
+    "ComfyUI-VideoHelperSuite|https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git|$VHS_REV"
+    "ComfyUI-MultiGPU|https://github.com/pollockjj/ComfyUI-MultiGPU.git|$MULTIGPU_REV"
 )
 
 # ----------------------------------------------------------
@@ -171,12 +175,22 @@ create_directories() {
 
 install_comfyui() {
     if [[ -d "$COMFY_DIR/.git" ]]; then
-        run "Mise à jour de ComfyUI" as_user git -C "$COMFY_DIR" pull --ff-only
+        ok "Dépôt ComfyUI présent"
     elif [[ -z "$(ls -A "$COMFY_DIR" 2>/dev/null)" ]]; then
         run "Clonage de ComfyUI" as_user git clone "$COMFY_REPO" "$COMFY_DIR"
     else
         error "$COMFY_DIR n'est pas vide et n'est pas un dépôt ComfyUI."
     fi
+    pin_checkout "$COMFY_DIR" "$COMFY_REV"
+}
+
+pin_checkout() {
+    local DIR="$1" REV="$2"
+    [[ "$REV" =~ ^[0-9a-f]{40}$ ]] || error "Révision Git invalide : $REV"
+    [[ -z "$(as_user git -C "$DIR" status --porcelain --untracked-files=no)" ]] \
+        || error "Modifications locales dans $DIR : sauvegarder avant installation."
+    run "Récupération de $REV" as_user git -C "$DIR" fetch origin "$REV"
+    run "Sélection de $REV" as_user git -C "$DIR" checkout --detach "$REV"
 }
 
 install_venv() {
@@ -199,6 +213,10 @@ install_torch() {
         | grep -E "^(torch|torchvision|torchaudio)==" \
         | as_user tee "$COMFY_DIR/eidolon-constraints.txt" >/dev/null
 
+    # S'applique aussi aux futurs pip de ce venv, dont ceux du Manager.
+    as_user "$VENV_DIR/bin/pip" config --site set global.constraint "$COMFY_DIR/eidolon-constraints.txt"
+    as_user "$VENV_DIR/bin/pip" config --site set global.extra-index-url "$TORCH_INDEX"
+
     ok "Contraintes PyTorch écrites dans eidolon-constraints.txt"
 }
 
@@ -210,17 +228,20 @@ install_requirements() {
 }
 
 install_custom_nodes() {
-    local ENTRY NAME REPO DEST
+    local ENTRY NAME REPO DEST REV REST
     for ENTRY in "${CUSTOM_NODES[@]}"; do
         NAME="${ENTRY%%|*}"
-        REPO="${ENTRY#*|}"
+        REST="${ENTRY#*|}"
+        REPO="${REST%%|*}"
+        REV="${REST##*|}"
         DEST="$COMFY_DIR/custom_nodes/$NAME"
 
         if [[ -d "$DEST/.git" ]]; then
-            run "Mise à jour de $NAME" as_user git -C "$DEST" pull --ff-only
+            ok "Dépôt $NAME présent"
         else
             run "Clonage de $NAME" as_user git clone "$REPO" "$DEST"
         fi
+        pin_checkout "$DEST" "$REV"
 
         if [[ -f "$DEST/requirements.txt" ]]; then
             run "Dépendances de $NAME" \
@@ -252,6 +273,7 @@ User=$PRIMARY_USER
 WorkingDirectory=$COMFY_DIR
 Environment=CUDA_DEVICE_ORDER=PCI_BUS_ID
 Environment=CUDA_VISIBLE_DEVICES=$COMFY_GPUS
+Environment=PIP_CONSTRAINT=$COMFY_DIR/eidolon-constraints.txt
 Environment=PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 ExecStart=$VENV_DIR/bin/python main.py --listen $COMFY_LISTEN --port $COMFY_PORT --force-fp16 --preview-method auto
 Restart=on-failure
@@ -279,8 +301,15 @@ print("archs", " ".join(torch.cuda.get_arch_list()))
 for i in range(torch.cuda.device_count()):
     p = torch.cuda.get_device_properties(i)
     print(f"gpu{i}", p.name, f"sm_{p.major}{p.minor}", f"{p.total_memory // 2**20} Mo")
-x = torch.randn(1024, 1024, device="cuda", dtype=torch.float16)
-print("fp16 matmul ok", float((x @ x).float().abs().mean()) > 0)
+    if (p.major, p.minor) == (7, 0):
+        assert "sm_70" in torch.cuda.get_arch_list(), "Build sans sm_70"
+    x = torch.randn(1024, 1024, device=f"cuda:{i}", dtype=torch.float16)
+    y = x @ x
+    assert torch.isfinite(y).all().item(), f"Résultat fp16 non fini sur GPU {i}"
+    assert y.abs().sum().item() > 0, f"Résultat fp16 nul sur GPU {i}"
+    torch.cuda.synchronize(i)
+    print(f"gpu{i} fp16 matmul ok")
+    del x, y
 PY
 )" || error "Validation PyTorch impossible :
 $OUT"
@@ -329,10 +358,10 @@ main() {
     check_root
     check_user
     check_nvidia
-    check_network
 
     title "Installation"
     install_packages
+    check_network
     create_directories
     install_comfyui
     install_venv
@@ -340,12 +369,18 @@ main() {
     install_requirements
     install_custom_nodes
     create_model_directories
-    configure_service
+    run "Cohérence des dépendances" as_user "$VENV_DIR/bin/pip" check
 
     title "Validation"
     validate_torch
 
+    # Aucun service créé/activé si les validations précédentes échouent.
+    configure_service
+
     summary
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi
+

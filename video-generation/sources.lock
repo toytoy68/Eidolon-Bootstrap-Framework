@@ -1,0 +1,6 @@
+# Révisions récupérées le 2026-10-23 ; exécution GPU encore à valider.
+readonly COMFY_REV="d07dff4565ea9804277fff8cdfa0c817e08c3d44"
+readonly GGUF_REV="6ea2651e7df66d7585f6ffee804b20e92fb38b8a"
+readonly VHS_REV="4d907bee61e92c2e65af3bd6383a4e4d356126d1"
+readonly MULTIGPU_REV="37a73feda5804045e4f39d8c640905d62a2169d1"
+readonly MANAGER_REV="a74929c65b49d7d7d81b9a6f140de878a818b893"

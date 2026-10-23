@@ -29,8 +29,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import re
+import shutil
 import sys
 import time
 import urllib.error
@@ -69,13 +71,14 @@ def http_json(url: str, payload: dict | None = None, timeout: float = 30) -> Any
 # Enrichissement du prompt (Ollama)
 # ----------------------------------------------------------
 
-def enhance_prompt(idea: str, url: str, model: str) -> str:
+def enhance_prompt(idea: str, url: str, model: str, keep_alive: str | int = 0) -> str:
     payload = {
         "model": model,
         "system": ENHANCE_SYSTEM,
         "prompt": idea,
         "stream": False,
         "think": False,
+        "keep_alive": keep_alive,
         "options": {"temperature": 0.7},
     }
     try:
@@ -110,6 +113,8 @@ def set_if_scalar(inputs: dict, key: str, value: Any) -> bool:
 
 def apply_steps(wf: dict, steps: int) -> None:
     advanced = [n for n in wf.values() if n.get("class_type") == "KSamplerAdvanced"]
+    if steps < (2 if advanced else 1):
+        raise ValueError("Au moins 2 étapes pour High/Low Noise, 1 pour un sampler simple.")
     if advanced:
         # Deux passes (High Noise puis Low Noise) : on conserve la
         # proportion de bascule définie dans le workflow.
@@ -176,10 +181,49 @@ def prepare_workflow(wf: dict, args: argparse.Namespace, prompt: str) -> dict:
         node_id, key, value = parse_set(expr)
         if node_id not in wf:
             raise SystemExit(f"--set : nœud {node_id} absent du workflow.")
+        if key not in wf[node_id]["inputs"]:
+            raise ValueError(f"--set : entrée {node_id}.{key} absente du workflow.")
         wf[node_id]["inputs"][key] = value
 
+    validate_workflow(wf)
     args.used_seed = seed
     return wf
+
+
+def validate_workflow(wf: dict) -> None:
+    """Contrôles locaux des graphes fournis ; l'API ComfyUI reste autoritaire."""
+    for node_id, node in wf.items():
+        inputs = node["inputs"]
+        for key, value in inputs.items():
+            if isinstance(value, list):
+                if (len(value) != 2 or value[0] not in wf
+                        or type(value[1]) is not int or value[1] < 0):
+                    raise ValueError(f"Lien invalide : {node_id}.{key}")
+        kind = node["class_type"]
+        if kind in ("Wan22ImageToVideoLatent", "EmptyHunyuanLatentVideo"):
+            multiple = 32 if kind == "Wan22ImageToVideoLatent" else 16
+            for key in ("width", "height", "length", "batch_size"):
+                value = inputs[key]
+                if type(value) is not int or value <= 0:
+                    raise ValueError(f"{node_id}.{key} doit être un entier positif.")
+            if inputs["width"] % multiple or inputs["height"] % multiple:
+                raise ValueError(f"Dimensions attendues : multiples de {multiple}.")
+            if (inputs["length"] - 1) % 4:
+                raise ValueError("Le nombre d'images doit valoir 4n + 1.")
+        if kind in ("KSampler", "KSamplerAdvanced"):
+            steps = inputs["steps"]
+            if type(steps) is not int or steps < (2 if kind == "KSamplerAdvanced" else 1):
+                raise ValueError("Nombre d'étapes invalide.")
+            if kind == "KSamplerAdvanced":
+                start, end = inputs["start_at_step"], inputs["end_at_step"]
+                if (type(start) is not int or type(end) is not int
+                        or not 0 <= start < min(end, steps)):
+                    raise ValueError("Intervalle de débruitage vide ou invalide.")
+        if kind == "CreateVideo":
+            fps = inputs["fps"]
+            if (isinstance(fps, bool) or not isinstance(fps, (int, float))
+                    or not math.isfinite(fps) or not 1 <= fps <= 120):
+                raise ValueError("FPS attendu entre 1 et 120.")
 
 
 # ----------------------------------------------------------
@@ -202,8 +246,8 @@ def submit(server: str, wf: dict) -> str:
 
 
 def wait(server: str, prompt_id: str, timeout: float) -> dict:
-    start = time.time()
-    while time.time() - start < timeout:
+    start = time.monotonic()
+    while time.monotonic() - start < timeout:
         hist = http_json(f"{server}/history/{prompt_id}")
         if prompt_id in hist:
             entry = hist[prompt_id]
@@ -217,13 +261,14 @@ def wait(server: str, prompt_id: str, timeout: float) -> dict:
                             f"({err.get('node_type')}) : {err.get('exception_message')}"
                         )
                 raise SystemExit("Échec de l'exécution (voir les journaux de ComfyUI).")
-            if status.get("completed", True):
+            if status.get("completed") is True:
                 return entry
-        elapsed = int(time.time() - start)
+        elapsed = int(time.monotonic() - start)
         print(f"\r[INFO] Génération en cours… {elapsed // 60:02d}:{elapsed % 60:02d}",
               end="", file=sys.stderr, flush=True)
         time.sleep(3)
-    raise SystemExit(f"Délai dépassé ({int(timeout)} s).")
+    raise SystemExit(f"Délai dépassé ({int(timeout)} s), tâche {prompt_id}. "
+                     "La tâche peut encore tourner sur ComfyUI ; elle n'a pas été annulée.")
 
 
 def download_outputs(server: str, entry: dict, out_dir: Path) -> list[Path]:
@@ -241,9 +286,20 @@ def download_outputs(server: str, entry: dict, out_dir: Path) -> list[Path]:
                     "subfolder": item.get("subfolder", ""),
                     "type": item.get("type", "output"),
                 })
-                dest = out_dir / item["filename"]
-                with urllib.request.urlopen(f"{server}/view?{query}", timeout=300) as r:
-                    dest.write_bytes(r.read())
+                name = item["filename"]
+                if (not isinstance(name, str) or name in ("", ".", "..")
+                        or any(c in name for c in ("/", "\\", ":", "\0"))):
+                    raise ValueError(f"Nom de sortie non sûr : {name!r}")
+                dest = out_dir / name
+                # Création exclusive : refuse aussi les liens symboliques et les collisions.
+                with dest.open("xb") as output:
+                    try:
+                        with urllib.request.urlopen(f"{server}/view?{query}", timeout=300) as r:
+                            shutil.copyfileobj(r, output, length=1024 * 1024)
+                    except BaseException:
+                        output.close()
+                        dest.unlink(missing_ok=True)
+                        raise
                 saved.append(dest)
     return saved
 
@@ -272,8 +328,14 @@ def main() -> None:
     ap.add_argument("--enhance", action="store_true", help="Enrichir le prompt avec un LLM local (Ollama)")
     ap.add_argument("--ollama-url", default="http://127.0.0.1:11434")
     ap.add_argument("--ollama-model", default="qwen3:14b")
+    ap.add_argument("--ollama-keep-alive", default=0,
+                    help="0 : décharger après enrichissement (défaut) ; ex. 5m sur GPU séparé")
     ap.add_argument("--dry-run", action="store_true", help="Afficher le workflow final sans l'envoyer")
     args = ap.parse_args()
+    if not math.isfinite(args.timeout) or args.timeout <= 0:
+        ap.error("--timeout doit être positif et fini")
+    if args.seed is not None and not 0 <= args.seed < 2**64:
+        ap.error("--seed doit être compris entre 0 et 2**64-1")
 
     server = args.server.rstrip("/")
     wf = json.loads(args.workflow.read_text(encoding="utf-8"))
@@ -281,7 +343,8 @@ def main() -> None:
     prompt = args.prompt
     if args.enhance:
         print(f"[INFO] Enrichissement du prompt avec {args.ollama_model}…", file=sys.stderr)
-        prompt = enhance_prompt(prompt, args.ollama_url, args.ollama_model)
+        prompt = enhance_prompt(prompt, args.ollama_url, args.ollama_model,
+                                args.ollama_keep_alive)
         print(f"[INFO] Prompt final : {prompt}", file=sys.stderr)
 
     wf = prepare_workflow(wf, args, prompt)
@@ -304,3 +367,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
