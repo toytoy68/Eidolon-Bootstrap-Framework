@@ -252,7 +252,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 | Ordre | Lot | Contenu | Dépend de | État |
 | --- | --- | --- | --- | --- |
 | 1 | V1-a | Outil de mesure des mots d'appel | — | **livré** |
-| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | à faire |
+| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | **kit prêt** (`tools/wake_training/`), autorisé le 23/10 à 21 h 32 ; lancement en attente d'accès à VM100 |
 | 3 | V1-c | Détection WASM dans le client, veille sans envoi, repli G282 | V1-b | à faire |
 | 4 | V2-a | Contrôleur de coupure | — | **livré** |
 | 5 | V2-b | Branchement, VAD Silero WASM, annulation de la synthèse, mesure de l'écho sur le PC | V2-a | à faire |
@@ -288,6 +288,41 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 4. **« Dis-moi » supprimé** partout (fait sur cette branche, §4). Avant toute activation : tests
    de non-régression, seuil de faux positifs, latence et écho acoustique réel validés sous
    Windows. Pas de déploiement en production ni de fusion sans validation.
+
+## 6 ter. Kit d'entraînement « eidolon » (VM100)
+
+Autorisation de toytoy : 23/10/2026, 21 h 32. Fichiers sous `tools/wake_training/` :
+
+- `eidolon-training.yml` : quatre graphies d'« Eidolon » et dix mots proches négatifs ; aucun autre mot d'appel.
+- `run_vm100.sh`, en quatre temps :
+  - contrôles préalables (`activity.json`, Docker, `nvidia-smi`, 45 Go libres) ;
+  - clonage de wakeword-generator au commit `1cc2c42`, refusé s'il a été modifié ;
+  - quatre étapes en conteneurs `eidolon-wake-*` de priorité minimale ;
+  - puis modèle, empreinte, provenance et banc.
+
+  CPU par défaut ; `WAKE_GPU=n` réserve un seul GPU à l'étape d'entraînement.
+- `guard.py` met le conteneur en **pause** (`docker pause`) :
+  - si Eidolon a servi dans les 10 dernières minutes ;
+  - si le reçu d'activité est absent ou périmé ;
+  - si un GPU atteint 82 °C ;
+  - si la température est inconnue.
+
+  Il reprend quand tout est revenu à la normale, et n'arrête ni ne redémarre aucun service.
+- `bench_model.py` mesure deux choses :
+  - les clips tenus à l'écart de l'entraînement, notés par `wake_eval_g296.py` ;
+  - les fausses activations par heure sur les ~11 h de négatifs d'openWakeWord.
+- Tests : `tests/test_wake_training_g296.py`, 13 tests, dont le vrai processus de garde avec un
+  `docker` simulé : pause, reprise, et aucune commande `rm`, `stop` ni `kill`.
+
+Commande, sur VM100, depuis `eidolon-core/` :
+
+```sh
+WAKE_ACTIVITY=/CHEMIN/ETAT-CORE/activity.json tools/wake_training/run_vm100.sh
+tools/wake_training/run_vm100.sh status
+```
+
+Le modèle produit reste sous `~/eidolon-validation/g296/wake/models/`, avec `activated: false`.
+L'activation dans le client (V1-c) attend le banc, puis les mesures Windows.
 
 ## 7. Limites
 

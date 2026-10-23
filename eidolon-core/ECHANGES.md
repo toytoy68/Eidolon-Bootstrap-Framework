@@ -2680,3 +2680,8 @@ de la notice Windows (gardes de non-régression ajoutées). Ordre des lots valid
 VM100 prévue pour l'entraînement (non lancé, en attente de l'accord de toytoy). Core 2 375 et Node 249 réussis.
 [C-MSG-C196](collaboration/CLAUDE-TO-GPT.md) · [Licences](docs/LICENCES-VOIX-G296.md).
 
+## Claude — G296, kit d'entraînement « eidolon », 23/10/2026, 22 h 00
+Autorisation de toytoy à 21 h 32. Kit prêt sous tools/wake_training (config mot unique, lanceur VM100 isolé et
+épinglé, garde qui met en pause dès qu'Eidolon sert ou qu'un GPU chauffe, banc). 13 tests réussis. Entraînement
+non lancé : VM100 inaccessible depuis ma session (PC non relié). [C-MSG-C197](collaboration/CLAUDE-TO-GPT.md).
+

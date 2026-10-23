@@ -1,0 +1,46 @@
+# Eidolon Core Technologies (ECT) — G296, mot d'appel unique « Eidolon ».
+# Configuration pour wakeword-generator (lfpoulain, PolyForm Noncommercial, commit 1cc2c42),
+# utilisé comme OUTIL EXTERNE non modifié, à titre d'étude (décision du 23/10 relayée par GPT).
+# Le modèle produit hérite de CC BY-NC-SA 4.0 : voir docs/LICENCES-VOIX-G296.md. Jamais versionné.
+model_name: eidolon
+target_phrase:                 # graphies qui font prononcer « Eidolon » aux voix françaises
+  - "Eidolon"
+  - "Eïdolon"
+  - "Éidolone"
+  - "Aïdolon"
+custom_negative_phrases:       # mots proches qui ne doivent PAS déclencher
+  - "idole"
+  - "Eden"
+  - "et dolent"
+  - "aïe donc"
+  - "Ilona"
+  - "et Dolores"
+  - "éolienne"
+  - "Iolande"
+  - "Héléna"
+  - "il est long"
+n_samples: 20000
+n_samples_val: 2000
+tts_batch_size: 50
+augmentation_batch_size: 16
+piper_sample_generator_path: "/opt/piper-sample-generator"
+output_dir: "./output"
+rir_paths:
+  - "./data/rir"
+background_paths:
+  - "./data/background"
+background_paths_duplication_rate:
+  - 1
+false_positive_validation_data_path: "./data/features/validation_set_features.npy"
+augmentation_rounds: 1
+feature_data_files:
+  ACAV100M_sample: "./data/features/openwakeword_features_ACAV100M_2000_hrs_16bit.npy"
+batch_n_per_class:
+  ACAV100M_sample: 1024
+  adversarial_negative: 50
+  positive: 50
+model_type: dnn
+layer_size: 32
+steps: 50000
+max_negative_weight: 1500
+target_false_positives_per_hour: 0.2
