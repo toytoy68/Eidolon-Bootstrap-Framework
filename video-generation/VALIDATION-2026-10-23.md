@@ -5,6 +5,12 @@ Base relue : PR #2, branche `claude/video-generation-v100`, commit
 
 ## Résultat
 
+**Mise à jour après reprise sur Core : 28 tests PASS sous Python 3.13.5 et
+ShellCheck 0.10.0 PASS après correction de SC2155. L’accès VM fonctionne à
+nouveau. Aucun GPU V100 n’est actuellement visible sur Core ; la recette vidéo
+matérielle reste non effectuée.** Voir la reprise détaillée en fin de rapport.
+
+
 **28 tests PASS**, Python 3.12.14, sans GPU ni téléchargement de modèles.
 Commande :
 
@@ -71,3 +77,25 @@ La PR doit rester expérimentale et en brouillon jusqu'à la recette V100.
 Le README fournit une première génération 5B courte à graine fixe, puis une
 progression vers les profils normaux et le 14B. Les trois workflows restent
 sur un GPU ; aucun partage automatique de 64 Go n'est ajouté.
+
+## Reprise sur Core — 23 octobre 2026
+
+- Accès `vm_execute` rétabli, diagnostic réalisé sur `eidolon-core`.
+- GPU visibles : GTX 1060 6 Go (6144 MiB) et GTX 1650 4 Go (4096 MiB).
+- RAM : environ 15 GiB ; aucune V100 visible. Répertoire attendu
+  `/opt/eidolon/comfyui` absent et service `eidolon-comfyui` inactif.
+- Clone isolé de la branche vidéo, base exacte
+  `6808746b2c9f3142fc33213373e6c0cad5005a9c`, dans un répertoire temporaire.
+- **28 tests PASS sous Python 3.13.5**, avant et après la correction ShellCheck.
+- ShellCheck 0.10.0 a trouvé SC2155 sur la déclaration de `SCRIPT_DIR`.
+  L’affectation et `readonly` sont maintenant séparés pour ne plus masquer
+  le statut de la substitution de commande.
+- **ShellCheck PASS** après correction :
+  `shellcheck -x -P video-generation video-generation/install-comfyui.sh video-generation/download-models.sh`.
+- `git diff --check` PASS.
+
+Seuls le clone de validation et ses fichiers temporaires ont été modifiés sur
+Core. Aucun installateur lancé, aucun service changé et aucun modèle téléchargé.
+Ces tests utilisent les simulations déjà décrites : être exécutés sur la VM ne
+les transforme pas en tests CUDA. La génération 5B/V100, les mesures mémoire et
+l’intégration ComfyUI réelle restent à effectuer sur le matériel cible.

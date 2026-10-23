@@ -35,7 +35,8 @@ readonly VENV_DIR="$COMFY_DIR/venv"
 readonly LOGFILE="${LOGFILE:-/var/log/eidolon-comfyui-install.log}"
 
 readonly COMFY_REPO="https://github.com/comfyanonymous/ComfyUI.git"
-readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
 # Révisions fixées, sans mise à jour implicite au prochain lancement.
 # shellcheck source=sources.lock
 source "$SCRIPT_DIR/sources.lock"
