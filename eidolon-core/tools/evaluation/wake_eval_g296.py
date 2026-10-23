@@ -10,6 +10,7 @@
 
 The same report compares the current G282 path (energy gate + Whisper on the VM)
 and a local detector (openWakeWord in the client): give each one's detection log.
+Only « eidolon » exists; any other phrase in an annotation or a detection is refused.
 
 Annotation (eidolon-wake-annotation/1):
   {"duration_s": 3600, "utterances": [{"start": 12.3, "end": 12.9, "phrase": "eidolon"}],
@@ -27,7 +28,7 @@ import json
 import math
 from pathlib import Path
 
-PHRASES = ("eidolon", "dis-moi")
+PHRASES = ("eidolon",)          # single wake word (operator decision, G296)
 DEFAULT_CRITERIA = {"min_recall": 0.95, "max_false_per_hour": 0.5, "max_latency_p95_ms": 500}
 
 

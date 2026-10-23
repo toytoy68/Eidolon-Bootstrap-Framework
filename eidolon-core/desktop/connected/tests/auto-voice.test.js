@@ -7,21 +7,26 @@
  * ========================================================== */
 const test = require('node:test'), assert = require('node:assert/strict');
 const A = require('../src/auto-voice.js');
-const all = {eidolon:true, disMoi:true};
 const tick = () => new Promise(resolve => setImmediate(resolve));
 function fixture(segments, overrides={}) {
   const sent=[], spoken=[], states=[]; let auto, reads=0;
-  const deps={prepare:async()=>{}, calls:()=>all, pause:async()=>{}, cancel:()=>{},
+  const deps={prepare:async()=>{}, pause:async()=>{}, cancel:()=>{},
     change:(s,n)=>states.push([s,n]),
     listen:async()=>{reads++;if(!segments.length){auto.stop();return null;} return segments.shift();},
     speak:async t=>{spoken.push(t);return true;}, send:async t=>{sent.push(t);return 'Réponse';}, ...overrides};
   auto=A.create(deps);return {auto,sent,spoken,states,reads:()=>reads};
 }
 const phrase=text=>({text,empty:false});
-test('wake calls require a whole leading expression and respect individual switches',()=>{
- assert.equal(A.wake('Eidolon !',all),'');assert.equal(A.wake('Dis-moi ? quelle heure ?',all),'quelle heure ?');
- assert.equal(A.wake('dit moi, bonjour',all),'bonjour');assert.equal(A.wake('Eidolonique',all),null);
- assert.equal(A.wake('je parle à Eidolon',all),null);assert.equal(A.wake('Dis-moi ?', {eidolon:true}),null);
+test('single wake word Eidolon must lead the phrase',()=>{
+ assert.equal(A.wake('Eidolon !'),'');assert.equal(A.wake('« Eidolon », quelle heure ?'),'quelle heure ?');
+ assert.equal(A.wake('Eidolonique'),null);assert.equal(A.wake('je parle à Eidolon'),null);
+});
+test('G296 operator decision: « dis-moi » and its variants never wake Eidolon',()=>{
+ for(const t of ['Dis-moi ?','Dis-moi ? quelle heure ?','dit moi, bonjour','dis moi Eidolon','DIS-MOI'])assert.equal(A.wake(t),null,t);
+});
+test('a « Dis-moi » command in standby is ignored, never sent',async()=>{
+ const f=fixture([phrase('Dis-moi, quelle heure est-il ?'),phrase('dit moi bonjour')]);await f.auto.start();
+ assert.deepEqual(f.sent,[]);assert.deepEqual(f.spoken,[]);
 });
 test('unrelated speech is ignored; greeting then command then standby, no repeat',async()=>{
  const f=fixture([phrase('bonjour personne'),phrase('Eidolon !'),phrase('Comment vas-tu ?')]);await f.auto.start();
@@ -32,7 +37,7 @@ test('joined wake and command skips greeting and keeps full command',async()=>{
  assert.deepEqual(f.sent,['décris tes fonctionnalités']);assert.deepEqual(f.spoken,['Réponse']);
 });
 test('silence after wake expires the armed state',async()=>{
- const f=fixture([phrase('Dis-moi'),{empty:true,text:''},phrase('phrase sans appel')]);await f.auto.start();assert.deepEqual(f.sent,[]);
+ const f=fixture([phrase('Eidolon'),{empty:true,text:''},phrase('phrase sans appel')]);await f.auto.start();assert.deepEqual(f.sent,[]);
 });
 test('stop during recognition discards the late transcript',async()=>{
  let resolve;const f=fixture([], {listen:()=>new Promise(r=>resolve=r)});const run=f.auto.start();await tick();f.auto.stop();resolve(phrase('Eidolon, test'));await run;assert.deepEqual(f.sent,[]);

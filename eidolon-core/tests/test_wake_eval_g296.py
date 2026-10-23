@@ -30,7 +30,7 @@ def test_accepted_detector():
     r = score(ann(utt), det([(e + .2, "eidolon") for _, e, _ in utt]))
     m = r["phrases"]["eidolon"]
     assert (m["recall"], m["false_activations"], m["latency_p95_ms"]) == (1.0, 0, 200.0)
-    assert r["verdict"] == {"eidolon": "ACCEPTED", "dis-moi": "NOT_MEASURED"}
+    assert r["verdict"] == {"eidolon": "ACCEPTED"}
 
 
 def test_g282_like_latency_is_rejected():
@@ -41,19 +41,25 @@ def test_g282_like_latency_is_rejected():
 
 
 def test_false_activations_are_counted_and_echo_separated():
-    utt = [(100, 100.6, "dis-moi")]
-    events = [(101, "dis-moi"), (500, "dis-moi"), (1000, "dis-moi"), (2000.5, "dis-moi")]
+    utt = [(100, 100.6, "eidolon")]
+    events = [(101, "eidolon"), (500, "eidolon"), (1000, "eidolon"), (2000.5, "eidolon")]
     r = score(ann(utt, playback=[(2000, 2010)]), det(events))
-    m = r["phrases"]["dis-moi"]
+    m = r["phrases"]["eidolon"]
     assert (m["detected"], m["false_activations"], m["false_during_playback"], m["false_per_hour"]) == (1, 3, 1, 3.0)
-    assert r["verdict"]["dis-moi"] == "REJECTED"
+    assert r["verdict"]["eidolon"] == "REJECTED"
 
 
-def test_one_detection_per_utterance_and_phrase_must_match():
-    utt = [(10, 10.5, "eidolon")]
-    r = score(ann(utt), det([(10.6, "eidolon"), (10.7, "eidolon"), (10.6, "dis-moi")]))
+def test_one_detection_per_utterance():
+    r = score(ann([(10, 10.5, "eidolon")]), det([(10.6, "eidolon"), (10.7, "eidolon")]))
     assert r["phrases"]["eidolon"]["detected"] == 1 and r["phrases"]["eidolon"]["false_activations"] == 1
-    assert r["phrases"]["dis-moi"]["false_activations"] == 1
+
+
+def test_dis_moi_no_longer_exists():
+    """G296 operator decision: a single wake word; « dis-moi » is refused everywhere."""
+    with pytest.raises(ValueError):
+        score(ann([(10, 10.5, "dis-moi")]), det([]))
+    with pytest.raises(ValueError):
+        score(ann([(10, 10.5, "eidolon")]), det([(10.6, "dis-moi")]))
 
 
 def test_late_detection_outside_window_is_a_miss_and_a_false_activation():

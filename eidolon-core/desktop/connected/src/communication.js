@@ -416,12 +416,10 @@
         try { return await hooks.voiceSend(text); }
         finally { voicePending--; }
       },
-      calls: function () { return { eidolon: $("voice-wake-eidolon").checked, disMoi: $("voice-wake-dis-moi").checked }; },
       change: function (state, note) {
         $("voice-auto-state").textContent = note;
         $("voice-auto-start").hidden = state !== "off";
         $("voice-auto-stop").hidden = state === "off";
-        $("voice-wake-eidolon").disabled = $("voice-wake-dis-moi").disabled = state !== "off";
       }
     }) : null;
     if (auto) {

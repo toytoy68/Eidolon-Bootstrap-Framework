@@ -20,7 +20,7 @@ issue de Core `2891e20` ; aucune fusion dans main.
   est sous CC BY-NC-SA 4.0. Je **n'ai copié aucun code** : tout le code livré ici est écrit de
   zéro (§4).
 - **Ce qui vaut d'être repris**, par ordre d'impact :
-  1. le mot d'appel **local** (openWakeWord), à la place de l'envoi de toute la veille à Whisper sur la VM ;
+  1. le mot d'appel **local** (openWakeWord, mot unique « Eidolon »), à la place de l'envoi de toute la veille à Whisper sur la VM ;
   2. la coupure de parole ;
   3. le jeton d'interaction et d'époque qui invalide les résultats tardifs ;
   4. le cache des modules, avec fraîcheur et repli daté ;
@@ -36,7 +36,7 @@ issue de Core `2891e20` ; aucune fusion dans main.
 | Lot | Fichiers | Tests |
 | --- | --- | --- |
 | V2-a, coupure de parole | `desktop/connected/src/duplex-voice.js` | `desktop/connected/tests/duplex-voice-g296.test.js` : 10 tests, 5 sabotages tous détectés |
-| V1-a, mesure des mots d'appel | `tools/evaluation/wake_eval_g296.py` | `tests/test_wake_eval_g296.py` : 10 tests |
+| V1-a, mesure du mot d'appel | `tools/evaluation/wake_eval_g296.py` | `tests/test_wake_eval_g296.py` : 11 tests |
 | M1-a, cache des modules | `src/eidolon_core/module_cache.py` | `tests/test_module_cache_g296.py` : 13 tests, 4 sabotages tous détectés |
 
 ## 2. Mesures faites ici (conteneur Linux, Xeon 2,1 GHz, sans GPU)
@@ -67,7 +67,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 
 ## 4. Analyse par piste
 
-### P0 — Mots d'appel locaux « Eidolon ! » et « dis-moi ? », écoute dès le lancement
+### P0 — Mot d'appel local unique « Eidolon », écoute dès le lancement
 
 - **Cornelius.**
   - Fichiers : `perception/wake.py` (openWakeWord, trame de 2 560 octets, seuil 0,5,
@@ -88,19 +88,22 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
   - Optionnel, en deux étages : la confirmation par Whisper du seul segment déclencheur, pour
     réduire les fausses activations.
   - La voie G282 reste disponible comme repli, désactivable.
-- **Faisabilité.** Windows : oui ; parité WASM démontrée. La VM sert à l'entraînement :
-  VM100 (GTX 1060 6 Go), ou les V100 une fois livrées.
+- **Faisabilité.** Windows : oui ; parité WASM démontrée. Entraînement et banc sur **VM100**
+  (GTX 1060 6 Go), décision du 23/10, sans perturber Gemma, Core ni DARME.
 - **Risques.**
-  - Fausses activations sur « dis-moi », expression courante en français. Le seuil se règle
-    **par mot**.
-  - Deux mots, donc deux modèles ou un modèle à deux classes.
-  - Licence NC-SA des données négatives.
+  - Fausses activations sur des mots proches (« Eden », « idole ») et sur la télévision. Le
+    seuil reste réglable.
+  - Licence NC-SA des données négatives : composant isolé et remplaçable
+    ([inventaire](LICENCES-VOIX-G296.md)).
+- **Un seul mot.** Décision de l'opérateur du 23/10, relayée par GPT : « Eidolon » est le
+  **seul** mot d'appel. « Dis-moi » est retiré du client G282, de l'interface, des tests, de
+  l'outil de mesure et de la notice Windows. La réponse « Oui ? » ne change pas.
 - **Budget.** CPU < 7 % d'un cœur (mesuré), pas de GPU. Mémoire navigateur à mesurer.
 - **Tests.** `wake_eval_g296.py` note n'importe quel détecteur, G282 compris, sur une
-  chronologie annotée : rappel par mot, fausses activations par heure (avec celles pendant que
+  chronologie annotée : rappel, fausses activations par heure (avec celles pendant que
   Eidolon parle, à part), latence médiane et p95.
 - **Critères d'acceptation proposés** (modifiables dans l'outil) :
-  - rappel ≥ 95 % par mot ;
+  - rappel ≥ 95 % ;
   - ≤ 0,5 fausse activation par heure sur 8 h de fond sonore réel (télé, conversation) ;
   - latence p95 ≤ 500 ms après la fin du mot ;
   - zéro octet audio vers la VM en veille, vérifié par capture réseau.
@@ -249,7 +252,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 | Ordre | Lot | Contenu | Dépend de | État |
 | --- | --- | --- | --- | --- |
 | 1 | V1-a | Outil de mesure des mots d'appel | — | **livré** |
-| 2 | V1-b | Modèles « eidolon » et « dis-moi » entraînés (données consignées), servis par Core avec empreinte | GPU VM | à faire |
+| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | à faire |
 | 3 | V1-c | Détection WASM dans le client, veille sans envoi, repli G282 | V1-b | à faire |
 | 4 | V2-a | Contrôleur de coupure | — | **livré** |
 | 5 | V2-b | Branchement, VAD Silero WASM, annulation de la synthèse, mesure de l'écho sur le PC | V2-a | à faire |
@@ -272,6 +275,19 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
   - voie `<audio>` contre voie WebRTC en boucle.
 - **CPU et mémoire** de la détection WASM et de la VAD dans le client Windows réel.
 - **Entraînement des modèles.** Durée, disque et GPU sur VM100 ; licence des données retenues.
+
+## 6 bis. Décisions reçues le 23/10 (relayées par GPT, canal Memory `cfaac8c` et `d062a17`)
+
+1. **Ordre validé** : mot d'appel local unique « Eidolon », puis branchement de la coupure de
+   parole, puis veille automatique au lancement Windows.
+2. **Licences** : composants non commerciaux acceptés **à titre d'étude** pour le prototype
+   personnel. Inventaire précis tenu dans [LICENCES-VOIX-G296](LICENCES-VOIX-G296.md) ; tout
+   composant ou donnée NC est isolé pour pouvoir être remplacé en cas de distribution.
+3. **Entraînement et banc sur VM100 dès maintenant**, sans attendre les V100, sans perturber
+   Gemma, Core ni DARME.
+4. **« Dis-moi » supprimé** partout (fait sur cette branche, §4). Avant toute activation : tests
+   de non-régression, seuil de faux positifs, latence et écho acoustique réel validés sous
+   Windows. Pas de déploiement en production ni de fusion sans validation.
 
 ## 7. Limites
 

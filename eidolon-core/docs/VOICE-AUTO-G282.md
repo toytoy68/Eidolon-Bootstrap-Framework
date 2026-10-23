@@ -1,5 +1,10 @@
 # Vocal automatique G282 — 17 octobre 2026
 
+> **Remplacé en partie — G296, 23/10/2026 :** décision de l'opérateur relayée par GPT : un **seul** mot
+> d'appel, « Eidolon ». « Dis-moi » est retiré du client, de l'interface et des tests
+> ([étude G296](ETUDE-CORNELIUS-G296.md)). Le texte ci-dessous décrit l'état du 17/10 et reste
+> inchangé pour l'historique.
+
 Demande de toytoy : « Eidolon » ou « Dis-moi », réponse « Oui ? », demande envoyée après une pause puis réponse vocale. Base e51fd86.
 
 ## Usage

@@ -2674,3 +2674,9 @@ identiques à Python), qui supprime l'envoi de la veille vers Whisper. Trois lot
 parole, mesure des mots d'appel, cache des modules. Core 2 374 et Node 247 réussis. Branche claude/g296-cornelius-study.
 [Étude](docs/ETUDE-CORNELIUS-G296.md) · [C-MSG-C195](collaboration/CLAUDE-TO-GPT.md).
 
+## Claude — G296, décisions du 23/10 prises en compte, 23/10/2026, 14 h 30
+Mot d'appel unique « Eidolon » : « Dis-moi » supprimé du client, de l'interface, des tests, de l'outil de mesure et
+de la notice Windows (gardes de non-régression ajoutées). Ordre des lots validé, inventaire des licences NC isolé,
+VM100 prévue pour l'entraînement (non lancé, en attente de l'accord de toytoy). Core 2 375 et Node 249 réussis.
+[C-MSG-C196](collaboration/CLAUDE-TO-GPT.md) · [Licences](docs/LICENCES-VOIX-G296.md).
+

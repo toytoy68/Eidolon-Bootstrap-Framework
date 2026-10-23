@@ -2976,9 +2976,10 @@
       return null;
     } };
   }
-  function wake(text, calls) {
-    var match = /^\s*[«"“]*\s*(eidolon|dis[\s-]+moi|dit[\s-]+moi)(?=$|[\s!?,.:;»"”])/i.exec(text || "");
-    if (!match || !(match[1].toLowerCase() === "eidolon" ? calls.eidolon : calls.disMoi)) return null;
+  // Single wake word « Eidolon » (operator decision, G296): no other call is accepted.
+  function wake(text) {
+    var match = /^\s*[«"“]*\s*eidolon(?=$|[\s!?,.:;»"”])/i.exec(text || "");
+    if (!match) return null;
     return text.slice(match[0].length).replace(/^[\s!?,.:;»"”]+/, "").trim();
   }
   function create(deps) {
@@ -2991,8 +2992,6 @@
     }
     async function start() {
       if (running) return;
-      var calls = deps.calls();
-      if (!calls.eidolon && !calls.disMoi) { change("off", "Choisissez au moins un appel vocal."); return; }
       var mine = ++generation, waiting = false;
       running = true;
       function current() { return running && mine === generation; }
@@ -3000,12 +2999,12 @@
         change("starting", "Autorisation du micro…");
         await deps.prepare();
         while (current()) {
-          change(waiting ? "listening" : "standby", waiting ? "Je vous écoute — envoi après une pause de 1,5 s." : "Veille vocale active — dites « Eidolon » ou « Dis-moi ». Micro ouvert.");
+          change(waiting ? "listening" : "standby", waiting ? "Je vous écoute — envoi après une pause de 1,5 s." : "Veille vocale active — dites « Eidolon ». Micro ouvert.");
           var result = await deps.listen();
           if (!current()) break;
           if (!result) throw new Error("Capture interrompue ou transcription indisponible. Relancez le vocal.");
           if (result.empty || !result.text || !result.text.trim()) { waiting = false; continue; }
-          var text = waiting ? result.text.trim() : wake(result.text, calls);
+          var text = waiting ? result.text.trim() : wake(result.text);
           if (text === null) continue;
           if (!text) {
             change("speaking", "Eidolon : Oui ? — micro en pause.");
@@ -3453,12 +3452,10 @@
         try { return await hooks.voiceSend(text); }
         finally { voicePending--; }
       },
-      calls: function () { return { eidolon: $("voice-wake-eidolon").checked, disMoi: $("voice-wake-dis-moi").checked }; },
       change: function (state, note) {
         $("voice-auto-state").textContent = note;
         $("voice-auto-start").hidden = state !== "off";
         $("voice-auto-stop").hidden = state === "off";
-        $("voice-wake-eidolon").disabled = $("voice-wake-dis-moi").disabled = state !== "off";
       }
     }) : null;
     if (auto) {
