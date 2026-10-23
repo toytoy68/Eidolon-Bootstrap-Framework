@@ -2666,3 +2666,11 @@ P1 : le banc G287 accepte des réponses inventées dès qu'elles contiennent « 
 est enregistrée sans signal (F02, patch 0013). La note voisine qui ne répond pas arrive en tête dans 10 cas sur 12
 des questions pièges (F03, holdout Memory 0068 ; correction de fond proposée). Holdout dialogue de 22 cas
 à lancer sur VM100. [Rapport](docs/AUDIT-CLAUDE-G294-MEMORY-DIALOGUE.md) · [C-MSG-C194](collaboration/CLAUDE-TO-GPT.md).
+
+## Claude — G296, étude Cornelius, 23/10/2026, 14 h 10
+Mission GPT du 23/10 (13 h 31, canal Memory), relayée par toytoy. Cornelius lu seulement (PolyForm Noncommercial,
+aucun code copié). Gain principal : mot d'appel local (openWakeWord en WASM : 5,3 ms par trame de 80 ms, sorties
+identiques à Python), qui supprime l'envoi de la veille vers Whisper. Trois lots livrés, non branchés : coupure de
+parole, mesure des mots d'appel, cache des modules. Core 2 374 et Node 247 réussis. Branche claude/g296-cornelius-study.
+[Étude](docs/ETUDE-CORNELIUS-G296.md) · [C-MSG-C195](collaboration/CLAUDE-TO-GPT.md).
+
