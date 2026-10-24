@@ -15,7 +15,7 @@ import pytest
 KIT = Path(__file__).resolve().parents[1] / "tools" / "wake_training"
 sys.path.insert(0, str(KIT))
 from guard import decide  # noqa: E402
-from bench_model import edges, false_per_hour, timeline  # noqa: E402
+from bench_model import edges, false_per_hour, feature_windows, timeline, timeline_scored  # noqa: E402
 
 NOW = datetime(2026, 10, 23, 22, 0, tzinfo=timezone.utc)
 
@@ -105,3 +105,28 @@ if [ "$1" = inspect ]; then n=$(cat {state}); [ "$n" -le 0 ] && exit 1; echo $((
     calls = log.read_text()
     assert "pause eidolon-wake-train" in calls and "unpause eidolon-wake-train" in calls
     assert "rm" not in calls.split() and "stop" not in calls.split() and "kill" not in calls.split()
+
+
+def test_feature_windows_match_train_py_and_the_exported_rank():
+    """VM100 run of 24/10: validation features are (frames, 96); the model wants (1, 16, 96)."""
+    import numpy as np
+    frames = np.arange(20 * 96, dtype=np.float32).reshape(20, 96)
+    windows = list(feature_windows(frames, 16))
+    assert len(windows) == 4                                   # range(frames - 16), as train.py
+    assert all(w.shape == (1, 16, 96) and w.dtype == np.float32 for w in windows)
+    assert (windows[1][0] == frames[1:17]).all()               # stride 1 = 80 ms
+    ready = np.zeros((3, 16, 96), dtype=np.float32)
+    assert [w.shape for w in feature_windows(ready, 16)] == [(1, 16, 96)] * 3
+    try:
+        list(feature_windows(np.zeros(5), 16))
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("rank 1 must be refused")
+
+
+def test_threshold_sweep_reuses_one_scoring():
+    scored = [("positive", 16000, [0.0, 0.65, 0.0]), ("negative", 16000, [0.45, 0.0, 0.0])]
+    low = timeline_scored(scored, .4)[1]["events"]
+    high = timeline_scored(scored, .6)[1]["events"]
+    assert len(low) == 2 and len(high) == 1

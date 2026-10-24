@@ -13,7 +13,10 @@
    and written as an annotation + detections pair (detection = rising edge >= threshold,
    2 s debounce, as a live detector would do).
 2. Optional ``--negative-features`` (openWakeWord validation features, ~11 h of speech,
-   noise and music): false activations per hour on 16x96 windows, one step = 80 ms.
+   noise and music): a (frames, 96) array that train.py windows itself, 16 frames per
+   window, stride 1 frame = 80 ms; same windowing here, then false activations per hour.
+3. Every metric is given for a threshold sweep, so the operating point is chosen from
+   measured data, not from the 0.5 default.
 Synthetic clips are not the user's room: this bench gates training, not activation.
 """
 import argparse
@@ -24,6 +27,7 @@ import wave
 
 FRAME = 1280            # 80 ms at 16 kHz
 DEBOUNCE_S = 2.0
+THRESHOLDS = (0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 
 
 def read_wav(path):
@@ -46,10 +50,16 @@ def edges(scores, threshold, start_s):
 
 def timeline(clips, score_clip, threshold, gap_s=1.0):
     """clips: [(label, samples)] -> (annotation, detections) for wake_eval_g296."""
+    return timeline_scored([(label, len(samples), score_clip(samples)) for label, samples in clips],
+                           threshold, gap_s)
+
+
+def timeline_scored(scored, threshold, gap_s=1.0):
+    """scored: [(label, n_samples, frame_scores)], scored once and reused for every threshold."""
     at, utterances, events = 0.0, [], []
-    for label, samples in clips:
-        duration = len(samples) / 16000
-        for t in edges(score_clip(samples), threshold, at):
+    for label, n_samples, scores in scored:
+        duration = n_samples / 16000
+        for t in edges(scores, threshold, at):
             events.append({"at": t, "phrase": "eidolon", "score": 1.0})
         if label == "positive":
             utterances.append({"start": round(at, 3), "end": round(at + duration, 3), "phrase": "eidolon"})
@@ -57,6 +67,23 @@ def timeline(clips, score_clip, threshold, gap_s=1.0):
     annotation = {"schema": "eidolon-wake-annotation/1", "duration_s": round(max(at, 1.0), 3),
                   "utterances": utterances, "playback": [], "hardware_measured": False}
     return annotation, {"schema": "eidolon-wake-detections/1", "detector": "eidolon-oww", "events": events}
+
+
+def feature_windows(features, length):
+    """Model inputs of shape (1, length, 96), as train.py builds its false-positive set.
+
+    A 2-D (frames, 96) array is windowed with stride 1 (one step = 80 ms); a 3-D
+    (n, length, 96) array is already windowed. The exported model takes a batch of 1.
+    """
+    import numpy as np
+    if features.ndim == 3:
+        for i in range(features.shape[0]):
+            yield np.asarray(features[i:i + 1, -length:], dtype=np.float32)
+    elif features.ndim == 2:
+        for i in range(features.shape[0] - length):
+            yield np.asarray(features[i:i + length], dtype=np.float32)[None]
+    else:
+        raise ValueError("features must be (frames, 96) or (n, frames, 96)")
 
 
 def false_per_hour(windows_scores, threshold):
@@ -94,29 +121,43 @@ def main():
 
     clips = [("positive", read_wav(f)) for f in sorted(a.positive_dir.glob("*.wav"))[:a.limit]]
     clips += [("negative", read_wav(f)) for f in sorted(a.negative_dir.glob("*.wav"))[:a.limit]]
-    annotation, detections = timeline(clips, score_clip, a.threshold)
+    scored = [(label, len(samples), score_clip(samples)) for label, samples in clips]
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "evaluation"))
     from wake_eval_g296 import score
-    report = {"schema": "eidolon-wake-bench/1", "threshold": a.threshold,
-              "clips": {"positive": sum(c[0] == "positive" for c in clips),
-                        "negative": sum(c[0] == "negative" for c in clips)},
-              "held_out_clips": score(annotation, detections, window_s=1.5), "synthetic_only": True}
+    negative_scores = None
     if a.negative_features:
         features = np.load(a.negative_features, mmap_mode="r")
         session = ort.InferenceSession(str(a.model), providers=["CPUExecutionProvider"])
-        name = session.get_inputs()[0].name
-        scores = []
-        # openWakeWord exports a batch of exactly 1 (train.py export_to_onnx): one window per call.
-        for i in range(len(features)):
-            window = np.asarray(features[i:i + 1], dtype=np.float32)
-            scores.append(float(session.run(None, {name: window})[0].reshape(-1)[0]))
-        report["negative_features"] = false_per_hour(scores, a.threshold)
+        model_input = session.get_inputs()[0]
+        length = int(model_input.shape[1])                   # 16 frames for openWakeWord
+        negative_scores = [float(session.run(None, {model_input.name: w})[0].reshape(-1)[0])
+                           for w in feature_windows(features, length)]
+    thresholds = sorted(set(THRESHOLDS) | {a.threshold})
+    sweep = []
+    for th in thresholds:
+        annotation, detections = timeline_scored(scored, th)
+        held = score(annotation, detections, window_s=1.5)
+        row = {"threshold": th, "verdict": held["verdict"],
+               "recall": held["phrases"]["eidolon"]["recall"],
+               "false_per_hour_clips": held["phrases"]["eidolon"]["false_per_hour"],
+               "latency_p95_ms": held["phrases"]["eidolon"].get("latency_p95_ms")}
+        if negative_scores is not None:
+            row["negative_features"] = false_per_hour(negative_scores, th)
+        sweep.append(row | {"_held_out": held})
+    main_row = next(r for r in sweep if r["threshold"] == a.threshold)
+    report = {"schema": "eidolon-wake-bench/1", "threshold": a.threshold,
+              "clips": {"positive": sum(c[0] == "positive" for c in clips),
+                        "negative": sum(c[0] == "negative" for c in clips)},
+              "held_out_clips": main_row["_held_out"], "synthetic_only": True,
+              "sweep": [{k: v for k, v in r.items() if k != "_held_out"} for r in sweep]}
+    if negative_scores is not None:
+        report["negative_features"] = main_row["negative_features"]
     a.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
-    print(json.dumps({k: v for k, v in report.items() if k != "held_out_clips"} | {
-        "verdict": report["held_out_clips"]["verdict"],
-        "recall": report["held_out_clips"]["phrases"]["eidolon"]["recall"],
-        "false_per_hour_clips": report["held_out_clips"]["phrases"]["eidolon"]["false_per_hour"]}, ensure_ascii=False))
-
+    for r in report["sweep"]:
+        print(json.dumps({"threshold": r["threshold"], "recall": r["recall"],
+                          "false_per_hour_clips": r["false_per_hour_clips"],
+                          "false_per_hour_11h": (r.get("negative_features") or {}).get("false_per_hour"),
+                          "latency_p95_ms": r["latency_p95_ms"], "verdict": r["verdict"]}, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

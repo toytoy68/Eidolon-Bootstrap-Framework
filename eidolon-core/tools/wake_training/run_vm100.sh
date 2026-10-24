@@ -14,6 +14,7 @@
 #   WAKE_ACTIVITY=/chemin/activity.json  ./run_vm100.sh            # CPU seulement (défaut)
 #   WAKE_ACTIVITY=... WAKE_GPU=1         ./run_vm100.sh            # entraînement sur le GPU n° 1 seul
 #   ./run_vm100.sh status                                          # où en est-on
+#   ./run_vm100.sh bench [modèle.onnx]                             # banc seul (défaut : dernier modèle)
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
@@ -39,6 +40,32 @@ if [ "${1:-}" = status ]; then
   exit 0
 fi
 
+# ---- Banc : clips tenus à l'écart et ~11 h de négatifs ---------------------------
+bench() {
+  local model="$1" base
+  base="$(basename "$model" .onnx)"
+  say "Banc : $base (balayage de seuils)."
+  docker run --rm --cpu-shares 64 -v "$GEN:/workspace" -v "$KIT/..:/kit:ro" -v "$WORKDIR/models:/models" \
+    -w /workspace --entrypoint python3.10 "$IMAGE" /kit/wake_training/bench_model.py \
+    --model "/models/$base.onnx" \
+    --melspec /opt/openWakeWord/openwakeword/resources/models/melspectrogram.onnx \
+    --embedding /opt/openWakeWord/openwakeword/resources/models/embedding_model.onnx \
+    --positive-dir output/eidolon/positive_test --negative-dir output/eidolon/negative_test \
+    --negative-features data/features/validation_set_features.npy \
+    --out "/models/$base.bench.json" | tee -a "$LOG"
+  say "Banc : $WORKDIR/models/$base.bench.json. Rien n'est activé."
+}
+
+GEN="$WORKDIR/wakeword-generator"
+if [ "${1:-}" = bench ]; then
+  command -v docker >/dev/null || fail "Docker absent."
+  model="${2:-$(ls -1t "$WORKDIR"/models/eidolon-*.onnx 2>/dev/null | head -1)}"
+  [ -n "$model" ] && [ -f "$model" ] || fail "aucun modèle à mesurer sous $WORKDIR/models"
+  case "$model" in "$WORKDIR/models/"*) ;; *) fail "le modèle doit être sous $WORKDIR/models" ;; esac
+  bench "$model"
+  exit 0
+fi
+
 # ---- Contrôles préalables ------------------------------------------------------
 [ -n "$ACTIVITY" ] || fail "WAKE_ACTIVITY doit désigner activity.json de Core (pause quand Eidolon sert)."
 [ -r "$ACTIVITY" ] || fail "activity.json illisible : $ACTIVITY"
@@ -54,7 +81,6 @@ say "Départ : dossier $WORKDIR, ${free_gb} Go libres, GPU ${GPU:-aucun (CPU)}."
 nvidia-smi --query-gpu=index,name,memory.used,temperature.gpu --format=csv,noheader | tee -a "$LOG"
 
 # ---- Outil externe, à un commit précis -------------------------------------------
-GEN="$WORKDIR/wakeword-generator"
 if [ ! -d "$GEN/.git" ]; then
   git clone --quiet "$GENERATOR_URL" "$GEN"
 fi
@@ -105,13 +131,4 @@ cat > "$WORKDIR/models/eidolon-$stamp.provenance.json" <<JSON
 JSON
 say "Modèle : $WORKDIR/models/eidolon-$stamp.onnx (sha256 $sha)."
 
-# ---- Banc : clips tenus à l'écart et ~11 h de négatifs ---------------------------
-docker run --rm --cpu-shares 64 -v "$GEN:/workspace" -v "$KIT/..:/kit:ro" -v "$WORKDIR/models:/models" \
-  -w /workspace --entrypoint python3.10 "$IMAGE" /kit/wake_training/bench_model.py \
-  --model "/models/eidolon-$stamp.onnx" \
-  --melspec /opt/openWakeWord/openwakeword/resources/models/melspectrogram.onnx \
-  --embedding /opt/openWakeWord/openwakeword/resources/models/embedding_model.onnx \
-  --positive-dir output/eidolon/positive_test --negative-dir output/eidolon/negative_test \
-  --negative-features data/features/validation_set_features.npy \
-  --out "/models/eidolon-$stamp.bench.json" | tee -a "$LOG"
-say "Banc : $WORKDIR/models/eidolon-$stamp.bench.json. Rien n'est activé."
+bench "$WORKDIR/models/eidolon-$stamp.onnx"
