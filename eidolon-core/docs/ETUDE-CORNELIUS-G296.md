@@ -252,7 +252,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 | Ordre | Lot | Contenu | Dépend de | État |
 | --- | --- | --- | --- | --- |
 | 1 | V1-a | Outil de mesure des mots d'appel | — | **livré** |
-| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | **kit prêt** (`tools/wake_training/`), autorisé le 23/10 à 21 h 32 ; lancement en attente d'accès à VM100 |
+| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | **v1 entraînée et mesurée** le 24/10 (rejetée, voir §6 quater) ; **v2 prête** (prononciation « Eille-do-lon ») |
 | 3 | V1-c | Détection WASM dans le client, veille sans envoi, repli G282 | V1-b | à faire |
 | 4 | V2-a | Contrôleur de coupure | — | **livré** |
 | 5 | V2-b | Branchement, VAD Silero WASM, annulation de la synthèse, mesure de l'écho sur le PC | V2-a | à faire |
@@ -293,7 +293,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 
 Autorisation de toytoy : 23/10/2026, 21 h 32. Fichiers sous `tools/wake_training/` :
 
-- `eidolon-training.yml` : quatre graphies d'« Eidolon » et dix mots proches négatifs ; aucun autre mot d'appel.
+- `eidolon-training.yml` : recette `eidolon_v2` (24/10), sept graphies lues « Eille-do-lon » et 23 mots proches négatifs ; aucun autre mot d'appel. La v1 (quatre graphies, dix négatifs) est décrite au §6 quater.
 - `run_vm100.sh`, en quatre temps :
   - contrôles préalables (`activity.json`, Docker, `nvidia-smi`, 45 Go libres) ;
   - clonage de wakeword-generator au commit `1cc2c42`, refusé s'il a été modifié ;
@@ -323,6 +323,59 @@ tools/wake_training/run_vm100.sh status
 
 Le modèle produit reste sous `~/eidolon-validation/g296/wake/models/`, avec `activated: false`.
 L'activation dans le client (V1-c) attend le banc, puis les mesures Windows.
+
+## 6 quater. Premier entraînement sur VM100 (v1, 23-24/10) — exécuté
+
+Docker CE et le NVIDIA Container Toolkit ont été installés par toytoy avec `03-docker.sh`
+(23/10, 23 h 38). Deux GPU : n° 0 GTX 1060 6 Go (entraînement, `WAKE_GPU=0`), n° 1 GTX 1650.
+Exécution, d'après `lancement.log` relayé par toytoy :
+
+| Étape | Début | Durée |
+| --- | --- | --- |
+| Image `eidolon-wake-generator:1cc2c42` | 23 h 43 | 5 min |
+| prepare | 23 h 48 | 4 min |
+| generate (44 000 clips) | 23 h 52 | 1 h 08 |
+| augment | 01 h 01 | 15 min |
+| train (GTX 1060) | 01 h 15 | 7 min |
+
+Modèle `eidolon-20261024-012328.onnx`, sha256 `3a47740f…7c173b2`, `activated: false`.
+Métriques internes de `train.py` : rappel 0,446 par fenêtre, 1,24 FP/h non regroupés.
+
+Le premier banc a échoué : `validation_set_features.npy` est un tableau (trames, 96), alors que
+le modèle exporté attend (1, 16, 96). C'est corrigé dans `6e7d7dc` (fenêtres de 16 trames, pas de
+80 ms, comme `train.py`). Banc exécuté le 24/10 sur 2 000 clips positifs et 2 000 négatifs tenus à
+l'écart (synthétiques), plus 11,3 h de négatifs openWakeWord :
+
+| Seuil | Rappel | FP/h, 11 h ordinaires | FP/h, série de mots pièges | Latence p95 |
+| --- | --- | --- | --- | --- |
+| 0,3 | 0,931 | 1,68 | 107 | 218 ms |
+| 0,5 | 0,910 | 1,12 | 76 | 206 ms |
+| 0,7 | 0,888 | 0,94 | 53 | 217 ms |
+| 0,8 | 0,872 | 0,56 | 42 | 217 ms |
+| 0,9 | 0,826 | 0,37 | 27 | 217 ms |
+
+Verdict : **rejeté** (aucun seuil n'atteint à la fois un rappel de 0,95 et 0,5 FP/h).
+Détail au seuil 0,5 (`ed7fe4e`, origine de chaque clip retrouvée par le plan du générateur) :
+
+- Ratés par graphie : Eidolon 75/500, Éidolone 59/500, Eïdolon 41/500, Aïdolon 2/500.
+- Détectés par voix : Siwis 500/500, Tom 478/500, UPMC (Jessica, Pierre) 845/1 000.
+- Mots pièges qui déclenchent : idole 77/200, et dolent 33/200, et Dolores 22/200, Eden 14/200,
+  aïe donc 6/200 ; zéro pour Ilona, éolienne, Iolande, Héléna et il est long.
+
+Cause principale, vérifiée avec le phonémiseur eSpeak de Piper 1.3.0 (celui des voix
+d'entraînement) : les quatre graphies sont lues de quatre façons. « Eidolon » devient /ɛdolɔ̃/,
+presque « et dolent » /edolɑ̃/ ; « Eïdolon » /ɛjdolɔ̃/ ; « Éidolone » /eidolɔn/ ; « Aïdolon »
+/aidolɔ̃/. Le modèle apprenait quatre mots, dont un collé à un mot piège.
+
+**v2** : toytoy prononce « Eille-do-lon » (/ɛjdolɔ̃/, réponse du 24/10). La recette
+`eidolon_v2` ne garde que des graphies lues /ɛjdolɔ̃/ (sept variantes d'accent et
+d'intonation), passe à 23 mots pièges, 30 000 clips et une couche de 64. Les clips de la v1
+ne sont pas réutilisés : le générateur refuse de mélanger deux recettes.
+
+Question ouverte pour GPT : `wake_eval_g296` applique le plafond de 0,5 FP/h à la série de mots
+pièges, lus bout à bout. Ce test est volontairement bien plus dur que la vie réelle, et aucun
+modèle ne le passera. Proposition : 0,5 FP/h sur les 11 h ordinaires, et un indicateur séparé
+« part des mots pièges qui déclenchent », avec un plafond à décider. Non modifié en attendant.
 
 ## 7. Limites
 

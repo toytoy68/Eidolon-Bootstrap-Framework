@@ -14,7 +14,8 @@
 #   WAKE_ACTIVITY=/chemin/activity.json  ./run_vm100.sh            # CPU seulement (défaut)
 #   WAKE_ACTIVITY=... WAKE_GPU=1         ./run_vm100.sh            # entraînement sur le GPU n° 1 seul
 #   ./run_vm100.sh status                                          # où en est-on
-#   ./run_vm100.sh bench [modèle.onnx]                             # banc seul (défaut : dernier modèle)
+#   ./run_vm100.sh bench [modèle.onnx] [recette]                   # banc seul (défaut : dernier modèle,
+#                                                                  #   clips de test de sa recette)
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
@@ -26,6 +27,8 @@ ACTIVITY="${WAKE_ACTIVITY:-}"
 GPU="${WAKE_GPU:-}"
 MIN_FREE_GB=45
 LOG="$WORKDIR/run.log"
+# Nom de la recette (model_name) : output/<RUN>/ pour les clips, output/<RUN>.onnx pour le modèle.
+RUN="$(sed -n 's/^model_name: *\([a-z][a-z0-9_-]*\).*/\1/p' "$KIT/eidolon-training.yml")"
 
 say() { printf '%s %s\n' "$(date -Is)" "$*" | tee -a "$LOG"; }
 fail() { say "ERREUR : $*"; exit 1; }
@@ -42,18 +45,23 @@ fi
 
 # ---- Banc : clips tenus à l'écart et ~11 h de négatifs ---------------------------
 bench() {
-  local model="$1" base
+  local model="$1" base run="${2:-}"
   base="$(basename "$model" .onnx)"
-  say "Banc : $base (balayage de seuils)."
+  if [ -z "$run" ]; then                       # recette d'origine, sinon la v1 (« eidolon »)
+    run="$(sed -n 's/.*"run": *"\([a-z][a-z0-9_-]*\)".*/\1/p' "$WORKDIR/models/$base.provenance.json" 2>/dev/null)"
+    run="${run:-eidolon}"
+  fi
+  [ -d "$GEN/output/$run/positive_test" ] || fail "clips de test absents : output/$run"
+  say "Banc : $base sur les clips de test de « $run » (balayage de seuils)."
   docker run --rm --cpu-shares 64 -v "$GEN:/workspace" -v "$KIT/..:/kit:ro" -v "$WORKDIR/models:/models" \
     -w /workspace --entrypoint python3.10 "$IMAGE" /kit/wake_training/bench_model.py \
     --model "/models/$base.onnx" \
     --melspec /opt/openWakeWord/openwakeword/resources/models/melspectrogram.onnx \
     --embedding /opt/openWakeWord/openwakeword/resources/models/embedding_model.onnx \
-    --positive-dir output/eidolon/positive_test --negative-dir output/eidolon/negative_test \
+    --positive-dir "output/$run/positive_test" --negative-dir "output/$run/negative_test" \
     --negative-features data/features/validation_set_features.npy \
-    --generator /workspace --out "/models/$base.bench.json" | tee -a "$LOG"
-  say "Banc : $WORKDIR/models/$base.bench.json. Rien n'est activé."
+    --generator /workspace --out "/models/$base.bench-$run.json" | tee -a "$LOG"
+  say "Banc : $WORKDIR/models/$base.bench-$run.json. Rien n'est activé."
 }
 
 GEN="$WORKDIR/wakeword-generator"
@@ -62,11 +70,12 @@ if [ "${1:-}" = bench ]; then
   model="${2:-$(ls -1t "$WORKDIR"/models/eidolon-*.onnx 2>/dev/null | head -1)}"
   [ -n "$model" ] && [ -f "$model" ] || fail "aucun modèle à mesurer sous $WORKDIR/models"
   case "$model" in "$WORKDIR/models/"*) ;; *) fail "le modèle doit être sous $WORKDIR/models" ;; esac
-  bench "$model"
+  bench "$model" "${3:-}"
   exit 0
 fi
 
 # ---- Contrôles préalables ------------------------------------------------------
+[ -n "$RUN" ] || fail "model_name introuvable dans eidolon-training.yml"
 [ -n "$ACTIVITY" ] || fail "WAKE_ACTIVITY doit désigner activity.json de Core (pause quand Eidolon sert)."
 [ -r "$ACTIVITY" ] || fail "activity.json illisible : $ACTIVITY"
 command -v docker >/dev/null || fail "Docker absent."
@@ -115,7 +124,7 @@ run_step() {
 for step in prepare generate augment train; do run_step "$step"; done
 
 # ---- Modèle, empreinte et provenance -------------------------------------------
-MODEL="$GEN/output/eidolon.onnx"
+MODEL="$GEN/output/$RUN.onnx"
 [ -f "$MODEL" ] || fail "modèle absent : $MODEL"
 mkdir -p "$WORKDIR/models"
 stamp=$(date +%Y%m%d-%H%M%S)
@@ -123,7 +132,7 @@ install -m 600 "$MODEL" "$WORKDIR/models/eidolon-$stamp.onnx"
 sha=$(sha256sum "$WORKDIR/models/eidolon-$stamp.onnx" | cut -d' ' -f1)
 cat > "$WORKDIR/models/eidolon-$stamp.provenance.json" <<JSON
 {"schema": "eidolon-wake-model-provenance/1", "model": "eidolon-$stamp.onnx", "sha256": "$sha",
- "phrase": "eidolon", "generator": "lfpoulain/wakeword-generator@$GENERATOR_COMMIT (PolyForm Noncommercial, unmodified)",
+ "phrase": "eidolon", "run": "$RUN", "generator": "lfpoulain/wakeword-generator@$GENERATOR_COMMIT (PolyForm Noncommercial, unmodified)",
  "config_sha256": "$(sha256sum "$KIT/eidolon-training.yml" | cut -d' ' -f1)",
  "image": "$(docker image inspect -f '{{.Id}}' "$IMAGE")", "gpu": "${GPU:-cpu}",
  "licence": "CC BY-NC-SA 4.0 by inheritance (study only, see docs/LICENCES-VOIX-G296.md)",

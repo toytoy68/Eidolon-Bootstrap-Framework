@@ -155,3 +155,43 @@ def test_breakdown_counts_misses_and_false_fires():
                    ("negative", "idole", "b", [0.7]), ("negative", "Eden", "b", [0.2])], .5)
     assert b["positive"]["phrase"] == {"Eidolon": {"fired": 1, "total": 1}, "Aïdolon": {"fired": 0, "total": 1}}
     assert b["negative"]["phrase"]["idole"]["fired"] == 1 and b["negative"]["voice"]["b"] == {"fired": 1, "total": 2}
+
+
+def test_v2_recipe_targets_only_the_eille_do_lon_spellings():
+    """toytoy, 24/10: « Eille-do-lon » (/ɛjdolɔ̃/). v1 spellings read as other words are refused."""
+    import yaml
+    config = yaml.safe_load((KIT / "eidolon-training.yml").read_text(encoding="utf-8"))
+    assert config["model_name"] == "eidolon_v2"
+    targets = {t.casefold() for t in config["target_phrase"]}
+    assert targets.isdisjoint({"eidolon", "éidolone", "aïdolon", "eydolon"})   # /ɛdolɔ̃/, /eidolɔn/, /aidolɔ̃/
+    assert all("dolon" in t.replace("-", "") for t in targets)
+    negatives = {n.casefold() for n in config["custom_negative_phrases"]}
+    assert {"idole", "et dolent", "et dolores", "eden"} <= negatives and targets.isdisjoint(negatives)
+
+
+def _bench_dry_run(tmp_path, provenance):
+    bin_dir = tmp_path / "bin"; bin_dir.mkdir()
+    calls = tmp_path / "docker.calls"
+    (bin_dir / "docker").write_text(f'#!/bin/sh\necho "$@" >> {calls}\n')
+    (bin_dir / "docker").chmod(0o755)
+    work = tmp_path / "wake"; models = work / "models"; models.mkdir(parents=True)
+    for run in ("eidolon", "eidolon_v2"):
+        (work / "wakeword-generator" / "output" / run / "positive_test").mkdir(parents=True)
+    (models / "eidolon-1.onnx").write_bytes(b"x")
+    if provenance is not None:
+        (models / "eidolon-1.provenance.json").write_text(json.dumps(provenance))
+    env = {"PATH": f"{bin_dir}:/usr/bin:/bin", "HOME": str(tmp_path), "WAKE_WORKDIR": str(work)}
+    r = subprocess.run(["bash", str(KIT / "run_vm100.sh"), "bench"], env=env, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    return calls.read_text()
+
+
+def test_bench_uses_the_test_clips_of_the_model_recipe(tmp_path):
+    call = _bench_dry_run(tmp_path, {"run": "eidolon_v2"})
+    assert "output/eidolon_v2/positive_test" in call and "eidolon-1.bench-eidolon_v2.json" in call
+    assert "--generator /workspace" in call
+
+
+def test_bench_of_a_v1_model_falls_back_to_v1_clips(tmp_path):
+    call = _bench_dry_run(tmp_path, {"model": "eidolon-1.onnx"})          # v1 provenance had no "run"
+    assert "output/eidolon/positive_test" in call and "bench-eidolon.json" in call

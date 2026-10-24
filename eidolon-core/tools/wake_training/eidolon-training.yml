@@ -2,24 +2,45 @@
 # Configuration pour wakeword-generator (lfpoulain, PolyForm Noncommercial, commit 1cc2c42),
 # utilisé comme OUTIL EXTERNE non modifié, à titre d'étude (décision du 23/10 relayée par GPT).
 # Le modèle produit hérite de CC BY-NC-SA 4.0 : voir docs/LICENCES-VOIX-G296.md. Jamais versionné.
-model_name: eidolon
-target_phrase:                 # graphies qui font prononcer « Eidolon » aux voix françaises
-  - "Eidolon"
+# v2 (24/10) : toytoy prononce « Eille-do-lon » (/ɛjdolɔ̃/). Les graphies de la v1 étaient lues
+# de quatre façons par les voix (eSpeak fr, vérifié avec le phonémiseur de Piper) :
+# « Eidolon » → /ɛdolɔ̃/ (quasi « et dolent »), « Éidolone » → /eidolɔn/, « Aïdolon » → /aidolɔ̃/.
+# Toutes les graphies ci-dessous sont lues /ɛjdolɔ̃/ ; elles ne varient que par l'accent
+# tonique et l'intonation. La v1 reste décrite dans docs/ETUDE-CORNELIUS-G296.md.
+model_name: eidolon_v2         # nouveau nom : le générateur refuse de mélanger deux recettes
+target_phrase:                 # toutes prononcées /ɛjdolɔ̃/ par les voix françaises
   - "Eïdolon"
-  - "Éidolone"
-  - "Aïdolon"
+  - "Eille-dolon"
+  - "Eilledolon"
+  - "Heïdolon"
+  - "Eïdo-lon"
+  - "Eïdolon !"
+  - "Eïdolon ?"
 custom_negative_phrases:       # mots proches qui ne doivent PAS déclencher
-  - "idole"
-  - "Eden"
-  - "et dolent"
-  - "aïe donc"
+  - "idole"                    # v1 : 77/200 déclenchaient au seuil 0,5
+  - "l'idole"
+  - "idolâtre"
+  - "et dolent"                # v1 : 33/200
+  - "et Dolan"
+  - "et Dolores"               # v1 : 22/200
+  - "Eden"                     # v1 : 14/200
+  - "aïe donc"                 # v1 : 6/200
+  - "aide au long"
+  - "pareil donc"
+  - "soleil long"
+  - "réveil long"
+  - "Eille Toulon"
+  - "Eïda"
+  - "merveille"
+  - "abeille"
+  - "Hey Dylan"
+  - "elle dort"
   - "Ilona"
-  - "et Dolores"
   - "éolienne"
   - "Iolande"
   - "Héléna"
   - "il est long"
-n_samples: 20000
+n_samples: 30000          # v1 : 20000
 n_samples_val: 2000
 tts_batch_size: 50
 augmentation_batch_size: 16
@@ -40,7 +61,7 @@ batch_n_per_class:
   adversarial_negative: 50
   positive: 50
 model_type: dnn
-layer_size: 32
+layer_size: 64            # v1 : 32
 steps: 50000
 max_negative_weight: 1500
 target_false_positives_per_hour: 0.2
