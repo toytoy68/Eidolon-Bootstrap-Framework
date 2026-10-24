@@ -52,7 +52,7 @@ bench() {
     --embedding /opt/openWakeWord/openwakeword/resources/models/embedding_model.onnx \
     --positive-dir output/eidolon/positive_test --negative-dir output/eidolon/negative_test \
     --negative-features data/features/validation_set_features.npy \
-    --out "/models/$base.bench.json" | tee -a "$LOG"
+    --generator /workspace --out "/models/$base.bench.json" | tee -a "$LOG"
   say "Banc : $WORKDIR/models/$base.bench.json. Rien n'est activé."
 }
 

@@ -15,7 +15,11 @@
 2. Optional ``--negative-features`` (openWakeWord validation features, ~11 h of speech,
    noise and music): a (frames, 96) array that train.py windows itself, 16 frames per
    window, stride 1 frame = 80 ms; same windowing here, then false activations per hour.
-3. Every metric is given for a threshold sweep, so the operating point is chosen from
+3. With ``--generator`` (the unmodified wakeword-generator checkout), each held-out clip is
+   traced back to its phrase and voice with the generator's own ``speaker_pool`` and
+   ``sample_plan`` (imported, not copied), to see which spellings are missed and which
+   near-words fire.
+4. Every metric is given for a threshold sweep, so the operating point is chosen from
    measured data, not from the 0.5 default.
 Synthetic clips are not the user's room: this bench gates training, not activation.
 """
@@ -86,6 +90,36 @@ def feature_windows(features, length):
         raise ValueError("features must be (frames, 96) or (n, frames, 96)")
 
 
+def clip_origin(generator_dir, manifest, voices_dir, split="test"):
+    """Return origin(kind, index) -> (phrase, voice) using the generator's own plan."""
+    sys.path.insert(0, str(generator_dir))
+    import pipeline                                        # wakeword-generator, read only
+    counts = []
+    for voice in manifest["voices"]:
+        config = json.loads((Path(voices_dir) / (voice["file"] + ".json")).read_text(encoding="utf-8"))
+        counts.append(int(config["num_speakers"]))
+    pool = pipeline.speaker_pool(counts, split)
+    phrases = {"positive": manifest["target_phrase"], "negative": manifest["negative_phrases"]}
+
+    def origin(kind, index):
+        voice_index, _speaker, _variation, phrase_index = pipeline.sample_plan(
+            index, pool, 1, len(phrases[kind]))
+        return phrases[kind][phrase_index], Path(manifest["voices"][voice_index]["file"]).stem
+    return origin
+
+
+def breakdown(scored_clips, threshold):
+    """scored_clips: [(label, phrase, voice, scores)] -> fired/total per phrase and per voice."""
+    out = {}
+    for label, phrase, voice, scores in scored_clips:
+        fired = any(x >= threshold for x in scores)
+        for axis, key in (("phrase", phrase), ("voice", voice)):
+            cell = out.setdefault(label, {}).setdefault(axis, {}).setdefault(key, {"fired": 0, "total": 0})
+            cell["total"] += 1
+            cell["fired"] += fired
+    return out
+
+
 def false_per_hour(windows_scores, threshold):
     n = len(windows_scores)
     hours = n * FRAME / 16000 / 3600
@@ -102,6 +136,7 @@ def main():
     p.add_argument("--positive-dir", required=True, type=Path)
     p.add_argument("--negative-dir", required=True, type=Path)
     p.add_argument("--negative-features", type=Path)
+    p.add_argument("--generator", type=Path, help="checkout de wakeword-generator (origine des clips)")
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--limit", type=int, default=2000)
     p.add_argument("--out", required=True, type=Path)
@@ -119,9 +154,15 @@ def main():
         return [float(next(iter(m.predict(padded[i:i + FRAME]).values())))
                 for i in range(0, len(padded) - FRAME + 1, FRAME)]
 
-    clips = [("positive", read_wav(f)) for f in sorted(a.positive_dir.glob("*.wav"))[:a.limit]]
-    clips += [("negative", read_wav(f)) for f in sorted(a.negative_dir.glob("*.wav"))[:a.limit]]
+    files = [("positive", f) for f in sorted(a.positive_dir.glob("*.wav"))[:a.limit]]
+    files += [("negative", f) for f in sorted(a.negative_dir.glob("*.wav"))[:a.limit]]
+    clips = [(label, read_wav(f)) for label, f in files]
     scored = [(label, len(samples), score_clip(samples)) for label, samples in clips]
+    origin = None
+    if a.generator:
+        manifest = json.loads((a.positive_dir.parent / "generation.json").read_text(encoding="utf-8"))
+        origin = clip_origin(a.generator, manifest, a.generator / "data" / "voices")
+        traced = [(label, *origin(label, int(f.stem)), sc[2]) for (label, f), sc in zip(files, scored)]
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "evaluation"))
     from wake_eval_g296 import score
     negative_scores = None
@@ -143,6 +184,8 @@ def main():
                "latency_p95_ms": held["phrases"]["eidolon"].get("latency_p95_ms")}
         if negative_scores is not None:
             row["negative_features"] = false_per_hour(negative_scores, th)
+        if origin is not None:
+            row["breakdown"] = breakdown(traced, th)
         sweep.append(row | {"_held_out": held})
     main_row = next(r for r in sweep if r["threshold"] == a.threshold)
     report = {"schema": "eidolon-wake-bench/1", "threshold": a.threshold,
@@ -158,6 +201,15 @@ def main():
                           "false_per_hour_clips": r["false_per_hour_clips"],
                           "false_per_hour_11h": (r.get("negative_features") or {}).get("false_per_hour"),
                           "latency_p95_ms": r["latency_p95_ms"], "verdict": r["verdict"]}, ensure_ascii=False))
+    if origin is not None:
+        b = main_row["breakdown"]
+        print(json.dumps({"threshold": a.threshold,
+                          "missed_positive": {k: f'{v["total"] - v["fired"]}/{v["total"]}'
+                                              for k, v in b["positive"]["phrase"].items()},
+                          "positive_by_voice": {k: f'{v["fired"]}/{v["total"]}' for k, v in b["positive"]["voice"].items()},
+                          "fired_negative": {k: f'{v["fired"]}/{v["total"]}'
+                                             for k, v in b.get("negative", {}).get("phrase", {}).items()}},
+                         ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

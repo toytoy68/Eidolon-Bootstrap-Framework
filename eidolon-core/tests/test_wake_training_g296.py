@@ -7,6 +7,7 @@
 # ==========================================================
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import json
 import subprocess
 import sys
 
@@ -15,7 +16,7 @@ import pytest
 KIT = Path(__file__).resolve().parents[1] / "tools" / "wake_training"
 sys.path.insert(0, str(KIT))
 from guard import decide  # noqa: E402
-from bench_model import edges, false_per_hour, feature_windows, timeline, timeline_scored  # noqa: E402
+from bench_model import breakdown, clip_origin, edges, false_per_hour, feature_windows, timeline, timeline_scored  # noqa: E402
 
 NOW = datetime(2026, 10, 23, 22, 0, tzinfo=timezone.utc)
 
@@ -130,3 +131,27 @@ def test_threshold_sweep_reuses_one_scoring():
     low = timeline_scored(scored, .4)[1]["events"]
     high = timeline_scored(scored, .6)[1]["events"]
     assert len(low) == 2 and len(high) == 1
+
+
+def test_clip_origin_uses_the_generator_plan_without_copying_it(tmp_path):
+    gen = tmp_path / "gen"; (gen / "data" / "voices").mkdir(parents=True)
+    (gen / "pipeline.py").write_text(
+        "def speaker_pool(counts, split):\n"
+        "    return [(v, s) for v, c in enumerate(counts) for s in range(c)]\n"
+        "def sample_plan(index, pool, variation_count, phrase_count):\n"
+        "    v, s = pool[index % len(pool)]\n"
+        "    return v, s, 0, index % phrase_count\n")
+    for name, n in (("a", 1), ("b", 2)):
+        (gen / "data" / "voices" / f"{name}.onnx.json").write_text(json.dumps({"num_speakers": n}))
+    manifest = {"target_phrase": ["Eidolon", "Aïdolon"], "negative_phrases": ["idole"],
+                "voices": [{"file": "a.onnx"}, {"file": "b.onnx"}]}
+    origin = clip_origin(gen, manifest, gen / "data" / "voices")
+    assert origin("positive", 0) == ("Eidolon", "a") and origin("positive", 1) == ("Aïdolon", "b")
+    assert origin("negative", 2) == ("idole", "b")
+
+
+def test_breakdown_counts_misses_and_false_fires():
+    b = breakdown([("positive", "Eidolon", "a", [0.9]), ("positive", "Aïdolon", "a", [0.1]),
+                   ("negative", "idole", "b", [0.7]), ("negative", "Eden", "b", [0.2])], .5)
+    assert b["positive"]["phrase"] == {"Eidolon": {"fired": 1, "total": 1}, "Aïdolon": {"fired": 0, "total": 1}}
+    assert b["negative"]["phrase"]["idole"]["fired"] == 1 and b["negative"]["voice"]["b"] == {"fired": 1, "total": 2}
