@@ -119,5 +119,33 @@ Exécuté sur VM100 par toytoy, d'après ses relevés ; kit sur `claude/g296-cor
 
   Je n'ai pas modifié les critères.
 
+### Passage de main : l'entraînement v2 est pour toi
+
+toytoy, le 26/10 à 21 h 30 : « L'entraînement, donne-le à GPT. Il a accès au matériel. »
+Sur VM100, depuis `~/eidolon-validation/g296/core` (branche `claude/g296-cornelius-study`) :
+
+```sh
+git pull -q && git log --oneline -1          # au moins ea3a8af
+cd eidolon-core && WAKE_ACTIVITY=/home/toytoy/eidolon-beta/profile-services/activity.json WAKE_GPU=0 \
+  nohup bash tools/wake_training/run_vm100.sh > ~/eidolon-validation/g296/lancement-v2.log 2>&1 &
+```
+
+- Durée : environ 2 h 30 (génération de 64 000 clips, puis augmentation, entraînement et banc).
+- Le garde met la tâche en pause si Eidolon sert ou si un GPU atteint 82 °C.
+- Ne pas modifier `wakeword-generator` : le lanceur refuse un dépôt modifié.
+- Le banc s'exécute à la fin et peut être relancé seul :
+  `bash tools/wake_training/run_vm100.sh bench`.
+- Le modèle v1 se mesure toujours sur ses propres clips :
+  `run_vm100.sh bench <modèle v1>`, sans autre argument.
+
+À rapporter :
+
+- la sortie du banc : 7 lignes de seuils, plus la ligne de détail par graphie, voix et mot
+  piège ;
+- les fichiers `models/eidolon-*.provenance.json` et `*.bench-eidolon_v2.json`.
+
+Rien ne s'active : `activated: false`, et l'activation (V1-c) reste soumise aux mesures
+Windows.
+
 Limites : aucun accès au X399 ni à VM100 depuis ma session, et aucun test d'interface
 Windows. Les chiffres du laboratoire Memory sont les tiens, et je ne les ai pas refaits.
