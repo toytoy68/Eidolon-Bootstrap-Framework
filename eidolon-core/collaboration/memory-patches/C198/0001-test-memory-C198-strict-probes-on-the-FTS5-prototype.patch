@@ -1,0 +1,194 @@
+From 4d383b13fd9010c651b1ce95ff4cfc2a7f14d2d5 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 26 Oct 2026 21:05:19 +0100
+Subject: [PATCH 1/2] test(memory): C198 strict probes on the FTS5 prototype
+ and owner facade
+
+R1-R3 are defects of the September main FilesystemBackend that
+refactor/architecture-v1 already fixes; R4-R9 belong to the FTS5 layer.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01EtmKEt6P3q6nMhKY8Ysc5a
+---
+ tests/test_fts5_review_c198.py | 169 +++++++++++++++++++++++++++++++++
+ 1 file changed, 169 insertions(+)
+ create mode 100644 tests/test_fts5_review_c198.py
+
+diff --git a/tests/test_fts5_review_c198.py b/tests/test_fts5_review_c198.py
+new file mode 100644
+index 0000000..3ce415d
+--- /dev/null
++++ b/tests/test_fts5_review_c198.py
+@@ -0,0 +1,169 @@
++"""Claude C198 probes on PR #2 (experiment/acl-recovery-x399-review @ 6631fa1).
++
++Each probe is xfail(strict=True): it fails today for the reason given, and the
++patch that fixes it removes its own mark. Probes marked "work branch" describe a
++defect of the September ``main`` FilesystemBackend that refactor/architecture-v1
++already fixes (status/revision checks, deletion receipts).
++"""
++import sqlite3
++import threading
++
++import pytest
++
++from core.backend.authorized_memory_experimental import AuthorizedMemory, Principal
++from core.backend.errors import MemoryAlreadyExists, MemoryNotFound, RevisionConflict
++from core.backend.fts5_backend import FTS5Backend
++from core.backend.models import Memory, SearchResult
++
++
++def make(tmp_path):
++    return FTS5Backend(persistent_root=tmp_path / "canonical", history_root=tmp_path / "history")
++
++
++# ---- R1, work branch: a cancelled deletion stays approvable ------------------------------
++@pytest.mark.xfail(strict=True, reason="R1: approve_delete ignores status CANCELLED")
++def test_r1_cancelled_delete_cannot_be_approved(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="x", content="keep me"))
++    b.delete_request("x", "op", "test", 1, "op-1")
++    b.cancel_delete("x", "op-1")
++    with pytest.raises((RevisionConflict, MemoryNotFound)):
++        b.approve_delete("x", "op-1")
++    assert b.get("x") is not None
++
++
++# ---- R2, work branch: approval deletes a revision nobody asked to delete -------------------
++@pytest.mark.xfail(strict=True, reason="R2: approve_delete does not recheck the requested revision")
++def test_r2_approval_refuses_a_memory_changed_since_the_request(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="x", content="v1"))
++    b.delete_request("x", "op", "test", 1, "op-1")
++    b.update("x", Memory(information_id="x", content="v2 important correction"), 1)
++    with pytest.raises(RevisionConflict):
++        b.approve_delete("x", "op-1")
++    assert b.get("x").content == "v2 important correction"
++
++
++# ---- R3, work branch: revision ABA after delete and re-create ------------------------------
++@pytest.mark.xfail(strict=True, reason="R3: re-created identity restarts at revision 1, a stale writer overwrites it")
++def test_r3_stale_writer_cannot_overwrite_a_recreated_memory(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="x", content="old"))
++    b.delete_request("x", "op", "test", 1, "op-1")
++    b.approve_delete("x", "op-1")
++    try:
++        b.store(Memory(information_id="x", content="new owner fact"))
++    except (MemoryAlreadyExists, RevisionConflict):
++        return                                   # identity reserved by a receipt: fixed
++    with pytest.raises(RevisionConflict):        # writer that read "old" at revision 1
++        b.update("x", Memory(information_id="x", content="stale edit"), 1)
++
++
++# ---- R4: startup rebuild races a concurrent writer and drops its entry ---------------------
++@pytest.mark.xfail(strict=True, reason="R4: rebuild_index snapshots and wipes outside the write lock")
++def test_r4_rebuild_does_not_drop_a_concurrent_write(tmp_path):
++    writer = make(tmp_path)
++    rebuilder = make(tmp_path)
++    hook = "_canonical_snapshot" if hasattr(FTS5Backend, "_canonical_snapshot") else "list"
++    original = getattr(FTS5Backend, hook)             # whatever rebuild_index reads canonical files with
++    racers = []
++
++    def racing_list(self, *args, **kwargs):
++        snapshot = original(self, *args, **kwargs)          # taken before "fresh" exists
++        if self is rebuilder and not racers:
++            t = threading.Thread(target=lambda: writer.store(Memory(information_id="fresh", content="fresh fact")))
++            racers.append(t); t.start()
++            t.join(timeout=1.0)                             # completes now unless rebuild holds the lock
++        return snapshot
++
++    setattr(FTS5Backend, hook, racing_list)
++    try:
++        worker = threading.Thread(target=rebuilder.rebuild_index)
++        worker.start(); worker.join(timeout=10)
++    finally:
++        setattr(FTS5Backend, hook, original)
++    assert racers, "the race was not exercised"
++    for t in racers:
++        t.join(timeout=10)
++    assert writer.get("fresh") is not None
++    assert [r.memory.information_id for r in writer.search("fresh")] == ["fresh"]
++
++
++# ---- R5: index failure after the canonical write is reported as a failed write -------------
++@pytest.mark.xfail(strict=True, reason="R5: canonical write succeeds, caller gets an exception, retry conflicts")
++def test_r5_index_failure_does_not_hide_a_successful_canonical_write(tmp_path, monkeypatch):
++    b = make(tmp_path)
++
++    def broken(memory):
++        raise sqlite3.OperationalError("database is locked")
++    monkeypatch.setattr(b, "_index_one", broken)
++    result = b.store(Memory(information_id="x", content="written"))
++    assert result.information_id == "x"
++    monkeypatch.undo()
++    assert [r.memory.information_id for r in b.search("written")] == ["x"]   # repaired lazily
++
++
++# ---- R6: JSON keys are indexed, so a key name matches every memory --------------------------
++@pytest.mark.xfail(strict=True, reason="R6: metadata/provenance indexed as raw JSON, keys match")
++def test_r6_metadata_keys_are_not_search_terms(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="a", content="pommes", metadata={"owner": "alice"}))
++    b.store(Memory(information_id="b", content="poires", metadata={"owner": "bob"}))
++    assert b.search("owner") == []
++
++
++# ---- R7: a corrupt canonical file silently disappears from the index ----------------------
++@pytest.mark.xfail(strict=True, reason="R7: rebuild_index skips unreadable files without reporting them")
++def test_r7_rebuild_reports_skipped_canonical_files(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="ok", content="fine"))
++    (tmp_path / "canonical" / "broken.md").write_text("not an information object", encoding="utf-8")
++    report = b.rebuild_index()
++    assert report["indexed"] == 1 and report.get("skipped") == ["broken.md"]
++
++
++# ---- R8: owner filtering after a global top-k starves a legitimate owner -------------------
++@pytest.mark.xfail(strict=True, reason="R8: facade filters after a raw top-10000; owners are not pre-filtered")
++def test_r8_other_owners_cannot_push_my_results_out(tmp_path):
++    def mem(i, owner):
++        return Memory(information_id=f"{owner}-{i}", content="note", metadata={"owner": owner})
++
++    class Ranked:
++        """Backend able to pre-filter; bob's 10 000 hits rank above alice's one."""
++        supports_owner_filter = True
++
++        def search(self, query, options=None):
++            options = options or {}
++            hits = [SearchResult(memory=mem(i, "bob"), score=2.0) for i in range(10_000)]
++            hits.append(SearchResult(memory=mem(0, "alice"), score=1.0))
++            if "owner" in options:
++                hits = [h for h in hits if h.memory.metadata["owner"] == options["owner"]]
++            return hits[: options.get("limit", 100)]
++
++    alice = AuthorizedMemory(Ranked(), Principal("alice"))
++    assert [r.memory.information_id for r in alice.search("note")] == ["alice-0"]
++
++
++# ---- R9: SQLite connections are committed but never closed --------------------------------
++@pytest.mark.xfail(strict=True, reason="R9: `with connect()` commits but does not close")
++def test_r9_connections_are_closed(tmp_path, monkeypatch):
++    opened, closed = [], []
++    real = sqlite3.connect
++
++    class Tracked:
++        def __init__(self, *a, **k):
++            self._c = real(*a, **k); opened.append(self)
++        def close(self):
++            closed.append(self); self._c.close()
++        def __getattr__(self, name):
++            return getattr(self._c, name)
++        def __enter__(self):
++            self._c.__enter__(); return self
++        def __exit__(self, *exc):
++            return self._c.__exit__(*exc)
++
++    monkeypatch.setattr(sqlite3, "connect", Tracked)
++    b = make(tmp_path)
++    b.store(Memory(information_id="x", content="y"))
++    b.search("y")
++    assert opened and len(closed) == len(opened)
+-- 
+2.43.0
+

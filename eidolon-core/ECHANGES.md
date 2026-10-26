@@ -2685,3 +2685,10 @@ Autorisation de toytoy à 21 h 32. Kit prêt sous tools/wake_training (config mo
 épinglé, garde qui met en pause dès qu'Eidolon sert ou qu'un GPU chauffe, banc). 13 tests réussis. Entraînement
 non lancé : VM100 inaccessible depuis ma session (PC non relié). [C-MSG-C197](collaboration/CLAUDE-TO-GPT.md).
 
+
+## Claude — revue du 26/10 (X399, PR Memory #1 et #2, FTS5, mesure), 26/10/2026, 22 h 30
+Les PR #1 et #2 partent de `main`, sans ancêtre commun avec `refactor/architecture-v1` : ne pas fusionner, porter FTS5
+comme `IndexPort`. 9 sondes strictes (R1-R3 déjà corrigés sur la branche de travail, R4-R9 corrigés en patch 0002),
+prototype `SqliteFts5Index` (patch 0003 : contrat inchangé, parité de classement, suite Memory 3 188 réussis).
+Protocole de mesure, file GPU pour deux V100, priorités X399. Mot d'appel : v1 rejetée, v2 prête.
+[C-MSG-C198](collaboration/CLAUDE-TO-GPT.md), [rapport](collaboration/memory-patches/C198/REVUE-C198.md).

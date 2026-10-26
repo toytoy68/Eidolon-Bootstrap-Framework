@@ -1,0 +1,361 @@
+From 01ecd7e441475e247e4af660832955a82c53b1d3 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 26 Oct 2026 21:05:21 +0100
+Subject: [PATCH 2/2] fix(memory): FTS5 rebuild under the write lock, owner
+ pre-filter, lazy repair
+
+- rebuild_index takes its canonical snapshot and swaps under the write lock (R4;
+  8-process stress: 1-5 of 120 entries lost before, none after)
+- an index failure after a successful canonical write marks the index dirty and
+  is repaired before the next search instead of failing the write (R5)
+- JSON values are indexed, never key names (R6); schema v2 rebuilds v1 indexes
+- rebuild reports unreadable canonical files (R7)
+- owner column filtered inside the FTS query, before ranking and LIMIT; the
+  facade refuses a backend that cannot pre-filter (R8)
+- SQLite connections are closed (R9)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01EtmKEt6P3q6nMhKY8Ysc5a
+---
+ .../backend/authorized_memory_experimental.py |  10 +-
+ core/backend/fts5_backend.py                  | 142 +++++++++++++-----
+ tests/test_fts5_review_c198.py                |  38 ++++-
+ 3 files changed, 145 insertions(+), 45 deletions(-)
+
+diff --git a/core/backend/authorized_memory_experimental.py b/core/backend/authorized_memory_experimental.py
+index ca2d4b1..64bcb08 100644
+--- a/core/backend/authorized_memory_experimental.py
++++ b/core/backend/authorized_memory_experimental.py
+@@ -61,10 +61,14 @@ class AuthorizedMemory:
+         return allowed[offset:offset + limit]
+ 
+     def search(self, query: str, options: dict[str, Any] | None = None) -> list[Any]:
+-        # Searches the raw backend before filtering; leaks through untrusted
+-        # code or side channels remain possible. Do not deploy as a security boundary.
+-        candidates = self._backend.search(query, {"limit": 10_000})
++        # The owner is applied inside the index query, before ranking and LIMIT, so
++        # other owners can neither starve nor rank against this principal's results.
++        # The post-filter is kept as defence in depth. Still not a security boundary
++        # against code that can reach the raw backend, filesystem or SQLite file.
++        if not getattr(self._backend, "supports_owner_filter", False):
++            raise PermissionError("backend cannot pre-filter by owner")
+         limit = max(1, min(10_000, int((options or {}).get("limit", 100))))
++        candidates = self._backend.search(query, {"limit": limit, "owner": self.principal.user_id})
+         return [
+             x for x in candidates
+             if x.memory.metadata.get("owner") == self.principal.user_id
+diff --git a/core/backend/fts5_backend.py b/core/backend/fts5_backend.py
+index 7c2690f..90abfbf 100644
+--- a/core/backend/fts5_backend.py
++++ b/core/backend/fts5_backend.py
+@@ -8,19 +8,25 @@ from __future__ import annotations
+ 
+ import json
+ import fcntl
++import os
+ from contextlib import contextmanager
+ import re
+ import sqlite3
+ from pathlib import Path
+ from typing import Any
+ 
++from .errors import InvalidMemory
+ from .filesystem import FilesystemBackend
+ from .models import DeleteResult, Memory, SearchResult, StoreResult, UpdateResult
+ 
++SCHEMA_VERSION = 2          # v2 (C198): JSON values only, owner column for pre-filtering
++
+ 
+ class FTS5Backend(FilesystemBackend):
+     """Opt-in BM25 search index with canonical Markdown read-through."""
+ 
++    supports_owner_filter = True
++
+     def __init__(
+         self,
+         persistent_root: Path | None = None,
+@@ -28,30 +34,64 @@ class FTS5Backend(FilesystemBackend):
+     ) -> None:
+         super().__init__(persistent_root=persistent_root, history_root=history_root)
+         self.db_path = self.history_root / "search_fts5.sqlite3"
+-        self.rebuild_index()
++        self.dirty_path = self.history_root / ".fts5-dirty"
++        self.last_rebuild = self.rebuild_index()
+ 
+-    def _connect(self) -> sqlite3.Connection:
++    @contextmanager
++    def _connect(self):
++        """One transaction, then close (sqlite3's own context manager never closes)."""
+         connection = sqlite3.connect(self.db_path, timeout=30)
+-        connection.execute("PRAGMA busy_timeout=30000")
+-        connection.execute("PRAGMA journal_mode=WAL")
+-        return connection
++        try:
++            connection.execute("PRAGMA busy_timeout=30000")
++            connection.execute("PRAGMA journal_mode=WAL")
++            with connection:
++                yield connection
++        finally:
++            connection.close()
+ 
+     @staticmethod
+     def _create_index(connection: sqlite3.Connection) -> None:
++        version = connection.execute("PRAGMA user_version").fetchone()[0]
++        if version != SCHEMA_VERSION:
++            connection.execute("DROP TABLE IF EXISTS memories_fts")
++            connection.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
+         connection.execute(
+             "CREATE VIRTUAL TABLE IF NOT EXISTS memories_fts USING "
+-            "fts5(information_id UNINDEXED, content, metadata, provenance)"
++            "fts5(information_id UNINDEXED, owner UNINDEXED, content, metadata, provenance)"
+         )
+ 
+     @staticmethod
+-    def _values(memory: Memory) -> tuple[str, str, str, str]:
++    def _json_values(value: Any) -> str:
++        """Searchable text of a JSON value: leaves only, never key names."""
++        if isinstance(value, dict):
++            return " ".join(FTS5Backend._json_values(v) for v in value.values())
++        if isinstance(value, (list, tuple)):
++            return " ".join(FTS5Backend._json_values(v) for v in value)
++        if value is None or isinstance(value, bool):
++            return ""
++        return str(value)
++
++    @classmethod
++    def _values(cls, memory: Memory) -> tuple[str, str, str, str, str]:
++        owner = (memory.metadata or {}).get("owner")
+         return (
+             memory.information_id,
++            owner if isinstance(owner, str) else "",
+             str(memory.content if memory.content is not None else ""),
+-            json.dumps(memory.metadata, ensure_ascii=False, default=str),
+-            json.dumps(memory.provenance, ensure_ascii=False, default=str),
++            cls._json_values(memory.metadata),
++            cls._json_values(memory.provenance),
+         )
+ 
++    def _mark_dirty(self) -> None:
++        """The canonical write succeeded; the derived index is repaired before the next search."""
++        self.dirty_path.touch(exist_ok=True)
++
++    def _index_safely(self, action) -> None:
++        try:
++            action()
++        except sqlite3.Error:
++            self._mark_dirty()
++
+     @contextmanager
+     def _write_lock(self):
+         """Serialize all writes using a host-local advisory process lock."""
+@@ -71,14 +111,22 @@ class FTS5Backend(FilesystemBackend):
+                 (memory.information_id,),
+             )
+             connection.execute(
+-                "INSERT INTO memories_fts VALUES (?, ?, ?, ?)",
++                "INSERT INTO memories_fts VALUES (?, ?, ?, ?, ?)",
+                 self._values(memory),
+             )
+ 
++    def _unindex(self, information_id: str) -> None:
++        with self._connect() as connection:
++            self._create_index(connection)
++            connection.execute(
++                "DELETE FROM memories_fts WHERE information_id=?",
++                (information_id,),
++            )
++
+     def store(self, memory: Memory) -> StoreResult:
+         with self._write_lock():
+             result = super().store(memory)
+-            self._index_one(memory)
++            self._index_safely(lambda: self._index_one(memory))
+             return result
+ 
+     def update(
+@@ -86,36 +134,47 @@ class FTS5Backend(FilesystemBackend):
+     ) -> UpdateResult:
+         with self._write_lock():
+             result = super().update(information_id, memory, previous_revision)
+-            self._index_one(memory)
++            self._index_safely(lambda: self._index_one(memory))
+             return result
+ 
+     def approve_delete(self, information_id: str, operation_id: str) -> DeleteResult:
+         with self._write_lock():
+             result = super().approve_delete(information_id, operation_id)
+-            with self._connect() as connection:
+-                self._create_index(connection)
+-                connection.execute(
+-                    "DELETE FROM memories_fts WHERE information_id=?",
+-                    (information_id,),
+-                )
++            self._index_safely(lambda: self._unindex(information_id))
+             return result
+ 
++    def _canonical_snapshot(self) -> tuple[list[Memory], list[str]]:
++        memories, skipped = [], []
++        for path in sorted(self.persistent_root.glob("*.md")):
++            try:
++                memories.append(self._deserialize(path.read_text(encoding="utf-8")))
++            except (OSError, UnicodeDecodeError, InvalidMemory):
++                skipped.append(path.name)
++        return memories, skipped
++
+     def rebuild_index(self) -> dict[str, Any]:
+         """Reconcile a missing or stale index with canonical Markdown files.
+ 
+-        Call this during initialization or after restoring Markdown from backup.
+-        Index corruption beyond missing tables may require deleting the SQLite
+-        files and rebuilding them; never delete canonical Markdown for recovery.
++        Runs under the write lock, so no write lands between the snapshot and the
++        swap. Unreadable canonical files are reported, never silently dropped.
++        Never delete canonical Markdown for recovery.
+         """
+-        memories = self.list(limit=1_000_000)
+-        with self._connect() as connection:
+-            self._create_index(connection)
+-            connection.execute("DELETE FROM memories_fts")
+-            connection.executemany(
+-                "INSERT INTO memories_fts VALUES (?, ?, ?, ?)",
+-                (self._values(memory) for memory in memories),
+-            )
+-        return {"status": "OK", "indexed": len(memories), "backend": "fts5"}
++        with self._write_lock():
++            self.dirty_path.unlink(missing_ok=True)       # a failure below marks it again
++            memories, skipped = self._canonical_snapshot()
++            try:
++                with self._connect() as connection:
++                    self._create_index(connection)
++                    connection.execute("DELETE FROM memories_fts")
++                    connection.executemany(
++                        "INSERT INTO memories_fts VALUES (?, ?, ?, ?, ?)",
++                        (self._values(memory) for memory in memories),
++                    )
++            except sqlite3.Error:
++                self._mark_dirty()
++                raise
++        return {"status": "OK" if not skipped else "DEGRADED", "indexed": len(memories),
++                "skipped": skipped, "backend": "fts5"}
+ 
+     def search(
+         self, query: str, options: dict[str, Any] | None = None
+@@ -124,13 +183,24 @@ class FTS5Backend(FilesystemBackend):
+         if not terms:
+             return []
+         expression = " OR ".join('"' + term + '"' for term in terms)
+-        limit = max(1, min(10_000, int((options or {}).get("limit", 100))))
++        options = options or {}
++        limit = max(1, min(10_000, int(options.get("limit", 100))))
++        owner = options.get("owner")
++        if owner is not None and (not isinstance(owner, str) or not owner):
++            raise ValueError("owner filter must be a non-empty string")
++        if self.dirty_path.exists():
++            self.rebuild_index()
++        sql = ("SELECT information_id, bm25(memories_fts) FROM memories_fts "
++               "WHERE memories_fts MATCH ?")
++        params: list[Any] = [expression]
++        if owner is not None:                    # filter before ranking and LIMIT
++            sql += " AND owner = ?"
++            params.append(owner)
++        sql += " ORDER BY bm25(memories_fts) LIMIT ?"
++        params.append(limit)
+         with self._connect() as connection:
+-            rows = connection.execute(
+-                "SELECT information_id, bm25(memories_fts) FROM memories_fts "
+-                "WHERE memories_fts MATCH ? ORDER BY bm25(memories_fts) LIMIT ?",
+-                (expression, limit),
+-            ).fetchall()
++            self._create_index(connection)
++            rows = connection.execute(sql, params).fetchall()
+         results: list[SearchResult] = []
+         for information_id, rank in rows:
+             memory = self.get(information_id)
+diff --git a/tests/test_fts5_review_c198.py b/tests/test_fts5_review_c198.py
+index 3ce415d..bf040bd 100644
+--- a/tests/test_fts5_review_c198.py
++++ b/tests/test_fts5_review_c198.py
+@@ -60,7 +60,6 @@ def test_r3_stale_writer_cannot_overwrite_a_recreated_memory(tmp_path):
+ 
+ 
+ # ---- R4: startup rebuild races a concurrent writer and drops its entry ---------------------
+-@pytest.mark.xfail(strict=True, reason="R4: rebuild_index snapshots and wipes outside the write lock")
+ def test_r4_rebuild_does_not_drop_a_concurrent_write(tmp_path):
+     writer = make(tmp_path)
+     rebuilder = make(tmp_path)
+@@ -90,7 +89,6 @@ def test_r4_rebuild_does_not_drop_a_concurrent_write(tmp_path):
+ 
+ 
+ # ---- R5: index failure after the canonical write is reported as a failed write -------------
+-@pytest.mark.xfail(strict=True, reason="R5: canonical write succeeds, caller gets an exception, retry conflicts")
+ def test_r5_index_failure_does_not_hide_a_successful_canonical_write(tmp_path, monkeypatch):
+     b = make(tmp_path)
+ 
+@@ -104,7 +102,6 @@ def test_r5_index_failure_does_not_hide_a_successful_canonical_write(tmp_path, m
+ 
+ 
+ # ---- R6: JSON keys are indexed, so a key name matches every memory --------------------------
+-@pytest.mark.xfail(strict=True, reason="R6: metadata/provenance indexed as raw JSON, keys match")
+ def test_r6_metadata_keys_are_not_search_terms(tmp_path):
+     b = make(tmp_path)
+     b.store(Memory(information_id="a", content="pommes", metadata={"owner": "alice"}))
+@@ -113,7 +110,6 @@ def test_r6_metadata_keys_are_not_search_terms(tmp_path):
+ 
+ 
+ # ---- R7: a corrupt canonical file silently disappears from the index ----------------------
+-@pytest.mark.xfail(strict=True, reason="R7: rebuild_index skips unreadable files without reporting them")
+ def test_r7_rebuild_reports_skipped_canonical_files(tmp_path):
+     b = make(tmp_path)
+     b.store(Memory(information_id="ok", content="fine"))
+@@ -123,7 +119,6 @@ def test_r7_rebuild_reports_skipped_canonical_files(tmp_path):
+ 
+ 
+ # ---- R8: owner filtering after a global top-k starves a legitimate owner -------------------
+-@pytest.mark.xfail(strict=True, reason="R8: facade filters after a raw top-10000; owners are not pre-filtered")
+ def test_r8_other_owners_cannot_push_my_results_out(tmp_path):
+     def mem(i, owner):
+         return Memory(information_id=f"{owner}-{i}", content="note", metadata={"owner": owner})
+@@ -144,8 +139,39 @@ def test_r8_other_owners_cannot_push_my_results_out(tmp_path):
+     assert [r.memory.information_id for r in alice.search("note")] == ["alice-0"]
+ 
+ 
++def test_r8_facade_refuses_a_backend_that_cannot_pre_filter():
++    class Plain:
++        def search(self, query, options=None):
++            return []
++    with pytest.raises(PermissionError):
++        AuthorizedMemory(Plain(), Principal("alice")).search("x")
++
++
++def test_r8_fts5_owner_filter_is_applied_in_the_index(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="a", content="partagé", metadata={"owner": "alice"}))
++    b.store(Memory(information_id="b", content="partagé", metadata={"owner": "bob"}))
++    assert [r.memory.information_id for r in b.search("partagé", {"owner": "alice"})] == ["a"]
++    with pytest.raises(ValueError):
++        b.search("partagé", {"owner": ""})
++
++
++def test_r6_metadata_values_stay_searchable(tmp_path):
++    b = make(tmp_path)
++    b.store(Memory(information_id="a", content="x", metadata={"topic": "jardinage"}))
++    assert [r.memory.information_id for r in b.search("jardinage")] == ["a"]
++
++
++def test_schema_upgrade_rebuilds_a_v1_index(tmp_path):
++    (tmp_path / "history").mkdir(parents=True)
++    with sqlite3.connect(tmp_path / "history" / "search_fts5.sqlite3") as c:
++        c.execute("CREATE VIRTUAL TABLE memories_fts USING fts5(information_id UNINDEXED, content, metadata, provenance)")
++    b = make(tmp_path)
++    b.store(Memory(information_id="a", content="migré", metadata={"owner": "alice"}))
++    assert [r.memory.information_id for r in b.search("migré", {"owner": "alice"})] == ["a"]
++
++
+ # ---- R9: SQLite connections are committed but never closed --------------------------------
+-@pytest.mark.xfail(strict=True, reason="R9: `with connect()` commits but does not close")
+ def test_r9_connections_are_closed(tmp_path, monkeypatch):
+     opened, closed = [], []
+     real = sqlite3.connect
+-- 
+2.43.0
+

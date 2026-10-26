@@ -1,0 +1,290 @@
+From bc83761b907e35ceccc42cd1a61dd9faa8b07de7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 26 Oct 2026 21:19:28 +0100
+Subject: [PATCH] feat(index): SQLite FTS5 IndexPort as candidate generator for
+ lexical_v1 (C198)
+
+FTS5 (BM25) only selects candidates; final scores are the reference
+lexical_ranking, so results match InMemoryIndex (60 random queries, 300 docs;
+50/50 top-5 on 20 000 docs, p50 19 ms vs 621 ms). Rebuild builds beside the
+live index and swaps with os.replace + directory fsync; private 0600 file;
+JSON values only. Passes IndexPortContract unchanged. Not wired.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01EtmKEt6P3q6nMhKY8Ysc5a
+---
+ core/indexing/fts5_index.py | 176 ++++++++++++++++++++++++++++++++++++
+ tests/test_fts5_index.py    |  78 ++++++++++++++++
+ 2 files changed, 254 insertions(+)
+ create mode 100644 core/indexing/fts5_index.py
+ create mode 100644 tests/test_fts5_index.py
+
+diff --git a/core/indexing/fts5_index.py b/core/indexing/fts5_index.py
+new file mode 100644
+index 0000000..e5f4a43
+--- /dev/null
++++ b/core/indexing/fts5_index.py
+@@ -0,0 +1,176 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : core/indexing/fts5_index.py
++# Description : Derived SQLite FTS5 IndexPort, candidate generator for lexical_v1.
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++
++"""Derived SQLite FTS5 index behind the existing IndexPort (C198 proposal).
++
++FTS5 (BM25) only *selects candidates*; the final score is the same
++``lexical_ranking`` as the reference ``InMemoryIndex``, so swapping adapters does
++not change ranking semantics. The canonical Markdown files stay the only truth:
++writes reach this index through the change journal and worker like Qdrant, and
++``rebuild`` builds a new database next to the old one and swaps it with
++``os.replace``, so a failed rebuild leaves the previous index usable.
++Not wired into any runtime by this module.
++"""
++
++from __future__ import annotations
++
++from contextlib import contextmanager
++from dataclasses import asdict
++from hashlib import sha256
++import json
++import os
++from pathlib import Path
++import sqlite3
++
++from core.backend.errors import InvalidMemory
++from core.backend.filesystem import FilesystemBackend
++from core.backend.models import Memory
++from core.indexing.manifest import build_manifest
++from core.indexing.port import IndexHit, IndexPort, IndexStatus
++from core.retrieval.ranking import lexical_ranking, terms
++
++SCHEMA = "eidolon-fts5-index/1"
++
++
++def _text(value) -> str:
++    """Values only, never JSON key names (keys would match every document)."""
++    if isinstance(value, str):
++        return value
++    if type(value) in (int, float):
++        return str(value)
++    if isinstance(value, dict):
++        return " ".join(_text(v) for v in value.values())
++    if isinstance(value, (list, tuple)):
++        return " ".join(_text(v) for v in value)
++    return ""
++
++
++class SqliteFts5Index(IndexPort):
++    def __init__(self, path: Path, *, candidate_floor: int = 500, candidate_factor: int = 50) -> None:
++        self.path = Path(path)
++        if self.path.is_symlink() or self.path.parent.is_symlink():
++            raise ValueError("FTS5 index path must not be a symlink")
++        if not self.path.parent.is_dir():
++            raise ValueError("FTS5 index parent must be an existing directory")
++        if type(candidate_floor) is not int or type(candidate_factor) is not int \
++                or candidate_floor < 1 or candidate_factor < 1:
++            raise ValueError("invalid candidate budget")
++        self.candidate_floor, self.candidate_factor = candidate_floor, candidate_factor
++        self._initialise(self.path)
++
++    # -- storage -------------------------------------------------------------------------
++    @staticmethod
++    @contextmanager
++    def _open(path: Path):
++        fresh = not path.exists()
++        if fresh:                                    # private from the first byte
++            os.close(os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600))
++        connection = sqlite3.connect(path, timeout=30)
++        try:
++            connection.execute("PRAGMA busy_timeout=30000")
++            with connection:
++                yield connection
++        finally:
++            connection.close()
++
++    @classmethod
++    def _initialise(cls, path: Path) -> None:
++        with cls._open(path) as db:
++            db.execute("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT)")
++            row = db.execute("SELECT value FROM meta WHERE key='schema'").fetchone()
++            if row is None:
++                db.execute("INSERT INTO meta VALUES ('schema', ?)", (SCHEMA,))
++            elif row[0] != SCHEMA:
++                raise ValueError("incompatible FTS5 index schema")
++            db.execute("CREATE TABLE IF NOT EXISTS documents (information_id TEXT PRIMARY KEY, memory TEXT NOT NULL)")
++            db.execute("CREATE VIRTUAL TABLE IF NOT EXISTS fts USING fts5("
++                       "information_id UNINDEXED, content, auxiliary, "
++                       "tokenize='unicode61 remove_diacritics 0')")
++
++    @staticmethod
++    def _put(db: sqlite3.Connection, memory: Memory) -> None:
++        db.execute("DELETE FROM fts WHERE information_id=?", (memory.information_id,))
++        db.execute("INSERT OR REPLACE INTO documents VALUES (?, ?)",
++                   (memory.information_id, json.dumps(asdict(memory), ensure_ascii=False, sort_keys=True)))
++        auxiliary = " ".join((memory.information_id, _text(memory.metadata), _text(memory.provenance),
++                              _text(memory.temporal), _text(memory.verification), _text(memory.relations)))
++        db.execute("INSERT INTO fts VALUES (?, ?, ?)",
++                   (memory.information_id, _text(memory.content), auxiliary))
++
++    # -- IndexPort -----------------------------------------------------------------------
++    def upsert(self, memory: Memory) -> None:
++        with self._open(self.path) as db:
++            self._put(db, memory)
++            db.execute("DELETE FROM meta WHERE key='source_digest'")
++
++    def delete(self, information_id: str) -> None:
++        with self._open(self.path) as db:
++            db.execute("DELETE FROM fts WHERE information_id=?", (information_id,))
++            db.execute("DELETE FROM documents WHERE information_id=?", (information_id,))
++            db.execute("DELETE FROM meta WHERE key='source_digest'")
++
++    def query(self, text: str, *, limit: int = 5) -> list[IndexHit]:
++        if type(limit) is not int or limit < 1:
++            raise ValueError("limit must be a positive integer")
++        wanted = tuple(dict.fromkeys(terms(text)))
++        if not wanted:
++            return []
++        expression = " OR ".join('"' + term.replace('"', '""') + '"' for term in wanted)
++        budget = max(self.candidate_floor, limit * self.candidate_factor)
++        with self._open(self.path) as db:
++            rows = db.execute(
++                "SELECT d.memory, bm25(fts) FROM fts JOIN documents d USING (information_id) "
++                "WHERE fts MATCH ? ORDER BY bm25(fts) LIMIT ?", (expression, budget)).fetchall()
++        hits = []
++        for raw, bm25 in rows:
++            memory = Memory(**json.loads(raw))
++            ranked = lexical_ranking(text, memory.content, memory.information_id, memory.metadata,
++                                     (memory.provenance, memory.temporal, memory.verification,
++                                      memory.relations))
++            if ranked.coverage:
++                explanation = ranked.explanation() | {"candidates": "fts5_bm25", "bm25": -float(bm25)}
++                hits.append(IndexHit(memory.information_id, ranked.score, explanation))
++        return sorted(hits, key=lambda item: (-item.score, item.information_id))[:limit]
++
++    def rebuild(self, persistent_root: Path) -> None:
++        root = Path(persistent_root)
++        manifest = build_manifest(root)
++        staging = self.path.with_name(self.path.name + ".rebuild")
++        for suffix in ("", "-wal", "-shm", "-journal"):
++            Path(str(staging) + suffix).unlink(missing_ok=True)
++        try:
++            self._initialise(staging)
++            with self._open(staging) as db:
++                for entry in manifest.entries:
++                    path = root / f"{entry.information_id}.md"
++                    if path.is_symlink():
++                        raise InvalidMemory("index source became a symlink")
++                    raw = path.read_bytes()
++                    if sha256(raw).hexdigest() != entry.file_sha256:
++                        raise InvalidMemory("index source changed during rebuild")
++                    memory = FilesystemBackend._deserialize(raw.decode("utf-8"))
++                    if memory.information_id != entry.information_id:
++                        raise InvalidMemory("index source identity changed")
++                    self._put(db, memory)
++                db.execute("INSERT OR REPLACE INTO meta VALUES ('source_digest', ?)", (manifest.digest,))
++            os.replace(staging, self.path)                       # atomic swap, old index kept on failure
++            if os.name != "nt":                                  # persist the directory entry
++                descriptor = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY)
++                try:
++                    os.fsync(descriptor)
++                finally:
++                    os.close(descriptor)
++        finally:
++            for suffix in ("", "-wal", "-shm", "-journal"):
++                Path(str(staging) + suffix).unlink(missing_ok=True)
++
++    def status(self) -> IndexStatus:
++        with self._open(self.path) as db:
++            documents = db.execute("SELECT count(*) FROM documents").fetchone()[0]
++            row = db.execute("SELECT value FROM meta WHERE key='source_digest'").fetchone()
++        return IndexStatus(documents, row[0] if row else None)
+diff --git a/tests/test_fts5_index.py b/tests/test_fts5_index.py
+new file mode 100644
+index 0000000..a75d53b
+--- /dev/null
++++ b/tests/test_fts5_index.py
+@@ -0,0 +1,78 @@
++# ==========================================================
++# Projet      : Eidolon Memory Engine
++# Organisation: Eidolon Core Technologies (ECT)
++# Fichier     : tests/test_fts5_index.py
++# Description : SQLite FTS5 IndexPort: unchanged contract and parity with the reference index.
++# Standard    : Eidolon Presentation Standard v1
++# ==========================================================
++
++import random
++import stat
++
++import pytest
++
++from core.backend.filesystem import FilesystemBackend
++from core.backend.models import Memory
++from core.indexing.fts5_index import SqliteFts5Index
++from core.indexing.memory_index import InMemoryIndex
++from tests.contracts.index_port_contract import IndexPortContract
++
++
++class TestSqliteFts5Index(IndexPortContract):
++    @pytest.fixture
++    def index(self, tmp_path):
++        (tmp_path / "index").mkdir()
++        return SqliteFts5Index(tmp_path / "index" / "fts5.sqlite3")
++
++
++WORDS = ("réseau fibre moteur robotique jardin pommes hydraulique eau stockage disques "
++         "Eidolon mémoire rappel souvenir livre chapitre serveur cave refroidissement").split()
++
++
++def _corpus(seed, n):
++    rng = random.Random(seed)
++    for i in range(n):
++        yield Memory(f"m{i}", content=" ".join(rng.choice(WORDS) for _ in range(rng.randint(3, 12))),
++                     metadata={"topic": rng.choice(WORDS), "owner": rng.choice(("alice", "bob"))})
++
++
++def test_ranking_parity_with_reference_index(tmp_path):
++    reference, fts = InMemoryIndex(), SqliteFts5Index(tmp_path / "fts5.sqlite3", candidate_floor=1000)
++    for memory in _corpus(7, 300):
++        reference.upsert(memory); fts.upsert(memory)
++    rng = random.Random(11)
++    for _ in range(60):
++        query = " ".join(rng.choice(WORDS) for _ in range(rng.randint(1, 3)))
++        expected = [(h.information_id, round(h.score, 9)) for h in reference.query(query, limit=10)]
++        got = [(h.information_id, round(h.score, 9)) for h in fts.query(query, limit=10)]
++        assert got == expected, query
++
++
++def test_json_key_names_are_not_terms(tmp_path):
++    fts = SqliteFts5Index(tmp_path / "fts5.sqlite3")
++    fts.upsert(Memory("a", content="pommes", metadata={"owner": "alice"}))
++    assert fts.query("owner") == [] and [h.information_id for h in fts.query("alice")] == ["a"]
++
++
++def test_persists_across_reopen_and_is_private(tmp_path):
++    path = tmp_path / "fts5.sqlite3"
++    SqliteFts5Index(path).upsert(Memory("a", content="souvenir durable"))
++    assert [h.information_id for h in SqliteFts5Index(path).query("souvenir")] == ["a"]
++    assert stat.S_IMODE(path.stat().st_mode) == 0o600
++
++
++def test_rebuild_swaps_atomically_and_records_the_manifest(tmp_path):
++    persistent = tmp_path / "memory" / "persistent"
++    backend = FilesystemBackend(persistent, tmp_path / "memory" / "history")
++    for memory in _corpus(3, 40):
++        backend.store(memory)
++    fts = SqliteFts5Index(tmp_path / "fts5.sqlite3")
++    fts.rebuild(persistent)
++    assert fts.status().documents == 40
++    assert not list(tmp_path.glob("fts5.sqlite3.rebuild*"))
++
++
++def test_query_with_quote_and_operators_is_literal(tmp_path):
++    fts = SqliteFts5Index(tmp_path / "fts5.sqlite3")
++    fts.upsert(Memory("a", content="alpha"))
++    assert [h.information_id for h in fts.query('alpha" OR NEAR(x) NOT *')] == ["a"]
+-- 
+2.43.0
+
