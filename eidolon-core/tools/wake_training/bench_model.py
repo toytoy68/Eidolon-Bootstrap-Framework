@@ -102,18 +102,24 @@ def clip_origin(generator_dir, manifest, voices_dir, split="test"):
     phrases = {"positive": manifest["target_phrase"], "negative": manifest["negative_phrases"]}
 
     def origin(kind, index):
-        voice_index, _speaker, _variation, phrase_index = pipeline.sample_plan(
+        """(phrase, voice, planned speaker id); the generator may swap a speaker after short clips."""
+        voice_index, speaker, _variation, phrase_index = pipeline.sample_plan(
             index, pool, 1, len(phrases[kind]))
-        return phrases[kind][phrase_index], Path(manifest["voices"][voice_index]["file"]).stem
+        return phrases[kind][phrase_index], Path(manifest["voices"][voice_index]["file"]).stem, speaker
     return origin
 
 
 def breakdown(scored_clips, threshold):
-    """scored_clips: [(label, phrase, voice, scores)] -> fired/total per phrase and per voice."""
+    """scored_clips: [(label, phrase, voice, speaker, scores)] -> fired/total per axis.
+
+    Axes: phrase, voice, speaker (voice#id) and phrase_voice (cross table), so a weak
+    spelling cannot hide behind a strong voice or the reverse.
+    """
     out = {}
-    for label, phrase, voice, scores in scored_clips:
+    for label, phrase, voice, speaker, scores in scored_clips:
         fired = any(x >= threshold for x in scores)
-        for axis, key in (("phrase", phrase), ("voice", voice)):
+        for axis, key in (("phrase", phrase), ("voice", voice), ("speaker", f"{voice}#{speaker}"),
+                          ("phrase_voice", f"{phrase} | {voice}")):
             cell = out.setdefault(label, {}).setdefault(axis, {}).setdefault(key, {"fired": 0, "total": 0})
             cell["total"] += 1
             cell["fired"] += fired
@@ -136,7 +142,12 @@ def main():
     p.add_argument("--positive-dir", required=True, type=Path)
     p.add_argument("--negative-dir", required=True, type=Path)
     p.add_argument("--negative-features", type=Path)
+    p.add_argument("--holdout-features", type=Path,
+                   help="négatifs jamais vus par train.py (moitié B), pour le critère FP/h")
+    p.add_argument("--holdout-clean", action="store_true",
+                   help="le modèle a été sélectionné sur la moitié A seulement")
     p.add_argument("--generator", type=Path, help="checkout de wakeword-generator (origine des clips)")
+    p.add_argument("--gate", type=Path, help="critères écrits avant entraînement (eidolon-wake-gate/1)")
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--limit", type=int, default=2000)
     p.add_argument("--out", required=True, type=Path)
@@ -163,16 +174,27 @@ def main():
         manifest = json.loads((a.positive_dir.parent / "generation.json").read_text(encoding="utf-8"))
         origin = clip_origin(a.generator, manifest, a.generator / "data" / "voices")
         traced = [(label, *origin(label, int(f.stem)), sc[2]) for (label, f), sc in zip(files, scored)]
+    detail = [{"file": f"{label}_test/{f.name}", "label": label, "duration_s": round(sc[1] / 16000, 3),
+               "max_score": round(max(sc[2]), 4)} for (label, f), sc in zip(files, scored)]
+    if origin is not None:
+        for row, t in zip(detail, traced):
+            row.update(phrase=t[1], voice=t[2], speaker=t[3])
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "evaluation"))
     from wake_eval_g296 import score
-    negative_scores = None
-    if a.negative_features:
-        features = np.load(a.negative_features, mmap_mode="r")
-        session = ort.InferenceSession(str(a.model), providers=["CPUExecutionProvider"])
-        model_input = session.get_inputs()[0]
-        length = int(model_input.shape[1])                   # 16 frames for openWakeWord
-        negative_scores = [float(session.run(None, {model_input.name: w})[0].reshape(-1)[0])
-                           for w in feature_windows(features, length)]
+    session = ort.InferenceSession(str(a.model), providers=["CPUExecutionProvider"])
+    model_input = session.get_inputs()[0]
+    length = int(model_input.shape[1])                       # 16 frames for openWakeWord
+
+    def window_scores(path):
+        features = np.load(path, mmap_mode="r")
+        return [float(session.run(None, {model_input.name: w})[0].reshape(-1)[0])
+                for w in feature_windows(features, length)]
+    negative_scores = window_scores(a.negative_features) if a.negative_features else None
+    holdout_scores = window_scores(a.holdout_features) if a.holdout_features else None
+    gate = None
+    if a.gate:
+        from gate import evaluate_gate, load_gate
+        gate = load_gate(a.gate)
     thresholds = sorted(set(THRESHOLDS) | {a.threshold})
     sweep = []
     for th in thresholds:
@@ -184,15 +206,25 @@ def main():
                "latency_p95_ms": held["phrases"]["eidolon"].get("latency_p95_ms")}
         if negative_scores is not None:
             row["negative_features"] = false_per_hour(negative_scores, th)
+        if holdout_scores is not None:
+            row["holdout_features"] = false_per_hour(holdout_scores, th) | {"clean": a.holdout_clean}
         if origin is not None:
             row["breakdown"] = breakdown(traced, th)
+        if gate is not None:
+            row["gate"] = evaluate_gate(row, gate)
         sweep.append(row | {"_held_out": held})
     main_row = next(r for r in sweep if r["threshold"] == a.threshold)
     report = {"schema": "eidolon-wake-bench/1", "threshold": a.threshold,
               "clips": {"positive": sum(c[0] == "positive" for c in clips),
                         "negative": sum(c[0] == "negative" for c in clips)},
               "held_out_clips": main_row["_held_out"], "synthetic_only": True,
-              "sweep": [{k: v for k, v in r.items() if k != "_held_out"} for r in sweep]}
+              "sweep": [{k: v for k, v in r.items() if k != "_held_out"} for r in sweep],
+              "clips_detail": detail}
+    if gate is not None:
+        passing = [r for r in sweep if r["gate"]["pass"]]
+        report["gate"] = {"source": gate["_source"], "sha256": gate["_sha256"],
+                          "operating_threshold": max(passing, key=lambda r: (r["recall"], -r["threshold"]))["threshold"]
+                          if passing else None}
     if negative_scores is not None:
         report["negative_features"] = main_row["negative_features"]
     a.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
@@ -200,7 +232,9 @@ def main():
         print(json.dumps({"threshold": r["threshold"], "recall": r["recall"],
                           "false_per_hour_clips": r["false_per_hour_clips"],
                           "false_per_hour_11h": (r.get("negative_features") or {}).get("false_per_hour"),
-                          "latency_p95_ms": r["latency_p95_ms"], "verdict": r["verdict"]}, ensure_ascii=False))
+                          "false_per_hour_holdout": (r.get("holdout_features") or {}).get("false_per_hour"),
+                          "latency_p95_ms": r["latency_p95_ms"], "verdict": r["verdict"],
+                          "gate": (r.get("gate") or {}).get("reasons")}, ensure_ascii=False))
     if origin is not None:
         b = main_row["breakdown"]
         print(json.dumps({"threshold": a.threshold,
@@ -208,8 +242,13 @@ def main():
                                               for k, v in b["positive"]["phrase"].items()},
                           "positive_by_voice": {k: f'{v["fired"]}/{v["total"]}' for k, v in b["positive"]["voice"].items()},
                           "fired_negative": {k: f'{v["fired"]}/{v["total"]}'
-                                             for k, v in b.get("negative", {}).get("phrase", {}).items()}},
+                                             for k, v in b.get("negative", {}).get("phrase", {}).items()},
+                          "positive_by_speaker": {k: f'{v["fired"]}/{v["total"]}' for k, v in b["positive"]["speaker"].items()},
+                          "missed_by_phrase_voice": {k: f'{v["total"] - v["fired"]}/{v["total"]}'
+                                                     for k, v in b["positive"]["phrase_voice"].items()}},
                          ensure_ascii=False))
+    if gate is not None:
+        print(json.dumps({"gate": report["gate"]}, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

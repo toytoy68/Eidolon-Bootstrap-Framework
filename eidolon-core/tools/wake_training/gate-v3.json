@@ -1,0 +1,21 @@
+{
+  "schema": "eidolon-wake-gate/1",
+  "written": "2026-10-27, Claude (C199), before any v3 training; changing it requires a dated note",
+  "synthetic": {
+    "min_recall": 0.95,
+    "min_recall_per_spelling": 0.90,
+    "min_recall_per_voice": 0.90,
+    "max_false_per_hour_general": 0.5,
+    "max_trap_fire_rate": 0.01,
+    "max_trap_fire_rate_per_word": 0.035,
+    "max_latency_p95_ms": 500
+  },
+  "human": {
+    "min_recall_per_speaker": 0.95,
+    "max_false_per_hour_household": 0.5,
+    "min_household_hours": 8,
+    "max_false_during_playback": 0,
+    "max_latency_p95_ms": 500,
+    "note": "measured with tools/evaluation/wake_eval_g296.py on annotated Windows recordings never used for training"
+  }
+}

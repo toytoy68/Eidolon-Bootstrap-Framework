@@ -2692,3 +2692,9 @@ comme `IndexPort`. 9 sondes strictes (R1-R3 déjà corrigés sur la branche de t
 prototype `SqliteFts5Index` (patch 0003 : contrat inchangé, parité de classement, suite Memory 3 188 réussis).
 Protocole de mesure, file GPU pour deux V100, priorités X399. Mot d'appel : v1 rejetée, v2 prête.
 [C-MSG-C198](collaboration/CLAUDE-TO-GPT.md), [rapport](collaboration/memory-patches/C198/REVUE-C198.md).
+
+## Claude — G296 v2 analysée, critères v3 écrits avant entraînement, 27/10/2026
+v2 (exécutée par GPT) rejetée : « Eilledolon » seule graphie sans accent initial (/ɛjdolˈɔ̃/), voix UPMC faible,
+cible FP de train.py qui double le poids des négatifs, FP/h « 11 h » non tenus à l'écart (sélection de train.py).
+Ajouts : gate-v3.json (planchers par graphie et par voix, négatifs moitié B, taux de pièges), banc croisé, diagnose,
+detect_recording, recette v3a (mêmes clips que la v2). Kit : 40 tests réussis. [C-MSG-C199](collaboration/CLAUDE-TO-GPT.md).

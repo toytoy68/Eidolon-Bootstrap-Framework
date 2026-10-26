@@ -14,6 +14,8 @@
 #   WAKE_ACTIVITY=/chemin/activity.json  ./run_vm100.sh            # CPU seulement (défaut)
 #   WAKE_ACTIVITY=... WAKE_GPU=1         ./run_vm100.sh            # entraînement sur le GPU n° 1 seul
 #   ./run_vm100.sh status                                          # où en est-on
+#   ./run_vm100.sh diagnose [modèle.onnx]                          # pourquoi des clips sont ratés (sans entraîner)
+#   WAKE_CONFIG=eidolon-training-v3.yml ./run_vm100.sh             # autre recette du kit
 #   ./run_vm100.sh bench [modèle.onnx] [recette]                   # banc seul (défaut : dernier modèle,
 #                                                                  #   clips de test de sa recette)
 set -euo pipefail
@@ -28,7 +30,11 @@ GPU="${WAKE_GPU:-}"
 MIN_FREE_GB=45
 LOG="$WORKDIR/run.log"
 # Nom de la recette (model_name) : output/<RUN>/ pour les clips, output/<RUN>.onnx pour le modèle.
-RUN="$(sed -n 's/^model_name: *\([a-z][a-z0-9_-]*\).*/\1/p' "$KIT/eidolon-training.yml")"
+CONFIG="${WAKE_CONFIG:-eidolon-training.yml}"
+case "$CONFIG" in */*|"") echo "WAKE_CONFIG : un nom de fichier du kit" >&2; exit 1 ;; esac
+[ -f "$KIT/$CONFIG" ] || { echo "recette absente : $KIT/$CONFIG" >&2; exit 1; }
+GATE="$KIT/gate-v3.json"
+RUN="$(sed -n 's/^model_name: *\([a-z][a-z0-9_-]*\).*/\1/p' "$KIT/$CONFIG")"
 
 say() { printf '%s %s\n' "$(date -Is)" "$*" | tee -a "$LOG"; }
 fail() { say "ERREUR : $*"; exit 1; }
@@ -43,15 +49,34 @@ if [ "${1:-}" = status ]; then
   exit 0
 fi
 
+split_validation() {                                   # moitiés A (train.py) et B (banc), une fois
+  say "Négatifs de validation : moitiés A et B."
+  docker run --rm --cpu-shares 64 -v "$GEN:/workspace" -v "$KIT/..:/kit:ro" -w /workspace \
+    --entrypoint python3.10 "$IMAGE" /kit/wake_training/split_validation.py \
+    --features-dir data/features | tee -a "$LOG"
+}
+
 # ---- Banc : clips tenus à l'écart et ~11 h de négatifs ---------------------------
 bench() {
   local model="$1" base run="${2:-}"
   base="$(basename "$model" .onnx)"
   if [ -z "$run" ]; then                       # recette d'origine, sinon la v1 (« eidolon »)
-    run="$(sed -n 's/.*"run": *"\([a-z][a-z0-9_-]*\)".*/\1/p' "$WORKDIR/models/$base.provenance.json" 2>/dev/null)"
+    run="$(sed -n 's/.*"run": *"\([a-z][a-z0-9_-]*\)".*/\1/p' "$WORKDIR/models/$base.provenance.json" 2>/dev/null || true)"
     run="${run:-eidolon}"
   fi
   [ -d "$GEN/output/$run/positive_test" ] || fail "clips de test absents : output/$run"
+  local cfg holdout=() clean=()
+  if [ ! -f "$GEN/data/features/validation_half_b.npy" ] && [ -f "$GEN/data/features/validation_set_features.npy" ]; then
+    split_validation
+  fi
+  cfg="$(sed -n 's/.*"config": *"\([A-Za-z0-9._-]*\)".*/\1/p' "$WORKDIR/models/$base.provenance.json" 2>/dev/null || true)"
+  if [ -f "$GEN/data/features/validation_half_b.npy" ]; then
+    holdout=(--holdout-features data/features/validation_half_b.npy)
+    # propre seulement si train.py a sélectionné le modèle sur la moitié A
+    if [ -n "$cfg" ] && grep -q '^false_positive_validation_data_path:.*validation_half_a.npy' "$KIT/$cfg" 2>/dev/null; then
+      clean=(--holdout-clean)
+    fi
+  fi
   say "Banc : $base sur les clips de test de « $run » (balayage de seuils)."
   docker run --rm --cpu-shares 64 -v "$GEN:/workspace" -v "$KIT/..:/kit:ro" -v "$WORKDIR/models:/models" \
     -w /workspace --entrypoint python3.10 "$IMAGE" /kit/wake_training/bench_model.py \
@@ -59,12 +84,36 @@ bench() {
     --melspec /opt/openWakeWord/openwakeword/resources/models/melspectrogram.onnx \
     --embedding /opt/openWakeWord/openwakeword/resources/models/embedding_model.onnx \
     --positive-dir "output/$run/positive_test" --negative-dir "output/$run/negative_test" \
-    --negative-features data/features/validation_set_features.npy \
-    --generator /workspace --out "/models/$base.bench-$run.json" | tee -a "$LOG"
+    --negative-features data/features/validation_set_features.npy "${holdout[@]}" "${clean[@]}" \
+    --generator /workspace --gate /kit/wake_training/gate-v3.json \
+    --out "/models/$base.bench-$run.json" | tee -a "$LOG"
   say "Banc : $WORKDIR/models/$base.bench-$run.json. Rien n'est activé."
 }
 
+diagnose() {
+  local model="$1" base run
+  base="$(basename "$model" .onnx)"
+  run="$(sed -n 's/.*"run": *"\([a-z][a-z0-9_-]*\)".*/\1/p' "$WORKDIR/models/$base.provenance.json" 2>/dev/null || true)"
+  run="${run:-eidolon}"
+  [ -f "$WORKDIR/models/$base.bench-$run.json" ] || fail "banc absent : lancer d'abord « bench » (version ≥ C199)"
+  grep -q '"clips_detail"' "$WORKDIR/models/$base.bench-$run.json" || fail "banc trop ancien (sans clips_detail) : relancer « bench »"
+  say "Diagnostic : $base (recette « $run »)."
+  docker run --rm --cpu-shares 64 -v "$GEN:/workspace:ro" -v "$KIT/..:/kit:ro" -v "$WORKDIR/models:/models" \
+    -w /workspace --entrypoint python3.10 "$IMAGE" /kit/wake_training/diagnose_clips.py \
+    --bench "/models/$base.bench-$run.json" --clips-root "output/$run" --voices data/voices \
+    --out "/models/$base.diagnostic" | tee -a "$LOG"
+  say "Diagnostic : $WORKDIR/models/$base.diagnostic/ (extraits à écouter dans a-ecouter/)."
+}
+
 GEN="$WORKDIR/wakeword-generator"
+if [ "${1:-}" = diagnose ]; then
+  command -v docker >/dev/null || fail "Docker absent."
+  model="${2:-$(ls -1t "$WORKDIR"/models/eidolon-*.onnx 2>/dev/null | head -1)}"
+  [ -n "$model" ] && [ -f "$model" ] || fail "aucun modèle sous $WORKDIR/models"
+  case "$model" in "$WORKDIR/models/"*) ;; *) fail "le modèle doit être sous $WORKDIR/models" ;; esac
+  diagnose "$model"
+  exit 0
+fi
 if [ "${1:-}" = bench ]; then
   command -v docker >/dev/null || fail "Docker absent."
   model="${2:-$(ls -1t "$WORKDIR"/models/eidolon-*.onnx 2>/dev/null | head -1)}"
@@ -75,7 +124,7 @@ if [ "${1:-}" = bench ]; then
 fi
 
 # ---- Contrôles préalables ------------------------------------------------------
-[ -n "$RUN" ] || fail "model_name introuvable dans eidolon-training.yml"
+[ -n "$RUN" ] || fail "model_name introuvable dans $CONFIG"
 [ -n "$ACTIVITY" ] || fail "WAKE_ACTIVITY doit désigner activity.json de Core (pause quand Eidolon sert)."
 [ -r "$ACTIVITY" ] || fail "activity.json illisible : $ACTIVITY"
 command -v docker >/dev/null || fail "Docker absent."
@@ -97,7 +146,7 @@ git -C "$GEN" fetch --quiet origin
 git -C "$GEN" checkout --quiet "$GENERATOR_COMMIT"
 [ "$(git -C "$GEN" rev-parse --short=7 HEAD)" = "$GENERATOR_COMMIT" ] || fail "commit inattendu de wakeword-generator"
 [ -z "$(git -C "$GEN" status --porcelain --untracked-files=no)" ] || fail "wakeword-generator modifié localement : refus."
-install -m 600 "$KIT/eidolon-training.yml" "$GEN/eidolon-training.yml"
+install -m 600 "$KIT/$CONFIG" "$GEN/eidolon-training.yml"
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
   say "Construction de l'image (une fois)."
   nice -n 19 docker build --quiet -t "$IMAGE" "$GEN" | tee -a "$LOG"
@@ -121,7 +170,20 @@ run_step() {
   [ "$code" = 0 ] || fail "étape $step : code $code (voir $LOG). Relancer reprend où l'outil s'était arrêté."
   say "Étape $step : terminée."
 }
-for step in prepare generate augment train; do run_step "$step"; done
+set_aside_previous_model() {   # pipeline.py refuse d'entraîner si output/<recette>.onnx existe déjà
+  local previous="$GEN/output/$RUN.onnx" sha
+  [ -f "$previous" ] || return 0
+  sha=$(sha256sum "$previous" | cut -d' ' -f1)
+  grep -lq "\"sha256\": \"$sha\"" "$WORKDIR"/models/*.provenance.json 2>/dev/null \
+    || fail "output/$RUN.onnx n'a pas de copie archivée dans models/ : refus de le déplacer"
+  mv "$previous" "$previous.trained-${sha:0:12}"
+  say "Ancien output/$RUN.onnx (archivé, sha256 $sha) mis de côté avant ré-entraînement."
+}
+run_step prepare
+split_validation
+for step in generate augment; do run_step "$step"; done
+set_aside_previous_model
+run_step train
 
 # ---- Modèle, empreinte et provenance -------------------------------------------
 MODEL="$GEN/output/$RUN.onnx"
@@ -133,7 +195,8 @@ sha=$(sha256sum "$WORKDIR/models/eidolon-$stamp.onnx" | cut -d' ' -f1)
 cat > "$WORKDIR/models/eidolon-$stamp.provenance.json" <<JSON
 {"schema": "eidolon-wake-model-provenance/1", "model": "eidolon-$stamp.onnx", "sha256": "$sha",
  "phrase": "eidolon", "run": "$RUN", "generator": "lfpoulain/wakeword-generator@$GENERATOR_COMMIT (PolyForm Noncommercial, unmodified)",
- "config_sha256": "$(sha256sum "$KIT/eidolon-training.yml" | cut -d' ' -f1)",
+ "config": "$CONFIG", "config_sha256": "$(sha256sum "$KIT/$CONFIG" | cut -d' ' -f1)",
+ "gate_sha256": "$(sha256sum "$GATE" | cut -d' ' -f1)",
  "image": "$(docker image inspect -f '{{.Id}}' "$IMAGE")", "gpu": "${GPU:-cpu}",
  "licence": "CC BY-NC-SA 4.0 by inheritance (study only, see docs/LICENCES-VOIX-G296.md)",
  "activated": false, "trained_at": "$(date -Is)"}

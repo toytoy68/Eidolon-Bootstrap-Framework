@@ -146,13 +146,15 @@ def test_clip_origin_uses_the_generator_plan_without_copying_it(tmp_path):
     manifest = {"target_phrase": ["Eidolon", "Aïdolon"], "negative_phrases": ["idole"],
                 "voices": [{"file": "a.onnx"}, {"file": "b.onnx"}]}
     origin = clip_origin(gen, manifest, gen / "data" / "voices")
-    assert origin("positive", 0) == ("Eidolon", "a") and origin("positive", 1) == ("Aïdolon", "b")
-    assert origin("negative", 2) == ("idole", "b")
+    assert origin("positive", 0) == ("Eidolon", "a", 0) and origin("positive", 1) == ("Aïdolon", "b", 0)
+    assert origin("negative", 2) == ("idole", "b", 1)
 
 
 def test_breakdown_counts_misses_and_false_fires():
-    b = breakdown([("positive", "Eidolon", "a", [0.9]), ("positive", "Aïdolon", "a", [0.1]),
-                   ("negative", "idole", "b", [0.7]), ("negative", "Eden", "b", [0.2])], .5)
+    b = breakdown([("positive", "Eidolon", "a", 0, [0.9]), ("positive", "Aïdolon", "a", 1, [0.1]),
+                   ("negative", "idole", "b", 0, [0.7]), ("negative", "Eden", "b", 0, [0.2])], .5)
+    assert b["positive"]["phrase_voice"]["Aïdolon | a"] == {"fired": 0, "total": 1}
+    assert b["positive"]["speaker"] == {"a#0": {"fired": 1, "total": 1}, "a#1": {"fired": 0, "total": 1}}
     assert b["positive"]["phrase"] == {"Eidolon": {"fired": 1, "total": 1}, "Aïdolon": {"fired": 0, "total": 1}}
     assert b["negative"]["phrase"]["idole"]["fired"] == 1 and b["negative"]["voice"]["b"] == {"fired": 1, "total": 2}
 
@@ -169,7 +171,8 @@ def test_v2_recipe_targets_only_the_eille_do_lon_spellings():
     assert {"idole", "et dolent", "et dolores", "eden"} <= negatives and targets.isdisjoint(negatives)
 
 
-def _bench_dry_run(tmp_path, provenance):
+def _bench_dry_run(tmp_path, provenance, half_b=False):
+    tmp_path.mkdir(parents=True, exist_ok=True)
     bin_dir = tmp_path / "bin"; bin_dir.mkdir()
     calls = tmp_path / "docker.calls"
     (bin_dir / "docker").write_text(f'#!/bin/sh\necho "$@" >> {calls}\n')
@@ -178,6 +181,9 @@ def _bench_dry_run(tmp_path, provenance):
     for run in ("eidolon", "eidolon_v2"):
         (work / "wakeword-generator" / "output" / run / "positive_test").mkdir(parents=True)
     (models / "eidolon-1.onnx").write_bytes(b"x")
+    if half_b:
+        features = work / "wakeword-generator" / "data" / "features"; features.mkdir(parents=True)
+        (features / "validation_half_b.npy").write_bytes(b"x")
     if provenance is not None:
         (models / "eidolon-1.provenance.json").write_text(json.dumps(provenance))
     env = {"PATH": f"{bin_dir}:/usr/bin:/bin", "HOME": str(tmp_path), "WAKE_WORKDIR": str(work)}
@@ -195,3 +201,115 @@ def test_bench_uses_the_test_clips_of_the_model_recipe(tmp_path):
 def test_bench_of_a_v1_model_falls_back_to_v1_clips(tmp_path):
     call = _bench_dry_run(tmp_path, {"model": "eidolon-1.onnx"})          # v1 provenance had no "run"
     assert "output/eidolon/positive_test" in call and "bench-eidolon.json" in call
+
+
+# ---- C199 : critères écrits avant la v3, diagnostic, négatifs tenus à l'écart --------------
+from gate import evaluate_gate, load_gate  # noqa: E402
+from split_validation import split  # noqa: E402
+from detect_recording import detections  # noqa: E402
+from diagnose_clips import table  # noqa: E402
+
+V2_AT_05 = {   # banc v2 exécuté sur VM100 par GPT le 26/10, seuil 0,5 (G296-WAKE-V2-FINAL)
+    "recall": 0.859, "latency_p95_ms": 150.0,
+    "negative_features": {"false_per_hour": 0.374},
+    "breakdown": {
+        "positive": {
+            "phrase": {k: {"fired": t - m, "total": t} for k, m, t in (
+                ("Eïdolon", 29, 285), ("Eille-dolon", 20, 286), ("Eilledolon", 128, 287),
+                ("Heïdolon", 34, 287), ("Eïdo-lon", 28, 286), ("Eïdolon !", 24, 285), ("Eïdolon ?", 19, 284))},
+            "voice": {"fr_FR-siwis-medium": {"fired": 489, "total": 500},
+                      "fr_FR-upmc-medium": {"fired": 753, "total": 1000},
+                      "fr_FR-tom-medium": {"fired": 476, "total": 500}}},
+        "negative": {"phrase": {"et dolent": {"fired": 1, "total": 88}, "et Dolores": {"fired": 1, "total": 88},
+                                "aide au long": {"fired": 1, "total": 88}, "Héléna": {"fired": 1, "total": 84},
+                                "idole": {"fired": 0, "total": 1652}}}}}
+
+
+def test_gate_v3_rejects_v2_for_the_right_reasons():
+    gate = load_gate(KIT / "gate-v3.json")
+    verdict = evaluate_gate(V2_AT_05, gate)
+    assert verdict == {"pass": False, "reasons": [
+        "RECALL", "GENERAL_AUDIO_NOT_MEASURED", "SPELLING:Eilledolon",
+        "SPELLING:Eïdolon", "SPELLING:Heïdolon",                # 0,898 et 0,882 : sous le plancher 0,90
+        "VOICE:fr_FR-upmc-medium"]}
+    held_out = dict(V2_AT_05, holdout_features={"false_per_hour": 0.374, "clean": False})
+    assert "GENERAL_AUDIO_NOT_HELD_OUT" in evaluate_gate(held_out, gate)["reasons"]
+    assert "TRAP_RATE" not in verdict["reasons"]           # 4 / 2 000 pièges déclenchent
+
+
+def test_gate_accepts_only_when_every_floor_holds():
+    gate = load_gate(KIT / "gate-v3.json")
+    good = {"recall": 0.96, "latency_p95_ms": 200, "holdout_features": {"false_per_hour": 0.4, "clean": True},
+            "breakdown": {"positive": {"phrase": {"a": {"fired": 96, "total": 100}},
+                                       "voice": {"v": {"fired": 96, "total": 100}}},
+                          "negative": {"phrase": {"idole": {"fired": 1, "total": 100}}}}}
+    assert evaluate_gate(good, gate) == {"pass": True, "reasons": []}
+    one_trap = json.loads(json.dumps(good)); one_trap["breakdown"]["negative"]["phrase"]["idole"]["fired"] = 4
+    assert evaluate_gate(one_trap, gate)["reasons"] == ["TRAP_RATE", "TRAP:idole"]
+    weak = json.loads(json.dumps(good)); weak["breakdown"]["positive"]["phrase"]["b"] = {"fired": 80, "total": 100}
+    assert evaluate_gate(weak, gate)["reasons"] == ["SPELLING:b"]
+
+
+def test_gate_file_is_strict(tmp_path):
+    bad = json.loads((KIT / "gate-v3.json").read_text()); del bad["synthetic"]["max_trap_fire_rate"]
+    (tmp_path / "g.json").write_text(json.dumps(bad))
+    with pytest.raises(ValueError):
+        load_gate(tmp_path / "g.json")
+    assert len(load_gate(KIT / "gate-v3.json")["_sha256"]) == 64
+
+
+def test_v3a_recipe_reuses_v2_clips_exactly_and_holds_out_half_b():
+    import yaml
+    v2 = yaml.safe_load((KIT / "eidolon-training.yml").read_text(encoding="utf-8"))
+    v3 = yaml.safe_load((KIT / "eidolon-training-v3.yml").read_text(encoding="utf-8"))
+    for key in ("model_name", "target_phrase", "custom_negative_phrases", "n_samples", "n_samples_val"):
+        assert v3[key] == v2[key], key          # sinon le générateur refuse ou régénère
+    assert v3["false_positive_validation_data_path"].endswith("validation_half_a.npy")
+    assert v3["target_false_positives_per_hour"] == 0.25 and v3["steps"] == 100000
+    assert "dis-moi" not in (KIT / "eidolon-training-v3.yml").read_text().lower()
+
+
+def test_split_validation_halves_are_disjoint_and_idempotent(tmp_path):
+    import numpy as np
+    src = tmp_path / "validation_set_features.npy"
+    np.save(src, np.arange(10 * 96, dtype=np.float32).reshape(10, 96))
+    a, b, m = tmp_path / "validation_half_a.npy", tmp_path / "validation_half_b.npy", tmp_path / "split.json"
+    first = split(src, a, b, m)
+    assert np.load(a).shape == (5, 96) and (np.load(b)[0] == np.load(src)[5]).all()
+    assert split(src, a, b, m) == first
+    np.save(src, np.zeros((10, 96), dtype=np.float32))
+    with pytest.raises(SystemExit):
+        split(src, a, b, m)
+
+
+def test_detect_recording_writes_wake_eval_detections():
+    d = detections([0.0] * 10 + [0.9] + [0.0] * 30 + [0.95], 0.5, "eidolon-x")
+    assert d["schema"] == "eidolon-wake-detections/1"
+    assert [e["at"] for e in d["events"]] == [0.88, 3.36]
+
+
+def test_diagnose_table_splits_hits_and_misses():
+    detail = [{"label": "positive", "phrase": "Eilledolon", "voice": "upmc", "duration_s": d, "max_score": s}
+              for d, s in ((0.9, 0.9), (0.7, 0.1), (0.6, 0.2))]
+    rows, cells = table(detail, 0.5)
+    assert rows == [{"phrase": "Eilledolon", "voice": "upmc", "total": 3, "missed": 2, "recall": 0.3333,
+                     "median_s_detected": 0.9, "median_s_missed": 0.65}]
+
+
+def test_bench_uses_clean_holdout_only_for_models_selected_on_half_a(tmp_path):
+    call = _bench_dry_run(tmp_path / "v3", {"run": "eidolon_v2", "config": "eidolon-training-v3.yml"}, half_b=True)
+    assert "--holdout-features data/features/validation_half_b.npy --holdout-clean" in call
+    assert "--gate /kit/wake_training/gate-v3.json" in call
+    call = _bench_dry_run(tmp_path / "v2", {"run": "eidolon_v2"}, half_b=True)
+    assert "--holdout-features data/features/validation_half_b.npy" in call and "--holdout-clean" not in call
+
+
+def test_diagnose_refuses_a_bench_without_clip_detail(tmp_path):
+    bin_dir = tmp_path / "bin"; bin_dir.mkdir()
+    (bin_dir / "docker").write_text("#!/bin/sh\nexit 0\n"); (bin_dir / "docker").chmod(0o755)
+    models = tmp_path / "wake" / "models"; models.mkdir(parents=True)
+    (models / "eidolon-1.onnx").write_bytes(b"x")
+    (models / "eidolon-1.bench-eidolon.json").write_text("{}")
+    env = {"PATH": f"{bin_dir}:/usr/bin:/bin", "HOME": str(tmp_path), "WAKE_WORKDIR": str(tmp_path / "wake")}
+    r = subprocess.run(["bash", str(KIT / "run_vm100.sh"), "diagnose"], env=env, capture_output=True, text=True)
+    assert r.returncode != 0 and "clips_detail" in r.stdout + r.stderr

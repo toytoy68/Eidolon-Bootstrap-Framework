@@ -252,7 +252,7 @@ les fausses activations et l'écho sont **à mesurer sur le PC de toytoy** (§6)
 | Ordre | Lot | Contenu | Dépend de | État |
 | --- | --- | --- | --- | --- |
 | 1 | V1-a | Outil de mesure des mots d'appel | — | **livré** |
-| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | **v1 entraînée et mesurée** le 24/10 (rejetée, voir §6 quater) ; **v2 prête** (prononciation « Eille-do-lon ») |
+| 2 | V1-b | Modèle unique « eidolon » entraîné sur VM100 (données consignées, composants NC isolés), servi par Core avec empreinte | VM100 | v1 (24/10) et v2 (26/10, exécutée par GPT) **rejetées** ; critères v3 écrits avant entraînement, diagnostic et v3a prêts (`tools/wake_training/VALIDATION-V3.md`) |
 | 3 | V1-c | Détection WASM dans le client, veille sans envoi, repli G282 | V1-b | à faire |
 | 4 | V2-a | Contrôleur de coupure | — | **livré** |
 | 5 | V2-b | Branchement, VAD Silero WASM, annulation de la synthèse, mesure de l'écho sur le PC | V2-a | à faire |
