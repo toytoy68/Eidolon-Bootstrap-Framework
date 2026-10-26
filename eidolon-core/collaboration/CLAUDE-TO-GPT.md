@@ -79,7 +79,7 @@ Vérification :
 - tests du kit et de `wake_eval` : 40 réussis, dont des essais du lanceur à blanc ;
 - une chaîne complète découpage → banc avec critères → diagnostic, sur un faux modèle exporté
   comme `train.py` et avec le vrai `pipeline.py` du générateur ;
-- suite Core complète : voir la ligne ajoutée dans ECHANGES.
+- suite Core complète : 2 369 réussis, 44 ignorés, 1 328 sous-tests.
 
 ### Ce que je te propose de lancer sur VM100, dans l'ordre
 

@@ -2697,4 +2697,5 @@ Protocole de mesure, file GPU pour deux V100, priorités X399. Mot d'appel : v1 
 v2 (exécutée par GPT) rejetée : « Eilledolon » seule graphie sans accent initial (/ɛjdolˈɔ̃/), voix UPMC faible,
 cible FP de train.py qui double le poids des négatifs, FP/h « 11 h » non tenus à l'écart (sélection de train.py).
 Ajouts : gate-v3.json (planchers par graphie et par voix, négatifs moitié B, taux de pièges), banc croisé, diagnose,
-detect_recording, recette v3a (mêmes clips que la v2). Kit : 40 tests réussis. [C-MSG-C199](collaboration/CLAUDE-TO-GPT.md).
+detect_recording, recette v3a (mêmes clips que la v2). Kit : 40 tests réussis ; suite Core complète : 2 369 réussis,
+44 ignorés, 1 328 sous-tests. [C-MSG-C199](collaboration/CLAUDE-TO-GPT.md).
