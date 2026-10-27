@@ -1,0 +1,84 @@
+# EXPERIMENTAL natural pronunciation variant: user recording sounded É-do-lon.
+# IMPORTANT: This config generates NEW synthetic material only. It DOES NOT ingest the supplied human recording.
+# Human recording must remain private, prepared separately, and must not be reused as independent evaluation.
+# This is not v3a and is NOT approved for activation; phonemization + false-positive checks required.
+# Eidolon Core Technologies (ECT) — G296, mot d'appel unique « Eidolon ».
+# Configuration pour wakeword-generator (lfpoulain, PolyForm Noncommercial, commit 1cc2c42),
+# utilisé comme OUTIL EXTERNE non modifié, à titre d'étude (décision du 23/10 relayée par GPT).
+# Le modèle produit hérite de CC BY-NC-SA 4.0 : voir docs/LICENCES-VOIX-G296.md. Jamais versionné.
+# v3a (27/10, C199) — même recette de clips que la v2 (model_name eidolon_v2 : clips et
+# caractéristiques réutilisés, aucun clip régénéré, comparaison appariée avec la v2).
+# Seul l'entraînement change, pour deux causes identifiées dans train.py (commit 368c037) :
+#  1. target_false_positives_per_hour était de 0,2 en fenêtres brutes, sur 11,3 h. Dès que la
+#     séquence 1 le dépasse, train.py double max_negative_weight avant la séquence 2, puis encore
+#     avant la 3 (v1 : « Increasing weight on negative examples » deux fois), ce qui fait chuter le
+#     rappel pour un plafond plus sévère que le critère (0,5 FP/h).
+#  2. train.py sélectionne et fusionne les checkpoints sur false_positive_validation_data_path ;
+#     mesurer ensuite les FP/h sur ce même fichier n'est pas un test tenu à l'écart. La v3a ne
+#     voit que la moitié A ; le banc mesure sur la moitié B (split_validation.py).
+# train.py suppose 11,3 h : sur la moitié A (~5,6 h), sa valeur de FP/h est environ deux fois
+# trop basse, d'où une cible de 0,25 pour viser 0,5 FP/h brutes réelles.
+# v2 (24/10) : toytoy prononce « Eille-do-lon » (/ɛjdolɔ̃/). Les graphies de la v1 étaient lues
+# de quatre façons par les voix (eSpeak fr, vérifié avec le phonémiseur de Piper) :
+# « Eidolon » → /ɛdolɔ̃/ (quasi « et dolent »), « Éidolone » → /eidolɔn/, « Aïdolon » → /aidolɔ̃/.
+# Toutes les graphies ci-dessous sont lues /ɛjdolɔ̃/ ; elles ne varient que par l'accent
+# tonique et l'intonation. La v1 reste décrite dans docs/ETUDE-CORNELIUS-G296.md.
+model_name: eidolon_natural_v1         # nouveau nom : le générateur refuse de mélanger deux recettes
+target_phrase:                 # toutes prononcées /ɛjdolɔ̃/ par les voix françaises
+  - "Eïdolon"
+  - "Eille-dolon"
+  - "Édolon"
+  - "Èdolon"
+  - "Heïdolon"
+  - "Eïdo-lon"
+  - "Eïdolon !"
+  - "Eïdolon ?"
+custom_negative_phrases:       # mots proches qui ne doivent PAS déclencher
+  - "idole"                    # v1 : 77/200 déclenchaient au seuil 0,5
+  - "l'idole"
+  - "idolâtre"
+  - "et dolent"                # v1 : 33/200
+  - "et Dolan"
+  - "et Dolores"               # v1 : 22/200
+  - "Eden"                     # v1 : 14/200
+  - "aïe donc"                 # v1 : 6/200
+  - "aide au long"
+  - "pareil donc"
+  - "soleil long"
+  - "réveil long"
+  - "Eille Toulon"
+  - "Eïda"
+  - "merveille"
+  - "abeille"
+  - "Hey Dylan"
+  - "elle dort"
+  - "Ilona"
+  - "éolienne"
+  - "Iolande"
+  - "Héléna"
+  - "il est long"
+n_samples: 30000          # v1 : 20000
+n_samples_val: 2000
+tts_batch_size: 50
+augmentation_batch_size: 16
+piper_sample_generator_path: "/opt/piper-sample-generator"
+output_dir: "./output"
+rir_paths:
+  - "./data/rir"
+background_paths:
+  - "./data/background"
+background_paths_duplication_rate:
+  - 1
+false_positive_validation_data_path: "./data/features/validation_half_a.npy"   # v2 : fichier entier
+augmentation_rounds: 1
+feature_data_files:
+  ACAV100M_sample: "./data/features/openwakeword_features_ACAV100M_2000_hrs_16bit.npy"
+batch_n_per_class:
+  ACAV100M_sample: 1024
+  adversarial_negative: 50
+  positive: 50
+model_type: dnn
+layer_size: 64            # v1 : 32
+steps: 100000              # v2 : 50000
+max_negative_weight: 1500
+target_false_positives_per_hour: 0.25   # v2 : 0,2 sur 11,3 h
