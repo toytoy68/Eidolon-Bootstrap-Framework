@@ -1,0 +1,161 @@
+{
+  "schema": "eidolon-dialogue-holdout/1",
+  "cases": [
+    {
+      "id": "month-boundary",
+      "family": "additional-unseen",
+      "question": "À quelle date Léa a-t-elle retiré son colis ?",
+      "items": [
+        {
+          "information_id": "colis-lea",
+          "content": "Message original de Léa : hier, j’ai retiré mon colis.",
+          "provenance": {
+            "source": "original-statement",
+            "timestamp": "2026-07-01T09:00:00+02:00"
+          },
+          "temporal": {
+            "created_at": "2026-08-12T10:00:00Z"
+          }
+        }
+      ],
+      "contains": [
+        "30 juin 2026|2026-06-30|30/06/2026"
+      ],
+      "cite": [
+        "colis-lea@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "missing-anchor",
+      "family": "additional-unseen",
+      "question": "Quel jour exact Jules a-t-il réparé la lampe ?",
+      "items": [
+        {
+          "information_id": "lampe",
+          "content": "Extrait sans date : hier, Jules a réparé la lampe.",
+          "provenance": {
+            "source": "undated-import"
+          },
+          "temporal": {
+            "created_at": "2026-08-12T10:00:00Z"
+          }
+        }
+      ],
+      "contains": [],
+      "cite": [],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    },
+    {
+      "id": "new-value",
+      "family": "additional-unseen",
+      "question": "Quelle capacité finale du réservoir Iris a été confirmée ?",
+      "items": [
+        {
+          "information_id": "iris-draft",
+          "content": "Estimation initiale : capacité du réservoir Iris 93 litres. Estimation remplacée.",
+          "epistemic_status": "SUPERSEDED",
+          "needs_review": true
+        },
+        {
+          "information_id": "iris-final",
+          "content": "Mesure finale du réservoir Iris : 88 litres.",
+          "epistemic_status": "CONFIRMED",
+          "needs_review": false
+        }
+      ],
+      "contains": [
+        "88"
+      ],
+      "cite": [
+        "iris-final@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "old-value",
+      "family": "additional-unseen",
+      "question": "Quelle estimation initiale avait-on annoncée pour le réservoir Iris ?",
+      "items": [
+        {
+          "information_id": "iris-draft",
+          "content": "Estimation initiale : capacité du réservoir Iris 93 litres. Estimation remplacée.",
+          "epistemic_status": "SUPERSEDED",
+          "needs_review": true
+        },
+        {
+          "information_id": "iris-final",
+          "content": "Mesure finale du réservoir Iris : 88 litres.",
+          "epistemic_status": "CONFIRMED",
+          "needs_review": false
+        }
+      ],
+      "contains": [
+        "93"
+      ],
+      "cite": [
+        "iris-draft@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "wrong-project",
+      "family": "additional-unseen",
+      "question": "Combien de livres Nora a-t-elle donnés au projet Cèdre ?",
+      "items": [
+        {
+          "information_id": "nora-bouleau",
+          "content": "Nora a donné 24 livres au projet Bouleau."
+        }
+      ],
+      "contains": [],
+      "cite": [],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    },
+    {
+      "id": "conflicting-measures",
+      "family": "additional-unseen",
+      "question": "Quel poids certain peut-on retenir pour le colis Opale ?",
+      "items": [
+        {
+          "information_id": "opale-a",
+          "content": "Colis Opale : poids déclaré 12 kg.",
+          "epistemic_status": "CONFLICTED",
+          "needs_review": true
+        },
+        {
+          "information_id": "opale-b",
+          "content": "Colis Opale : poids déclaré 17 kg.",
+          "epistemic_status": "CONFLICTED",
+          "needs_review": true
+        }
+      ],
+      "contains": [
+        "contradic|contradict|diverg|désaccord|incohér|conflit"
+      ],
+      "cite": [],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    }
+  ]
+}

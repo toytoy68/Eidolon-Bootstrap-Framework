@@ -1,0 +1,168 @@
+{
+  "schema": "eidolon-dialogue-holdout/1",
+  "cases": [
+    {
+      "id": "dated-source",
+      "family": "temporal-evidence",
+      "question": "Nous sommes le 2 novembre 2026. À quelle date a eu lieu mon inscription à l’atelier ?",
+      "items": [
+        {
+          "information_id": "atelier",
+          "content": "Inscription atelier : hier, inscription confirmée.",
+          "provenance": {
+            "source": "synthetic-statement",
+            "timestamp": "2026-07-03T09:00:00+02:00"
+          },
+          "temporal": {
+            "observed_at": "2026-07-02T10:00:00+02:00",
+            "created_at": "2026-10-21T12:00:00Z"
+          }
+        }
+      ],
+      "contains": [
+        "2 juillet 2026|02 juillet 2026|02/07/2026|2026-07-02"
+      ],
+      "cite": [
+        "atelier@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "undated-source",
+      "family": "temporal-evidence",
+      "question": "Nous sommes le 2 novembre 2026. À quelle date exacte ai-je réservé le stage ?",
+      "items": [
+        {
+          "information_id": "stage",
+          "content": "Hier, j’ai réservé le stage.",
+          "provenance": {
+            "source": "undated-import"
+          },
+          "temporal": {
+            "created_at": "2026-10-21T12:00:00Z"
+          }
+        }
+      ],
+      "contains": [],
+      "cite": [],
+      "excludes": [
+        "20 octobre|2026-10-20|20/10/2026",
+        "1 novembre|1er novembre|2026-11-01|01/11/2026"
+      ],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    },
+    {
+      "id": "corrected-current",
+      "family": "temporal-evidence",
+      "question": "Quel est le nombre final de places de l’atelier Orme après correction ?",
+      "items": [
+        {
+          "information_id": "provisoire",
+          "content": "Atelier Orme : la note provisoire annonçait 71 places. Cette valeur a été corrigée.",
+          "epistemic_status": "SUPERSEDED",
+          "needs_review": true
+        },
+        {
+          "information_id": "corrigee",
+          "content": "Atelier Orme : après correction, le nombre final confirmé est 67 places.",
+          "epistemic_status": "CONFIRMED",
+          "needs_review": false
+        }
+      ],
+      "contains": [
+        "67"
+      ],
+      "cite": [
+        "corrigee@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "provisional-history",
+      "family": "temporal-evidence",
+      "question": "Quel nombre avait été annoncé dans la note provisoire de l’atelier Orme, avant correction ?",
+      "items": [
+        {
+          "information_id": "provisoire",
+          "content": "Atelier Orme : la note provisoire annonçait 71 places. Cette valeur a été corrigée.",
+          "epistemic_status": "SUPERSEDED",
+          "needs_review": true
+        },
+        {
+          "information_id": "corrigee",
+          "content": "Atelier Orme : après correction, le nombre final confirmé est 67 places.",
+          "epistemic_status": "CONFIRMED",
+          "needs_review": false
+        }
+      ],
+      "contains": [
+        "71"
+      ],
+      "cite": [
+        "provisoire@1"
+      ],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ]
+    },
+    {
+      "id": "unresolved-conflict",
+      "family": "temporal-evidence",
+      "question": "Quel nombre de places de l’atelier Saule peut-on affirmer avec certitude ?",
+      "items": [
+        {
+          "information_id": "saule-a",
+          "content": "Atelier Saule : 42 places.",
+          "epistemic_status": "CONFLICTED",
+          "needs_review": true
+        },
+        {
+          "information_id": "saule-b",
+          "content": "Atelier Saule : 58 places.",
+          "epistemic_status": "CONFLICTED",
+          "needs_review": true
+        }
+      ],
+      "contains": [
+        "contradic|contradict|diverg|désaccord|incohér|conflit"
+      ],
+      "cite": [],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    },
+    {
+      "id": "wrong-entity",
+      "family": "temporal-evidence",
+      "question": "À quelle date exacte a eu lieu l’inscription de Zoé à l’atelier Hêtre ?",
+      "items": [
+        {
+          "information_id": "autre-personne",
+          "content": "Mila s’est inscrite à l’atelier Hêtre le 14 septembre 2026.",
+          "temporal": {
+            "observed_at": "2026-09-14T10:00:00+02:00"
+          }
+        }
+      ],
+      "contains": [],
+      "cite": [],
+      "excludes": [],
+      "kind": [
+        "ANSWER"
+      ],
+      "abstain": true
+    }
+  ]
+}
