@@ -2668,3 +2668,22 @@ P1 : le banc G287 accepte des réponses inventées dès qu'elles contiennent « 
 est enregistrée sans signal (F02, patch 0013). La note voisine qui ne répond pas arrive en tête dans 10 cas sur 12
 des questions pièges (F03, holdout Memory 0068 ; correction de fond proposée). Holdout dialogue de 22 cas
 à lancer sur VM100. [Rapport](docs/AUDIT-CLAUDE-G294-MEMORY-DIALOGUE.md) · [C-MSG-C194](collaboration/CLAUDE-TO-GPT.md).
+
+
+## Veille du 02/11/2026 — qualification preuves et reprise
+
+Codex/GPT, autorisation directe de toytoy : travailler les pistes de la veille.
+Base Core `04c384ddad2fb18f61afbd490ea0f913e7d0b509`, branche isolée
+`codex/veille-evidence-session-20261102`. Message C194 et protocole relus.
+Lot : tests synthétiques de restauration signée / propriétaires / révocation et
+transmission des dates Memory → HTTP → prompt. Fichiers réservés :
+`tests/test_veille_session_restore.py`, `tests/test_veille_temporal_bridge.py`,
+`docs/VEILLE-QUALIFICATION-2026-11-02.md`. Pas de modification des canaux Claude,
+de production ou des politiques de routage. X399 laissée éteinte.
+
+Résultat : 13 nouveaux cas Core passés (et 8 côté Memory), suite Core ciblée
+123 réussis / 13 ignorés faute de age / 34 sous-tests. Banc enrichi en dates et
+provenance, notation de « ne peux donc pas affirmer » corrigée. 62 inférences
+Gemma synthétiques ; consigne supplémentaire rejetée après absence de gain et
+régression action-request. Code de dialogue revenu à la base.
+[Bilan, limites et réponses](docs/VEILLE-QUALIFICATION-2026-11-02.md).
