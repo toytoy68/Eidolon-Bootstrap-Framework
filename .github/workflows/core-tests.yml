@@ -1,6 +1,8 @@
 name: Core isolated tests
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [feat/eidolon-core-v0.1]
   push:
     branches: [feat/eidolon-core-v0.1]
     paths:
@@ -10,7 +12,8 @@ on:
       - 'eidolon-core/weekend/**/*.json'
       - 'eidolon-core/weekend/**/*.ps1'
       - 'eidolon-core/weekend/**/*.in'
-      - 'eidolon-core/tools/build_weekend_bundle.py'
+      - 'eidolon-core/tools/**'
+      - 'eidolon-core/deployment/**'
       - 'eidolon-core/desktop/connected/**'
       - 'eidolon-core/pyproject.toml'
       - '.github/workflows/core-tests.yml'
@@ -50,9 +53,17 @@ jobs:
           node desktop/connected/build.js --check
           node --test desktop/connected/tests/*.test.js
       - name: Core test suite
-        run: python -m pytest -q -rs -p no:cacheprovider tests --basetemp="$RUNNER_TEMP/pytest-core"
+        run: python -m pytest -q -rs -p no:cacheprovider tests --basetemp="$RUNNER_TEMP/pytest-core" --junitxml="$RUNNER_TEMP/core-results.xml"
       - name: Bridge credential owner probes with real UID changes
         run: sudo --preserve-env=PYTHONPATH "$(command -v python)" -m pytest -q -rs -W error -p no:cacheprovider tests/test_bridge_credentials_claude_g235.py --basetemp="$RUNNER_TEMP/pytest-credential-owners"
+      - name: Preserve Core suite results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-isolated-results
+          path: ${{ runner.temp }}/core-results.xml
+          if-no-files-found: warn
+          retention-days: 14
   identity-synthetic:
     runs-on: ubuntu-latest
     timeout-minutes: 10

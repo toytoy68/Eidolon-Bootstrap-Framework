@@ -318,6 +318,7 @@ store.publish_pending(sys.argv[2], json.loads(sys.argv[3]))
             with self.assertRaisesRegex(MediaError, "EXPORT_INSIDE_STORE"):
                 self.store.export_file(ref, folder / "new.png")
         folder = self.base / "public"; folder.mkdir(mode=0o755)
+        folder.chmod(0o755)  # make this a genuinely public fixture under umask 077 too
         with self.assertRaisesRegex(MediaError, "ARTIFACT_PERMISSIONS"):
             self.store.export_file(ref, folder / "new.png")
 

@@ -146,6 +146,17 @@ class MandatorySigningTests(Base):
                          first["signer"])
         st.decrypt_backup(self.out / "b.age", self.identity, self.out / "plain.sqlite3", signer=self.server_public())
 
+    def test_server_key_modes_are_explicit_under_restrictive_umask(self):
+        previous = os.umask(0o077)
+        try:
+            private, state = bs.server_key(self.conversations.directory)
+        finally:
+            os.umask(previous)
+        self.assertEqual(state, "CREATED")
+        self.assertEqual(os.stat(private).st_mode & 0o777, 0o600)
+        self.assertEqual(os.stat(self.server_public()).st_mode & 0o777, 0o644)
+        self.assertTrue(bs.read_public_key(self.server_public()))
+
     def test_a_lost_server_key_is_never_regenerated_silently(self):
         st.backup(self.database, self.out / "a.sqlite3")
         os.unlink(self.conversations.directory / bs.SERVER_KEY)
