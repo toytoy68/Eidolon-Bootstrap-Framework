@@ -2,7 +2,7 @@ name: Core Windows candidate
 on:
   workflow_dispatch:
   push:
-    branches: [feat/eidolon-core-v0.1]
+    branches: [feat/eidolon-core-v0.1, codex/client-resident-ci-20261107]
     paths:
       - 'eidolon-core/desktop/tauri/**'
       - 'eidolon-core/desktop/windows/**'
@@ -69,6 +69,53 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           powershell -NoProfile -File ../windows/test-launcher.ps1 -LauncherExe target/release/Eidolon.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Resident and protected pairing import tests
+        shell: powershell
+        run: |
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+          $sources=@('EidolonLauncher.cs','EidolonResident.cs','PairingImport.cs','ResidentTests.cs') | ForEach-Object { (Resolve-Path (Join-Path '../windows' $_)).Path }
+          & $compiler /nologo /target:exe /main:ResidentTests /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Security.dll /reference:System.Web.Extensions.dll /out:target/release/resident-tests.exe $sources
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & ./target/release/resident-tests.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $first=Start-Process ./target/release/Eidolon-compagnon.exe -ArgumentList '--background' -PassThru
+          try {
+            Start-Sleep -Seconds 3
+            if ($first.HasExited) { throw 'Resident exited during background startup' }
+            $second=Start-Process ./target/release/Eidolon-compagnon.exe -ArgumentList '--background' -PassThru -Wait
+            if ($second.ExitCode -ne 0) { throw 'Second background launch failed' }
+            $second.Dispose()
+            $children=Get-CimInstance Win32_Process -Filter "ParentProcessId=$($first.Id)"
+            if ($children) { throw 'Background startup launched a conversation process' }
+          } finally {
+            if (-not $first.HasExited) { $first.Kill(); $first.WaitForExit() }
+            $first.Dispose()
+          }
+      - name: Build and check per-user installer
+        shell: powershell
+        run: |
+          $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (-not (Test-Path $compiler)) { throw 'Inno Setup compiler missing from runner image' }
+          $payload=(Resolve-Path target/release).Path
+          $output=Join-Path $payload 'installer'
+          & $compiler "/DPayloadDir=$payload" "/O$output" ../windows/Eidolon.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $setup=Get-ChildItem $output -Filter '*.exe' | Select-Object -First 1
+          $destination=Join-Path $env:RUNNER_TEMP 'eidolon-install-check'
+          $install=Start-Process $setup.FullName -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/DIR="'+$destination+'"'),'/TASKS=startup') -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw 'Installer failed' }
+          $startup=Join-Path ([Environment]::GetFolderPath('Startup')) 'Eidolon.lnk'
+          if (-not (Test-Path $startup)) { throw 'Startup shortcut missing' }
+          $shell=New-Object -ComObject WScript.Shell
+          $shortcut=$shell.CreateShortcut($startup)
+          if ($shortcut.TargetPath -ne (Join-Path $destination 'Eidolon-compagnon.exe') -or $shortcut.Arguments -ne '--background') { throw 'Incorrect startup shortcut' }
+          if (Test-Path (Join-Path $destination 'desktop-identity')) { throw 'Private key included in installer' }
+          if (Test-Path (Join-Path $destination 'connection.json')) { throw 'Private connection included in installer' }
+          'synthetic-preserved-profile' | Set-Content (Join-Path $destination 'connection.json')
+          $uninstall=Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
+          if ($uninstall.ExitCode -ne 0) { throw 'Uninstaller failed' }
+          if (Test-Path $startup) { throw 'Startup shortcut survived uninstall' }
+          if (-not (Test-Path (Join-Path $destination 'connection.json'))) { throw 'Uninstaller deleted user connection' }
       - name: Parse Windows scripts and exercise side-effect-free previews
         shell: powershell
         run: |
@@ -125,6 +172,8 @@ jobs:
             eidolon-core/desktop/tauri/target/release/eidolon-consultation.exe
             eidolon-core/desktop/tauri/target/release/Eidolon.exe
             eidolon-core/desktop/tauri/target/release/Eidolon-camera.exe
+            eidolon-core/desktop/tauri/target/release/Eidolon-compagnon.exe
+            eidolon-core/desktop/tauri/target/release/installer/*.exe
             eidolon-core/desktop/tauri/target/release/eidolon-pc-g286.zip
             eidolon-core/desktop/tauri/target/release/SHA256SUMS.txt
             eidolon-core/desktop/windows/*.ps1

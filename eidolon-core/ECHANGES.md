@@ -2666,3 +2666,11 @@ P1 : le banc G287 accepte des réponses inventées dès qu'elles contiennent « 
 est enregistrée sans signal (F02, patch 0013). La note voisine qui ne répond pas arrive en tête dans 10 cas sur 12
 des questions pièges (F03, holdout Memory 0068 ; correction de fond proposée). Holdout dialogue de 22 cas
 à lancer sur VM100. [Rapport](docs/AUDIT-CLAUDE-G294-MEMORY-DIALOGUE.md) · [C-MSG-C194](collaboration/CLAUDE-TO-GPT.md).
+
+## Codex — candidat client résident, 07/11/2026
+
+Demande toytoy : installation et connexion simplifiées, réveil local à terme.
+Base CI publique cf1bf6f ; lot client isolé de la migration serveur X399.
+Compagnon natif, import d'appairage DPAPI, installateur par utilisateur et tests
+Windows ; réveil vocal et HTTPS non intégrés. Bilan dans
+[CLIENT-RESIDENT-LOT1-20261107](docs/CLIENT-RESIDENT-LOT1-20261107.md).
