@@ -2674,3 +2674,9 @@ Base CI publique cf1bf6f ; lot client isolé de la migration serveur X399.
 Compagnon natif, import d'appairage DPAPI, installateur par utilisateur et tests
 Windows ; réveil vocal et HTTPS non intégrés. Bilan dans
 [CLIENT-RESIDENT-LOT1-20261107](docs/CLIENT-RESIDENT-LOT1-20261107.md).
+
+Client résident : CI Windows 42311133081 réussie (DPAPI, installateur, désinstallation).
+Contrôleur vocal préparé séparément, sept tests Node réussis, non raccordé.
+Recette serveur : limite de tâches Piper reproduite, corrigée avec budget BLAS/OpenMP.
+83 tests communication réussis, un ignoré ; synthèse/transcription réelles HTTP 200
+sur X399 après déploiement afb79a7. Bilan : docs/CLIENT-RESIDENT-LOT1-20261107.md.
