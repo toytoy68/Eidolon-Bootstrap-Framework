@@ -54,3 +54,22 @@ les défauts du banc v2 et la qualification v3/humaine. Aucun entraînement lanc
 Exécuter la CI Windows, puis poursuivre le détecteur local et l'appairage HTTPS.
 L'installateur de ce lot doit rester un artefact de recette tant que les fonctions
 vocales et le parcours d'appairage définitif ne sont pas intégrés.
+
+## Contrôleur vocal préparé séparément
+
+Le module connected/src/resident-voice.js orchestre des adaptateurs locaux de
+détection et de session ; il n'est pas raccordé à app.js ou au compagnon.
+Les adaptateurs doivent libérer leur micro avant de terminer, y compris lors
+d'une annulation. Le contrôleur sérialise arrêt/reprise, refuse une activation
+sans consentement ou sans détecteur qualifié, invalide les résultats tardifs
+et ne rejoue jamais une conversation échouée. Le statut reste « stopping »
+jusqu'à restitution réelle du contrôle par l'adaptateur.
+
+Sept tests Node exécutés avec adaptateurs simulés : succès. Aucun microphone
+réel ni moteur acoustique utilisé par cette suite.
+
+Réapplication de gate-v3.json au rapport v2 sauvegardé (pas une nouvelle
+inférence) : rappel 0,855, latence p95 151 ms ; refus pour rappel insuffisant,
+audio général non indépendant, quatre graphies et la voix UPMC.
+Ces chiffres viennent du rapport détaillé sauvegardé ; ils diffèrent légèrement
+du résumé C199.
