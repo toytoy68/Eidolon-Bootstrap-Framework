@@ -1,0 +1,103 @@
+{
+  "epoch": 1794306644.7774014,
+  "boot_id": "062f1048-abc3-4186-b5b7-2121af1e945d",
+  "phase": "blocked_memory_integrity",
+  "training_started": false,
+  "model_loaded": false,
+  "copy_checks": {
+    "copy-0.log": {
+      "destination_errors": 9,
+      "source_errors": 3,
+      "sha256": "97f0d98a954b39af0e83c1644e21720751b68c8f7f3ab26abda6c49e55da5d9d",
+      "raw_log": "COPYERR mode=0 cpu=0 offset=144283312 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=0 cpu=0 offset=409837232 xor=8 srcxor=0 rereadxor=8\nSUMMARY mode=0 cpu=0 destination_errors=2 source_errors=0\nSUMMARY mode=0 cpu=8 destination_errors=0 source_errors=0\nCOPYERR mode=0 cpu=16 offset=93494960 xor=800 srcxor=800 rereadxor=800\nCOPYERR mode=0 cpu=16 offset=1022814768 xor=800 srcxor=0 rereadxor=800\nSUMMARY mode=0 cpu=16 destination_errors=2 source_errors=2\nCOPYERR mode=1 cpu=0 offset=691326448 xor=800 srcxor=0 rereadxor=800\nCOPYERR mode=1 cpu=0 offset=1273228784 xor=8 srcxor=0 rereadxor=8\nSUMMARY mode=1 cpu=0 destination_errors=2 source_errors=0\nSUMMARY mode=1 cpu=8 destination_errors=0 source_errors=0\nCOPYERR mode=1 cpu=16 offset=602161840 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=1 cpu=16 offset=1557965488 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=1 cpu=16 offset=1939548848 xor=8 srcxor=0 rereadxor=8\nSUMMARY mode=1 cpu=16 destination_errors=3 source_errors=1\n"
+    },
+    "confirm-copy.log": {
+      "destination_errors": 8,
+      "source_errors": 1,
+      "sha256": "47529b25f410d6bf747969c8e6fc4e2753ea0d46a677d3c0c7252873f7723566",
+      "raw_log": "COPYERR mode=0 cpu=0 offset=140634800 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=0 cpu=0 offset=613548528 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=0 cpu=0 offset=1933194416 xor=80000 srcxor=0 rereadxor=80000\nSUMMARY mode=0 cpu=0 destination_errors=3 source_errors=0\nCOPYERR mode=0 cpu=8 offset=613548528 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=0 cpu=8 offset=2118413808 xor=8 srcxor=0 rereadxor=8\nSUMMARY mode=0 cpu=8 destination_errors=2 source_errors=0\nSUMMARY mode=0 cpu=16 destination_errors=0 source_errors=0\nSUMMARY mode=1 cpu=0 destination_errors=0 source_errors=0\nSUMMARY mode=1 cpu=8 destination_errors=0 source_errors=0\nCOPYERR mode=1 cpu=16 offset=517092848 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=1 cpu=16 offset=814667312 xor=8 srcxor=0 rereadxor=8\nCOPYERR mode=1 cpu=16 offset=956768816 xor=8 srcxor=0 rereadxor=8\nSUMMARY mode=1 cpu=16 destination_errors=3 source_errors=1\n"
+    }
+  },
+  "preflight-status.json": {
+    "phase": "failed",
+    "epoch": 1794306302.9532335,
+    "reason": "AssertionError('COPYERR mode=0 cpu=0 offset=144283312 xor=8 srcxor=0 rereadxor=8\\nCOPYERR mode=0 cpu=0 offset=409837232 xor=8 srcxor=0 rereadxor=8\\nSUMMARY mode=0 cpu=0 destination_errors=2 source_errors=0\\nSUMMARY mode=0 cpu=8 destination_errors=0 source_errors=0\\nCOPYERR mode=0 cpu=16 offset=93494960 xor=800 srcxor=800 rereadxor=800\\nCOPYERR mode=0 cpu=16 offset=1022814768 xor=800 srcxor=0 rereadxor=800\\nSUMMARY mode=0 cpu=16 destination_errors=2 source_errors=2\\nCOPYERR mode=1 cpu=0 offset=691326448 xor=800 srcxor=0 rereadxor=800\\nCOPYERR mode=1 cpu=0 offset=1273228784 xor=8 srcxor=0 rereadxor=8\\nSUMMARY mode=1 cpu=0 destination_errors=2 source_errors=0\\nSUMMARY mode=1 cpu=8 destination_errors=0 source_errors=0\\nCOPYERR mode=1 cpu=16 offset=602161840 xor=8 srcxor=0 rereadxor=8\\nCOPYERR mode=1 cpu=16 offset=1557965488 xor=8 srcxor=0 rereadxor=8\\nCOPYERR mode=1 cpu=16 offset=1939548848 xor=8 srcxor=0 rereadxor=8\\nSUMMARY mode=1 cpu=16 destination_errors=3 source_errors=1\\n')"
+  },
+  "diagnostic-status.json": {
+    "phase": "failed",
+    "epoch": 1794306377.0105422,
+    "reason": "FileNotFoundError(2, 'No such file or directory')",
+    "results": {
+      "confirm-copy": {
+        "returncode": 0,
+        "seconds": 6.057864189147949,
+        "sha256": "47529b25f410d6bf747969c8e6fc4e2753ea0d46a677d3c0c7252873f7723566"
+      }
+    }
+  },
+  "independent-status.json": {
+    "phase": "stopped_after_confirmed_memory_failure",
+    "epoch": 1794306718.449995,
+    "full_memtester_loop_completed": false
+  },
+  "independent_memtester": {
+    "path": "/srv/eidolon/work/eva-learning-cycle9-hours-20261110/memtester-independent.log",
+    "mlocked": true,
+    "bytes": 236015,
+    "sha256_at_snapshot": "a7f6f981f0d235718668e422c35870e049836ed093037d54b3171c23a6201d2b",
+    "failures_at_snapshot": [
+      "FAILURE: 0xaaaaaaaaaaaaaaaa != 0xaaaaaaaaaaaaaaa2 at offset 0x000000004f809de8."
+    ],
+    "sha256_final": "8754f64c29acee83948e32bcf4dae29295e20e6c9a0e11f10185dac6db0bc021",
+    "failures": [
+      "FAILURE: 0xaaaaaaaaaaaaaaaa != 0xaaaaaaaaaaaaaaa2 at offset 0x000000004f809de8."
+    ]
+  },
+  "dmi_summary": [
+    "Part Number: CT16G4DFRA32A.M16FE",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: 16ATF2G64AZ-3G2J1",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CT16G4DFRA32A.C16FT",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CP16G4DFRA32A.M16FE",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CT16G4DFRA32A.M16FE",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CM4X16GC3200C16K2E",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CT16G4DFRA32A.C16FT",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V",
+    "Part Number: CP16G4DFRA32A.M16FE",
+    "Configured Memory Speed: 3200 MT/s",
+    "Configured Voltage: 1.2 V"
+  ],
+  "diagnostic_closed_epoch": 1794306718.4493604,
+  "independent_test_stopped_after_failure": true,
+  "kernel_diagnostic": {
+    "sha256": "94726ef31b926f88f433122eae691c12b4a27fd9b5e02c38a950ac8ace8755d9",
+    "selected_lines": [
+      "nov. 10 11:30:33 eidolon-os kernel: Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI",
+      "nov. 10 11:30:33 eidolon-os kernel: CPU: 27 UID: 0 PID: 10415 Comm: kworker/u131:1 Tainted: P           OE      6.12.113+deb13-amd64 #1  Debian 6.12.113-1",
+      "nov. 10 11:30:33 eidolon-os kernel: Tainted: [P]=PROPRIETARY_MODULE, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE",
+      "nov. 10 11:30:33 eidolon-os kernel: RIP: 0010:get_nr_inodes+0x0/0x60",
+      "nov. 10 11:30:33 eidolon-os kernel: Call Trace:",
+      "nov. 10 11:30:34 eidolon-os kernel: RIP: 0010:get_nr_inodes+0x0/0x60",
+      "nov. 10 11:31:08 eidolon-os kernel: BUG: unable to handle page fault for address: 000000001fbe12d8",
+      "nov. 10 11:31:08 eidolon-os kernel: Oops: Oops: 0000 [#2] PREEMPT SMP NOPTI",
+      "nov. 10 11:31:08 eidolon-os kernel: CPU: 19 UID: 0 PID: 10988 Comm: python3 Tainted: P      D    OE      6.12.113+deb13-amd64 #1  Debian 6.12.113-1",
+      "nov. 10 11:31:08 eidolon-os kernel: Tainted: [P]=PROPRIETARY_MODULE, [D]=DIE, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE",
+      "nov. 10 11:31:08 eidolon-os kernel: RIP: 0010:osq_lock+0x50/0x110",
+      "nov. 10 11:31:08 eidolon-os kernel: Call Trace:",
+      "nov. 10 11:31:08 eidolon-os kernel: RIP: 0033:0x7fa5a508c3a7",
+      "nov. 10 11:31:08 eidolon-os kernel: RIP: 0010:get_nr_inodes+0x0/0x60"
+    ]
+  }
+}

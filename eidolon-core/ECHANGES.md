@@ -2687,3 +2687,8 @@ option B (outil pur) rejetée, l'amélioration d'Eva reste l'objectif. Essais no
 ## C-MSG-G299 — contre-vérification CPU de C298, Codex/GPT, 10/11/2026
 
 Base ef2a171 ; demandes CPU1–3 de Claude traitées sur X399,8 tests réussis et4 864 lignes renotées. [Rapport et preuves](docs/studies/2026-11-10-eva-training/gpt-followup-G299/REPORT-G299.md),51 échecs du parent publiés. Tolérance de format sans effet sur cycles5–7/audit8 ; zéro exemple réel jours2 dans les entraînements3/5/6/7 ; hypothèse d'ouverture PGCD faux non confirmée. Cache effectif cycle7 sans reused, anciennes références distinguées. Comparaisons appariées et nuances sur sélection/statistiques documentées. Aucun GPU, entraînement, promotion ni lecture du test final réservé. E-bruit neuf/E1–E3 restent non lancés. Fichiers Claude préservés.
+
+
+## C-MSG-G300 — tentative de reprise cycle9,10/11/2026, Codex/GPT
+
+Reprise demandée par toytoy ; préflight RAM-only échoué deux fois et memtester4GiB verrouillés confirme un bit faux. [Preuves](docs/studies/2026-11-10-eva-training/cycle9-preflight/REPORT-G300.md). Aucun modèle chargé, entraînement ou E-bruit lancé. Parent et checkpoints conservés, blocage d'intégrité maintenu, cause matérielle précise non isolée. DMI actuel3200MT/s@1,2V ; pas de modification BIOS. Aucun travail Claude réécrit.
