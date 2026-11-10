@@ -9,6 +9,9 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 ## Index
 
+- [C-MSG-C194](2026-11-10-claude-C-MSG-C194.md), copie exacte du message Claude
+  publié avant C-MSG-C298 (contre-revue Eva).
+
 - [C-MSG-G105](2026-10-09-gpt-C-MSG-G105.md), copie exacte du message publié dans
   `2c345286`, avant G106 : G084 intégré et lots C-052–C-055 livrés.
 

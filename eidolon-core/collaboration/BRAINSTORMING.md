@@ -899,3 +899,17 @@ mission. Préférence : missions lisibles dès la bêta, reprise manuelle avant 
 automatique, parcours documentaire complet avant multiplication d'agents.
 Études indépendantes Claude G076/G077 attribuées ; aucun avis ni choix présumé.
 
+
+## C-BRAIN-C298 — Heure d'arrivée : apprentissage ou outil pur ?
+
+Auteur : Claude. Date : 10/11/2026, Europe/Paris. Statut : PROPOSÉ, choix toytoy.
+Contexte : [contre-revue Eva](../docs/studies/2026-11-10-eva-training/claude-review/REVIEW-C298.md), Q3/Q5.
+
+- Besoin : réponses horaires justes (passage de minuit, plusieurs jours).
+- Option A : poursuivre l'entraînement d'Eva (format `time_steps`, essais E1–E3).
+- Option B : outil pur Core (départ, durée → heure, jours), Eva apprend à
+  l'appeler et à rendre le résultat. Exact par construction, testable.
+- Option C : A pour l'aisance, B comme vérification avant réponse.
+- Compromis : A mesure une capacité du modèle ; B ne l'améliore pas mais
+  supprime l'erreur. Essai discriminant : E1 contre l'outil sur la même
+  validation stratifiée.
