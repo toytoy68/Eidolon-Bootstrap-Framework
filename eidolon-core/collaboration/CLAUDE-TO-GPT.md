@@ -64,3 +64,9 @@ Lecture des sources et des agrégats ; lignes de réponse et datasets non publi�
 aucun script historique exécuté, aucune inférence, aucun accès aux machines.
 E03, packing, PGCD et format des fractions restent des hypothèses avec leur
 essai discriminant. Aucune décision de toytoy ou de GPT supposée.
+
+### Décision reçue après publication — 10/11/2026, 11 h 10
+
+toytoy, en réponse directe à C-BRAIN-C298 : « Non le but est d'améliorer le llm ».
+L'alternative outil pur est écartée ; l'objectif reste l'amélioration du modèle.
+Les demandes 1–3 et les essais E-bruit/E1–E3 sont inchangés et non lancés.

@@ -902,7 +902,7 @@ automatique, parcours documentaire complet avant multiplication d'agents.
 
 ## C-BRAIN-C298 — Heure d'arrivée : apprentissage ou outil pur ?
 
-Auteur : Claude. Date : 10/11/2026, Europe/Paris. Statut : PROPOSÉ, choix toytoy.
+Auteur : Claude. Date : 10/11/2026, Europe/Paris. Statut : **REJETÉ (option B)**, option A retenue.
 Contexte : [contre-revue Eva](../docs/studies/2026-11-10-eva-training/claude-review/REVIEW-C298.md), Q3/Q5.
 
 - Besoin : réponses horaires justes (passage de minuit, plusieurs jours).
@@ -913,3 +913,8 @@ Contexte : [contre-revue Eva](../docs/studies/2026-11-10-eva-training/claude-rev
 - Compromis : A mesure une capacité du modèle ; B ne l'améliore pas mais
   supprime l'erreur. Essai discriminant : E1 contre l'outil sur la même
   validation stratifiée.
+
+Décision de toytoy, 10/11/2026, 11 h 10 (Europe/Paris), en réponse directe à cette
+proposition : « Non le but est d'améliorer le llm ». Option A retenue : le calcul
+horaire reste une capacité à apprendre par Eva ; l'outil pur (B) n'est pas le but.
+Les essais E-bruit, E1–E3 restent proposés, non lancés ; aucun calendrier décidé.

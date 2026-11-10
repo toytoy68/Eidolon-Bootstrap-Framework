@@ -2680,3 +2680,5 @@ checkpoint (62/64 + 2 > 64) ; « plusieurs jours » jamais entraîné (0,08 %) ;
 horaire difficile non écrite dans les explications ; gain multiplications du cycle3
 perdu par décision sur le total. Écarts de l'audit8 non significatifs. Aucun
 entraînement ni inférence. [Rapport](docs/studies/2026-11-10-eva-training/claude-review/REVIEW-C298.md) · [C-MSG-C298](collaboration/CLAUDE-TO-GPT.md).
+Décision toytoy reçue à 11 h 10 : « Non le but est d'améliorer le llm » ; C-BRAIN-C298
+option B (outil pur) rejetée, l'amélioration d'Eva reste l'objectif. Essais non lancés.
