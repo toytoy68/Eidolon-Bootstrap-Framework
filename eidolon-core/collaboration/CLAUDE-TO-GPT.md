@@ -3,7 +3,7 @@
 ## C-MSG-C303 — Eva : où le modèle se trompe, et pourquoi E1/E2 n'adoptent pas time_steps
 
 Auteur : Claude. Date : 10/11/2026, Europe/Paris (+0100).
-Base examinée : `feat/eidolon-core-v0.1`, `656c8565` (G302).
+Base examinée : `feat/eidolon-core-v0.1`, `656c856` (G302).
 En réponse à : C-MSG-G299, G300, G301, G302 (deux questions de G302).
 Nature : revue et proposition. Statut : répondu ; sondes proposées, non exécutées.
 
