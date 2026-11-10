@@ -1,0 +1,115 @@
+from pathlib import Path
+import ast,json,random,hashlib,re,collections,math
+import torch
+from transformers import AutoTokenizer
+from review_tools import time_steps,time_operands
+from curriculum import grade
+P=Path(__file__).resolve().parent;WORK=Path('/srv/eidolon/work')
+C=json.loads((P/'config.json').read_text());rng=random.Random(901110)
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token_id=tokenizer.eos_token_id
+old=WORK/'eva-learning-cycle1-20261108/train.py';tree=ast.parse(old.read_text())
+nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='encode' or isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets)]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+seen=set();text_seen=set()
+def collect(obj):
+ if isinstance(obj,dict):
+  if isinstance(obj.get('question'),str):
+   text_seen.add(obj['question'])
+   if obj.get('expected',{}).get('unite')=='heure':
+    ops=time_operands(obj['question'])
+    if ops:seen.add(tuple(ops))
+  else:
+   for v in obj.values():collect(v)
+ elif isinstance(obj,list):
+  for x in obj:collect(x)
+for folder in WORK.glob('eva-learning-*'):
+ f=folder/'dataset.json'
+ if f.exists():collect(json.loads(f.read_text()))
+# CPU-only exclusion of reserved operands; no reserved item is published,
+# used as a training example or passed to model.generate.
+sealed=WORK/'eva-learning-cycle8-audit-20261109/final-test-reserved.json'
+sealed_hash=hashlib.sha256(sealed.read_bytes()).hexdigest();collect(json.loads(sealed.read_text()))
+def pair(day,high):
+ while True:
+  if day==0:
+   s=rng.randrange(1439);d=rng.randint(1,1439-s)
+  elif day==1 and not high:
+   s=rng.randrange(1440);d=rng.randint(max(1,1440-s),min(1500,2879-s))
+  elif day==1:
+   s=rng.randrange(1379);d=rng.randint(1501,2879-s)
+  elif day==2 and not high:
+   s=rng.randint(1380,1439);d=rng.randint(2880-s,1500)
+  else:
+   s=rng.randrange(1440);d=rng.randint(max(1501,2880-s),4319-s)
+  if (s,d) not in seen:seen.add((s,d));return s,d
+def ex(day,high,template,split,i):
+ s,d=pair(day,high);answer,expected=time_steps(s,d);h,m=divmod(s,60)
+ if template==0:q=f'Départ à {h:02d}:{m:02d}, durée {d} minutes. Donne l’heure d’arrivée et le décalage en jours.'
+ else:q=f'Un délai de {d} minutes commence à {h:02d}:{m:02d}. À quelle heure se termine-t-il et combien de jours sont franchis ?'
+ q+=' Termine par un objet JSON avec resultat (chaîne ou null), unite exactement « heure » et jours, un entier.'
+ assert q not in text_seen;text_seen.add(q)
+ return dict(id=f'c9-{split}-{day}-{int(high)}-{template}-{i}',family=5,skill='time',stratum=f'day{day}-'+('long' if high else 'short')+f'-template{template}',group='target',question=q,answer=answer,expected=expected,time_key=[s,d])
+cells=[(day,high,t) for day,high in [(0,False),(1,False),(1,True),(2,False),(2,True)] for t in [0,1]]
+validation=[ex(day,high,t,'selection',i) for day,high,t in cells for i in range(16)]
+heldout=[ex(day,high,t,'report',i) for day,high,t in cells for i in range(32)]
+audit=json.loads((WORK/'eva-learning-cycle8-audit-20261109/challenge-validation.json').read_text())
+anchors=[dict(x,group='anchor',stratum='anchor-'+str(x['family'])) for x in audit['anchors']]
+assert len(anchors)==32
+parent_data=json.loads((WORK/'eva-learning-cycle5-progressive-20261109/dataset.json').read_text())
+replay=collections.defaultdict(list)
+replay_seen=set()
+older=json.loads((WORK/'eva-learning-cycle4-comprehension-20261109/dataset.json').read_text())
+for x in parent_data['train']+older['train']:
+ if x['question'] in replay_seen:continue
+ replay_seen.add(x['question'])
+ replay[x['family']].append(dict(x,group='replay',stratum='replay-'+str(x['family'])))
+for pool in replay.values():rng.shuffle(pool)
+targets={day:[ex(day,False if day==0 else bool(i%2),0,'train',i) for i in range(200)] for day in range(3)}
+for pool in targets.values():rng.shuffle(pool)
+# Explicit 4320-minute boundary means day3, not day2. Keep a few boundary
+# examples in training, without incorrectly relabelling them as day2.
+boundary=[]
+for i,s in enumerate([0,60,720]):
+ if (s,4320) in seen:continue
+ seen.add((s,4320));a,e=time_steps(s,4320);h,m=divmod(s,60)
+ boundary.append(dict(id=f'c9-train-boundary-{i}',family=5,skill='time',group='target',stratum='day3-boundary4320',time_key=[s,4320],question=f'Départ à {h:02d}:{m:02d}, durée 4320 minutes. Donne l’heure et le décalage en jours. Termine par un objet JSON avec resultat, unite exactement « heure » et jours.',answer=a,expected=e))
+def token_counts(x):
+ msgs=[dict(role='system',content=SYSTEM),dict(role='user',content=x['question'])]
+ prefix=tokenizer.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tokenizer.apply_chat_template(msgs+[dict(role='assistant',content=x['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False);assert full.startswith(prefix)
+ enc=tokenizer(full,add_special_tokens=False,return_offsets_mapping=True)
+ assert len(enc['input_ids'])<=512,(x['id'],len(enc['input_ids']))
+ return len(enc['input_ids']),sum(o[0]>=len(prefix) for o in enc['offset_mapping'])
+train=[];counts=collections.Counter();packs=1;used=0;target_index=0;replay_index=0
+while True:
+ is_target=counts['target']<.25*sum(counts.values()) if counts else False
+ if is_target:
+  if boundary:x=boundary.pop(0)
+  else:
+   day=target_index%3;target_index+=1;assert targets[day];x=targets[day].pop()
+ else:
+  family=replay_index%8;replay_index+=1;assert replay[family];x=replay[family].pop()
+ length,supervised=token_counts(x)
+ if used+length>512:
+  if packs==400:break
+  packs+=1;used=0
+ used+=length;counts[x['group']]+=supervised;train.append(x)
+assert packs==400 and .24<=counts['target']/sum(counts.values())<=.26
+train_batches,info=encode(train)
+assert len(train_batches)==400
+actual_supervised=sum(int((b['labels'][:,1:]!=-100).sum()) for b in train_batches)
+assert actual_supervised==sum(counts.values())
+data=dict(train=train,validation=validation,selection=validation+anchors,heldout=heldout+anchors)
+for name,rows in data.items():
+ assert len({x['id'] for x in rows})==len(rows)
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in rows)
+train_questions={x['question'] for x in train};assert not train_questions & {x['question'] for x in data['selection']+data['heldout']}
+assert not {tuple(x['time_key']) for x in validation}&{tuple(x['time_key']) for x in heldout}
+assert not {tuple(x['time_key']) for x in train if x['group']=='target'} & {tuple(x['time_key']) for x in validation+heldout}
+dataset=json.dumps(data,ensure_ascii=False);(P/'dataset.json').write_text(dataset)
+C.update(train_examples=len(train),selection_examples=len(data['selection']),heldout_examples=len(data['heldout']),selection_interval=100,world_size=1,learning_rate=3e-6,sequence_length=512)
+(P/'config.json').write_text(json.dumps(C,indent=2))
+stats=dict(train=info,supervised_tokens=dict(counts),target_share=counts['target']/sum(counts.values()),target_days=dict(collections.Counter(x['expected']['jours'] for x in train if x['group']=='target')),target_strata=dict(collections.Counter(x['stratum'] for x in train if x['group']=='target')),selection_time_n=160,report_time_n=320,anchors_n=32,feasible_strata=[str(x) for x in cells],updates=100,sealed_contents_used_for_exclusion_only=True,sealed_hash=sealed_hash)
+(P/'dataset-preparation.json').write_text(json.dumps(stats,indent=2))
+(P/'lineage.json').write_text(json.dumps(dict(dataset_sha256=hashlib.sha256(dataset.encode()).hexdigest(),parent_adapter=C['parent_adapter'],source_revision=C['source_revision'],automatic_promotion=False),indent=2));print(json.dumps(stats))

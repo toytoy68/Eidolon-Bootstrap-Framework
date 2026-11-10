@@ -1,0 +1,473 @@
+{
+  "state": "finished",
+  "epoch": 1794321043.1868656,
+  "boot_id": "f006076b-6010-48c7-8104-046b21152e0f",
+  "training": {
+    "ranks": [
+      {
+        "mode": "train",
+        "seconds": 1488.1231515407562,
+        "optimizer_steps": 100,
+        "executed_updates": 100,
+        "resumed_from": 0,
+        "nonpadding_tokens": 163208,
+        "supervised_tokens": 50833,
+        "initial_adapter_state_sha256": "0883c80e45904bdcb85aa6a27d20e921eea7a6bf5574990375e51835d4163a52",
+        "final_adapter_state_sha256": "bf4132dfe820de30969687f480b8c0ee5c5a4117daae18af13f9e45b3e9406b7",
+        "replica_max_difference": 0.0,
+        "peak_vram_mib": 5430.09814453125
+      }
+    ],
+    "examples": 878,
+    "epochs": 1,
+    "global_packs_per_update": 4,
+    "precision": "FP16",
+    "power_limit_per_gpu_w": 200,
+    "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+    "coverage_verified": true,
+    "resumed_from": 0,
+    "previous_tokens": 0,
+    "world_size": 1
+  },
+  "selection": {
+    "dataset_sha256": "50275b18acf3df2669ad03b54efe4fe1eb0fa5c157fd09ebe6eddfb561f6f01a",
+    "baseline": {
+      "step": 0,
+      "n": 192,
+      "correct": 65,
+      "target_correct": 39,
+      "anchors_correct": 26,
+      "families": {
+        "0": 4,
+        "1": 3,
+        "2": 2,
+        "3": 4,
+        "4": 4,
+        "5": 41,
+        "6": 3,
+        "7": 4
+      },
+      "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+    },
+    "best": {
+      "step": 0,
+      "n": 192,
+      "correct": 65,
+      "target_correct": 39,
+      "anchors_correct": 26,
+      "families": {
+        "0": 4,
+        "1": 3,
+        "2": 2,
+        "3": 4,
+        "4": 4,
+        "5": 41,
+        "6": 3,
+        "7": 4
+      },
+      "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+    },
+    "checks": 2,
+    "rule": "Target net gain>=6, paired exact p<=0.05 exploratory, acquired score loss<=1, each target stratum loss<=1. No promotion.",
+    "last": {
+      "step": 100,
+      "n": 192,
+      "correct": 65,
+      "target_correct": 40,
+      "anchors_correct": 25,
+      "families": {
+        "0": 4,
+        "1": 3,
+        "2": 2,
+        "3": 4,
+        "4": 4,
+        "5": 42,
+        "6": 2,
+        "7": 4
+      },
+      "adapter": "/srv/eidolon/work/eva-learning-cycle9-hours-20261110/e1-f006076b/resume/step-100/adapter"
+    },
+    "epoch": 1794318718.5915225,
+    "last_decision": {
+      "accepted": false,
+      "gains": 1,
+      "losses": 0,
+      "p_exact": 1.0,
+      "anchor_loss": 1,
+      "stratum_guard": true,
+      "exploratory": true
+    }
+  },
+  "comparison": {
+    "before": {
+      "n": 352,
+      "content_correct": 105,
+      "exact_json": 105,
+      "truncated": 0,
+      "subsets": {
+        "target": {
+          "n": 320,
+          "content_correct": 79,
+          "exact_json": 79,
+          "truncated": 0
+        },
+        "anchor": {
+          "n": 32,
+          "content_correct": 26,
+          "exact_json": 26,
+          "truncated": 0
+        }
+      },
+      "strata": {
+        "anchor-0": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "content_correct": 3,
+          "exact_json": 3,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "content_correct": 2,
+          "exact_json": 2,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "content_correct": 2,
+          "exact_json": 2,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "content_correct": 3,
+          "exact_json": 3,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "day0-short-template0": {
+          "n": 32,
+          "content_correct": 32,
+          "exact_json": 32,
+          "truncated": 0
+        },
+        "day0-short-template1": {
+          "n": 32,
+          "content_correct": 26,
+          "exact_json": 26,
+          "truncated": 0
+        },
+        "day1-long-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day1-long-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day1-short-template0": {
+          "n": 32,
+          "content_correct": 14,
+          "exact_json": 14,
+          "truncated": 0
+        },
+        "day1-short-template1": {
+          "n": 32,
+          "content_correct": 7,
+          "exact_json": 7,
+          "truncated": 0
+        },
+        "day2-long-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-long-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-short-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-short-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        }
+      },
+      "identity": {
+        "adapter_state_sha256": "0883c80e45904bdcb85aa6a27d20e921eea7a6bf5574990375e51835d4163a52",
+        "gpu_uuid": "GPU-REDACTED",
+        "precision": "torch.float16",
+        "dataset_sha256": "50275b18acf3df2669ad03b54efe4fe1eb0fa5c157fd09ebe6eddfb561f6f01a",
+        "max_new_tokens": 384,
+        "cache_reused": false
+      },
+      "seconds": 2321.6584742069244
+    },
+    "after": {
+      "n": 352,
+      "content_correct": 108,
+      "exact_json": 108,
+      "truncated": 0,
+      "subsets": {
+        "target": {
+          "n": 320,
+          "content_correct": 83,
+          "exact_json": 83,
+          "truncated": 0
+        },
+        "anchor": {
+          "n": 32,
+          "content_correct": 25,
+          "exact_json": 25,
+          "truncated": 0
+        }
+      },
+      "strata": {
+        "anchor-0": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "content_correct": 3,
+          "exact_json": 3,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "content_correct": 2,
+          "exact_json": 2,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "content_correct": 2,
+          "exact_json": 2,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "content_correct": 2,
+          "exact_json": 2,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "content_correct": 4,
+          "exact_json": 4,
+          "truncated": 0
+        },
+        "day0-short-template0": {
+          "n": 32,
+          "content_correct": 32,
+          "exact_json": 32,
+          "truncated": 0
+        },
+        "day0-short-template1": {
+          "n": 32,
+          "content_correct": 28,
+          "exact_json": 28,
+          "truncated": 0
+        },
+        "day1-long-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day1-long-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day1-short-template0": {
+          "n": 32,
+          "content_correct": 15,
+          "exact_json": 15,
+          "truncated": 0
+        },
+        "day1-short-template1": {
+          "n": 32,
+          "content_correct": 8,
+          "exact_json": 8,
+          "truncated": 0
+        },
+        "day2-long-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-long-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-short-template0": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        },
+        "day2-short-template1": {
+          "n": 32,
+          "content_correct": 0,
+          "exact_json": 0,
+          "truncated": 0
+        }
+      },
+      "identity": {
+        "adapter_state_sha256": "bf4132dfe820de30969687f480b8c0ee5c5a4117daae18af13f9e45b3e9406b7",
+        "gpu_uuid": "GPU-REDACTED",
+        "precision": "torch.float16",
+        "dataset_sha256": "50275b18acf3df2669ad03b54efe4fe1eb0fa5c157fd09ebe6eddfb561f6f01a",
+        "max_new_tokens": 384,
+        "cache_reused": false
+      },
+      "seconds": 2319.3697080612183
+    },
+    "warning": "Fresh report time320 plus reused acquired32. AFTER is the trained candidate even if selection retains parent. No promotion. Canary human review required."
+  },
+  "paired_report": {
+    "accepted": false,
+    "gains": 4,
+    "losses": 0,
+    "p_exact": 0.125,
+    "anchor_loss": 1,
+    "stratum_guard": true,
+    "exploratory": true
+  },
+  "data": {
+    "train": {
+      "examples": 878,
+      "packs": 400,
+      "tokens": 163208,
+      "mean_tokens_per_example": 185.88610478359908,
+      "max_tokens_per_example": 379,
+      "packing": "Whole examples concatenated; causal attention crosses sample boundaries; padding masked; assistant-only loss."
+    },
+    "supervised_tokens": {
+      "replay": 38058,
+      "target": 12775
+    },
+    "target_share": 0.2513131233647434,
+    "target_days": {
+      "3": 3,
+      "0": 22,
+      "1": 22,
+      "2": 21
+    },
+    "target_strata": {
+      "day3-boundary4320": 3,
+      "day0-short-template0": 22,
+      "day1-long-template0": 12,
+      "day2-short-template0": 11,
+      "day1-short-template0": 10,
+      "day2-long-template0": 10
+    },
+    "selection_time_n": 160,
+    "report_time_n": 320,
+    "anchors_n": 32,
+    "feasible_strata": [
+      "(0, False, 0)",
+      "(0, False, 1)",
+      "(1, False, 0)",
+      "(1, False, 1)",
+      "(1, True, 0)",
+      "(1, True, 1)",
+      "(2, False, 0)",
+      "(2, False, 1)",
+      "(2, True, 0)",
+      "(2, True, 1)"
+    ],
+    "updates": 100,
+    "sealed_contents_used_for_exclusion_only": true,
+    "sealed_hash": "1f83e9d9740cabded1e044cb1913fbff612fe59465b9bda89acc756c489ff645"
+  },
+  "telemetry": {
+    "gpu_c": {
+      "max": 36.0,
+      "mean": 27.850247982826264,
+      "n": 13509
+    },
+    "hbm_c": {
+      "max": 39.0,
+      "mean": 28.241098526907987,
+      "n": 13509
+    },
+    "cpu_c": {
+      "max": 43.375,
+      "mean": 37.19978347768154,
+      "n": 13509
+    },
+    "gpu_w": {
+      "max": 219.08,
+      "mean": 81.18967976904287,
+      "n": 13509
+    },
+    "vram_mib": {
+      "max": 7026.5625,
+      "mean": 6760.051609112444,
+      "n": 13509
+    },
+    "wall_w": {
+      "max": 341.7,
+      "mean": 222.049078392183,
+      "n": 13509
+    }
+  },
+  "automatic_promotion": false,
+  "final_reserved_test_evaluated": false,
+  "canaries_review_required": true
+}

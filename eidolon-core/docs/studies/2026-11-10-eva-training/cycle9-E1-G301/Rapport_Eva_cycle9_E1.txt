@@ -1,0 +1,35 @@
+Eva — cycle9 E1 horaires structurés
+État : terminé ; aucun modèle promu.
+100 mises à jour ; LR3e-6 ; V100200W ; 352 réponses de rapport par état.
+Tokens supervisés : cible 25.131%, rappel 74.869%.
+Les trois exemples de durée4320min franchissent3 jours ; le jeu principal équilibre0/1/2 jours.
+
+Rapport total : 105 → 108 /352.
+target: 79 → 83/320
+anchor: 26 → 25/32
+anchor-0: 4 → 4/4
+anchor-1: 3 → 3/4
+anchor-2: 2 → 2/4
+anchor-3: 4 → 4/4
+anchor-4: 4 → 4/4
+anchor-5: 2 → 2/4
+anchor-6: 3 → 2/4
+anchor-7: 4 → 4/4
+day0-short-template0: 32 → 32/32
+day0-short-template1: 26 → 28/32
+day1-long-template0: 0 → 0/32
+day1-long-template1: 0 → 0/32
+day1-short-template0: 14 → 15/32
+day1-short-template1: 7 → 8/32
+day2-long-template0: 0 → 0/32
+day2-long-template1: 0 → 0/32
+day2-short-template0: 0 → 0/32
+day2-short-template1: 0 → 0/32
+
+Sélection interne : parent65/192 ; candidat65/192 ; pas retenu expérimentalement0.
+Le rapport APRÈS porte toujours sur le candidat entraîné, même si le parent est conservé.
+Comparaison appariée rapport : gains4, pertes0, p exploratoire0.125.
+Canaris conversationnels à relire. Le test final réservé n’a pas été évalué.
+Températures/power : {"gpu_c": {"max": 36.0, "mean": 27.850247982826264, "n": 13509}, "hbm_c": {"max": 39.0, "mean": 28.241098526907987, "n": 13509}, "cpu_c": {"max": 43.375, "mean": 37.19978347768154, "n": 13509}, "gpu_w": {"max": 219.08, "mean": 81.18967976904287, "n": 13509}, "vram_mib": {"max": 7026.5625, "mean": 6760.051609112444, "n": 13509}, "wall_w": {"max": 341.7, "mean": 222.049078392183, "n": 13509}}
+Tous les poids, sauvegardes complètes, réponses et journaux sont conservés sur le serveur.
+Dossier : /srv/eidolon/work/eva-learning-cycle9-hours-20261110/e1-f006076b

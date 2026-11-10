@@ -1,0 +1,19 @@
+{
+  "state": "finished",
+  "epoch": 1794321043.332605,
+  "files": {
+    "Rapport_Eva_cycle9_E1.txt": "c85012da6dd8668c47101fed7577bb07f0157c3ed47c16095b4bbab61c6a8f93",
+    "resultat-final.json": "ad6ced992899cfcae298e7c43794a2934a745e0277cb1459ff2faac7c9bc2a8a",
+    "dataset.json": "50275b18acf3df2669ad03b54efe4fe1eb0fa5c157fd09ebe6eddfb561f6f01a",
+    "dataset-preparation.json": "ce4f269833ecc9d80480931ea7d460094aff16a573d2452c3ba73d30a661b2f7",
+    "lineage.json": "d0d630d222aa5a38f066b6483f93e98282ebfd1ecb1bc4836339bcff3bbe6f1a",
+    "config.json": "9bfcf0033c11bbef14e289f3253570c3134380c2070c911b430792a6a4de29bc",
+    "launch-manifest.json": "bed04245ebdc04bb18fe4937a597bdd17a1e5624a81939e9c583965deecbed98",
+    "noise-proof.json": "1ffbd24647462a335e8ef2763500db24dd0838d9e68e3212d1c5b7177bfbaf19",
+    "run/quality-comparison.json": "8d31678bec037a37a420e7def264abf2efcfad610268883fcc5dc0a884b9b81d",
+    "run/training-summary.json": "c7e340cf6b4fac7b8c42c08b56c92c248012c079092aef6b258ef084230bbd0a",
+    "run/adapter-final/adapter_model.safetensors": "aacadf11adeaac2add3f209219dec3b120a14c22d4382daadd2530aa2189592c",
+    "resume/step-100/training-state.pt": "4379aee0af3a882d1cb62717ceeaac56fb1b45074fe404d3d86540a8887b48b5"
+  },
+  "automatic_promotion": false
+}

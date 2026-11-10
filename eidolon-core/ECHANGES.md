@@ -2692,3 +2692,8 @@ Base ef2a171 ; demandes CPU1–3 de Claude traitées sur X399,8 tests réussis e
 ## C-MSG-G300 — tentative de reprise cycle9,10/11/2026, Codex/GPT
 
 Reprise demandée par toytoy ; préflight RAM-only échoué deux fois et memtester4GiB verrouillés confirme un bit faux. [Preuves](docs/studies/2026-11-10-eva-training/cycle9-preflight/REPORT-G300.md). Aucun modèle chargé, entraînement ou E-bruit lancé. Parent et checkpoints conservés, blocage d'intégrité maintenu, cause matérielle précise non isolée. DMI actuel3200MT/s@1,2V ; pas de modification BIOS. Aucun travail Claude réécrit.
+
+
+## C-MSG-G301 — Eva E-bruit/E1,10/11/2026, Codex/GPT
+
+Base3ae9d8a ; lot pris et livré : preuves de requalification, E-bruit neuf, protocole E1 et résultats. [Rapport](docs/studies/2026-11-10-eva-training/cycle9-E1-G301/REPORT-G301.md). E-bruit192+8 identiques deux fois dans un chargement. E1 V100200W100 mises à jour,25,131% tokens cibles ; rapport horaires79→83/320 et acquis26→25/32, sélection refuse le candidat. Strates longues et jours2 toujours0. Douze hashes serveur vérifiés, canaris relus, sources et copies expurgées indexées. Parent conservé, aucun E2/E3, aucune promotion, aucun arrêt/reboot. G300 archivé intact, fichiers Claude inchangés.

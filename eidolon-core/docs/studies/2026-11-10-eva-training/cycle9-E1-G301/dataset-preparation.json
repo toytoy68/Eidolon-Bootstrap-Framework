@@ -1,0 +1,47 @@
+{
+  "train": {
+    "examples": 878,
+    "packs": 400,
+    "tokens": 163208,
+    "mean_tokens_per_example": 185.88610478359908,
+    "max_tokens_per_example": 379,
+    "packing": "Whole examples concatenated; causal attention crosses sample boundaries; padding masked; assistant-only loss."
+  },
+  "supervised_tokens": {
+    "replay": 38058,
+    "target": 12775
+  },
+  "target_share": 0.2513131233647434,
+  "target_days": {
+    "3": 3,
+    "0": 22,
+    "1": 22,
+    "2": 21
+  },
+  "target_strata": {
+    "day3-boundary4320": 3,
+    "day0-short-template0": 22,
+    "day1-long-template0": 12,
+    "day2-short-template0": 11,
+    "day1-short-template0": 10,
+    "day2-long-template0": 10
+  },
+  "selection_time_n": 160,
+  "report_time_n": 320,
+  "anchors_n": 32,
+  "feasible_strata": [
+    "(0, False, 0)",
+    "(0, False, 1)",
+    "(1, False, 0)",
+    "(1, False, 1)",
+    "(1, True, 0)",
+    "(1, True, 1)",
+    "(2, False, 0)",
+    "(2, False, 1)",
+    "(2, True, 0)",
+    "(2, True, 1)"
+  ],
+  "updates": 100,
+  "sealed_contents_used_for_exclusion_only": true,
+  "sealed_hash": "1f83e9d9740cabded1e044cb1913fbff612fe59465b9bda89acc756c489ff645"
+}
