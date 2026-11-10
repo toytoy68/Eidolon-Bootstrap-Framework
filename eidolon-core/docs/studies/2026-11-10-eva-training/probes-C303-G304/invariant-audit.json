@@ -1,0 +1,112 @@
+{
+  "parent-cycle5": {
+    "false_comparison_claims": [
+      {
+        "id": "FS-jour2-court-0",
+        "claims": [
+          "1466 < 1440"
+        ],
+        "original_step_errors": []
+      },
+      {
+        "id": "FS-jour2-court-1",
+        "claims": [
+          "1475 < 1440"
+        ],
+        "original_step_errors": []
+      },
+      {
+        "id": "FS-jour2-court-3",
+        "claims": [
+          "1478 < 1440"
+        ],
+        "original_step_errors": []
+      }
+    ],
+    "counts": {
+      "S1": {
+        "n": 24,
+        "correct": 20
+      },
+      "S2": {
+        "n": 24,
+        "correct": 24
+      },
+      "S3": {
+        "n": 24,
+        "correct": 23
+      },
+      "S4": {
+        "n": 24,
+        "correct": 14
+      },
+      "ZS": {
+        "n": 20,
+        "correct": 7
+      },
+      "FS": {
+        "n": 20,
+        "correct": 16
+      },
+      "PF": {
+        "n": 20,
+        "correct": 5
+      }
+    }
+  },
+  "E2-step102": {
+    "false_comparison_claims": [
+      {
+        "id": "FS-jour2-court-0",
+        "claims": [
+          "1466 < 1440"
+        ],
+        "original_step_errors": []
+      },
+      {
+        "id": "FS-jour2-court-1",
+        "claims": [
+          "1475 < 1440"
+        ],
+        "original_step_errors": []
+      },
+      {
+        "id": "FS-jour2-court-3",
+        "claims": [
+          "1478 < 1440"
+        ],
+        "original_step_errors": []
+      }
+    ],
+    "counts": {
+      "S1": {
+        "n": 24,
+        "correct": 23
+      },
+      "S2": {
+        "n": 24,
+        "correct": 24
+      },
+      "S3": {
+        "n": 24,
+        "correct": 20
+      },
+      "S4": {
+        "n": 24,
+        "correct": 17
+      },
+      "ZS": {
+        "n": 20,
+        "correct": 7
+      },
+      "FS": {
+        "n": 20,
+        "correct": 17
+      },
+      "PF": {
+        "n": 20,
+        "correct": 7
+      }
+    }
+  }
+}

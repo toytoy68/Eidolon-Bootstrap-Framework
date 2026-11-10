@@ -1,0 +1,129 @@
+{
+  "sondes": {
+    "FS|jour0-court": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 3
+    },
+    "FS|jour1-court": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 4
+    },
+    "FS|jour1-long": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 4
+    },
+    "FS|jour2-court": {
+      "n": 4,
+      "correct": 1,
+      "format_time_steps": 4
+    },
+    "FS|jour2-long": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 4
+    },
+    "PF|jour0-court": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 0
+    },
+    "PF|jour1-court": {
+      "n": 4,
+      "correct": 3,
+      "format_time_steps": 0
+    },
+    "PF|jour1-long": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    },
+    "PF|jour2-court": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    },
+    "PF|jour2-long": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    },
+    "S1|conversion": {
+      "n": 24,
+      "correct": 23
+    },
+    "S2|1441-2879": {
+      "n": 12,
+      "correct": 12
+    },
+    "S2|2880-4319": {
+      "n": 12,
+      "correct": 12
+    },
+    "S3|jours0": {
+      "n": 9,
+      "correct": 9
+    },
+    "S3|jours1": {
+      "n": 8,
+      "correct": 7
+    },
+    "S3|jours2": {
+      "n": 7,
+      "correct": 4
+    },
+    "S4|reconversion": {
+      "n": 24,
+      "correct": 17
+    },
+    "ZS|jour0-court": {
+      "n": 4,
+      "correct": 4,
+      "format_time_steps": 0
+    },
+    "ZS|jour1-court": {
+      "n": 4,
+      "correct": 3,
+      "format_time_steps": 0
+    },
+    "ZS|jour1-long": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    },
+    "ZS|jour2-court": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    },
+    "ZS|jour2-long": {
+      "n": 4,
+      "correct": 0,
+      "format_time_steps": 0
+    }
+  },
+  "appariement_vs_ZS": {
+    "FS_gagne": 10,
+    "FS_perd": 0,
+    "PF_gagne": 0,
+    "PF_perd": 0
+  },
+  "sondes_sans_reponse": 0,
+  "structure_complete": {
+    "ZS": {
+      "n": 20,
+      "complete": 0
+    },
+    "FS": {
+      "n": 20,
+      "complete": 14
+    },
+    "PF": {
+      "n": 20,
+      "complete": 0
+    }
+  },
+  "limitation": "Original format_start detects only a prefix. Additional structure_complete checks required sections/subtraction count, not full mathematical chain correctness. Grade correctness uses final JSON."
+}

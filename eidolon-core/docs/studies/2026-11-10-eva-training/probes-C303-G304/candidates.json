@@ -1,0 +1,12 @@
+[
+  {
+    "name": "parent-cycle5",
+    "path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+    "sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30"
+  },
+  {
+    "name": "E2-step102",
+    "path": "/srv/eidolon/work/eva-learning-cycle9-hours-20261110/e2-f006076b/run/adapter-final",
+    "sha256": "b12d13e82c4ccb05fd5185deb5ef267189587159734c6bdfec4840f068538540"
+  }
+]

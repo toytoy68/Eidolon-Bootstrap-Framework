@@ -1,0 +1,18 @@
+from pathlib import Path
+import json,re,collections
+P=Path(__file__).resolve().parent
+def invalid_claims(text):
+ out=[]
+ for m in re.finditer(r'(\d+)\s*(<|≥)\s*1440',text):
+  n=int(m[1]);valid=n<1440 if m[2]=='<' else n>=1440
+  if not valid:out.append(m[0])
+ return out
+assert invalid_claims('1466 < 1440 : 1 jour(s)')==['1466 < 1440']
+assert invalid_claims('2906 ≥ 1440 ; 26 < 1440')==[]
+result={}
+for name in ['parent-cycle5','E2-step102']:
+ rows=[json.loads(s) for s in (P/'run'/('responses-'+name+'.jsonl')).read_text().splitlines()]
+ assert len(rows)==156 and len({r['id'] for r in rows})==156
+ result[name]=dict(false_comparison_claims=[dict(id=r['id'],claims=invalid_claims(r['response']),original_step_errors=r.get('original_step_errors',[])) for r in rows if invalid_claims(r['response'])],counts={k:dict(n=sum(r['kind']==k for r in rows),correct=sum(r['grade_correct'] for r in rows if r['kind']==k)) for k in ['S1','S2','S3','S4','ZS','FS','PF']})
+(P/'invariant-audit.json').write_text(json.dumps(result,indent=2,ensure_ascii=False))
+print(json.dumps(result,ensure_ascii=False))

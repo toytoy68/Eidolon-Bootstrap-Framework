@@ -1,0 +1,62 @@
+{
+  "e1-f006076b-before": {
+    "n": 324,
+    "format_start": 0,
+    "errors": {
+      "? | conversion_ok | addition_ok | modulo_ok | jours_FAUX": 13,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_ok": 6,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_FAUX": 2,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_ok": 47,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_FAUX": 157,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_FAUX": 9,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_ok": 6,
+      "? | conversion_ok | addition_FAUSSE | modulo_FAUX | jours_FAUX": 2,
+      "? | conversion_FAUSSE | addition_FAUSSE | modulo_FAUX | jours_FAUX": 1
+    }
+  },
+  "e1-f006076b-after": {
+    "n": 324,
+    "format_start": 0,
+    "errors": {
+      "? | conversion_ok | addition_ok | modulo_ok | jours_FAUX": 12,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_ok": 3,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_FAUX": 1,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_ok": 51,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_FAUX": 148,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_FAUX": 14,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_ok": 7,
+      "? | conversion_ok | addition_FAUSSE | modulo_FAUX | jours_FAUX": 2,
+      "? | conversion_FAUSSE | addition_FAUSSE | modulo_FAUX | jours_FAUX": 1
+    }
+  },
+  "e2-f006076b-before": {
+    "n": 324,
+    "format_start": 0,
+    "errors": {
+      "? | conversion_ok | addition_ok | modulo_ok | jours_FAUX": 13,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_ok": 6,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_FAUX": 2,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_ok": 47,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_FAUX": 157,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_FAUX": 9,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_ok": 6,
+      "? | conversion_ok | addition_FAUSSE | modulo_FAUX | jours_FAUX": 2,
+      "? | conversion_FAUSSE | addition_FAUSSE | modulo_FAUX | jours_FAUX": 1
+    }
+  },
+  "e2-f006076b-after": {
+    "n": 324,
+    "format_start": 0,
+    "errors": {
+      "? | conversion_ok | addition_ok | modulo_ok | jours_FAUX": 11,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_ok": 2,
+      "? | conversion_FAUSSE | addition_ok | modulo_ok | jours_FAUX": 1,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_ok": 53,
+      "? | conversion_ok | addition_ok | modulo_FAUX | jours_FAUX": 143,
+      "? | format_inconnu": 2,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_FAUX": 17,
+      "? | conversion_FAUSSE | addition_ok | modulo_FAUX | jours_ok": 6,
+      "? | conversion_ok | addition_FAUSSE | modulo_FAUX | jours_FAUX": 3
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "note": "Original hashes are server bytes; REPORT-G304.md is authored for this publication and not part of server manifest. Public copies are redacted.",
+  "files": {
+    "run/Rapport_Eva_sondes_C303.txt": {
+      "original_sha256": "d9aa47bdb59daf2248b61db4f5ebb69bca47fa90e7bda61a9def888f65836f2e",
+      "published_sha256": "d9aa47bdb59daf2248b61db4f5ebb69bca47fa90e7bda61a9def888f65836f2e",
+      "redacted": false
+    },
+    "run/result-saved.json": {
+      "original_sha256": "de7e6100e8e710e6a612a10e05d59814646cf2c4f7e1d8d0c0c0dff7b3406937",
+      "published_sha256": "de7e6100e8e710e6a612a10e05d59814646cf2c4f7e1d8d0c0c0dff7b3406937",
+      "redacted": false
+    },
+    "run/grade-parent-cycle5.json": {
+      "original_sha256": "bf343d6e91cd80694fb56241159b4882c4d4df521b5a841ede04f641d40bad4f",
+      "published_sha256": "bf343d6e91cd80694fb56241159b4882c4d4df521b5a841ede04f641d40bad4f",
+      "redacted": false
+    },
+    "run/grade-E2-step102.json": {
+      "original_sha256": "2477a51ebcf2ef1161b0c690402e21deba98ed24a52b77abe5f80d9b6b7f1cd8",
+      "published_sha256": "2477a51ebcf2ef1161b0c690402e21deba98ed24a52b77abe5f80d9b6b7f1cd8",
+      "redacted": false
+    },
+    "cpu-analysis.json": {
+      "original_sha256": "6ec612475d0565720ca7c894270b9d470b00ab0fb253034209b74604a36bc5c8",
+      "published_sha256": "6ec612475d0565720ca7c894270b9d470b00ab0fb253034209b74604a36bc5c8",
+      "redacted": false
+    },
+    "experiment-plan.json": {
+      "original_sha256": "7b835bba246951bd1d7ce96dae546d48b27405f1b55190dfa91c202b08300df9",
+      "published_sha256": "7b835bba246951bd1d7ce96dae546d48b27405f1b55190dfa91c202b08300df9",
+      "redacted": false
+    },
+    "sources/probe_worker.py.txt": {
+      "original_sha256": "575201d82c248de5e7ecbc2edc6e53b8e3722eea77ca962eff7c67b4e154082d",
+      "published_sha256": "575201d82c248de5e7ecbc2edc6e53b8e3722eea77ca962eff7c67b4e154082d",
+      "redacted": false
+    },
+    "run/responses-parent-cycle5.jsonl": {
+      "original_sha256": "1403bbf64c3e79b1c16bbf9e39b217ba7657ccce31dd914f72f263b4b197c73e",
+      "published_sha256": "3362be0b71e67f46dbe61929657d0431b96424f000547d0f4176d99081c4638e",
+      "redacted": true
+    },
+    "run/responses-E2-step102.jsonl": {
+      "original_sha256": "bd9c03c0a25297304f68283a8b88ee0522ab43ea739d1468b9b7fc9569aa1199",
+      "published_sha256": "759197721dbd2434d4e8a99e5e993ced86af2e369338e2d1c8819192a518d6d8",
+      "redacted": true
+    },
+    "probes.jsonl": {
+      "original_sha256": "4118acd038a116bcad750b2dcabaea20e79e6b7dd9b318b21ed96c1cddf9d27a",
+      "published_sha256": "4118acd038a116bcad750b2dcabaea20e79e6b7dd9b318b21ed96c1cddf9d27a",
+      "redacted": false
+    },
+    "candidates.json": {
+      "original_sha256": "db079d19edd8379d09b06213c837a16b29aeabbbf1b7da670aef93ec025d11f0",
+      "published_sha256": "db079d19edd8379d09b06213c837a16b29aeabbbf1b7da670aef93ec025d11f0",
+      "redacted": false
+    },
+    "live-integrity.json": {
+      "original_sha256": "3cc54b9fa90471be2a379a6649a1ca6c1e14a74c22f05e5a9395fb3c4b1b2860",
+      "published_sha256": "3cc54b9fa90471be2a379a6649a1ca6c1e14a74c22f05e5a9395fb3c4b1b2860",
+      "redacted": false
+    },
+    "exclude.json": {
+      "original_sha256": "b84bfb4713d54184d99c5354df58436b2fcbcc53fd2bc84738f271a1f72d3531",
+      "published_sha256": "b84bfb4713d54184d99c5354df58436b2fcbcc53fd2bc84738f271a1f72d3531",
+      "redacted": false
+    },
+    "invariant-audit.json": {
+      "original_sha256": "89a2a6518c09774baa512440661afd6618c75d4e40841407c4cc713eb8588f0f",
+      "published_sha256": "89a2a6518c09774baa512440661afd6618c75d4e40841407c4cc713eb8588f0f",
+      "redacted": false
+    },
+    "sources/invariant_audit.py.txt": {
+      "original_sha256": "beb8ce036dcb9f9ed6115ce4f406a3ab32eccdfa907b35ed1eb6c4bff674970e",
+      "published_sha256": "beb8ce036dcb9f9ed6115ce4f406a3ab32eccdfa907b35ed1eb6c4bff674970e",
+      "redacted": false
+    }
+  }
+}

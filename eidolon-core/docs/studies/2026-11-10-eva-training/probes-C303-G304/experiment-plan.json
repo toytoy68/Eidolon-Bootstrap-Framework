@@ -1,0 +1,18 @@
+{
+  "training": false,
+  "claude_commit": "01046a6e08081d0b75f73554366847ed937dc082",
+  "files": {
+    "train.py": "575201d82c248de5e7ecbc2edc6e53b8e3722eea77ca962eff7c67b4e154082d",
+    "controller.py": "5f43f7e150b10331bccbd11049fdcbcea250a1bff85aeb45126f021c6d58107f",
+    "guard.py": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "sampler_rtx.py": "c2c0b69b4aab6f81c4f988cc5d4036a0853b5db654ed42c6f3ee64a808e7c24c",
+    "sampler_v100.py": "287b26bbc689add0d8757d1b84e733ac0eaf5b72e6542c806e4eb3554f03cd6d",
+    "live_integrity.py": "df5d9bddda420b16a4366e765da52687333a2286d7b109463cafe5c8b0401adf",
+    "eva_time_probes.py": "d88252560161323348f1c4696701898f469d2917b65ab416f0758ef32674e2c4",
+    "decompose_failures.py": "a4b1f99d49328d4a858a2de800e8e18a14ddf92ae0a5e2f9725be135f9238cf5",
+    "probes.jsonl": "4118acd038a116bcad750b2dcabaea20e79e6b7dd9b318b21ed96c1cddf9d27a",
+    "candidates.json": "db079d19edd8379d09b06213c837a16b29aeabbbf1b7da670aef93ec025d11f0",
+    "config.json": "d2381d03c4705f274a1ef222065b6702f58afd75ba3e4e51182fd64f5613f411"
+  },
+  "boot_id": "f006076b-6010-48c7-8104-046b21152e0f"
+}

@@ -1,0 +1,67 @@
+from pathlib import Path
+import os,json,time,hashlib,ast,random,re
+P=Path(__file__).resolve().parent;OUT=Path(os.environ['EVA_OUTPUT']);OUT.mkdir(exist_ok=True)
+def save(n,d):
+ q=OUT/(n+'.tmp');q.write_text(json.dumps(d,ensure_ascii=False,indent=2));q.replace(OUT/n)
+def progress(stage,**kw):save('progress-rank0.json',dict(stage=stage,epoch=time.time(),rank=0,**kw))
+def append(n,r):
+ with (OUT/n).open('a') as f:f.write(json.dumps(r,ensure_ascii=False)+'\n')
+progress('importing')
+for n,h in json.loads((P/'experiment-plan.json').read_text())['files'].items():assert hashlib.sha256((P/n).read_bytes()).hexdigest()==h,n
+import torch
+from transformers import AutoTokenizer,AutoModelForCausalLM,BitsAndBytesConfig
+from peft import prepare_model_for_kbit_training,PeftModel,set_peft_model_state_dict,get_peft_model_state_dict
+from safetensors.torch import load_file
+from live_integrity import validate
+import eva_time_probes as probes
+torch.set_num_threads(4);torch.manual_seed(1234);random.seed(1234)
+assert torch.cuda.device_count()==1 and torch.cuda.get_device_capability(0)==(7,0)
+validate(P,progress)
+C=json.loads((P/'config.json').read_text());examples=[json.loads(s) for s in (P/'probes.jsonl').read_text().splitlines()]
+assert len(examples)==156 and len({r['id'] for r in examples})==156
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token_id=tokenizer.eos_token_id
+old=Path('/srv/eidolon/work/eva-learning-cycle1-20261108/train.py');tree=ast.parse(old.read_text());nodes=[n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets)]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+progress('loading_model')
+quant=BitsAndBytesConfig(load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=torch.float16)
+base=AutoModelForCausalLM.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False,quantization_config=quant,torch_dtype=torch.float16,device_map={'':0},attn_implementation='sdpa')
+base=prepare_model_for_kbit_training(base,use_gradient_checkpointing=True,gradient_checkpointing_kwargs={'use_reentrant':False})
+candidates=json.loads((P/'candidates.json').read_text());model=None;summaries=[]
+for ci,c in enumerate(candidates):
+ f=Path(c['path'])/'adapter_model.safetensors';hs=[hashlib.sha256(f.read_bytes()).hexdigest() for _ in range(2)];assert hs==[c['sha256']]*2
+ if model is None:model=PeftModel.from_pretrained(base,c['path'],is_trainable=False)
+ else:
+  result=set_peft_model_state_dict(model,load_file(str(f),device='cpu'));assert not result.unexpected_keys
+ model.eval();model.config.use_cache=False
+ statehash=hashlib.sha256(b''.join(v.detach().cpu().contiguous().view(torch.uint8).numpy().tobytes() for k,v in sorted(get_peft_model_state_dict(model).items()))).hexdigest()
+ expected=['0883c80e45904bdcb85aa6a27d20e921eea7a6bf5574990375e51835d4163a52','ecbfd8470817e1dee7e6fb6a20c82e19c333f3da9d90fc33585870b3f1ea0e1d'][ci]
+ assert statehash==expected,(c['name'],statehash)
+ responses=[];complete={}
+ for i,x in enumerate(examples):
+  progress('probe_generation',candidate=c['name'],candidate_index=ci,done=i,total=len(examples),total_candidates=2)
+  prefix=x.get('assistant_prefix','')
+  text=tokenizer.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=x['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False)+prefix
+  inputs=tokenizer(text,add_special_tokens=False,return_tensors='pt').to('cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=torch.float16):
+   out=model.generate(**inputs,max_new_tokens=384,do_sample=False,use_cache=True,pad_token_id=tokenizer.pad_token_id,eos_token_id=tokenizer.eos_token_id)
+  response=prefix+tokenizer.decode(out[0,inputs['input_ids'].shape[1]:],skip_special_tokens=True)
+  row=dict(id=x['id'],kind=x['kind'],stratum=x['stratum'],candidate=c['name'],question=x['question'],expected=x['expected'],response=response,identity=dict(adapter_state_sha256=statehash,adapter_sha256=c['sha256'],precision='FP16/NF4 doublequant',gpu_uuid=C['uuids'][1],max_new_tokens=384,prefix_appended=bool(prefix),cache_reused=False),grade_correct=probes.correct(probes.last_object(response),x['expected']),format_start=probes.follows_time_steps(response),generated_tokens=int(out.shape[1]-inputs['input_ids'].shape[1]))
+  if x['kind'] in ['ZS','FS','PF']:
+   matches=probes.STEP_RE.findall(response)
+   structure=bool(row['format_start'] and re.search(r'\d+ < 1440 : \d+ jour',response) and re.search(r'\d+ × 60 = \d+ ; \d+ − \d+ = \d+, et',response) and 'Arrivée ' in response and len(matches)==x['expected']['jours'])
+   row['structure_complete']=structure;row['original_step_errors']=probes.step_errors(response) if row['format_start'] else []
+  responses.append(row);append('responses-'+c['name']+'.jsonl',row)
+ assert [r['id'] for r in responses]==[x['id'] for x in examples]
+ result=probes.grade(examples,responses)
+ result['structure_complete']={kind:dict(n=sum(r['kind']==kind for r in responses),complete=sum(r.get('structure_complete',False) for r in responses if r['kind']==kind)) for kind in ['ZS','FS','PF']}
+ result['limitation']='Original format_start detects only a prefix. Additional structure_complete checks required sections/subtraction count, not full mathematical chain correctness. Grade correctness uses final JSON.'
+ save('grade-'+c['name']+'.json',result);summaries.append(dict(candidate=c,grade=result,state_sha256=statehash))
+save('quality-comparison.json',dict(state='finished',candidates=summaries,training=False,base_model_loads=1,fresh_generation=True,cache_reused=False,final_reserved_test_evaluated=False))
+lines=['Eva — sondes C303, sans entraînement','Deux adaptateurs,156 sondes chacun ; V100200W,FP16/NF4,glouton384tokens.','Même chargement de base, adaptateurs vérifiés. Lot réservé non lu ni évalué.','Le score de format initial et la complétude structurelle restent distincts de la justesse.']
+for s in summaries:
+ lines+=['',s['candidate']['name'],json.dumps(s['grade'],ensure_ascii=False,indent=2)]
+report=OUT/'Rapport_Eva_sondes_C303.txt';report.write_text('\n'.join(lines)+'\n')
+files=['quality-comparison.json','grade-parent-cycle5.json','grade-E2-step102.json','responses-parent-cycle5.jsonl','responses-E2-step102.jsonl','Rapport_Eva_sondes_C303.txt']
+save('result-saved.json',dict(state='finished',files={n:hashlib.sha256((OUT/n).read_bytes()).hexdigest() for n in files},training=False))
+progress('finished')

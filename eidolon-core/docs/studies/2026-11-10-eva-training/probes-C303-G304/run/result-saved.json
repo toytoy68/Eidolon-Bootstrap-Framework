@@ -1,0 +1,12 @@
+{
+  "state": "finished",
+  "files": {
+    "quality-comparison.json": "e4aeb87d4f6444f834555ad4883b05531cdee615161660b9fc69aeae1c5a3f51",
+    "grade-parent-cycle5.json": "bf343d6e91cd80694fb56241159b4882c4d4df521b5a841ede04f641d40bad4f",
+    "grade-E2-step102.json": "2477a51ebcf2ef1161b0c690402e21deba98ed24a52b77abe5f80d9b6b7f1cd8",
+    "responses-parent-cycle5.jsonl": "1403bbf64c3e79b1c16bbf9e39b217ba7657ccce31dd914f72f263b4b197c73e",
+    "responses-E2-step102.jsonl": "bd9c03c0a25297304f68283a8b88ee0522ab43ea739d1468b9b7fc9569aa1199",
+    "Rapport_Eva_sondes_C303.txt": "d9aa47bdb59daf2248b61db4f5ebb69bca47fa90e7bda61a9def888f65836f2e"
+  },
+  "training": false
+}
