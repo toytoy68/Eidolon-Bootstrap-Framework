@@ -1,0 +1,80 @@
+{
+  "cycle5-parent": {
+    "fractions": {
+      "n": 32,
+      "content_correct": 30,
+      "correct_and_reduced_when_fraction_required": 29
+    },
+    "midnight_strata": {
+      "duration>1500": {
+        "n": 8,
+        "correct": 0
+      },
+      "duration<=1500": {
+        "n": 16,
+        "correct": 7
+      }
+    }
+  },
+  "cycle7-step-160": {
+    "fractions": {
+      "n": 32,
+      "content_correct": 30,
+      "correct_and_reduced_when_fraction_required": 30
+    },
+    "midnight_strata": {
+      "duration>1500": {
+        "n": 8,
+        "correct": 0
+      },
+      "duration<=1500": {
+        "n": 16,
+        "correct": 8
+      }
+    }
+  },
+  "cycle7-step-286": {
+    "fractions": {
+      "n": 32,
+      "content_correct": 30,
+      "correct_and_reduced_when_fraction_required": 30
+    },
+    "midnight_strata": {
+      "duration>1500": {
+        "n": 8,
+        "correct": 0
+      },
+      "duration<=1500": {
+        "n": 16,
+        "correct": 8
+      }
+    }
+  },
+  "cycle7-step-40": {
+    "fractions": {
+      "n": 32,
+      "content_correct": 30,
+      "correct_and_reduced_when_fraction_required": 30
+    },
+    "midnight_strata": {
+      "duration>1500": {
+        "n": 8,
+        "correct": 0
+      },
+      "duration<=1500": {
+        "n": 16,
+        "correct": 7
+      }
+    }
+  },
+  "cycle7_reference_vs_executed": {
+    "n": 608,
+    "responses_different": [
+      "88014-138",
+      "c6-test-time-44"
+    ],
+    "reference_label": "cycle6 before, identical cycle5 parent, generation config and608 evaluation cases",
+    "executed_before_reused": 0,
+    "executed_after_reused": 0
+  }
+}

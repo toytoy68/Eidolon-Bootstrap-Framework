@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "/srv/eidolon/work/eva-review-c298-20261110/test_eva_review_tools.py",
+    "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/curriculum.py"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "........\n----------------------------------------------------------------------\nRan 8 tests in 0.120s\n\nOK\n",
+  "epoch": 1794305793.496057,
+  "gpu_used": false
+}

@@ -1,0 +1,76 @@
+from pathlib import Path
+import json,hashlib,importlib.util,collections,math,re
+P=Path('/srv/eidolon/work');OUT=P/'eva-review-c298-20261110'
+spec=importlib.util.spec_from_file_location('review',OUT/'eva_review_tools.py');tool=importlib.util.module_from_spec(spec);spec.loader.exec_module(tool)
+sources={};groups={}
+def read(f):
+ b=f.read_bytes();sources[str(f)]=hashlib.sha256(b).hexdigest()
+ if f.suffix=='.jsonl':return [json.loads(l) for l in b.decode().splitlines() if l.strip()]
+ return json.loads(b)
+def save(n,obj):
+ (OUT/n).write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n')
+for i in [3,5,6,7]:
+ d=next(P.glob(f'eva-learning-cycle{i}-*'))
+ run=d/('v100-fallback' if i==7 else 'dual-resumable')
+ if not run.exists():run=d
+ raw=sum([read(f) for f in sorted(run.glob('evaluation-rank*.jsonl'))],[])
+ for stage in ['before','after']:
+  rows=[r for r in raw if r['stage']==stage]
+  assert len(rows)==len({r['id'] for r in rows}),(i,stage,'duplicate IDs')
+  groups[f'cycle{i}-{stage}']=rows
+d=next(P.glob('eva-learning-cycle8-*'))
+for f in sorted((d/'run').glob('cycle*.jsonl')):groups['audit-'+f.stem]=read(f)
+report={};mismatches=[]
+for label,rows in groups.items():
+ for r in rows:
+  val=tool.last_object(r['response']);strict=tool.strict_correct(val,r['expected'])
+  if strict!=r['evaluation']['content_correct']:mismatches.append([label,r['id']])
+  r['_source']=label
+ a=tool.analyse(rows)
+ report[label]={'n':len(rows),'strict':sum(tool.strict_correct(tool.last_object(r['response']),r['expected']) for r in rows),'tolerant':sum(tool.tolerant_correct(tool.last_object(r['response']),r['expected']) for r in rows),**{k:v.get(label,{}) for k,v in a.items()}}
+assert not mismatches,mismatches
+def paired(a,b):
+ aa={r['id']:r for r in a};bb={r['id']:r for r in b};assert aa.keys()==bb.keys()
+ gains=losses=0;textdiff=0;diff=[]
+ for k,x in aa.items():
+  y=bb[k];assert (x['question'],x['expected'])==(y['question'],y['expected'])
+  cx=tool.strict_correct(tool.last_object(x['response']),x['expected']);cy=tool.strict_correct(tool.last_object(y['response']),y['expected'])
+  gains+=cy and not cx;losses+=cx and not cy;textdiff+=x['response']!=y['response']
+  if cx!=cy:diff.append({'id':k,'before_correct':cx,'after_correct':cy,'family':x.get('family'),'skill':x.get('skill')})
+ n=gains+losses;p=min(1,2*sum(math.comb(n,k) for k in range(min(gains,losses)+1))/2**n) if n else 1
+ return {'n':len(a),'gains':gains,'losses':losses,'net':gains-losses,'responses_changed':textdiff,'mcnemar_exact_two_sided':p,'changed_correctness':diff}
+stats={}
+parent=groups['audit-cycle5-parent']
+for name in ['40','160','286']:stats['audit-step-'+name]=paired(parent,groups['audit-cycle7-step-'+name])
+stats['cycle7-parent-before-after']=paired(groups['cycle7-before'],groups['cycle7-after'])
+stats['cycle6-before-vs-cycle7-before']=paired(groups['cycle6-before'],groups['cycle7-before'])
+for i in [3,6]:
+ for family in ([1,3] if i==3 else [3]):
+  stats[f'cycle{i}-family{family}']=paired([r for r in groups[f'cycle{i}-before'] if r['family']==family],[r for r in groups[f'cycle{i}-after'] if r['family']==family])
+save('paired-comparisons.json',stats)
+fail=[r for r in parent if r.get('skill') in ['same_day','midnight','multi_day','minutes_conversion','fraction','money','operation'] and not tool.strict_correct(tool.last_object(r['response']),r['expected'])]
+(OUT/'audit-parent-failures.jsonl').write_text(''.join(json.dumps({k:v for k,v in r.items() if k!='_source'},ensure_ascii=False)+'\n' for r in fail))
+assert len(fail)==51
+pgcd=[]
+for r in groups['cycle6-after']:
+ if r['family']!=3 or tool.strict_correct(tool.last_object(r['response']),r['expected']):continue
+ # Inspect claimed integers only when explicitly given as PGCD(a,b)=d or Le PGCD de a et b est d.
+ text=r['response']
+ patterns=[r'PGCD\s*(?:de\s+)?(\d+)\s*(?:et|,)\s*(\d+)\s*(?:est|=|:)\s*(\d+)',r'PGCD\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)\s*(?:est|=|:)\s*(\d+)']
+ match=next((m for pat in patterns if (m:=re.search(pat,text,re.I))),None)
+ pgcd.append({'id':r['id'],'question':r['question'],'expected':r['expected'],'response':text,'explicit_pgcd':list(map(int,match.groups())) if match else None,'pgcd_claim_false':int(match[3])!=math.gcd(int(match[1]),int(match[2])) if match else None})
+save('cycle6-failed-fractions.json',pgcd)
+# Actual training distributions; no reserved final-test contents loaded.
+dist={}
+for i in [3,5,6,7]:
+ d=next(P.glob(f'eva-learning-cycle{i}-*'));data=read(d/'dataset.json');rows=[r for r in data['train'] if r['expected'].get('unite')=='heure'];c=collections.Counter();unparsed=[]
+ for r in rows:
+  ops=tool.time_operands(r['question'])
+  if ops is None:unparsed.append(r['id']);continue
+  start,delta=ops;c[f'jours={r["expected"]["jours"]}|duree'+('>1500' if delta>1500 else '<=1500')]+=1
+ dist[f'cycle{i}']={'hours_n':len(rows),'strata':dict(c),'unparsed':unparsed}
+save('actual-training-distributions.json',dist)
+summary={'groups':report,'strict_grade_mismatches':mismatches,'parent_challenge_failures':len(fail),'cycle6_failed_fractions':len(pgcd),'explicit_pgcd_claims':sum(r['explicit_pgcd'] is not None for r in pgcd),'false_pgcd_claims':sum(r['pgcd_claim_false'] is True for r in pgcd),'cycle7_reused_before':sum(bool(r.get('reused')) for r in groups['cycle7-before']),'cycle7_reused_after':sum(bool(r.get('reused')) for r in groups['cycle7-after']),'sources_sha256':sources,'scope':'CPU only; no model loading, no inference, no training, no final-test-reserved read'}
+save('renotation.json',summary)
+save('files-sha256.json',{str(f.name):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(OUT.iterdir()) if f.is_file() and f.name!='files-sha256.json'})
+print(json.dumps({'groups':{k:{x:v[x] for x in ['n','strict','tolerant']} for k,v in report.items()},'pairs':stats,'pgcd':{k:v for k,v in summary.items() if k in ['cycle6_failed_fractions','explicit_pgcd_claims','false_pgcd_claims']},'reuse':[summary['cycle7_reused_before'],summary['cycle7_reused_after']],'actual_distribution':dist},ensure_ascii=False))

@@ -1,0 +1,1287 @@
+{
+  "groups": {
+    "cycle3-before": {
+      "n": 320,
+      "strict": 246,
+      "tolerant": 246,
+      "groupes": {
+        "famille-0": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 40,
+          "strict": 20,
+          "tolerant": 20,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 25,
+          "tolerant": 25,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 40,
+          "strict": 33,
+          "tolerant": 33,
+          "tronque": 0,
+          "fraction_attendue": 40,
+          "strict_et_irreductible": 29
+        },
+        "famille-4": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 40,
+          "strict": 19,
+          "tolerant": 19,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 40,
+          "strict": 29,
+          "tolerant": 29,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 19,
+          "jours_justes_heure_fausse": 10,
+          "heure_decalee_-2h": 2,
+          "heure_decalee_+1h": 1,
+          "heure_decalee_-1h": 1,
+          "heure_decalee_-9h": 2,
+          "ecart_multiple_60": 1,
+          "jours_faux_heure_juste": 1,
+          "heure_decalee_-10h": 1,
+          "heure_et_jours_faux": 1,
+          "heure_decalee_-16h": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 15,
+          "strict": 14
+        },
+        "jours=1|duree<=1500": {
+          "n": 25,
+          "strict": 5
+        }
+      }
+    },
+    "cycle3-after": {
+      "n": 320,
+      "strict": 234,
+      "tolerant": 237,
+      "groupes": {
+        "famille-0": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 40,
+          "strict": 35,
+          "tolerant": 35,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 25,
+          "tolerant": 25,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 40,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0,
+          "fraction_attendue": 40,
+          "strict_et_irreductible": 12
+        },
+        "famille-4": {
+          "n": 40,
+          "strict": 37,
+          "tolerant": 37,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 40,
+          "strict": 13,
+          "tolerant": 16,
+          "tronque": 2
+        },
+        "famille-6": {
+          "n": 40,
+          "strict": 29,
+          "tolerant": 29,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "json_absent": 2,
+          "heure_et_jours_faux": 3,
+          "correct": 13,
+          "jours_faux_heure_juste": 1,
+          "ecart_multiple_60": 7,
+          "heure_decalee_-10h": 1,
+          "format_seul": 3,
+          "heure_illisible": 4,
+          "heure_decalee_-3h": 1,
+          "jours_justes_heure_fausse": 2,
+          "ecart_minutes_<=5": 1,
+          "heure_decalee_+14h": 1,
+          "heure_decalee_-13h": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 15,
+          "strict": 5
+        },
+        "jours=1|duree<=1500": {
+          "n": 25,
+          "strict": 8
+        }
+      }
+    },
+    "cycle5-before": {
+      "n": 512,
+      "strict": 432,
+      "tolerant": 432,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 72,
+          "strict": 66,
+          "tolerant": 66,
+          "tronque": 0,
+          "fraction_attendue": 56,
+          "strict_et_irreductible": 46
+        },
+        "famille-4": {
+          "n": 56,
+          "strict": 56,
+          "tolerant": 56,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 56,
+          "strict": 31,
+          "tolerant": 31,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 107,
+          "tolerant": 107,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 31,
+          "heure_decalee_+1h": 2,
+          "jours_justes_heure_fausse": 13,
+          "jours_faux_heure_juste": 3,
+          "heure_decalee_-1h": 1,
+          "heure_decalee_-9h": 2,
+          "heure_decalee_-10h": 2,
+          "ecart_multiple_60": 1,
+          "heure_decalee_-16h": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 31,
+          "strict": 25
+        },
+        "jours=1|duree<=1500": {
+          "n": 25,
+          "strict": 6
+        }
+      }
+    },
+    "cycle5-after": {
+      "n": 512,
+      "strict": 434,
+      "tolerant": 434,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 25,
+          "tolerant": 25,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 72,
+          "strict": 70,
+          "tolerant": 70,
+          "tronque": 0,
+          "fraction_attendue": 56,
+          "strict_et_irreductible": 48
+        },
+        "famille-4": {
+          "n": 56,
+          "strict": 55,
+          "tolerant": 55,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 56,
+          "strict": 29,
+          "tolerant": 29,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 107,
+          "tolerant": 107,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 29,
+          "jours_faux_heure_juste": 6,
+          "jours_justes_heure_fausse": 14,
+          "heure_decalee_+1h": 1,
+          "heure_decalee_-9h": 2,
+          "heure_decalee_-10h": 2,
+          "heure_decalee_-6h": 1,
+          "heure_decalee_-16h": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 31,
+          "strict": 22
+        },
+        "jours=1|duree<=1500": {
+          "n": 25,
+          "strict": 7
+        }
+      }
+    },
+    "cycle6-before": {
+      "n": 608,
+      "strict": 502,
+      "tolerant": 502,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 25,
+          "tolerant": 25,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 96,
+          "strict": 91,
+          "tolerant": 91,
+          "tronque": 0,
+          "fraction_attendue": 80,
+          "strict_et_irreductible": 69
+        },
+        "famille-4": {
+          "n": 80,
+          "strict": 79,
+          "tolerant": 79,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 104,
+          "strict": 52,
+          "tolerant": 52,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 107,
+          "tolerant": 107,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 52,
+          "jours_faux_heure_juste": 16,
+          "jours_justes_heure_fausse": 24,
+          "heure_decalee_+1h": 1,
+          "heure_decalee_-10h": 5,
+          "heure_decalee_-9h": 2,
+          "heure_decalee_-6h": 2,
+          "heure_decalee_-16h": 1,
+          "heure_et_jours_faux": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 53,
+          "strict": 36
+        },
+        "jours=1|duree<=1500": {
+          "n": 51,
+          "strict": 16
+        }
+      }
+    },
+    "cycle6-after": {
+      "n": 608,
+      "strict": 475,
+      "tolerant": 475,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 96,
+          "strict": 76,
+          "tolerant": 76,
+          "tronque": 0,
+          "fraction_attendue": 80,
+          "strict_et_irreductible": 58
+        },
+        "famille-4": {
+          "n": 80,
+          "strict": 78,
+          "tolerant": 78,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 104,
+          "strict": 50,
+          "tolerant": 50,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 99,
+          "tolerant": 99,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 50,
+          "heure_decalee_+1h": 1,
+          "jours_justes_heure_fausse": 17,
+          "jours_faux_heure_juste": 12,
+          "heure_decalee_-1h": 1,
+          "ecart_multiple_60": 7,
+          "heure_decalee_-6h": 4,
+          "heure_decalee_-10h": 6,
+          "heure_et_jours_faux": 2,
+          "heure_illisible": 1,
+          "heure_decalee_-9h": 1,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_-2h": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 53,
+          "strict": 34
+        },
+        "jours=1|duree<=1500": {
+          "n": 51,
+          "strict": 16
+        }
+      }
+    },
+    "cycle7-before": {
+      "n": 608,
+      "strict": 502,
+      "tolerant": 502,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 96,
+          "strict": 91,
+          "tolerant": 91,
+          "tronque": 0,
+          "fraction_attendue": 80,
+          "strict_et_irreductible": 69
+        },
+        "famille-4": {
+          "n": 80,
+          "strict": 79,
+          "tolerant": 79,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 104,
+          "strict": 53,
+          "tolerant": 53,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 107,
+          "tolerant": 107,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 53,
+          "jours_faux_heure_juste": 15,
+          "jours_justes_heure_fausse": 24,
+          "heure_decalee_-9h": 2,
+          "heure_decalee_-10h": 5,
+          "heure_decalee_-6h": 2,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_+1h": 1,
+          "heure_et_jours_faux": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 53,
+          "strict": 37
+        },
+        "jours=1|duree<=1500": {
+          "n": 51,
+          "strict": 16
+        }
+      }
+    },
+    "cycle7-after": {
+      "n": 608,
+      "strict": 502,
+      "tolerant": 502,
+      "groupes": {
+        "famille-0": {
+          "n": 72,
+          "strict": 72,
+          "tolerant": 72,
+          "tronque": 0
+        },
+        "famille-1": {
+          "n": 56,
+          "strict": 36,
+          "tolerant": 36,
+          "tronque": 0
+        },
+        "famille-2": {
+          "n": 40,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        },
+        "famille-3": {
+          "n": 96,
+          "strict": 91,
+          "tolerant": 91,
+          "tronque": 0,
+          "fraction_attendue": 80,
+          "strict_et_irreductible": 69
+        },
+        "famille-4": {
+          "n": 80,
+          "strict": 79,
+          "tolerant": 79,
+          "tronque": 0
+        },
+        "famille-5": {
+          "n": 104,
+          "strict": 53,
+          "tolerant": 53,
+          "tronque": 0
+        },
+        "famille-6": {
+          "n": 120,
+          "strict": 107,
+          "tolerant": 107,
+          "tronque": 0
+        },
+        "famille-7": {
+          "n": 40,
+          "strict": 40,
+          "tolerant": 40,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "famille-5": {
+          "correct": 53,
+          "jours_faux_heure_juste": 15,
+          "jours_justes_heure_fausse": 24,
+          "heure_decalee_-9h": 2,
+          "heure_decalee_-10h": 5,
+          "heure_decalee_-6h": 2,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_+1h": 1,
+          "heure_et_jours_faux": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 53,
+          "strict": 37
+        },
+        "jours=1|duree<=1500": {
+          "n": 51,
+          "strict": 16
+        }
+      }
+    },
+    "audit-cycle5-parent": {
+      "n": 192,
+      "strict": 135,
+      "tolerant": 135,
+      "groupes": {
+        "anchor-0": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "strict": 3,
+          "tolerant": 3,
+          "tronque": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0,
+          "fraction_attendue": 4,
+          "strict_et_irreductible": 4
+        },
+        "anchor-4": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "strict": 3,
+          "tolerant": 3,
+          "tronque": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "fraction": {
+          "n": 32,
+          "strict": 30,
+          "tolerant": 30,
+          "tronque": 0,
+          "fraction_attendue": 29,
+          "strict_et_irreductible": 26
+        },
+        "midnight": {
+          "n": 24,
+          "strict": 7,
+          "tolerant": 7,
+          "tronque": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "strict": 17,
+          "tolerant": 17,
+          "tronque": 0
+        },
+        "money": {
+          "n": 16,
+          "strict": 16,
+          "tolerant": 16,
+          "tronque": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "strict": 0,
+          "tolerant": 0,
+          "tronque": 0
+        },
+        "operation": {
+          "n": 16,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0
+        },
+        "same_day": {
+          "n": 24,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "anchor-5": {
+          "correct": 2,
+          "jours_faux_heure_juste": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "midnight": {
+          "jours_faux_heure_juste": 2,
+          "correct": 7,
+          "ecart_multiple_60": 3,
+          "jours_justes_heure_fausse": 5,
+          "heure_et_jours_faux": 4,
+          "heure_decalee_-16h": 2,
+          "heure_decalee_-10h": 1
+        },
+        "minutes_conversion": {
+          "correct": 17,
+          "jours_faux_heure_juste": 1,
+          "ecart_multiple_60": 2,
+          "heure_et_jours_faux": 2,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_-10h": 1
+        },
+        "multi_day": {
+          "heure_et_jours_faux": 18,
+          "ecart_multiple_60": 5,
+          "heure_illisible": 1
+        },
+        "same_day": {
+          "correct": 24
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 41,
+          "strict": 40
+        },
+        "jours=1|duree<=1500": {
+          "n": 27,
+          "strict": 10
+        },
+        "jours=1|duree>1500": {
+          "n": 8,
+          "strict": 0
+        },
+        "jours=2|duree>1500": {
+          "n": 24,
+          "strict": 0
+        }
+      }
+    },
+    "audit-cycle7-step-160": {
+      "n": 192,
+      "strict": 132,
+      "tolerant": 132,
+      "groupes": {
+        "anchor-0": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0,
+          "fraction_attendue": 4,
+          "strict_et_irreductible": 4
+        },
+        "anchor-4": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "fraction": {
+          "n": 32,
+          "strict": 30,
+          "tolerant": 30,
+          "tronque": 0,
+          "fraction_attendue": 29,
+          "strict_et_irreductible": 27
+        },
+        "midnight": {
+          "n": 24,
+          "strict": 8,
+          "tolerant": 8,
+          "tronque": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "strict": 17,
+          "tolerant": 17,
+          "tronque": 0
+        },
+        "money": {
+          "n": 16,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "strict": 0,
+          "tolerant": 0,
+          "tronque": 0
+        },
+        "operation": {
+          "n": 16,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0
+        },
+        "same_day": {
+          "n": 24,
+          "strict": 23,
+          "tolerant": 23,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "anchor-5": {
+          "correct": 2,
+          "jours_faux_heure_juste": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "midnight": {
+          "jours_faux_heure_juste": 1,
+          "correct": 8,
+          "heure_decalee_-9h": 1,
+          "jours_justes_heure_fausse": 7,
+          "heure_et_jours_faux": 2,
+          "heure_decalee_-16h": 2,
+          "ecart_multiple_60": 1,
+          "heure_decalee_-10h": 2
+        },
+        "minutes_conversion": {
+          "correct": 17,
+          "jours_faux_heure_juste": 1,
+          "heure_decalee_-6h": 1,
+          "ecart_multiple_60": 1,
+          "heure_et_jours_faux": 1,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_-10h": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "multi_day": {
+          "heure_et_jours_faux": 18,
+          "ecart_multiple_60": 6
+        },
+        "same_day": {
+          "correct": 23,
+          "jours_faux_heure_juste": 1
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 41,
+          "strict": 39
+        },
+        "jours=1|duree<=1500": {
+          "n": 27,
+          "strict": 11
+        },
+        "jours=1|duree>1500": {
+          "n": 8,
+          "strict": 0
+        },
+        "jours=2|duree>1500": {
+          "n": 24,
+          "strict": 0
+        }
+      }
+    },
+    "audit-cycle7-step-286": {
+      "n": 192,
+      "strict": 129,
+      "tolerant": 129,
+      "groupes": {
+        "anchor-0": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0,
+          "fraction_attendue": 4,
+          "strict_et_irreductible": 4
+        },
+        "anchor-4": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "fraction": {
+          "n": 32,
+          "strict": 30,
+          "tolerant": 30,
+          "tronque": 0,
+          "fraction_attendue": 29,
+          "strict_et_irreductible": 27
+        },
+        "midnight": {
+          "n": 24,
+          "strict": 8,
+          "tolerant": 8,
+          "tronque": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "strict": 17,
+          "tolerant": 17,
+          "tronque": 0
+        },
+        "money": {
+          "n": 16,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "strict": 0,
+          "tolerant": 0,
+          "tronque": 0
+        },
+        "operation": {
+          "n": 16,
+          "strict": 15,
+          "tolerant": 15,
+          "tronque": 0
+        },
+        "same_day": {
+          "n": 24,
+          "strict": 20,
+          "tolerant": 20,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "anchor-5": {
+          "correct": 2,
+          "jours_faux_heure_juste": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "midnight": {
+          "jours_faux_heure_juste": 1,
+          "correct": 8,
+          "heure_decalee_-9h": 1,
+          "jours_justes_heure_fausse": 9,
+          "heure_decalee_-10h": 2,
+          "heure_et_jours_faux": 1,
+          "heure_decalee_-16h": 1,
+          "ecart_multiple_60": 1
+        },
+        "minutes_conversion": {
+          "correct": 17,
+          "jours_faux_heure_juste": 1,
+          "heure_decalee_-6h": 2,
+          "heure_et_jours_faux": 1,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_-10h": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "multi_day": {
+          "heure_et_jours_faux": 18,
+          "ecart_multiple_60": 6
+        },
+        "same_day": {
+          "heure_et_jours_faux": 1,
+          "correct": 20,
+          "jours_faux_heure_juste": 3
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 41,
+          "strict": 36
+        },
+        "jours=1|duree<=1500": {
+          "n": 27,
+          "strict": 11
+        },
+        "jours=1|duree>1500": {
+          "n": 8,
+          "strict": 0
+        },
+        "jours=2|duree>1500": {
+          "n": 24,
+          "strict": 0
+        }
+      }
+    },
+    "audit-cycle7-step-40": {
+      "n": 192,
+      "strict": 133,
+      "tolerant": 133,
+      "groupes": {
+        "anchor-0": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "strict": 3,
+          "tolerant": 3,
+          "tronque": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0,
+          "fraction_attendue": 4,
+          "strict_et_irreductible": 4
+        },
+        "anchor-4": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "strict": 2,
+          "tolerant": 2,
+          "tronque": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "strict": 3,
+          "tolerant": 3,
+          "tronque": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "strict": 4,
+          "tolerant": 4,
+          "tronque": 0
+        },
+        "fraction": {
+          "n": 32,
+          "strict": 30,
+          "tolerant": 30,
+          "tronque": 0,
+          "fraction_attendue": 29,
+          "strict_et_irreductible": 27
+        },
+        "midnight": {
+          "n": 24,
+          "strict": 7,
+          "tolerant": 7,
+          "tronque": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "strict": 17,
+          "tolerant": 17,
+          "tronque": 0
+        },
+        "money": {
+          "n": 16,
+          "strict": 16,
+          "tolerant": 16,
+          "tronque": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "strict": 0,
+          "tolerant": 0,
+          "tronque": 0
+        },
+        "operation": {
+          "n": 16,
+          "strict": 13,
+          "tolerant": 13,
+          "tronque": 0
+        },
+        "same_day": {
+          "n": 24,
+          "strict": 24,
+          "tolerant": 24,
+          "tronque": 0
+        }
+      },
+      "erreurs_horaires": {
+        "anchor-5": {
+          "correct": 2,
+          "jours_faux_heure_juste": 1,
+          "jours_justes_heure_fausse": 1
+        },
+        "midnight": {
+          "jours_faux_heure_juste": 2,
+          "correct": 7,
+          "ecart_multiple_60": 4,
+          "jours_justes_heure_fausse": 5,
+          "heure_et_jours_faux": 3,
+          "heure_decalee_-16h": 2,
+          "heure_decalee_-10h": 1
+        },
+        "minutes_conversion": {
+          "correct": 17,
+          "jours_faux_heure_juste": 1,
+          "ecart_multiple_60": 2,
+          "heure_et_jours_faux": 2,
+          "heure_decalee_-16h": 1,
+          "heure_decalee_-10h": 1
+        },
+        "multi_day": {
+          "heure_et_jours_faux": 18,
+          "ecart_multiple_60": 6
+        },
+        "same_day": {
+          "correct": 24
+        }
+      },
+      "strates_horaires": {
+        "jours=0|duree<=1500": {
+          "n": 41,
+          "strict": 40
+        },
+        "jours=1|duree<=1500": {
+          "n": 27,
+          "strict": 10
+        },
+        "jours=1|duree>1500": {
+          "n": 8,
+          "strict": 0
+        },
+        "jours=2|duree>1500": {
+          "n": 24,
+          "strict": 0
+        }
+      }
+    }
+  },
+  "strict_grade_mismatches": [],
+  "parent_challenge_failures": 51,
+  "cycle6_failed_fractions": 20,
+  "explicit_pgcd_claims": 0,
+  "false_pgcd_claims": 0,
+  "cycle7_reused_before": 0,
+  "cycle7_reused_after": 0,
+  "sources_sha256": {
+    "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/evaluation-rank0.jsonl": "e7ba0cd518b8a8cd0300f23ddb6104c35a606ef4a18804070edd210814860015",
+    "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/evaluation-rank1.jsonl": "168d77414fcd3f16e892ea6a81404de918cb9084c43be60bc1c2e193bef020c0",
+    "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/evaluation-rank0.jsonl": "15fac59f409dd838df79753ae18eed5da4d49c1acbc9ddecc2954a6a611ccaaa",
+    "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/evaluation-rank1.jsonl": "63f4acb51617b20153891ccfe4c19646ead299b0cdd918d9aa701cb6ad85b95d",
+    "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/dual-resumable/evaluation-rank0.jsonl": "9122b2d4f0c49010f8e34d51dcb0ab927a9c6b87926c42580f5944614174c382",
+    "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/dual-resumable/evaluation-rank1.jsonl": "f517bc192e9bb01899dccbadd695bb06a3537e3bc4f34028ac6fdebe3e183970",
+    "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/v100-fallback/evaluation-rank0.jsonl": "a58f3701e4bc64ee2104e42e01dee207d86d9f53c24f1ac5385fce4d46553501",
+    "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/run/cycle5-parent.jsonl": "4a8fc5c9430575f3ef734549aae139b132a04c50d38a3b760d52f9e1371fe57e",
+    "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/run/cycle7-step-160.jsonl": "aa8165ae757faf64748e35d6eaa3a767bd2004d492d93de79b146fb8b11f4597",
+    "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/run/cycle7-step-286.jsonl": "7b880f52decef4817ce7b889533445a37775e5941d7bca9a951f502ceeb49492",
+    "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/run/cycle7-step-40.jsonl": "775bebef6a0a5aff262393478c030a512fcc68c8fc5cd07231406aebeb1763c1",
+    "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dataset.json": "8b491d4cd8784aa5540c6fc00f63c63677c34e35a2677b848412eac2652eee0b",
+    "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dataset.json": "2fc4c4676d287601194511a455ed122fd08c20fc59183ba0f387732393f05ec8",
+    "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/dataset.json": "25965ccfc91a2af9623f7ab50f79b62d40297d5607b55b6b9c2a5b464ce8cd51",
+    "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/dataset.json": "80d92111c1c7b067f7399d6eeaf15c0d957281ca02e133c5fe487f739402a467"
+  },
+  "scope": "CPU only; no model loading, no inference, no training, no final-test-reserved read"
+}

@@ -1,0 +1,34 @@
+{
+  "cycle3": {
+    "hours_n": 900,
+    "strata": {
+      "jours=0|duree<=1500": 595,
+      "jours=1|duree<=1500": 305
+    },
+    "unparsed": []
+  },
+  "cycle5": {
+    "hours_n": 351,
+    "strata": {
+      "jours=0|duree<=1500": 319,
+      "jours=1|duree<=1500": 32
+    },
+    "unparsed": []
+  },
+  "cycle6": {
+    "hours_n": 600,
+    "strata": {
+      "jours=0|duree<=1500": 344,
+      "jours=1|duree<=1500": 256
+    },
+    "unparsed": []
+  },
+  "cycle7": {
+    "hours_n": 600,
+    "strata": {
+      "jours=0|duree<=1500": 344,
+      "jours=1|duree<=1500": 256
+    },
+    "unparsed": []
+  }
+}

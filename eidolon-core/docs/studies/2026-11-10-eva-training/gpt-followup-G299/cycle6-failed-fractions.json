@@ -1,0 +1,222 @@
+[
+  {
+    "id": "c6-test-fraction-2",
+    "question": "Quel est le résultat exact et simplifié de la division de 282 par 48 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "47/8",
+      "unite": "nombre"
+    },
+    "response": "282 ÷ 48 = 47 ÷ 8 = 5 + 7/8.\n{\"resultat\": \"5 7/8\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "c6-test-fraction-12",
+    "question": "Quel est le résultat exact et simplifié de la division de 209 par 126 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "209/126",
+      "unite": "nombre"
+    },
+    "response": "209 ÷ 126 = 209/126. La division exacte se simplifie par 7 : 29/18.\n{\"resultat\": \"29/18\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-19",
+    "question": "Quel est le quotient exact de la somme 1813+111 par 131 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "1924/131",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 1813 + 111 = 1924. Puis 1924 ÷ 131 = 148/13.\n{\"resultat\": \"148/13\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-27",
+    "question": "Quel est le quotient exact de la somme 3071+252 par 141 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "3323/141",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 3071 + 252 = 3323. Puis 3323 ÷ 141 = 23.5673759.\n{\"resultat\": \"235673759/10000000\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-51",
+    "question": "Quel est le quotient exact de la somme 4510+446 par 107 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "4956/107",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 4510 + 446 = 4956. Puis 4956 ÷ 107 = 46.22429906542056.\n{\"resultat\": \"4622429906542056/107000000000\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-59",
+    "question": "Quel est le quotient exact de la somme 2295+447 par 174 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "457/29",
+      "unite": "nombre"
+    },
+    "response": "2295 + 447 = 2742. Le quotient exact par 174 est 2742/174 = 158/9.\n{\"resultat\": \"158/9\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-139",
+    "question": "Quel est le quotient exact de la somme 3961+395 par 123 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "1452/41",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 3961 + 395 = 4356. Puis 4356 ÷ 123 = 352/11.\n{\"resultat\": \"352/11\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-147",
+    "question": "Quel est le quotient exact de la somme 4854+223 par 248 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "5077/248",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 4854 + 223 = 5077. Puis 5077 ÷ 248 = 2031/92.\n{\"resultat\": \"2031/92\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88013-155",
+    "question": "Quel est le quotient exact de la somme 4849+360 par 245 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "5209/245",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 4849 + 360 = 5209. Puis 5209 ÷ 245 = 21.26122449.\n{\"resultat\": \"2126122449/100000\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-27",
+    "question": "Quel est le quotient exact de la somme 4885+341 par 147 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "1742/49",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 4885 + 341 = 5226. Puis 5226 ÷ 147 = 354/7.\n{\"resultat\": \"354/7\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-51",
+    "question": "Quel est le quotient exact de la somme 1462+444 par 129 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "1906/129",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 1462 + 444 = 1906. Puis 1906 ÷ 129 = 146/9.\n{\"resultat\": \"146/9\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-67",
+    "question": "Quel est le quotient exact de la somme 2808+297 par 109 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "3105/109",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 2808 + 297 = 3105. Puis 3105 ÷ 109 = 285/11.\n{\"resultat\": \"285/11\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-75",
+    "question": "Quel est le quotient exact de la somme 3843+155 par 177 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "3998/177",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 3843 + 155 = 3998. Puis 3998 ÷ 177 = 22.6.\n{\"resultat\": \"226/11\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-91",
+    "question": "Quel est le quotient exact de la somme 4200+379 par 233 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "4579/233",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 4200 + 379 = 4579. Puis 4579 ÷ 233 = 19.65236523652365.\n{\"resultat\": \"1965236523652365/100000000000000\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-107",
+    "question": "Quel est le quotient exact de la somme 1253+121 par 193 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "1374/193",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 1253 + 121 = 1374. Puis 1374 ÷ 193 = 7.067357518134715.\n{\"resultat\": \"7067/1000\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "88014-155",
+    "question": "Quel est le quotient exact de la somme 2874+145 par 119 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "3019/119",
+      "unite": "nombre"
+    },
+    "response": "La parenthèse se calcule d’abord : 2874 + 145 = 3019. Puis 3019 ÷ 119 = 25.37.\n{\"resultat\": \"2537/119\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "c5-test-2-3-35",
+    "question": "Quel est le quotient de 2184 par 56 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "39",
+      "unite": "nombre"
+    },
+    "response": "2184 ÷ 56 = 39. Puis 39 × 100 = 3900.\n{\"resultat\": \"3900\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "c5-test-2-3-123",
+    "question": "Quel est le quotient de 5472 par 76 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "72",
+      "unite": "nombre"
+    },
+    "response": "5472 ÷ 76 = 72. Puis 72 × 100 = 7200.\n{\"resultat\": \"7200\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "c6-test-fraction-3",
+    "question": "Quel est le résultat exact et simplifié de la division de 279 par 98 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "279/98",
+      "unite": "nombre"
+    },
+    "response": "279 ÷ 98 = 279/98. La division exacte se simplifie par 3 : 93/32.\n{\"resultat\": \"93/32\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  },
+  {
+    "id": "c6-test-fraction-15",
+    "question": "Quel est le résultat exact et simplifié de la division de 321 par 124 ? Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « nombre ».",
+    "expected": {
+      "resultat": "321/124",
+      "unite": "nombre"
+    },
+    "response": "321 ÷ 124 = 321/124 = 253/100. 253/100 = 2.53.\n{\"resultat\": \"2.53\", \"unite\": \"nombre\"}",
+    "explicit_pgcd": null,
+    "pgcd_claim_false": null
+  }
+]

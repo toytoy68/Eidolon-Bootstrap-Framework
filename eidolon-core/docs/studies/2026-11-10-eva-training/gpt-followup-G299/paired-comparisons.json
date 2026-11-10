@@ -1,0 +1,704 @@
+{
+  "audit-step-40": {
+    "n": 192,
+    "gains": 2,
+    "losses": 4,
+    "net": -2,
+    "responses_changed": 37,
+    "mcnemar_exact_two_sided": 0.6875,
+    "changed_correctness": [
+      {
+        "id": "c8-validation-operation-0",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 6,
+        "skill": "operation"
+      },
+      {
+        "id": "c8-validation-fraction-22",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-operation-8",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 6,
+        "skill": "operation"
+      },
+      {
+        "id": "c8-validation-operation-2",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 6,
+        "skill": "operation"
+      },
+      {
+        "id": "c8-validation-fraction-5",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-operation-4",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 6,
+        "skill": "operation"
+      }
+    ]
+  },
+  "audit-step-160": {
+    "n": 192,
+    "gains": 2,
+    "losses": 5,
+    "net": -3,
+    "responses_changed": 86,
+    "mcnemar_exact_two_sided": 0.453125,
+    "changed_correctness": [
+      {
+        "id": "c8-validation-same_day-7",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 5,
+        "skill": "same_day"
+      },
+      {
+        "id": "c8-validation-fraction-22",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-fraction-5",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-money-7",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 4,
+        "skill": "money"
+      },
+      {
+        "id": "c8-validation-midnight-16",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 5,
+        "skill": "midnight"
+      },
+      {
+        "id": "88013-25",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 1,
+        "skill": "anchor-1"
+      },
+      {
+        "id": "88013-14",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 6,
+        "skill": "anchor-6"
+      }
+    ]
+  },
+  "audit-step-286": {
+    "n": 192,
+    "gains": 2,
+    "losses": 8,
+    "net": -6,
+    "responses_changed": 84,
+    "mcnemar_exact_two_sided": 0.109375,
+    "changed_correctness": [
+      {
+        "id": "c8-validation-same_day-22",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 5,
+        "skill": "same_day"
+      },
+      {
+        "id": "c8-validation-same_day-7",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 5,
+        "skill": "same_day"
+      },
+      {
+        "id": "c8-validation-same_day-18",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 5,
+        "skill": "same_day"
+      },
+      {
+        "id": "c8-validation-fraction-22",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-same_day-3",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 5,
+        "skill": "same_day"
+      },
+      {
+        "id": "c8-validation-fraction-5",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": "fraction"
+      },
+      {
+        "id": "c8-validation-money-7",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 4,
+        "skill": "money"
+      },
+      {
+        "id": "c8-validation-midnight-16",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 5,
+        "skill": "midnight"
+      },
+      {
+        "id": "88013-25",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 1,
+        "skill": "anchor-1"
+      },
+      {
+        "id": "88013-14",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 6,
+        "skill": "anchor-6"
+      }
+    ]
+  },
+  "cycle7-parent-before-after": {
+    "n": 608,
+    "gains": 0,
+    "losses": 0,
+    "net": 0,
+    "responses_changed": 0,
+    "mcnemar_exact_two_sided": 1,
+    "changed_correctness": []
+  },
+  "cycle6-before-vs-cycle7-before": {
+    "n": 608,
+    "gains": 1,
+    "losses": 1,
+    "net": 0,
+    "responses_changed": 2,
+    "mcnemar_exact_two_sided": 1,
+    "changed_correctness": [
+      {
+        "id": "88014-138",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 2,
+        "skill": null
+      },
+      {
+        "id": "c6-test-time-44",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 5,
+        "skill": null
+      }
+    ]
+  },
+  "cycle3-family1": {
+    "n": 40,
+    "gains": 18,
+    "losses": 3,
+    "net": 15,
+    "responses_changed": 39,
+    "mcnemar_exact_two_sided": 0.0014896392822265625,
+    "changed_correctness": [
+      {
+        "id": "88013-9",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-49",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-57",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-65",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-81",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-89",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-105",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-129",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-145",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88013-153",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-9",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-17",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-25",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-41",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-49",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-73",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-89",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-113",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-121",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-137",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      },
+      {
+        "id": "88014-145",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 1,
+        "skill": null
+      }
+    ]
+  },
+  "cycle3-family3": {
+    "n": 40,
+    "gains": 0,
+    "losses": 18,
+    "net": -18,
+    "responses_changed": 40,
+    "mcnemar_exact_two_sided": 7.62939453125e-06,
+    "changed_correctness": [
+      {
+        "id": "88013-3",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-11",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-35",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-99",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-147",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-3",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-11",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-27",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-35",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-51",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-67",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-75",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-83",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-107",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-115",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-123",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-131",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-155",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      }
+    ]
+  },
+  "cycle6-family3": {
+    "n": 96,
+    "gains": 5,
+    "losses": 20,
+    "net": -15,
+    "responses_changed": 85,
+    "mcnemar_exact_two_sided": 0.004077315330505371,
+    "changed_correctness": [
+      {
+        "id": "c6-test-fraction-2",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-12",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-14",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-19",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-27",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-51",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-59",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-123",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-139",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-147",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88013-155",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-27",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-51",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-67",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-75",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-91",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-107",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "88014-155",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c5-test-2-3-35",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c5-test-2-5-77",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c5-test-2-3-123",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-3",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-5",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-15",
+        "before_correct": true,
+        "after_correct": false,
+        "family": 3,
+        "skill": null
+      },
+      {
+        "id": "c6-test-fraction-19",
+        "before_correct": false,
+        "after_correct": true,
+        "family": 3,
+        "skill": null
+      }
+    ]
+  }
+}
