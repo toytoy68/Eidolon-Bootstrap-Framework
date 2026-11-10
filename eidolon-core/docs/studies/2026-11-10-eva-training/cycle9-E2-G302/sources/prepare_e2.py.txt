@@ -1,0 +1,39 @@
+from pathlib import Path
+import json,ast,hashlib,collections,math
+import torch
+from transformers import AutoTokenizer
+from review_tools import time_steps,time_operands
+from curriculum import grade
+P=Path(__file__).resolve().parent
+C=json.loads((P/'config.json').read_text())
+d=json.loads((P/'source-e1-dataset.json').read_text());changes=[]
+for x in d['train']:
+ if x['group']=='replay' and x['expected'].get('unite')=='heure':
+  ops=time_operands(x['question']);assert ops,x['id']
+  answer,expected=time_steps(*ops)
+  assert expected==x['expected'],(x['id'],expected,x['expected'])
+  assert grade(answer,x['expected'])['exact']
+  changes.append(dict(id=x['id'],time_key=ops,answer_before=x['answer'],answer_after=answer))
+  x['answer']=answer
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token_id=tokenizer.eos_token_id
+old=Path('/srv/eidolon/work/eva-learning-cycle1-20261108/train.py');t=ast.parse(old.read_text())
+nodes=[n for n in t.body if isinstance(n,ast.FunctionDef) and n.name=='encode' or isinstance(n,ast.Assign) and any(isinstance(a,ast.Name) and a.id=='SYSTEM' for a in n.targets)]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+b,info=encode(d['train']);counts=collections.Counter()
+for x in d['train']:
+ msgs=[dict(role='system',content=SYSTEM),dict(role='user',content=x['question'])]
+ prefix=tokenizer.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tokenizer.apply_chat_template(msgs+[dict(role='assistant',content=x['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+ enc=tokenizer(full,add_special_tokens=False,return_offsets_mapping=True)
+ assert len(enc['input_ids'])<=512
+ counts[x['group']]+=sum(o[0]>=len(prefix) for o in enc['offset_mapping'])
+assert sum(counts.values())==sum(int((x['labels'][:,1:]!=-100).sum()) for x in b)
+stats=dict(train=info,supervised_tokens=dict(counts),target_share=counts['target']/sum(counts.values()),changed_replay_answers=len(changes),updates=math.ceil(len(b)/4),target_days=dict(collections.Counter(x['expected']['jours'] for x in d['train'] if x['group']=='target')),parent_experiment='E1',change='Only replay hour answers rewritten with time_steps; same example identities/order and evaluation sets.',evaluation_sets_reused_from_E1=True)
+(P/'dataset.json').write_text(json.dumps(d,ensure_ascii=False))
+(P/'dataset-preparation.json').write_text(json.dumps(stats,indent=2))
+(P/'format-changes.json').write_text(json.dumps(changes,ensure_ascii=False,indent=2))
+c=json.loads((P/'config.json').read_text());c.update(max_updates=stats['updates'],selection_interval=stats['updates'],train_examples=len(d['train']),experiment='E2',comparison='format-only fixed-example exposure')
+(P/'config.json').write_text(json.dumps(c,indent=2))
+(P/'lineage.json').write_text(json.dumps(dict(dataset_sha256=hashlib.sha256((P/'dataset.json').read_bytes()).hexdigest(),parent_adapter=c['parent_adapter'],source_revision=c['source_revision'],automatic_promotion=False,e1_dataset_sha256=hashlib.sha256((P/'source-e1-dataset.json').read_bytes()).hexdigest()),indent=2))
+print(json.dumps(stats))

@@ -1,0 +1,75 @@
+{
+  "note": "Original means server bytes except REPORT-G302.md authored for this publication. Original manifest hashes apply to server files only.",
+  "files": {
+    "REPORT-G302.md": {
+      "original_sha256": "8c92c7d347c88ea60fe6d3c8901d1e96330894d83ab057fe0efd22684697a96a",
+      "published_sha256": "8c92c7d347c88ea60fe6d3c8901d1e96330894d83ab057fe0efd22684697a96a",
+      "redacted": false
+    },
+    "Rapport_Eva_cycle9_E2.txt": {
+      "original_sha256": "fc9332c520bf6e0053c20bce7cf44eb11558a5cfad7eeaec218f7b8a89b746f6",
+      "published_sha256": "fc9332c520bf6e0053c20bce7cf44eb11558a5cfad7eeaec218f7b8a89b746f6",
+      "redacted": false
+    },
+    "result-saved.json": {
+      "original_sha256": "8662a367b46f8a2ca0025ca784425995f6fdfe8b4da1c67d0dbdbab54de718f6",
+      "published_sha256": "8662a367b46f8a2ca0025ca784425995f6fdfe8b4da1c67d0dbdbab54de718f6",
+      "redacted": false
+    },
+    "resultat-final.json": {
+      "original_sha256": "166013872a451eab11e2d8345e119c446dfdc14ae9df70d5e66c4e5ebbe5ed2d",
+      "published_sha256": "8c9d382e6c8e9dfc539f65e3a8bc9c136d0ed3e0a252b6348a16d59e75db1006",
+      "redacted": true
+    },
+    "run/baseline-equivalence.json": {
+      "original_sha256": "c34eae8215f9a2f7b18d20a4b05ade9317526dcc9e7e201f3ee7dea76aa368ac",
+      "published_sha256": "c34eae8215f9a2f7b18d20a4b05ade9317526dcc9e7e201f3ee7dea76aa368ac",
+      "redacted": false
+    },
+    "dataset-preparation.json": {
+      "original_sha256": "95554915a62a0f9f9c2b4c38f38c61bd6345a4c999454190861da1c5bb0d2ed8",
+      "published_sha256": "95554915a62a0f9f9c2b4c38f38c61bd6345a4c999454190861da1c5bb0d2ed8",
+      "redacted": false
+    },
+    "checkpoint-selection.json": {
+      "original_sha256": "a53966d465e4ee32fd6edc14ffb94fef149701e61f744160db6fff7e38af64f3",
+      "published_sha256": "a53966d465e4ee32fd6edc14ffb94fef149701e61f744160db6fff7e38af64f3",
+      "redacted": false
+    },
+    "run/canaries-rank0.jsonl": {
+      "original_sha256": "19d609d765c50ed7fec0c637198cffbe1fcbf4ef9f9e6fce35e8a4f6515edd75",
+      "published_sha256": "068ab2c720fe2669480213bb7953907d382ca005f9ee897a848e49eb54f58868",
+      "redacted": true
+    },
+    "sources/train.py.txt": {
+      "original_sha256": "7b47a303b98fcfb7606bd5b283c4ed1b20ad56d1494db83938743dd6d301e89b",
+      "published_sha256": "7b47a303b98fcfb7606bd5b283c4ed1b20ad56d1494db83938743dd6d301e89b",
+      "redacted": false
+    },
+    "sources/prepare_e2.py.txt": {
+      "original_sha256": "e87266affb21ad5eae98a50d716da2281ababb5589f6902d374783bca3d5d7e2",
+      "published_sha256": "e87266affb21ad5eae98a50d716da2281ababb5589f6902d374783bca3d5d7e2",
+      "redacted": false
+    },
+    "self-check.json": {
+      "original_sha256": "787b7ca48f5b1986d4708c18c3a9e009b617179acb9b298ebcc14e3f2600fc0a",
+      "published_sha256": "787b7ca48f5b1986d4708c18c3a9e009b617179acb9b298ebcc14e3f2600fc0a",
+      "redacted": false
+    },
+    "config.json": {
+      "original_sha256": "d2381d03c4705f274a1ef222065b6702f58afd75ba3e4e51182fd64f5613f411",
+      "published_sha256": "9b092b4a0e683021f741eded7b0eaa2fbafb0fdbe9f61d8d08a93b4b8d60f1fc",
+      "redacted": true
+    },
+    "launch-manifest.json": {
+      "original_sha256": "fe38b6713b4193323fb2e7f7f0ada0f378bd13f46ad29fa8de9ac70e98aa9751",
+      "published_sha256": "fe38b6713b4193323fb2e7f7f0ada0f378bd13f46ad29fa8de9ac70e98aa9751",
+      "redacted": false
+    },
+    "paired-changes.json": {
+      "original_sha256": "49eff8d08fb421d645e199c1106c223746c909a2f2ea2354963377e5a70557b7",
+      "published_sha256": "49eff8d08fb421d645e199c1106c223746c909a2f2ea2354963377e5a70557b7",
+      "redacted": false
+    }
+  }
+}

@@ -2697,3 +2697,8 @@ Reprise demandée par toytoy ; préflight RAM-only échoué deux fois et memtest
 ## C-MSG-G301 — Eva E-bruit/E1,10/11/2026, Codex/GPT
 
 Base3ae9d8a ; lot pris et livré : preuves de requalification, E-bruit neuf, protocole E1 et résultats. [Rapport](docs/studies/2026-11-10-eva-training/cycle9-E1-G301/REPORT-G301.md). E-bruit192+8 identiques deux fois dans un chargement. E1 V100200W100 mises à jour,25,131% tokens cibles ; rapport horaires79→83/320 et acquis26→25/32, sélection refuse le candidat. Strates longues et jours2 toujours0. Douze hashes serveur vérifiés, canaris relus, sources et copies expurgées indexées. Parent conservé, aucun E2/E3, aucune promotion, aucun arrêt/reboot. G300 archivé intact, fichiers Claude inchangés.
+
+
+## C-MSG-G302 — Eva E2,10/11/2026,Codex/GPT
+
+Base d0778fa ; lot pris et livré : harmonisation des101 réponses horaires replay, essai102 mises à jour, contrôles et bilan. [Rapport](docs/studies/2026-11-10-eva-training/cycle9-E2-G302/REPORT-G302.md). Répétabilité entre chargements352+8 identiques ; rapport horaires79→84/320 (E1:83),acquis26→25/32 ; candidat refusé, longs/jour2 toujours0. Volumes/ratio changés par le format explicités.14SHA256 vérifiés, canaris et six changements relus ; sources/preuves expurgées indexées. Parent conservé,aucun E3/promotion/arrêt/reboot. G301 archivé intact, canal Claude inchangé.

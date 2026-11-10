@@ -1,0 +1,69 @@
+{
+  "dataset_sha256": "ab564987c617f773de2a9eb8faea14f05fa280928a75357a71c693ee4157d8c2",
+  "baseline": {
+    "step": 0,
+    "n": 192,
+    "correct": 65,
+    "target_correct": 39,
+    "anchors_correct": 26,
+    "families": {
+      "0": 4,
+      "1": 3,
+      "2": 2,
+      "3": 4,
+      "4": 4,
+      "5": 41,
+      "6": 3,
+      "7": 4
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+  },
+  "best": {
+    "step": 0,
+    "n": 192,
+    "correct": 65,
+    "target_correct": 39,
+    "anchors_correct": 26,
+    "families": {
+      "0": 4,
+      "1": 3,
+      "2": 2,
+      "3": 4,
+      "4": 4,
+      "5": 41,
+      "6": 3,
+      "7": 4
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+  },
+  "checks": 2,
+  "rule": "Target net gain>=6, paired exact p<=0.05 exploratory, acquired score loss<=1, each target stratum loss<=1. No promotion.",
+  "last": {
+    "step": 102,
+    "n": 192,
+    "correct": 66,
+    "target_correct": 41,
+    "anchors_correct": 25,
+    "families": {
+      "0": 4,
+      "1": 3,
+      "2": 2,
+      "3": 4,
+      "4": 4,
+      "5": 43,
+      "6": 2,
+      "7": 4
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle9-hours-20261110/e2-f006076b/resume/step-102/adapter"
+  },
+  "epoch": 1794330962.829747,
+  "last_decision": {
+    "accepted": false,
+    "gains": 2,
+    "losses": 0,
+    "p_exact": 0.5,
+    "anchor_loss": 1,
+    "stratum_guard": true,
+    "exploratory": true
+  }
+}

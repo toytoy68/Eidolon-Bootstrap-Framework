@@ -1,0 +1,26 @@
+{
+  "train": {
+    "examples": 878,
+    "packs": 408,
+    "tokens": 172484,
+    "mean_tokens_per_example": 196.4510250569476,
+    "max_tokens_per_example": 379,
+    "packing": "Whole examples concatenated; causal attention crosses sample boundaries; padding masked; assistant-only loss."
+  },
+  "supervised_tokens": {
+    "replay": 47334,
+    "target": 12775
+  },
+  "target_share": 0.21253056946547105,
+  "changed_replay_answers": 101,
+  "updates": 102,
+  "target_days": {
+    "3": 3,
+    "0": 22,
+    "1": 22,
+    "2": 21
+  },
+  "parent_experiment": "E1",
+  "change": "Only replay hour answers rewritten with time_steps; same example identities/order and evaluation sets.",
+  "evaluation_sets_reused_from_E1": true
+}

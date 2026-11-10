@@ -1,0 +1,21 @@
+{
+  "state": "finished",
+  "epoch": 1794333322.4748924,
+  "files": {
+    "run/baseline-equivalence.json": "c34eae8215f9a2f7b18d20a4b05ade9317526dcc9e7e201f3ee7dea76aa368ac",
+    "format-changes.json": "e910a61a5c6d29f9db77ff2954cab80ebb81cb94755e1bd67ef1d64cbd8145dc",
+    "Rapport_Eva_cycle9_E2.txt": "fc9332c520bf6e0053c20bce7cf44eb11558a5cfad7eeaec218f7b8a89b746f6",
+    "resultat-final.json": "166013872a451eab11e2d8345e119c446dfdc14ae9df70d5e66c4e5ebbe5ed2d",
+    "dataset.json": "ab564987c617f773de2a9eb8faea14f05fa280928a75357a71c693ee4157d8c2",
+    "dataset-preparation.json": "95554915a62a0f9f9c2b4c38f38c61bd6345a4c999454190861da1c5bb0d2ed8",
+    "lineage.json": "2fd5c66653a4bde1ce3703a271492ee03a4350fef5cd82dab2e2069a39237029",
+    "config.json": "d2381d03c4705f274a1ef222065b6702f58afd75ba3e4e51182fd64f5613f411",
+    "launch-manifest.json": "fe38b6713b4193323fb2e7f7f0ada0f378bd13f46ad29fa8de9ac70e98aa9751",
+    "noise-proof.json": "1ffbd24647462a335e8ef2763500db24dd0838d9e68e3212d1c5b7177bfbaf19",
+    "run/quality-comparison.json": "7bc8cca983f82aff2a0e1de562d2e2416550ff162af6b950245984b40a80a869",
+    "run/training-summary.json": "36ae10ee229a1e2febb6c2e3df77e1a7f48efe8f78a8450f67e4e90b93727e65",
+    "run/adapter-final/adapter_model.safetensors": "b12d13e82c4ccb05fd5185deb5ef267189587159734c6bdfec4840f068538540",
+    "resume/step-102/training-state.pt": "6e5d26054f18decc49ece3dff91627771ea17b80fe06bdcb7f69e8119df25020"
+  },
+  "automatic_promotion": false
+}
