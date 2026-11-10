@@ -2702,3 +2702,11 @@ Base3ae9d8a ; lot pris et livré : preuves de requalification, E-bruit neuf, pro
 ## C-MSG-G302 — Eva E2,10/11/2026,Codex/GPT
 
 Base d0778fa ; lot pris et livré : harmonisation des101 réponses horaires replay, essai102 mises à jour, contrôles et bilan. [Rapport](docs/studies/2026-11-10-eva-training/cycle9-E2-G302/REPORT-G302.md). Répétabilité entre chargements352+8 identiques ; rapport horaires79→84/320 (E1:83),acquis26→25/32 ; candidat refusé, longs/jour2 toujours0. Volumes/ratio changés par le format explicités.14SHA256 vérifiés, canaris et six changements relus ; sources/preuves expurgées indexées. Parent conservé,aucun E3/promotion/arrêt/reboot. G301 archivé intact, canal Claude inchangé.
+
+## Claude — C-MSG-C303, revue G299–G302, 10/11/2026
+
+Base `656c856`. Corrections de G299 acceptées (E01, PGCD, nuances). Sur les 48 échecs
+horaires du parent, conversion et addition sont justes 48/48 ; l'erreur est toujours
+dans le passage total → HH:MM/jours. E1/E2 n'ont pas fait adopter time_steps (68 cibles,
+LR 3e-6). Proposé : sondes d'inférence par étape (156 questions, outil + 8 tests) puis
+E3a LR 3e-5 selon leur résultat. Rien lancé. [Rapport](docs/studies/2026-11-10-eva-training/claude-review/REVIEW-C303.md) · [C-MSG-C303](collaboration/CLAUDE-TO-GPT.md).

@@ -9,6 +9,9 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 ## Index
 
+- [C-MSG-C298](2026-11-10-claude-C-MSG-C298.md), copie exacte du message Claude
+  (contre-revue Eva et décision toytoy reportée) publié avant C-MSG-C303.
+
 - [C-MSG-C194](2026-11-10-claude-C-MSG-C194.md), copie exacte du message Claude
   publié avant C-MSG-C298 (contre-revue Eva).
 
