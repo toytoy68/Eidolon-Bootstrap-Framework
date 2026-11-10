@@ -1,0 +1,12 @@
+{
+  "parent": "/srv/eidolon/work/eva-learning-cycle1-20261108",
+  "parent_adapter_sha256": "13afeb5b466128d93bec9389a00a60f34bcba5460712fbe5a0021db9f1f0c717",
+  "dataset_sha256": "49e39a73843e1db479baf66412103c20a632a73f5c13bf751152aa37fd7fde12",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "historical_heldout_unchanged": true,
+  "excluded_previous_questions": 12848,
+  "precision_change": "BF16 single GPU to FP16 two GPU DDP",
+  "optimizer": "fresh AdamW, not optimizer-state resume",
+  "global_batch": "4 packs, token-weighted loss; local microbatch1 accumulation2 world2",
+  "epoch": 1794169786.7667172
+}

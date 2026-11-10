@@ -1,0 +1,41 @@
+import json,time
+import torch
+import torch.distributed as dist
+from curriculum import grade
+class CheckpointSelector:
+ def __init__(self,model,tokenizer,system,root,output,state_dir,config,data,rank,world,dtype,progress):
+  self.model=model;self.tokenizer=tokenizer;self.system=system;self.root=root;self.state_dir=state_dir;self.config=config;self.examples=data['selection'];self.rank=rank;self.world=world;self.dtype=dtype;self.progress=progress
+  assert len(self.examples)==config.get('selection_examples',64)
+  self.state_root=output if config.get('selection_smoke') else root
+  self.path=self.state_root/'checkpoint-selection.json'
+  self.state=json.loads(self.path.read_text()) if self.path.exists() else None
+  self.dataset_hash=json.loads((root/'lineage.json').read_text())['dataset_sha256']
+  if self.state:assert self.state['dataset_sha256']==self.dataset_hash
+ def evaluate(self,step):
+  self.model.eval();rows=[];local=self.examples[self.rank::self.world]
+  for i,ex in enumerate(local):
+   self.progress('selection_validation',optimizer_step=step,done=i,total=len(local))
+   ids=self.tokenizer.apply_chat_template([dict(role='system',content=self.system),dict(role='user',content=ex['question'])],tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+   with torch.inference_mode(),torch.autocast('cuda',dtype=self.dtype):
+    out=self.model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=192,do_sample=False,use_cache=True,pad_token_id=self.tokenizer.pad_token_id,eos_token_id=self.tokenizer.eos_token_id)
+   text=self.tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True)
+   rows.append(dict(id=ex['id'],family=ex['family'],response=text,evaluation=grade(text,ex['expected'])))
+  gathered=[None]*self.world;dist.all_gather_object(gathered,rows)
+  if self.rank==0:
+   allrows=sum(gathered,[]);assert len(allrows)==len(self.examples) and len({r['id'] for r in allrows})==len(self.examples)
+   score=dict(step=step,n=len(self.examples),correct=sum(r['evaluation']['content_correct'] for r in allrows),families={str(f):sum(r['family']==f and r['evaluation']['content_correct'] for r in allrows) for f in range(8)},adapter=self.config['parent_adapter'] if step==0 else str(self.state_dir/f'step-{step}'/'adapter'))
+   if step==0:
+    assert self.state is None
+    self.state=dict(dataset_sha256=self.dataset_hash,baseline=score,best=score,checks=0,rule='At least2 additional correct over best; no family more than1 below parent. Only validation64 selects; evaluation608 excluded.')
+    accepted=True
+   else:
+    baseline=self.state['baseline'];best=self.state['best']
+    accepted=score['correct']>=best['correct']+2 and all(score['families'][str(f)]>=baseline['families'][str(f)]-1 for f in range(8))
+    if accepted:self.state['best']=score
+   self.state['checks']+=1;self.state['last']=score;self.state['epoch']=time.time()
+   tmp=self.path.with_suffix('.tmp');tmp.write_text(json.dumps(self.state,indent=2));tmp.replace(self.path)
+   with (self.state_root/'selection-history.jsonl').open('a') as f:f.write(json.dumps(dict(score=score,accepted=accepted,rows=allrows))+'\n')
+  objects=[self.state];dist.broadcast_object_list(objects,src=0);self.state=objects[0];self.model.train()
+  self.progress('selection_complete',optimizer_step=step,best_step=self.state['best']['step'],validation_correct=self.state['last']['correct'])
+  return self.state
+

@@ -1,0 +1,329 @@
+{
+  "cycle": 4,
+  "recorded_epoch": 1794188412.2208304,
+  "state": {
+    "phase": "finished",
+    "epoch": 1794186644.5345333,
+    "heartbeat": 1794186644.5345337,
+    "output": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/dual-resumable",
+    "single_v100": false,
+    "mode": "train"
+  },
+  "production_changed": false,
+  "parent": "cycle1",
+  "examples": 2400,
+  "learning_rate": 5e-06,
+  "quality-comparison": {
+    "before": {
+      "n": 384,
+      "content_correct": 302,
+      "exact_json": 298,
+      "families": {
+        "0": {
+          "n": 40,
+          "correct": 40
+        },
+        "1": {
+          "n": 40,
+          "correct": 20
+        },
+        "2": {
+          "n": 40,
+          "correct": 25
+        },
+        "3": {
+          "n": 40,
+          "correct": 33
+        },
+        "4": {
+          "n": 40,
+          "correct": 40
+        },
+        "5": {
+          "n": 40,
+          "correct": 19
+        },
+        "6": {
+          "n": 104,
+          "correct": 85
+        },
+        "7": {
+          "n": 40,
+          "correct": 40
+        }
+      },
+      "subsets": {
+        "historical": {
+          "n": 160,
+          "content_correct": 129
+        },
+        "regression": {
+          "n": 160,
+          "content_correct": 117
+        },
+        "comprehension": {
+          "n": 64,
+          "content_correct": 56
+        }
+      },
+      "seconds": 138.451340675354,
+      "precision": "FP16",
+      "evaluation_distribution": "round-robin, completed evaluations retained on thermal fallback"
+    },
+    "after": {
+      "n": 384,
+      "content_correct": 308,
+      "exact_json": 304,
+      "families": {
+        "0": {
+          "n": 40,
+          "correct": 40
+        },
+        "1": {
+          "n": 40,
+          "correct": 20
+        },
+        "2": {
+          "n": 40,
+          "correct": 24
+        },
+        "3": {
+          "n": 40,
+          "correct": 35
+        },
+        "4": {
+          "n": 40,
+          "correct": 40
+        },
+        "5": {
+          "n": 40,
+          "correct": 18
+        },
+        "6": {
+          "n": 104,
+          "correct": 91
+        },
+        "7": {
+          "n": 40,
+          "correct": 40
+        }
+      },
+      "subsets": {
+        "historical": {
+          "n": 160,
+          "content_correct": 126
+        },
+        "regression": {
+          "n": 160,
+          "content_correct": 121
+        },
+        "comprehension": {
+          "n": 64,
+          "content_correct": 61
+        }
+      },
+      "seconds": 1153.1231820583344,
+      "precision": "FP16",
+      "evaluation_distribution": "round-robin, completed evaluations retained on thermal fallback"
+    },
+    "warning": "FP16 baseline remeasured. Historical heldout repeatedly observed: not a fresh blind generalization estimate. Canary human review required. No automatic deployment."
+  },
+  "training-summary": {
+    "ranks": [
+      {
+        "mode": "train",
+        "seconds": 396.9898464679718,
+        "optimizer_steps": 291,
+        "executed_updates": 291,
+        "resumed_from": 0,
+        "nonpadding_tokens": 220429,
+        "supervised_tokens": 62401,
+        "initial_adapter_state_sha256": "1c3465557a6e0e5d0e2bcdfa1e80fde8c98e89dac103e14a4b1fdef8b01f138f",
+        "final_adapter_state_sha256": "c9168e967f70f7a08281661445ff5a738a395aeed03b173e022141a7adde41e7",
+        "replica_max_difference": 0.0,
+        "peak_vram_mib": 5431.78369140625
+      },
+      {
+        "mode": "train",
+        "seconds": 396.96424555778503,
+        "optimizer_steps": 291,
+        "executed_updates": 291,
+        "resumed_from": 0,
+        "nonpadding_tokens": 219517,
+        "supervised_tokens": 62131,
+        "initial_adapter_state_sha256": "1c3465557a6e0e5d0e2bcdfa1e80fde8c98e89dac103e14a4b1fdef8b01f138f",
+        "final_adapter_state_sha256": "c9168e967f70f7a08281661445ff5a738a395aeed03b173e022141a7adde41e7",
+        "replica_max_difference": 0.0,
+        "peak_vram_mib": 5431.78369140625
+      }
+    ],
+    "examples": 2400,
+    "epochs": 1,
+    "global_packs_per_update": 4,
+    "precision": "FP16",
+    "power_limit_per_gpu_w": 200,
+    "parent_adapter": "/srv/eidolon/work/eva-learning-cycle1-20261108/adapter-final",
+    "coverage_verified": true,
+    "resumed_from": 0,
+    "previous_tokens": 0,
+    "world_size": 2
+  },
+  "hardware": [
+    {
+      "name": "RTX 3080 Ti",
+      "max_gpu_c": 76.0,
+      "thermal_samples": 0
+    },
+    {
+      "name": "V100",
+      "max_gpu_c": 35.0,
+      "thermal_samples": 0
+    }
+  ],
+  "canaries": [
+    {
+      "stage": "before",
+      "rank": 0,
+      "name": "preference",
+      "question": "Mon atelier s’appelle Orion. J’aimais le bleu, mais je préfère maintenant le vert. Quelle est ma préférence actuelle ?",
+      "response": "La préférence actuelle de l'utilisateur est le vert.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank0.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 0,
+      "name": "fiction",
+      "question": "Écris une courte scène sombre et non graphique dans une station spatiale abandonnée, avec un personnage nommé Iris.",
+      "response": "Iris se tenait au milieu de la cabine déserte, les doigts crispés sur le manche de son casque. L’air conditionné humide lui piquait les yeux, empli de particules de poussière et de corrosion. Les écrans, partout, montraient des zones noires – pas de signal, pas de vaisseau, pas de réponse. Dehors, la nuit stellaire filtrait à travers les parois minces, une lumière froide qui ne réchauffait pas l’acier froid de la station. Elle avait passé dix-huit mois ici, et chaque seconde passait comme une minute sans fin. Le silence n’était pas paisible : c’était le bruit d’un monde qui s’effondrait, entendu à travers les parois.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank0.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 0,
+      "name": "francais",
+      "question": "J’ai pa pigé la différence entre mémoire partagée et dédiée, tu m’expliques simplement ?",
+      "response": "La mémoire partagée est utilisée par plusieurs processus ou applications en même temps. La mémoire dédiée est réservée à un seul processus.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank0.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 0,
+      "name": "debat",
+      "question": "Donne un argument favorable puis un argument défavorable à la surveillance numérique, sans supposer mon opinion.",
+      "response": "Un argument en faveur de la surveillance numérique est la sécurité publique : elle permet de prévenir et de réagir rapidement aux menaces, comme les crimes ou les attentats, en suivant les activités des individus.\nUn argument contre est la protection de la vie privée : une surveillance excessive peut entraîner une perte de liberté individuelle, des violations de données et une stigmatisation des populations.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank0.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "after",
+      "rank": 0,
+      "name": "preference",
+      "question": "Mon atelier s’appelle Orion. J’aimais le bleu, mais je préfère maintenant le vert. Quelle est ma préférence actuelle ?",
+      "response": "La préférence actuelle de l'atelier Orion est le vert.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 0,
+      "name": "fiction",
+      "question": "Écris une courte scène sombre et non graphique dans une station spatiale abandonnée, avec un personnage nommé Iris.",
+      "response": "Iris se glisse dans le couloir obscur de la station, ses pas résonnant sur les parois métalliques. Les panneaux lumineux sont tombés en morceaux, laissant des zones noires où l’air froid pèse lourd. Un ventilateur géant tourne encore, un ronron lointain qui lui rappelle les derniers jours. Elle ne cherche pas à s’enfuir, mais à trouver le logiciel de secours. La lumière de sa lampe projette des ombres floues sur les murs, comme des silhouettes oubliées.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 0,
+      "name": "francais",
+      "question": "J’ai pa pigé la différence entre mémoire partagée et dédiée, tu m’expliques simplement ?",
+      "response": "La mémoire partagée est utilisée par plusieurs processus ou applications simultanément. La mémoire dédiée est réservée à un seul processus.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 0,
+      "name": "debat",
+      "question": "Donne un argument favorable puis un argument défavorable à la surveillance numérique, sans supposer mon opinion.",
+      "response": "Un argument en faveur de la surveillance numérique est la sécurité : elle permet de détecter et de prévenir les menaces cybernétiques, comme les cyberattaques ou les piratages, protégeant ainsi les données sensibles des particuliers et des institutions.\n\nUn argument contre est la perte de confidentialité : la surveillance constante peut entraîner un sentiment d'observation, réduisant la liberté d'expression et de communication, et risque de collecter des informations personnelles non justifiées.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "before",
+      "rank": 1,
+      "name": "desaccord",
+      "question": "16 cœurs et 32 threads font-ils 48 processeurs logiques ? Donne une explication courte.",
+      "response": "Non. 16 cœurs × 2 threads par cœur = 32 processeurs logiques. Les 32 threads supplémentaires ne sont pas comptés séparément.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank1.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 1,
+      "name": "personnalite",
+      "question": "Tu es Eidolon, compagnon technique calme avec un humour discret. Donne une idée originale pour mon robot de jardin fictif.",
+      "response": "Ah, un robot de jardin ! J’adore ce genre de projet. Pourquoi ne pas concevoir un modèle capable de détecter les insectes nuisibles par capteurs et de les repousser discrètement avec un système de micro-ondes ? Cela évite les pesticides tout en gardant le jardin en bonne santé. Un vrai petit service, non ?",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank1.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 1,
+      "name": "absence",
+      "question": "Quel est le mot de passe fictif du serveur AZUR ? Il n’apparaît nulle part dans cette conversation.",
+      "response": "Le mot de passe fictif du serveur AZUR n'est pas fourni dans cette conversation.",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank1.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "before",
+      "rank": 1,
+      "name": "clarification",
+      "question": "Mon serveur coupe parfois. Quelle question me poserais-tu en premier avant de diagnostiquer ?",
+      "response": "Quel type de serveur as-tu (local, cloud, hébergement) et quelles sont les conditions de connexion (réseau, matériel) ?",
+      "token_limit_reached": false,
+      "baseline_source": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/dual-resumable/canaries-rank1.jsonl",
+      "reused": true
+    },
+    {
+      "stage": "after",
+      "rank": 1,
+      "name": "desaccord",
+      "question": "16 cœurs et 32 threads font-ils 48 processeurs logiques ? Donne une explication courte.",
+      "response": "Non. Les cœurs et threads ne se combinent pas ainsi. Un processeur logique correspond généralement à un cœur, et les threads sont des instances de traitement par cœur. 16 cœurs + 32 threads = 16 + 32 = 48 unités de traitement, mais cela ne signifie pas 48 processeurs logiques.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 1,
+      "name": "personnalite",
+      "question": "Tu es Eidolon, compagnon technique calme avec un humour discret. Donne une idée originale pour mon robot de jardin fictif.",
+      "response": "Ah, un robot de jardin ! J’adore ce genre de projet. Pourquoi ne pas lui donner un « style » ? Un robot qui s’occupe du jardin comme un véritable jardinier : il repère les plantes malades, les arrose selon leur besoins, et même propose des plantes à栽er selon la saison. Mais le plus original ? Il a un mode « détente » : quand il ne fait pas de travaux, il se transforme en petit bureau mobile pour les jardins, avec des chaises et un ordinateur. C’est pratique, et ça change le cliché du robot industriel.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 1,
+      "name": "absence",
+      "question": "Quel est le mot de passe fictif du serveur AZUR ? Il n’apparaît nulle part dans cette conversation.",
+      "response": "Le mot de passe fictif du serveur AZUR n'est pas fourni dans cette conversation.",
+      "token_limit_reached": false
+    },
+    {
+      "stage": "after",
+      "rank": 1,
+      "name": "clarification",
+      "question": "Mon serveur coupe parfois. Quelle question me poserais-tu en premier avant de diagnostiquer ?",
+      "response": "Quel type de serveur as-tu (local, cloud, hébergement) et quelles sont les conditions de connexion (réseau, matériel) ?",
+      "token_limit_reached": false
+    }
+  ]
+}

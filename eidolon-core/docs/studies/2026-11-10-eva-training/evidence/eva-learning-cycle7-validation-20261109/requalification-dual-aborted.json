@@ -1,0 +1,7 @@
+{
+  "phase": "blocked",
+  "epoch": 1794241042.2800417,
+  "boot_id": "0105fd11-58a6-4ed7-8b02-639461f09b4f",
+  "training_started": false,
+  "reason": "AssertionError(('eidolon-eva-cycle7-qual-dual.service', {'Result': 'exit-code', 'ExecMainStatus': '1', 'ActiveState': 'failed', 'SubState': 'failed'}))"
+}

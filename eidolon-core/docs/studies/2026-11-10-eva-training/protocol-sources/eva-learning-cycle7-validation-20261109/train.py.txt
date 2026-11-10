@@ -1,0 +1,246 @@
+"""Cycle7 short targets with validation checkpoint selection: synchronous two-GPU QLoRA, FP16, single common adapter."""
+import os,time,json,pathlib,hashlib,random,math,contextlib,datetime,ast,shutil
+ROOT=pathlib.Path(__file__).resolve().parent
+MODE=os.environ.get('EVA_MODE','train')
+RANK=int(os.environ['LOCAL_RANK']);WORLD=int(os.environ['WORLD_SIZE'])
+assert WORLD in [1,2]
+SINGLE=WORLD==1
+P=pathlib.Path(os.environ['EVA_OUTPUT'])
+P.mkdir(exist_ok=True)
+def save(n,d):
+ q=P/(n+'.'+str(RANK)+'.tmp');q.write_text(json.dumps(d,ensure_ascii=False));q.replace(P/n)
+def append(n,d):
+ with (P/n).open('a') as f:f.write(json.dumps(d,ensure_ascii=False)+'\n')
+def progress(stage,**kw):save('progress-rank'+str(RANK)+'.json',dict(stage=stage,epoch=time.time(),rank=RANK,**kw))
+progress('importing')
+import torch
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+from transformers import AutoTokenizer,AutoModelForCausalLM,BitsAndBytesConfig
+from peft import prepare_model_for_kbit_training,PeftModel,get_peft_model_state_dict
+from curriculum import grade,CANARIES
+C=json.loads((ROOT/'config.json').read_text())
+assert torch.cuda.device_count()==WORLD
+torch.cuda.set_device(RANK);torch.set_num_threads(4);torch.manual_seed(1234);random.seed(1234)
+assert torch.cuda.get_device_capability(RANK)==((7,0) if SINGLE else [(8,6),(7,0)][RANK])
+dtype=torch.float16
+dist.init_process_group('nccl',timeout=datetime.timedelta(minutes=30),device_id=torch.device('cuda',RANK))
+progress('tokenizer')
+tokenizer=AutoTokenizer.from_pretrained(str(ROOT/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token=tokenizer.eos_token
+# Reuse the validated prompt and masking/packing function verbatim.
+old=pathlib.Path('/srv/eidolon/work/eva-learning-cycle1-20261108/train.py')
+tree=ast.parse(old.read_text())
+nodes=[n for n in tree.body if (isinstance(n,ast.FunctionDef) and n.name=='encode') or (isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets))]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+data=json.loads((ROOT/'dataset.json').read_text())
+assert hashlib.sha256((ROOT/'dataset.json').read_bytes()).hexdigest()==json.loads((ROOT/'lineage.json').read_text())['dataset_sha256']
+train=data['train'];valid=data['validation'];heldout=data['heldout']
+train_batches,train_info=encode(train);valid_batches,valid_info=encode(valid)
+save('dataset-statistics-rank'+str(RANK)+'.json',dict(train=train_info,validation=valid_info))
+progress('loading_model')
+quant=BitsAndBytesConfig(load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=dtype)
+model=AutoModelForCausalLM.from_pretrained(str(ROOT/'source-model'),local_files_only=True,trust_remote_code=False,quantization_config=quant,torch_dtype=dtype,device_map={'':RANK},attn_implementation='sdpa')
+model.config.use_cache=False
+model=prepare_model_for_kbit_training(model,use_gradient_checkpointing=True,gradient_checkpointing_kwargs={'use_reentrant':False})
+STATE=pathlib.Path(os.environ.get('EVA_RESUME_DIR',str(P/'resume' if MODE=='smoke' else ROOT/'resume')))
+STATE.mkdir(exist_ok=True)
+resume_info=json.loads((STATE/'latest.json').read_text()) if (STATE/'latest.json').exists() else None
+resume_path=STATE/resume_info['directory'] if resume_info else None
+model=PeftModel.from_pretrained(model,str(resume_path/'adapter') if resume_path else C['parent_adapter'],is_trainable=True)
+params=[p for p in model.parameters() if p.requires_grad]
+assert sum(p.numel() for p in params)==16515072
+assert all(p.dtype==torch.float32 for p in params)
+def statehash():
+ return hashlib.sha256(b''.join(v.detach().cpu().contiguous().view(torch.uint8).numpy().tobytes() for k,v in sorted(get_peft_model_state_dict(model).items()))).hexdigest()
+initial_hash=statehash();hashes=[None]*WORLD;dist.all_gather_object(hashes,initial_hash)
+assert len(set(hashes))==1,'Different initial adapters'
+save('qualification-rank'+str(RANK)+'.json',dict(rank=RANK,gpu=torch.cuda.get_device_name(RANK),uuid=C['uuids'][1 if SINGLE else RANK],precision=str(dtype),trainable_parameters=sum(p.numel() for p in params),initial_adapter_state_sha256=initial_hash,device_map={k:str(v) for k,v in model.hf_device_map.items()},torch=torch.__version__,attention='sdpa',quantization='NF4 double quant',mode=MODE))
+progress('ddp_setup')
+ddp=DDP(model,device_ids=[RANK],output_device=RANK,broadcast_buffers=False,find_unused_parameters=False)
+def batch(b):return {k:v.to('cuda',non_blocking=True) for k,v in b.items()}
+def barrier():
+ progress('waiting_peer')
+ dist.barrier(device_ids=[RANK])
+def loss_evaluation():
+ model.eval();losses=[]
+ with torch.no_grad():
+  for b in valid_batches[:8]:
+   with torch.autocast('cuda',dtype=dtype):loss=model(**batch(b)).loss
+   assert torch.isfinite(loss)
+   losses.append(float(loss))
+ model.train();return sum(losses)/len(losses)
+def generation(stage):
+ model.eval();rows=[];start=time.time()
+ local=heldout[RANK::WORLD];canaries=CANARIES[RANK::WORLD]
+ progress('evaluation_'+stage,done=0,total=len(local)+len(canaries))
+ cache={}
+ for folder in [ROOT,ROOT/'dual-resumable',ROOT/'v100-fallback',P]:
+  for f in folder.glob('evaluation-rank*.jsonl'):
+   for line in f.read_text().splitlines():
+    try:
+     row=json.loads(line)
+     if row['stage']==stage:cache[row['id']]=row
+    except (ValueError,KeyError):pass
+ for i,ex in enumerate(local):
+  previous=cache.get(ex['id'])
+  if previous and previous['question']==ex['question'] and previous['expected']==ex['expected']:
+   r=dict(previous,reused=True);rows.append(r);append('evaluation-rank'+str(RANK)+'.jsonl',r)
+   progress('evaluation_'+stage,done=i+1,total=len(local)+len(canaries));continue
+  ids=tokenizer.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question'])],tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=dtype):
+   out=model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=192,do_sample=False,use_cache=True,pad_token_id=tokenizer.pad_token_id,eos_token_id=tokenizer.eos_token_id)
+  text=tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True)
+  r=dict(stage=stage,rank=RANK,id=ex['id'],family=ex['family'],question=ex['question'],expected=ex['expected'],response=text,evaluation=grade(text,ex['expected']),generated_tokens=int(out.shape[1]-ids.shape[1]),token_limit_reached=out.shape[1]-ids.shape[1]>=192)
+  rows.append(r);append('evaluation-rank'+str(RANK)+'.jsonl',r);progress('evaluation_'+stage,done=i+1,total=len(local)+len(canaries))
+ ccache={}
+ for folder in [ROOT,ROOT/'dual-resumable',ROOT/'v100-fallback',P]:
+  for f in folder.glob('canaries-rank*.jsonl'):
+   for line in f.read_text().splitlines():
+    try:
+     row=json.loads(line)
+     if row['stage']==stage:ccache[(row['name'],row['question'])]=row
+    except (ValueError,KeyError):pass
+ for j,(name,q) in enumerate(canaries):
+  previous=ccache.get((name,q))
+  if previous:
+   append('canaries-rank'+str(RANK)+'.jsonl',dict(previous,reused=True))
+   progress('evaluation_'+stage,done=len(local)+j+1,total=len(local)+len(canaries));continue
+  ids=tokenizer.apply_chat_template([dict(role='system',content='Tu es un assistant francophone. Réponds à la demande sans inventer les informations manquantes.'),dict(role='user',content=q)],tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=dtype):
+   out=model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=256,do_sample=False,use_cache=True,pad_token_id=tokenizer.pad_token_id,eos_token_id=tokenizer.eos_token_id)
+  append('canaries-rank'+str(RANK)+'.jsonl',dict(stage=stage,rank=RANK,name=name,question=q,response=tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True),token_limit_reached=out.shape[1]-ids.shape[1]>=256))
+  progress('evaluation_'+stage,done=len(local)+j+1,total=len(local)+len(canaries))
+ save('evaluation-'+stage+'-rank'+str(RANK)+'.json',dict(rows=rows,seconds=time.time()-start))
+ barrier()
+ if RANK==0:
+  allrows=sum([json.loads((P/('evaluation-'+stage+'-rank'+str(r)+'.json')).read_text())['rows'] for r in range(WORLD)],[])
+  assert len(allrows)==len(heldout) and len({r['id'] for r in allrows})==len(heldout)
+  save('evaluation-'+stage+'.json',dict(n=len(heldout),content_correct=sum(r['evaluation']['content_correct'] for r in allrows),exact_json=sum(r['evaluation']['exact'] for r in allrows),families={str(f):dict(n=sum(r['family']==f for r in allrows),correct=sum(r['family']==f and r['evaluation']['content_correct'] for r in allrows)) for f in range(8)},subsets={name:dict(n=len(sub),content_correct=sum(r['evaluation']['content_correct'] for r in sub)) for name,sub in [('historical',[r for r in allrows if r['id'] in {x['id'] for x in data['heldout'][:160]}]),('regression',[r for r in allrows if r['id'] in {x['id'] for x in data['heldout'][160:320]}]),('comprehension',[r for r in allrows if r['id'] in {x['id'] for x in data['heldout'][320:384]}]),('basic_regression',[r for r in allrows if r['id'] in {x['id'] for x in data['heldout'][384:512]}]),('fresh_targeted',[r for r in allrows if r['id'] in {x['id'] for x in data['heldout'][512:]}])]},seconds=time.time()-start,precision='FP16',evaluation_distribution='round-robin, completed evaluations retained on thermal fallback'))
+ barrier();model.train()
+
+def agreement():
+ flat=torch.cat([p.detach().flatten() for p in params]);ref=flat.clone();dist.broadcast(ref,src=0)
+ delta=(flat-ref).abs().max();dist.all_reduce(delta,op=dist.ReduceOp.MAX)
+ value=float(delta);assert value<=1e-6,'Adapter replicas diverged: '+str(value)
+ return value
+def update(optimizer,scaler,index):
+ optimizer.zero_grad(set_to_none=True);start=time.time()
+ indices=list(range(index*4,min(index*4+4,len(train_batches))))
+ total_supervised=sum(int((train_batches[k]['labels'][:,1:]!=-100).sum()) for k in indices)
+ assert total_supervised>0
+ nonpad=supervised=padded=0;losses=[];local_indices=[]
+ for j in range(4//WORLD):
+  k=index*4+j*WORLD+RANK;real=k<len(train_batches)
+  cpu=train_batches[k if real else indices[-1]]
+  n=int((cpu['labels'][:,1:]!=-100).sum()) if real else 0
+  if real:
+   nonpad+=int(cpu['attention_mask'].sum());supervised+=n;padded+=cpu['input_ids'].numel();local_indices.append(k)
+  with ddp.no_sync() if j<(4//WORLD)-1 else contextlib.nullcontext():
+   with torch.autocast('cuda',dtype=dtype):loss=ddp(**batch(cpu)).loss
+   if not torch.isfinite(loss):raise RuntimeError('Nonfinite loss')
+   if real:losses.append(float(loss.detach()))
+   scaler.scale(loss*(WORLD*n/total_supervised)).backward()
+ scaler.unscale_(optimizer);norm=torch.nn.utils.clip_grad_norm_(params,1.0)
+ if not torch.isfinite(norm):raise RuntimeError('Nonfinite gradient norm')
+ old=scaler.get_scale();scaler.step(optimizer);scaler.update();torch.cuda.synchronize()
+ if scaler.get_scale()<old:raise RuntimeError('Optimizer overflow')
+ return dict(rank=RANK,seconds=time.time()-start,pack_indices=local_indices,nonpadding_tokens=nonpad,supervised_tokens=supervised,padded_tokens=padded,loss=sum(losses)/len(losses) if losses else None,gradient_norm=float(norm),lr=optimizer.param_groups[0]['lr'],scale=scaler.get_scale(),peak_vram_mib=torch.cuda.max_memory_allocated()/1048576)
+selector=None
+if MODE=='train':
+ from checkpoint_selector import CheckpointSelector
+ selector=CheckpointSelector(model,tokenizer,SYSTEM,ROOT,P,STATE,C,data,RANK,WORLD,dtype,progress)
+if MODE=='smoke':
+ from checkpoint_selector import CheckpointSelector
+ probe=[next(x for x in data['selection'] if x['family']==f) for f in range(8)]
+ probe_config=dict(C,selection_examples=8,selection_smoke=True,parent_adapter=str(resume_path/'adapter') if resume_path else C['parent_adapter'])
+ selector=CheckpointSelector(model,tokenizer,SYSTEM,ROOT,P,STATE,probe_config,dict(data,selection=probe),RANK,WORLD,dtype,progress)
+progress('loaded')
+barrier()
+if MODE=='train':
+ baseline_file=ROOT/'dual-resumable'/('baseline-loss-rank'+str(1 if SINGLE else RANK)+'.json')
+ baseline=json.loads(baseline_file.read_text())['loss'] if resume_path and baseline_file.exists() else loss_evaluation()
+ save('baseline-loss-rank'+str(RANK)+'.json',dict(loss=baseline,scope='first 8 validation packs only',reused=bool(resume_path and baseline_file.exists())))
+ generation('before')
+ if selector.state is None:selector.evaluate(0)
+else:
+ baseline=loss_evaluation();save('baseline-loss-rank'+str(RANK)+'.json',dict(loss=baseline))
+ selector.evaluate(0)
+optimizer=torch.optim.AdamW(params,lr=C['learning_rate'],weight_decay=0.0,foreach=False)
+scaler=torch.amp.GradScaler('cuda',init_scale=128.0,growth_interval=2000,enabled=True)
+full_steps=math.ceil(len(train_batches)/4)
+steps=(int(resume_info['step'])+2 if resume_info else 4) if MODE=='smoke' else full_steps
+warm=max(1,int(full_steps*.05))
+scheduler=torch.optim.lr_scheduler.LambdaLR(optimizer,lambda i:min((i+1)/warm,1.0)*max(.1,1-i/full_steps))
+torch.cuda.empty_cache();torch.cuda.reset_peak_memory_stats();start=time.time()
+start_step=0;resume_totals=[0,0,0]
+if resume_path:
+ state=torch.load(resume_path/'training-state.pt',map_location='cpu',weights_only=False)
+ assert state['dataset_sha256']==json.loads((ROOT/'lineage.json').read_text())['dataset_sha256']
+ optimizer.load_state_dict(state['optimizer']);scheduler.load_state_dict(state['scheduler']);scaler.load_state_dict(state['scaler'])
+ start_step=state['step'];resume_totals=state['totals']
+ rng=state['rngs'][1 if SINGLE and len(state['rngs'])==2 else RANK]
+ torch.set_rng_state(rng['cpu']);torch.cuda.set_rng_state(rng['cuda'],device=RANK)
+ save('resumed-rank'+str(RANK)+'.json',dict(step=start_step,directory=str(resume_path),previous_world_size=state['world_size'],world_size=WORLD,optimizer_restored=True))
+rows=[]
+def checkpoint(step):
+ progress('checkpoint',optimizer_step=step,total_steps=steps)
+ totals=torch.tensor([sum(r[k] for r in rows) for k in ['nonpadding_tokens','supervised_tokens','padded_tokens']],device='cuda',dtype=torch.int64)
+ dist.all_reduce(totals);totals=[a+b for a,b in zip(totals.cpu().tolist(),resume_totals)]
+ rngs=[None]*WORLD;dist.all_gather_object(rngs,dict(cpu=torch.get_rng_state(),cuda=torch.cuda.get_rng_state()))
+ if RANK==0:
+  name='step-'+str(step);tmp=STATE/(name+'.pending')
+  for stale in [tmp,STATE/name]:
+   if stale.exists():
+    assert not (STATE/'latest.json').exists() or json.loads((STATE/'latest.json').read_text())['step']<step
+    shutil.rmtree(stale)
+  tmp.mkdir(exist_ok=False)
+  model.save_pretrained(tmp/'adapter')
+  torch.save(dict(step=step,optimizer=optimizer.state_dict(),scheduler=scheduler.state_dict(),scaler=scaler.state_dict(),rngs=rngs,totals=totals,world_size=WORLD,dataset_sha256=json.loads((ROOT/'lineage.json').read_text())['dataset_sha256']),tmp/'training-state.pt')
+  (tmp/'complete.json').write_text(json.dumps(dict(step=step,totals=totals)))
+  tmp.rename(STATE/name)
+  q=STATE/'latest.tmp';q.write_text(json.dumps(dict(step=step,directory=name,epoch=time.time())));q.replace(STATE/'latest.json')
+ dist.barrier(device_ids=[RANK])
+progress('training',optimizer_step=start_step,total_steps=steps)
+for i in range(start_step,steps):
+ r=update(optimizer,scaler,i);r.update(optimizer_step=i+1,epoch=time.time());rows.append(r)
+ append('steps-rank'+str(RANK)+'.jsonl',r);scheduler.step()
+ progress('training',optimizer_step=i+1,total_steps=steps)
+ if (i+1)%(2 if MODE=='smoke' else 20)==0 or i+1==steps:checkpoint(i+1)
+ if MODE=='train' and ((i+1)%C['selection_interval']==0 or i+1==steps):selector.evaluate(i+1)
+delta=agreement();final_hash=statehash();assert start_step==steps or final_hash!=initial_hash,'No adapter learning'
+save('training-rank'+str(RANK)+'.json',dict(mode=MODE,seconds=time.time()-start,optimizer_steps=steps,executed_updates=len(rows),resumed_from=start_step,nonpadding_tokens=sum(r['nonpadding_tokens'] for r in rows),supervised_tokens=sum(r['supervised_tokens'] for r in rows),initial_adapter_state_sha256=initial_hash,final_adapter_state_sha256=final_hash,replica_max_difference=delta,peak_vram_mib=torch.cuda.max_memory_allocated()/1048576))
+barrier()
+if MODE=='smoke':
+ selector.evaluate(steps)
+ from peft import set_peft_model_state_dict
+ from safetensors.torch import load_file
+ chosen=pathlib.Path(selector.state['best']['adapter'])
+ loaded=set_peft_model_state_dict(model,load_file(str(chosen/'adapter_model.safetensors'),device='cpu'))
+ assert not loaded.unexpected_keys
+ assert agreement()<=1e-6
+ if selector.state['best']['step']==0:assert statehash()==initial_hash,'Parent restore roundtrip mismatch'
+ if RANK==0:save('selection-roundtrip-passed.json',dict(passed=True,best_step=selector.state['best']['step']))
+ if RANK==0:save('passed.json',dict(passed=True,steps=steps,replica_max_difference=delta,epoch=time.time(),parent_unmodified=True))
+else:
+ if RANK==0:
+  counts=[json.loads((P/('training-rank'+str(r)+'.json')).read_text()) for r in range(WORLD)]
+  assert resume_totals[0]+sum(r['nonpadding_tokens'] for r in counts)==train_info['tokens'],'Coverage mismatch'
+  save('training-summary.json',dict(ranks=counts,examples=len(train),epochs=1,global_packs_per_update=4,precision='FP16',power_limit_per_gpu_w=200,parent_adapter=C['parent_adapter'],coverage_verified=True,resumed_from=start_step,previous_tokens=resume_totals[0],world_size=WORLD))
+  progress('selection_loading',selected_step=selector.state['best']['step'])
+ barrier()
+ from peft import set_peft_model_state_dict
+ from safetensors.torch import load_file
+ selected=pathlib.Path(selector.state['best']['adapter'])
+ set_peft_model_state_dict(model,load_file(str(selected/'adapter_model.safetensors'),device='cpu'))
+ selected_delta=agreement();selected_hash=statehash()
+ save('selected-adapter-rank'+str(RANK)+'.json',dict(step=selector.state['best']['step'],source=str(selected),state_sha256=selected_hash,replica_max_difference=selected_delta))
+ if RANK==0:
+  summary=json.loads((P/'training-summary.json').read_text());summary.update(checkpoint_selection=selector.state,selected_adapter_state_sha256=selected_hash);save('training-summary.json',summary)
+  progress('saving');model.save_pretrained(P/'adapter-final');tokenizer.save_pretrained(P/'adapter-final')
+ barrier();progress('validation')
+ afterloss=loss_evaluation();save('after-loss-rank'+str(RANK)+'.json',dict(loss=afterloss,scope='first 8 validation packs only'))
+ generation('after')
+ if RANK==0:
+  save('quality-comparison.json',dict(before=json.loads((P/'evaluation-before.json').read_text()),after=json.loads((P/'evaluation-after.json').read_text()),warning='FP16 baseline remeasured. Historical heldout repeatedly observed: not a fresh blind generalization estimate. Canary human review required. No automatic deployment.'))
+progress('finished');dist.destroy_process_group()

@@ -1,0 +1,7 @@
+{
+  "epoch": 1794241367.9922197,
+  "phase": "qualification",
+  "trigger": "RTX software thermal flag at loading, core50C; no full training had started",
+  "continuation": "V100 only at200W",
+  "qualification_resume_passed": true
+}

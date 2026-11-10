@@ -1,0 +1,961 @@
+[
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/result.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/result.json",
+    "original_sha256": "4b57110b1cf8ae615d7b7441f20c0048a728a49066a8d7bb4aea92655a01c777",
+    "published_sha256": "4b57110b1cf8ae615d7b7441f20c0048a728a49066a8d7bb4aea92655a01c777",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/quality-comparison.json",
+    "original_sha256": "b72929877931bbe0c0a667ad21cf1538f65602320e9191dac92690dd7c3c1546",
+    "published_sha256": "b72929877931bbe0c0a667ad21cf1538f65602320e9191dac92690dd7c3c1546",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/methodology-reference.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/methodology-reference.json",
+    "original_sha256": "7808bd74df97d5fad3bd38f1778cb50e0350ace3c38273519bbb24a244d90c50",
+    "published_sha256": "7808bd74df97d5fad3bd38f1778cb50e0350ace3c38273519bbb24a244d90c50",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/training-qualification.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/training-qualification.json",
+    "original_sha256": "0cf521d274477e7ec9bdae0aab0fe8e6e91a645cb0ddc654f9e770a320222988",
+    "published_sha256": "0cf521d274477e7ec9bdae0aab0fe8e6e91a645cb0ddc654f9e770a320222988",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/status.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/status.json",
+    "original_sha256": "89b8f18df72f35436663bb18a5b89590894af488ff6d5a882d9c8abfa43f2129",
+    "published_sha256": "89b8f18df72f35436663bb18a5b89590894af488ff6d5a882d9c8abfa43f2129",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/dataset-statistics.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/dataset-statistics.json",
+    "original_sha256": "104d741c4a82c073bf56a61108a39acf6b4ad83372c19f7830fbc6fb7469ab13",
+    "published_sha256": "104d741c4a82c073bf56a61108a39acf6b4ad83372c19f7830fbc6fb7469ab13",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/config.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/config.json",
+    "original_sha256": "ff535ac7e17fff0fa90a45590c927e53a7e71df6dafdb8ff8c03da32adec14c8",
+    "published_sha256": "a00c8343e606351ef2726578487fd35ce9d7d76b00b0db1018f8bdbf9016602a",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle1-20261108/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/canary-review.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/canary-review.json",
+    "original_sha256": "04874b58367c26524d662e4097503651b1ceca5b9ac63c24dbda78987e2617d3",
+    "published_sha256": "04874b58367c26524d662e4097503651b1ceca5b9ac63c24dbda78987e2617d3",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/lineage.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/lineage.json",
+    "original_sha256": "9907c15a21e0384d694a103c66072abe69a16af926a4b9d02cdab2a1ab2b6347",
+    "published_sha256": "9907c15a21e0384d694a103c66072abe69a16af926a4b9d02cdab2a1ab2b6347",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/quality-comparison.json",
+    "original_sha256": "491aa0c90030b389efbc8da90b75c2499385fd0ffe4777bbd8d21447f8a0e981",
+    "published_sha256": "491aa0c90030b389efbc8da90b75c2499385fd0ffe4777bbd8d21447f8a0e981",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/status.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/status.json",
+    "original_sha256": "678d88081c369609d3c65d3d8abf5afe3e70237cadc9087d1d76614fff03b11f",
+    "published_sha256": "678d88081c369609d3c65d3d8abf5afe3e70237cadc9087d1d76614fff03b11f",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/training-summary.json",
+    "original_sha256": "e68064a8629f975516128413fd270cf580e34099daecc57ed9dc39736bd94b25",
+    "published_sha256": "e68064a8629f975516128413fd270cf580e34099daecc57ed9dc39736bd94b25",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/config.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/config.json",
+    "original_sha256": "2a03d1ec57429672f2ea556b2e6b5ae77c27713fdebe30737991a893513d0949",
+    "published_sha256": "a6332d6dc9dbafbb90464c8d067b3cfbe3f172dbe2506c9d434651fcf153fa19",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle2-dual200-20261108/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/lineage.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/lineage.json",
+    "original_sha256": "4c6adc3ad1d1aa2365e6752fa72d791f71bf5d590a9a44ebe99bedd2f451503b",
+    "published_sha256": "4c6adc3ad1d1aa2365e6752fa72d791f71bf5d590a9a44ebe99bedd2f451503b",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/quality-comparison.json",
+    "original_sha256": "dcb70f3470ea465a3ae6deb4f13aaef41d7e7fcf0fcef759c35db707e3a1bef7",
+    "published_sha256": "dcb70f3470ea465a3ae6deb4f13aaef41d7e7fcf0fcef759c35db707e3a1bef7",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/status.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/status.json",
+    "original_sha256": "4a3588e394f09b2b25d20b57a838b83e1f913fbfc5627309700b395a98f02c6d",
+    "published_sha256": "4a3588e394f09b2b25d20b57a838b83e1f913fbfc5627309700b395a98f02c6d",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/training-summary.json",
+    "original_sha256": "d5a33dfbcc8d28ee82d36420bd0bad5a5df71215cb5419a399c918fa97b1ed75",
+    "published_sha256": "d5a33dfbcc8d28ee82d36420bd0bad5a5df71215cb5419a399c918fa97b1ed75",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/config.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/config.json",
+    "original_sha256": "a1f64a13f94d5adf2603c97d5955431392a0b5841e6fecfc62ebd5c27c3453d9",
+    "published_sha256": "d4b107f948b771f22fe3a098a6d30030ab8c942c857effe5abd348a7f1e4f39f",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle3-targeted-20261108/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/lineage.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/lineage.json",
+    "original_sha256": "85f16dc131bd76b85e8b4d0c5fa91455131000183bcd724733470435ea924e26",
+    "published_sha256": "85f16dc131bd76b85e8b4d0c5fa91455131000183bcd724733470435ea924e26",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/quality-comparison.json",
+    "original_sha256": "966ae000bac87756783b406c5a1efcc12ea895fd544ae655b09144056f475b38",
+    "published_sha256": "966ae000bac87756783b406c5a1efcc12ea895fd544ae655b09144056f475b38",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/result-saved.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/result-saved.json",
+    "original_sha256": "660b1a35c1c001eb8f1afa424cc53f2109eea1834082809cdc35d8519334f13c",
+    "published_sha256": "660b1a35c1c001eb8f1afa424cc53f2109eea1834082809cdc35d8519334f13c",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/status.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/status.json",
+    "original_sha256": "3488e9503ccd549c3a1768a64c644ee63ca1d50a48127d2262056f89a938f4ea",
+    "published_sha256": "3488e9503ccd549c3a1768a64c644ee63ca1d50a48127d2262056f89a938f4ea",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/Rapport_Eva_cycle4.txt",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/Rapport_Eva_cycle4.txt",
+    "original_sha256": "852cdd5a466a74a3c0c873c9bf983716fadad136bc127e899bcc7be3146c3b0d",
+    "published_sha256": "852cdd5a466a74a3c0c873c9bf983716fadad136bc127e899bcc7be3146c3b0d",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/training-summary.json",
+    "original_sha256": "b1cc4ca486bcdf9649a9f486aa424e8d3dbc056da13afa4c1dd5ccffedf9b71f",
+    "published_sha256": "b1cc4ca486bcdf9649a9f486aa424e8d3dbc056da13afa4c1dd5ccffedf9b71f",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/config.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/config.json",
+    "original_sha256": "cf55276e989473b9a1d6c5887b615567af2eb032ecb6528ace9e2a797404b1ee",
+    "published_sha256": "30b3397fac98c153258f9e4f70ae531a3c99afcc0dd80c33b209924f56f0e422",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/resultat-final.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/resultat-final.json",
+    "original_sha256": "1ff7bade3dc7947b81ee6b888c7c264139a64a6733bba5faa1ad76ad04e70443",
+    "published_sha256": "1ff7bade3dc7947b81ee6b888c7c264139a64a6733bba5faa1ad76ad04e70443",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle4-comprehension-20261109/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/lineage.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/lineage.json",
+    "original_sha256": "428968d662c54451263e3e155b24049f04052a67f7f43d21dd36b697945b1a1f",
+    "published_sha256": "428968d662c54451263e3e155b24049f04052a67f7f43d21dd36b697945b1a1f",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/quality-comparison.json",
+    "original_sha256": "b8670e361b6eca9ff42d27792baef7cb0e30723e15a30bb2bcdf0ef80ff57e42",
+    "published_sha256": "b8670e361b6eca9ff42d27792baef7cb0e30723e15a30bb2bcdf0ef80ff57e42",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/Rapport_Diagnostic_X399_20261109.txt",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/Rapport_Diagnostic_X399_20261109.txt",
+    "original_sha256": "59db302768812384c7c745fceb11b3b54cd33cd938a2d8961cf84cb4adbd0b3f",
+    "published_sha256": "59db302768812384c7c745fceb11b3b54cd33cd938a2d8961cf84cb4adbd0b3f",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/result-saved.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/result-saved.json",
+    "original_sha256": "95ac2ce8212b59f6536fd245359c046ccd79d1b8da62b7a0c46fbe59d280f71d",
+    "published_sha256": "95ac2ce8212b59f6536fd245359c046ccd79d1b8da62b7a0c46fbe59d280f71d",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/status.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/status.json",
+    "original_sha256": "9be326a6903465fdb836ab64f92d0d5fd6ec3720fe05d23056947db93c60bdfe",
+    "published_sha256": "9be326a6903465fdb836ab64f92d0d5fd6ec3720fe05d23056947db93c60bdfe",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/training-summary.json",
+    "original_sha256": "4a7e12f36bc3875e2b9018e9f50af8bf88ea0b9201ccc0d1caae29668b12b756",
+    "published_sha256": "4a7e12f36bc3875e2b9018e9f50af8bf88ea0b9201ccc0d1caae29668b12b756",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/config.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/config.json",
+    "original_sha256": "a44ae3f4746cad6930f4255759c56ab460361d58c2471ce35e2696c8dd84ab5f",
+    "published_sha256": "5492600f19a24b97dc7a574f52808e7bb0e79dc643f78508b76558d8af562ae8",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/resultat-final.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/resultat-final.json",
+    "original_sha256": "cc36a966219e436844ecc4b16a0c1b5b260e7d043cce3fe0d3cb98e2e1ae746d",
+    "published_sha256": "cc36a966219e436844ecc4b16a0c1b5b260e7d043cce3fe0d3cb98e2e1ae746d",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/Rapport_Eva_cycle5.txt",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/Rapport_Eva_cycle5.txt",
+    "original_sha256": "dbd077a5b62aee07420ad50aefa5d621bb4ff7f0fa0896fe09ce151930a04f27",
+    "published_sha256": "dbd077a5b62aee07420ad50aefa5d621bb4ff7f0fa0896fe09ce151930a04f27",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle5-progressive-20261109/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/lineage.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/lineage.json",
+    "original_sha256": "9ad95f63383e27a573cde45de5ae2d38b6add068cf02fd96c191218b3dfa7ba0",
+    "published_sha256": "9ad95f63383e27a573cde45de5ae2d38b6add068cf02fd96c191218b3dfa7ba0",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/quality-comparison.json",
+    "original_sha256": "7f5d09960d03311f841865a94208a24101d24af15669481bd8a5221f809150e4",
+    "published_sha256": "7f5d09960d03311f841865a94208a24101d24af15669481bd8a5221f809150e4",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/Rapport_Eva_cycle6.txt",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/Rapport_Eva_cycle6.txt",
+    "original_sha256": "64254479f52895f987458e2c2ff3bb90bedaaa49071beea6121ecbebcfa28d79",
+    "published_sha256": "64254479f52895f987458e2c2ff3bb90bedaaa49071beea6121ecbebcfa28d79",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/result-saved.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/result-saved.json",
+    "original_sha256": "22066844ff9031f92731599d41df4b0e40fff5bd0cb7a7f6bbe8cb5a4c496595",
+    "published_sha256": "22066844ff9031f92731599d41df4b0e40fff5bd0cb7a7f6bbe8cb5a4c496595",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/status.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/status.json",
+    "original_sha256": "e7e76d37924baac6e9c7c9d83347b4901e1d6b7788b00caccaebee8192a355c9",
+    "published_sha256": "e7e76d37924baac6e9c7c9d83347b4901e1d6b7788b00caccaebee8192a355c9",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/training-summary.json",
+    "original_sha256": "8f5f87a324622f3a8a63c35c514d8e3a6b11b923df66804bd7a2ba01c9deab18",
+    "published_sha256": "8f5f87a324622f3a8a63c35c514d8e3a6b11b923df66804bd7a2ba01c9deab18",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/config.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/config.json",
+    "original_sha256": "4c2db5fdd32283e35efd64b9906eb919502687982364e65342646cb9792f0ede",
+    "published_sha256": "c71938262161c683e8a220f6f66c94da1650522966482d300b1d284fa18b1ad0",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/resultat-final.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/resultat-final.json",
+    "original_sha256": "de0b756b9596b9fddc37801c2512bbbdc1837f4df5809e163df81bad61df4ece",
+    "published_sha256": "de0b756b9596b9fddc37801c2512bbbdc1837f4df5809e163df81bad61df4ece",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle6-consolidation-20261109/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/checkpoint-selection.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/checkpoint-selection.json",
+    "original_sha256": "c8d177f81f9b87e307cf32866fee2ec9b837dec115e432435aea42becd6e9765",
+    "published_sha256": "c8d177f81f9b87e307cf32866fee2ec9b837dec115e432435aea42becd6e9765",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/lineage.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/lineage.json",
+    "original_sha256": "4acf7793569ac2967d7a654c25e72ca08896834575172ed529a7212fdf1497af",
+    "published_sha256": "4acf7793569ac2967d7a654c25e72ca08896834575172ed529a7212fdf1497af",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/quality-comparison.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/quality-comparison.json",
+    "original_sha256": "8e7369c22035980e323b50e21f535bb30f676270462fdd1be1e65b96fc7211bd",
+    "published_sha256": "8e7369c22035980e323b50e21f535bb30f676270462fdd1be1e65b96fc7211bd",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/requalification-dual-aborted.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/requalification-dual-aborted.json",
+    "original_sha256": "f88b7ec4c7c7dc53056516f598e03335d88211c8324a3408f27dc1bac21e569a",
+    "published_sha256": "f88b7ec4c7c7dc53056516f598e03335d88211c8324a3408f27dc1bac21e569a",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/supervised-token-balance.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/supervised-token-balance.json",
+    "original_sha256": "1385fae2b90e36ee428711a47fb8f1ce3e5d00e1052a5abd0476b0b779bb3a01",
+    "published_sha256": "1385fae2b90e36ee428711a47fb8f1ce3e5d00e1052a5abd0476b0b779bb3a01",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/Rapport_Eva_cycle7.txt",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/Rapport_Eva_cycle7.txt",
+    "original_sha256": "a892bcfb7c1cfebd00a17dc4341af5d51b44fcb1c9ffec85d077c0ec4b5f7ebd",
+    "published_sha256": "a892bcfb7c1cfebd00a17dc4341af5d51b44fcb1c9ffec85d077c0ec4b5f7ebd",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/result-saved.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/result-saved.json",
+    "original_sha256": "e302f65f064745d530c374e3b4830dc9c26cc3f16086e96062e4250f03b7e7e4",
+    "published_sha256": "e302f65f064745d530c374e3b4830dc9c26cc3f16086e96062e4250f03b7e7e4",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/status.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/status.json",
+    "original_sha256": "38e73c355f2a354ec289867eb1db5e68ecdc1c2c602d2cbced4d72c1e9f847c8",
+    "published_sha256": "38e73c355f2a354ec289867eb1db5e68ecdc1c2c602d2cbced4d72c1e9f847c8",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/training-summary.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/training-summary.json",
+    "original_sha256": "32d6a3760c93be652a103d66a080a934543a27031d619fcb8f6379b759644094",
+    "published_sha256": "32d6a3760c93be652a103d66a080a934543a27031d619fcb8f6379b759644094",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/config.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/config.json",
+    "original_sha256": "e423f8894c580df4b12533ca9e77b351654d1d98214c1a97a9a4eeccd27a7753",
+    "published_sha256": "8f6ffe103fe44bdc1505f087e20929acff4c925133511e7dfa250140c4a9cc5d",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resultat-final.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/resultat-final.json",
+    "original_sha256": "ca11231998ac704d929ce4c24f9cc1409ae693c6e09a272a368a84defee79edf",
+    "published_sha256": "ca11231998ac704d929ce4c24f9cc1409ae693c6e09a272a368a84defee79edf",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/fallback-event.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/fallback-event.json",
+    "original_sha256": "05490079e6871c1c6863c8828f980c7fd9dd9561298adc8ef54280a4b565ea2b",
+    "published_sha256": "05490079e6871c1c6863c8828f980c7fd9dd9561298adc8ef54280a4b565ea2b",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle7-validation-20261109/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/Rapport_Eva_audit_checkpoints.txt",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/Rapport_Eva_audit_checkpoints.txt",
+    "original_sha256": "4cb6580e0e5101668677138420d650ea0df8075fdbefdc93c70328172335cc4b",
+    "published_sha256": "4cb6580e0e5101668677138420d650ea0df8075fdbefdc93c70328172335cc4b",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/result-saved.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/result-saved.json",
+    "original_sha256": "f0edfc9f81cf8d709b7ad4d08f47466c19c3f5ed6c593f17cb0ce9792d23bef4",
+    "published_sha256": "f0edfc9f81cf8d709b7ad4d08f47466c19c3f5ed6c593f17cb0ce9792d23bef4",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/status.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/status.json",
+    "original_sha256": "18c046804460172482968c121acc222827a94876fa9853707516abb5c7ff942e",
+    "published_sha256": "18c046804460172482968c121acc222827a94876fa9853707516abb5c7ff942e",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/audit-summary.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/audit-summary.json",
+    "original_sha256": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+    "published_sha256": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/experiment-plan.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/experiment-plan.json",
+    "original_sha256": "aec1c5614451108ec66f5fb9c7030a271c012e51cdfe7b917ce30e6f00027913",
+    "published_sha256": "aec1c5614451108ec66f5fb9c7030a271c012e51cdfe7b917ce30e6f00027913",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/config.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/config.json",
+    "original_sha256": "b39f50680f2322ab76671818e9b1161ff540d9a899823cb2eb62da1b8264a846",
+    "published_sha256": "91c36545c95154a55926430a6bef644f71949e5f292243f132f1ad90d8914992",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/source-manifest.json",
+    "published_path": "evidence/eva-learning-cycle8-audit-20261109/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/result.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/result.json",
+    "original_sha256": "4115ed270b1a221fb56d7899691c5b66b95760ce825b4f9b8741bb0ca73c6188",
+    "published_sha256": "4115ed270b1a221fb56d7899691c5b66b95760ce825b4f9b8741bb0ca73c6188",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/resource-plan.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/resource-plan.json",
+    "original_sha256": "d701b5a1edf98737cc03979114df4d3cb324c9ba228edb6b6f5fab83244600db",
+    "published_sha256": "d701b5a1edf98737cc03979114df4d3cb324c9ba228edb6b6f5fab83244600db",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/methodology-reference.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/methodology-reference.json",
+    "original_sha256": "72034f0a919fc4d98ddd145150128b75eae83aa3a4bb03fc6ff924bfddc81e5b",
+    "published_sha256": "72034f0a919fc4d98ddd145150128b75eae83aa3a4bb03fc6ff924bfddc81e5b",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/training-qualification.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/training-qualification.json",
+    "original_sha256": "576f8a393c63b129c82e594113de958fc5de41355a634afc7166977f34a1631d",
+    "published_sha256": "576f8a393c63b129c82e594113de958fc5de41355a634afc7166977f34a1631d",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/status.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/status.json",
+    "original_sha256": "54fe35d672718a76a5a836589c28b32e12303ccf772161ee1109fc7d5e444aef",
+    "published_sha256": "54fe35d672718a76a5a836589c28b32e12303ccf772161ee1109fc7d5e444aef",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/dataset-statistics.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/dataset-statistics.json",
+    "original_sha256": "f77369f965bd4417eacfb9bc48cb4636ef15e6a830f0ccfe0aaf9b6cd62ae045",
+    "published_sha256": "f77369f965bd4417eacfb9bc48cb4636ef15e6a830f0ccfe0aaf9b6cd62ae045",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/config.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/config.json",
+    "original_sha256": "900f56eeb923c5f607227353a319a428bb16505bbd347e7a2f50026b78dca98f",
+    "published_sha256": "f4344bbff8702f9dc73a4ebc2c38cbebdef96429d1bdfbea5d0bdacf6fd05e0b",
+    "redacted": true
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/source-manifest.json",
+    "published_path": "evidence/eva-learning-pilot-20261108/source-manifest.json",
+    "original_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "published_sha256": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle1-20261108/train.py.txt",
+    "original_sha256": "5f6cf918a7155460c44fd3c76e832aff5ddcdc95e04652a32fb858164e4bb88a",
+    "published_sha256": "5f6cf918a7155460c44fd3c76e832aff5ddcdc95e04652a32fb858164e4bb88a",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle1-20261108/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle1-20261108/controller.py.txt",
+    "original_sha256": "d8a225383e490cf12bb95e67e4463b77dec05aeb7ac33c2c7673bdd8231e9f3b",
+    "published_sha256": "d8a225383e490cf12bb95e67e4463b77dec05aeb7ac33c2c7673bdd8231e9f3b",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle1-20261108/guard.py.txt",
+    "original_sha256": "eddf1b5cf6e82649ad1de763aaa023ea95b93441057e7cbaff1a2fc2e883e29f",
+    "published_sha256": "eddf1b5cf6e82649ad1de763aaa023ea95b93441057e7cbaff1a2fc2e883e29f",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle1-20261108/packages.txt",
+    "published_path": "protocol-sources/eva-learning-cycle1-20261108/packages.txt.txt",
+    "original_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "published_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/train.py.txt",
+    "original_sha256": "c93d2016566ce880c12c68bbba8096724f34657bb00d1631efdbee340bb27ea6",
+    "published_sha256": "c93d2016566ce880c12c68bbba8096724f34657bb00d1631efdbee340bb27ea6",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/controller.py.txt",
+    "original_sha256": "87cb16af7a6e5f26e003e494bb75106caf8366f69386f0675a3d387f005c7b62",
+    "published_sha256": "87cb16af7a6e5f26e003e494bb75106caf8366f69386f0675a3d387f005c7b62",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/guard.py.txt",
+    "original_sha256": "200e8a3229ae7ed2466677eca9ee3d009385a3b816c91b9417220ec200575e9c",
+    "published_sha256": "200e8a3229ae7ed2466677eca9ee3d009385a3b816c91b9417220ec200575e9c",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/preflight.py.txt",
+    "original_sha256": "505387a5591269966c8c38c834e68a0f8832563eecfd6adbfeefea36484970d3",
+    "published_sha256": "505387a5591269966c8c38c834e68a0f8832563eecfd6adbfeefea36484970d3",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle2-dual200-20261108/packages.txt",
+    "published_path": "protocol-sources/eva-learning-cycle2-dual200-20261108/packages.txt.txt",
+    "original_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "published_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/train.py.txt",
+    "original_sha256": "d2c89eab5a8b121fc2370dfe2864941e417d7cb231c7a476ec2a15c99016e230",
+    "published_sha256": "d2c89eab5a8b121fc2370dfe2864941e417d7cb231c7a476ec2a15c99016e230",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/prepare_dataset.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/prepare_dataset.py.txt",
+    "original_sha256": "d70e67e0b4cbd3202af057fe0c9acfb47a6ec7282f6e4db9990b11addf39c325",
+    "published_sha256": "d70e67e0b4cbd3202af057fe0c9acfb47a6ec7282f6e4db9990b11addf39c325",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/controller.py.txt",
+    "original_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "published_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/thermal_fallback.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/thermal_fallback.py.txt",
+    "original_sha256": "3f5f8007e6afeeb099f1ca62d615a1a8b6bff1dd38478b87f5b54a4877fd7f92",
+    "published_sha256": "3f5f8007e6afeeb099f1ca62d615a1a8b6bff1dd38478b87f5b54a4877fd7f92",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/preflight.py.txt",
+    "original_sha256": "3a5d525376ea7900251280604cfef4378c382654ec2255f1687627ea4ddb206c",
+    "published_sha256": "3a5d525376ea7900251280604cfef4378c382654ec2255f1687627ea4ddb206c",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle3-targeted-20261108/packages.txt",
+    "published_path": "protocol-sources/eva-learning-cycle3-targeted-20261108/packages.txt.txt",
+    "original_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "published_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/train.py.txt",
+    "original_sha256": "c52cc0289de13e43f99b09a075b75dbfa2fd14a651788e92dc35e6cae22bf373",
+    "published_sha256": "c52cc0289de13e43f99b09a075b75dbfa2fd14a651788e92dc35e6cae22bf373",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/prepare_dataset.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/prepare_dataset.py.txt",
+    "original_sha256": "9a5affdaa85be9ea64a6f6902b97abf8eb993d6cdbfb902108369b8931a3fdbf",
+    "published_sha256": "9a5affdaa85be9ea64a6f6902b97abf8eb993d6cdbfb902108369b8931a3fdbf",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/controller.py.txt",
+    "original_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "published_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/thermal_fallback.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/thermal_fallback.py.txt",
+    "original_sha256": "dbb47f8b33009cbd9de73a057fa03eba768e46ebcc9b3b4166b0a466c18c7124",
+    "published_sha256": "dbb47f8b33009cbd9de73a057fa03eba768e46ebcc9b3b4166b0a466c18c7124",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/preflight.py.txt",
+    "original_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "published_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/packages.txt",
+    "published_path": "protocol-sources/eva-learning-cycle4-comprehension-20261109/packages.txt.txt",
+    "original_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "published_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/train.py.txt",
+    "original_sha256": "9d5250da41c0c987854bd1902416a5dbf6bc81e235acd9d2d31a9131bdd7836c",
+    "published_sha256": "9d5250da41c0c987854bd1902416a5dbf6bc81e235acd9d2d31a9131bdd7836c",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/prepare_dataset.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/prepare_dataset.py.txt",
+    "original_sha256": "ff3f222690662eb0df3eaf3a11722c7ad33b5dbde63960085bc1d851ddfe1bd7",
+    "published_sha256": "ff3f222690662eb0df3eaf3a11722c7ad33b5dbde63960085bc1d851ddfe1bd7",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/controller.py.txt",
+    "original_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "published_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/thermal_fallback.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/thermal_fallback.py.txt",
+    "original_sha256": "4983656514640f8bc5e71afe6c7eb3434137ab0ea53fecabe96d56d711556abc",
+    "published_sha256": "4983656514640f8bc5e71afe6c7eb3434137ab0ea53fecabe96d56d711556abc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle5-progressive-20261109/preflight.py.txt",
+    "original_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "published_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/train.py.txt",
+    "original_sha256": "978edd1c7996de09aa091e593da7e3eb616288589d2e3be513a3649e78d39d72",
+    "published_sha256": "978edd1c7996de09aa091e593da7e3eb616288589d2e3be513a3649e78d39d72",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/prepare_dataset.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/prepare_dataset.py.txt",
+    "original_sha256": "9d96ecebf140b1748c55b541fa5669652f3743435c7cef8e1c9e158ffe6c95ec",
+    "published_sha256": "9d96ecebf140b1748c55b541fa5669652f3743435c7cef8e1c9e158ffe6c95ec",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/controller.py.txt",
+    "original_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "published_sha256": "34bcf354590fe41efdedad7588fc6b2e08f87e058cc0b87017c4089f45221d6e",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/thermal_fallback.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/thermal_fallback.py.txt",
+    "original_sha256": "91cd52e907b849df7a2d6ce60443d549c8cd531e2fe629ad7971993cef8246c1",
+    "published_sha256": "91cd52e907b849df7a2d6ce60443d549c8cd531e2fe629ad7971993cef8246c1",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle6-consolidation-20261109/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle6-consolidation-20261109/preflight.py.txt",
+    "original_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "published_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/train.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/train.py.txt",
+    "original_sha256": "4ca075228102f6ecfbc4627e864efca4ffde97bb47611202fac56cddc5ad2e43",
+    "published_sha256": "4ca075228102f6ecfbc4627e864efca4ffde97bb47611202fac56cddc5ad2e43",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/prepare_dataset.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/prepare_dataset.py.txt",
+    "original_sha256": "f9307f7752250e167e08eebeba4bd7a16f0092ac6730e7459cc1732651c27dac",
+    "published_sha256": "f9307f7752250e167e08eebeba4bd7a16f0092ac6730e7459cc1732651c27dac",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/controller.py.txt",
+    "original_sha256": "207283a348ac213de0d88a3c4e9dcc13958097bdaa0cbfc54a1a098f1185fdbf",
+    "published_sha256": "207283a348ac213de0d88a3c4e9dcc13958097bdaa0cbfc54a1a098f1185fdbf",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/thermal_fallback.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/thermal_fallback.py.txt",
+    "original_sha256": "de5d09e88dd13ad82e8dd140066eb1744d35d5e995cfbeb8be60c615e5e56a74",
+    "published_sha256": "de5d09e88dd13ad82e8dd140066eb1744d35d5e995cfbeb8be60c615e5e56a74",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/checkpoint_selector.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/checkpoint_selector.py.txt",
+    "original_sha256": "cb1ec44fca40d9a9a3994d551ae1f6f290ded41f0ef9c83d61926a4487cd9229",
+    "published_sha256": "cb1ec44fca40d9a9a3994d551ae1f6f290ded41f0ef9c83d61926a4487cd9229",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/preflight.py",
+    "published_path": "protocol-sources/eva-learning-cycle7-validation-20261109/preflight.py.txt",
+    "original_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "published_sha256": "a79ee603c7fd7d14a0f7817cbe7741f51e61db2c94c19797873caea37ba576b8",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/curriculum.py",
+    "published_path": "protocol-sources/eva-learning-cycle8-audit-20261109/curriculum.py.txt",
+    "original_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "published_sha256": "d1a886138524c20f556d840010136f1a7c1de8951cf9eb40a7e44b9bbebee785",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/controller.py",
+    "published_path": "protocol-sources/eva-learning-cycle8-audit-20261109/controller.py.txt",
+    "original_sha256": "a0ba6467bd8d26c213488e9a7328fb7f2b1ce38a6ebf605fd60185ec25962af2",
+    "published_sha256": "a0ba6467bd8d26c213488e9a7328fb7f2b1ce38a6ebf605fd60185ec25962af2",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/guard.py",
+    "published_path": "protocol-sources/eva-learning-cycle8-audit-20261109/guard.py.txt",
+    "original_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "published_sha256": "cbae38c7ec6e8f3e2d4d26167c27ca2555e7791493dc30f4e3231286a35196cc",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/evaluate_checkpoints.py",
+    "published_path": "protocol-sources/eva-learning-cycle8-audit-20261109/evaluate_checkpoints.py.txt",
+    "original_sha256": "549549e2dddfd8ba5b5623c12971c790630c9ffa878864dcca3f133ac6507950",
+    "published_sha256": "549549e2dddfd8ba5b5623c12971c790630c9ffa878864dcca3f133ac6507950",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-cycle8-audit-20261109/prepare_audit.py",
+    "published_path": "protocol-sources/eva-learning-cycle8-audit-20261109/prepare_audit.py.txt",
+    "original_sha256": "ac8f3a6de087caed1d8a90a91b90e3136fabe32951d039a5900dc3e4d581c433",
+    "published_sha256": "ac8f3a6de087caed1d8a90a91b90e3136fabe32951d039a5900dc3e4d581c433",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/train.py",
+    "published_path": "protocol-sources/eva-learning-pilot-20261108/train.py.txt",
+    "original_sha256": "8a87cbb5ec88e0885c3f378496a780587634a4e2b4d2a75970ad711fa822dae6",
+    "published_sha256": "8a87cbb5ec88e0885c3f378496a780587634a4e2b4d2a75970ad711fa822dae6",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/controller.py",
+    "published_path": "protocol-sources/eva-learning-pilot-20261108/controller.py.txt",
+    "original_sha256": "fae381e1dd7425943b19ea47841408df092fc3a02690f80258c31e8e3a17a4d6",
+    "published_sha256": "fae381e1dd7425943b19ea47841408df092fc3a02690f80258c31e8e3a17a4d6",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/guard.py",
+    "published_path": "protocol-sources/eva-learning-pilot-20261108/guard.py.txt",
+    "original_sha256": "4140d8b39a42e041dcc3a291227b9b2ca53549762fb660b2a671e3490b998c27",
+    "published_sha256": "4140d8b39a42e041dcc3a291227b9b2ca53549762fb660b2a671e3490b998c27",
+    "redacted": false
+  },
+  {
+    "server_path": "/srv/eidolon/work/eva-learning-pilot-20261108/packages.txt",
+    "published_path": "protocol-sources/eva-learning-pilot-20261108/packages.txt.txt",
+    "original_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "published_sha256": "bc0e83bfbb63f7cefd8e574e179a56072ce0f1f90112669b811b4aa9b18c2aa0",
+    "redacted": false
+  },
+  {
+    "server_path": "model-config.json",
+    "published_path": "protocol-sources/model-config.json.txt",
+    "original_sha256": "fa52ea5ef3a0e11d3b9c5551101d53472cec544f6e11f5bee7af1a832cd53583",
+    "published_sha256": "fa52ea5ef3a0e11d3b9c5551101d53472cec544f6e11f5bee7af1a832cd53583",
+    "redacted": false
+  },
+  {
+    "server_path": "adapter-config.json",
+    "published_path": "protocol-sources/adapter-config.json.txt",
+    "original_sha256": "09ed4908f53e4c6069668b1f6fd6b768b4f3e5b0980f5fb6c8a54821503c9d5b",
+    "published_sha256": "09ed4908f53e4c6069668b1f6fd6b768b4f3e5b0980f5fb6c8a54821503c9d5b",
+    "redacted": false
+  }
+]

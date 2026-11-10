@@ -1,0 +1,53 @@
+from pathlib import Path
+from fractions import Fraction
+import json,re,collections,hashlib
+from curriculum import examples,grade
+P=Path(__file__).resolve().parent;W=P.parent
+OLD=W/'eva-learning-cycle6-consolidation-20261109'
+C=json.loads((P/'config.json').read_text());data=json.loads((OLD/'dataset.json').read_text())
+def key(x):return (x['family'],tuple(sorted(map(int,re.findall(r'\d+',x['question'].split(' Termine')[0])))))
+seen=set()
+for folder in W.glob('eva-learning-*'):
+ f=folder/'dataset.json'
+ if f.exists() and folder!=P:
+  d=json.loads(f.read_text())
+  seen.update(key(x) for rows in d.values() if isinstance(rows,list) for x in rows if isinstance(x,dict) and 'family' in x)
+changed=0
+for x in data['train']:
+ if x.get('rehearsal'):continue
+ skill,a,b=x['semantic_key']
+ if skill=='time':
+  end=a+b;why=f'{a} + {b} = {end} minutes depuis minuit. Arrivée {x["expected"]["resultat"]}, décalage {end//1440} jour(s).'
+ elif skill=='money':why=f'{a} + {b} = {a+b} centimes, soit {x["expected"]["resultat"]} euros.'
+ else:why=f'{a} ÷ {b} = {Fraction(a,b)} en fraction irréductible.'
+ x['answer']=why+'\n'+json.dumps(x['expected'],ensure_ascii=False);changed+=1
+assert changed==800
+valid=[];counts=collections.Counter()
+for x in examples(C['validation_seed'],20000):
+ if counts[x['family']]>=32 or key(x) in seen:continue
+ seen.add(key(x));counts[x['family']]+=1;valid.append(x)
+ if len(valid)==256:break
+assert len(valid)==256
+selection=[]
+for f in range(8):selection.extend([x for x in valid if x['family']==f][:8])
+data['validation']=valid;data['selection']=selection
+data['warning']='Same2400 training questions as cycle6; only800 targeted answers shortened. 64 balanced validation questions select checkpoints;608 previously observed evaluation questions never select checkpoints. No automatic promotion.'
+for rows in [data['train'],valid,data['heldout'],selection]:assert all(grade(x['answer'],x['expected'])['exact'] for x in rows)
+assert not ({key(x) for x in data['train']}&{key(x) for x in valid+data['heldout']})
+assert not ({key(x) for x in valid}&{key(x) for x in data['heldout']})
+assert len({x['id'] for x in selection})==64
+(P/'dataset.json').write_text(json.dumps(data,ensure_ascii=False))
+C['expected_family_counts']={n:dict(collections.Counter(x['family'] for x in data[n])) for n in ['train','validation','heldout']};(P/'config.json').write_text(json.dumps(C,indent=2))
+sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+(P/'lineage.json').write_text(json.dumps(dict(parent_adapter=C['parent_adapter'],parent_adapter_sha256=sha(Path(C['parent_adapter'])/'adapter_model.safetensors'),dataset_sha256=sha(P/'dataset.json'),source_revision=C['source_revision'],learning_rate=C['learning_rate'],scope='Controlled target-answer shortening; same training questions, order, learning rate and full epoch as cycle6. Checkpoint selection on64 separate validation questions.'),indent=2))
+assert json.loads((OLD/'config.json').read_text())['parent_adapter']==C['parent_adapter']
+for kind in ['evaluation','canaries']:
+ for rank in range(2):
+  rows=[]
+  for f in (OLD/'dual-resumable').glob(kind+'-rank*.jsonl'):
+   for l in f.read_text().splitlines():
+    r=json.loads(l)
+    if r['stage']=='before' and r['rank']==rank:rows.append(dict(r,baseline_source='cycle6 before, identical cycle5 parent, generation config and608 evaluation cases'))
+  (P/f'{kind}-rank{rank}.jsonl').write_text(''.join(json.dumps(r,ensure_ascii=False)+'\n' for r in rows))
+print(json.dumps(dict(train=len(data['train']),shortened=changed,validation=len(valid),selection=len(selection),heldout=len(data['heldout']),split_checks_passed=True)))
+

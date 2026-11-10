@@ -1,0 +1,14 @@
+{
+  "epoch": 1794257902.5400715,
+  "state": "finished",
+  "all_candidates_verified": true,
+  "blind_test_untouched": true,
+  "files": {
+    "audit-summary.json": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+    "Rapport_Eva_audit_checkpoints.txt": "4cb6580e0e5101668677138420d650ea0df8075fdbefdc93c70328172335cc4b",
+    "run/quality-comparison.json": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+    "candidates.json": "13cad7914611a9df60991466cf46a2471513e5b493846032ece73eb21c24de9e",
+    "challenge-validation.json": "987701cdbffc67cf3bda70fd408bd7e86a4f3779ba10df1f23552163f7b19e0f",
+    "final-test-reserved.json": "1f83e9d9740cabded1e044cb1913fbff612fe59465b9bda89acc756c489ff645"
+  }
+}

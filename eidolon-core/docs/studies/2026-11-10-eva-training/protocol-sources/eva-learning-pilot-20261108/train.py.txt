@@ -1,0 +1,108 @@
+"""Isolated QLoRA hardware pilot; never changes the production model."""
+import os,time,json,pathlib,hashlib,signal,random,copy,math
+P=pathlib.Path(__file__).resolve().parent
+def save(n,d):
+ p=P/(n+'.tmp');p.write_text(json.dumps(d,ensure_ascii=False));p.replace(P/n)
+def append(n,d):
+ with (P/n).open('a') as f:f.write(json.dumps(d,ensure_ascii=False)+'\n')
+def progress(stage,**kw):save('train-progress.json',dict(stage=stage,epoch=time.time(),**kw))
+progress('importing')
+import torch
+from transformers import AutoTokenizer,AutoModelForCausalLM,BitsAndBytesConfig
+from peft import LoraConfig,get_peft_model,prepare_model_for_kbit_training,get_peft_model_state_dict,set_peft_model_state_dict
+assert torch.cuda.device_count()==1,'Unexpected visible GPUs'
+assert torch.cuda.get_device_capability(0)==(8,6),'Unexpected GPU architecture'
+C=json.loads((P/'config.json').read_text());torch.set_num_threads(6);torch.manual_seed(1234);random.seed(1234)
+dtype=torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+progress('tokenizer')
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token=tokenizer.eos_token
+SYSTEM='Tu es un assistant francophone. Résous le calcul en donnant les opérations intermédiaires exactes puis le résultat. N’invente aucune donnée.'
+def examples(seed,n,heldout=False):
+ rng=random.Random(seed);out=[]
+ for i in range(n):
+  a=rng.randint(2,999);b=rng.randint(2,99);c=rng.randint(1,99);f=i%4
+  if f==0:
+   val=a*b-c;question=f'Calcule ({a} × {b}) − {c}.';answer=f'{a} × {b} = {a*b}.\n{a*b} − {c} = {val}.\nRésultat : {val}.';assert val+c==a*b
+  elif f==1:
+   val=(a+c)*b;question=f'Calcule ({a} + {c}) × {b}.';answer=f'{a} + {c} = {a+c}.\n{a+c} × {b} = {val}.\nRésultat : {val}.';assert val//b==a+c
+  elif f==2:
+   val=a-c;question=f'On répartit {a*b} pièces en {b} lots égaux puis on retire {c} pièces d’un lot. Combien reste-t-il dans ce lot ?';answer=f'{a*b} ÷ {b} = {a}.\n{a} − {c} = {val}.\nRésultat : {val} pièces.';assert (val+c)*b==a*b
+  else:
+   minutes=rng.randrange(1440);delta=rng.randint(1,500);end=minutes+delta;clock=f'{end//60%24:02d}:{end%60:02d}';question=f'Départ à {minutes//60:02d}:{minutes%60:02d}, durée {delta} minutes. Quelle est l’heure d’arrivée et le décalage en jours ?';answer=f'{minutes} + {delta} = {end} minutes depuis minuit.\nRésultat : {clock}, décalage de {end//1440} jour(s).';assert end//1440*1440+(end//60%24)*60+end%60==end
+  out.append(dict(id=f'{seed}-{i}',question=question,answer=answer,family=f))
+ return out
+train=examples(1234,2048);valid=examples(97531,128,True)
+assert not ({x['question'] for x in train}&{x['question'] for x in valid})
+save('dataset.json',dict(train=train,validation=valid,warning='Exploratory pilot only. Validation shares task families and templates; not a generalisation test.'))
+def encode(examples):
+ packed=[];ids=[];labels=[];L=C['sequence_length'];lengths=[]
+ for ex in examples:
+  messages=[dict(role='system',content=SYSTEM),dict(role='user',content=ex['question'])]
+  prefix=tokenizer.apply_chat_template(messages,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+  full=tokenizer.apply_chat_template(messages+[dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+  assert full.startswith(prefix),'Assistant masking prefix mismatch'
+  enc=tokenizer(full,add_special_tokens=False,return_offsets_mapping=True)
+  seq=enc['input_ids'];lab=[t if off[0]>=len(prefix) else -100 for t,off in zip(seq,enc['offset_mapping'])]
+  assert any(t!=-100 for t in lab),'No supervised target tokens'
+  if len(seq)>L:raise RuntimeError('Example exceeds sequence length: '+str(len(seq)))
+  lengths.append(len(seq))
+  if len(ids)+len(seq)>L:
+   packed.append((ids,labels));ids=[];labels=[]
+  ids+=seq;labels+=lab
+ if ids:packed.append((ids,labels))
+ batches=[]
+ for seq,lab in packed:
+  actual=len(seq);batches.append(dict(input_ids=torch.tensor([seq+[tokenizer.pad_token_id]*(L-actual)]),attention_mask=torch.tensor([[1]*actual+[0]*(L-actual)]),labels=torch.tensor([lab+[-100]*(L-actual)])))
+ return batches,dict(examples=len(examples),packs=len(batches),tokens=sum(lengths),mean_tokens_per_example=sum(lengths)/len(lengths),max_tokens_per_example=max(lengths),packing='Whole examples concatenated; causal attention crosses sample boundaries; padding masked; assistant-only loss.')
+train_batches,train_info=encode(train);valid_batches,valid_info=encode(valid)
+save('dataset-statistics.json',dict(train=train_info,validation=valid_info,template_sha256=hashlib.sha256(tokenizer.chat_template.encode()).hexdigest()))
+progress('loading_model')
+quant=BitsAndBytesConfig(load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=dtype)
+model=AutoModelForCausalLM.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False,quantization_config=quant,torch_dtype=dtype,device_map={'':0},attn_implementation='sdpa')
+model.config.use_cache=False
+model=prepare_model_for_kbit_training(model,use_gradient_checkpointing=True,gradient_checkpointing_kwargs={'use_reentrant':False})
+model=get_peft_model(model,LoraConfig(r=8,lora_alpha=16,lora_dropout=0.0,target_modules='all-linear',bias='none',task_type='CAUSAL_LM'))
+params=[p for p in model.parameters() if p.requires_grad];assert params
+initial={k:v.detach().cpu().clone() for k,v in get_peft_model_state_dict(model).items()}
+init_hash=hashlib.sha256(b''.join(v.contiguous().view(torch.uint8).numpy().tobytes() for k,v in sorted(initial.items()))).hexdigest()
+save('training-qualification.json',dict(torch=torch.__version__,cuda_runtime=torch.version.cuda,gpu=torch.cuda.get_device_name(),dtype=str(dtype),trainable_parameters=sum(p.numel() for p in params),initial_adapter_sha256=init_hash,device_map={k:str(v) for k,v in model.hf_device_map.items()},attention='sdpa',quantization='NF4, double quant; distinct from inference Q4_K_M',assistant_only_loss=True,sequence_length=C['sequence_length'],micro_batch=1,gradient_accumulation=C['gradient_accumulation']))
+def batch(b):return {k:v.to('cuda') for k,v in b.items()}
+def evaluate():
+ model.eval();losses=[]
+ with torch.no_grad():
+  for b in valid_batches[:8]:
+   with torch.autocast('cuda',dtype=dtype):loss=model(**batch(b)).loss
+   losses.append(float(loss))
+ model.train();return sum(losses)/len(losses)
+def update(optimizer,scaler,index):
+ optimizer.zero_grad(set_to_none=True);nonpad=supervised=0;losses=[];t0=time.perf_counter()
+ for g in range(C['gradient_accumulation']):
+  b=train_batches[(index*C['gradient_accumulation']+g)%len(train_batches)];nonpad+=int(b['attention_mask'].sum());supervised+=int((b['labels'][:,1:]!=-100).sum())
+  with torch.autocast('cuda',dtype=dtype):loss=model(**batch(b)).loss
+  if not torch.isfinite(loss):raise RuntimeError('Nonfinite loss')
+  losses.append(float(loss.detach()));scaler.scale(loss/C['gradient_accumulation']).backward()
+ scaler.unscale_(optimizer);norm=torch.nn.utils.clip_grad_norm_(params,1.0)
+ if not torch.isfinite(norm):raise RuntimeError('Nonfinite gradient norm')
+ old=scaler.get_scale();scaler.step(optimizer);scaler.update();torch.cuda.synchronize()
+ if scaler.get_scale()<old:raise RuntimeError('Optimizer step skipped due to overflow')
+ return dict(seconds=time.perf_counter()-t0,nonpadding_tokens=nonpad,supervised_tokens=supervised,padded_tokens=C['sequence_length']*C['gradient_accumulation'],loss=sum(losses)/len(losses),gradient_norm=float(norm),allocated_mib=torch.cuda.memory_allocated()/1048576,reserved_mib=torch.cuda.memory_reserved()/1048576,max_allocated_mib=torch.cuda.max_memory_allocated()/1048576,max_reserved_mib=torch.cuda.max_memory_reserved()/1048576)
+progress('loaded')
+for power in C['powers']:
+ while True:
+  if (P/'command.json').exists():
+   cmd=json.loads((P/'command.json').read_text())
+   if cmd.get('power_w')==power:break
+  time.sleep(.2)
+ set_peft_model_state_dict(model,initial);torch.manual_seed(1234);model.train()
+ optimizer=torch.optim.AdamW(params,lr=1e-4,weight_decay=0.0,foreach=False);scaler=torch.amp.GradScaler('cuda',enabled=dtype==torch.float16)
+ baseline=evaluate();progress('warmup',power_w=power)
+ for i in range(2):update(optimizer,scaler,i);progress('warmup',power_w=power,step=i)
+ torch.cuda.reset_peak_memory_stats();torch.cuda.synchronize();start=time.time();deadline=time.monotonic()+C['seconds_per_power'];i=2;rows=[]
+ progress('measuring',power_w=power,start=start)
+ while time.monotonic()<deadline:
+  r=update(optimizer,scaler,i);r.update(power_w=power,optimizer_step=i,epoch=time.time());rows.append(r);append('steps.jsonl',r);i+=1;progress('measuring',power_w=power,start=start,optimizer_step=i)
+ end=time.time();progress('validation',power_w=power);after=evaluate()
+ save('cell-'+str(power)+'.json',dict(power_w=power,start=start,end=end,seconds=end-start,optimizer_steps=len(rows),nonpadding_tokens=sum(r['nonpadding_tokens'] for r in rows),supervised_tokens=sum(r['supervised_tokens'] for r in rows),padded_tokens=sum(r['padded_tokens'] for r in rows),initial_adapter_sha256=init_hash,validation_loss_before=baseline,validation_loss_after=after,validation_warning='Same-family synthetic loss, not arithmetic accuracy or conversation quality.'))
+ model.save_pretrained(P/'adapters'/str(power));del optimizer;torch.cuda.empty_cache();progress('waiting',power_w=power)
+progress('finished')

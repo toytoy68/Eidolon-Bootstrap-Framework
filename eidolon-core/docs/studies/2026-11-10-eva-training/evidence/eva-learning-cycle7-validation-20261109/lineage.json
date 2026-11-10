@@ -1,0 +1,9 @@
+{
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "parent_adapter_sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30",
+  "dataset_sha256": "80d92111c1c7b067f7399d6eeaf15c0d957281ca02e133c5fe487f739402a467",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "learning_rate": 3e-06,
+  "scope": "Controlled target-answer shortening; same training questions, order, learning rate and full epoch as cycle6. Checkpoint selection on64 separate validation questions.",
+  "baseline_policy": "Remeasure all608 before and after on same V100; cycle6 cached outputs archived, not reused"
+}

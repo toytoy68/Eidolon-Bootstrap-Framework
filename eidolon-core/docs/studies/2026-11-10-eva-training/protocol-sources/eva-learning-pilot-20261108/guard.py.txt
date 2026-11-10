@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""Eva exploratory campaign. Independent guard, bounded windows, full raw evidence."""
+import concurrent.futures as cf,contextlib,fcntl,hashlib,json,os,pathlib,re,signal,socket,subprocess as sp,sys,threading,time,urllib.request
+from corpus import *
+P=pathlib.Path(__file__).resolve().parent
+C=json.loads((P/'config.json').read_text())
+lock=threading.Lock();stop=threading.Event();engine=None;guard=None
+state={'phase':'starting','epoch':time.time(),'heartbeat':time.time()}
+def save(name,data):
+    q=P/(name+'.'+str(os.getpid())+'.'+str(threading.get_ident())+'.tmp');q.write_text(json.dumps(data,ensure_ascii=False));q.replace(P/name)
+def append(name,data):
+    with lock:
+        with (P/name).open('a') as f:f.write(json.dumps(data,ensure_ascii=False)+'\n')
+def status(**kw):
+    state.update(kw);state.update(epoch=time.time(),heartbeat=time.time());save('status.json',state)
+def get(path,data=None,timeout=15):
+    req=urllib.request.Request('http://127.0.0.1:'+str(C['port'])+path,data=None if data is None else json.dumps(data,ensure_ascii=False).encode(),headers={'Content-Type':'application/json'})
+    return urllib.request.urlopen(req,timeout=timeout)
+def jget(path,data=None,timeout=15):
+    with get(path,data,timeout) as r:return json.load(r)
+def restore():
+    original=json.loads((P/'original.json').read_text())['power_w']
+    r=sp.run(['nvidia-smi','-i',C['uuid'],'-pl',str(original)],capture_output=True,text=True,timeout=12)
+    save('restore.json',dict(epoch=time.time(),requested_w=original,returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
+    return r.returncode
+def kill_engine():
+    global engine
+    if engine is not None and engine.poll() is None:
+        engine.terminate()
+        try:engine.wait(timeout=4)
+        except sp.TimeoutExpired:engine.kill();engine.wait(timeout=3)
+    engine=None
+def tripped():
+    if (P/'guard-trip.json').exists():raise RuntimeError('guard_trip: '+(P/'guard-trip.json').read_text())
+def notify():
+    a=os.environ.get('NOTIFY_SOCKET')
+    if a:
+        with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall(b'WATCHDOG=1')
+
+def guard_run():
+    # This process alone performs repeated NVML reads. Main never polls nvidia-smi.
+    from nvml_sampler import sample
+    latest_meter={};meter_error=[];ending=threading.Event();fault=[]
+    def meter():
+        while not ending.is_set():
+            try:
+                with urllib.request.urlopen(C['meter_url'],timeout=3) as r:d=json.load(r)
+                latest_meter.update(epoch=time.time(),wall_w=float(d['apower']),wall_energy_wh=float(d['aenergy']['total']));meter_error.clear()
+            except Exception as e:meter_error[:]=[repr(e)]
+            ending.wait(1)
+    threading.Thread(target=meter,daemon=True).start()
+    kernel=sp.Popen(['journalctl','-k','-b','-f','-n','0','--no-pager','-o','short-iso'],stdout=sp.PIPE,stderr=sp.STDOUT,text=True)
+    def kreader():
+        for line in kernel.stdout:
+            with (P/'kernel.log').open('a') as f:f.write(line)
+            if re.search(r'NVRM: Xid|\bBUG:|Oops:|Hardware Error|hard LOCKUP|soft lockup',line):fault.append(line.strip())
+    threading.Thread(target=kreader,daemon=True).start()
+    baseline=None;start=time.monotonic()
+    try:
+        while not (P/'guard-stop').exists():
+            t=sample();now=time.time()
+            if baseline is None:
+                baseline={k:t.get(k) for k in ['ecc_corrected','ecc_uncorrected','ecc_aggregate_corrected','ecc_aggregate_uncorrected']};save('ecc-baseline.json',baseline)
+            for k,v in baseline.items():
+                if v is not None and t[k]!=v:raise RuntimeError('ECC counter changed: '+k)
+            if t['gpu_c']>=C['gpu_stop_c'] or t['cpu_c']>=70:raise RuntimeError('temperature GPU/CPU: '+json.dumps(t))
+            if t.get('hbm_c') is not None and t['hbm_c']>=83:raise RuntimeError('temperature HBM: '+json.dumps(t))
+            if fault:raise RuntimeError('kernel: '+fault[0])
+            if kernel.poll() is not None:raise RuntimeError('kernel monitor ended')
+            if now-latest_meter.get('epoch',0)>8 and time.monotonic()-start>8:raise RuntimeError('sector telemetry missing: '+str(meter_error))
+            s=json.loads((P/'status.json').read_text())
+            if now-s['heartbeat']>30:raise RuntimeError('controller heartbeat stale')
+            t.update(phase=s.get('phase'),window_id=s.get('window_id'),requested_w=s.get('power_w'),**latest_meter)
+            # Preserve GPU sample epoch separately; meter has its own age.
+            t['meter_epoch']=latest_meter.get('epoch');t['epoch']=now
+            append('guard-telemetry.jsonl',t);save('guard-status.json',dict(state='monitoring',epoch=now,sample=t));notify()
+            ending.wait(.5)
+    except BaseException as e:
+        trip=dict(epoch=time.time(),reason=repr(e),last_sample=locals().get('t'));save('guard-trip.json',trip);save('guard-status.json',dict(state='tripped',**trip))
+        try:
+            pid=json.loads((P/'engine-pid.json').read_text())['pid']
+            if str(P).encode() in pathlib.Path(f'/proc/{pid}/cmdline').read_bytes():os.kill(pid,signal.SIGTERM)
+        except Exception:pass
+        try:os.kill(int((P/'controller.pid').read_text()),signal.SIGTERM)
+        except Exception:pass
+    finally:
+        ending.set();kernel.terminate()
+        try:kernel.wait(timeout=3)
+        except sp.TimeoutExpired:kernel.kill()
+
+def begin_engine(ctx,parallel,tag):
+    global engine
+    kill_engine();status(phase='cooling',window_id=tag)
+    deadline=time.monotonic()+600
+    while True:
+        tripped();status()
+        if (P/'guard-status.json').exists():
+            t=json.loads((P/'guard-status.json').read_text()).get('sample',{})
+            if t.get('gpu_c',999)<=45 and (t.get('hbm_c') is None or t['hbm_c']<=45):break
+        if time.monotonic()>deadline:raise RuntimeError('cooldown_timeout')
+        time.sleep(1)
+    cmd=[C['server'],'-m',str(P/'model.gguf'),'-lv','4','-ngl','999','-c',str(ctx*parallel),'-np',str(parallel),'-b','512','-ub','512','-t','6','-tb','6','-fa',C.get('fa','off'),'-ctk','f16','-ctv','f16','--cache-ram','0','--host','127.0.0.1','--port',str(C['port'])]
+    log=P/('engine-'+tag+'.log');env=dict(os.environ,CUDA_VISIBLE_DEVICES=C['uuid'],LD_LIBRARY_PATH=C['libpath'],LLAMA_ARG_CACHE_RAM='0')
+    t0=time.monotonic();engine=sp.Popen(cmd,env=env,stdout=log.open('w'),stderr=sp.STDOUT);save('engine-pid.json',dict(pid=engine.pid));status(phase='loading')
+    for _ in range(360):
+        tripped();status()
+        if engine.poll() is not None:raise RuntimeError('engine_load_failed '+tag)
+        try:
+            if jget('/health',timeout=1).get('status')=='ok':break
+        except Exception:pass
+        time.sleep(.5)
+    else:raise RuntimeError('engine_load_timeout')
+    text=log.read_text();pairs=re.findall(r'offloaded\s+(\d+)/(\d+)\s+layers',text)
+    if not pairs or any(a!=b for a,b in pairs):raise RuntimeError('full_GPU_offload_not_confirmed')
+    fa_lines=[x for x in text.splitlines() if 'flash_attn' in x.lower() or 'flash attention' in x.lower()]
+    if C.get('fa','off')=='off' and not any(re.search(r'(disabled|=\s*0|=\s*off)',x,re.I) for x in fa_lines):raise RuntimeError('FA_OFF_not_confirmed '+str(fa_lines))
+    jget('/completion',dict(prompt='Bonjour',n_predict=4,temperature=0,stream=False,cache_prompt=False),timeout=20)
+    append('qualification.jsonl',dict(epoch=time.time(),tag=tag,command=cmd,load_seconds=time.monotonic()-t0,full_offload=pairs,fa_lines=fa_lines,ctx_per_session=ctx,parallel=parallel,props=jget('/props')))
+
+def tokenize(text):return jget('/tokenize',dict(content=text),timeout=10)['tokens']
+def render(messages):
+    return jget('/apply-template',dict(messages=messages,add_generation_prompt=True,enable_thinking=False),timeout=10)['prompt']
+def context_case(c):
+    target=c['budget']-768;count=max(1,target//40)
+    for _ in range(6):
+        prompt,expected=context_prompt(c,count);n=len(tokenize(prompt))
+        if n<=target and n>target*.94:break
+        count=max(1,int(count*target/max(n,1))-(1 if n>target else 0))
+    while n>target:
+        count=max(1,count-1);prompt,expected=context_prompt(c,count);n=len(tokenize(prompt))
+    return dict(c,prompt=prompt,expected=expected,document_tokens=n,target_document_tokens=target)
+
+def ask(c,messages,deadline,window,lane,seq,turn=None,load=False):
+    row=dict(case_id=c['id'],family=c['family'],window_id=window,lane=lane,seq=seq,turn=turn,started=time.time(),expected=c.get('expected'),document_tokens=c.get('document_tokens'))
+    t0=time.monotonic();first=None;text='';done=False;data=None
+    try:
+        prompt=render(messages);nt=len(tokenize(prompt));budget=c.get('max_tokens',256)
+        if nt+budget>CURRENT['ctx']:raise ValueError(f'context_overflow:{nt}+{budget}>{CURRENT["ctx"]}')
+        data=dict(prompt=prompt,n_predict=budget,temperature=0,seed=seq+lane*10000,stream=True,cache_prompt=False,ignore_eos=load)
+        row.update(messages=messages,payload_sha256=sha(data),canonical_case_sha256=sha(c),prompt_tokens_checked=nt,parameters={k:v for k,v in data.items() if k!='prompt'})
+        with get('/completion',data,timeout=60) as response:
+            for line in response:
+                if stop.is_set() or time.monotonic()>=deadline:break
+                if line.startswith(b'data: '):
+                    z=json.loads(line[6:])
+                    if z.get('error'):raise RuntimeError(str(z['error']))
+                    if z.get('content'):
+                        if first is None:first=time.monotonic()
+                        text+=z['content']
+                    if z.get('stop'):
+                        row.update(timings=z.get('timings'),tokens_predicted=z.get('tokens_predicted'),stop_type=z.get('stop_type'),truncated=z.get('truncated'));done=True;break
+        row.update(done=done,interruption=None if done else 'phase_boundary',response=text,ttft_s=None if first is None else first-t0,seconds=time.monotonic()-t0)
+        row['evaluation']=grade(text,c.get('expected')) if done else dict(automatic=False,interrupted=True)
+    except Exception as e:
+        boundary=stop.is_set() or time.monotonic()>=deadline
+        row.update(done=False,error=repr(e),interruption='phase_boundary' if boundary else None,response=text,seconds=time.monotonic()-t0)
+    append('requests.jsonl',row)
+    return row
+
+CURRENT={}
+def worker(phase,lane,parallel,deadline,window):
+    seq=lane;case_count=0
+    a=cases_a();b=cases_b();conv=conversations()
+    while time.monotonic()<deadline and not stop.is_set():
+        r={}
+        if phase=='A':
+            c=a[seq%len(a)];r=ask(c,[dict(role='system',content=SYSTEM),dict(role='user',content=c['prompt'])],deadline,window,lane,seq)
+        elif phase=='B':
+            c=context_case(b[seq%len(b)]);r=ask(c,[dict(role='system',content=SYSTEM),dict(role='user',content=c['prompt'])],deadline,window,lane,seq)
+        elif phase=='C':
+            c=conv[seq%len(conv)];messages=[dict(role='system',content=SYSTEM)]
+            for turn,prompt in enumerate(c['turns']):
+                if stop.is_set() or time.monotonic()>=deadline:break
+                messages.append(dict(role='user',content=prompt));q=dict(c)
+                if c['family']=='memoire' and turn==19:q['expected']=dict(atelier='Orion',couleur='vert')
+                r=ask(q,list(messages),deadline,window,lane,seq,turn=turn)
+                if not r.get('done'):break
+                messages.append(dict(role='assistant',content=r['response']))
+        else:
+            c=load_case(seq//parallel,lane);r=ask(c,[dict(role='system',content=SYSTEM),dict(role='user',content=c['prompt'])],deadline,window,lane,seq,load=True)
+        if r.get('error') and r.get('interruption')!='phase_boundary':
+            if 'context_overflow' not in r['error']:raise RuntimeError('request_failure '+r['error'])
+        seq+=parallel;case_count+=1
+    return case_count
+
+def safe_worker(phase,lane,parallel,deadline,window):
+    try:return worker(phase,lane,parallel,deadline,window)
+    except Exception as e:
+        if time.monotonic()>=deadline or stop.is_set():
+            append('boundary-events.jsonl',dict(epoch=time.time(),window_id=window,lane=lane,stage='worker-preparation-or-exit',error=repr(e)))
+            return 0
+        raise
+
+def window(power,phase,duration,parallel,ctx,suffix=''):
+    name=f'{power}W-{phase}{suffix}';CURRENT.update(ctx=ctx)
+    status(power_w=power);begin_engine(ctx,parallel,name)
+    status(phase='measure',window_id=name,power_w=power,scenario=phase,parallel=parallel,ctx_per_session=ctx)
+    w=dict(id=name,power_w=power,phase=phase,parallel=parallel,ctx_per_session=ctx,start=time.time(),requested_seconds=duration);append('windows.jsonl',dict(event='start',**w))
+    deadline=time.monotonic()+duration;pool=cf.ThreadPoolExecutor(max_workers=parallel)
+    futures=[pool.submit(safe_worker,phase,lane,parallel,deadline,name) for lane in range(parallel)]
+    try:
+        while time.monotonic()<deadline:
+            tripped();status()
+            if engine.poll() is not None:raise RuntimeError('engine_ended')
+            for f in futures:
+                if f.done():f.result()
+            time.sleep(.5)
+    finally:
+        kill_engine();pool.shutdown(wait=True,cancel_futures=True)
+        w.update(end=time.time());w['seconds']=w['end']-w['start'];append('windows.jsonl',dict(event='end',**w))
+    for f in futures:f.result()
+
+def main():
+    global guard
+    lease=open('/run/eidolon-eva-campaign.lock','w');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    from nvml_sampler import busy,power
+    if busy():raise RuntimeError('GPU busy before campaign')
+    original=power();save('original.json',dict(power_w=original,epoch=time.time()))
+    (P/'controller.pid').write_text(str(os.getpid()));status(phase='preflight')
+    h=hashlib.sha256()
+    with (P/'model.gguf').open('rb') as f:
+        for b in iter(lambda:f.read(8*1024*1024),b''):h.update(b);status()
+    if h.hexdigest()!=C['model_sha256']:raise RuntimeError('model SHA mismatch')
+    save('corpus.json',dict(A=cases_a(),B=cases_b(),C=conversations(),system=SYSTEM,load_example=load_case(0,0)))
+    sp.run(['nvidia-smi','-i',C['uuid'],'-q'],stdout=(P/'hardware-before.txt').open('w'),stderr=sp.STDOUT,timeout=10,check=True)
+    guard=sp.Popen([sys.executable,__file__,'guard']);time.sleep(2);tripped()
+    try:
+        for p in C['powers']:
+            power(p)
+            if C.get('smoke'):
+                window(p,'A',20,2,8192)
+                break
+            for phase,parallel,ctx in [('A',2,8192),('B',1,32768),('C',1,8192)]:window(p,phase,C['phase_seconds'],parallel,ctx)
+            for np in [1,2,4]:window(p,'D',C['phase_seconds']//3,np,8192,suffix='-np'+str(np))
+        status(phase='finished',finished=time.time())
+    except BaseException as e:
+        status(phase='aborted',reason=repr(e),finished=time.time());raise
+    finally:
+        kill_engine();(P/'guard-stop').touch()
+        if guard:
+            try:guard.wait(timeout=6)
+            except sp.TimeoutExpired:guard.kill();guard.wait()
+        rc=restore();save('cleanup.json',dict(epoch=time.time(),restore_exit_code=rc,engine_stopped=True,guard_stopped=guard is None or guard.poll() is not None))
+        sp.run([sys.executable,str(P/'summarize.py')],timeout=60)
+
+if __name__=='__main__':
+    mode=sys.argv[1] if len(sys.argv)>1 else 'run'
+    if mode=='guard':guard_run()
+    elif mode=='cleanup':
+        if (P/'original.json').exists():sys.exit(restore())
+    else:
+        def term(*_):stop.set();raise RuntimeError('terminated by guard/operator/systemd')
+        signal.signal(signal.SIGTERM,term)
+        main()

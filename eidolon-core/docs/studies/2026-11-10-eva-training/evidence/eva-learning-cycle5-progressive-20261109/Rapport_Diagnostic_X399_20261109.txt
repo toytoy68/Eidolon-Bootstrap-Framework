@@ -1,0 +1,40 @@
+Diagnostic empirique X399 — 9 novembre 2026
+
+Conclusion confirmée : corruption silencieuse dans le chemin mémoire. La barrette ou le composant précis n’est pas encore isolé.
+
+Preuves :
+- Les deux fichiers du modèle produisent des SHA256 variables sans changement de taille/date.
+- Un chargement complet figé du premier fichier donne six fois son SHA256 attendu, sur CPU0/8/16.
+- Un tampon synthétique de 64 Mio donne le même SHA256 OpenSSL et logiciel sur les 32 CPU logiques.
+- Les petits tests mémoire 512 Mio, le test adressé 4 Gio et le test pseudo-aléatoire 8 Gio passent : ils ne suffisent donc pas à détecter le défaut.
+- Le test de copie de 2 Gio, sans lecture disque, reproduit des inversions de bits avec memcpy ET une copie scalaire volatile, sur plusieurs CPU. Les XOR observés sont majoritairement 0x8.
+- La désactivation temporaire du boost CPU n’élimine pas les erreurs. Le réglage initial a été restauré.
+- Memtester 4.7.1, 4 Gio verrouillés en RAM, confirme indépendamment :
+FAILURE: 0x0000000000000000 != 0x0000000000000008 at offset 0x000000002f883628.
+- Memtester arrêté après confirmation de cette erreur ; ne pas présenter la suite entière comme terminée.
+- SMART NVMe : état PASSED, 0 erreur média/intégrité, 0 entrée erreur. Cela seul ne garantit pas tout le stockage ; la reproduction sans disque exclut le NVMe comme explication unique.
+
+Profils mémoire lus directement :
+- Sept modules Crucial/Micron : JEDEC 3200 à 1,2 V.
+- Corsair CM4X16GC3200C16K2E : JEDEC 2133 à 1,2 V ; XMP 3200, 16-20-20, 1,35 V.
+- SMBIOS déclare les huit modules à 3200 MT/s et 1,2 V ; télémétrie carte mère autour de 1,18–1,20 V.
+- Cette différence de profil est une piste, pas la preuve que la Corsair ou le réglage explique toutes les erreurs.
+
+Confirmation causale encore nécessaire :
+1. Dans le BIOS, tester une fréquence commune JEDEC 2133, timings Auto, tension nominale 1,2 V. Ne pas modifier plusieurs autres paramètres simultanément.
+2. Refaire exactement copies mémoire, Memtester et plusieurs SHA256 des deux fichiers.
+3. Si stabilisation : distinguer limite de réglage/charge mémoire et module en réintroduisant les paramètres étape par étape.
+4. Si erreurs persistantes : isoler les barrettes puis les emplacements, vérifier si le défaut suit le module ou le canal.
+Ces essais BIOS/physiques ne sont pas réalisables par les commandes SSH disponibles.
+
+Entraînement cycle5 préparé mais non lancé. Adaptateurs, fichiers source et checkpoints conservés. Aucun changement de fréquence/tension RAM ni aucune extinction effectués.
+Dossier des preuves : /srv/eidolon/work/eva-learning-cycle5-progressive-20261109
+Décodage XMP vérifié avec le code source : https://github.com/apoage/spd-matchtable/blob/main/spd_matchtable.py
+
+A/B boost (erreurs destination, erreurs source) :
+{"boost": "1", "run": 0, "destination_errors": 16, "source_errors": 4}
+{"boost": "1", "run": 1, "destination_errors": 10, "source_errors": 2}
+{"boost": "0", "run": 0, "destination_errors": 14, "source_errors": 0}
+{"boost": "0", "run": 1, "destination_errors": 10, "source_errors": 1}
+{"boost": "1", "run": 0, "destination_errors": 10, "source_errors": 1}
+{"boost": "1", "run": 1, "destination_errors": 13, "source_errors": 2}

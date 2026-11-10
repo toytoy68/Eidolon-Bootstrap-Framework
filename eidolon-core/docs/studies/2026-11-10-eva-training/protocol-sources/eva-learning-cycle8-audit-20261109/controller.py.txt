@@ -1,0 +1,72 @@
+"""Bounded dual-GPU training controller."""
+import pathlib,json,time,subprocess as sp,signal,os,fcntl,sys
+ROOT=pathlib.Path(__file__).resolve().parent;MODE=os.environ.get('EVA_MODE','train');P=pathlib.Path(os.environ['EVA_OUTPUT']);P.mkdir(exist_ok=True)
+C=json.loads((ROOT/'config.json').read_text());child=guard=None;SINGLE=os.environ.get('EVA_SINGLE')=='1';WORLD=1 if SINGLE else 2
+def save(n,d):
+ q=P/(n+'.controller.tmp');q.write_text(json.dumps(d));q.replace(P/n)
+def status(phase,**kw):
+ d=dict(phase=phase,epoch=time.time(),heartbeat=time.time(),output=str(P),single_v100=SINGLE,**kw);save('status.json',d)
+ if MODE in ['train','audit']:
+  q=ROOT/'status.mirror.tmp';q.write_text(json.dumps(d));q.replace(ROOT/'status.json')
+def restore():
+ results=[]
+ for uuid in C['uuids']:
+  r=sp.run(['nvidia-smi','-i',uuid,'-pl','200'],capture_output=True,text=True,timeout=10)
+  results.append(dict(uuid=uuid,requested_w=200,returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
+ save('restore.json',dict(epoch=time.time(),results=results));return max(r['returncode'] for r in results)
+if len(sys.argv)>1 and sys.argv[1]=='cleanup':
+ if (P/'original.json').exists():restore()
+ sys.exit()
+def terminated(*args):raise RuntimeError('operator/guard/systemd termination')
+signal.signal(signal.SIGTERM,terminated)
+lease=open('/run/eidolon-eva-learning.lock','w');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+import sampler_rtx,sampler_v100
+samplers=[sampler_v100] if SINGLE else [sampler_rtx,sampler_v100]
+assert all(not s.busy() for s in samplers),'GPU in use'
+assert json.loads((ROOT/'cpu-preflight.json').read_text())['passed'],'CPU preflight not passed'
+if MODE=='train':assert json.loads((ROOT/'qualification-single/passed.json').read_text())['passed'],'Smoke not passed'
+assert not (P/'guard-stop').exists(),'Run folder already used'
+save('original.json',dict(powers=[s.power() for s in samplers],epoch=time.time()))
+(P/'controller.pid').write_text(str(os.getpid()));status('preflight')
+try:
+ for s in samplers:s.power(200)
+ guard=sp.Popen(['/usr/bin/python3',str(ROOT/'guard.py')],env=dict(os.environ,EVA_MODE=MODE))
+ started=time.time()
+ while not (P/'guard-status.json').exists():
+  if guard.poll() is not None or (P/'guard-trip.json').exists():raise RuntimeError('Guard startup failed')
+  if time.time()-started>12:raise RuntimeError('Guard startup timeout')
+  status('preflight');time.sleep(.5)
+ env=dict(os.environ,EVA_MODE=MODE,CUDA_VISIBLE_DEVICES=C['uuids'][1] if SINGLE else ','.join(C['uuids']),TOKENIZERS_PARALLELISM='false',HF_HUB_DISABLE_XET='1',HF_HOME=str(ROOT/'hf-cache'),OMP_NUM_THREADS='4',TORCH_NCCL_ASYNC_ERROR_HANDLING='1')
+ child=sp.Popen([str(ROOT/'venv/bin/python'),str(ROOT/'evaluate_checkpoints.py')],env=env,stdout=(P/'train.log').open('w'),stderr=sp.STDOUT,start_new_session=True)
+ save('engine-pid.json',dict(pid=child.pid));deadline=time.time()+(900 if MODE=='smoke' else (14400 if SINGLE else 10800))
+ while child.poll() is None:
+  if (P/'guard-trip.json').exists():raise RuntimeError('Guard trip '+(P/'guard-trip.json').read_text())
+  if guard.poll() is not None:raise RuntimeError('Guard stopped')
+  ranks=[]
+  for r in range(WORLD):
+   q=P/('progress-rank'+str(r)+'.json')
+   if q.exists():
+    d=json.loads(q.read_text());ranks.append(d)
+    limit=1800 if d['stage'] in ['waiting_peer','ddp_setup'] else 300
+    if time.time()-d['epoch']>limit:raise RuntimeError('Rank progress stale '+str(r)+' '+d['stage'])
+  status('running',mode=MODE,ranks=ranks)
+  if time.time()>deadline:raise RuntimeError('Run timeout')
+  time.sleep(.5)
+ if child.returncode!=0:raise RuntimeError('Training child exit '+str(child.returncode))
+ if MODE=='smoke':assert (P/'passed.json').exists()
+ else:assert (P/'quality-comparison.json').exists()
+ if MODE=='train':
+  for name in ['quality-comparison.json','training-summary.json']:
+   q=ROOT/(name+'.mirror.tmp');q.write_text((P/name).read_text());q.replace(ROOT/name)
+ status('finished',mode=MODE)
+except BaseException as e:status('aborted',reason=repr(e),mode=MODE);raise
+finally:
+ if child and child.poll() is None:
+  os.killpg(child.pid,signal.SIGTERM)
+  try:child.wait(timeout=10)
+  except sp.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=3)
+ (P/'guard-stop').touch()
+ if guard:
+  try:guard.wait(timeout=5)
+  except sp.TimeoutExpired:guard.kill();guard.wait()
+ restore()

@@ -1,0 +1,75 @@
+from pathlib import Path
+from fractions import Fraction
+import json,random,hashlib,re,collections
+P=Path(__file__).resolve().parent;W=P.parent
+seen=set();questions=set()
+for folder in W.glob('eva-learning-*'):
+ f=folder/'dataset.json'
+ if not f.exists() or folder==P:continue
+ for rows in json.loads(f.read_text()).values():
+  if not isinstance(rows,list):continue
+  for x in rows:
+   if not isinstance(x,dict) or 'question' not in x:continue
+   q=x['question'].split(' Termine')[0];questions.add(x['question'])
+   if x.get('family')==5:
+    t=re.search(r'(\d{2}):(\d{2})',q)
+    if t:
+     nums=re.findall(r'\d+',q[:t.start()]+q[t.end():])
+     if nums:seen.add(('time',int(t[1])*60+int(t[2]),int(nums[0])))
+   sk=x.get('semantic_key')
+   if sk and isinstance(sk[0],str):seen.add(tuple(sk))
+def create(split,seed):
+ rng=random.Random(seed);rows=[]
+ specs=[('same_day',24),('midnight',24),('multi_day',24),('minutes_conversion',24),('fraction',32),('money',16),('operation',16)]
+ for skill,count in specs:
+  for i in range(count):
+   for attempt in range(100000):
+    if skill in ['same_day','midnight','multi_day','minutes_conversion']:
+     a=rng.randrange(1439) if skill=='same_day' else rng.randrange(1440)
+     if skill=='same_day':b=rng.randint(1,max(1,1439-a))
+     elif skill=='midnight':b=rng.randint(1440-a,2879-a)
+     elif skill=='multi_day':b=rng.randint(2880-a,4319-a)
+     else:b=rng.choice([59,60,61,119,120,121,1439,1440,1441])+rng.randint(-2,2)
+     key=('time',a,b);total=a+b;days,m=divmod(total,1440);hour,minute=divmod(m,60);value=f'{hour:02d}:{minute:02d}';family=5;unit='heure';extra={'jours':days}
+     q=f'Départ à {a//60:02d}:{a%60:02d}. Après exactement {b} minutes, donne l’heure et le nombre de jours franchis.' if split=='validation' else f'Une opération débute à {a//60:02d}:{a%60:02d} et dure {b} minutes. Indique sa fin et son décalage en jours.'
+     why=f'{a} + {b} = {total} minutes ; {days} jour(s) et {value}.'
+     assert days*1440+hour*60+minute==total
+    elif skill=='fraction':
+     a=rng.randint(5,99);b=rng.randint(6,99);scale=rng.randint(2,8);a*=scale;b*=scale
+     key=('fraction',a,b);value=str(Fraction(a,b));family=3;unit='nombre';extra={}
+     q=f'Donne la valeur exacte de {a}/{b}, sous forme de fraction irréductible.' if split=='validation' else f'Simplifie complètement le quotient exact de {a} par {b}.'
+     why=f'{a}/{b} = {value}.';assert Fraction(value)*b==a
+    elif skill=='money':
+     a=rng.randint(1,9999);b=rng.randint(1,9999);key=('money',*sorted([a,b]));total=a+b;value=f'{total//100}.{total%100:02d}';family=4;unit='euro';extra={}
+     q=f'Un panier contient un article à {a} centimes et un autre à {b} centimes. Quel est le total en euros ?' if split=='validation' else f'Additionne deux montants de {a} et {b} centimes ; exprime leur somme en euros.'
+     why=f'{a} + {b} = {total} centimes = {value} euros.';assert Fraction(value)*100==total
+    else:
+     a=rng.randint(3,64);b=rng.randint(2,9);k=i%2;key=('operation',a,b,k);total=a*b;value=str(total);family=6;unit='pièce';extra={}
+     if split=='validation':q=f'{a} caisses contiennent ensemble {total} pièces au total. Combien de pièces possède-t-on ?' if k==0 else f'{a} caisses contiennent chacune {b} pièces. Combien de pièces possède-t-on ?'
+     else:q=f'On compte {total} pièces réparties dans {a} caisses. Quel est le total de pièces ?' if k==0 else f'Chaque caisse reçoit {b} pièces et on prépare {a} caisses. Quelle quantité en tout ?'
+     why=f'Le total est déjà indiqué : {total} pièces.' if k==0 else f'{a} × {b} = {total} pièces.'
+    expected=dict(resultat=value,unite=unit,**extra);q+=f' Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « {unit} ».'
+    if family==5:q+=' Ajoute aussi jours, un entier.'
+    if key in seen or q in questions:continue
+    seen.add(key);questions.add(q);rows.append(dict(id=f'c8-{split}-{skill}-{i}',family=family,skill=skill,key=list(key),question=q,expected=expected,answer=why+'\n'+json.dumps(expected,ensure_ascii=False)));break
+   else:raise RuntimeError('Could not reserve unique case')
+ rng.shuffle(rows);return rows
+blind=create('final',982109);validation=create('validation',882109)
+old=json.loads((W/'eva-learning-cycle5-progressive-20261109/dataset.json').read_text())['heldout']
+anchors=[]
+for family in range(8):anchors.extend([dict(x,skill='anchor-'+str(family)) for x in old if x['family']==family][:4])
+from curriculum import grade
+for rows in [validation,blind,anchors]:assert all(grade(x['answer'],x['expected'])['exact'] for x in rows)
+assert not ({tuple(x['key']) for x in validation}&{tuple(x['key']) for x in blind})
+assert len(validation)==len(blind)==160 and len(anchors)==32
+(P/'challenge-validation.json').write_text(json.dumps(dict(validation=validation,anchors=anchors),ensure_ascii=False))
+(P/'final-test-reserved.json').write_text(json.dumps(dict(test=blind,policy='Not evaluated, not used in training or checkpoint selection. Distinct prompts and numerical keys from validation.'),ensure_ascii=False))
+(P/'dataset.json').write_text(json.dumps(dict(validation=validation,anchors=anchors,warning='Audit only; no training data. Blind final in separate file.'),ensure_ascii=False))
+sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+candidates=[dict(name='cycle5-parent',path=str(W/'eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final'))]
+candidates += [dict(name='cycle7-step-'+str(step),path=str(W/f'eva-learning-cycle7-validation-20261109/resume/step-{step}/adapter')) for step in [40,160,286]]
+for c in candidates:c['sha256']=sha(Path(c['path'])/'adapter_model.safetensors')
+(P/'candidates.json').write_text(json.dumps(candidates,indent=2))
+(P/'experiment-plan.json').write_text(json.dumps(dict(phase='checkpoint_comparison_only',training_started=False,candidates=candidates,validation_counts=dict(collections.Counter(x['skill'] for x in validation)),anchors=32,blind_test=160,blind_evaluation=False,split_checks_passed=True,files={n:sha(P/n) for n in ['challenge-validation.json','final-test-reserved.json','candidates.json']},next_phase='Separate short time-only training trials from cycle5, approximately75% replay/25% time in supervised tokens, one learning-rate change per trial; no automatic model adoption'),indent=2))
+print(json.dumps(dict(validation=len(validation),anchors=len(anchors),blind_reserved=len(blind),candidates=len(candidates),split_checks_passed=True)))
+

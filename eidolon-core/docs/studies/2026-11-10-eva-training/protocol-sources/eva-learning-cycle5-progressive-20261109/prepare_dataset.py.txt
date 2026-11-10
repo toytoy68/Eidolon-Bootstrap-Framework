@@ -1,0 +1,101 @@
+from pathlib import Path
+from fractions import Fraction
+import json,random,hashlib,collections,re
+from curriculum import grade
+P=Path(__file__).resolve().parent
+OLD=P.parent/'eva-learning-cycle4-comprehension-20261109'
+C=json.loads((P/'config.json').read_text())
+previous=json.loads((OLD/'dataset.json').read_text())
+seen_questions=set()
+for folder in P.parent.glob('eva-learning-*'):
+ f=folder/'dataset.json'
+ if f.exists() and folder!=P:
+  d=json.loads(f.read_text())
+  seen_questions.update(x['question'] for v in d.values() if isinstance(v,list) for x in v)
+used=set()
+def example(k,a,b,split,stage,i):
+ family=[0,0,1,3,4,3,5,6][k];unit='nombre';extra={}
+ if k==0:
+  result=str(a+b);why=f'{a} + {b} = {result}.'
+  q=f'Calcule {a} + {b}.' if split!='test' else f'Quelle est la somme de {a} et {b} ?'
+ elif k==1:
+  result=str(a-b);why=f'{a} − {b} = {result}.'
+  q=f'Calcule {a} − {b}.' if split!='test' else f'Quelle différence obtient-on en retranchant {b} de {a} ?'
+ elif k==2:
+  result=str(a*b);why=f'{a} × {b} = {result}.'
+  q=f'Calcule {a} × {b}.' if split!='test' else f'Quel est le produit de {a} par {b} ?'
+ elif k==3:
+  result=str(a);why=f'{a*b} ÷ {b} = {a}.'
+  q=f'Calcule {a*b} ÷ {b}.' if split!='test' else f'Quel est le quotient de {a*b} par {b} ?'
+ elif k==4:
+  unit='euro';result=f'{(a+b)//100}.{(a+b)%100:02d}'
+  why=f'{a} + {b} = {a+b} centimes, soit {result} euros.'
+  q=f'Additionne {a} centimes et {b} centimes. Réponds en euros.' if split!='test' else f'Deux prix de {a} et {b} centimes : quel montant en euros au total ?'
+ elif k==5:
+  result=str(Fraction(a,b));why=f'{a}/{b} se simplifie en {result}.'
+  q=f'Simplifie la fraction {a}/{b}.' if split!='test' else f'Écris le quotient exact {a} ÷ {b} sous forme irréductible.'
+ elif k==6:
+  unit='heure';m=a*11;end=m+b;result=f'{end//60%24:02d}:{end%60:02d}';extra={'jours':end//1440}
+  why=f'{m} + {b} = {end} minutes depuis minuit, soit {result}, décalage {end//1440} jour(s).'
+  q=f'À {m//60:02d}:{m%60:02d}, ajoute {b} minutes. Donne l’heure et le décalage en jours.' if split!='test' else f'Un trajet de {b} minutes commence à {m//60:02d}:{m%60:02d}. Heure de fin et jours franchis ?'
+ else:
+  unit='pièce'
+  if i%2:
+   result=str(a*b);why=f'{a} lots × {b} pièces par lot = {result} pièces.'
+   q=f'Il y a {a} lots de {b} pièces chacun. Combien de pièces au total ?' if split!='test' else f'Chaque paquet contient {b} pièces. Avec {a} paquets, quel total obtient-on ?'
+  else:
+   result=str(a*b);why=f'Le total est déjà donné : {result} pièces.'
+   q=f'{a} lots contiennent ensemble {a*b} pièces au total. Combien de pièces en tout ?' if split!='test' else f'On dénombre {a*b} pièces en réunissant {a} paquets. Quel est le nombre total de pièces ?'
+ if split!='test' and stage==2 and k<4:
+  q=f'Pour vérifier un inventaire, {q[0].lower()+q[1:]}'
+ expected=dict(resultat=result,unite=unit,**extra)
+ q+=f' Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « {unit} ».'
+ if k==6:q+=' Ajoute aussi jours, un entier.'
+ return dict(id=f'c5-{split}-{stage}-{k}-{i}',family=family,skill=f'basic-{k}',level=stage,question=q,answer=why+'\n'+json.dumps(expected,ensure_ascii=False),expected=expected)
+def generate(split,stage,count,seed):
+ rng=random.Random(seed);out=[]
+ for i in range(count):
+  k=i%8
+  for attempt in range(100000):
+   limit=[20,60,99][stage];a=rng.randint(2,limit);b=rng.randint(2,limit)
+   sig=(k,a,b,i%2 if k==7 else 0)
+   x=example(k,a,b,split,stage,i)
+   if sig in used or x['question'] in seen_questions:continue
+   used.add(sig);seen_questions.add(x['question']);x['semantic_key']=list(sig);out.append(x);break
+  else:raise RuntimeError('Unique basic sample exhausted')
+ return out
+# Reserve unseen operand combinations and different question templates before training.
+fresh=generate('test',2,128,951109)
+validation=generate('validation',2,256,651109)
+pool=list(previous['train']);random.Random(551109).shuffle(pool)
+train=[]
+for stage in range(3):
+ chunk=generate('train',stage,400,551109+stage)+[dict(x,rehearsal=True,level=stage) for x in pool[stage*400:(stage+1)*400]]
+ random.Random(771109+stage).shuffle(chunk);train.extend(chunk)
+heldout=previous['heldout']+fresh
+data=dict(train=train,validation=validation,heldout=heldout,warning='Historical384 already observed; fresh128 templates and operand tuples reserved before training. 3 progressive blocks mixed 50% replay. No automatic deployment.')
+assert len(train)==2400 and len(validation)==256 and len(heldout)==512
+for split in [train,validation,heldout]:
+ assert len({x['question'] for x in split})==len(split)
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in split)
+assert not ({x['question'] for x in train}&{x['question'] for x in validation+heldout})
+assert not ({x['question'] for x in validation}&{x['question'] for x in heldout})
+basicsets=[{tuple(x['semantic_key']) for x in split if 'semantic_key' in x} for split in [train,validation,fresh]]
+assert all(not basicsets[i]&basicsets[j] for i in range(3) for j in range(i))
+(P/'dataset.json').write_text(json.dumps(data,ensure_ascii=False))
+C['expected_family_counts']={k:dict(collections.Counter(x['family'] for x in data[k])) for k in ['train','validation','heldout']}
+(P/'config.json').write_text(json.dumps(C,indent=2))
+sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+(P/'lineage.json').write_text(json.dumps(dict(parent_adapter=C['parent_adapter'],parent_adapter_sha256=sha(Path(C['parent_adapter'])/'adapter_model.safetensors'),dataset_sha256=sha(P/'dataset.json'),source_revision=C['source_revision'],scope='1200 novel basics +1200 cycle4 rehearsal; 3 gradual blocks; fresh128 heldout',learning_rate=C['learning_rate']),indent=2))
+# Before evaluation for historical384: same parent as cycle4 final, same generation configuration.
+for rank in range(2):
+ for kind in ['evaluation','canaries']:
+  rows=[]
+  for f in (OLD/'dual-resumable').glob(kind+'-rank*.jsonl'):
+   for line in f.read_text().splitlines():
+    r=json.loads(line)
+    if r['stage']=='after' and int(r['rank'])==rank:
+     r.update(stage='before',baseline_source='cycle4-final same adapter and generation settings');rows.append(r)
+  (P/f'{kind}-rank{rank}.jsonl').write_text(''.join(json.dumps(r,ensure_ascii=False)+'\n' for r in rows))
+print(json.dumps(dict(counts={k:len(data[k]) for k in ['train','validation','heldout']},overlap_checks_passed=True,fresh_reserved=True)))
+

@@ -1,0 +1,100 @@
+{
+  "generated": 1794133228.714829,
+  "state": {
+    "phase": "finished",
+    "epoch": 1794133228.0654943,
+    "heartbeat": 1794133228.0654943,
+    "window_id": "200W",
+    "power_w": 200,
+    "finished": 1794133228.0654933
+  },
+  "cells": [
+    {
+      "power_w": 200,
+      "start": 1794129600.0713367,
+      "end": 1794132314.8158739,
+      "seconds": 2714.744537115097,
+      "optimizer_steps": 1231,
+      "nonpadding_tokens": 1822397,
+      "supervised_tokens": 525287,
+      "padded_tokens": 2521088,
+      "initial_adapter_sha256": "b33902adfb9fd917c3d54b61a454873b6121765305a7251cc16587ba374f9bff",
+      "parent_adapter": "/srv/eidolon/work/eva-learning-pilot-20261108/adapters/200",
+      "examples": 10000,
+      "epochs": 1,
+      "micro_batch": 2,
+      "validation_loss_before": 0.5838130190968513,
+      "validation_loss_after": 0.001281425482375198,
+      "nonpadding_tok_s": 671.2959451929217,
+      "supervised_tok_s": 193.49408123617098,
+      "telemetry": {
+        "gpu_c": {
+          "n": 5382,
+          "mean": 64.09457450761799,
+          "median": 64.0,
+          "max": 65.0,
+          "p95": 65.0
+        },
+        "cpu_c": {
+          "n": 5382,
+          "mean": 40.392256596060946,
+          "median": 40.75,
+          "max": 45.875,
+          "p95": 41.25
+        },
+        "gpu_w": {
+          "n": 5382,
+          "mean": 199.35055629877368,
+          "median": 199.526,
+          "max": 204.119,
+          "p95": 200.519
+        },
+        "wall_w": {
+          "n": 5382,
+          "mean": 330.0370865849127,
+          "median": 330.3,
+          "max": 335.4,
+          "p95": 332.7
+        },
+        "vram_mib": {
+          "n": 5382,
+          "mean": 8020.815612225938,
+          "median": 8020.9375,
+          "max": 8020.9375,
+          "p95": 8020.9375
+        },
+        "sm_mhz": {
+          "n": 5382,
+          "mean": 1256.0479375696766,
+          "median": 1260.0,
+          "max": 1950,
+          "p95": 1470
+        },
+        "gpu_util_pct": {
+          "n": 5382,
+          "mean": 96.79394277220364,
+          "median": 100.0,
+          "max": 100,
+          "p95": 100
+        }
+      },
+      "sw_thermal_fraction": 0.0,
+      "hw_thermal_fraction": 0.0,
+      "sw_power_cap_fraction": 0.9998141954663694,
+      "hw_power_brake_fraction": 0.0,
+      "gpu_w_wh": 150.30257846363085,
+      "gpu_w_coverage_s": 2714.210789680481,
+      "gpu_w_wh_per_million_nonpadding_tokens": 82.47521174784136,
+      "wall_w_wh": 248.836133857263,
+      "wall_w_coverage_s": 2714.210789680481,
+      "wall_w_wh_per_million_nonpadding_tokens": 136.5433184192374,
+      "example_time_estimates_hours": {
+        "1000": 0.1034483299679205,
+        "10000": 1.034483299679205,
+        "100000": 10.34483299679205,
+        "1000000": 103.4483299679205
+      }
+    }
+  ],
+  "warning": "Hardware pilot, adapter reset each power, same initial corpus order. Estimate uses 250 nonpadding tokens/example and one epoch, same sequence/batch. No generalisation claim."
+}

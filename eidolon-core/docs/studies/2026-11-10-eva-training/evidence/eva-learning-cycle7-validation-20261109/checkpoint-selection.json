@@ -1,0 +1,54 @@
+{
+  "dataset_sha256": "80d92111c1c7b067f7399d6eeaf15c0d957281ca02e133c5fe487f739402a467",
+  "baseline": {
+    "step": 0,
+    "n": 64,
+    "correct": 62,
+    "families": {
+      "0": 8,
+      "1": 8,
+      "2": 6,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+  },
+  "best": {
+    "step": 0,
+    "n": 64,
+    "correct": 62,
+    "families": {
+      "0": 8,
+      "1": 8,
+      "2": 6,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+  },
+  "checks": 9,
+  "rule": "At least2 additional correct over best; no family more than1 below parent. Only validation64 selects; evaluation608 excluded.",
+  "last": {
+    "step": 286,
+    "n": 64,
+    "correct": 62,
+    "families": {
+      "0": 8,
+      "1": 8,
+      "2": 6,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8
+    },
+    "adapter": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-286/adapter"
+  },
+  "epoch": 1794248395.6884747
+}

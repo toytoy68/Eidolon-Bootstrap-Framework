@@ -1,0 +1,85 @@
+from pathlib import Path
+from fractions import Fraction
+from math import gcd
+import random,json,hashlib,re,collections
+from curriculum import grade
+P=Path(__file__).resolve().parent;W=P.parent
+previous=json.loads((W/'eva-learning-cycle5-progressive-20261109/dataset.json').read_text())
+C=json.loads((P/'config.json').read_text());questions=set();keys=set()
+for folder in W.glob('eva-learning-*'):
+ f=folder/'dataset.json'
+ if not f.exists() or folder==P:continue
+ d=json.loads(f.read_text())
+ for rows in d.values():
+  if not isinstance(rows,list):continue
+  for x in rows:
+   q=x['question'].split(' Termine')[0];questions.add(x['question'])
+   if x.get('family')==5:
+    t=re.search(r'(\d{2}):(\d{2})',q)
+    if t:
+     nums=re.findall(r'\d+',q[:t.start()]+q[t.end():])
+     if nums:keys.add(('time',int(t[1])*60+int(t[2]),int(nums[0])))
+   sk=x.get('semantic_key')
+   if sk and sk[0]==4:keys.add(('money',*sorted([sk[1],sk[2]])))
+   if sk and sk[0]==5:keys.add(('fraction',sk[1],sk[2]))
+def make(skill,a,b,split,i):
+ unit='nombre';extra={}
+ if skill=='time':
+  total=a+b;days,minutes=divmod(total,1440);hour,minute=divmod(minutes,60);result=f'{hour:02d}:{minute:02d}';unit='heure';extra={'jours':days};family=5
+  q=f'À {a//60:02d}:{a%60:02d}, ajoute {b} minutes. Donne l’heure d’arrivée et les jours franchis.' if split!='test' else f'Le départ est fixé à {a//60:02d}:{a%60:02d} et le parcours dure {b} minutes. À quelle heure arrive-t-on, avec quel décalage de jour ?'
+  why=f'{a//60} × 60 + {a%60} = {a} minutes depuis minuit. {a} + {b} = {total}. {total} = {days} × 1440 + {minutes}. {minutes} = {hour} × 60 + {minute}. Arrivée {result}, décalage {days} jour(s).'
+  assert days*1440+hour*60+minute==a+b
+ elif skill=='money':
+  family=4;unit='euro';total=a+b;euros,cents=divmod(total,100);result=f'{euros}.{cents:02d}'
+  q=f'Additionne {a} centimes et {b} centimes et donne le total en euros.' if split!='test' else f'Un achat coûte {a} centimes et un second {b} centimes. Quelle somme en euros faut-il payer ?'
+  why=f'On additionne une seule fois les montants : {a} + {b} = {total} centimes. {total} ÷ 100 = {result} euros.'
+  assert Fraction(result)*100==total
+ else:
+  family=3;d=gcd(a,b);num,den=a//d,b//d;result=str(Fraction(a,b))
+  q=f'Réduis la fraction {a}/{b} à sa forme irréductible.' if split!='test' else f'Quel est le résultat exact et simplifié de la division de {a} par {b} ?'
+  why=f'Le PGCD de {a} et {b} est {d}. On divise le numérateur et le dénominateur par le même nombre : {a} ÷ {d} = {num} ; {b} ÷ {d} = {den}. Résultat exact : {result}.'
+  assert Fraction(result)*b==a
+ expected=dict(resultat=result,unite=unit,**extra)
+ q+=f' Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « {unit} ».'
+ if skill=='time':q+=' Ajoute aussi jours, un entier.'
+ return dict(id=f'c6-{split}-{skill}-{i}',family=family,skill=skill,semantic_key=[skill,a,b],question=q,answer=why+'\n'+json.dumps(expected,ensure_ascii=False),expected=expected)
+def generate(split,counts,seed):
+ rng=random.Random(seed);rows=[]
+ for skill,count in counts.items():
+  for i in range(count):
+   for attempt in range(100000):
+    if skill=='time':a=rng.randrange(1440);b=rng.randint(1,1500)
+    elif skill=='money':a=rng.randint(1,9999);b=rng.randint(1,9999)
+    else:a=rng.randint(1,499);b=rng.randint(2,199)
+    key=(skill,*sorted([a,b])) if skill=='money' else (skill,a,b)
+    x=make(skill,a,b,split,i)
+    if key in keys or x['question'] in questions:continue
+    keys.add(key);questions.add(x['question']);rows.append(x);break
+   else:raise RuntimeError('Could not create distinct example')
+ return rows
+fresh=generate('test',dict(time=48,money=24,fraction=24),961109)
+valid=generate('validation',dict(time=128,money=64,fraction=64),661109)
+target=generate('train',dict(time=400,money=200,fraction=200),561109)
+old=json.loads((W/'eva-learning-cycle4-comprehension-20261109/dataset.json').read_text())['train']
+rng=random.Random(561109);replay=[]
+for f in range(8):
+ candidates=[x for x in old if x['family']==f];rng.shuffle(candidates);assert len(candidates)>=200;replay.extend(dict(x,rehearsal=True) for x in candidates[:200])
+# Keep the easiest targeted arithmetic earlier while mixing preserved skills throughout.
+target.sort(key=lambda x:sum(int(v) for v in x['semantic_key'][1:]))
+rng.shuffle(replay);train=[]
+for stage in range(4):
+ block=target[stage*200:(stage+1)*200]+replay[stage*400:(stage+1)*400];rng.shuffle(block);train.extend(block)
+heldout=previous['heldout']+fresh
+data=dict(train=train,validation=valid,heldout=heldout,warning='512 previously observed questions +96 fresh targeted questions reserved before training. No heldout answers used as training examples.')
+assert [len(train),len(valid),len(heldout)]==[2400,256,608]
+for rows in [train,valid,heldout]:
+ assert len({x['question'] for x in rows})==len(rows)
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in rows)
+assert not ({x['question'] for x in train}&{x['question'] for x in valid+heldout})
+assert not ({x['question'] for x in valid}&{x['question'] for x in heldout})
+(P/'dataset.json').write_text(json.dumps(data,ensure_ascii=False))
+C['expected_family_counts']={n:dict(collections.Counter(x['family'] for x in data[n])) for n in ['train','validation','heldout']};(P/'config.json').write_text(json.dumps(C,indent=2))
+sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+(P/'lineage.json').write_text(json.dumps(dict(parent_adapter=C['parent_adapter'],parent_adapter_sha256=sha(Path(C['parent_adapter'])/'adapter_model.safetensors'),dataset_sha256=sha(P/'dataset.json'),source_revision=C['source_revision'],scope='1600 balanced replay +400 time +200 cents +200 fractions',learning_rate=C['learning_rate']),indent=2))
+print(json.dumps(dict(sizes={k:len(data[k]) for k in ['train','validation','heldout']},counts=C['expected_family_counts'],overlap_checks_passed=True)))
+

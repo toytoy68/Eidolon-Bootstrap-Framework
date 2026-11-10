@@ -1,0 +1,36 @@
+{
+  "recorded_epoch": 1794126878.9744542,
+  "authorization": "toytoy authorizes use of all available X399 hardware when useful",
+  "current_power_matrix": "Keep microbatch1/sequence512/accumulation4 identical until matrix completes; no parallel additional CPU or GPU load that would contaminate Shelly measurements.",
+  "observed_resources": {
+    "cpu": "1950X, 16 physical cores / 32 logical CPUs",
+    "ram_available_gib": 118,
+    "work_free_gib": 226,
+    "training_gpu": "RTX3080Ti 12GiB",
+    "secondary_gpu": "GTX1060 6GiB"
+  },
+  "next_experiments": [
+    {
+      "priority": 1,
+      "experiment": "Compare microbatch1,2 then4 under fixed power after current pilot; stop a configuration on OOM; same dataset and adapter initialization.",
+      "status": "proposed, not started"
+    },
+    {
+      "priority": 2,
+      "experiment": "Measure CPU preparation, tokenization and transfer overhead; use workers and pinned host memory only if measured benefit. Cache tokenized data in RAM/NVMe.",
+      "status": "proposed, not started"
+    },
+    {
+      "priority": 3,
+      "experiment": "Use GTX1060 for an isolated reference inference/evaluation worker after power matrix, if its VRAM is sufficient and production use is absent. Measure separate baseline and combined-sector cost.",
+      "status": "proposed, not started"
+    }
+  ],
+  "constraints": [
+    "VRAM on separate cards is not automatically pooled.",
+    "No automatic multi-GPU training with heterogeneous GPUs.",
+    "No CPU/offload merely to occupy RAM if GPU-resident training fits.",
+    "Production Core/Memory and original model retained.",
+    "Same thermal and error protections apply to any subsequent load."
+  ]
+}

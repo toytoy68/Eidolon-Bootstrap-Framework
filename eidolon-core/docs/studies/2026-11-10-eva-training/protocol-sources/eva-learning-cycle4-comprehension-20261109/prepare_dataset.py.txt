@@ -1,0 +1,83 @@
+from pathlib import Path
+import json,hashlib,random,re,collections,time
+from curriculum import examples,grade
+P=Path(__file__).resolve().parent;W=P.parent;C=json.loads((P/'config.json').read_text())
+def key(x):return (x['family'],tuple(sorted(map(int,re.findall(r'\d+',x['question'].split(' Termine')[0])))))
+prior=[]
+for name in ['eva-learning-pilot-20261108','eva-learning-cycle1-20261108','eva-learning-cycle2-dual200-20261108','eva-learning-cycle3-targeted-20261108']:
+ d=json.loads((W/name/'dataset.json').read_text());prior += [x for v in d.values() if isinstance(v,list) for x in v]
+seen={key(x) for x in prior}
+heldout=list(json.loads((W/'eva-learning-cycle3-targeted-20261108/dataset.json').read_text())['heldout'])
+train=[];validation=[];count=collections.Counter()
+quota={i:400 if i in [3,5] else 200 for i in range(8)}
+for x in examples(C['train_seed'],20000):
+ f=x['family']
+ if count[f]>=quota[f] or key(x) in seen:continue
+ seen.add(key(x));train.append(x);count[f]+=1
+ if len(train)==2000:break
+assert len(train)==2000
+count=collections.Counter()
+for x in examples(C['validation_seed'],8000):
+ f=x['family']
+ if count[f]>=32 or key(x) in seen:continue
+ seen.add(key(x));validation.append(x);count[f]+=1
+ if len(validation)==256:break
+assert len(validation)==256
+rng=random.Random(191109);reading_seen=set()
+def reading(k,n,b,split,j):
+ t=n*b;unit='processeur_logique' if k<2 else 'pièce'
+ result=[t,t,t,t,b,t-b,t,t+b][k]
+ questions=[
+ f'Un processeur possède {n} cœurs physiques et {t} threads au total. Combien de processeurs logiques expose-t-il ?',
+ f'Un processeur a {n} cœurs physiques. Chaque cœur exécute {b} threads. Combien de processeurs logiques cela donne-t-il ?',
+ f'{n} boîtes contiennent ensemble {t} pièces au total. Combien de pièces possède-t-on en tout ?',
+ f'Il y a {n} boîtes, chacune contenant {b} pièces. Combien de pièces cela représente-t-il au total ?',
+ f'On répartit {t} pièces également entre {n} boîtes. Combien de pièces reçoit chaque boîte ?',
+ f'Un stock comprend {t} pièces. On en retire {b}. Combien en reste-t-il ?',
+ f'Un stock contient {t} pièces, dont {b} rouges. Combien de pièces contient le stock au total ?',
+ f'Un stock contient {t} pièces. On ajoute {b} pièces. Quel est le nouveau total ?']
+ why=[
+ f'Les {t} threads sont déjà le total : {t} processeurs logiques.',
+ f'La quantité est donnée par cœur : {n} × {b} = {t}.',
+ f'Le total est déjà indiqué : {t} pièces. On ne le multiplie pas par le nombre de boîtes.',
+ f'On multiplie le nombre de boîtes par leur contenu : {n} × {b} = {t}.',
+ f'On cherche une part : {t} ÷ {n} = {b}.',
+ f'Le retrait réduit le stock : {t} − {b} = {t-b}.',
+ f'Les pièces rouges font déjà partie du total : {t} pièces.',
+ f'La livraison augmente le stock : {t} + {b} = {t+b}.'][k]
+ if split=='test':
+  questions=[
+ f'Le système annonce {t} threads en tout sur une puce à {n} cœurs physiques. Quel est le nombre de processeurs logiques ?',
+ f'Une puce comporte {n} cœurs ; {b} threads sont disponibles par cœur. Donne le total des processeurs logiques.',
+ f'En comptant les pièces de {n} caisses, on obtient un total de {t}. Quel est le nombre total de pièces ?',
+ f'Chaque caisse renferme {b} pièces ; il y a {n} caisses. Quel est le nombre total de pièces ?',
+ f'{n} caisses se partagent équitablement {t} pièces. Quel est le contenu d’une caisse ?',
+ f'Après avoir sorti {b} pièces d’une réserve qui en comptait {t}, combien en reste-t-il ?',
+ f'Parmi les {t} pièces présentes, {b} sont rouges. Quel est le nombre de pièces, toutes couleurs confondues ?',
+ f'Une réserve de {t} pièces est augmentée de {b} pièces. Quelle est la nouvelle quantité ?']
+ q=questions[k]+f' Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « {unit} ».'
+ expected=dict(resultat=str(result),unite=unit)
+ return dict(id=f'c4-{split}-{j}',family=6,skill='reading-'+str(k),question=q,answer=why+'\n'+json.dumps(expected,ensure_ascii=False),expected=expected)
+for split,per,dest in [('test',8,heldout),('validation',8,validation),('train',50,train)]:
+ for k in range(8):
+  for j in range(per):
+   for attempt in range(100000):
+    n=rng.randint(2,128) if k<2 else rng.randint(3,80);b=rng.choice([1,2]) if k<2 else rng.randint(3,90)
+    if (n,b)==(16,2) or (n,b) in reading_seen:continue
+    x=reading(k,n,b,split,k*per+j)
+    if key(x) in seen:continue
+    reading_seen.add((n,b));seen.add(key(x));dest.append(x);break
+   else:raise RuntimeError('Could not generate unique case')
+random.Random(C['train_seed']).shuffle(train)
+assert len(train)==2400 and len(validation)==320 and len(heldout)==384
+for a in [train,validation,heldout]:
+ assert len({x['question'] for x in a})==len(a)
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in a)
+assert not ({key(x) for x in train+validation}&{key(x) for x in prior+heldout[320:]})
+data=dict(train=train,validation=validation,heldout=heldout,warning='160 historical arithmetic +160 regression arithmetic +64 new comprehension cases. No heldout training or automatic deployment.')
+(P/'dataset.json').write_text(json.dumps(data,ensure_ascii=False))
+C['expected_family_counts']={k:dict(collections.Counter(x['family'] for x in v)) for k,v in data.items() if isinstance(v,list)}
+(P/'config.json').write_text(json.dumps(C,indent=2))
+sha=lambda q:hashlib.sha256(q.read_bytes()).hexdigest()
+(P/'lineage.json').write_text(json.dumps(dict(parent_adapter=C['parent_adapter'],parent_adapter_sha256=sha(Path(C['parent_adapter'])/'adapter_model.safetensors'),dataset_sha256=sha(P/'dataset.json'),source_revision=C['source_revision'],epoch=time.time(),scope='1600 balanced rehearsal,400 added fractions/time,400 comprehension',learning_rate=5e-6,baseline_reuse='Cycle3 before only, identical cycle1 parent, FP16, prompt and generation settings; new64 evaluated fresh.'),indent=2))
+print({k:len(v) for k,v in data.items() if isinstance(v,list)})

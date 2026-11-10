@@ -1,0 +1,28 @@
+import ast,pathlib,json,hashlib,math,collections,time
+import torch
+from transformers import AutoTokenizer
+P=pathlib.Path(__file__).resolve().parent;C=json.loads((P/'config.json').read_text());torch.set_num_threads(4)
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token=tokenizer.eos_token
+old=pathlib.Path('/srv/eidolon/work/eva-learning-cycle1-20261108/train.py')
+tree=ast.parse(old.read_text())
+nodes=[n for n in tree.body if (isinstance(n,ast.FunctionDef) and n.name=='encode') or (isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets))]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+data=json.loads((P/'dataset.json').read_text());stats={}
+for name in ['train','validation','heldout']:
+ ex=data[name];b,info=encode(ex);counts=dict(collections.Counter(x['family'] for x in ex))
+ assert counts=={int(k):v for k,v in C['expected_family_counts'][name].items()}
+ assert all((r['labels'][r['attention_mask']==0]==-100).all() for r in b)
+ stats[name]=dict(info,family_counts=counts)
+manifest=json.loads((P/'source-manifest.json').read_text())
+for name,row in manifest['files'].items():
+ q=P/'source-model'/name
+ assert q.stat().st_size==row['bytes']
+ h=hashlib.sha256()
+ with q.open('rb') as f:
+  for block in iter(lambda:f.read(8*1024*1024),b''):h.update(block)
+ assert h.hexdigest()==row['sha256'],name
+lineage=json.loads((P/'lineage.json').read_text())
+assert hashlib.sha256((pathlib.Path(C['parent_adapter'])/'adapter_model.safetensors').read_bytes()).hexdigest()==lineage['parent_adapter_sha256']
+stats.update(passed=True,base_hashes_verified=True,parent_adapter_hash_verified=True,global_steps=math.ceil(stats['train']['packs']/4),epoch=time.time())
+(P/'cpu-preflight.json').write_text(json.dumps(stats,indent=2));print(json.dumps(stats))

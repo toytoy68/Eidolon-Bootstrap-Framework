@@ -1,0 +1,1151 @@
+{
+  "eva-learning-cycle1-20261108": {
+    "dataset_sha256": "42a3f373cfc9a165d5c8c83c7bf0e7bfe4269fcbe7596c67720bb78cf68f726c",
+    "splits": {
+      "train": 10000,
+      "validation": 512,
+      "heldout": 160
+    }
+  },
+  "eva-learning-cycle2-dual200-20261108": {
+    "dataset_sha256": "49e39a73843e1db479baf66412103c20a632a73f5c13bf751152aa37fd7fde12",
+    "splits": {
+      "train": 10000,
+      "validation": 512,
+      "heldout": 160
+    }
+  },
+  "eva-learning-cycle3-targeted-20261108": {
+    "dataset_sha256": "8b491d4cd8784aa5540c6fc00f63c63677c34e35a2677b848412eac2652eee0b",
+    "splits": {
+      "train": 4800,
+      "validation": 512,
+      "heldout": 320
+    }
+  },
+  "eva-learning-cycle4-comprehension-20261109": {
+    "dataset_sha256": "9b6f66f7f2f9785008e2d186b7d3f4c7db469071821a604c316d312dd8db2084",
+    "splits": {
+      "train": 2400,
+      "validation": 320,
+      "heldout": 384
+    }
+  },
+  "eva-learning-cycle5-progressive-20261109": {
+    "dataset_sha256": "2fc4c4676d287601194511a455ed122fd08c20fc59183ba0f387732393f05ec8",
+    "splits": {
+      "train": 2400,
+      "validation": 256,
+      "heldout": 512
+    }
+  },
+  "eva-learning-cycle6-consolidation-20261109": {
+    "dataset_sha256": "25965ccfc91a2af9623f7ab50f79b62d40297d5607b55b6b9c2a5b464ce8cd51",
+    "splits": {
+      "train": 2400,
+      "validation": 256,
+      "heldout": 608
+    }
+  },
+  "eva-learning-cycle7-validation-20261109": {
+    "dataset_sha256": "80d92111c1c7b067f7399d6eeaf15c0d957281ca02e133c5fe487f739402a467",
+    "splits": {
+      "train": 2400,
+      "validation": 256,
+      "heldout": 608,
+      "selection": 64
+    }
+  },
+  "eva-learning-cycle8-audit-20261109": {
+    "dataset_sha256": "4b4762b550ee300bd7b0dc6e7d0f17aa47f16da3385dca7d20508aa5fd16f7e0",
+    "splits": {
+      "validation": 160,
+      "anchors": 32
+    }
+  },
+  "eva-learning-pilot-20261108": {
+    "dataset_sha256": "959411411390efd665e94ce22ba873fbbf5d3178b7a66415b81f192f312c425d",
+    "splits": {
+      "train": 2048,
+      "validation": 128
+    }
+  },
+  "manifests": {
+    "eva-learning-cycle4-comprehension-20261109": {
+      "manifest": {
+        "epoch": 1794188412.287259,
+        "files": {
+          "resultat-final.json": "1ff7bade3dc7947b81ee6b888c7c264139a64a6733bba5faa1ad76ad04e70443",
+          "Rapport_Eva_cycle4.txt": "852cdd5a466a74a3c0c873c9bf983716fadad136bc127e899bcc7be3146c3b0d"
+        },
+        "state": "finished"
+      },
+      "rechecked": {
+        "resultat-final.json": true,
+        "Rapport_Eva_cycle4.txt": true
+      }
+    },
+    "eva-learning-cycle5-progressive-20261109": {
+      "manifest": {
+        "epoch": 1794231967.8038952,
+        "files": {
+          "resultat-final.json": "cc36a966219e436844ecc4b16a0c1b5b260e7d043cce3fe0d3cb98e2e1ae746d",
+          "Rapport_Eva_cycle5.txt": "dbd077a5b62aee07420ad50aefa5d621bb4ff7f0fa0896fe09ce151930a04f27"
+        },
+        "state": "finished"
+      },
+      "rechecked": {
+        "resultat-final.json": true,
+        "Rapport_Eva_cycle5.txt": true
+      }
+    },
+    "eva-learning-cycle6-consolidation-20261109": {
+      "manifest": {
+        "epoch": 1794239863.1137226,
+        "files": {
+          "resultat-final.json": "de0b756b9596b9fddc37801c2512bbbdc1837f4df5809e163df81bad61df4ece",
+          "Rapport_Eva_cycle6.txt": "64254479f52895f987458e2c2ff3bb90bedaaa49071beea6121ecbebcfa28d79"
+        },
+        "state": "finished"
+      },
+      "rechecked": {
+        "resultat-final.json": true,
+        "Rapport_Eva_cycle6.txt": true
+      }
+    },
+    "eva-learning-cycle7-validation-20261109": {
+      "manifest": {
+        "epoch": 1794251650.9519358,
+        "files": {
+          "resultat-final.json": "ca11231998ac704d929ce4c24f9cc1409ae693c6e09a272a368a84defee79edf",
+          "Rapport_Eva_cycle7.txt": "a892bcfb7c1cfebd00a17dc4341af5d51b44fcb1c9ffec85d077c0ec4b5f7ebd"
+        },
+        "state": "finished"
+      },
+      "rechecked": {
+        "resultat-final.json": true,
+        "Rapport_Eva_cycle7.txt": true
+      }
+    },
+    "eva-learning-cycle8-audit-20261109": {
+      "manifest": {
+        "epoch": 1794257902.5400715,
+        "state": "finished",
+        "all_candidates_verified": true,
+        "blind_test_untouched": true,
+        "files": {
+          "audit-summary.json": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+          "Rapport_Eva_audit_checkpoints.txt": "4cb6580e0e5101668677138420d650ea0df8075fdbefdc93c70328172335cc4b",
+          "run/quality-comparison.json": "a0d840a68e510c7f670b3dd4ec88b6c73f7320dfe6d238513dd7d06fba116bba",
+          "candidates.json": "13cad7914611a9df60991466cf46a2471513e5b493846032ece73eb21c24de9e",
+          "challenge-validation.json": "987701cdbffc67cf3bda70fd408bd7e86a4f3779ba10df1f23552163f7b19e0f",
+          "final-test-reserved.json": "1f83e9d9740cabded1e044cb1913fbff612fe59465b9bda89acc756c489ff645"
+        }
+      },
+      "rechecked": {
+        "audit-summary.json": true,
+        "Rapport_Eva_audit_checkpoints.txt": true,
+        "run/quality-comparison.json": true,
+        "candidates.json": true,
+        "challenge-validation.json": true,
+        "final-test-reserved.json": true
+      }
+    }
+  },
+  "eva-v100-power-sweep-20261108/comparison.json": {
+    "updated": 1794168017.209749,
+    "state": {
+      "phase": "finished",
+      "epoch": 1794167997.6205375,
+      "heartbeat": 1794167997.6205378,
+      "power_w": 300,
+      "window_id": "300W-D-np4",
+      "scenario": "D",
+      "parallel": 4,
+      "ctx_per_session": 8192,
+      "finished": 1794167997.6205356
+    },
+    "powers": {
+      "150": {
+        "metrics": {
+          "gpu_c": {
+            "mean": 32.12259194395797,
+            "median": 32.0,
+            "min": 26.0,
+            "max": 33.0,
+            "n": 571
+          },
+          "hbm_c": {
+            "mean": 35.44133099824869,
+            "median": 36.0,
+            "min": 26.0,
+            "max": 36.0,
+            "n": 571
+          },
+          "gpu_w": {
+            "mean": 145.3553274956217,
+            "median": 145.754,
+            "min": 55.315,
+            "max": 241.694,
+            "n": 571
+          },
+          "wall_w": {
+            "mean": 292.3339754816112,
+            "median": 294.0,
+            "min": 143.0,
+            "max": 307.0,
+            "n": 571
+          },
+          "cpu_c": {
+            "mean": 41.172285464098074,
+            "median": 41.5,
+            "min": 35.5,
+            "max": 42.625,
+            "n": 571
+          }
+        },
+        "concurrency": {
+          "1": {
+            "completed_requests": 2,
+            "decode_tps_per_request": {
+              "mean": 108.30048117503259,
+              "median": 108.30048117503259,
+              "min": 108.15508916839062,
+              "max": 108.44587318167454,
+              "n": 2
+            },
+            "ttft_s": {
+              "mean": 0.7492691009999817,
+              "median": 0.7492691009999817,
+              "min": 0.735417580000103,
+              "max": 0.7631206219998603,
+              "n": 2
+            },
+            "tokens_completed": 8192,
+            "boundary_interruptions": 1,
+            "events": [
+              {
+                "event": "start",
+                "id": "150W-D-np1",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794166768.424239,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "150W-D-np1",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794166768.424239,
+                "requested_seconds": 100,
+                "end": 1794166868.7921388,
+                "seconds": 100.36789989471436
+              }
+            ],
+            "errors": []
+          },
+          "2": {
+            "completed_requests": 2,
+            "decode_tps_per_request": {
+              "mean": 75.62288309568869,
+              "median": 75.62288309568869,
+              "min": 75.38777760697656,
+              "max": 75.85798858440083,
+              "n": 2
+            },
+            "ttft_s": {
+              "mean": 1.3683583319998434,
+              "median": 1.3683583319998434,
+              "min": 1.113243391999731,
+              "max": 1.6234732719999556,
+              "n": 2
+            },
+            "tokens_completed": 8192,
+            "boundary_interruptions": 2,
+            "events": [
+              {
+                "event": "start",
+                "id": "150W-D-np2",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794166870.4922256,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "150W-D-np2",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794166870.4922256,
+                "requested_seconds": 100,
+                "end": 1794166970.852288,
+                "seconds": 100.36006236076355
+              }
+            ],
+            "errors": []
+          },
+          "4": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 46.15167512650555,
+              "median": 46.16845760005533,
+              "min": 46.06106626565456,
+              "max": 46.20871904025699,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 2.1988510449999694,
+              "median": 2.1815875510001206,
+              "min": 1.109522620000007,
+              "max": 3.3227064579996295,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 4,
+            "events": [
+              {
+                "event": "start",
+                "id": "150W-D-np4",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794166972.5546584,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "150W-D-np4",
+                "power_w": 150,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794166972.5546584,
+                "requested_seconds": 100,
+                "end": 1794167072.926521,
+                "seconds": 100.3718626499176
+              }
+            ],
+            "errors": []
+          }
+        }
+      },
+      "200": {
+        "metrics": {
+          "gpu_c": {
+            "mean": 36.526041666666664,
+            "median": 37.0,
+            "min": 31.0,
+            "max": 38.0,
+            "n": 576
+          },
+          "hbm_c": {
+            "mean": 39.84375,
+            "median": 40.0,
+            "min": 33.0,
+            "max": 41.0,
+            "n": 576
+          },
+          "gpu_w": {
+            "mean": 192.10581597222222,
+            "median": 192.694,
+            "min": 57.214,
+            "max": 247.889,
+            "n": 576
+          },
+          "wall_w": {
+            "mean": 343.4770833333333,
+            "median": 346.0,
+            "min": 189.2,
+            "max": 357.8,
+            "n": 576
+          },
+          "cpu_c": {
+            "mean": 42.3359375,
+            "median": 42.75,
+            "min": 39.25,
+            "max": 43.5,
+            "n": 576
+          }
+        },
+        "concurrency": {
+          "1": {
+            "completed_requests": 2,
+            "decode_tps_per_request": {
+              "mean": 120.5559366836205,
+              "median": 120.5559366836205,
+              "min": 120.3460570708334,
+              "max": 120.76581629640762,
+              "n": 2
+            },
+            "ttft_s": {
+              "mean": 0.6520618614997602,
+              "median": 0.6520618614997602,
+              "min": 0.6364051759996983,
+              "max": 0.6677185469998221,
+              "n": 2
+            },
+            "tokens_completed": 8192,
+            "boundary_interruptions": 1,
+            "events": [
+              {
+                "event": "start",
+                "id": "200W-D-np1",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167074.620945,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "200W-D-np1",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167074.620945,
+                "requested_seconds": 100,
+                "end": 1794167174.9299912,
+                "seconds": 100.30904626846313
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 93.13647735895907,
+              "v100_ratio": 1.294400863143917
+            }
+          },
+          "2": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 84.78940822330364,
+              "median": 84.78912283985643,
+              "min": 84.50320226896979,
+              "max": 85.07618494453189,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 1.0556000522500426,
+              "median": 0.9786456649999309,
+              "min": 0.8267238840003301,
+              "max": 1.4383849949999785,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 2,
+            "events": [
+              {
+                "event": "start",
+                "id": "200W-D-np2",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167176.6219769,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "200W-D-np2",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167176.6219769,
+                "requested_seconds": 100,
+                "end": 1794167277.0709662,
+                "seconds": 100.4489893913269
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 67.74717149670704,
+              "v100_ratio": 1.2515522193273818
+            }
+          },
+          "4": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 52.29289013546537,
+              "median": 52.33638567652686,
+              "min": 52.11733647498419,
+              "max": 52.38145271382359,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 1.9185207344997934,
+              "median": 1.9055705184998715,
+              "min": 0.9671471359997668,
+              "max": 2.895794764999664,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 4,
+            "events": [
+              {
+                "event": "start",
+                "id": "200W-D-np4",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167278.7658632,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "200W-D-np4",
+                "power_w": 200,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167278.7658632,
+                "requested_seconds": 100,
+                "end": 1794167379.2127628,
+                "seconds": 100.44689965248108
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 40.516451485242285,
+              "v100_ratio": 1.291731722744522
+            }
+          }
+        }
+      },
+      "250": {
+        "metrics": {
+          "gpu_c": {
+            "mean": 40.71404109589041,
+            "median": 41.0,
+            "min": 31.0,
+            "max": 42.0,
+            "n": 584
+          },
+          "hbm_c": {
+            "mean": 43.792808219178085,
+            "median": 44.0,
+            "min": 34.0,
+            "max": 45.0,
+            "n": 584
+          },
+          "gpu_w": {
+            "mean": 231.8503082191781,
+            "median": 235.182,
+            "min": 50.474,
+            "max": 259.324,
+            "n": 584
+          },
+          "wall_w": {
+            "mean": 387.5888698630137,
+            "median": 394.5,
+            "min": 158.2,
+            "max": 402.7,
+            "n": 584
+          },
+          "cpu_c": {
+            "mean": 41.23694349315068,
+            "median": 41.125,
+            "min": 35.0,
+            "max": 43.875,
+            "n": 584
+          }
+        },
+        "concurrency": {
+          "1": {
+            "completed_requests": 3,
+            "decode_tps_per_request": {
+              "mean": 125.41723490765823,
+              "median": 125.41375052898879,
+              "min": 125.26978890985183,
+              "max": 125.56816528413408,
+              "n": 3
+            },
+            "ttft_s": {
+              "mean": 0.6044196493332189,
+              "median": 0.5907107739999446,
+              "min": 0.5884256049998839,
+              "max": 0.6341225689998282,
+              "n": 3
+            },
+            "tokens_completed": 12288,
+            "boundary_interruptions": 1,
+            "events": [
+              {
+                "event": "start",
+                "id": "250W-D-np1",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167380.911788,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "250W-D-np1",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167380.911788,
+                "requested_seconds": 100,
+                "end": 1794167485.1897318,
+                "seconds": 104.2779438495636
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 129.71952374424222,
+              "v100_ratio": 0.9668070534722067
+            }
+          },
+          "2": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 89.1135450068186,
+              "median": 89.11052285396266,
+              "min": 88.66466340100673,
+              "max": 89.56847091834236,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 1.0363598662499953,
+              "median": 1.0352127405001283,
+              "min": 0.7510764459998427,
+              "max": 1.323937537999882,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 2,
+            "events": [
+              {
+                "event": "start",
+                "id": "250W-D-np2",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167486.9009428,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "250W-D-np2",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167486.9009428,
+                "requested_seconds": 100,
+                "end": 1794167587.2197373,
+                "seconds": 100.31879448890686
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 96.20986466984027,
+              "v100_ratio": 0.9262098347166359
+            }
+          },
+          "4": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 56.191171387782944,
+              "median": 56.23958111860752,
+              "min": 55.998341300413585,
+              "max": 56.28718201350315,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 1.8015289342502,
+              "median": 1.7890650010001536,
+              "min": 0.9174514220003402,
+              "max": 2.710534313000153,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 4,
+            "events": [
+              {
+                "event": "start",
+                "id": "250W-D-np4",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167588.9195359,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "250W-D-np4",
+                "power_w": 250,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167588.9195359,
+                "requested_seconds": 100,
+                "end": 1794167689.3550365,
+                "seconds": 100.43550062179565
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 56.235612028879075,
+              "v100_ratio": 1.000070579648469
+            }
+          }
+        }
+      },
+      "300": {
+        "metrics": {
+          "gpu_c": {
+            "mean": 42.829015544041454,
+            "median": 43.0,
+            "min": 35.0,
+            "max": 45.0,
+            "n": 579
+          },
+          "hbm_c": {
+            "mean": 46.05181347150259,
+            "median": 46.0,
+            "min": 39.0,
+            "max": 48.0,
+            "n": 579
+          },
+          "gpu_w": {
+            "mean": 245.78997409326425,
+            "median": 244.241,
+            "min": 61.085,
+            "max": 294.188,
+            "n": 579
+          },
+          "wall_w": {
+            "mean": 403.09965457685666,
+            "median": 408.4,
+            "min": 178.7,
+            "max": 435.6,
+            "n": 579
+          },
+          "cpu_c": {
+            "mean": 41.167098445595855,
+            "median": 41.25,
+            "min": 37.75,
+            "max": 42.0,
+            "n": 579
+          }
+        },
+        "concurrency": {
+          "1": {
+            "completed_requests": 3,
+            "decode_tps_per_request": {
+              "mean": 125.58643826199143,
+              "median": 125.63067673487373,
+              "min": 125.45319391883795,
+              "max": 125.67544413226263,
+              "n": 3
+            },
+            "ttft_s": {
+              "mean": 0.5837346120001712,
+              "median": 0.5688720460002514,
+              "min": 0.5681382810003015,
+              "max": 0.6141935089999606,
+              "n": 3
+            },
+            "tokens_completed": 12288,
+            "boundary_interruptions": 1,
+            "events": [
+              {
+                "event": "start",
+                "id": "300W-D-np1",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167691.0716112,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "300W-D-np1",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 1,
+                "ctx_per_session": 8192,
+                "start": 1794167691.0716112,
+                "requested_seconds": 100,
+                "end": 1794167792.4783456,
+                "seconds": 101.40673446655273
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 136.73332108303705,
+              "v100_ratio": 0.9188007410320943
+            }
+          },
+          "2": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 90.06305088902309,
+              "median": 90.06128538570135,
+              "min": 89.72344473610953,
+              "max": 90.40618804858012,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 0.9959323755000469,
+              "median": 0.9938454990001446,
+              "min": 0.7237498839999716,
+              "max": 1.2722886199999266,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 2,
+            "events": [
+              {
+                "event": "start",
+                "id": "300W-D-np2",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167794.184465,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "300W-D-np2",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 2,
+                "ctx_per_session": 8192,
+                "start": 1794167794.184465,
+                "requested_seconds": 100,
+                "end": 1794167894.5070984,
+                "seconds": 100.32263350486755
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 101.53379651087332,
+              "v100_ratio": 0.8870079567649836
+            }
+          },
+          "4": {
+            "completed_requests": 4,
+            "decode_tps_per_request": {
+              "mean": 56.80516049940604,
+              "median": 56.85210842853464,
+              "min": 56.61550519093672,
+              "max": 56.90091994961816,
+              "n": 4
+            },
+            "ttft_s": {
+              "mean": 1.7294823194998798,
+              "median": 1.7170800049998434,
+              "min": 0.8751659529998506,
+              "max": 2.608603314999982,
+              "n": 4
+            },
+            "tokens_completed": 16384,
+            "boundary_interruptions": 4,
+            "events": [
+              {
+                "event": "start",
+                "id": "300W-D-np4",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167897.2120318,
+                "requested_seconds": 100
+              },
+              {
+                "event": "end",
+                "id": "300W-D-np4",
+                "power_w": 300,
+                "phase": "D",
+                "parallel": 4,
+                "ctx_per_session": 8192,
+                "start": 1794167897.2120318,
+                "requested_seconds": 100,
+                "end": 1794167997.6203513,
+                "seconds": 100.4083194732666
+              }
+            ],
+            "errors": [],
+            "vs_historical_rtx_same_cap": {
+              "rtx_median_tps": 59.750340778669724,
+              "v100_ratio": 0.9514942958924558
+            }
+          }
+        }
+      }
+    },
+    "rtx_historical_reference": {
+      "1": {
+        "common_n": 10,
+        "powers": {
+          "200": {
+            "generation_median": 93.13647735895907,
+            "prefill_median": 3786.935612563206,
+            "ttft_median": 0.5679693599995517
+          },
+          "250": {
+            "generation_median": 129.71952374424222,
+            "prefill_median": 4899.097222179124,
+            "ttft_median": 0.44346937499994965
+          },
+          "300": {
+            "generation_median": 136.73332108303705,
+            "prefill_median": 5247.823175515696,
+            "ttft_median": 0.4148569154986035
+          },
+          "350": {
+            "generation_median": 140.2980977366932,
+            "prefill_median": 5336.512410034025,
+            "ttft_median": 0.40927411450138607
+          }
+        }
+      },
+      "2": {
+        "common_n": 14,
+        "powers": {
+          "200": {
+            "generation_median": 67.74717149670704,
+            "prefill_median": 2782.669149874174,
+            "ttft_median": 0.8971708589997434
+          },
+          "250": {
+            "generation_median": 96.20986466984027,
+            "prefill_median": 3574.7991765664574,
+            "ttft_median": 0.6613970234993758
+          },
+          "300": {
+            "generation_median": 101.53379651087332,
+            "prefill_median": 3812.9348035493476,
+            "ttft_median": 0.6748395499980688
+          },
+          "350": {
+            "generation_median": 104.40046596616833,
+            "prefill_median": 3903.0193023343313,
+            "ttft_median": 0.6536867000013444
+          }
+        }
+      },
+      "4": {
+        "common_n": 16,
+        "powers": {
+          "200": {
+            "generation_median": 40.516451485242285,
+            "prefill_median": 2676.9923390681843,
+            "ttft_median": 1.0216481634997763
+          },
+          "250": {
+            "generation_median": 56.235612028879075,
+            "prefill_median": 3464.940251980912,
+            "ttft_median": 0.8332620900009715
+          },
+          "300": {
+            "generation_median": 59.750340778669724,
+            "prefill_median": 3727.397378566049,
+            "ttft_median": 0.8514498674994684
+          },
+          "350": {
+            "generation_median": 61.543839673382294,
+            "prefill_median": 3781.5646044085292,
+            "ttft_median": 0.8486818890014547
+          }
+        }
+      }
+    },
+    "limitations": [
+      "100 seconds per concurrency, 300 seconds per power, fewer requests than historical RTX campaign",
+      "Power levels tested in ascending order",
+      "Reference RTX test is historical, not simultaneous",
+      "Complete requests only for primary token rates; boundary-interrupted requests excluded",
+      "timings_per_token enabled for this run to preserve partial diagnostic timings"
+    ],
+    "cleanup.json": {
+      "epoch": 1794167997.7176077,
+      "restore_exit_code": 0,
+      "engine_stopped": true,
+      "guard_stopped": true
+    },
+    "restore.json": {
+      "epoch": 1794167998.0104687,
+      "requested_w": 300.0,
+      "returncode": 0,
+      "stdout": "Power limit for GPU 00000000:0A:00.0 was set to 300.00 W from 300.00 W.\nAll done.\n",
+      "stderr": ""
+    }
+  },
+  "eva-v100-power-sweep-20261108/config.json": {
+    "since": "2026-11-08T20:39:22.302541+01:00",
+    "uuid": "GPU_UUID_REDACTED",
+    "shelly": "LAN_HOST",
+    "server": "/srv/eidolon/work/duel-v100-300w-5min-20261107/cuda/bin/llama-server",
+    "libpath": "/srv/eidolon/work/duel-v100-300w-5min-20261107/cuda/bin:/usr/local/lib/ollama/cuda_v12",
+    "unavailable": [],
+    "gpu_stop_c": 80,
+    "cpu_stop_c": 70,
+    "power_w": 300,
+    "original_power_w": 300,
+    "powers": [
+      150,
+      200,
+      250,
+      300
+    ],
+    "phase_seconds": 300,
+    "port": 11542,
+    "fa": "off",
+    "model_sha256": "fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "manifest_sha256": "d471a9c0ad4ec6230a03da7b0c754ae6f529ede40571e2b97d5e2adaeb7164ef",
+    "meter_url": "http://LAN_HOST/rpc/PM1.GetStatus?id=0"
+  },
+  "eva-v100-power-sweep-20261108/manifest.json": {
+    "model": "/srv/eidolon/models/ollama/blobs/sha256-fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "model_sha256": "fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "server_sha256": "bde2bee49104efe08c153297005f3fb74212cca6b29efe5b14f3c872c4059caf",
+    "powers_w": [
+      150,
+      200,
+      250,
+      300
+    ],
+    "seconds_per_power": 300,
+    "seconds_per_concurrency": 100,
+    "concurrency": [
+      1,
+      2,
+      4
+    ],
+    "context_per_session": 8192,
+    "n_predict": 4096,
+    "temperature": 0,
+    "flash_attention": "off",
+    "kv_type": "f16",
+    "batch": 512,
+    "reference": "/srv/eidolon/work/eva-hermes-characterisation-20261107-v2",
+    "scope": "V100 only; RTX remains idle at its normal 200 W cap",
+    "comparison": "Same corpus.load_case and SYSTEM as RTX reference; shorter samples and ascending power order"
+  },
+  "eva-hermes-characterisation-20261107-v2/report-matched-D.json": {
+    "1": {
+      "common_n": 10,
+      "powers": {
+        "200": {
+          "generation_median": 93.13647735895907,
+          "prefill_median": 3786.935612563206,
+          "ttft_median": 0.5679693599995517
+        },
+        "250": {
+          "generation_median": 129.71952374424222,
+          "prefill_median": 4899.097222179124,
+          "ttft_median": 0.44346937499994965
+        },
+        "300": {
+          "generation_median": 136.73332108303705,
+          "prefill_median": 5247.823175515696,
+          "ttft_median": 0.4148569154986035
+        },
+        "350": {
+          "generation_median": 140.2980977366932,
+          "prefill_median": 5336.512410034025,
+          "ttft_median": 0.40927411450138607
+        }
+      }
+    },
+    "2": {
+      "common_n": 14,
+      "powers": {
+        "200": {
+          "generation_median": 67.74717149670704,
+          "prefill_median": 2782.669149874174,
+          "ttft_median": 0.8971708589997434
+        },
+        "250": {
+          "generation_median": 96.20986466984027,
+          "prefill_median": 3574.7991765664574,
+          "ttft_median": 0.6613970234993758
+        },
+        "300": {
+          "generation_median": 101.53379651087332,
+          "prefill_median": 3812.9348035493476,
+          "ttft_median": 0.6748395499980688
+        },
+        "350": {
+          "generation_median": 104.40046596616833,
+          "prefill_median": 3903.0193023343313,
+          "ttft_median": 0.6536867000013444
+        }
+      }
+    },
+    "4": {
+      "common_n": 16,
+      "powers": {
+        "200": {
+          "generation_median": 40.516451485242285,
+          "prefill_median": 2676.9923390681843,
+          "ttft_median": 1.0216481634997763
+        },
+        "250": {
+          "generation_median": 56.235612028879075,
+          "prefill_median": 3464.940251980912,
+          "ttft_median": 0.8332620900009715
+        },
+        "300": {
+          "generation_median": 59.750340778669724,
+          "prefill_median": 3727.397378566049,
+          "ttft_median": 0.8514498674994684
+        },
+        "350": {
+          "generation_median": 61.543839673382294,
+          "prefill_median": 3781.5646044085292,
+          "ttft_median": 0.8486818890014547
+        }
+      }
+    }
+  },
+  "eva-hermes-characterisation-20261107-v2/config.json": {
+    "since": "2026-11-07T23:16:41.026981+01:00",
+    "uuid": "GPU_UUID_REDACTED",
+    "shelly": "LAN_HOST",
+    "server": "/srv/eidolon/work/duel-v100-300w-5min-20261107/cuda/bin/llama-server",
+    "libpath": "/srv/eidolon/work/duel-v100-300w-5min-20261107/cuda/bin:/usr/local/lib/ollama/cuda_v12",
+    "unavailable": [
+      "memory_temperature",
+      "ECC"
+    ],
+    "gpu_stop_c": 83,
+    "cpu_stop_c": 70,
+    "power_w": 300,
+    "original_power_w": 350,
+    "powers": [
+      200,
+      250,
+      300,
+      350
+    ],
+    "phase_seconds": 1440,
+    "port": 11538,
+    "fa": "off",
+    "model_sha256": "fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "manifest_sha256": "d471a9c0ad4ec6230a03da7b0c754ae6f529ede40571e2b97d5e2adaeb7164ef",
+    "meter_url": "http://LAN_HOST/rpc/PM1.GetStatus?id=0"
+  }
+}

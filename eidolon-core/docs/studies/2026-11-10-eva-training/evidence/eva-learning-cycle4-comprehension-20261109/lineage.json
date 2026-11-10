@@ -1,0 +1,10 @@
+{
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle1-20261108/adapter-final",
+  "parent_adapter_sha256": "13afeb5b466128d93bec9389a00a60f34bcba5460712fbe5a0021db9f1f0c717",
+  "dataset_sha256": "9b6f66f7f2f9785008e2d186b7d3f4c7db469071821a604c316d312dd8db2084",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "epoch": 1794184782.1110947,
+  "scope": "1600 balanced rehearsal,400 added fractions/time,400 comprehension",
+  "learning_rate": 5e-06,
+  "baseline_reuse": "Cycle3 before only, identical cycle1 parent, FP16, prompt and generation settings; new64 evaluated fresh."
+}

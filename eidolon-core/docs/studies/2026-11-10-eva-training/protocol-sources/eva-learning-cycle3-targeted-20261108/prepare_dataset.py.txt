@@ -1,0 +1,73 @@
+from pathlib import Path
+import json,hashlib,random,re,time,collections
+from curriculum import examples,grade
+P=Path(__file__).resolve().parent;W=P.parent;C=json.loads((P/'config.json').read_text())
+def key(x):return (x['family'],tuple(sorted(map(int,re.findall(r'\d+',x['question'].split(' Termine')[0])))))
+prior=[]
+for name in ['eva-learning-pilot-20261108','eva-learning-cycle1-20261108','eva-learning-cycle2-dual200-20261108']:
+ d=json.loads((W/name/'dataset.json').read_text())
+ prior += [x for v in d.values() if isinstance(v,list) for x in v]
+seen={key(x) for x in prior}
+history=json.loads((W/'eva-learning-cycle1-20261108/dataset.json').read_text())['heldout']
+fresh=[];counts=collections.Counter()
+for x in examples(C['fresh_heldout_seed'],4000,True):
+ if counts[x['family']]<20 and key(x) not in seen:
+  fresh.append(x);counts[x['family']]+=1;seen.add(key(x))
+ if len(fresh)==160:break
+assert len(fresh)==160
+# Training uses familiar question forms, wider number ranges, and explicit decomposition.
+src=(P/'curriculum.py').read_text().replace('else r.randint(2,999)','else r.randint(2,4999)').replace('else r.randint(2,99)','else r.randint(2,249)').replace('else r.randint(1,99)','else r.randint(1,499)').replace('else r.randint(1,500)','else r.randint(1,1500)')
+ns={};exec(compile(src,'expanded_curriculum','exec'),ns)
+def strengthen(x):
+ x=dict(x);nums=list(map(int,re.findall(r'\d+',x['question'].split(' Termine')[0])));f=x['family'];steps=None
+ if f in [1,2]:
+  if f==1:a,b,c=nums;left=a;prefix=''
+  else:a,c,b=nums;left=a+c;prefix=f'Parenthèse : {a} + {c} = {left}. '
+  parts=[v for v in [b//100*100,(b//10%10)*10,b%10] if v]
+  products=[left*v for v in parts];prod=sum(products)
+  steps=prefix+f'{b} = '+ ' + '.join(map(str,parts))+'. '
+  steps+=' '.join(f'{left} × {v} = {left*v}.' for v in parts)+' '
+  steps+=' + '.join(map(str,products))+f' = {prod}.'
+  result=prod-c if f==1 else prod
+  if f==1:steps+=f' Puis {prod} − {c} = {result}.'
+  assert str(result)==x['expected']['resultat']
+ elif f==5:
+  h,m,delta=nums;total=h*60+m+delta;days,rest=divmod(total,1440);hh,mm=divmod(rest,60)
+  assert x['expected']['jours']==days and x['expected']['resultat']==f'{hh:02d}:{mm:02d}'
+  steps=f'{h} × 60 + {m} = {h*60+m} minutes. Avec la durée : {h*60+m} + {delta} = {total}. {total} = {days} × 1440 + {rest}. {rest} = {hh} × 60 + {mm}. Arrivée : {hh:02d}:{mm:02d}, décalage {days} jour(s).'
+ elif f==6:
+  total,b,c=nums;a,rem=divmod(total,b);assert rem==0
+  result=a-c;assert str(result)==x['expected']['resultat']
+  steps=f'{total} ÷ {b} = {a}. Vérification : {b} × {a} = {total}. Dans un lot : {a} − {c} = {result}.'
+ if steps:x['answer']=steps+'\n'+json.dumps(x['expected'],ensure_ascii=False)
+ return x
+train=[]
+for difficulty,fun in [('basic',examples),('expanded',ns['examples'])]:
+ counts=collections.Counter();seed=C['train_seed']+(100 if difficulty=='expanded' else 0)
+ pool=fun(seed,16000);random.Random(seed).shuffle(pool)
+ for x in pool:
+  f=x['family'];quota=450 if f in [1,2,5,6] else 150
+  if counts[f]>=quota or key(x) in seen:continue
+  seen.add(key(x));x=strengthen(x);x['difficulty']=difficulty
+  if len(train)%3==0:x['question']=x['question'].replace('Calcule','Détermine la valeur de',1).replace('Départ à','Le départ a lieu à',1)
+  train.append(x);counts[f]+=1
+  if sum(counts.values())==2400:break
+ assert sum(counts.values())==2400,counts
+random.Random(C['train_seed']).shuffle(train)
+validation=[];counts=collections.Counter()
+for x in ns['examples'](C['validation_seed'],8000):
+ f=x['family']
+ if counts[f]<64 and key(x) not in seen:
+  seen.add(key(x));validation.append(strengthen(x));counts[f]+=1
+ if len(validation)==512:break
+assert len(validation)==512
+for group in [train,validation,history,fresh]:
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in group)
+ assert len({key(x) for x in group})==len(group)
+assert not ({key(x) for x in train+validation}&{key(x) for x in prior+fresh})
+assert not ({key(x) for x in train}&{key(x) for x in validation})
+dataset=dict(train=train,validation=validation,heldout=history+fresh,warning='160 historical tracking questions plus 160 new untouched questions. No heldout optimizer/checkpoint selection. Prior semantic operands excluded from new train/validation.')
+(P/'dataset.json').write_text(json.dumps(dataset,ensure_ascii=False))
+sha=lambda q:hashlib.sha256(q.read_bytes()).hexdigest()
+(P/'lineage.json').write_text(json.dumps(dict(parent_adapter=C['parent_adapter'],parent_adapter_sha256=sha(Path(C['parent_adapter'])/'adapter_model.safetensors'),dataset_sha256=sha(P/'dataset.json'),source_revision=C['source_revision'],epoch=time.time(),scope='Targeted arithmetic continuation from best cycle1; cycle2 regression not used as parent.',changes=dict(examples=4800,weak_families_fraction=.75,rehearsal_fraction=.25,learning_rate=1e-5,epochs=1,explicit_verified_steps=True,number_scales=['basic','expanded']),historical_heldout=160,fresh_heldout=160,semantic_disjointness_checked=True),indent=2))
+print(json.dumps(dict(train=len(train),families=dict(collections.Counter(x['family'] for x in train)),validation=len(validation),historical=len(history),fresh=len(fresh))))

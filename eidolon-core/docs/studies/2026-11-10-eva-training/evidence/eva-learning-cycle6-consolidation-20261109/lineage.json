@@ -1,0 +1,8 @@
+{
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "parent_adapter_sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30",
+  "dataset_sha256": "25965ccfc91a2af9623f7ab50f79b62d40297d5607b55b6b9c2a5b464ce8cd51",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "scope": "1600 balanced replay +400 time +200 cents +200 fractions",
+  "learning_rate": 3e-06
+}

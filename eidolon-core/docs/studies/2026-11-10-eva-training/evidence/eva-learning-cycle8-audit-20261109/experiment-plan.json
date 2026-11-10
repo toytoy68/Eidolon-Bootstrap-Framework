@@ -1,0 +1,45 @@
+{
+  "phase": "checkpoint_comparison_only",
+  "training_started": false,
+  "candidates": [
+    {
+      "name": "cycle5-parent",
+      "path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+      "sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30"
+    },
+    {
+      "name": "cycle7-step-40",
+      "path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-40/adapter",
+      "sha256": "321109143e901c63a91acdc64a9378de7891888d2d1ee0e66533596ad657e8c5"
+    },
+    {
+      "name": "cycle7-step-160",
+      "path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-160/adapter",
+      "sha256": "d04868062099a9aa38abb369a08de7247ffa267ee590fe39206c457ca53b9332"
+    },
+    {
+      "name": "cycle7-step-286",
+      "path": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-286/adapter",
+      "sha256": "72a2c94532bd61fb6be8e171993a878b9f08d59894b3994c469102ec63d69327"
+    }
+  ],
+  "validation_counts": {
+    "minutes_conversion": 24,
+    "multi_day": 24,
+    "same_day": 24,
+    "fraction": 32,
+    "midnight": 24,
+    "money": 16,
+    "operation": 16
+  },
+  "anchors": 32,
+  "blind_test": 160,
+  "blind_evaluation": false,
+  "split_checks_passed": true,
+  "files": {
+    "challenge-validation.json": "987701cdbffc67cf3bda70fd408bd7e86a4f3779ba10df1f23552163f7b19e0f",
+    "final-test-reserved.json": "1f83e9d9740cabded1e044cb1913fbff612fe59465b9bda89acc756c489ff645",
+    "candidates.json": "13cad7914611a9df60991466cf46a2471513e5b493846032ece73eb21c24de9e"
+  },
+  "next_phase": "Separate short time-only training trials from cycle5, approximately75% replay/25% time in supervised tokens, one learning-rate change per trial; no automatic model adoption"
+}

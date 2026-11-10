@@ -1,0 +1,69 @@
+import pathlib,json,time,subprocess as sp,signal,os,fcntl,sys
+P=pathlib.Path(__file__).resolve().parent;C=json.loads((P/'config.json').read_text());child=guard=None
+def save(n,d):
+ p=P/(n+'.controller.tmp');p.write_text(json.dumps(d));p.replace(P/n)
+state={'phase':'preflight','epoch':time.time(),'heartbeat':time.time()}
+def status(**kw):state.update(kw,epoch=time.time(),heartbeat=time.time());save('status.json',state)
+def trip():
+ if (P/'guard-trip.json').exists():raise RuntimeError('guard_trip '+(P/'guard-trip.json').read_text())
+def stop_child():
+ if child and child.poll() is None:
+  child.terminate()
+  try:child.wait(timeout=8)
+  except sp.TimeoutExpired:child.kill();child.wait(timeout=3)
+def restore():
+ w=200;r=sp.run(['nvidia-smi','-i',C['uuid'],'-pl',str(w)],capture_output=True,text=True,timeout=12);save('restore.json',dict(epoch=time.time(),requested_w=w,returncode=r.returncode,stdout=r.stdout,stderr=r.stderr));return r.returncode
+if len(sys.argv)>1 and sys.argv[1]=='cleanup':
+ if (P/'original.json').exists():restore()
+ sys.exit()
+def terminated(*a):raise RuntimeError('operator/guard/systemd termination')
+signal.signal(signal.SIGTERM,terminated)
+lease=open('/run/eidolon-eva-learning.lock','w');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+from nvml_sampler import power,busy
+assert not busy(),'GPU already in use'
+assert abs(power()-200)<.1,'200W policy not active'
+save('original.json',dict(power_w=power(),epoch=time.time()));(P/'controller.pid').write_text(str(os.getpid()));status()
+try:
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py'),'guard']);time.sleep(2);trip();power(200)
+ env=dict(os.environ,CUDA_VISIBLE_DEVICES=C['uuid'],TOKENIZERS_PARALLELISM='false',HF_HUB_DISABLE_XET='1',HF_HOME=str(P/'hf-cache'),OMP_NUM_THREADS='6')
+ child=sp.Popen([str(P/'venv/bin/python'),str(P/'train.py')],env=env,stdout=(P/'train.log').open('w'),stderr=sp.STDOUT);save('engine-pid.json',dict(pid=child.pid));load_deadline=time.monotonic()+7200
+ while True:
+  trip();status(phase='loading')
+  if child.poll() is not None:raise RuntimeError('training_process_ended_during_load')
+  if (P/'train-progress.json').exists() and json.loads((P/'train-progress.json').read_text())['stage']=='loaded':break
+  if time.monotonic()>load_deadline:raise RuntimeError('load_timeout')
+  time.sleep(.5)
+ for w in C['powers']:
+  status(phase='cooling',window_id=str(w)+'W',power_w=w);deadline=time.monotonic()+600
+  while True:
+   trip();status();s=json.loads((P/'guard-status.json').read_text()).get('sample',{})
+   if s.get('gpu_c',999)<=45:break
+   if time.monotonic()>deadline:raise RuntimeError('cooldown_timeout')
+   time.sleep(1)
+  power(w);save('command.json',dict(power_w=w,epoch=time.time()));deadline=time.monotonic()+7200
+  while not (P/('cell-'+str(w)+'.json')).exists():
+   trip()
+   if child.poll() is not None:raise RuntimeError('training_process_ended at '+str(w))
+   s=json.loads((P/'train-progress.json').read_text());status(phase=s['stage'],window_id=str(w)+'W',power_w=w)
+   if time.time()-s['epoch']>300:raise RuntimeError('training_progress_stale')
+   if time.monotonic()>deadline:raise RuntimeError('cell_timeout')
+   time.sleep(.5)
+  # Wait for adapter save before allowing the next power interval.
+  while True:
+   trip();status(phase='saving',power_w=w)
+   if child.poll() is not None:
+    if w==C['powers'][-1] and child.returncode==0:break
+    raise RuntimeError('training_process_ended_during_save')
+   s=json.loads((P/'train-progress.json').read_text())
+   if s['stage'] in ['waiting','finished']:break
+   if time.monotonic()>deadline:raise RuntimeError('save_timeout')
+   time.sleep(.5)
+ status(phase='finished',finished=time.time())
+except BaseException as e:status(phase='aborted',reason=repr(e),finished=time.time());raise
+finally:
+ stop_child();(P/'guard-stop').touch()
+ if guard:
+  try:guard.wait(timeout=6)
+  except sp.TimeoutExpired:guard.kill();guard.wait()
+ rc=restore();save('cleanup.json',dict(epoch=time.time(),restore_exit_code=rc,child_stopped=child is None or child.poll() is not None,guard_stopped=guard is None or guard.poll() is not None))
+ sp.run(['/usr/bin/python3',str(P/'summarize.py')],timeout=45)

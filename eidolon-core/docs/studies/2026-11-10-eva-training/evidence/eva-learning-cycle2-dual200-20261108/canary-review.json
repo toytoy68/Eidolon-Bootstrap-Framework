@@ -1,0 +1,4 @@
+{
+  "parent_review": "Mixed qualitative quality. Preference and missing-information probes work. Technical explanation remains simplistic; garden-robot idea not engineering validated.",
+  "policy": "Same eight canaries before/after; qualitative review required. No automatic production deployment."
+}

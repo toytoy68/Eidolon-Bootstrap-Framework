@@ -1,0 +1,18 @@
+{
+  "uuid": "GPU_UUID_REDACTED",
+  "meter_url": "http://LAN_HOST/rpc/PM1.GetStatus?id=0",
+  "gpu_stop_c": 83,
+  "cpu_stop_c": 70,
+  "port": 11538,
+  "powers": [
+    200,
+    250,
+    300,
+    350
+  ],
+  "seconds_per_power": 300,
+  "sequence_length": 512,
+  "gradient_accumulation": 4,
+  "initial_power_expected_w": 350,
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2"
+}

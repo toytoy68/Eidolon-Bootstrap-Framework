@@ -1,0 +1,40 @@
+Eva — comparaison ciblée des checkpoints
+Évaluation uniquement ; aucun entraînement ni déploiement.
+160 validations nouvelles, 32 contrôles des acquis, 8 contrôles conversationnels par candidat.
+160 questions finales réservées, non évaluées.
+
+cycle5-parent: validation 109/160 ; acquis 26/32 ; NLL 0.6022
+  fraction: 30/32
+  midnight: 7/24
+  minutes_conversion: 17/24
+  money: 16/16
+  multi_day: 0/24
+  operation: 15/16
+  same_day: 24/24
+cycle7-step-40: validation 107/160 ; acquis 26/32 ; NLL 0.5806
+  fraction: 30/32
+  midnight: 7/24
+  minutes_conversion: 17/24
+  money: 16/16
+  multi_day: 0/24
+  operation: 13/16
+  same_day: 24/24
+cycle7-step-160: validation 108/160 ; acquis 24/32 ; NLL 0.6151
+  fraction: 30/32
+  midnight: 8/24
+  minutes_conversion: 17/24
+  money: 15/16
+  multi_day: 0/24
+  operation: 15/16
+  same_day: 23/24
+cycle7-step-286: validation 105/160 ; acquis 24/32 ; NLL 0.6347
+  fraction: 30/32
+  midnight: 8/24
+  minutes_conversion: 17/24
+  money: 15/16
+  multi_day: 0/24
+  operation: 15/16
+  same_day: 20/24
+
+Les scores servent à préparer les prochains essais, pas à revendiquer une généralisation finale.
+Dossier complet : /srv/eidolon/work/eva-learning-cycle8-audit-20261109

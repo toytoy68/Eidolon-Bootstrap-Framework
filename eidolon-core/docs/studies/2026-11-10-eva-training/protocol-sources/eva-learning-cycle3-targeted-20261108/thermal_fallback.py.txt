@@ -1,0 +1,32 @@
+import pathlib,json,time,re,subprocess as sp,sys
+ROOT=pathlib.Path(__file__).resolve().parent
+def eligible(trip,baseline,kernel):
+ reason=trip.get('reason','');samples=trip.get('last_samples') or []
+ if not any(s in reason for s in ['Thermal throttling 0','Temperature threshold 0']):return False
+ if len(samples)!=2 or any(t.get('cpu_c',999)>=70 for t in samples):return False
+ v=samples[1]
+ if v.get('gpu_c',999)>=83 or v.get('hbm_c',999)>=83:return False
+ if any(v.get(k)!='Not Active' for k in ['hw_thermal','sw_thermal']):return False
+ if re.search(r'NVRM: Xid|\bBUG:|Oops:|Hardware Error|hard LOCKUP|soft lockup',kernel):return False
+ if len(baseline)!=2:return False
+ for k,value in baseline[1].items():
+  if value is not None and v.get(k)!=value:return False
+ return True
+if '--self-test' in sys.argv:
+ healthy=dict(cpu_c=40,gpu_c=30,hbm_c=32,hw_thermal='Not Active',sw_thermal='Not Active')
+ base=[{},{}];t=dict(reason="RuntimeError('Thermal throttling 0')",last_samples=[dict(healthy,gpu_c=83),healthy])
+ assert eligible(t,base,'')
+ assert not eligible(dict(t,reason="RuntimeError('Thermal throttling 1')"),base,'')
+ assert not eligible(dict(t,reason='timeout'),base,'')
+ assert not eligible(dict(t,last_samples=[dict(healthy,cpu_c=71),healthy]),base,'')
+ assert not eligible(t,base,'NVRM: Xid fault')
+ print('Fallback eligibility tests passed');sys.exit()
+p=ROOT/'dual-resumable';q=p/'guard-trip.json'
+if not q.exists():sys.exit()
+trip=json.loads(q.read_text());baseline=json.loads((p/'ecc-baseline.json').read_text());kernel=(p/'kernel.log').read_text() if (p/'kernel.log').exists() else ''
+ok=eligible(trip,baseline,kernel)
+record=dict(epoch=time.time(),eligible=ok,trigger=trip,checkpoint=json.loads((ROOT/'resume/latest.json').read_text()) if (ROOT/'resume/latest.json').exists() else None)
+if ok:
+ r=sp.run(['systemctl','start','eidolon-eva-cycle3-v100.service'],capture_output=True,text=True,timeout=25)
+ record.update(start_exit_code=r.returncode,stdout=r.stdout,stderr=r.stderr)
+(ROOT/'fallback-event.json').write_text(json.dumps(record,indent=2))

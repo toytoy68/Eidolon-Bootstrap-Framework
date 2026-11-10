@@ -1,0 +1,512 @@
+{
+  "candidates": [
+    {
+      "name": "cycle5-parent",
+      "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+      "seconds": 1187.3994047641754,
+      "challenge": {
+        "n": 160,
+        "correct": 109,
+        "exact_json": 106,
+        "teacher_nll": 0.6022146023857974,
+        "truncated": 0
+      },
+      "anchors": {
+        "n": 32,
+        "correct": 26,
+        "exact_json": 26,
+        "teacher_nll": 0.1724226881328319,
+        "truncated": 0
+      },
+      "skills": {
+        "anchor-0": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.026539001613855362,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "correct": 3,
+          "exact_json": 3,
+          "teacher_nll": 0.04201117507182062,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.043814162723720074,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.06631301250308752,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.0506420386955142,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.3810762957240758,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "correct": 3,
+          "exact_json": 3,
+          "teacher_nll": 0.3078242093324661,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.5526833832263947,
+          "truncated": 0
+        },
+        "fraction": {
+          "n": 32,
+          "correct": 30,
+          "exact_json": 28,
+          "teacher_nll": 0.04239730447374075,
+          "truncated": 0
+        },
+        "midnight": {
+          "n": 24,
+          "correct": 7,
+          "exact_json": 7,
+          "teacher_nll": 0.8124172789305338,
+          "truncated": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "correct": 17,
+          "exact_json": 17,
+          "teacher_nll": 0.770794396761802,
+          "truncated": 0
+        },
+        "money": {
+          "n": 16,
+          "correct": 16,
+          "exact_json": 15,
+          "teacher_nll": 0.18625990394502878,
+          "truncated": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "correct": 0,
+          "exact_json": 0,
+          "teacher_nll": 0.9020367017574056,
+          "truncated": 0
+        },
+        "operation": {
+          "n": 16,
+          "correct": 15,
+          "exact_json": 15,
+          "teacher_nll": 0.1496392170319686,
+          "truncated": 0
+        },
+        "same_day": {
+          "n": 24,
+          "correct": 24,
+          "exact_json": 24,
+          "teacher_nll": 0.7979242162592143,
+          "truncated": 0
+        }
+      }
+    },
+    {
+      "name": "cycle7-step-40",
+      "adapter": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-40/adapter",
+      "seconds": 1187.6876583099365,
+      "challenge": {
+        "n": 160,
+        "correct": 107,
+        "exact_json": 105,
+        "teacher_nll": 0.5806266275556715,
+        "truncated": 0
+      },
+      "anchors": {
+        "n": 32,
+        "correct": 26,
+        "exact_json": 26,
+        "teacher_nll": 0.171440307327702,
+        "truncated": 0
+      },
+      "skills": {
+        "anchor-0": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.03194810589775443,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "correct": 3,
+          "exact_json": 3,
+          "teacher_nll": 0.05022919690236449,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.04748977394774556,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.07198131550103426,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.04530610190704465,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.376316978355472,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "correct": 3,
+          "exact_json": 3,
+          "teacher_nll": 0.2971911132335663,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.5381568223237991,
+          "truncated": 0
+        },
+        "fraction": {
+          "n": 32,
+          "correct": 30,
+          "exact_json": 29,
+          "teacher_nll": 0.06034218563619897,
+          "truncated": 0
+        },
+        "midnight": {
+          "n": 24,
+          "correct": 7,
+          "exact_json": 7,
+          "teacher_nll": 0.7774740741619288,
+          "truncated": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "correct": 17,
+          "exact_json": 17,
+          "teacher_nll": 0.7363526349928392,
+          "truncated": 0
+        },
+        "money": {
+          "n": 16,
+          "correct": 16,
+          "exact_json": 15,
+          "teacher_nll": 0.17589454689994455,
+          "truncated": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "correct": 0,
+          "exact_json": 0,
+          "teacher_nll": 0.8681213015618593,
+          "truncated": 0
+        },
+        "operation": {
+          "n": 16,
+          "correct": 13,
+          "exact_json": 13,
+          "teacher_nll": 0.16358295944609236,
+          "truncated": 0
+        },
+        "same_day": {
+          "n": 24,
+          "correct": 24,
+          "exact_json": 24,
+          "teacher_nll": 0.7625066112602373,
+          "truncated": 0
+        }
+      }
+    },
+    {
+      "name": "cycle7-step-160",
+      "adapter": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-160/adapter",
+      "seconds": 1189.933852672577,
+      "challenge": {
+        "n": 160,
+        "correct": 108,
+        "exact_json": 107,
+        "teacher_nll": 0.6151066987168554,
+        "truncated": 0
+      },
+      "anchors": {
+        "n": 32,
+        "correct": 24,
+        "exact_json": 24,
+        "teacher_nll": 0.16567157978865948,
+        "truncated": 0
+      },
+      "skills": {
+        "anchor-0": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.023982591461390257,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.05291945021599531,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.042770270723849535,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.06384541746228933,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.062432972714304924,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.35227759779615797,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.28142691403627396,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.5410826504230499,
+          "truncated": 0
+        },
+        "fraction": {
+          "n": 32,
+          "correct": 30,
+          "exact_json": 29,
+          "teacher_nll": 0.10483430631667653,
+          "truncated": 0
+        },
+        "midnight": {
+          "n": 24,
+          "correct": 8,
+          "exact_json": 8,
+          "teacher_nll": 0.7979525486539715,
+          "truncated": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "correct": 17,
+          "exact_json": 17,
+          "teacher_nll": 0.7876671303889267,
+          "truncated": 0
+        },
+        "money": {
+          "n": 16,
+          "correct": 15,
+          "exact_json": 15,
+          "teacher_nll": 0.17329846259206533,
+          "truncated": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "correct": 0,
+          "exact_json": 0,
+          "teacher_nll": 0.8998743393831508,
+          "truncated": 0
+        },
+        "operation": {
+          "n": 16,
+          "correct": 15,
+          "exact_json": 15,
+          "teacher_nll": 0.18172398700044423,
+          "truncated": 0
+        },
+        "same_day": {
+          "n": 24,
+          "correct": 23,
+          "exact_json": 23,
+          "teacher_nll": 0.8181449260483397,
+          "truncated": 0
+        }
+      }
+    },
+    {
+      "name": "cycle7-step-286",
+      "adapter": "/srv/eidolon/work/eva-learning-cycle7-validation-20261109/resume/step-286/adapter",
+      "seconds": 1185.2540068626404,
+      "challenge": {
+        "n": 160,
+        "correct": 105,
+        "exact_json": 104,
+        "teacher_nll": 0.6346996076539336,
+        "truncated": 0
+      },
+      "anchors": {
+        "n": 32,
+        "correct": 24,
+        "exact_json": 24,
+        "teacher_nll": 0.16843298947979174,
+        "truncated": 0
+      },
+      "skills": {
+        "anchor-0": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.019716437673196197,
+          "truncated": 0
+        },
+        "anchor-1": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.05098053766414523,
+          "truncated": 0
+        },
+        "anchor-2": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.03795638866722584,
+          "truncated": 0
+        },
+        "anchor-3": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.06440109387040138,
+          "truncated": 0
+        },
+        "anchor-4": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.06421654857695103,
+          "truncated": 0
+        },
+        "anchor-5": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.3698435724897777,
+          "truncated": 0
+        },
+        "anchor-6": {
+          "n": 4,
+          "correct": 2,
+          "exact_json": 2,
+          "teacher_nll": 0.2892473042011261,
+          "truncated": 0
+        },
+        "anchor-7": {
+          "n": 4,
+          "correct": 4,
+          "exact_json": 4,
+          "teacher_nll": 0.5455139577388763,
+          "truncated": 0
+        },
+        "fraction": {
+          "n": 32,
+          "correct": 30,
+          "exact_json": 30,
+          "teacher_nll": 0.11095397463677642,
+          "truncated": 0
+        },
+        "midnight": {
+          "n": 24,
+          "correct": 8,
+          "exact_json": 8,
+          "teacher_nll": 0.8242969462937041,
+          "truncated": 0
+        },
+        "minutes_conversion": {
+          "n": 24,
+          "correct": 17,
+          "exact_json": 17,
+          "teacher_nll": 0.8155941266370745,
+          "truncated": 0
+        },
+        "money": {
+          "n": 16,
+          "correct": 15,
+          "exact_json": 14,
+          "teacher_nll": 0.18297423370182514,
+          "truncated": 0
+        },
+        "multi_day": {
+          "n": 24,
+          "correct": 0,
+          "exact_json": 0,
+          "teacher_nll": 0.9271676740236028,
+          "truncated": 0
+        },
+        "operation": {
+          "n": 16,
+          "correct": 15,
+          "exact_json": 15,
+          "teacher_nll": 0.1567553998075397,
+          "truncated": 0
+        },
+        "same_day": {
+          "n": 24,
+          "correct": 20,
+          "exact_json": 20,
+          "teacher_nll": 0.8491480530304749,
+          "truncated": 0
+        }
+      }
+    }
+  ],
+  "complete": true,
+  "blind_evaluated": false,
+  "training_started": false,
+  "warning": "Validation comparison only. No automatic model adoption. Conversation answers require review."
+}

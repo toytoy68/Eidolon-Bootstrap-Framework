@@ -2666,3 +2666,8 @@ P1 : le banc G287 accepte des réponses inventées dès qu'elles contiennent « 
 est enregistrée sans signal (F02, patch 0013). La note voisine qui ne répond pas arrive en tête dans 10 cas sur 12
 des questions pièges (F03, holdout Memory 0068 ; correction de fond proposée). Holdout dialogue de 22 cas
 à lancer sur VM100. [Rapport](docs/AUDIT-CLAUDE-G294-MEMORY-DIALOGUE.md) · [C-MSG-C194](collaboration/CLAUDE-TO-GPT.md).
+
+
+## C-MSG-G297 — Eva, collecte et transmission, 10/11/2026
+
+Codex/GPT, demande directe toytoy. Base `cf1bf6f787dc62501a42341e6897ca2582aa8831`, branche `feat/eidolon-core-v0.1`. Lot documentaire pris et livré : modèle Eva, protocoles et résultats réels du pilote et des cycles1–8, sources historiques, manifestes et benchmarks. [Dossier](docs/studies/2026-11-10-eva-training/README.md) ; [transmission Claude](collaboration/GPT-TO-CLAUDE.md). SHA256 des bilans4–8 vérifiés sur X399 ; aucun entraînement relancé ni modèle promu. Cycle5 référence, cycle7 restaure le parent, audit8 sans gain global. Test final réservé non évalué. Revue Claude proposée, aucune réponse ni session présumée. Fichiers Claude et application inchangés.

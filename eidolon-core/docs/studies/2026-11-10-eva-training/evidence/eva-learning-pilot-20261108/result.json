@@ -1,0 +1,346 @@
+{
+  "generated": 1794127702.9954746,
+  "state": {
+    "phase": "finished",
+    "epoch": 1794127702.4406297,
+    "heartbeat": 1794127702.44063,
+    "window_id": "350W",
+    "power_w": 350,
+    "finished": 1794127702.440629
+  },
+  "cells": [
+    {
+      "power_w": 200,
+      "start": 1794126391.4173446,
+      "end": 1794126693.7389219,
+      "seconds": 302.32157731056213,
+      "optimizer_steps": 124,
+      "nonpadding_tokens": 237378,
+      "supervised_tokens": 83763,
+      "padded_tokens": 253952,
+      "initial_adapter_sha256": "e7eaf8fe200a3782c350df98574c17e47ee50f2c7801707e92ba12388695db32",
+      "validation_loss_before": 0.46171415969729424,
+      "validation_loss_after": 0.003108358150711865,
+      "validation_warning": "Same-family synthetic loss, not arithmetic accuracy or conversation quality.",
+      "nonpadding_tok_s": 785.1837838096209,
+      "supervised_tok_s": 277.06590030771713,
+      "telemetry": {
+        "gpu_c": {
+          "n": 600,
+          "mean": 58.20666666666666,
+          "median": 60.0,
+          "max": 65.0,
+          "p95": 64.0
+        },
+        "cpu_c": {
+          "n": 600,
+          "mean": 35.94229166666667,
+          "median": 36.0,
+          "max": 38.5,
+          "p95": 38.375
+        },
+        "gpu_w": {
+          "n": 600,
+          "mean": 198.65694666666667,
+          "median": 199.38400000000001,
+          "max": 202.899,
+          "p95": 200.552
+        },
+        "wall_w": {
+          "n": 600,
+          "mean": 330.2196666666667,
+          "median": 330.9,
+          "max": 337.8,
+          "p95": 333.3
+        },
+        "vram_mib": {
+          "n": 600,
+          "mean": 6534.9375,
+          "median": 6534.9375,
+          "max": 6534.9375,
+          "p95": 6534.9375
+        },
+        "sm_mhz": {
+          "n": 600,
+          "mean": 1415.925,
+          "median": 1425.0,
+          "max": 1950,
+          "p95": 1635
+        },
+        "gpu_util_pct": {
+          "n": 600,
+          "mean": 90.42,
+          "median": 95.0,
+          "max": 100,
+          "p95": 100
+        }
+      },
+      "sw_thermal_fraction": 0.0,
+      "hw_thermal_fraction": 0.0,
+      "sw_power_cap_fraction": 1.0,
+      "hw_power_brake_fraction": 0.0,
+      "gpu_w_wh": 16.67749129790764,
+      "gpu_w_coverage_s": 302.22763228416443,
+      "gpu_w_wh_per_million_nonpadding_tokens": 70.25710595719755,
+      "wall_w_wh": 27.72292344394327,
+      "wall_w_coverage_s": 302.22763228416443,
+      "wall_w_wh_per_million_nonpadding_tokens": 116.78809090961786,
+      "example_time_estimates_hours": {
+        "1000": 0.08844355407788485,
+        "10000": 0.8844355407788485,
+        "100000": 8.844355407788484,
+        "1000000": 88.44355407788484
+      }
+    },
+    {
+      "power_w": 250,
+      "start": 1794126728.8547275,
+      "end": 1794127029.859102,
+      "seconds": 301.00437450408936,
+      "optimizer_steps": 126,
+      "nonpadding_tokens": 241201,
+      "supervised_tokens": 85109,
+      "padded_tokens": 258048,
+      "initial_adapter_sha256": "e7eaf8fe200a3782c350df98574c17e47ee50f2c7801707e92ba12388695db32",
+      "validation_loss_before": 0.46171415969729424,
+      "validation_loss_after": 0.0015605852677254006,
+      "validation_warning": "Same-family synthetic loss, not arithmetic accuracy or conversation quality.",
+      "nonpadding_tok_s": 801.3205801323764,
+      "supervised_tok_s": 282.7500435507582,
+      "telemetry": {
+        "gpu_c": {
+          "n": 596,
+          "mean": 70.89261744966443,
+          "median": 72.0,
+          "max": 73.0,
+          "p95": 72.0
+        },
+        "cpu_c": {
+          "n": 596,
+          "mean": 39.180159395973156,
+          "median": 39.0,
+          "max": 44.5,
+          "p95": 42.125
+        },
+        "gpu_w": {
+          "n": 596,
+          "mean": 246.47755536912751,
+          "median": 247.6735,
+          "max": 251.482,
+          "p95": 249.656
+        },
+        "wall_w": {
+          "n": 596,
+          "mean": 382.88187919463087,
+          "median": 384.45,
+          "max": 390.6,
+          "p95": 387.5
+        },
+        "vram_mib": {
+          "n": 596,
+          "mean": 6534.9375,
+          "median": 6534.9375,
+          "max": 6534.9375,
+          "p95": 6534.9375
+        },
+        "sm_mhz": {
+          "n": 596,
+          "mean": 1714.731543624161,
+          "median": 1710.0,
+          "max": 1935,
+          "p95": 1815
+        },
+        "gpu_util_pct": {
+          "n": 596,
+          "mean": 82.75671140939598,
+          "median": 86.0,
+          "max": 95,
+          "p95": 92
+        }
+      },
+      "sw_thermal_fraction": 0.0,
+      "hw_thermal_fraction": 0.0,
+      "sw_power_cap_fraction": 1.0,
+      "hw_power_brake_fraction": 0.0,
+      "gpu_w_wh": 20.55917378819559,
+      "gpu_w_coverage_s": 300.284126996994,
+      "gpu_w_wh_per_million_nonpadding_tokens": 85.23668553694053,
+      "wall_w_wh": 31.93709194051886,
+      "wall_w_coverage_s": 300.284126996994,
+      "wall_w_wh_per_million_nonpadding_tokens": 132.40862160819756,
+      "example_time_estimates_hours": {
+        "1000": 0.0866624995865854,
+        "10000": 0.866624995865854,
+        "100000": 8.66624995865854,
+        "1000000": 86.6624995865854
+      }
+    },
+    {
+      "power_w": 300,
+      "start": 1794127066.7187436,
+      "end": 1794127368.4647543,
+      "seconds": 301.7460107803345,
+      "optimizer_steps": 126,
+      "nonpadding_tokens": 241201,
+      "supervised_tokens": 85109,
+      "padded_tokens": 258048,
+      "initial_adapter_sha256": "e7eaf8fe200a3782c350df98574c17e47ee50f2c7801707e92ba12388695db32",
+      "validation_loss_before": 0.46171415969729424,
+      "validation_loss_after": 0.002667789267434273,
+      "validation_warning": "Same-family synthetic loss, not arithmetic accuracy or conversation quality.",
+      "nonpadding_tok_s": 799.3510813158351,
+      "supervised_tok_s": 282.05509587319045,
+      "telemetry": {
+        "gpu_c": {
+          "n": 598,
+          "mean": 74.97324414715719,
+          "median": 75.0,
+          "max": 78.0,
+          "p95": 77.0
+        },
+        "cpu_c": {
+          "n": 598,
+          "mean": 38.921822742474916,
+          "median": 38.875,
+          "max": 39.75,
+          "p95": 39.5
+        },
+        "gpu_w": {
+          "n": 598,
+          "mean": 294.2709197324415,
+          "median": 295.7255,
+          "max": 300.902,
+          "p95": 299.49
+        },
+        "wall_w": {
+          "n": 598,
+          "mean": 434.5612040133779,
+          "median": 437.4,
+          "max": 441.9,
+          "p95": 440.7
+        },
+        "vram_mib": {
+          "n": 598,
+          "mean": 6534.9375,
+          "median": 6534.9375,
+          "max": 6534.9375,
+          "p95": 6534.9375
+        },
+        "sm_mhz": {
+          "n": 598,
+          "mean": 1835.1923076923076,
+          "median": 1830.0,
+          "max": 1935,
+          "p95": 1890
+        },
+        "gpu_util_pct": {
+          "n": 598,
+          "mean": 79.19565217391305,
+          "median": 82.0,
+          "max": 90,
+          "p95": 88
+        }
+      },
+      "sw_thermal_fraction": 0.0,
+      "hw_thermal_fraction": 0.0,
+      "sw_power_cap_fraction": 1.0,
+      "hw_power_brake_fraction": 0.0,
+      "gpu_w_wh": 24.628378688773065,
+      "gpu_w_coverage_s": 301.29582262039185,
+      "gpu_w_wh_per_million_nonpadding_tokens": 102.10728267616247,
+      "wall_w_wh": 36.36988740792208,
+      "wall_w_coverage_s": 301.29582262039185,
+      "wall_w_wh_per_million_nonpadding_tokens": 150.78663607498342,
+      "example_time_estimates_hours": {
+        "1000": 0.08687602490026025,
+        "10000": 0.8687602490026024,
+        "100000": 8.687602490026023,
+        "1000000": 86.87602490026025
+      }
+    },
+    {
+      "power_w": 350,
+      "start": 1794127400.076515,
+      "end": 1794127700.6154768,
+      "seconds": 300.5389618873596,
+      "optimizer_steps": 125,
+      "nonpadding_tokens": 239286,
+      "supervised_tokens": 84433,
+      "padded_tokens": 256000,
+      "initial_adapter_sha256": "e7eaf8fe200a3782c350df98574c17e47ee50f2c7801707e92ba12388695db32",
+      "validation_loss_before": 0.46171415969729424,
+      "validation_loss_after": 0.004461065825125843,
+      "validation_warning": "Same-family synthetic loss, not arithmetic accuracy or conversation quality.",
+      "nonpadding_tok_s": 796.1896138101492,
+      "supervised_tok_s": 280.93861597766823,
+      "telemetry": {
+        "gpu_c": {
+          "n": 595,
+          "mean": 75.509243697479,
+          "median": 76.0,
+          "max": 77.0,
+          "p95": 77.0
+        },
+        "cpu_c": {
+          "n": 595,
+          "mean": 40.50063025210084,
+          "median": 41.0,
+          "max": 46.5,
+          "p95": 42.25
+        },
+        "gpu_w": {
+          "n": 595,
+          "mean": 327.8225462184874,
+          "median": 329.274,
+          "max": 345.137,
+          "p95": 339.364
+        },
+        "wall_w": {
+          "n": 595,
+          "mean": 471.9788235294118,
+          "median": 473.3,
+          "max": 491.4,
+          "p95": 484.5
+        },
+        "vram_mib": {
+          "n": 595,
+          "mean": 6534.9375,
+          "median": 6534.9375,
+          "max": 6534.9375,
+          "p95": 6534.9375
+        },
+        "sm_mhz": {
+          "n": 595,
+          "mean": 1880.9109243697478,
+          "median": 1890,
+          "max": 1935,
+          "p95": 1920
+        },
+        "gpu_util_pct": {
+          "n": 595,
+          "mean": 77.52436974789916,
+          "median": 81,
+          "max": 92,
+          "p95": 86
+        }
+      },
+      "sw_thermal_fraction": 0.7176470588235294,
+      "hw_thermal_fraction": 0.0067226890756302525,
+      "sw_power_cap_fraction": 0.492436974789916,
+      "hw_power_brake_fraction": 0.0,
+      "gpu_w_wh": 27.308656896618714,
+      "gpu_w_coverage_s": 299.88179659843445,
+      "gpu_w_wh_per_million_nonpadding_tokens": 114.12559404486143,
+      "wall_w_wh": 39.315453796545654,
+      "wall_w_coverage_s": 299.88179659843445,
+      "wall_w_wh_per_million_nonpadding_tokens": 164.30319281757252,
+      "example_time_estimates_hours": {
+        "1000": 0.08722098761389195,
+        "10000": 0.8722098761389195,
+        "100000": 8.722098761389196,
+        "1000000": 87.22098761389195
+      }
+    }
+  ],
+  "warning": "Hardware pilot, adapter reset each power, same initial corpus order. Estimate uses 250 nonpadding tokens/example and one epoch, same sequence/batch. No generalisation claim."
+}

@@ -1,0 +1,54 @@
+"""Independent two-GPU watchdog, reused NVML collectors."""
+import os,time,json,pathlib,threading,subprocess as sp,signal,socket,re,urllib.request
+import sampler_rtx,sampler_v100
+ROOT=pathlib.Path(__file__).resolve().parent;MODE=os.environ.get('EVA_MODE','train');P=ROOT if MODE=='train' else ROOT/'smoke'
+C=json.loads((ROOT/'config.json').read_text());ending=threading.Event()
+def save(n,d):
+ q=P/(n+'.guard.tmp');q.write_text(json.dumps(d));q.replace(P/n)
+def notify():
+ a=os.environ.get('NOTIFY_SOCKET')
+ if a:
+  if a.startswith('@'):a='\0'+a[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall(b'WATCHDOG=1')
+meter_latest={};meter_errors=[];fault=[]
+def meter():
+ while not ending.is_set():
+  try:
+   with urllib.request.urlopen(C['meter_url'],timeout=3) as r:d=json.load(r)
+   meter_latest.update(epoch=time.time(),wall_w=float(d['apower']),energy_wh=float(d['aenergy']['total']));meter_errors.clear()
+  except Exception as e:meter_errors[:]=[repr(e)]
+  ending.wait(1)
+threading.Thread(target=meter,daemon=True).start()
+kernel=sp.Popen(['journalctl','-k','-b','-f','-n','0','--no-pager'],stdout=sp.PIPE,stderr=sp.STDOUT,text=True)
+def kreader():
+ for line in kernel.stdout:
+  with (P/'kernel.log').open('a') as f:f.write(line)
+  if re.search(r'NVRM: Xid|\bBUG:|Oops:|Hardware Error|hard LOCKUP|soft lockup',line):fault.append(line.strip())
+threading.Thread(target=kreader,daemon=True).start()
+baseline=None;start=time.time()
+try:
+ while not (P/'guard-stop').exists():
+  samples=[sampler_rtx.sample(),sampler_v100.sample()];now=time.time()
+  if baseline is None:baseline=[{k:v for k,v in t.items() if k.startswith('ecc_')} for t in samples];save('ecc-baseline.json',baseline)
+  for idx,t in enumerate(samples):
+   if abs(t['power_limit_w']-200)>.1:raise RuntimeError('Power cap violated '+str(idx))
+   if t['gpu_c']>=83 or t['cpu_c']>=70 or (t['hbm_c'] is not None and t['hbm_c']>=83):raise RuntimeError('Temperature threshold '+str(idx))
+   if t['hw_thermal']=='Active' or t['sw_thermal']=='Active':raise RuntimeError('Thermal throttling '+str(idx))
+   for k,v in baseline[idx].items():
+    if v is not None and t[k]!=v:raise RuntimeError('ECC changed '+str(idx)+' '+k)
+  if fault:raise RuntimeError(fault[0])
+  if kernel.poll() is not None:raise RuntimeError('Kernel monitor stopped')
+  if now-meter_latest.get('epoch',0)>8 and now-start>8:raise RuntimeError('Wall telemetry missing '+str(meter_errors))
+  state=json.loads((P/'status.json').read_text())
+  if now-state['heartbeat']>30:raise RuntimeError('Controller heartbeat stale')
+  row=dict(epoch=now,gpus=samples,meter=dict(meter_latest),phase=state.get('phase'))
+  with (P/'telemetry.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
+  save('guard-status.json',row);notify();ending.wait(.5)
+except BaseException as e:
+ save('guard-trip.json',dict(epoch=time.time(),reason=repr(e),last_samples=locals().get('samples')))
+ try:os.kill(int((P/'controller.pid').read_text()),signal.SIGTERM)
+ except Exception:pass
+finally:
+ ending.set();kernel.terminate()
+ try:kernel.wait(timeout=3)
+ except sp.TimeoutExpired:kernel.kill()

@@ -1,0 +1,23 @@
+{
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle1-20261108/adapter-final",
+  "parent_adapter_sha256": "13afeb5b466128d93bec9389a00a60f34bcba5460712fbe5a0021db9f1f0c717",
+  "dataset_sha256": "8b491d4cd8784aa5540c6fc00f63c63677c34e35a2677b848412eac2652eee0b",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "epoch": 1794174077.4029388,
+  "scope": "Targeted arithmetic continuation from best cycle1; cycle2 regression not used as parent.",
+  "changes": {
+    "examples": 4800,
+    "weak_families_fraction": 0.75,
+    "rehearsal_fraction": 0.25,
+    "learning_rate": 1e-05,
+    "epochs": 1,
+    "explicit_verified_steps": true,
+    "number_scales": [
+      "basic",
+      "expanded"
+    ]
+  },
+  "historical_heldout": 160,
+  "fresh_heldout": 160,
+  "semantic_disjointness_checked": true
+}

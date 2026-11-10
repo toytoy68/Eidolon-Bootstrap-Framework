@@ -1,0 +1,81 @@
+from pathlib import Path
+import os,time,json,hashlib,ast,random
+P=Path(__file__).resolve().parent;OUT=Path(os.environ['EVA_OUTPUT']);OUT.mkdir(exist_ok=True)
+def save(name,obj):
+ f=OUT/(name+'.tmp');f.write_text(json.dumps(obj,ensure_ascii=False,indent=2));f.replace(OUT/name)
+def progress(stage,**kw):save('progress-rank0.json',dict(stage=stage,epoch=time.time(),rank=0,**kw))
+progress('importing')
+import torch
+from transformers import AutoTokenizer,AutoModelForCausalLM,BitsAndBytesConfig
+from peft import prepare_model_for_kbit_training,PeftModel,set_peft_model_state_dict
+from safetensors.torch import load_file
+from curriculum import grade,CANARIES
+torch.set_num_threads(4);torch.manual_seed(1234);random.seed(1234)
+assert torch.cuda.device_count()==1 and torch.cuda.get_device_capability(0)==(7,0)
+C=json.loads((P/'config.json').read_text());dtype=torch.float16
+plan=json.loads((P/'experiment-plan.json').read_text())
+for name,h in plan['files'].items():assert hashlib.sha256((P/name).read_bytes()).hexdigest()==h
+d=json.loads((P/'challenge-validation.json').read_text());examples=d['validation']+d['anchors']
+assert len(examples)==192 and len({x['id'] for x in examples})==192
+candidates=json.loads((P/'candidates.json').read_text())
+tokenizer=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token_id=tokenizer.eos_token_id
+old=P.parent/'eva-learning-cycle1-20261108/train.py';tree=ast.parse(old.read_text())
+nodes=[n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets)]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+progress('loading_model')
+quant=BitsAndBytesConfig(load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=dtype)
+base=AutoModelForCausalLM.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False,quantization_config=quant,torch_dtype=dtype,device_map={'':0},attn_implementation='sdpa')
+base=prepare_model_for_kbit_training(base,use_gradient_checkpointing=False)
+model=PeftModel.from_pretrained(base,candidates[0]['path'],is_trainable=False)
+model.eval();model.config.use_cache=False
+summaries=[]
+for ci,c in enumerate(candidates):
+ f=Path(c['path'])/'adapter_model.safetensors'
+ assert hashlib.sha256(f.read_bytes()).hexdigest()==c['sha256']
+ r=set_peft_model_state_dict(model,load_file(str(f),device='cpu'));assert not r.unexpected_keys
+ model.eval();rows=[];start=time.time()
+ for i,x in enumerate(examples):
+  progress('checkpoint_evaluation',candidate=c['name'],candidate_index=ci,total_candidates=len(candidates),done=i,total=len(examples)+len(CANARIES))
+  msgs=[dict(role='system',content=SYSTEM),dict(role='user',content=x['question'])]
+  prefix=tokenizer.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+  full=tokenizer.apply_chat_template(msgs+[dict(role='assistant',content=x['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+  assert full.startswith(prefix)
+  enc=tokenizer(full,add_special_tokens=False,return_offsets_mapping=True)
+  labels=[t if off[0]>=len(prefix) else -100 for t,off in zip(enc['input_ids'],enc['offset_mapping'])]
+  n=sum(v!=-100 for v in labels[1:]);assert n>0
+  seq=torch.tensor([enc['input_ids']],device='cuda');lab=torch.tensor([labels],device='cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=dtype):
+   loss=float(model(input_ids=seq,attention_mask=torch.ones_like(seq),labels=lab).loss)
+  assert 0<=loss<100
+  ids=tokenizer.apply_chat_template(msgs,tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=dtype):
+   out=model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=192,do_sample=False,use_cache=True,pad_token_id=tokenizer.pad_token_id,eos_token_id=tokenizer.eos_token_id)
+  text=tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True)
+  row=dict(id=x['id'],skill=x['skill'],family=x['family'],question=x['question'],expected=x['expected'],response=text,evaluation=grade(text,x['expected']),teacher_nll=loss,teacher_tokens=n,token_limit_reached=out.shape[1]-ids.shape[1]>=192)
+  rows.append(row)
+  with (OUT/(c['name']+'.jsonl')).open('a') as f:f.write(json.dumps(row,ensure_ascii=False)+'\n')
+ canaries=[]
+ for j,(name,q) in enumerate(CANARIES):
+  progress('conversation_checks',candidate=c['name'],candidate_index=ci,total_candidates=len(candidates),done=len(examples)+j,total=len(examples)+len(CANARIES))
+  ids=tokenizer.apply_chat_template([dict(role='system',content='Tu es un assistant francophone. Réponds à la demande sans inventer les informations manquantes.'),dict(role='user',content=q)],tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+  with torch.inference_mode(),torch.autocast('cuda',dtype=dtype):
+   out=model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=256,do_sample=False,use_cache=True,pad_token_id=tokenizer.pad_token_id,eos_token_id=tokenizer.eos_token_id)
+  canaries.append(dict(name=name,question=q,response=tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True)))
+ save(c['name']+'-canaries.json',canaries)
+ def score(sub):
+  return dict(n=len(sub),correct=sum(r['evaluation']['content_correct'] for r in sub),exact_json=sum(r['evaluation']['exact'] for r in sub),teacher_nll=sum(r['teacher_nll']*r['teacher_tokens'] for r in sub)/sum(r['teacher_tokens'] for r in sub),truncated=sum(r['token_limit_reached'] for r in sub))
+ summary=dict(name=c['name'],adapter=c['path'],seconds=time.time()-start,challenge=score([r for r in rows if not r['skill'].startswith('anchor')]),anchors=score([r for r in rows if r['skill'].startswith('anchor')]),skills={s:score([r for r in rows if r['skill']==s]) for s in sorted({r['skill'] for r in rows})})
+ summaries.append(summary);save('audit-summary.json',dict(candidates=summaries,complete=False,blind_evaluated=False,training_started=False))
+final=dict(candidates=summaries,complete=True,blind_evaluated=False,training_started=False,warning='Validation comparison only. No automatic model adoption. Conversation answers require review.')
+save('quality-comparison.json',final);save('audit-summary.json',final)
+(P/'audit-summary.json').write_text(json.dumps(final,ensure_ascii=False,indent=2))
+lines=['Eva — comparaison ciblée des checkpoints','Évaluation uniquement ; aucun entraînement ni déploiement.','160 validations nouvelles, 32 contrôles des acquis, 8 contrôles conversationnels par candidat.','160 questions finales réservées, non évaluées.','']
+for s in summaries:
+ lines += [s['name']+': validation '+str(s['challenge']['correct'])+'/160 ; acquis '+str(s['anchors']['correct'])+'/32 ; NLL '+str(round(s['challenge']['teacher_nll'],4))]
+ for skill,v in s['skills'].items():
+  if not skill.startswith('anchor'):lines.append('  '+skill+': '+str(v['correct'])+'/'+str(v['n']))
+lines+=['','Les scores servent à préparer les prochains essais, pas à revendiquer une généralisation finale.','Dossier complet : '+str(P)]
+(P/'Rapport_Eva_audit_checkpoints.txt').write_text('\n'.join(lines)+'\n')
+progress('finished',completed_candidates=len(candidates))
+

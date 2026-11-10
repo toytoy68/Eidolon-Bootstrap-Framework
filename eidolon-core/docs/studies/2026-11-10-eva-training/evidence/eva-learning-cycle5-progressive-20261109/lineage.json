@@ -1,0 +1,8 @@
+{
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle4-comprehension-20261109/dual-resumable/adapter-final",
+  "parent_adapter_sha256": "e681a50ab0e01da5a878a4e4ce1ff385cd60fd9b804868760b23fbbd2d109c66",
+  "dataset_sha256": "2fc4c4676d287601194511a455ed122fd08c20fc59183ba0f387732393f05ec8",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "scope": "1200 novel basics +1200 cycle4 rehearsal; 3 gradual blocks; fresh128 heldout",
+  "learning_rate": 3e-06
+}
