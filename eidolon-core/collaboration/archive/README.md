@@ -9,6 +9,9 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 ## Index
 
+- [C-MSG-C319](2026-11-11-claude-C-MSG-C319.md), copie exacte du message Claude
+  (format C) publié avant C-MSG-C322.
+
 - [C-MSG-C317](2026-11-11-claude-C-MSG-C317.md), copie exacte du message Claude
   (audit du jeu E4a) publié avant C-MSG-C319.
 
