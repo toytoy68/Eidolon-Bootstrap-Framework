@@ -1,0 +1,25 @@
+{
+  "meter_url": "http://LAN-REDACTED/rpc/PM1.GetStatus?id=0",
+  "gpu_stop_c": 83,
+  "cpu_stop_c": 70,
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "uuids": [
+    "GPU-REDACTED",
+    "GPU-REDACTED"
+  ],
+  "boot_id": "4c1f2095-f683-4b6c-8c17-9d9a21474ee5",
+  "experiment": "E4b-1-components",
+  "sequence_length": 512,
+  "learning_rate": 3e-06,
+  "updates_per_epoch": 102,
+  "max_updates": 204,
+  "epochs": 2,
+  "global_packs_per_update": "4 or6, equal2or3 per rank",
+  "automatic_promotion": false,
+  "target_hours_tokens_per_pass": 28487,
+  "pack_counts_per_pass": [
+    426,
+    428
+  ]
+}

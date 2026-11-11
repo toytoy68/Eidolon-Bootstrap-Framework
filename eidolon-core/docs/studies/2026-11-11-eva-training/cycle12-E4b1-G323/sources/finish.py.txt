@@ -1,0 +1,46 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : finish.py
+# Description : Bilan E4b1 avec regressions, gardes, temps et SHA
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from metrics import summarize,rows
+import json,time
+decision=read(P/'experiment-decision.json');last=decision['last_step'];phases=[i for i in [1,2] if (P/f'eval{i}/assessment.json').exists()]
+assert phases and last==102*phases[-1]
+assessments={str(i*102):read(P/f'eval{i}/assessment.json') for i in phases}
+telemetry={}
+for name in ['qualification-dual','baseline']+sum([[f'phase{i}',f'eval{i}'] for i in phases],[]):
+ xs=[json.loads(x) for x in (P/name/'telemetry.jsonl').read_text().splitlines()];vs=[x for x in xs if isinstance(x.get('meter',{}).get('energy_wh'),(int,float))];ws=[x for x in xs if isinstance(x.get('meter',{}).get('wall_w'),(int,float))]
+ assert read(P/name/'status.json')['phase']=='finished' and not (P/name/'guard-trip.json').exists()
+ telemetry[name]=dict(seconds=xs[-1]['epoch']-xs[0]['epoch'],samples=len(xs),wall_w_mean=sum(x['meter']['wall_w'] for x in ws)/len(ws),wall_w_max=max(x['meter']['wall_w'] for x in ws),energy_wh=vs[-1]['meter']['energy_wh']-vs[0]['meter']['energy_wh'],meter_missing=len(xs)-len(vs),energy_interval_seconds=vs[-1]['epoch']-vs[0]['epoch'],gpu=[{k:dict(mean=sum(x['gpus'][r][k] for x in xs)/len(xs),max=max(x['gpus'][r][k] for x in xs)) for k in ['gpu_w','gpu_c','hbm_c','cpu_c']} for r in range(2)])
+result=dict(state='finished',experiment='E4b-1',decision=decision,baseline=read(P/'baseline-scores.json'),assessments=assessments,data=read(P/'dataset-preparation.json'),telemetry=telemetry,training={str(i):read(P/f'phase{i}/training-summary.json') for i in phases},reference_model='parent-cycle5',automatic_promotion=False,next_experiment_launched=False,final_reserved_read=False,canaries_human_review_required=True)
+save(P/'resultat-final.json',result)
+response={}
+for folder,c in [('baseline','parent')]+[(f'eval{i}',f'step{102*i}') for i in phases]:
+ response[c]=dict(report=rows(folder,'report',c),components={k:rows(folder,'component-'+k,c) for k in ['X1','X2','X3']},legacy=rows(folder,'legacy',c),canaries=rows(folder,'canary',c))
+save(P/'all-responses.json',response)
+L=['EVA — E4b-1 PIECES ISOLEES','Eidolon Core Technologies (ECT) — 11 novembre2026','Depuis parentcycle5 ;aucun modele promu,aucunE4b2 automatique.','',
+'DOSE ET DONNEES',json.dumps(result['data'],ensure_ascii=False),'Masquageassistant et perte ponderee par tokens conserves ;packing/ordre etnombre de lots different d E3,4ou6packs globaux parupdate avec microsteps egaux sur2ranks. Ce nouvelessai ne pretend pas isoler un unique facteur causal.',
+'101replayshoraires courts E1 et709nonhoraires inchanges parpassage. Aucuntextetime_steps de questionhorairecomplete dans letrain. ExercicesX1/X2/X3 distincts entrepasses ;valeurs des288tests reservees dans touteslesfamilles primitives. Le preentrainement n estpas garanti inedit. Bornes exactes enseignees unefois,diagnostics historiques eventuellement vus distincts des testsprimitifs neufs.','',
+'BASELINE',json.dumps(result['baseline'],ensure_ascii=False),'',
+'CRITERES :rapport>=parent-2 ;jour0>=parent-1 ;acquis>=25/32 ;aucunprefixeDepart etnouveauxformats<=parent+1. Stabilite intermediaire primitivesetSG>=parent-1. Progresfinal :plafonddeja100%=maintien ;1a5erreurs disponibles=toutes corrigees sanspretendre significance ;sinonnet>=2 etpappairedexploratoire<=.05.']
+for step,z in assessments.items():
+ L+=['','PAS '+step,'Scores :'+json.dumps(z['after'],ensure_ascii=False),'Gardes :'+json.dumps(z['guards'],ensure_ascii=False),'Apprentissage :'+json.dumps(z['learning'],ensure_ascii=False)]
+L+=['','DECISION',json.dumps(decision,ensure_ascii=False),'Si garde echoue au102,le secondpassage n estpas lance. Toutequalification reste experimentale,pas une validationgenerale ni une promotion.','',
+'TEMPS PUISSANCES ENERGIE',json.dumps(telemetry,ensure_ascii=False),'Energie secteur machinecomplete,intervalles compteur valides,pausesnoninclues. Limites200W configurees parGPU,pointesinstantanees peuventdepasser200W.','',
+'LIMITES ET CONSERVATION','Testsprimitifs tenusapart de ce nouvelentrainement ;rapportcomplet connu,reutilise,pas une nouvelle validationaveugle. Mesures S1/S4/SG historiques nonaveugles et chevauchements de valeurs potentiels documentes. Le controle canonique de chaine etlesregex d affirmations sontpartiels.',
+'Canaris complets conserves pourrevue qualitative. Touspoids,donnees,logs,checkpoints complets etRNG sont conserves ;evaluation horsDDP,restauration102 explicite avantphase2 seulement si gardespassent. Aucunereprise automatique d unrunpartiel.',
+'AucunWOL,reboot,extinction,pilote oumodeleproduction modifie. Dossier :'+str(P)]
+(P/'Rapport_Eva_E4b1.txt').write_text('\n'.join(L)+'\n')
+files={}
+for folder in ['qualification-dual','baseline']+sum([[f'phase{i}',f'eval{i}'] for i in phases],[])+['checkpoints']:
+ for f in (P/folder).rglob('*'):
+  if f.is_file() and '__pycache__' not in f.parts and '.tmp' not in f.name:files[str(f.relative_to(P))]=sha(f)
+for f in P.iterdir():
+ if f.is_file() and f.name not in ['result-saved.json','finalize.log','campaign-status.json']:files[f.name]=sha(f)
+save(P/'result-saved.json',dict(state='finished',files=files,epoch=time.time(),automatic_promotion=False))
+assert all(sha(P/n)==h for n,h in files.items())
+print(json.dumps(dict(saved=True,verified_files=len(files),last_step=last,decision=decision)))

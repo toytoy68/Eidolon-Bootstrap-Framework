@@ -1,0 +1,117 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : campaign.py
+# Description : E4b1 borne, deux phases DDP avec evaluations separees
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from pathlib import Path
+import os,time,subprocess as sp,signal,fcntl,socket
+from metrics import summarize,assess
+C=read(P/'config.json');BOOT=C['boot_id'];children=[];guard=None;OUT=None;START=time.time()
+leases=[open(n,'a') for n in ['/run/eidolon-eva-cycle9-orchestration.lock','/run/eidolon-eva-learning.lock','/run/eidolon-eva-requalification.lock']]
+for lease in leases:fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+def notify(ready=False):
+ a=os.environ.get('NOTIFY_SOCKET')
+ if a:
+  if a.startswith('@'):a='\0'+a[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall((b'READY=1\n' if ready else b'')+b'WATCHDOG=1')
+def campaign(phase,**kw):save(P/'campaign-status.json',dict(phase=phase,epoch=time.time(),boot_id=BOOT,**kw));notify()
+def heartbeat(phase,**kw):save(OUT/'status.json',dict(phase=phase,heartbeat=time.time(),epoch=time.time(),**kw));notify()
+def stop(*args):raise RuntimeError('operator/systemd/guard termination')
+signal.signal(signal.SIGTERM,stop)
+def kill():
+ global children
+ for x in children:
+  if x.poll() is None:
+   try:os.killpg(x.pid,signal.SIGTERM)
+   except ProcessLookupError:pass
+ for x in children:
+  if x.poll() is None:
+   try:x.wait(timeout=12)
+   except sp.TimeoutExpired:os.killpg(x.pid,signal.SIGKILL);x.wait(timeout=5)
+ children=[]
+def monitor(phase,seconds,check=True):
+ deadline=time.time()+seconds
+ while any(x.poll() is None for x in children):
+  assert all(x.poll() in [None,0] for x in children),'Worker exited nonzero in '+phase
+  assert guard.poll() is None and not (OUT/'guard-trip.json').exists(),'Guard stopped/tripped'
+  assert time.time()<deadline,'Stage timeout '+phase
+  paths=[OUT/'progress-check.json'] if phase=='integrity' else [OUT/f'progress-rank{r}.json' for r in range(2)]
+  if check:
+   for f in paths:
+    if f.exists():
+     d=read(f);assert d.get('stage')=='finished' or time.time()-d['epoch']<600,'Progress stale '+str(f)
+  heartbeat(phase);time.sleep(.5)
+ assert all(x.returncode==0 for x in children)
+def gate():
+ assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()==BOOT
+ assert read(P/'cpu-preflight.json')['passed'] and read(P/'cpu-preflight.json')['memtester_passed']
+ assert read(P/'self-check.json')['passed'] and read(P/'dataset-preparation.json')['passed']
+ for n,h in read(P/'launch-manifest.json').items():assert sha(P/n)==h,n
+def stage(name,kind,phase=1):
+ global OUT,guard,children
+ gate();OUT=P/name;OUT.mkdir(exist_ok=False);campaign(name,training=kind=='train',phase_number=phase)
+ (OUT/'controller.pid').write_text(str(os.getpid()));heartbeat('starting')
+ import sampler_rtx,sampler_v100
+ assert not sampler_rtx.busy() and not sampler_v100.busy()
+ for x in [sampler_rtx,sampler_v100]:x.power(200)
+ env=dict(os.environ,EVA_OUTPUT=str(OUT),TOKENIZERS_PARALLELISM='false',OMP_NUM_THREADS='4',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1')
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py')],env=env,stdout=(OUT/'guard.log').open('w'),stderr=sp.STDOUT)
+ try:
+  deadline=time.time()+15
+  while not (OUT/'guard-status.json').exists():assert guard.poll() is None and time.time()<deadline;heartbeat('starting_guard');time.sleep(.2)
+  children=[sp.Popen(['/usr/bin/python3',str(P/'live_check.py')],env=env,stdout=(OUT/'integrity.log').open('w'),stderr=sp.STDOUT,start_new_session=True)]
+  monitor('integrity',600);children=[]
+  if kind in ['smoke','train']:
+   ev=dict(env,EVA_MODE=kind,EVA_PHASE=str(phase),CUDA_VISIBLE_DEVICES=','.join(C['uuids']),TORCH_NCCL_ASYNC_ERROR_HANDLING='1',NCCL_DEBUG='INFO',NCCL_DEBUG_SUBSYS='INIT,GRAPH,P2P')
+   children=[sp.Popen([str(P/'venv/bin/python'),'-m','torch.distributed.run','--standalone','--nnodes=1','--nproc-per-node=2',str(P/'train.py')],env=ev,stdout=(OUT/'train.log').open('w'),stderr=sp.STDOUT,start_new_session=True)]
+   timeout=900 if kind=='smoke' else 3600
+  else:
+   candidates='candidates-baseline.json' if kind=='baseline' else f'candidates-phase{phase}.json'
+   children=[sp.Popen([str(P/'venv/bin/python'),str(P/'audit_worker.py')],env=dict(env,EVA_RANK=str(r),EVA_DIAGNOSTIC=kind,EVA_CANDIDATES_FILE=candidates,CUDA_VISIBLE_DEVICES=C['uuids'][r]),stdout=(OUT/f'worker-rank{r}.log').open('w'),stderr=sp.STDOUT,start_new_session=True) for r in range(2)]
+   timeout=6000
+  monitor(kind,timeout);children=[]
+  if kind=='smoke':
+   z=read(OUT/'passed.json');assert z['passed'] and z['tested_global_packs']==[4,6]
+  elif kind=='train':assert read(OUT/'training-summary.json')['coverage_verified']
+  else:assert all(read(OUT/f'progress-rank{r}.json')['stage']=='finished' for r in range(2))
+  heartbeat('finished',kind=kind)
+ finally:
+  kill();(OUT/'guard-stop').touch()
+  if guard:
+   try:guard.wait(timeout=6)
+   except sp.TimeoutExpired:guard.terminate();guard.wait(timeout=5)
+  guard=None
+def finalizer():
+ global children
+ campaign('saving_results',training=False)
+ child=sp.Popen(['/usr/bin/python3',str(P/'finish.py')],stdout=(P/'finalize.log').open('w'),stderr=sp.STDOUT,start_new_session=True);children=[child];deadline=time.time()+300
+ while child.poll() is None:assert time.time()<deadline;notify();time.sleep(.5)
+ assert child.returncode==0,'Finalizer failed';children=[]
+ assert read(P/'result-saved.json')['state']=='finished'
+ campaign('finished',training=False,result_saved=True,automatic_promotion=False,seconds=time.time()-START)
+try:
+ campaign('starting',training=False);notify(True)
+ stage('qualification-dual','smoke')
+ stage('baseline','baseline')
+ save(P/'baseline-scores.json',summarize('baseline','parent'))
+ assert all(read(P/'baseline'/f'repeat-{k}-rank{r}.json')['passed'] for k in ['X1','X2','X3'] for r in range(2))
+ for phase in [1,2]:
+  stage('phase'+str(phase),'train',phase)
+  c=dict(name='step'+str(102*phase),path=str(P/f'checkpoints/step-{102*phase}/adapter'),sha256=sha(P/f'checkpoints/step-{102*phase}/adapter/adapter_model.safetensors'))
+  save(P/f'candidates-phase{phase}.json',[read(P/'candidates-baseline.json')[0],c])
+  stage('eval'+str(phase),'after',phase)
+  result=assess('eval'+str(phase),c['name'],final=phase==2)
+  save(P/'experiment-decision.json',dict(last_step=102*phase,guard_passed=result['all_guards'],learning_passed=result['all_learning'],qualified=result['qualified'],stopped_after102=phase==1 and not result['all_guards'],automatic_promotion=False))
+  if phase==1 and not result['all_guards']:break
+ finalizer()
+except BaseException as e:
+ campaign('failed',training=False,reason=repr(e));failure=dict(state='failed',reason=repr(e),epoch=time.time(),all_artifacts_retained=True,automatic_promotion=False);save(P/'failed-result.json',failure)
+ report=P/'Rapport_Eva_E4b1_failure.txt';report.write_text('Eva E4b-1 :essai arrete,aucune promotion.\n'+__import__('json').dumps(failure,ensure_ascii=False,indent=2)+'\nPoids,checkpoints,donnees etlogs conserves. AucunE4b2automatique.\n')
+ save(P/'failure-saved.json',dict(state='failed',files={report.name:sha(report),'failed-result.json':sha(P/'failed-result.json')}));raise
+finally:
+ kill()
+ if OUT:(OUT/'guard-stop').touch()
+ if guard and guard.poll() is None:guard.terminate()

@@ -1,0 +1,746 @@
+[
+  {
+    "id": "S1-0",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 07:46 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "466",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-0",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 53 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "00:53",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-1",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 10:46 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "646",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-1",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 929 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "15:29",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-2",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 10:30 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "630",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-2",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 581 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "09:41",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-3",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 22:32 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1352",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-3",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 319 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "05:19",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-4",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 00:17 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "17",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-4",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1275 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "21:15",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-5",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 10:40 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "640",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-5",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 151 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "02:31",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-6",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 07:37 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "457",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-6",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 382 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "06:22",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-7",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 11:47 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "707",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-7",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 854 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "14:14",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-8",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 22:47 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1367",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-8",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 914 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "15:14",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-9",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 12:51 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "771",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-9",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 650 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "10:50",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-10",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 16:50 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1010",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-10",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 88 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "01:28",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-11",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 06:28 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "388",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-11",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1283 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "21:23",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-12",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 18:00 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1080",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-12",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1368 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "22:48",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-13",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 05:24 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "324",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-13",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 912 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "15:12",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-14",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 10:23 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "623",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-14",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1249 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "20:49",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-15",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 14:28 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "868",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-15",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 519 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "08:39",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-16",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 14:27 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "867",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-16",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 879 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "14:39",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-17",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 13:07 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "787",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-17",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1064 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "17:44",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-18",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 07:45 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "465",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-18",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1438 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "23:58",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-19",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 10:49 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "649",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-19",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1239 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "20:39",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-20",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 01:07 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "67",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-20",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1289 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "21:29",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-21",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 19:10 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1150",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-21",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1177 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "19:37",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-22",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 20:36 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "1236",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-22",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 1149 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "19:09",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "S1-23",
+    "kind": "S1",
+    "stratum": "conversion",
+    "question": "Convertis l’heure 12:45 en minutes écoulées depuis minuit. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « minute ».",
+    "expected": {
+      "resultat": "765",
+      "unite": "minute"
+    }
+  },
+  {
+    "id": "S4-23",
+    "kind": "S4",
+    "stratum": "reconversion",
+    "question": "Convertis 842 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat (chaîne ou null) et unite exactement « heure ».",
+    "expected": {
+      "resultat": "14:02",
+      "unite": "heure"
+    }
+  },
+  {
+    "id": "SG-0",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 1439 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -1,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-1",
+    "kind": "SG",
+    "stratum": "nul",
+    "question": "Calcule 1440 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 0,
+      "unite": "nombre",
+      "signe": "nul"
+    }
+  },
+  {
+    "id": "SG-2",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 1441 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 1,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-3",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2879 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 1439,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-4",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2880 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 1440,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-5",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2881 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 1441,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-6",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 0 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -1440,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-7",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 1 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -1439,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-8",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 780 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -660,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-9",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 223 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -1217,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-10",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 503 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -937,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-11",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 1081 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -359,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-12",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 595 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -845,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-13",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 441 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -999,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-14",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 916 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -524,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-15",
+    "kind": "SG",
+    "stratum": "negatif",
+    "question": "Calcule 1184 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": -256,
+      "unite": "nombre",
+      "signe": "négatif"
+    }
+  },
+  {
+    "id": "SG-16",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2204 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 764,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-17",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 1877 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 437,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-18",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2359 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 919,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-19",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 1743 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 303,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-20",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2000 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 560,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-21",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2154 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 714,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-22",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 2392 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 952,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  },
+  {
+    "id": "SG-23",
+    "kind": "SG",
+    "stratum": "positif",
+    "question": "Calcule 1800 − 1440, puis dis si le résultat est négatif, nul ou positif. Termine par un objet JSON avec resultat (un entier, éventuellement négatif), unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).",
+    "expected": {
+      "resultat": 360,
+      "unite": "nombre",
+      "signe": "positif"
+    }
+  }
+]
