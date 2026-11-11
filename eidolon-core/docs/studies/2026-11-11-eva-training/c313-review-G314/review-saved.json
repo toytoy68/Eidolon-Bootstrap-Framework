@@ -1,0 +1,10 @@
+{
+  "training": false,
+  "model_loaded": false,
+  "files": {
+    "analysis-original.json": "d4f91d2eff15ebd8ec6a7244f82985633ce1d0c05bc21d62eb851127271470c3",
+    "subtraction-audit.json": "7f2562b5f77f86d226269a0a2972caaf3355d325af432e193d134ceaf87d00cf",
+    "token-budget-audit.json": "304b3ce3e60cf992a46dea08d8da55e21428a436a14b6c7a1fc8f220996e3a89",
+    "eva_hybrid_analysis.py": "815fe673c5c6f10be0214c50e1e76ae3c05d6083f1e5b234cf4fb98d3d6e315c"
+  }
+}

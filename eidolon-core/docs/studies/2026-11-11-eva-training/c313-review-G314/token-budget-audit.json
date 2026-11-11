@@ -1,0 +1,22 @@
+{
+  "per_pass": {
+    "non_hours": {
+      "examples": 709,
+      "supervised_tokens": 31622,
+      "full_tokens": 120196
+    },
+    "hours": {
+      "examples": 169,
+      "supervised_tokens": 28487,
+      "full_tokens": 52288
+    }
+  },
+  "completed_passes_E3": 2,
+  "packs_per_pass": 408,
+  "updates_per_pass": 102,
+  "hours_supervised_share": 0.47392237435325824,
+  "target_share_in_historical_manifest_is_not_all_hours_share": true,
+  "data_sha256": "69ca4e7a6a84de1cb33a04bd2b9cca2236d132ec4895218e09c27ec4ee841329",
+  "training": false,
+  "model_loaded": false
+}

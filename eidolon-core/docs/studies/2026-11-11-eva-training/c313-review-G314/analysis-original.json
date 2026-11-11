@@ -1,0 +1,94 @@
+{
+ "parent": {
+  "totaux": {
+   "n": 320,
+   "justes": 86,
+   "conversion_presente": 300,
+   "total_present": 297,
+   "total_present_mais_faux": 211
+  },
+  "par_forme": {
+   "court": {
+    "n": 311,
+    "justes": 81
+   },
+   "autre": {
+    "n": 9,
+    "justes": 5
+   }
+  },
+  "operations": {
+   "cela_donne": {
+    "n": 311,
+    "justes": 81
+   }
+  },
+  "tokens_moyens": 63.5
+ },
+ "step204": {
+  "totaux": {
+   "n": 320,
+   "justes": 56,
+   "conversion_presente": 303,
+   "total_present": 299,
+   "total_present_mais_faux": 245
+  },
+  "par_forme": {
+   "Départ": {
+    "n": 174,
+    "justes": 32
+   },
+   "autre": {
+    "n": 130,
+    "justes": 24
+   },
+   "court": {
+    "n": 16,
+    "justes": 0
+   }
+  },
+  "operations": {
+   "cela_donne": {
+    "n": 233,
+    "justes": 50
+   },
+   "soustraction_1440": {
+    "n": 40,
+    "justes": 0
+   },
+   "division_60": {
+    "n": 28,
+    "justes": 1
+   },
+   "heure_sup_24": {
+    "n": 39,
+    "justes": 0
+   }
+  },
+  "tokens_moyens": 92.3
+ },
+ "pertes": {
+  "n": 37,
+  "detail": {
+   "conversion ok | total ok | Départ": 19,
+   "conversion ok | total ok | autre": 9,
+   "conversion perdue | total perdu | Départ": 5,
+   "conversion perdue | total perdu | autre": 3,
+   "conversion ok | total perdu | autre": 1
+  },
+  "par_strate": {
+   "day1-short-template0": 13,
+   "day0-short-template0": 11,
+   "day1-short-template1": 8,
+   "day0-short-template1": 5
+  }
+ },
+ "gains": {
+  "n": 7,
+  "par_strate": {
+   "day1-short-template1": 3,
+   "day0-short-template1": 3,
+   "day1-short-template0": 1
+  }
+ }
+}

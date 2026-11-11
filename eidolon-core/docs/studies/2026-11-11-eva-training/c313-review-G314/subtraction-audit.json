@@ -1,0 +1,48 @@
+{
+  "literal_subtraction_rows": 40,
+  "literal_subtraction_occurrences": 42,
+  "literal_subtractions_arithmetically_correct": 42,
+  "literal_subtraction_rows_final_correct": 0,
+  "examples_arithmetic_correct_final_wrong": [
+    {
+      "id": "c10-report-0-0-0-28",
+      "final_correct": false,
+      "ops": [
+        {
+          "a": 844,
+          "b": 1440,
+          "result": -596,
+          "arithmetic_correct": true
+        }
+      ],
+      "response": "Départ 584 minutes depuis minuit. 584 + 260 = 844 minutes. 844 - 1440 = -596 minutes, soit 00:56 le jour après.\n{\"resultat\": \"00:56\", \"unite\": \"heure\", \"jours\": 1}"
+    },
+    {
+      "id": "c10-report-1-0-0-10",
+      "final_correct": false,
+      "ops": [
+        {
+          "a": 1652,
+          "b": 1440,
+          "result": 212,
+          "arithmetic_correct": true
+        }
+      ],
+      "response": "Départ : 22 × 60 + 35 = 1355 minutes. 1355 + 297 = 1652 minutes. 1652 − 1440 = 212 minutes, soit 3h32. Décalage : 0 jour(s).\n{\"resultat\": \"03:32\", \"unite\": \"heure\", \"jours\": 0}"
+    },
+    {
+      "id": "c10-report-1-0-0-12",
+      "final_correct": false,
+      "ops": [
+        {
+          "a": 2637,
+          "b": 1440,
+          "result": 1197,
+          "arithmetic_correct": true
+        }
+      ],
+      "response": "Départ : 1654 minutes depuis minuit. 1654 + 983 = 2637 minutes. 2637 - 24*60 = 2637 - 1440 = 1197 minutes depuis minuit. 19:57, décalage de 0 jour(s).\n{\"resultat\": \"19:57\", \"unite\": \"heure\", \"jours\": 0}"
+    }
+  ],
+  "limit": "Narrow regex, literal integer minus1440 only; not a complete chain validator."
+}

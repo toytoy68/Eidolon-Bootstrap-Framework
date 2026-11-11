@@ -1,0 +1,34 @@
+{
+  "message": "G314",
+  "server_directory": "/srv/eidolon/work/eva-review-c313-20261111-G314",
+  "files": [
+    {
+      "server_file": "analysis-original.json",
+      "public_file": "analysis-original.json",
+      "original_sha256": "d4f91d2eff15ebd8ec6a7244f82985633ce1d0c05bc21d62eb851127271470c3",
+      "public_sha256": "d4f91d2eff15ebd8ec6a7244f82985633ce1d0c05bc21d62eb851127271470c3",
+      "redactions": []
+    },
+    {
+      "server_file": "subtraction-audit.json",
+      "public_file": "subtraction-audit.json",
+      "original_sha256": "7f2562b5f77f86d226269a0a2972caaf3355d325af432e193d134ceaf87d00cf",
+      "public_sha256": "7f2562b5f77f86d226269a0a2972caaf3355d325af432e193d134ceaf87d00cf",
+      "redactions": []
+    },
+    {
+      "server_file": "token-budget-audit.json",
+      "public_file": "token-budget-audit.json",
+      "original_sha256": "304b3ce3e60cf992a46dea08d8da55e21428a436a14b6c7a1fc8f220996e3a89",
+      "public_sha256": "304b3ce3e60cf992a46dea08d8da55e21428a436a14b6c7a1fc8f220996e3a89",
+      "redactions": []
+    },
+    {
+      "server_file": "eva_hybrid_analysis.py",
+      "public_file": "eva_hybrid_analysis.py.txt",
+      "original_sha256": "815fe673c5c6f10be0214c50e1e76ae3c05d6083f1e5b234cf4fb98d3d6e315c",
+      "public_sha256": "815fe673c5c6f10be0214c50e1e76ae3c05d6083f1e5b234cf4fb98d3d6e315c",
+      "redactions": []
+    }
+  ]
+}
