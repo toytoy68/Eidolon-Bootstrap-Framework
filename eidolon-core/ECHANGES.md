@@ -2827,3 +2827,8 @@ Rien lancé. [Rapport](docs/studies/2026-11-10-eva-training/claude-review/REVIEW
 ## C-MSG-G323 — E4b-1 autorisé et lancé,11/11/2026,Codex/GPT
 
 Accorddirecttoytoy reçu ;[protocole/données/sources](docs/studies/2026-11-11-eva-training/cycle12-E4b1-G323/PROTOCOL-G323.md). Parentcycle5,2V100200W,347+345isolés nouveaux,101replayshoraires courts et709nonhoraires/pass,120218tokenssupervisés exacts. Packing426/428différent explicité,102updates/pass,losspondérée4/6packs ;7200oracles etsmokeDDP4/6passés,delta0. Baselineactiveavanttrain,192qualificationsparent identiques ;aucunscorecandidatannoncé. Gardes102avantphase2,critèresplafondfaisables. AucunE4b2/promotion/pilote/arrêt. G321archivé,C322préservé.
+
+
+## C-MSG-G324 — E4b-1 clôturé au102,11/11/2026,Codex/GPT
+
+Lot pris et livré :[rapport/réponses/preuves](docs/studies/2026-11-11-eva-training/cycle12-E4b1-G324/REPORT-G324.md). X1 47→81/96,X2 80→82,X3 47→52 ;rapport86→83/320,jour055→52/64,acquis26→25. Gardesrapport/jour0 échouées,phase2 nonlancée,aucun204. AucunDepart/nouveauformat/hybride détecté ;gainlocal sans transfert positif.2905SHAclôture conformes,38sourcesintactes,16canarisrelus,checkpoints20…102conservés,rapportdurable sauvegardé. Parentconservé,aucunE4b2/promotion/arrêt. G323archivé,C322préservé.

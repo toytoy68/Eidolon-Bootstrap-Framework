@@ -1,0 +1,44 @@
+EVA E4b-1 — BILAN FINAL G324
+Eidolon Core Technologies (ECT),11 novembre2026
+
+Essai termine normalement au pas102 par criteres de non-regression. Secondpassage nonlance,aucunscore204 disponible. Aucunmodelepromu,parentcycle5 conserve.
+
+RESULTATS — parent -> candidat102
+Conversion HH:MM vers minutes: 47 -> 81/96 ;38 gains/4 pertes ;p exact exploratoire 5.65314622e-08.
+Decision etcompteur: 80 -> 82/96 ;2 gains/0 pertes ;p exact exploratoire 0.5.
+Reconversion minutes versHH:MM: 47 -> 52/96 ;15 gains/10 pertes ;p exact exploratoire 0.424356222.
+Questions horaires completes :86 ->83/320 ;minimum84 nonatteint.
+Sanspassage de minuit :55 ->52/64 ;minimum54 nonatteint.
+Acquis :26 ->25/32 ;minimum25 atteint.
+AucunprefixeDepart,nouveauformatA/B/C ouhybride canonique detecte sur320 reponses completes avant/apres. Aucune troncature.
+S1historique20 ->24/24 ;S4 14 ->15/24 ;SG24 ->24/24. Cesdiagnostics neufs/anciens ne sontpas desjeux interchangeables.
+
+INTERPRETATION
+Gain net de conversion sur cette partition reservee (+34),mais pas de transfert positif observe au rapport complet. Lesprogressions X2(+2,p=.5) etX3(+5,p=.42436) nepassent pas lecritere deprogres preenregistre.
+Les3 pertes nettes du rapport complet sont dans jour0 :gabarit0 32->31,gabarit1 23->21. Jour1court22/32et9/32 inchanges ;jour1long etjour2 restent0.
+L arret nest pas une panne materielle. Lesgardesdequalite ont rempli leurrole ;nepas les assouplir apres coup. Unseulessai,plusieurscomparaisons exploratoires,packingchange :pas depreuve causale unique ni validationgenerale.
+
+DOSE REELLE
+Parentcycle5 ;phase1 seulement102updates,nouvelleLoRA r8alpha16,FP16/NF4doublequant,LRmax3e-6,deuxV100200W.347exercicesisoles (112X1,166X2,69X3),101rappels horairescourtsE1 et709autres inchanges.
+28487tokens horaires supervises (6436rappel+22051isoles),31622autres,60109total.203646nonpadding,426packs512,93updates4packs+9updates6 ;masquesassistant etpondérationtokens conserves,ordre/membershippacking differentsE3.
+Les345exercices du secondpassage ont ete prepares mais NONentraines. Les120218tokens sont le budget PREVU sur2passages,pas la dose reellement executee.
+288testsprimitifs reservees (96/famille),valeurs exclues de toutesfamilles primitives de ce train ;pas de garantie inedit au preentrainement. Rapport320 connu/reutilise. Bornesenseignees etdiagnosticshistoriques distingues.
+
+INTEGRITE
+SmokeDDP4updates distinct du vrai train,4et6packs testes,allreduce3,replicasdelta0,checkpoint/optimiseur/scheduler/scaler etparentroundtrippasses.
+Qualificationparent192 etrapport352 reproduisentE4a ;96primitifs repetes identiques memeslots/memechargement. Rechargementparent avantcandidat reproduit aussi composantes/rapport/legacy/canaris.
+Memtester4GiBmlockdu memeboot,copiesRAM2x etsourceSHA2x avantchargements,38sourcesfigeesinchangées ;pas de certification128GiB ni de resolutiondemontree de l ancienproblemeRAM.
+2901SHAoriginaux verifies,touscheckpoints20/40/60/80/100/102 complets conserves,ycomprisoptimiseur/scaler/scheduler/RNG. Parentdoublehashconforme,ECCvolatiles0/0 parV100,aucuneguardtrip,nouvellealertekernel desmotifs inspectes oucompute restant.
+
+TEMPS,PUISSANCES,ENERGIE — par etape
+qualification-dual: 51.735s ;GPUmoy 64.304/63.554W ;secteurmoy 255.153W max537.900W ;energie 3.644Wh ;compteurabsent1,intervalleenergie51.198s.
+baseline: 313.925s ;GPUmoy 120.834/118.279W ;secteurmoy 381.613W max479.700W ;energie 33.220Wh ;compteurabsent0,intervalleenergie313.925s.
+phase1: 186.286s ;GPUmoy 140.796/142.515W ;secteurmoy 434.232W max535.800W ;energie 22.505Wh ;compteurabsent0,intervalleenergie186.286s.
+eval1: 491.693s ;GPUmoy 125.433/123.003W ;secteurmoy 390.167W max488.100W ;energie 53.153Wh ;compteurabsent1,intervalleenergie491.157s.
+Calcultrain102updates :143.906s,replicasdelta0. Intervallesgardes total1043.639s,energie secteur112.522Wh. Campagne totale1049.565s,pauses/preparationCPU distinguees.
+MaxGPU42°C,HBM46°C,CPU43.375°C. PointesGPU echantillonnees jusqu255.989W pourlimites configurees200W ;pas unplafondinstantane garanti. Secteurinclutmachinecomplete.
+
+CANARIS ET SUITE
+16reponses conversationnelles lues,0tronquee. Reservesqualitatives :preferenceattribueeaatelier,definitionmemoire simplifiee,ideecreative nonetayee. Pas devalidationgenerale.
+AucunE4b-2,autrenouveautrain,promotion,WOL,reboot,extinctionoupilote modifie. Machineallumee,parentreference. Resultats etpoids conserves pourrevueClaude.
+Rapportbrut original Rapport_Eva_E4b1.txt etmanifeste result-saved.json conserves intacts. Dossier :/srv/eidolon/work/eva-learning-cycle12-components-20261111-4c1f2095

@@ -1,0 +1,1 @@
+{"rank": 1, "gpu": "Tesla V100-SXM2-16GB", "uuid": "GPU-REDACTED", "precision": "torch.float16", "trainable_parameters": 16515072, "initial_adapter_state_sha256": "0883c80e45904bdcb85aa6a27d20e921eea7a6bf5574990375e51835d4163a52", "device_map": {"": "1"}, "torch": "2.6.0+cu124", "attention": "sdpa", "quantization": "NF4 double quant", "mode": "train"}

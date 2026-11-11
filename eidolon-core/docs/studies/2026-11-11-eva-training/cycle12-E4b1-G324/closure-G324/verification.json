@@ -1,0 +1,18 @@
+{
+  "original_verified_files": 2901,
+  "frozen_sources": 38,
+  "parent_sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30",
+  "parent_double_hash_passed": true,
+  "kernel_alerts": [],
+  "compute_apps": [],
+  "volatile_ecc": "0 corrected and0 uncorrected perV100",
+  "checkpoint_steps": [
+    20,
+    40,
+    60,
+    80,
+    100,
+    102
+  ],
+  "epoch": 1794421718.7202709
+}
