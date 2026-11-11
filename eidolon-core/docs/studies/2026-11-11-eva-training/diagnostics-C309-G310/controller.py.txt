@@ -1,0 +1,124 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : controller.py
+# Description : Diagnostics bornes, gardes et processus CUDA independants
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import json,time,os,subprocess as sp,fcntl,signal,hashlib,re,math
+from common import P,read,save,sha,sg_correct
+C=read(P/'config.json');BOOT='4c1f2095-f683-4b6c-8c17-9d9a21474ee5';children=[];guard=None;OUT=None;START=time.time()
+lease=open('/run/eidolon-eva-learning.lock','a');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+orchestration=open('/run/eidolon-eva-cycle9-orchestration.lock','a');fcntl.flock(orchestration,fcntl.LOCK_EX|fcntl.LOCK_NB)
+def stopped(*a):raise RuntimeError('operator/guard/systemd stop')
+signal.signal(signal.SIGTERM,stopped)
+def campaign(phase,**kw):save(P/'campaign-status.json',dict(phase=phase,epoch=time.time(),boot_id=BOOT,training=False,**kw))
+def heartbeat(phase,**kw):save(OUT/'status.json',dict(phase=phase,heartbeat=time.time(),epoch=time.time(),training=False,**kw))
+def kernel():
+ k=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True)
+ assert not re.search(r'Oops:|BUG:|Hardware Error|NVRM: Xid|hard LOCKUP|soft lockup',k),'Current kernel fault'
+def check_guard():
+ assert guard.poll() is None,'Guard process stopped'
+ assert not (OUT/'guard-trip.json').exists(),'Guard trip: '+str(read(OUT/'guard-trip.json')) if (OUT/'guard-trip.json').exists() else 'Guard'
+def integrity():
+ assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()==BOOT
+ proof=read(P/'cpu-preflight.json');assert proof['passed'] and proof['memtester_passed'] and proof['boot_id']==BOOT
+ for n,h in read(P/'launch-manifest.json').items():assert sha(P/n)==h,n
+ kernel();lock=open('/run/eidolon-eva-requalification.lock','a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ try:
+  copies=[]
+  for i in range(2):
+   heartbeat('memory_recheck',pass_index=i);check_guard()
+   r=sp.run([str(P/'memory_copy_test')],capture_output=True,text=True,timeout=30);save(OUT/f'copy-{i}.json',dict(returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
+   errors=[int(x) for x in re.findall(r'(?:destination|source)_errors=(\d+)',r.stdout)]
+   assert r.returncode==0 and len(errors)==12 and not any(errors),'Memory copy defect';copies.append(r.stdout)
+  checks={}
+  for name,v in read(P/'source-manifest.json')['files'].items():
+   hs=[]
+   for i in range(2):
+    heartbeat('source_recheck',file=name,pass_index=i);check_guard();hs.append(sha(P/'source-model'/name))
+   assert hs==[v['sha256']]*2,name;checks[name]=hs
+  kernel();save(OUT/'integrity-proof.json',dict(passed=True,boot_id=BOOT,source_hashes=checks,copies=copies,initial_cpu_proof_sha256=sha(P/'cpu-preflight.json'),epoch=time.time()))
+ finally:fcntl.flock(lock,fcntl.LOCK_UN);lock.close()
+def collect(stage,candidate='parent'):
+ rows=[]
+ for rank in range(2):rows+=read(OUT/f'{stage}-{candidate}-rank{rank}.json')['rows']
+ assert len({r['id'] for r in rows})==len(rows)
+ return rows
+def sign_gate():
+ probes=read(P/'boundary-probes.json');xs=[x for x in probes if x['kind']=='SG'];byid={x['id']:x for x in xs};rows=collect('sign')
+ assert {r['id'] for r in rows}==set(byid)
+ wrong=[r['id'] for r in rows if not sg_correct(r,byid[r['id']])]
+ result=dict(allow_B=not wrong,policy='Require all24 isolated value+sign answers correct; any negative failure rejectsB before its generation.',wrong=wrong,by_sign={k:dict(n=sum(x['stratum']==k for x in xs),correct=sum(sg_correct(r,byid[r['id']]) for r in rows if byid[r['id']]['stratum']==k)) for k in ['negatif','nul','positif']},epoch=time.time())
+ save(OUT/'sign-gate.json',result)
+def stage(mode,timeout):
+ global OUT,guard,children
+ OUT=P/mode;assert not OUT.exists(),'Explicit inspection required before any resume';OUT.mkdir();children=[];campaign(mode);heartbeat('starting',mode=mode)
+ env=dict(os.environ,EVA_OUTPUT=str(OUT),EVA_MODE=mode,EVA_SINGLE='0')
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py')],env=env,stdout=(OUT/'guard.log').open('w'),stderr=sp.STDOUT)
+ deadline=time.time()+15
+ while not (OUT/'guard-status.json').exists():
+  assert guard.poll() is None and time.time()<deadline,'Guard startup failed';heartbeat('starting',mode=mode);time.sleep(.3)
+ integrity()
+ for rank in range(2):
+  e=dict(env,EVA_RANK=str(rank),EVA_DIAGNOSTIC=mode,CUDA_VISIBLE_DEVICES=C['uuids'][rank],TOKENIZERS_PARALLELISM='false',HF_HOME=str(P/'hf-cache'),HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1',OMP_NUM_THREADS='4')
+  children.append(sp.Popen([str(P/'venv/bin/python'),str(P/'worker.py')],env=e,stdout=(OUT/f'worker-rank{rank}.log').open('w'),stderr=sp.STDOUT,start_new_session=True))
+ started=time.time()
+ while any(x.poll() is None for x in children):
+  check_guard();ranks=[]
+  for rank,x in enumerate(children):
+   f=OUT/f'progress-rank{rank}.json'
+   if f.exists():
+    p=read(f);ranks.append(p)
+    if x.poll() is None:assert time.time()-p['epoch']<600,'Independent worker progress stale '+str(rank)
+   assert x.poll() in [None,0],'Worker failed rank'+str(rank)
+  if mode=='probes' and not (OUT/'sign-gate.json').exists() and all((OUT/f'sign-ready-rank{r}.json').exists() for r in range(2)):sign_gate()
+  assert time.time()-started<timeout,'Stage deadline'
+  heartbeat('running',mode=mode,ranks=ranks);time.sleep(1)
+ assert all(x.returncode==0 for x in children),'Worker failed'
+ heartbeat('finished',mode=mode);(OUT/'guard-stop').touch();guard.wait(timeout=10);guard=None;children=[]
+ if mode=='nll':
+  a=read(OUT/'nll-parent-rank0.json')['rows'];b=read(OUT/'nll-parent-rank1.json')['rows']
+  assert [x['id'] for x in a]==[x['id'] for x in b]
+  delta=max(abs(x['mean_nll']-y['mean_nll']) for x,y in zip(a,b));assert delta<=1e-3,'Cross-GPU NLL baseline mismatch'
+  results=[]
+  for f in sorted(OUT.glob('nll-*-rank*.json')):
+   if f.name.startswith('nll-qualification-'):continue
+   d=read(f);rs=d['rows'];ps=[x['p_prefix'] for x in rs if 'p_prefix' in x]
+   results.append(dict(candidate=rs[0]['candidate'],rank=rs[0]['rank'],summaries=d['summaries'],seconds=d['seconds'],mean_p_prefix=sum(ps)/len(ps),geomean_p_prefix=math.exp(sum(x['logp_prefix'] for x in rs if 'logp_prefix' in x)/len(ps))))
+  save(OUT/'summary.json',dict(passed=True,cross_gpu_parent_max_abs_nll=delta,candidates=results,training=False))
+ elif mode=='probes':
+  import eva_boundary_probes as bp
+  g=read(OUT/'sign-gate.json');allp=read(P/'boundary-probes.json');rows=collect('sign')+collect('boundary')
+  planned=[x for x in allp if x['kind']!='FB' or g['allow_B']];assert {x['id'] for x in rows}=={x['id'] for x in planned}
+  save(OUT/'summary.json',dict(grade=bp.grade(planned,rows),sign_gate=g,generated=len(rows),skipped_B=0 if g['allow_B'] else 44,training=False));save(OUT/'responses.json',rows)
+ elif mode=='batch':
+  a=collect('batch1');b=collect('batch16');d=collect('batch16repeat');aa={x['id']:x for x in a};bb={x['id']:x for x in b};dd={x['id']:x for x in d}
+  assert aa.keys()==bb.keys()==dd.keys() and len(a)==192
+  unstable=[k for k in bb if bb[k]['response']!=dd[k]['response']];assert not unstable,'Batch16 unstable'
+  changed=[k for k in aa if aa[k]['response']!=bb[k]['response']]
+  # Fixed batch16 is allowed for an explicitly NEW paired assessment only.
+  # Differences from batch1 are exposed, never presented as identical output.
+  save(OUT/'batch-decision.json',dict(repeatability_passed=True,exact_equivalence=not changed,changed=changed,n=192,chosen_batch_size=16,warning='New parent/candidate comparison at fixedbatch16. Historical batch1 scores must not be directly compared if changed.',config_changed=bool(changed)))
+ campaign(mode+'-finished')
+try:
+ import sampler_rtx,sampler_v100
+ assert not sampler_rtx.busy() and not sampler_v100.busy(),'GPU already busy'
+ for s in [sampler_rtx,sampler_v100]:s.power(200)
+ stage('nll',5400);stage('probes',5400);stage('batch',7200);stage('eval',7200)
+ campaign('saving_results')
+ r=sp.run([str(P/'venv/bin/python'),str(P/'finish.py')],capture_output=True,text=True,timeout=300);(P/'finalize.log').write_text(r.stdout+'\n'+r.stderr);assert r.returncode==0,r.stderr
+ campaign('finished',training=False,result_saved=True)
+except BaseException as e:
+ campaign('failed',reason=repr(e),training=False);save(P/'failure.json',dict(reason=repr(e),epoch=time.time(),training=False));raise
+finally:
+ for x in children:
+  if x.poll() is None:
+   os.killpg(x.pid,signal.SIGTERM)
+   try:x.wait(timeout=10)
+   except sp.TimeoutExpired:os.killpg(x.pid,signal.SIGKILL);x.wait(timeout=3)
+ if OUT:(OUT/'guard-stop').touch()
+ if guard:
+  try:guard.wait(timeout=8)
+  except sp.TimeoutExpired:guard.terminate();guard.wait(timeout=3)

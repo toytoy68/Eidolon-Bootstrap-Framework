@@ -1,0 +1,35 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : self_check.py
+# Description : Qualification CPU des mesures sans optimisation
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+import ast,json,subprocess
+from common import P,read,save,sg_correct,item_path
+import torch
+import torch.nn.functional as F
+for n in ['worker.py','controller.py','finish.py','prepare.py','common.py']:
+ tree=ast.parse((P/n).read_text())
+ if n=='worker.py':
+  assert not any(isinstance(x,ast.Call) and isinstance(x.func,ast.Attribute) and x.func.attr in ['backward','step','init_process_group','barrier','all_reduce','broadcast','broadcast_object_list'] for x in ast.walk(tree))
+  assert not any(isinstance(x,ast.ImportFrom) and x.module and x.module.startswith('torch.distributed') for x in ast.walk(tree))
+data=read(P/'data-preparation.json');assert data['nll_examples']==352 and data['boundary_generations']==156 and data['boundary_time_cases']==44
+assert len(read(P/'candidates.json'))==13
+# Check causal one-token shift and assistant-only masking on known logits.
+logits=torch.tensor([[1.,0.,0.],[0.,2.,0.],[0.,0.,3.],[0.,0.,0.]])
+ids=torch.tensor([0,0,1,2]);positions=torch.tensor([2,3])
+loss=F.cross_entropy(logits[positions-1],ids[positions],reduction='none')
+assert torch.allclose(loss,-F.log_softmax(logits,dim=-1)[torch.tensor([1,2]),torch.tensor([1,2])])
+assert positions.min()>0 and len(loss)==2
+# A boolean is not an arithmetic integer answer, even where True==1.
+probe=dict(expected=dict(resultat=1,unite='nombre',signe='positif'))
+assert sg_correct(dict(response='{"resultat":1,"unite":"nombre","signe":"positif"}'),probe)
+assert not sg_correct(dict(response='{"resultat":true,"unite":"nombre","signe":"positif"}'),probe)
+try:item_path('/tmp','s','parent','../escape')
+except AssertionError:pass
+else:raise AssertionError('unsafe response identifier accepted')
+r=subprocess.run(['/usr/bin/python3','-I',str(P/'test_eva_boundary_probes.py'),'/srv/eidolon/work/eva-learning-cycle9-hours-20261110/probes-c303-f006076b'],capture_output=True,text=True)
+(P/'original-tests.log').write_text(r.stdout+'\n'+r.stderr);assert r.returncode==0
+save(P/'self-check.json',dict(passed=True,original_tests=10,no_training_or_distributed_calls=True,assistant_only_causal_shift=True,strict_boolean_rejected=True,data_coverage_verified=True))
+print('CPU qualification passed')

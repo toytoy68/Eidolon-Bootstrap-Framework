@@ -1,0 +1,56 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : prepare.py
+# Description : Jeux figes pour diagnostics C309 sans entrainement
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import json,ast,hashlib,collections
+from common import P,save,read,sha
+from eva_review_tools import time_operands
+import eva_boundary_probes as probes
+from transformers import AutoTokenizer
+seen=set()
+def collect(obj):
+ if isinstance(obj,dict):
+  if isinstance(obj.get('question'),str):
+   op=time_operands(obj['question'])
+   if op:seen.add(tuple(op))
+   if obj.get('time_key'):seen.add(tuple(obj['time_key']))
+  else:
+   for x in obj.values():collect(x)
+ elif isinstance(obj,list):
+  for x in obj:collect(x)
+for root in P.parent.glob('eva-learning-*'):
+ f=root/'dataset.json'
+ if f.is_file():collect(read(f))
+prior=P.parent/'eva-learning-cycle9-hours-20261110'
+for n in ['e1-f006076b','e2-f006076b']:collect(read(prior/n/'dataset.json'))
+for line in (prior/'probes-c303-f006076b/probes.jsonl').read_text().splitlines():collect(json.loads(line))
+data=read(P/'e3-dataset.json');collect(data);initial_seen=len(seen)
+boundary=probes.build(3070,8,list(seen),exact=2)
+assert len(boundary)==156 and len({x['id'] for x in boundary})==156
+timed=[x for x in boundary if x['kind']!='SG'];signs=[x for x in boundary if x['kind']=='SG']
+assert len({x['pair'] for x in timed})==44 and len(signs)==24
+assert all(tuple(x['time_key']) not in seen for x in timed)
+assert {1439,1440,1441,2879,2880,2881}<={sum(x['time_key']) for x in timed}
+save(P/'boundary-probes.json',boundary);save(P/'nll-examples.json',data['heldout']);save(P/'selection.json',data['selection'])
+save(P/'report-examples.json',data['heldout'])
+tok=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tok.pad_token_id is None:tok.pad_token_id=tok.eos_token_id
+tree=ast.parse((P/'encoding-source.py').read_text());system=ast.literal_eval(next(n.value for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets)))
+save(P/'system.json',dict(system=system))
+lengths=[];count=collections.Counter()
+for ex in data['heldout']:
+ msgs=[dict(role='system',content=system),dict(role='user',content=ex['question'])]
+ prefix=tok.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tok.apply_chat_template(msgs+[dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False);assert full.startswith(prefix)
+ enc=tok(full,add_special_tokens=False,return_offsets_mapping=True)
+ supervised=[i for i,o in enumerate(enc['offset_mapping']) if o[0]>=len(prefix)]
+ assert supervised and supervised[0]>0
+ if ex['group']=='target':assert enc['input_ids'][supervised[0]:supervised[0]+2]==[86893,4480]
+ lengths.append(len(enc['input_ids']));count[ex['group']]+=len(supervised)
+assert max(lengths)<=1024
+stats=dict(training=False,source_commit='87f2b4994e840ae540b547036860bcbdcc34f33e',historical_pairs_excluded=initial_seen,nll_examples=352,nll_supervised_tokens=dict(count),nll_max_tokens=max(lengths),boundary_generations=156,boundary_time_cases=44,sign_probes=24,distinct_sign_operands=len({x['question'] for x in signs}),sign_classes=dict(collections.Counter(x['stratum'] for x in signs)),prefix_ids=[86893,4480],final_reserved_read=False,cache_reused=False)
+save(P/'data-preparation.json',stats);print(json.dumps(stats))

@@ -1,0 +1,59 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : finish.py
+# Description : Rapport des diagnostics NLL, signe et checkpoint204
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import json,time,math,collections
+def collect(folder,stage,candidate):
+ rows=[]
+ for rank in range(2):rows+=read(P/folder/f'{stage}-{candidate}-rank{rank}.json')['rows']
+ assert len({x['id'] for x in rows})==len(rows)
+ return rows
+def score(rows):
+ return dict(n=len(rows),correct=sum(x['evaluation']['content_correct'] for x in rows),exact=sum(x['evaluation']['exact'] for x in rows),truncated=sum(x['truncated'] for x in rows),formats=dict(collections.Counter(x['format'] for x in rows if x['expected']['unite']=='heure')),false_claims=sum(bool(x['invalid_claims']) for x in rows))
+def compare(a,b):
+ aa={x['id']:x for x in a};bb={x['id']:x for x in b};assert aa.keys()==bb.keys()
+ assert all(aa[k]['identity']['gpu_uuid']==bb[k]['identity']['gpu_uuid'] and aa[k]['identity']['batch_ids']==bb[k]['identity']['batch_ids'] for k in aa)
+ gain=sum(not aa[k]['evaluation']['content_correct'] and bb[k]['evaluation']['content_correct'] for k in aa);loss=sum(aa[k]['evaluation']['content_correct'] and not bb[k]['evaluation']['content_correct'] for k in aa);n=gain+loss
+ p=min(1.,2*sum(math.comb(n,i) for i in range(min(gain,loss)+1))/2**n) if n else 1.
+ return dict(before=score(a),after=score(b),gains=gain,losses=loss,p_exact_exploratory=p)
+results={}
+for scope in ['selection','report']:
+ a=collect('eval','eval-'+scope,'parent');b=collect('eval','eval-'+scope,'step204')
+ assert len(a)==(192 if scope=='selection' else 352)
+ comp=compare(a,b);comp['subsets']={g:compare([x for x in a if x['group']==g],[x for x in b if x['group']==g]) for g in ['target','anchor']}
+ comp['strata']={s:compare([x for x in a if x['stratum']==s],[x for x in b if x['stratum']==s]) for s in sorted({x['stratum'] for x in a})};results[scope]=comp
+ save(P/f'{scope}-responses.json',dict(parent=a,step204=b))
+canaries={c:collect('eval','eval-canary',c) for c in ['parent','step204']};assert all(len(x)==8 for x in canaries.values());save(P/'canaries.json',canaries)
+for rank in range(2):assert read(P/'eval'/f'baseline-crossload-rank{rank}.json')['passed']
+telemetry={}
+for stage in ['nll','probes','batch','eval']:
+ folder=P/stage;assert read(folder/'status.json')['phase']=='finished' and not (folder/'guard-trip.json').exists()
+ rows=[json.loads(x) for x in (folder/'telemetry.jsonl').read_text().splitlines()]
+ out=dict(seconds=rows[-1]['epoch']-rows[0]['epoch'],samples=len(rows),gpus=[])
+ for i in range(2):
+  d={}
+  for k in ['gpu_w','gpu_c','hbm_c','cpu_c','vram_mib']:
+   vals=[x['gpus'][i][k] for x in rows];d[k]=dict(mean=sum(vals)/len(vals),max=max(vals))
+  d['energy_wh']=sum((b['epoch']-a['epoch'])*(a['gpus'][i]['gpu_w']+b['gpus'][i]['gpu_w'])/7200 for a,b in zip(rows,rows[1:]))
+  out['gpus'].append(d)
+ out['wall_energy_wh']=rows[-1]['meter']['energy_wh']-rows[0]['meter']['energy_wh'];out['wall_w_mean']=sum(x['meter']['wall_w'] for x in rows)/len(rows);telemetry[stage]=out
+result=dict(state='finished',training=False,nll=read(P/'nll/summary.json'),probes=read(P/'probes/summary.json'),batch=read(P/'batch/batch-decision.json'),quality=results,telemetry=telemetry,automatic_promotion=False,canaries_human_review_required=True,final_reserved_read=False)
+save(P/'resultat-final.json',result)
+lines=['Eva — diagnostics C309 et evaluation du checkpoint204','Aucun entrainement, backward, optimiseur ou promotion.','Deux evaluateurs CUDA independants ; aucune operation NCCL/DDP pendant les generations.','Base/parent/checkpoints preserves ; dernier boot qualifie conserve.','', 'NLL complete par reponse cible, masquage assistant ; P(Départ) mesure sur les tokens86893 puis4480.','La NLL et le prefixe sont des signaux de format, pas des scores de justesse.']
+for x in result['nll']['candidates']:lines.append(x['candidate']+' rank'+str(x['rank'])+' : '+json.dumps({k:x[k] for k in ['summaries','mean_p_prefix','geomean_p_prefix','seconds']},ensure_ascii=False))
+lines+=['','Sondes parent : '+json.dumps(result['probes'],ensure_ascii=False),'Batching : '+json.dumps(result['batch'],ensure_ascii=False),'Les comparaisons ci-dessous sont de nouvelles generations parent/204 au meme reglage, memes GPU parID et memes lots. Toute difference avec les anciens scores batch1 doit etre interpretee comme un changement de configuration.']
+for scope,d in results.items():
+ lines+=['',scope+' : '+json.dumps({k:v for k,v in d.items() if k!='strata'},ensure_ascii=False)]
+ for s,v in d['strata'].items():lines.append(s+' : '+str(v['before']['correct'])+' -> '+str(v['after']['correct'])+'/'+str(v['before']['n']))
+lines+=['','Temps/puissance/temperatures/energie par etape : '+json.dumps(telemetry,ensure_ascii=False),'Les16canaris parent/204 sont conserves pour revue qualitative. Le validateur des affirmations reste partiel.','Les156sondes prevues representent44problemes horaires apparies et24sondes de signe ; toutFB ecarte est compte explicitement.','E4 et toute modification du taux dapprentissage restent des decisions distinctes ; aucun nouvel entrainement lance.','Dossier : '+str(P)]
+(P/'Rapport_Eva_diagnostics_C309.txt').write_text('\n'.join(lines)+'\n')
+names=['Rapport_Eva_diagnostics_C309.txt','resultat-final.json','selection-responses.json','report-responses.json','canaries.json','nll/summary.json','probes/summary.json','probes/responses.json','batch/batch-decision.json','data-preparation.json','launch-manifest.json','candidates.json']
+hashes={n:sha(P/n) for n in names}
+for folder in ['nll','probes','batch','eval']:
+ for f in (P/folder).glob('items/*.json'):hashes[str(f.relative_to(P))]=sha(f)
+save(P/'result-saved.json',dict(state='finished',training=False,files=hashes,epoch=time.time()))
+assert all(sha(P/n)==h for n,h in hashes.items());print(json.dumps(dict(saved=True,files=len(hashes))))

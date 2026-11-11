@@ -1,0 +1,79 @@
+[
+  {
+    "name": "parent",
+    "path": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+    "sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30"
+  },
+  {
+    "name": "step20",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-20/adapter",
+    "sha256": "f9ecb02b7bc2021d18b65038750122c01cb4c3ed2335e11e5f806674b5293e20",
+    "step": 20
+  },
+  {
+    "name": "step40",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-40/adapter",
+    "sha256": "dc09e559702b1dbe1bf37273221316129817f7baab1bc07a41d759e677cf1005",
+    "step": 40
+  },
+  {
+    "name": "step60",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-60/adapter",
+    "sha256": "e37c20dca2f52657b55eea6cdb927ed58ad4286fa262354d0d0361c99f5b3211",
+    "step": 60
+  },
+  {
+    "name": "step80",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-80/adapter",
+    "sha256": "c5320db86cb77d82d38ac88502c5eac1eba16d84f70a671fb245c729e75af91e",
+    "step": 80
+  },
+  {
+    "name": "step100",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-100/adapter",
+    "sha256": "8921897c6e144d02e5ca7e5b6ad49985114fc0791d124170a6d9fc4bee69d3eb",
+    "step": 100
+  },
+  {
+    "name": "step102",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-102/adapter",
+    "sha256": "ac55b0a89890520590ef8364f40f601f2e383524cbd3c738211b29d326832142",
+    "step": 102
+  },
+  {
+    "name": "step120",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-120/adapter",
+    "sha256": "817a61a154045469bc44fd4526e46e27407985b1fb18b448ef6007f443005393",
+    "step": 120
+  },
+  {
+    "name": "step140",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-140/adapter",
+    "sha256": "0324d0623a1aa0867a046ffe6067767c57c61127e6003116d07135b0a0ad37cd",
+    "step": 140
+  },
+  {
+    "name": "step160",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-160/adapter",
+    "sha256": "0f503d8fe6bebf188f796d0cae8721fff3e8f66c35c704f1a92c4e4d31cd386f",
+    "step": 160
+  },
+  {
+    "name": "step180",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-180/adapter",
+    "sha256": "100efa54c8dc8c6d13a30113749894e3883071f8481bfba4bc5e11e99da280b2",
+    "step": 180
+  },
+  {
+    "name": "step200",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-200/adapter",
+    "sha256": "2eb465b621154e23a16f8aed971197cac619b8c9704eb4ed174fd326b5275e68",
+    "step": 200
+  },
+  {
+    "name": "step204",
+    "path": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-204/adapter",
+    "sha256": "df3e8c7de5a23b8e2c4d3f19caffc03197ee257640cc39ad5f1dcde990b6e7e2",
+    "step": 204
+  }
+]
