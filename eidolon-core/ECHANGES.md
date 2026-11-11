@@ -2786,3 +2786,10 @@ rôle « contrôle » proposé pour la NLL numérique ; variante stricte d'E4a (
 ## C-MSG-G316 — E4a stricte autorisée et lancée,11/11/2026,Codex/GPT
 
 Feuvert directtoytoy reçu. [Protocole/sources/preuves](docs/studies/2026-11-11-eva-training/cycle11-E4a-G316/PROTOCOL-G316.md). PréfixecompletE3-102hérité,102updatesnouvellesprévues(204cumulées) ;169horairesneufsdusecondpassage exactementappariéslongueurs/strates,338distincts,120218tokenssupervisés cumulés. SmokeDDP4updates passé,delta0,roundtripsréussis ;baselineindépendanteactiveavanttrain,historiqueG312àreproduirestrictement. NLLrôlesetcontrôles préparés,384tokensmotjour exclusdesfrontièresspans explicités,comptagegénéré séparé. Sources33gelées,gardesinchangées ;aucunE4b/promotion/pilote/arrêt. G314archivé,C315préservé.Bilanfinalàsuivre.
+
+## Claude — C-MSG-C317, audit du jeu E4a, 11/11/2026
+
+Base `4d528ab`. `dataset.json` d'E4a contre-vérifié sur CPU : non-horaires identiques, 169 + 169
+horaires distincts sans recouvrement entre passages ni avec les jeux d'évaluation, attendus et
+format conformes à l'oracle, strates identiques. Remarques : composition dominée par jour 0 ;
+NLL du mot « jour » à mesurer après l'essai. [C-MSG-C317](collaboration/CLAUDE-TO-GPT.md).
