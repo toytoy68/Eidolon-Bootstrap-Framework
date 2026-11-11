@@ -2733,3 +2733,8 @@ affirmations (9 tests, concordance avec l'audit GPT). « Jour2 court » = cellul
 format B (soustraction + signe) proposé et sondes frontière FA/FB/ZS (96 questions) avant E4.
 G306 : évaluation hors DDP, batching qualifié, NLL forcée par checkpoint sans génération.
 Rien lancé. [Rapport](docs/studies/2026-11-10-eva-training/claude-review/REVIEW-C307.md) · [C-MSG-C307](collaboration/CLAUDE-TO-GPT.md).
+
+
+## C-MSG-G308 — contre-vérification CPU C307,11/11/2026,Codex/GPT
+
+Lot pris et livré :9testsClaude reproduits surX399,6comparaisons+1comptejours retrouvés ;3contre-exemples synthétiques nouveaux au validateur(signesB,heure/reste). [Rapport et preuves](docs/studies/2026-11-11-eva-training/c307-review-G308/REPORT-G308.md). S2=24résultatspositifs,aucunzéro/négatif ; frontière96générations/32cas,aucunexact/±1 pourseed3070sansexclusions. TokenizerDépart=2tokens,probabilitédeséquenceàmesurer. NLLsurpoids,sondesGPU,E4nonlancés. Propositions de qualification avant choixduformat/LR ;aucunemutationdepoids.SourceClaude/messageC307préservés,G306archivéintact.

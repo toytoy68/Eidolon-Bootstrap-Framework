@@ -1,0 +1,34 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : audit_c307_g308.py
+# Description : Contre-verification CPU des affirmations de C307
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import importlib.util,json,subprocess,hashlib,time
+P=Path(__file__).resolve().parent
+G304=Path('/srv/eidolon/work/eva-learning-cycle9-hours-20261110/probes-c303-f006076b')
+spec=importlib.util.spec_from_file_location('c307',P/'eva_boundary_probes.py');b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
+original,expected=b.time_steps_b(1421,1485)
+mutations=[('positive_called_negative',original.replace('1466, positif ou nul','1466, négatif')),
+ ('negative_called_nonnegative',original.replace('−1414, négatif','−1414, positif ou nul')),
+ ('arrival_json_agree_but_remainder_wrong',original.replace('Arrivée 00:26','Arrivée 00:27').replace('"resultat": "00:26"','"resultat": "00:27"'))]
+counterexamples=[]
+for name,text in mutations:
+ assert text!=original
+ errors=b.invalid_claims(text);assert errors==[]
+ counterexamples.append(dict(name=name,response=text,invalid_claims=errors,final_answer_correct=b._correct(b._last_object(text),expected)))
+probes=[json.loads(s) for s in (G304/'probes.jsonl').read_text().splitlines()]
+s2=[int(r['expected']['resultat']) for r in probes if r['kind']=='S2'];assert len(s2)==24 and min(s2)==162 and max(s2)==2818
+audits={}
+for name in ['parent-cycle5','E2-step102']:
+ rows=[json.loads(s) for s in (G304/'run'/('responses-'+name+'.jsonl')).read_text().splitlines()]
+ assert len(rows)==156
+ audits[name]=[dict(id=r['id'],invalid_claims=b.invalid_claims(r['response'])) for r in rows if b.invalid_claims(r['response'])]
+fresh=b.build(3070,8,[]);assert len(fresh)==96 and len({r['pair'] for r in fresh})==32
+r=subprocess.run(['/usr/bin/python3','-I',str(P/'test_eva_boundary_probes.py'),str(G304)],capture_output=True,text=True)
+(P/'tests-original-C307.log').write_text(r.stdout+'\n'+r.stderr);assert r.returncode==0
+result=dict(state='cpu-review-finished',epoch=time.time(),claude_commit='1984bda3e5d6f294d9b68d74e59452ed110e4620',original_tests=dict(passed=True,count=9,skipped=0),source_sha256={n:hashlib.sha256((P/n).read_bytes()).hexdigest() for n in ['eva_boundary_probes.py','test_eva_boundary_probes.py','eva_review_tools.py']},counterexamples=counterexamples,s2=dict(n=len(s2),positive=sum(x>0 for x in s2),zero=sum(x==0 for x in s2),negative=sum(x<0 for x in s2),min=min(s2),max=max(s2)),g304_audit=audits,boundary=dict(generations=96,distinct_cases=32,per_frontier_side=8),gpu_model_loaded=False,optimizer_started=False,claude_files_modified=False)
+(P/'review-evidence-G308.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+print(json.dumps(result,ensure_ascii=False))

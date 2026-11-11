@@ -1,0 +1,120 @@
+{
+  "state": "cpu-review-finished",
+  "epoch": 1794400779.0182054,
+  "claude_commit": "1984bda3e5d6f294d9b68d74e59452ed110e4620",
+  "original_tests": {
+    "passed": true,
+    "count": 9,
+    "skipped": 0
+  },
+  "source_sha256": {
+    "eva_boundary_probes.py": "0514b940681fd10258dfdd419fee6df7c6410cdd3d05d8c64cdff9e616ef988f",
+    "test_eva_boundary_probes.py": "ffbe5c7b23fd11d46d209fef4bba0885fe0610348a4938aa969afef9a32173e8",
+    "eva_review_tools.py": "3e977de2f8ff8d2875ef30289f824dbdda923f13947ffda69b555b4d9b2d8b28"
+  },
+  "counterexamples": [
+    {
+      "name": "positive_called_negative",
+      "response": "Départ 23:41 = 23 × 60 + 41 = 1380 + 41 = 1421 minutes. 1421 + 1485 = 2906 minutes. 2906 − 1440 = 1466, négatif : jour 1. 1466 − 1440 = 26, positif ou nul : jour 2. 26 − 1440 = −1414, négatif : on garde 26, 2 jour(s) franchi(s). 0 × 60 = 0 ; 26 − 0 = 26, et 26 < 60. Arrivée 00:26, décalage 2 jour(s).\n{\"resultat\": \"00:26\", \"unite\": \"heure\", \"jours\": 2}",
+      "invalid_claims": [],
+      "final_answer_correct": true
+    },
+    {
+      "name": "negative_called_nonnegative",
+      "response": "Départ 23:41 = 23 × 60 + 41 = 1380 + 41 = 1421 minutes. 1421 + 1485 = 2906 minutes. 2906 − 1440 = 1466, positif ou nul : jour 1. 1466 − 1440 = 26, positif ou nul : jour 2. 26 − 1440 = −1414, positif ou nul : on garde 26, 2 jour(s) franchi(s). 0 × 60 = 0 ; 26 − 0 = 26, et 26 < 60. Arrivée 00:26, décalage 2 jour(s).\n{\"resultat\": \"00:26\", \"unite\": \"heure\", \"jours\": 2}",
+      "invalid_claims": [],
+      "final_answer_correct": true
+    },
+    {
+      "name": "arrival_json_agree_but_remainder_wrong",
+      "response": "Départ 23:41 = 23 × 60 + 41 = 1380 + 41 = 1421 minutes. 1421 + 1485 = 2906 minutes. 2906 − 1440 = 1466, positif ou nul : jour 1. 1466 − 1440 = 26, positif ou nul : jour 2. 26 − 1440 = −1414, négatif : on garde 26, 2 jour(s) franchi(s). 0 × 60 = 0 ; 26 − 0 = 26, et 26 < 60. Arrivée 00:27, décalage 2 jour(s).\n{\"resultat\": \"00:27\", \"unite\": \"heure\", \"jours\": 2}",
+      "invalid_claims": [],
+      "final_answer_correct": false
+    }
+  ],
+  "s2": {
+    "n": 24,
+    "positive": 24,
+    "zero": 0,
+    "negative": 0,
+    "min": 162,
+    "max": 2818
+  },
+  "g304_audit": {
+    "parent-cycle5": [
+      {
+        "id": "FS-jour2-court-0",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1466 < 1440"
+          ]
+        ]
+      },
+      {
+        "id": "FS-jour2-court-1",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1475 < 1440"
+          ]
+        ]
+      },
+      {
+        "id": "FS-jour2-court-2",
+        "invalid_claims": [
+          [
+            "compte_jours",
+            "1 vs [2]"
+          ]
+        ]
+      },
+      {
+        "id": "FS-jour2-court-3",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1478 < 1440"
+          ]
+        ]
+      }
+    ],
+    "E2-step102": [
+      {
+        "id": "FS-jour2-court-0",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1466 < 1440"
+          ]
+        ]
+      },
+      {
+        "id": "FS-jour2-court-1",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1475 < 1440"
+          ]
+        ]
+      },
+      {
+        "id": "FS-jour2-court-3",
+        "invalid_claims": [
+          [
+            "comparaison",
+            "1478 < 1440"
+          ]
+        ]
+      }
+    ]
+  },
+  "boundary": {
+    "generations": 96,
+    "distinct_cases": 32,
+    "per_frontier_side": 8
+  },
+  "gpu_model_loaded": false,
+  "optimizer_started": false,
+  "claude_files_modified": false
+}
