@@ -70,31 +70,60 @@ class Tests(unittest.TestCase):
         self.assertEqual(ebp.format_of('1148 + 2612 = 3760 minutes depuis minuit.'), 'court')
 
     def test_build_boundaries(self):
-        rows = ebp.build(3070, 8, [])
-        self.assertEqual(len(rows), 4 * 8 * 3)
+        rows = ebp.build(3070, 8, [], exact=2)
+        timed = [r for r in rows if r['kind'] != 'SG']
+        sg = [r for r in rows if r['kind'] == 'SG']
+        self.assertEqual(len(timed), (4 * 8 + 6 * 2) * 3)
+        self.assertEqual(len(sg), 8 + 2 * 8)
         self.assertEqual(len({r['id'] for r in rows}), len(rows))
-        for r in rows:
+        totals = set()
+        for r in timed:
             s, d = r['time_key']
-            f, side = r['stratum'].split('-')
             t = s + d
-            if side == 'dessus':
+            totals.add(t)
+            f, side = r['stratum'].split('-', 1)
+            if side.startswith('exact'):
+                self.assertEqual(t, int(f) + int(side[5:]))
+            elif side == 'dessus':
                 self.assertTrue(int(f) <= t <= int(f) + 59)
             else:
                 self.assertTrue(int(f) - 60 <= t < int(f))
             self.assertEqual(r['expected'], ert.time_steps(s, d)[1])
-        shots = rows[1]['question'].split('Résous maintenant')[0]
-        for r in rows:
+        for t in (1439, 1440, 1441, 2879, 2880, 2881):
+            self.assertIn(t, totals)
+        self.assertEqual({r['stratum'] for r in sg}, {'negatif', 'nul', 'positif'})
+        self.assertIn(-1, {r['expected']['resultat'] for r in sg})
+        self.assertIn(0, {r['expected']['resultat'] for r in sg})
+        shots = timed[1]['question'].split('Résous maintenant')[0]
+        for r in timed:
             self.assertNotIn(ebp.question(*r['time_key']), shots)
 
     def test_grade_oracle(self):
         rows = ebp.build(3070, 4, [])
-        resp = [dict(id=r['id'], response=(ebp.time_steps_b if r['kind'] == 'FB' else ebp.time_steps_a)(*r['time_key'])[0])
-                for r in rows]
+        resp = []
+        for r in rows:
+            if r['kind'] == 'SG':
+                resp.append(dict(id=r['id'], response=json.dumps(r['expected'], ensure_ascii=False)))
+            else:
+                fn = ebp.time_steps_b if r['kind'] == 'FB' else ebp.time_steps_a
+                resp.append(dict(id=r['id'], response=fn(*r['time_key'])[0]))
         g = ebp.grade(rows, resp)
         for k, v in g['sondes'].items():
             self.assertEqual(v['correct'], v['n'], k)
-            self.assertEqual(v['sans_affirmation_fausse'], v['n'], k)
+            if not k.startswith('SG'):
+                self.assertEqual(v['sans_affirmation_fausse'], v['n'], k)
         self.assertEqual(g['sans_reponse'], 0)
+
+    def test_g308_mutations_caught(self):
+        t = ebp.time_steps_b(1421, 1485)[0]
+        cats = lambda x: {c for c, _ in ebp.invalid_claims(x)}
+        self.assertIn('signe', cats(t.replace('1466, positif ou nul', '1466, négatif')))
+        self.assertIn('signe', cats(t.replace('−1414, négatif', '−1414, positif ou nul')))
+        m3 = t.replace('Arrivée 00:26', 'Arrivée 00:27').replace('"resultat": "00:26"', '"resultat": "00:27"')
+        self.assertIn('heure_vs_reste', cats(m3))
+        a = ebp.time_steps_a(1421, 1485)[0]
+        m4 = a.replace('Arrivée 00:26', 'Arrivée 00:27').replace('"resultat": "00:26"', '"resultat": "00:27"')
+        self.assertIn('heure_vs_reste', cats(m4))
 
     def test_against_g304(self):
         if G304 is None:

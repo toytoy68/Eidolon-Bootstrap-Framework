@@ -13,7 +13,10 @@ Bibliothèque standard uniquement ; ne charge aucun modèle.
      suivies de « ? » (question posée, pas affirmation) ;
    - « jour k » : k doit valoir 1, 2, 3… dans l'ordre d'apparition ;
    - « d jour(s) franchi(s) » / « décalage d jour(s) » : d égal au dernier k ;
-   - JSON final : resultat et jours cohérents avec le dernier reste écrit.
+   - JSON final : jours cohérents avec le compte écrit, resultat avec l'Arrivée ;
+   - signe annoncé (format B) : « X, négatif » ⇒ X < 0, « X, positif ou nul » ⇒ X ≥ 0 ;
+   - reste final (« on garde R » ou « R < 1440 : ») dans [0, 1440), et
+     Arrivée comme JSON égaux à R minutes (contre-exemples G308).
    Il ne prouve pas que la méthode suivie est la bonne : une réponse sans
    affirmation fausse peut rester incomplète ; la justesse du JSON reste notée
    à part.
@@ -25,7 +28,10 @@ Bibliothèque standard uniquement ; ne charge aucun modèle.
    24/24 sur les deux modèles, alors que les trois échecs FS jour2-court sont des
    comparaisons fausses juste au-dessus de 1440.
 
-3. ``build`` : questions dont le total tombe à ±60 min d'une frontière de jour
+3. ``build`` : sondes SG de signe isolé (N − 1440 négatif / nul / positif, dont
+   1439/1440/1441 et 2879/2880/2881), totaux imposés exactement à F−1, F, F+1
+   (F = 1440, 2880 ; ``--exact`` départs chacun), puis
+   questions dont le total tombe à ±60 min d'une frontière de jour
    (1440, 2880), côté au-dessus et côté au-dessous, en trois variantes
    appariées : ZS (sans aide), FA (2 exemples format C298), FB (2 exemples
    format B). Les exemples d'amorce sont eux-mêmes des cas frontière.
@@ -105,6 +111,9 @@ EXPR = rf'{NUM}(?:\s*[+−×*-]\s*\d+)*'
 CHAIN_RE = re.compile(rf'(?<![\d:])({EXPR}(?:\s*=\s*{EXPR})+)')
 CMP_RE = re.compile(rf'(?<![\d:])(?=({NUM})\s*(<|≥|>|≤)\s*({NUM})(?![\d:]))')
 DAY_RE = re.compile(r'\bjour (\d+)\b')
+SIGN_RE = re.compile(r'(?<![\d:])([−-]?\d+), (négatif|positif ou nul)')
+REST_RE = re.compile(r'on garde (\d+)')
+REST_A_RE = re.compile(r'(?<![\d:])(\d+) < 1440 :')
 FINAL_DAYS_RE = re.compile(r'(\d+) jour\(s\) franchi\(s\)|décalage (?:de )?(\d+) jour\(s\)')
 
 
@@ -166,6 +175,23 @@ def invalid_claims(text):
     arr = re.findall(r'Arrivée (\d{2}:\d{2})', body)
     if obj and arr and obj.get('resultat') != arr[-1]:
         out.append(('json_incoherent', f"{obj.get('resultat')} vs {arr[-1]}"))
+    # Signe annoncé (format B) : « X, négatif » exige X < 0, « X, positif ou nul » X ≥ 0.
+    for m in SIGN_RE.finditer(body):
+        v = _int(m[1])
+        if (m[2] == 'négatif') != (v < 0):
+            out.append(('signe', f'{m[1]}, {m[2]}'))
+    # Reste final : « on garde R » (B) ou « R < 1440 : » (A) ; l'heure d'arrivée
+    # et le JSON doivent valoir R minutes, et R doit être dans [0, 1440).
+    rests = [int(x) for x in REST_RE.findall(body)] or [int(x) for x in REST_A_RE.findall(body)]
+    if rests:
+        r = rests[-1]
+        if not 0 <= r < 1440:
+            out.append(('reste_hors_bornes', str(r)))
+        for label, hm in (('arrivee', arr[-1] if arr else None),
+                          ('json', obj.get('resultat') if obj else None)):
+            if isinstance(hm, str) and re.fullmatch(r'\d{2}:\d{2}', hm):
+                if int(hm[:2]) * 60 + int(hm[3:]) != r:
+                    out.append(('heure_vs_reste', f'{label} {hm} vs reste {r}'))
     return out
 
 
@@ -217,7 +243,7 @@ def question(s, d):
     return f'Départ à {hhmm(s)}, durée {d} minutes. Donne l’heure d’arrivée et le décalage en jours.' + JSON_TAIL
 
 
-def build(seed, per, exclude):
+def build(seed, per, exclude, exact=2):
     rng = random.Random(seed)
     seen = set(exclude)
     shot_pairs = [boundary_pair(rng, 1440, 'dessus', seen), boundary_pair(rng, 2880, 'dessus', seen)]
@@ -227,18 +253,45 @@ def build(seed, per, exclude):
             f'Question : {question(s, d)}\nRéponse : {fn(s, d)[0]}' for s, d in shot_pairs) \
             + '\n\nRésous maintenant de la même manière.\n'
     rows = []
+
+    def add(st, key, s, d):
+        exp = time_steps_a(s, d)[1]
+        q = question(s, d)
+        rows.append(dict(id=f'ZS-{key}', kind='ZS', stratum=st, pair=key, question=q, expected=exp, time_key=[s, d]))
+        for name in ('FA', 'FB'):
+            rows.append(dict(id=f'{name}-{key}', kind=name, stratum=st, pair=key,
+                             question=pre[name] + q, expected=exp, time_key=[s, d]))
+
+    # Bornes exactes imposées : totaux F−1, F, F+1 pour F = 1440 et 2880,
+    # chacun avec `exact` départs différents (le tirage aléatoire ne les garantit pas).
+    for frontier in (1440, 2880):
+        for off in (-1, 0, 1):
+            total = frontier + off
+            st = f'{frontier}-exact{off:+d}'
+            for i in range(exact):
+                for _ in range(100000):
+                    s0 = rng.randrange(1440)
+                    if total - s0 >= 1 and (s0, total - s0) not in seen:
+                        break
+                seen.add((s0, total - s0))
+                add(st, f'{st}-{i}', s0, total - s0)
+    # Signe isolé (prérequis du format B) : N − 1440 pour N autour des bornes et au hasard.
+    sign_ns = [1439, 1440, 1441, 2879, 2880, 2881, 0, 1]
+    sign_ns += [rng.randint(2, 1438) for _ in range(per)] + [rng.randint(1442, 2878) for _ in range(per)]
+    for i, n in enumerate(sign_ns):
+        v = n - 1440
+        rows.append(dict(id=f'SG-{i}', kind='SG', stratum='negatif' if v < 0 else 'nul' if v == 0 else 'positif',
+                         question=(f'Calcule {n} − 1440, puis dis si le résultat est négatif, nul ou positif. '
+                                   'Termine par un objet JSON avec resultat (un entier, éventuellement négatif), '
+                                   'unite exactement « nombre » et signe (« négatif », « nul » ou « positif »).'),
+                         expected={'resultat': v, 'unite': 'nombre',
+                                   'signe': 'négatif' if v < 0 else 'nul' if v == 0 else 'positif'}))
     for frontier in (1440, 2880):
         for side in ('dessous', 'dessus'):
             st = f'{frontier}-{side}'
             for i in range(per):
                 s, d = boundary_pair(rng, frontier, side, seen)
-                exp = time_steps_a(s, d)[1]
-                key = f'{st}-{i}'
-                q = question(s, d)
-                rows.append(dict(id=f'ZS-{key}', kind='ZS', stratum=st, pair=key, question=q, expected=exp, time_key=[s, d]))
-                for name in ('FA', 'FB'):
-                    rows.append(dict(id=f'{name}-{key}', kind=name, stratum=st, pair=key,
-                                     question=pre[name] + q, expected=exp, time_key=[s, d]))
+                add(st, f'{st}-{i}', s, d)
     return rows
 
 
@@ -251,10 +304,21 @@ def grade(probes, responses):
         if p is None:
             continue
         text = r.get('response', '')
-        ok = _correct(_last_object(text), p['expected'])
         k = f"{p['kind']}|{p['stratum']}"
         c = stats[k]
         c['n'] += 1
+        if p['kind'] == 'SG':
+            obj = _last_object(text) or {}
+            exp = p['expected']
+            val = obj.get('resultat')
+            if isinstance(val, str) and re.fullmatch(r'\s*[−-]?\d+\s*', val):
+                val = _int(val.strip())
+            c['valeur_juste'] += isinstance(val, int) and not isinstance(val, bool) and val == exp['resultat']
+            c['signe_juste'] += obj.get('signe') == exp['signe']
+            c['correct'] += (val == exp['resultat'] and obj.get('signe') == exp['signe']
+                             and obj.get('unite') == 'nombre')
+            continue
+        ok = _correct(_last_object(text), p['expected'])
         c['correct'] += ok
         c['format_' + format_of(text)] += 1
         bad = invalid_claims(text)
@@ -278,6 +342,7 @@ def main(argv):
     b = sub.add_parser('build')
     b.add_argument('--seed', type=int, default=3070)
     b.add_argument('--per', type=int, default=8)
+    b.add_argument('--exact', type=int, default=2)
     b.add_argument('--exclude')
     g = sub.add_parser('grade'); g.add_argument('probes'); g.add_argument('responses')
     au = sub.add_parser('audit'); au.add_argument('responses')
@@ -285,7 +350,7 @@ def main(argv):
     load = lambda f: [json.loads(l) for l in open(f, encoding='utf-8') if l.strip()]
     if a.cmd == 'build':
         ex = [tuple(x) for x in json.load(open(a.exclude, encoding='utf-8'))] if a.exclude else []
-        for row in build(a.seed, a.per, ex):
+        for row in build(a.seed, a.per, ex, a.exact):
             print(json.dumps(row, ensure_ascii=False))
     elif a.cmd == 'grade':
         print(json.dumps(grade(load(a.probes), load(a.responses)), ensure_ascii=False, indent=1))
