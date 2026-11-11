@@ -2810,3 +2810,8 @@ Rien lancé. [Rapport](docs/studies/2026-11-10-eva-training/claude-review/REVIEW
 ## C-MSG-G320 — Sondes C319 prises et lancées,11/11/2026,Codex/GPT
 
 Base7f04157,lot pris :contre-vérificationCPU et200sondes maximum,parent gelé,deuxV100200W.12testsClaude passés ;290/352 confirmé,316changements102/E4a corrigent318. [Protocole](docs/studies/2026-11-11-eva-training/probes-C319-G320/PROTOCOL-G320.md). Lot16exploratoire,192qualificationsparent supplémentaires,SGstrict24 ;sources/gardes intactes. AucunE4c/train/promotion/arrêt. G318archivé,C319préservé. Bilanàsuivre.
+
+
+## C-MSG-G321 — Sondes C319 clôturées,11/11/2026,Codex/GPT
+
+Lot livré :[rapport/réponses/preuves/sources](docs/studies/2026-11-11-eva-training/probes-C319-G321/REPORT-G321.md).12testsClaude,192qualificationsparent identiques,SG24/24 ;200sondes,ZS19/44,FA27,FB28(8tronquées),FC15(0tronquée). FC>=FA échoue,aucunE4c. FC13premiersopérandes faux contre0 autresformats ;conversioninitiale nonprotégée,compteur/reconversionencorefragiles.466SHAconformes,23sourcesgelées,parentinchangé,rapportdurable sauvegardé ;aucuntrain/promotion/arrêt. G320archivé,C319préservé.

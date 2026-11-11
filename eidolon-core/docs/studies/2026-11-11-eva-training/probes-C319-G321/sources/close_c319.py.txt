@@ -1,0 +1,51 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : close_c319.py
+# Description : Cloture CPU, profils par format et SHA finaux
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import subprocess as sp,json,time,re,statistics
+out=P/'closure';out.mkdir(exist_ok=False)
+s=sp.check_output(['systemctl','show','eidolon-eva-probes-c319-4c1f2095.service','-p','ActiveState','-p','Result'],text=True)
+assert 'ActiveState=inactive' in s and 'Result=success' in s,s
+d=read(P/'resultat-final.json');assert d['state']=='finished'
+assert not sp.check_output(['nvidia-smi','--query-compute-apps=pid,process_name','--format=csv,noheader'],text=True).strip()
+original=read(P/'result-saved.json');bad=[n for n,h in original['files'].items() if sha(P/n)!=h];assert not bad,bad
+assert all(sha(P/n)==h for n,h in read(P/'launch-manifest.json').items())
+parent=read(P/'candidates.json')[0];assert [sha(__import__('pathlib').Path(parent['path'])/'adapter_model.safetensors') for _ in range(2)]==[parent['sha256']]*2
+k=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True);alerts=[s for s in k.splitlines() if re.search(r'BUG:|Oops:|general protection fault|Machine check|Hardware Error|NVRM: Xid|EDAC.*(?:CE|UE|error)|segfault',s,re.I)];assert not alerts,alerts
+ecc=sp.check_output(['nvidia-smi','--query-gpu=index,name,ecc.errors.corrected.volatile.total,ecc.errors.uncorrected.volatile.total,power.limit','--format=csv'],text=True);(out/'hardware-after.txt').write_text(ecc)
+stages={}
+for stage in ['qualification','sign','boundary-ZS','boundary-FA','boundary-FB','boundary-FC']:
+ files=[P/'run'/f'{stage}-parent-rank{r}.json' for r in range(2)]
+ if not all(f.exists() for f in files):continue
+ groups=[read(f) for f in files];rows=sum([x['rows'] for x in groups],[])
+ batches={}
+ for x in rows:
+  key=(x['rank'],tuple(x['identity']['batch_ids']))
+  if key not in batches:batches[key]=x
+ start=min(x['epoch']-x['batch_seconds'] for x in batches.values());end=max(x['epoch'] for x in rows)
+ stages[stage]=dict(n=len(rows),rank_seconds=[x['seconds'] for x in groups],generated_tokens=sum(x['generated_tokens'] for x in rows),median_output_tokens=statistics.median(x['generated_tokens'] for x in rows),median_input_tokens=statistics.median(x['input_tokens'] for x in rows),batch_compute_seconds_per_rank=[sum(x['batch_seconds'] for x in batches.values() if x['rank']==r) for r in range(2)],wall_span_seconds=end-start,window_epoch=[start,end])
+tele=[json.loads(s) for s in (P/'run/telemetry.jsonl').read_text().splitlines()]
+for stage,z in stages.items():
+ xs=[x for x in tele if z['window_epoch'][0]<=x['epoch']<=z['window_epoch'][1]]
+ vs=[x for x in xs if isinstance(x.get('meter',{}).get('energy_wh'),(int,float))]
+ ws=[x for x in xs if isinstance(x.get('meter',{}).get('wall_w'),(int,float))]
+ z['overlapping_stage_windows']=[k for k,v in stages.items() if k!=stage and max(z['window_epoch'][0],v['window_epoch'][0])<min(z['window_epoch'][1],v['window_epoch'][1])]
+ z['wall_w_mean_during_window']=sum(x['meter']['wall_w'] for x in ws)/len(ws)
+ z['meter_energy_wh_during_window']=vs[-1]['meter']['energy_wh']-vs[0]['meter']['energy_wh']
+ z['gpu_w_mean_during_window']=[sum(x['gpus'][r]['gpu_w'] for x in xs)/len(xs) for r in range(2)]
+save(out/'stage-profiles.json',dict(stages=stages,note='Per-GPU format execution can overlap adjacent stages; do not sum window energies. Overall guarded meter interval is authoritative.'))
+save(out/'verification.json',dict(original_verified_files=len(original['files']),frozen_sources=len(read(P/'launch-manifest.json')),parent_double_sha256=parent['sha256'],kernel_alerts=alerts,compute_apps=[],epoch=time.time(),training=False))
+lines=['','CLOTURE ET PROFILS COMPLEMENTAIRES','Service termine avec succes ;poids parent re-verifies deux fois,aucunGPUcompute restant,nouvellesalertesnoyau desmotifs inspectes :0.','Phases parformat : dureeswall span et puissancespendantfenetre ;fenetres peuventsechevaucher entreGPU,energies nonadditionnables.']
+for stage,z in stages.items():lines.append(stage+' : '+json.dumps(z,ensure_ascii=False))
+lines+=['Interpretation : les scores en contexte mesurent l effet du prompt, pas la facilite d apprentissage du format. Le changement du debut peut reduire une difficulte sans garantir absence d hybrides. Le validateur corrige certaines erreurs visibles mais ne prouve pas toute la chaine.','Tous resultats originaux conserves. Aucun E4c lance.']
+base=(P/'Rapport_Eva_sondes_C319.txt').read_text();(P/'Rapport_Eva_sondes_C319_final.txt').write_text(base+'\n'.join(lines)+'\n')
+files=dict(original['files']);files['result-saved.json']=sha(P/'result-saved.json');files['Rapport_Eva_sondes_C319_final.txt']=sha(P/'Rapport_Eva_sondes_C319_final.txt');files['close_c319.py']=sha(P/'close_c319.py')
+for f in out.iterdir():
+ if f.is_file():files[str(f.relative_to(P))]=sha(f)
+save(out/'result-saved.json',dict(state='finished',files=files,epoch=time.time(),training=False,automatic_promotion=False))
+assert all(sha(P/n)==h for n,h in files.items())
+print(json.dumps(dict(verified_files=len(files),report_sha256=sha(P/'Rapport_Eva_sondes_C319_final.txt'),profiles=stages),ensure_ascii=False))

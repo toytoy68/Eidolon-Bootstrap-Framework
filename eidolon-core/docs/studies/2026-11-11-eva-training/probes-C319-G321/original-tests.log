@@ -1,0 +1,14 @@
+/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/test_eva_boundary_probes.py:153: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/G304-fixture/invariant-audit.json' mode='r' encoding='utf-8'>
+  audit = json.load(open(os.path.join(G304, 'invariant-audit.json'), encoding='utf-8'))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/test_eva_boundary_probes.py:155: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/G304-fixture/run/responses-parent-cycle5.jsonl' mode='r' encoding='utf-8'>
+  rows = [json.loads(l) for l in open(os.path.join(G304, 'run', f'responses-{name}.jsonl'), encoding='utf-8')]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/test_eva_boundary_probes.py:155: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095/G304-fixture/run/responses-E2-step102.jsonl' mode='r' encoding='utf-8'>
+  rows = [json.loads(l) for l in open(os.path.join(G304, 'run', f'responses-{name}.jsonl'), encoding='utf-8')]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............
+----------------------------------------------------------------------
+Ran 12 tests in 2.480s
+
+OK

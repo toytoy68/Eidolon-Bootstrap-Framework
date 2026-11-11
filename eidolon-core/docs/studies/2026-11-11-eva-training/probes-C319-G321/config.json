@@ -1,0 +1,18 @@
+{
+  "meter_url": "http://LAN-REDACTED/rpc/PM1.GetStatus?id=0",
+  "gpu_stop_c": 83,
+  "cpu_stop_c": 70,
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "uuids": [
+    "GPU-REDACTED",
+    "GPU-REDACTED"
+  ],
+  "boot_id": "4c1f2095-f683-4b6c-8c17-9d9a21474ee5",
+  "experiment": "C319-probes-only",
+  "training": false,
+  "automatic_promotion": false,
+  "batch_generation": 16,
+  "max_new_tokens": 384,
+  "final_reserved_read": false
+}

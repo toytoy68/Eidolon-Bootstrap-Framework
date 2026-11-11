@@ -1,0 +1,76 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : controller.py
+# Description : Sondes C319 bornees, gardes et processus independants
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import os,time,fcntl,subprocess as sp,signal,socket
+locks=[open(x,'a') for x in ['/run/eidolon-eva-learning.lock','/run/eidolon-eva-cycle9-orchestration.lock','/run/eidolon-eva-requalification.lock']]
+for f in locks:fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
+OUT=P/'run';OUT.mkdir(exist_ok=False);children=[];guard=None;start=time.time()
+def notify(ready=False):
+ a=os.environ.get('NOTIFY_SOCKET')
+ if a:
+  if a.startswith('@'):a='\0'+a[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall((b'READY=1\n' if ready else b'')+b'WATCHDOG=1')
+def state(phase,**kw):
+ d=dict(phase=phase,heartbeat=time.time(),epoch=time.time(),training=False,**kw);save(OUT/'status.json',d);save(P/'campaign-status.json',d);notify()
+def stop(*args):raise RuntimeError('guard/operator termination')
+signal.signal(signal.SIGTERM,stop);(OUT/'controller.pid').write_text(str(os.getpid()));state('starting');notify(True)
+def collect(stage):return sum([read(OUT/f'{stage}-parent-rank{r}.json')['rows'] for r in range(2)],[])
+def strict_sign(r,p):
+ import eva_boundary_probes as bp
+ o=bp._last_object(r['response']) or {};v=o.get('resultat')
+ if isinstance(v,str):
+  import re
+  if re.fullmatch(r'\s*[−-]?\d+\s*',v):v=int(v.strip().replace('−','-'))
+ return isinstance(v,int) and not isinstance(v,bool) and v==p['expected']['resultat'] and o.get('signe')==p['expected']['signe'] and o.get('unite')=='nombre'
+def gate():
+ ps={x['id']:x for x in read(P/'boundary-probes.json') if x['kind']=='SG'};rows=collect('sign');assert len(rows)==24 and {x['id'] for x in rows}==ps.keys()
+ wrong=[x['id'] for x in rows if not strict_sign(x,ps[x['id']])]
+ save(OUT/'sign-gate.json',dict(allow_B=not wrong,wrong=wrong,n=24,correct=24-len(wrong),bool_rejected=True,training=False))
+def watch(phase,timeout):
+ deadline=time.time()+timeout
+ while any(x.poll() is None for x in children):
+  assert guard.poll() is None and not (OUT/'guard-trip.json').exists(),'Guard stopped/tripped'
+  assert all(x.poll() in [None,0] for x in children),'Worker failed'
+  assert time.time()<deadline,'Stage deadline'
+  for r in range(2):
+   f=OUT/f'progress-rank{r}.json'
+   if f.exists():
+    d=read(f);assert d['stage']=='finished' or time.time()-d['epoch']<600,'Progress stale'
+  if phase=='probes' and not (OUT/'sign-gate.json').exists() and all((OUT/f'sign-ready-rank{r}.json').exists() for r in range(2)):gate()
+  state(phase);time.sleep(.5)
+ assert all(x.returncode==0 for x in children)
+try:
+ for n,h in read(P/'launch-manifest.json').items():assert sha(P/n)==h,n
+ import sampler_rtx,sampler_v100
+ assert not sampler_rtx.busy() and not sampler_v100.busy()
+ for sampler in [sampler_rtx,sampler_v100]:sampler.power(200)
+ env=dict(os.environ,EVA_OUTPUT=str(OUT),TOKENIZERS_PARALLELISM='false',OMP_NUM_THREADS='4',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1')
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py')],env=env,stdout=(OUT/'guard.log').open('w'),stderr=sp.STDOUT)
+ deadline=time.time()+15
+ while not (OUT/'guard-status.json').exists():assert guard.poll() is None and time.time()<deadline;state('starting_guard');time.sleep(.2)
+ children=[sp.Popen(['/usr/bin/python3',str(P/'live_check.py')],env=env,stdout=(OUT/'integrity.log').open('w'),stderr=sp.STDOUT,start_new_session=True)]
+ watch('integrity',600);children=[]
+ c=read(P/'config.json')
+ children=[sp.Popen([str(P/'venv/bin/python'),str(P/'worker.py')],env=dict(env,EVA_RANK=str(r),EVA_DIAGNOSTIC='C319-probes',CUDA_VISIBLE_DEVICES=c['uuids'][r]),stdout=(OUT/f'worker-rank{r}.log').open('w'),stderr=sp.STDOUT,start_new_session=True) for r in range(2)]
+ watch('probes',2400);children=[]
+ state('finished',seconds=time.time()-start)
+except BaseException as e:
+ save(OUT/'failure.json',dict(reason=repr(e),epoch=time.time(),training=False));state('failed',reason=repr(e));raise
+finally:
+ for x in children:
+  if x.poll() is None:
+   os.killpg(x.pid,signal.SIGTERM)
+   try:x.wait(timeout=10)
+   except sp.TimeoutExpired:os.killpg(x.pid,signal.SIGKILL);x.wait()
+ (OUT/'guard-stop').touch()
+ if guard:
+  try:guard.wait(timeout=6)
+  except sp.TimeoutExpired:guard.terminate();guard.wait(timeout=5)
+if read(OUT/'status.json')['phase']=='finished':
+ try:sp.run(['/usr/bin/python3',str(P/'finish.py')],check=True,timeout=120)
+ except BaseException as e:state('failed_finalization',reason=repr(e));save(P/'finalize-failure.json',dict(reason=repr(e)));raise

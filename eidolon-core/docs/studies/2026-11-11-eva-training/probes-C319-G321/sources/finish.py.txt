@@ -1,0 +1,74 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : finish.py
+# Description : Resultats apparies des sondes C319 et empreintes
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import eva_boundary_probes as bp
+import json,time,re,math,collections
+OUT=P/'run';assert read(OUT/'status.json')['phase']=='finished'
+probes=read(P/'boundary-probes.json');gate=read(OUT/'sign-gate.json')
+def collect(stage):return sum([read(OUT/f'{stage}-parent-rank{r}.json')['rows'] for r in range(2)],[])
+rows=collect('sign')
+for k in ['ZS','FA','FB','FC']:
+ if k=='FB' and not gate['allow_B']:continue
+ rows+=collect('boundary-'+k)
+planned=[x for x in probes if x['kind']!='FB' or gate['allow_B']]
+assert len(rows)==len(planned) and len({x['id'] for x in rows})==len(rows) and {x['id'] for x in rows}=={x['id'] for x in planned}
+assert all(x['candidate']=='parent' and x['fresh_generation'] for x in rows)
+for rank in range(2):assert read(OUT/f'baseline-equivalence-rank{rank}.json')['passed']
+assert all(sha(P/n)==h for n,h in read(P/'launch-manifest.json').items())
+byid={x['id']:x for x in probes};paired=collections.defaultdict(dict);detail=[]
+for x in rows:
+ p=byid[x['id']];assert x['question']==p['question'] and x['expected']==p['expected']
+ if p['kind']=='SG':continue
+ correct=bool(bp._correct(bp._last_object(x['response']),p['expected']));bad=bp.invalid_claims(x['response']);days=bp.DAY_RE.findall(x['response']);exp=p['expected']['jours']
+ d=dict(id=x['id'],pair=p['pair'],kind=p['kind'],stratum=p['stratum'],rank=x['rank'],correct=correct,invalid_claims=bad,format=bp.format_of(x['response']),truncated=x['truncated'],written_counters=[int(z) for z in days],counter_required=exp>0,counter_sequence_exact=[int(z) for z in days]==list(range(1,exp+1)),expected_days=exp)
+ detail.append(d);paired[p['pair']][p['kind']]=d
+stats={}
+for kind in ['ZS','FA','FB','FC']:
+ xs=[x for x in detail if x['kind']==kind]
+ if not xs:continue
+ stats[kind]=dict(n=len(xs),correct=sum(x['correct'] for x in xs),truncated=sum(x['truncated'] for x in xs),no_detected_false_claim=sum(not x['invalid_claims'] for x in xs),correct_and_no_detected_false_claim=sum(x['correct'] and not x['invalid_claims'] for x in xs),format=dict(collections.Counter(x['format'] for x in xs)),counter_required=sum(x['counter_required'] for x in xs),counter_sequence_exact_when_required=sum(x['counter_required'] and x['counter_sequence_exact'] for x in xs),strata={s:dict(n=sum(x['stratum']==s for x in xs),correct=sum(x['stratum']==s and x['correct'] for x in xs)) for s in sorted({x['stratum'] for x in xs})})
+comparisons={}
+for a,b in [('FC','FA'),('FC','FB'),('FC','ZS'),('FA','ZS'),('FB','ZS')]:
+ ps=[v for v in paired.values() if a in v and b in v]
+ if not ps:continue
+ assert all(v[a]['rank']==v[b]['rank'] for v in ps)
+ gains=sum(v[a]['correct'] and not v[b]['correct'] for v in ps);losses=sum(v[b]['correct'] and not v[a]['correct'] for v in ps);n=gains+losses
+ comparisons[a+'__'+b]=dict(n=len(ps),gains=gains,losses=losses,p_exact_exploratory=min(1.,2*sum(math.comb(n,i) for i in range(min(gains,losses)+1))/2**n) if n else 1.)
+xs=[json.loads(s) for s in (OUT/'telemetry.jsonl').read_text().splitlines()]
+v=[x for x in xs if isinstance(x.get('meter',{}).get('energy_wh'),(int,float))];w=[x for x in xs if isinstance(x.get('meter',{}).get('wall_w'),(int,float))]
+telemetry=dict(seconds=xs[-1]['epoch']-xs[0]['epoch'],samples=len(xs),energy_wh=v[-1]['meter']['energy_wh']-v[0]['meter']['energy_wh'],wall_w_mean=sum(x['meter']['wall_w'] for x in w)/len(w),wall_w_max=max(x['meter']['wall_w'] for x in w),meter_missing=len(xs)-len(v),energy_interval_seconds=v[-1]['epoch']-v[0]['epoch'],gpu=[{k:dict(mean=sum(x['gpus'][r][k] for x in xs)/len(xs),max=max(x['gpus'][r][k] for x in xs)) for k in ['gpu_w','gpu_c','hbm_c','cpu_c']} for r in range(2)])
+assert not (OUT/'guard-trip.json').exists()
+result=dict(state='finished',training=False,planned=200,generated=len(rows),stats=stats,paired=comparisons,claude_grade=bp.grade(planned,rows),strict_sign_gate=gate,telemetry=telemetry,plan=read(P/'experiment-plan.json'),FC_at_least_FA_content=stats['FC']['correct']>=stats['FA']['correct'],automatic_training=False,automatic_promotion=False,limits=['Known44cases and shot pairs reused, fresh generations at batch16; no claimed equivalence to historical batch1','Counter regex checks written literal sequence only, not complete algorithm','Validator partial, decimal claims intentionally outside scope','Showing examples in context is not proof that training C prevents a hybrid transition'])
+save(P/'responses.json',rows);save(P/'response-analysis.json',detail);save(P/'resultat-final.json',result)
+L=['EVA — SONDES C319 / FORMAT C','Eidolon Core Technologies (ECT) — 11 novembre 2026','Aucun entrainement : poids parent cycle5 inchanges.','',
+'Correction CPU C319 : E3-204/E4a identiques290/352 ;102/E3-204 identiques34 (318changes),102/E4a identiques36 (316changes). Le resultat affaiblit repetition-seule a cette dose ;il ne demontre pas a lui seul une causalite du gabarit.','',
+'PROTOCOLE','44 problemes horaires identiques aux sondesC309,poses ZS/FA/FB/FC,plus24 sondes signe ;200generations prevues.156anciennesquestions strictement conservees,FC seul ajoute ;pas de nouveau jeu aveugle.',
+'DeuxV100200W,processCUDAindependants,sansNCCL/optimizer/backward,FP16/NF4doublequant,parentSHA c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30. Un chargementbase parGPU,unadaptateur parent.',
+'Lot16 fixe,memes problemes/ordre/rang a travers formats.192reponses de qualification parent generees en plus des sondes reproduisent EXACTEMENT la baselineE4a surmemesGPU/lots. Cette qualification ne prouve pas equivalence lot1/16 pour les nouveauxprompts.',
+'CopiesRAM2x,tous12compteurs zero/passage,doublesSHA source/parent,boot/noyau etgardesGPU/HBM83,CPU70,ECC/Xid/progression/secteur. Memtester4GiBmlock du memeboot conserve,pas certification128GiB.','',
+'SIGNES ET SCORES','Garde signe stricte :'+json.dumps(gate,ensure_ascii=False),f"Generations sondes reelles :{len(rows)}/200 ;FB saute si garde echoue.",'Format : justes /N ; sans affirmation fausse detectee ; correctes ET sans affirmation fausse ; tronquees']
+for k,z in stats.items():L.append(f"{k} : {z['correct']}/{z['n']} ;{z['no_detected_false_claim']} ;{z['correct_and_no_detected_false_claim']} ;{z['truncated']}. Formats observes {z['format']}. Compteurs litteraux justes quand requis {z['counter_sequence_exact_when_required']}/{z['counter_required']}.")
+L+=['','COMPARAISONS APPARIEES EXPLORATOIRES']
+for k,z in comparisons.items():L.append(k+' : '+json.dumps(z))
+L+=['','STRATES']
+for s in stats['FC']['strata']:L.append(s+' : '+' ; '.join(k+' '+str(z['strata'][s]['correct'])+'/'+str(z['strata'][s]['n']) for k,z in stats.items()))
+L+=['','INTERPRETATION',f"Seuil brut FC>=FA en contexte :{result['FC_at_least_FA_content']}. Ce seuil exploratoire ne suffit pas a autoriser E4c ni a valider la qualite generale. Lire egalement invariants,compteurs et troncatures.",
+'Le formatC change moins le debut ;cela ne garantit pas l absence d hybrides apres entrainement. Aucun E4c lance,aucun modele promu.','',
+'TEMPS ET SECTEUR',json.dumps(telemetry,ensure_ascii=False),'Puissances200W configurees ;pics echantillonnes peuvent depasser200W. Secteur machine complete,qualification192 incluse.','',
+'LIMITES','Validateur et detectionformat partiels,decimaux horsperimetre ;absence d affirmation fausse ne prouve pas une chaine complete. Le compteur regex mesure la suite explicite jour1,jour2,etc ;absence de compteur pourjour0 distincte.',
+'Jeux deja connus et quatre prompts du memeprobleme :44cas apparies,pas176problemes independants. Nouvelles sorties lot16 comparees entreelles,pas scores historiqueslot1.',
+'Le testfinalreserve n a pas ete lu. Toutes sources/questions/reponses/logs conserves. AucunWOL,reboot,extinction,pilote oupoids modifie. Machine laissee allumee.',
+'Dossier :'+str(P)]
+(P/'Rapport_Eva_sondes_C319.txt').write_text('\n'.join(L)+'\n')
+files={}
+for f in P.rglob('*'):
+ if f.is_file() and not f.is_symlink() and not any(x in f.parts for x in ['__pycache__','G304-fixture','source-model','venv']) and '.tmp' not in f.name and f.name!='result-saved.json':
+  files[str(f.relative_to(P))]=sha(f)
+save(P/'result-saved.json',dict(state='finished',files=files,epoch=time.time(),training=False))
+assert all(sha(P/n)==h for n,h in files.items())
+print(json.dumps(dict(finished=True,verified_files=len(files),stats=stats,report_sha256=sha(P/'Rapport_Eva_sondes_C319.txt')),ensure_ascii=False))

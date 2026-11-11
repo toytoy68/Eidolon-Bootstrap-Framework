@@ -1,0 +1,3160 @@
+{
+  "rule": "First literal a+b=c minutes whose b equals requested duration; unparsed explicit; regex indicator not full reasoning verification",
+  "summary": {
+    "ZS": {
+      "n": 44,
+      "parsed": 44,
+      "start_matches": 44,
+      "total_matches": 44
+    },
+    "FA": {
+      "n": 44,
+      "parsed": 44,
+      "start_matches": 44,
+      "total_matches": 44
+    },
+    "FB": {
+      "n": 44,
+      "parsed": 44,
+      "start_matches": 44,
+      "total_matches": 44
+    },
+    "FC": {
+      "n": 44,
+      "parsed": 41,
+      "start_matches": 28,
+      "total_matches": 28
+    }
+  },
+  "rows": [
+    {
+      "id": "ZS-1440-exact-1-0",
+      "kind": "ZS",
+      "expected_start": 193,
+      "expected_delta": 1246,
+      "expected_total": 1439,
+      "parsed": [
+        193,
+        1246,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-exact+0-0",
+      "kind": "ZS",
+      "expected_start": 795,
+      "expected_delta": 645,
+      "expected_total": 1440,
+      "parsed": [
+        795,
+        645,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-exact+1-0",
+      "kind": "ZS",
+      "expected_start": 1021,
+      "expected_delta": 420,
+      "expected_total": 1441,
+      "parsed": [
+        1021,
+        420,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact-1-0",
+      "kind": "ZS",
+      "expected_start": 1089,
+      "expected_delta": 1790,
+      "expected_total": 2879,
+      "parsed": [
+        1089,
+        1790,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact+0-0",
+      "kind": "ZS",
+      "expected_start": 990,
+      "expected_delta": 1890,
+      "expected_total": 2880,
+      "parsed": [
+        990,
+        1890,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact+1-0",
+      "kind": "ZS",
+      "expected_start": 385,
+      "expected_delta": 2496,
+      "expected_total": 2881,
+      "parsed": [
+        385,
+        2496,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-0",
+      "kind": "ZS",
+      "expected_start": 500,
+      "expected_delta": 921,
+      "expected_total": 1421,
+      "parsed": [
+        500,
+        921,
+        1421
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-2",
+      "kind": "ZS",
+      "expected_start": 104,
+      "expected_delta": 1283,
+      "expected_total": 1387,
+      "parsed": [
+        104,
+        1283,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-4",
+      "kind": "ZS",
+      "expected_start": 206,
+      "expected_delta": 1205,
+      "expected_total": 1411,
+      "parsed": [
+        206,
+        1205,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-6",
+      "kind": "ZS",
+      "expected_start": 340,
+      "expected_delta": 1047,
+      "expected_total": 1387,
+      "parsed": [
+        340,
+        1047,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-0",
+      "kind": "ZS",
+      "expected_start": 643,
+      "expected_delta": 854,
+      "expected_total": 1497,
+      "parsed": [
+        643,
+        854,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-2",
+      "kind": "ZS",
+      "expected_start": 165,
+      "expected_delta": 1290,
+      "expected_total": 1455,
+      "parsed": [
+        165,
+        1290,
+        1455
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-4",
+      "kind": "ZS",
+      "expected_start": 331,
+      "expected_delta": 1131,
+      "expected_total": 1462,
+      "parsed": [
+        331,
+        1131,
+        1462
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-6",
+      "kind": "ZS",
+      "expected_start": 637,
+      "expected_delta": 813,
+      "expected_total": 1450,
+      "parsed": [
+        637,
+        813,
+        1450
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-0",
+      "kind": "ZS",
+      "expected_start": 1041,
+      "expected_delta": 1828,
+      "expected_total": 2869,
+      "parsed": [
+        1041,
+        1828,
+        2869
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-2",
+      "kind": "ZS",
+      "expected_start": 873,
+      "expected_delta": 1972,
+      "expected_total": 2845,
+      "parsed": [
+        873,
+        1972,
+        2845
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-4",
+      "kind": "ZS",
+      "expected_start": 1193,
+      "expected_delta": 1647,
+      "expected_total": 2840,
+      "parsed": [
+        1193,
+        1647,
+        2840
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-6",
+      "kind": "ZS",
+      "expected_start": 588,
+      "expected_delta": 2245,
+      "expected_total": 2833,
+      "parsed": [
+        588,
+        2245,
+        2833
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-0",
+      "kind": "ZS",
+      "expected_start": 418,
+      "expected_delta": 2479,
+      "expected_total": 2897,
+      "parsed": [
+        418,
+        2479,
+        2897
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-2",
+      "kind": "ZS",
+      "expected_start": 1198,
+      "expected_delta": 1689,
+      "expected_total": 2887,
+      "parsed": [
+        1198,
+        1689,
+        2887
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-4",
+      "kind": "ZS",
+      "expected_start": 1355,
+      "expected_delta": 1578,
+      "expected_total": 2933,
+      "parsed": [
+        1355,
+        1578,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-6",
+      "kind": "ZS",
+      "expected_start": 288,
+      "expected_delta": 2645,
+      "expected_total": 2933,
+      "parsed": [
+        288,
+        2645,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-exact-1-1",
+      "kind": "ZS",
+      "expected_start": 3,
+      "expected_delta": 1436,
+      "expected_total": 1439,
+      "parsed": [
+        3,
+        1436,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-exact+0-1",
+      "kind": "ZS",
+      "expected_start": 1242,
+      "expected_delta": 198,
+      "expected_total": 1440,
+      "parsed": [
+        1242,
+        198,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-exact+1-1",
+      "kind": "ZS",
+      "expected_start": 261,
+      "expected_delta": 1180,
+      "expected_total": 1441,
+      "parsed": [
+        261,
+        1180,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact-1-1",
+      "kind": "ZS",
+      "expected_start": 731,
+      "expected_delta": 2148,
+      "expected_total": 2879,
+      "parsed": [
+        731,
+        2148,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact+0-1",
+      "kind": "ZS",
+      "expected_start": 660,
+      "expected_delta": 2220,
+      "expected_total": 2880,
+      "parsed": [
+        660,
+        2220,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-exact+1-1",
+      "kind": "ZS",
+      "expected_start": 567,
+      "expected_delta": 2314,
+      "expected_total": 2881,
+      "parsed": [
+        567,
+        2314,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-1",
+      "kind": "ZS",
+      "expected_start": 331,
+      "expected_delta": 1094,
+      "expected_total": 1425,
+      "parsed": [
+        331,
+        1094,
+        1425
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-3",
+      "kind": "ZS",
+      "expected_start": 278,
+      "expected_delta": 1133,
+      "expected_total": 1411,
+      "parsed": [
+        278,
+        1133,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-5",
+      "kind": "ZS",
+      "expected_start": 696,
+      "expected_delta": 699,
+      "expected_total": 1395,
+      "parsed": [
+        696,
+        699,
+        1395
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessous-7",
+      "kind": "ZS",
+      "expected_start": 577,
+      "expected_delta": 811,
+      "expected_total": 1388,
+      "parsed": [
+        577,
+        811,
+        1388
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-1",
+      "kind": "ZS",
+      "expected_start": 19,
+      "expected_delta": 1474,
+      "expected_total": 1493,
+      "parsed": [
+        19,
+        1474,
+        1493
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-3",
+      "kind": "ZS",
+      "expected_start": 811,
+      "expected_delta": 632,
+      "expected_total": 1443,
+      "parsed": [
+        811,
+        632,
+        1443
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-5",
+      "kind": "ZS",
+      "expected_start": 1192,
+      "expected_delta": 260,
+      "expected_total": 1452,
+      "parsed": [
+        1192,
+        260,
+        1452
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-1440-dessus-7",
+      "kind": "ZS",
+      "expected_start": 496,
+      "expected_delta": 1001,
+      "expected_total": 1497,
+      "parsed": [
+        496,
+        1001,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-1",
+      "kind": "ZS",
+      "expected_start": 1017,
+      "expected_delta": 1841,
+      "expected_total": 2858,
+      "parsed": [
+        1017,
+        1841,
+        2858
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-3",
+      "kind": "ZS",
+      "expected_start": 1118,
+      "expected_delta": 1741,
+      "expected_total": 2859,
+      "parsed": [
+        1118,
+        1741,
+        2859
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-5",
+      "kind": "ZS",
+      "expected_start": 210,
+      "expected_delta": 2667,
+      "expected_total": 2877,
+      "parsed": [
+        210,
+        2667,
+        2877
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessous-7",
+      "kind": "ZS",
+      "expected_start": 295,
+      "expected_delta": 2565,
+      "expected_total": 2860,
+      "parsed": [
+        295,
+        2565,
+        2860
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-1",
+      "kind": "ZS",
+      "expected_start": 1236,
+      "expected_delta": 1652,
+      "expected_total": 2888,
+      "parsed": [
+        1236,
+        1652,
+        2888
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-3",
+      "kind": "ZS",
+      "expected_start": 663,
+      "expected_delta": 2263,
+      "expected_total": 2926,
+      "parsed": [
+        663,
+        2263,
+        2926
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-5",
+      "kind": "ZS",
+      "expected_start": 289,
+      "expected_delta": 2595,
+      "expected_total": 2884,
+      "parsed": [
+        289,
+        2595,
+        2884
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "ZS-2880-dessus-7",
+      "kind": "ZS",
+      "expected_start": 430,
+      "expected_delta": 2482,
+      "expected_total": 2912,
+      "parsed": [
+        430,
+        2482,
+        2912
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-exact-1-0",
+      "kind": "FA",
+      "expected_start": 193,
+      "expected_delta": 1246,
+      "expected_total": 1439,
+      "parsed": [
+        193,
+        1246,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-exact+0-0",
+      "kind": "FA",
+      "expected_start": 795,
+      "expected_delta": 645,
+      "expected_total": 1440,
+      "parsed": [
+        795,
+        645,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-exact+1-0",
+      "kind": "FA",
+      "expected_start": 1021,
+      "expected_delta": 420,
+      "expected_total": 1441,
+      "parsed": [
+        1021,
+        420,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-exact-1-0",
+      "kind": "FA",
+      "expected_start": 1089,
+      "expected_delta": 1790,
+      "expected_total": 2879,
+      "parsed": [
+        1089,
+        1790,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1439 < 60"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 00:39 vs reste 1439"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:39 vs reste 1439"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-exact+0-0",
+      "kind": "FA",
+      "expected_start": 990,
+      "expected_delta": 1890,
+      "expected_total": 2880,
+      "parsed": [
+        990,
+        1890,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-exact+1-0",
+      "kind": "FA",
+      "expected_start": 385,
+      "expected_delta": 2496,
+      "expected_total": 2881,
+      "parsed": [
+        385,
+        2496,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessous-0",
+      "kind": "FA",
+      "expected_start": 500,
+      "expected_delta": 921,
+      "expected_total": 1421,
+      "parsed": [
+        500,
+        921,
+        1421
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1421 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-dessous-2",
+      "kind": "FA",
+      "expected_start": 104,
+      "expected_delta": 1283,
+      "expected_total": 1387,
+      "parsed": [
+        104,
+        1283,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1387 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-dessous-4",
+      "kind": "FA",
+      "expected_start": 206,
+      "expected_delta": 1205,
+      "expected_total": 1411,
+      "parsed": [
+        206,
+        1205,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1411 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-dessous-6",
+      "kind": "FA",
+      "expected_start": 340,
+      "expected_delta": 1047,
+      "expected_total": 1387,
+      "parsed": [
+        340,
+        1047,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-0",
+      "kind": "FA",
+      "expected_start": 643,
+      "expected_delta": 854,
+      "expected_total": 1497,
+      "parsed": [
+        643,
+        854,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-2",
+      "kind": "FA",
+      "expected_start": 165,
+      "expected_delta": 1290,
+      "expected_total": 1455,
+      "parsed": [
+        165,
+        1290,
+        1455
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-4",
+      "kind": "FA",
+      "expected_start": 331,
+      "expected_delta": 1131,
+      "expected_total": 1462,
+      "parsed": [
+        331,
+        1131,
+        1462
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-6",
+      "kind": "FA",
+      "expected_start": 637,
+      "expected_delta": 813,
+      "expected_total": 1450,
+      "parsed": [
+        637,
+        813,
+        1450
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessous-0",
+      "kind": "FA",
+      "expected_start": 1041,
+      "expected_delta": 1828,
+      "expected_total": 2869,
+      "parsed": [
+        1041,
+        1828,
+        2869
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessous-2",
+      "kind": "FA",
+      "expected_start": 873,
+      "expected_delta": 1972,
+      "expected_total": 2845,
+      "parsed": [
+        873,
+        1972,
+        2845
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessous-4",
+      "kind": "FA",
+      "expected_start": 1193,
+      "expected_delta": 1647,
+      "expected_total": 2840,
+      "parsed": [
+        1193,
+        1647,
+        2840
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1400 ≥ 1440"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessous-6",
+      "kind": "FA",
+      "expected_start": 588,
+      "expected_delta": 2245,
+      "expected_total": 2833,
+      "parsed": [
+        588,
+        2245,
+        2833
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1393 < 60"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 02:33 vs reste 1393"
+        ],
+        [
+          "heure_vs_reste",
+          "json 02:33 vs reste 1393"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessus-0",
+      "kind": "FA",
+      "expected_start": 418,
+      "expected_delta": 2479,
+      "expected_total": 2897,
+      "parsed": [
+        418,
+        2479,
+        2897
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-2",
+      "kind": "FA",
+      "expected_start": 1198,
+      "expected_delta": 1689,
+      "expected_total": 2887,
+      "parsed": [
+        1198,
+        1689,
+        2887
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-4",
+      "kind": "FA",
+      "expected_start": 1355,
+      "expected_delta": 1578,
+      "expected_total": 2933,
+      "parsed": [
+        1355,
+        1578,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-6",
+      "kind": "FA",
+      "expected_start": 288,
+      "expected_delta": 2645,
+      "expected_total": 2933,
+      "parsed": [
+        288,
+        2645,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-exact-1-1",
+      "kind": "FA",
+      "expected_start": 3,
+      "expected_delta": 1436,
+      "expected_total": 1439,
+      "parsed": [
+        3,
+        1436,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "arrivee 24:39 vs reste 1439"
+        ],
+        [
+          "heure_vs_reste",
+          "json 24:39 vs reste 1439"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-exact+0-1",
+      "kind": "FA",
+      "expected_start": 1242,
+      "expected_delta": 198,
+      "expected_total": 1440,
+      "parsed": [
+        1242,
+        198,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-exact+1-1",
+      "kind": "FA",
+      "expected_start": 261,
+      "expected_delta": 1180,
+      "expected_total": 1441,
+      "parsed": [
+        261,
+        1180,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-exact-1-1",
+      "kind": "FA",
+      "expected_start": 731,
+      "expected_delta": 2148,
+      "expected_total": 2879,
+      "parsed": [
+        731,
+        2148,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1439 < 60"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 00:39 vs reste 1439"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:39 vs reste 1439"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-exact+0-1",
+      "kind": "FA",
+      "expected_start": 660,
+      "expected_delta": 2220,
+      "expected_total": 2880,
+      "parsed": [
+        660,
+        2220,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-exact+1-1",
+      "kind": "FA",
+      "expected_start": 567,
+      "expected_delta": 2314,
+      "expected_total": 2881,
+      "parsed": [
+        567,
+        2314,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessous-1",
+      "kind": "FA",
+      "expected_start": 331,
+      "expected_delta": 1094,
+      "expected_total": 1425,
+      "parsed": [
+        331,
+        1094,
+        1425
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1425 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-dessous-3",
+      "kind": "FA",
+      "expected_start": 278,
+      "expected_delta": 1133,
+      "expected_total": 1411,
+      "parsed": [
+        278,
+        1133,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1411 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FA-1440-dessous-5",
+      "kind": "FA",
+      "expected_start": 696,
+      "expected_delta": 699,
+      "expected_total": 1395,
+      "parsed": [
+        696,
+        699,
+        1395
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessous-7",
+      "kind": "FA",
+      "expected_start": 577,
+      "expected_delta": 811,
+      "expected_total": 1388,
+      "parsed": [
+        577,
+        811,
+        1388
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-1",
+      "kind": "FA",
+      "expected_start": 19,
+      "expected_delta": 1474,
+      "expected_total": 1493,
+      "parsed": [
+        19,
+        1474,
+        1493
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-3",
+      "kind": "FA",
+      "expected_start": 811,
+      "expected_delta": 632,
+      "expected_total": 1443,
+      "parsed": [
+        811,
+        632,
+        1443
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-5",
+      "kind": "FA",
+      "expected_start": 1192,
+      "expected_delta": 260,
+      "expected_total": 1452,
+      "parsed": [
+        1192,
+        260,
+        1452
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-1440-dessus-7",
+      "kind": "FA",
+      "expected_start": 496,
+      "expected_delta": 1001,
+      "expected_total": 1497,
+      "parsed": [
+        496,
+        1001,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessous-1",
+      "kind": "FA",
+      "expected_start": 1017,
+      "expected_delta": 1841,
+      "expected_total": 2858,
+      "parsed": [
+        1017,
+        1841,
+        2858
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1418 ≥ 1440"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessous-3",
+      "kind": "FA",
+      "expected_start": 1118,
+      "expected_delta": 1741,
+      "expected_total": 2859,
+      "parsed": [
+        1118,
+        1741,
+        2859
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1419 ≥ 1440"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessous-5",
+      "kind": "FA",
+      "expected_start": 210,
+      "expected_delta": 2667,
+      "expected_total": 2877,
+      "parsed": [
+        210,
+        2667,
+        2877
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1437 < 60"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 14:37 vs reste 1437"
+        ],
+        [
+          "heure_vs_reste",
+          "json 14:37 vs reste 1437"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessous-7",
+      "kind": "FA",
+      "expected_start": 295,
+      "expected_delta": 2565,
+      "expected_total": 2860,
+      "parsed": [
+        295,
+        2565,
+        2860
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1420 ≥ 1440"
+        ]
+      ]
+    },
+    {
+      "id": "FA-2880-dessus-1",
+      "kind": "FA",
+      "expected_start": 1236,
+      "expected_delta": 1652,
+      "expected_total": 2888,
+      "parsed": [
+        1236,
+        1652,
+        2888
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-3",
+      "kind": "FA",
+      "expected_start": 663,
+      "expected_delta": 2263,
+      "expected_total": 2926,
+      "parsed": [
+        663,
+        2263,
+        2926
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-5",
+      "kind": "FA",
+      "expected_start": 289,
+      "expected_delta": 2595,
+      "expected_total": 2884,
+      "parsed": [
+        289,
+        2595,
+        2884
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FA-2880-dessus-7",
+      "kind": "FA",
+      "expected_start": 430,
+      "expected_delta": 2482,
+      "expected_total": 2912,
+      "parsed": [
+        430,
+        2482,
+        2912
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-exact-1-0",
+      "kind": "FB",
+      "expected_start": 193,
+      "expected_delta": 1246,
+      "expected_total": 1439,
+      "parsed": [
+        193,
+        1246,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1439 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0, 1]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-exact+0-0",
+      "kind": "FB",
+      "expected_start": 795,
+      "expected_delta": 645,
+      "expected_total": 1440,
+      "parsed": [
+        795,
+        645,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-exact+1-0",
+      "kind": "FB",
+      "expected_start": 1021,
+      "expected_delta": 420,
+      "expected_total": 1441,
+      "parsed": [
+        1021,
+        420,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-exact-1-0",
+      "kind": "FB",
+      "expected_start": 1089,
+      "expected_delta": 1790,
+      "expected_total": 2879,
+      "parsed": [
+        1089,
+        1790,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "arrivee 00:59 vs reste 1439"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:59 vs reste 1439"
+        ]
+      ]
+    },
+    {
+      "id": "FB-2880-exact+0-0",
+      "kind": "FB",
+      "expected_start": 990,
+      "expected_delta": 1890,
+      "expected_total": 2880,
+      "parsed": [
+        990,
+        1890,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-exact+1-0",
+      "kind": "FB",
+      "expected_start": 385,
+      "expected_delta": 2496,
+      "expected_total": 2881,
+      "parsed": [
+        385,
+        2496,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessous-0",
+      "kind": "FB",
+      "expected_start": 500,
+      "expected_delta": 921,
+      "expected_total": 1421,
+      "parsed": [
+        500,
+        921,
+        1421
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "suite_jours",
+          "[1, 1]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-2",
+      "kind": "FB",
+      "expected_start": 104,
+      "expected_delta": 1283,
+      "expected_total": 1387,
+      "parsed": [
+        104,
+        1283,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "compte_jours",
+          "1 vs [0, 0, 0, 0, 0, 0, 0, 0]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-4",
+      "kind": "FB",
+      "expected_start": 206,
+      "expected_delta": 1205,
+      "expected_total": 1411,
+      "parsed": [
+        206,
+        1205,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "71 < 60"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 13:11 vs reste 851"
+        ],
+        [
+          "heure_vs_reste",
+          "json 13:11 vs reste 851"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-6",
+      "kind": "FB",
+      "expected_start": 340,
+      "expected_delta": 1047,
+      "expected_total": 1387,
+      "parsed": [
+        340,
+        1047,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "compte_jours",
+          "1 vs [0, 0, 0, 0, 0, 0, 0, 0]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessus-0",
+      "kind": "FB",
+      "expected_start": 643,
+      "expected_delta": 854,
+      "expected_total": 1497,
+      "parsed": [
+        643,
+        854,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-2",
+      "kind": "FB",
+      "expected_start": 165,
+      "expected_delta": 1290,
+      "expected_total": 1455,
+      "parsed": [
+        165,
+        1290,
+        1455
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-4",
+      "kind": "FB",
+      "expected_start": 331,
+      "expected_delta": 1131,
+      "expected_total": 1462,
+      "parsed": [
+        331,
+        1131,
+        1462
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-6",
+      "kind": "FB",
+      "expected_start": 637,
+      "expected_delta": 813,
+      "expected_total": 1450,
+      "parsed": [
+        637,
+        813,
+        1450
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-0",
+      "kind": "FB",
+      "expected_start": 1041,
+      "expected_delta": 1828,
+      "expected_total": 2869,
+      "parsed": [
+        1041,
+        1828,
+        2869
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "arrivee 00:29 vs reste 1429"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:29 vs reste 1429"
+        ]
+      ]
+    },
+    {
+      "id": "FB-2880-dessous-2",
+      "kind": "FB",
+      "expected_start": 873,
+      "expected_delta": 1972,
+      "expected_total": 2845,
+      "parsed": [
+        873,
+        1972,
+        2845
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-4",
+      "kind": "FB",
+      "expected_start": 1193,
+      "expected_delta": 1647,
+      "expected_total": 2840,
+      "parsed": [
+        1193,
+        1647,
+        2840
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "arrivee 00:20 vs reste 1400"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:20 vs reste 1400"
+        ]
+      ]
+    },
+    {
+      "id": "FB-2880-dessous-6",
+      "kind": "FB",
+      "expected_start": 588,
+      "expected_delta": 2245,
+      "expected_total": 2833,
+      "parsed": [
+        588,
+        2245,
+        2833
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-0",
+      "kind": "FB",
+      "expected_start": 418,
+      "expected_delta": 2479,
+      "expected_total": 2897,
+      "parsed": [
+        418,
+        2479,
+        2897
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-2",
+      "kind": "FB",
+      "expected_start": 1198,
+      "expected_delta": 1689,
+      "expected_total": 2887,
+      "parsed": [
+        1198,
+        1689,
+        2887
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-4",
+      "kind": "FB",
+      "expected_start": 1355,
+      "expected_delta": 1578,
+      "expected_total": 2933,
+      "parsed": [
+        1355,
+        1578,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-6",
+      "kind": "FB",
+      "expected_start": 288,
+      "expected_delta": 2645,
+      "expected_total": 2933,
+      "parsed": [
+        288,
+        2645,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-exact-1-1",
+      "kind": "FB",
+      "expected_start": 3,
+      "expected_delta": 1436,
+      "expected_total": 1439,
+      "parsed": [
+        3,
+        1436,
+        1439
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-exact+0-1",
+      "kind": "FB",
+      "expected_start": 1242,
+      "expected_delta": 198,
+      "expected_total": 1440,
+      "parsed": [
+        1242,
+        198,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-exact+1-1",
+      "kind": "FB",
+      "expected_start": 261,
+      "expected_delta": 1180,
+      "expected_total": 1441,
+      "parsed": [
+        261,
+        1180,
+        1441
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-exact-1-1",
+      "kind": "FB",
+      "expected_start": 731,
+      "expected_delta": 2148,
+      "expected_total": 2879,
+      "parsed": [
+        731,
+        2148,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-exact+0-1",
+      "kind": "FB",
+      "expected_start": 660,
+      "expected_delta": 2220,
+      "expected_total": 2880,
+      "parsed": [
+        660,
+        2220,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-exact+1-1",
+      "kind": "FB",
+      "expected_start": 567,
+      "expected_delta": 2314,
+      "expected_total": 2881,
+      "parsed": [
+        567,
+        2314,
+        2881
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessous-1",
+      "kind": "FB",
+      "expected_start": 331,
+      "expected_delta": 1094,
+      "expected_total": 1425,
+      "parsed": [
+        331,
+        1094,
+        1425
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "arrivee 00:45 vs reste 1425"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:45 vs reste 1425"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-3",
+      "kind": "FB",
+      "expected_start": 278,
+      "expected_delta": 1133,
+      "expected_total": 1411,
+      "parsed": [
+        278,
+        1133,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "compte_jours",
+          "1 vs [0, 0, 0, 0, 0, 0, 0, 0]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-5",
+      "kind": "FB",
+      "expected_start": 696,
+      "expected_delta": 699,
+      "expected_total": 1395,
+      "parsed": [
+        696,
+        699,
+        1395
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": [
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessous-7",
+      "kind": "FB",
+      "expected_start": 577,
+      "expected_delta": 811,
+      "expected_total": 1388,
+      "parsed": [
+        577,
+        811,
+        1388
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "compte_jours",
+          "1 vs [0, 0]"
+        ],
+        [
+          "heure_vs_reste",
+          "arrivee 02:08 vs reste 1388"
+        ],
+        [
+          "heure_vs_reste",
+          "json 02:08 vs reste 1388"
+        ]
+      ]
+    },
+    {
+      "id": "FB-1440-dessus-1",
+      "kind": "FB",
+      "expected_start": 19,
+      "expected_delta": 1474,
+      "expected_total": 1493,
+      "parsed": [
+        19,
+        1474,
+        1493
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-3",
+      "kind": "FB",
+      "expected_start": 811,
+      "expected_delta": 632,
+      "expected_total": 1443,
+      "parsed": [
+        811,
+        632,
+        1443
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-5",
+      "kind": "FB",
+      "expected_start": 1192,
+      "expected_delta": 260,
+      "expected_total": 1452,
+      "parsed": [
+        1192,
+        260,
+        1452
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-1440-dessus-7",
+      "kind": "FB",
+      "expected_start": 496,
+      "expected_delta": 1001,
+      "expected_total": 1497,
+      "parsed": [
+        496,
+        1001,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-1",
+      "kind": "FB",
+      "expected_start": 1017,
+      "expected_delta": 1841,
+      "expected_total": 2858,
+      "parsed": [
+        1017,
+        1841,
+        2858
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-3",
+      "kind": "FB",
+      "expected_start": 1118,
+      "expected_delta": 1741,
+      "expected_total": 2859,
+      "parsed": [
+        1118,
+        1741,
+        2859
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-5",
+      "kind": "FB",
+      "expected_start": 210,
+      "expected_delta": 2667,
+      "expected_total": 2877,
+      "parsed": [
+        210,
+        2667,
+        2877
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessous-7",
+      "kind": "FB",
+      "expected_start": 295,
+      "expected_delta": 2565,
+      "expected_total": 2860,
+      "parsed": [
+        295,
+        2565,
+        2860
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 28:20 vs reste 1420"
+        ]
+      ]
+    },
+    {
+      "id": "FB-2880-dessus-1",
+      "kind": "FB",
+      "expected_start": 1236,
+      "expected_delta": 1652,
+      "expected_total": 2888,
+      "parsed": [
+        1236,
+        1652,
+        2888
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-3",
+      "kind": "FB",
+      "expected_start": 663,
+      "expected_delta": 2263,
+      "expected_total": 2926,
+      "parsed": [
+        663,
+        2263,
+        2926
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-5",
+      "kind": "FB",
+      "expected_start": 289,
+      "expected_delta": 2595,
+      "expected_total": 2884,
+      "parsed": [
+        289,
+        2595,
+        2884
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FB-2880-dessus-7",
+      "kind": "FB",
+      "expected_start": 430,
+      "expected_delta": 2482,
+      "expected_total": 2912,
+      "parsed": [
+        430,
+        2482,
+        2912
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact-1-0",
+      "kind": "FC",
+      "expected_start": 193,
+      "expected_delta": 1246,
+      "expected_total": 1439,
+      "parsed": null,
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact+0-0",
+      "kind": "FC",
+      "expected_start": 795,
+      "expected_delta": 645,
+      "expected_total": 1440,
+      "parsed": [
+        795,
+        645,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact+1-0",
+      "kind": "FC",
+      "expected_start": 1021,
+      "expected_delta": 420,
+      "expected_total": 1441,
+      "parsed": [
+        961,
+        420,
+        1381
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-exact-1-0",
+      "kind": "FC",
+      "expected_start": 1089,
+      "expected_delta": 1790,
+      "expected_total": 2879,
+      "parsed": [
+        1089,
+        1790,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 00:39 vs reste 1439"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-exact+0-0",
+      "kind": "FC",
+      "expected_start": 990,
+      "expected_delta": 1890,
+      "expected_total": 2880,
+      "parsed": [
+        990,
+        1890,
+        2880
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-exact+1-0",
+      "kind": "FC",
+      "expected_start": 385,
+      "expected_delta": 2496,
+      "expected_total": 2881,
+      "parsed": [
+        325,
+        2496,
+        2821
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-0",
+      "kind": "FC",
+      "expected_start": 500,
+      "expected_delta": 921,
+      "expected_total": 1421,
+      "parsed": [
+        500,
+        921,
+        1421
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1421 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:21 vs reste 1421"
+        ]
+      ]
+    },
+    {
+      "id": "FC-1440-dessous-2",
+      "kind": "FC",
+      "expected_start": 104,
+      "expected_delta": 1283,
+      "expected_total": 1387,
+      "parsed": [
+        104,
+        1283,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-4",
+      "kind": "FC",
+      "expected_start": 206,
+      "expected_delta": 1205,
+      "expected_total": 1411,
+      "parsed": null,
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-6",
+      "kind": "FC",
+      "expected_start": 340,
+      "expected_delta": 1047,
+      "expected_total": 1387,
+      "parsed": [
+        340,
+        1047,
+        1387
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-0",
+      "kind": "FC",
+      "expected_start": 643,
+      "expected_delta": 854,
+      "expected_total": 1497,
+      "parsed": [
+        643,
+        854,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-2",
+      "kind": "FC",
+      "expected_start": 165,
+      "expected_delta": 1290,
+      "expected_total": 1455,
+      "parsed": [
+        165,
+        1290,
+        1455
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-4",
+      "kind": "FC",
+      "expected_start": 331,
+      "expected_delta": 1131,
+      "expected_total": 1462,
+      "parsed": [
+        331,
+        1131,
+        1462
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-6",
+      "kind": "FC",
+      "expected_start": 637,
+      "expected_delta": 813,
+      "expected_total": 1450,
+      "parsed": [
+        637,
+        813,
+        1450
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessous-0",
+      "kind": "FC",
+      "expected_start": 1041,
+      "expected_delta": 1828,
+      "expected_total": 2869,
+      "parsed": [
+        1041,
+        1828,
+        2869
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 00:29 vs reste 1429"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessous-2",
+      "kind": "FC",
+      "expected_start": 873,
+      "expected_delta": 1972,
+      "expected_total": 2845,
+      "parsed": [
+        933,
+        1972,
+        2905
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1465 < 1440"
+        ],
+        [
+          "suite_jours",
+          "[1, 0]"
+        ],
+        [
+          "reste_hors_bornes",
+          "1465"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:25 vs reste 1465"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessous-4",
+      "kind": "FC",
+      "expected_start": 1193,
+      "expected_delta": 1647,
+      "expected_total": 2840,
+      "parsed": [
+        1193,
+        1647,
+        2840
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessous-6",
+      "kind": "FC",
+      "expected_start": 588,
+      "expected_delta": 2245,
+      "expected_total": 2833,
+      "parsed": [
+        948,
+        2245,
+        3193
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessus-0",
+      "kind": "FC",
+      "expected_start": 418,
+      "expected_delta": 2479,
+      "expected_total": 2897,
+      "parsed": [
+        418,
+        2479,
+        2897
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1457 < 1440"
+        ],
+        [
+          "suite_jours",
+          "[1, 1]"
+        ],
+        [
+          "reste_hors_bornes",
+          "1457"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:17 vs reste 1457"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessus-2",
+      "kind": "FC",
+      "expected_start": 1198,
+      "expected_delta": 1689,
+      "expected_total": 2887,
+      "parsed": [
+        1198,
+        1689,
+        2887
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessus-4",
+      "kind": "FC",
+      "expected_start": 1355,
+      "expected_delta": 1578,
+      "expected_total": 2933,
+      "parsed": [
+        1355,
+        1578,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessus-6",
+      "kind": "FC",
+      "expected_start": 288,
+      "expected_delta": 2645,
+      "expected_total": 2933,
+      "parsed": [
+        288,
+        2645,
+        2933
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact-1-1",
+      "kind": "FC",
+      "expected_start": 3,
+      "expected_delta": 1436,
+      "expected_total": 1439,
+      "parsed": null,
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact+0-1",
+      "kind": "FC",
+      "expected_start": 1242,
+      "expected_delta": 198,
+      "expected_total": 1440,
+      "parsed": [
+        1242,
+        198,
+        1440
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-exact+1-1",
+      "kind": "FC",
+      "expected_start": 261,
+      "expected_delta": 1180,
+      "expected_total": 1441,
+      "parsed": [
+        21,
+        1180,
+        1201
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "1201 ≥ 1440"
+        ],
+        [
+          "suite_jours",
+          "[0]"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-exact-1-1",
+      "kind": "FC",
+      "expected_start": 731,
+      "expected_delta": 2148,
+      "expected_total": 2879,
+      "parsed": [
+        731,
+        2148,
+        2879
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-exact+0-1",
+      "kind": "FC",
+      "expected_start": 660,
+      "expected_delta": 2220,
+      "expected_total": 2880,
+      "parsed": [
+        600,
+        2220,
+        2820
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-exact+1-1",
+      "kind": "FC",
+      "expected_start": 567,
+      "expected_delta": 2314,
+      "expected_total": 2881,
+      "parsed": [
+        927,
+        2314,
+        3241
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-1",
+      "kind": "FC",
+      "expected_start": 331,
+      "expected_delta": 1094,
+      "expected_total": 1425,
+      "parsed": [
+        331,
+        1094,
+        1425
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-3",
+      "kind": "FC",
+      "expected_start": 278,
+      "expected_delta": 1133,
+      "expected_total": 1411,
+      "parsed": [
+        278,
+        1133,
+        1411
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 00:11 vs reste 1411"
+        ]
+      ]
+    },
+    {
+      "id": "FC-1440-dessous-5",
+      "kind": "FC",
+      "expected_start": 696,
+      "expected_delta": 699,
+      "expected_total": 1395,
+      "parsed": [
+        636,
+        699,
+        1335
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessous-7",
+      "kind": "FC",
+      "expected_start": 577,
+      "expected_delta": 811,
+      "expected_total": 1388,
+      "parsed": [
+        937,
+        811,
+        1748
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-1",
+      "kind": "FC",
+      "expected_start": 19,
+      "expected_delta": 1474,
+      "expected_total": 1493,
+      "parsed": [
+        19,
+        1474,
+        1493
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-3",
+      "kind": "FC",
+      "expected_start": 811,
+      "expected_delta": 632,
+      "expected_total": 1443,
+      "parsed": [
+        811,
+        632,
+        1443
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-5",
+      "kind": "FC",
+      "expected_start": 1192,
+      "expected_delta": 260,
+      "expected_total": 1452,
+      "parsed": [
+        952,
+        260,
+        1212
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-1440-dessus-7",
+      "kind": "FC",
+      "expected_start": 496,
+      "expected_delta": 1001,
+      "expected_total": 1497,
+      "parsed": [
+        496,
+        1001,
+        1497
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessous-1",
+      "kind": "FC",
+      "expected_start": 1017,
+      "expected_delta": 1841,
+      "expected_total": 2858,
+      "parsed": [
+        957,
+        1841,
+        2798
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessous-3",
+      "kind": "FC",
+      "expected_start": 1118,
+      "expected_delta": 1741,
+      "expected_total": 2859,
+      "parsed": [
+        1118,
+        1741,
+        2859
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 03:39 vs reste 1419"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessous-5",
+      "kind": "FC",
+      "expected_start": 210,
+      "expected_delta": 2667,
+      "expected_total": 2877,
+      "parsed": [
+        330,
+        2667,
+        2997
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessous-7",
+      "kind": "FC",
+      "expected_start": 295,
+      "expected_delta": 2565,
+      "expected_total": 2860,
+      "parsed": [
+        295,
+        2565,
+        2860
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "heure_vs_reste",
+          "json 00:20 vs reste 1420"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessus-1",
+      "kind": "FC",
+      "expected_start": 1236,
+      "expected_delta": 1652,
+      "expected_total": 2888,
+      "parsed": [
+        1236,
+        1652,
+        2888
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessus-3",
+      "kind": "FC",
+      "expected_start": 663,
+      "expected_delta": 2263,
+      "expected_total": 2926,
+      "parsed": [
+        603,
+        2263,
+        2866
+      ],
+      "start_matches": false,
+      "total_matches": false,
+      "content_correct": false,
+      "counter_bad": []
+    },
+    {
+      "id": "FC-2880-dessus-5",
+      "kind": "FC",
+      "expected_start": 289,
+      "expected_delta": 2595,
+      "expected_total": 2884,
+      "parsed": [
+        289,
+        2595,
+        2884
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": false,
+      "counter_bad": [
+        [
+          "comparaison",
+          "2884 < 1440"
+        ],
+        [
+          "suite_jours",
+          "[1, 1]"
+        ],
+        [
+          "reste_hors_bornes",
+          "2884"
+        ],
+        [
+          "heure_vs_reste",
+          "json 00:04 vs reste 2884"
+        ]
+      ]
+    },
+    {
+      "id": "FC-2880-dessus-7",
+      "kind": "FC",
+      "expected_start": 430,
+      "expected_delta": 2482,
+      "expected_total": 2912,
+      "parsed": [
+        430,
+        2482,
+        2912
+      ],
+      "start_matches": true,
+      "total_matches": true,
+      "content_correct": true,
+      "counter_bad": []
+    }
+  ]
+}

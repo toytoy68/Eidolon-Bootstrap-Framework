@@ -1,0 +1,72 @@
+EVA — SONDES C319 / FORMAT C
+Eidolon Core Technologies (ECT) — 11 novembre 2026
+Aucun entrainement : poids parent cycle5 inchanges.
+
+Correction CPU C319 : E3-204/E4a identiques290/352 ;102/E3-204 identiques34 (318changes),102/E4a identiques36 (316changes). Le resultat affaiblit repetition-seule a cette dose ;il ne demontre pas a lui seul une causalite du gabarit.
+
+PROTOCOLE
+44 problemes horaires identiques aux sondesC309,poses ZS/FA/FB/FC,plus24 sondes signe ;200generations prevues.156anciennesquestions strictement conservees,FC seul ajoute ;pas de nouveau jeu aveugle.
+DeuxV100200W,processCUDAindependants,sansNCCL/optimizer/backward,FP16/NF4doublequant,parentSHA c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30. Un chargementbase parGPU,unadaptateur parent.
+Lot16 fixe,memes problemes/ordre/rang a travers formats.192reponses de qualification parent generees en plus des sondes reproduisent EXACTEMENT la baselineE4a surmemesGPU/lots. Cette qualification ne prouve pas equivalence lot1/16 pour les nouveauxprompts.
+CopiesRAM2x,tous12compteurs zero/passage,doublesSHA source/parent,boot/noyau etgardesGPU/HBM83,CPU70,ECC/Xid/progression/secteur. Memtester4GiBmlock du memeboot conserve,pas certification128GiB.
+
+SIGNES ET SCORES
+Garde signe stricte :{"allow_B": true, "wrong": [], "n": 24, "correct": 24, "bool_rejected": true, "training": false}
+Generations sondes reelles :200/200 ;FB saute si garde echoue.
+Format : justes /N ; sans affirmation fausse detectee ; correctes ET sans affirmation fausse ; tronquees
+ZS : 19/44 ;44 ;19 ;0. Formats observes {'court': 44}. Compteurs litteraux justes quand requis 0/34.
+FA : 27/44 ;30 ;27 ;0. Formats observes {'A': 44}. Compteurs litteraux justes quand requis 28/34.
+FB : 28/44 ;31 ;27 ;8. Formats observes {'B': 44}. Compteurs litteraux justes quand requis 34/34.
+FC : 15/44 ;34 ;15 ;0. Formats observes {'autre': 3, 'court': 8, 'C': 33}. Compteurs litteraux justes quand requis 20/34.
+
+COMPARAISONS APPARIEES EXPLORATOIRES
+FC__FA : {"n": 44, "gains": 2, "losses": 14, "p_exact_exploratory": 0.004180908203125}
+FC__FB : {"n": 44, "gains": 3, "losses": 16, "p_exact_exploratory": 0.004425048828125}
+FC__ZS : {"n": 44, "gains": 10, "losses": 14, "p_exact_exploratory": 0.5412561893463135}
+FA__ZS : {"n": 44, "gains": 14, "losses": 6, "p_exact_exploratory": 0.11531829833984375}
+FB__ZS : {"n": 44, "gains": 17, "losses": 8, "p_exact_exploratory": 0.10775214433670044}
+
+STRATES
+1440-dessous : ZS 8/8 ; FA 3/8 ; FB 1/8 ; FC 1/8
+1440-dessus : ZS 6/8 ; FA 8/8 ; FB 8/8 ; FC 6/8
+1440-exact+0 : ZS 2/2 ; FA 1/2 ; FB 2/2 ; FC 0/2
+1440-exact+1 : ZS 2/2 ; FA 2/2 ; FB 2/2 ; FC 0/2
+1440-exact-1 : ZS 1/2 ; FA 1/2 ; FB 1/2 ; FC 0/2
+2880-dessous : ZS 0/8 ; FA 0/8 ; FB 2/8 ; FC 1/8
+2880-dessus : ZS 0/8 ; FA 8/8 ; FB 8/8 ; FC 5/8
+2880-exact+0 : ZS 0/2 ; FA 2/2 ; FB 2/2 ; FC 1/2
+2880-exact+1 : ZS 0/2 ; FA 2/2 ; FB 2/2 ; FC 0/2
+2880-exact-1 : ZS 0/2 ; FA 0/2 ; FB 0/2 ; FC 1/2
+
+INTERPRETATION
+Seuil brut FC>=FA en contexte :False. Ce seuil exploratoire ne suffit pas a autoriser E4c ni a valider la qualite generale. Lire egalement invariants,compteurs et troncatures.
+Le formatC change moins le debut ;cela ne garantit pas l absence d hybrides apres entrainement. Aucun E4c lance,aucun modele promu.
+
+TEMPS ET SECTEUR
+{"seconds": 324.96084809303284, "samples": 588, "energy_wh": 39.43600000000151, "wall_w_mean": 435.8569727891156, "wall_w_max": 551.2, "meter_missing": 0, "energy_interval_seconds": 324.96084809303284, "gpu": [{"gpu_w": {"mean": 145.494481292517, "max": 212.295}, "gpu_c": {"mean": 35.3656462585034, "max": 40.0}, "hbm_c": {"mean": 40.136054421768705, "max": 49.0}, "cpu_c": {"mean": 38.139668367346935, "max": 41.75}}, {"gpu_w": {"mean": 142.3037295918367, "max": 245.046}, "gpu_c": {"mean": 36.545918367346935, "max": 42.0}, "hbm_c": {"mean": 40.70238095238095, "max": 49.0}, "cpu_c": {"mean": 38.140943877551024, "max": 41.625}}]}
+Puissances200W configurees ;pics echantillonnes peuvent depasser200W. Secteur machine complete,qualification192 incluse.
+
+LIMITES
+Validateur et detectionformat partiels,decimaux horsperimetre ;absence d affirmation fausse ne prouve pas une chaine complete. Le compteur regex mesure la suite explicite jour1,jour2,etc ;absence de compteur pourjour0 distincte.
+Jeux deja connus et quatre prompts du memeprobleme :44cas apparies,pas176problemes independants. Nouvelles sorties lot16 comparees entreelles,pas scores historiqueslot1.
+Le testfinalreserve n a pas ete lu. Toutes sources/questions/reponses/logs conserves. AucunWOL,reboot,extinction,pilote oupoids modifie. Machine laissee allumee.
+Dossier :/srv/eidolon/work/eva-probes-c319-20261111-4c1f2095
+
+CLOTURE ET PROFILS COMPLEMENTAIRES
+Service termine avec succes ;poids parent re-verifies deux fois,aucunGPUcompute restant,nouvellesalertesnoyau desmotifs inspectes :0.
+Phases parformat : dureeswall span et puissancespendantfenetre ;fenetres peuventsechevaucher entreGPU,energies nonadditionnables.
+qualification : {"n": 192, "rank_seconds": [54.27876114845276, 55.75039458274841], "generated_tokens": 11970, "median_output_tokens": 62.0, "median_input_tokens": 141.0, "batch_compute_seconds_per_rank": [54.15837335586548, 55.62589955329895], "wall_span_seconds": 55.87670278549194, "window_epoch": [1794414954.3491945, 1794415010.2258973], "overlapping_stage_windows": ["sign"], "wall_w_mean_during_window": 406.90980392156865, "meter_energy_wh_during_window": 6.430000000000291, "gpu_w_mean_during_window": [135.67446078431374, 130.7168137254902]}
+sign : {"n": 24, "rank_seconds": [6.576329708099365, 6.723584413528442], "generated_tokens": 1080, "median_output_tokens": 47.0, "median_input_tokens": 155.0, "batch_compute_seconds_per_rank": [6.562657833099365, 6.709506034851074], "wall_span_seconds": 8.322504043579102, "window_epoch": [1794415008.6389747, 1794415016.9614787], "overlapping_stage_windows": ["qualification"], "wall_w_mean_during_window": 400.64666666666665, "meter_energy_wh_during_window": 0.8569999999999709, "gpu_w_mean_during_window": [119.36113333333333, 126.76806666666667]}
+boundary-ZS : {"n": 44, "rank_seconds": [17.66791796684265, 17.792518377304077], "generated_tokens": 2898, "median_output_tokens": 66.0, "median_input_tokens": 144.0, "batch_compute_seconds_per_rank": [17.640565872192383, 17.761313915252686], "wall_span_seconds": 17.922462463378906, "window_epoch": [1794415017.4680197, 1794415035.3904822], "overlapping_stage_windows": ["boundary-FA"], "wall_w_mean_during_window": 383.8060606060606, "meter_energy_wh_during_window": 1.9290000000000873, "gpu_w_mean_during_window": [126.12387878787878, 120.47442424242423]}
+boundary-FA : {"n": 44, "rank_seconds": [58.66662120819092, 59.414283752441406], "generated_tokens": 7839, "median_output_tokens": 177.0, "median_input_tokens": 689.0, "batch_compute_seconds_per_rank": [58.621211528778076, 59.37812900543213], "wall_span_seconds": 59.41128444671631, "window_epoch": [1794415035.2626805, 1794415094.673965], "overlapping_stage_windows": ["boundary-ZS", "boundary-FB"], "wall_w_mean_during_window": 490.89811320754717, "meter_energy_wh_during_window": 7.930000000000291, "gpu_w_mean_during_window": [171.243358490566, 167.4738962264151]}
+boundary-FB : {"n": 44, "rank_seconds": [108.54866766929626, 108.00301790237427], "generated_tokens": 10494, "median_output_tokens": 211.0, "median_input_tokens": 705.0, "batch_compute_seconds_per_rank": [108.51281261444092, 107.96774291992188], "wall_span_seconds": 108.61453104019165, "window_epoch": [1794415094.064574, 1794415202.679105], "overlapping_stage_windows": ["boundary-FA", "boundary-FC"], "wall_w_mean_during_window": 498.6077319587629, "meter_energy_wh_during_window": 14.78900000000067, "gpu_w_mean_during_window": [172.5802474226804, 170.13619587628864]}
+boundary-FC : {"n": 44, "rank_seconds": [38.21051907539368, 38.74679350852966], "generated_tokens": 4309, "median_output_tokens": 105.5, "median_input_tokens": 539.0, "batch_compute_seconds_per_rank": [38.179301261901855, 38.717098236083984], "wall_span_seconds": 38.81323218345642, "window_epoch": [1794415202.6155324, 1794415241.4287646], "overlapping_stage_windows": ["boundary-FB"], "wall_w_mean_during_window": 473.3478873239436, "meter_energy_wh_during_window": 4.930000000000291, "gpu_w_mean_during_window": [161.22538028169015, 155.2040281690141]}
+Interpretation : les scores en contexte mesurent l effet du prompt, pas la facilite d apprentissage du format. Le changement du debut peut reduire une difficulte sans garantir absence d hybrides. Le validateur corrige certaines erreurs visibles mais ne prouve pas toute la chaine.
+Tous resultats originaux conserves. Aucun E4c lance.
+
+CONTRE-LECTURE DES REPONSES C : LE DEBUT PEUT AUSSI SE DEGRADER
+Indicateur litteral : premiere egalite a+b=c dont b est la duree demandee,avec ou sans suffixe minutes. Les44 cas de ZS/A/B ont le premieroperande et le total attendus. Pour C :42egalites parsables,29premiersoperandes/totaux justes,13premiersoperandes faux ;2 reponses se limitent a parler du format JSON.
+Exemple FC-1440-dessous-7 :depart09:37,duree811 ;il faut577+811=1388. Eva ecrit937+811=1748 puis05:08/jour1. Les operations ecrites sont coherentes mais l operande de depart est faux ;invalid_claims ne le detecte pas car il ne recroise pas les operandes avec la question.
+Exemple FC-2880-exact-1-0 :1089+1790=2879, reste1439 correct ;sortie00:39 au lieu de23:59. La reconversion reste fragile.
+C detecte commeformat dans33/44reponses,mais seulement15reponses finales justes. Cet essai ne confirme pas la promesse que garder le debut garantit les premieresetapes. Le role causal de la conversion implicite reste a tester,aucun nouveauprompt/cycle relance.
+L analyse stricte precedente exigeant le mot minutes est conservee :41parsables/28justes pourC. L analyse elargie ajoute une egalite sans suffixe (3+1436=1439),d ou42/29. Ne pas confondre indicateurs de parse et taux de verite mathematique general.

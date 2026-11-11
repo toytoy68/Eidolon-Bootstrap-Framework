@@ -1,0 +1,32 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : initial_addition_audit.py
+# Description : Controle du premier operande et total ecrits C319
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import re,collections
+rows=read(P/'responses.json');probes={x['id']:x for x in read(P/'boundary-probes.json')};out=[]
+for x in rows:
+ if x['kind']=='SG':continue
+ s,d=probes[x['id']]['time_key']
+ matches=[m for m in re.finditer(r'(?<![\d:])(\d+)\s*\+\s*(\d+)\s*=\s*(\d+)(?!\d)',x['response']) if int(m[2])==d]
+ m=matches[0] if matches else None
+ out.append(dict(id=x['id'],kind=x['kind'],expected_start=s,expected_delta=d,expected_total=s+d,parsed=[int(m[i]) for i in [1,2,3]] if m else None,start_matches=bool(m) and int(m[1])==s,total_matches=bool(m) and int(m[3])==s+d,content_correct=x['evaluation']['content_correct']))
+stats={k:dict(n=sum(x['kind']==k for x in out),parsed=sum(x['kind']==k and x['parsed'] is not None for x in out),start_matches=sum(x['kind']==k and x['start_matches'] for x in out),total_matches=sum(x['kind']==k and x['total_matches'] for x in out)) for k in ['ZS','FA','FB','FC']}
+assert all(stats[k]['parsed']==stats[k]['start_matches']==stats[k]['total_matches']==44 for k in ['ZS','FA','FB'])
+assert stats['FC']['parsed']==42 and stats['FC']['start_matches']==stats['FC']['total_matches']==29
+save(P/'closure/initial-addition-audit.json',dict(rule='First literal a+b=c whose b equals requested duration; minutes suffix not required. Indicator of written operands, not complete reasoning verification.',summary=stats,rows=out,wrong_FC_ids=[x['id'] for x in out if x['kind']=='FC' and x['parsed'] and not x['start_matches']]))
+f=P/'Rapport_Eva_sondes_C319_final.txt'
+addition=['','CONTRE-LECTURE DES REPONSES C : LE DEBUT PEUT AUSSI SE DEGRADER','Indicateur litteral : premiere egalite a+b=c dont b est la duree demandee,avec ou sans suffixe minutes. Les44 cas de ZS/A/B ont le premieroperande et le total attendus. Pour C :42egalites parsables,29premiersoperandes/totaux justes,13premiersoperandes faux ;2 reponses se limitent a parler du format JSON.',
+'Exemple FC-1440-dessous-7 :depart09:37,duree811 ;il faut577+811=1388. Eva ecrit937+811=1748 puis05:08/jour1. Les operations ecrites sont coherentes mais l operande de depart est faux ;invalid_claims ne le detecte pas car il ne recroise pas les operandes avec la question.',
+'Exemple FC-2880-exact-1-0 :1089+1790=2879, reste1439 correct ;sortie00:39 au lieu de23:59. La reconversion reste fragile.',
+'C detecte commeformat dans33/44reponses,mais seulement15reponses finales justes. Cet essai ne confirme pas la promesse que garder le debut garantit les premieresetapes. Le role causal de la conversion implicite reste a tester,aucun nouveauprompt/cycle relance.',
+'L analyse stricte precedente exigeant le mot minutes est conservee :41parsables/28justes pourC. L analyse elargie ajoute une egalite sans suffixe (3+1436=1439),d ou42/29. Ne pas confondre indicateurs de parse et taux de verite mathematique general.']
+with f.open('a') as z:z.write('\n'.join(addition)+'\n')
+manifest=read(P/'closure/result-saved.json');files=manifest['files'];files['Rapport_Eva_sondes_C319_final.txt']=sha(f);files['initial_addition_audit.py']=sha(P/'initial_addition_audit.py')
+for z in (P/'closure').iterdir():
+ if z.is_file() and z.name!='result-saved.json':files[str(z.relative_to(P))]=sha(z)
+save(P/'closure/result-saved.json',dict(manifest,files=files));assert all(sha(P/n)==h for n,h in files.items())
+print(__import__('json').dumps(dict(summary=stats,verified_files=len(files),report_sha256=sha(f)),ensure_ascii=False))

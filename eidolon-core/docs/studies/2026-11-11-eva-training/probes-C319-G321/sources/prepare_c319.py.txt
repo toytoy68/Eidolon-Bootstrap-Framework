@@ -1,0 +1,48 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : prepare_c319.py
+# Description : Sondes appairees C319 sans toucher aux poids
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import re,json,collections,importlib.util,ast
+import eva_boundary_probes as bp
+old=P.parent/'eva-diagnostics-c309-20261111-4c1f2095'
+spec=importlib.util.spec_from_file_location('old_boundary',old/'eva_boundary_probes.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+assert bp.build(3070,8,[])==mod.build(3070,8,[])
+assert [x for x in bp.build(3070,8,[],formats=('FA','FB','FC')) if x['kind']!='FC']==mod.build(3070,8,[])
+prior=read(P/'previous-probes.json');assert len(prior)==156
+fa=next(x for x in prior if x['kind']=='FA')
+shots=[(int(h)*60+int(m),int(d)) for h,m,d in re.findall(r'Question : Départ à (\d{2}):(\d{2}), durée (\d+) minutes\.',fa['question'])]
+assert len(shots)==2
+prefix='Voici deux exemples résolus.\n\n'+'\n\n'.join(f'Question : {bp.question(s,d)}\nRéponse : {bp.time_steps_c(s,d)[0]}' for s,d in shots)+'\n\nRésous maintenant de la même manière.\n'
+rows=[]
+for x in prior:
+ rows.append(x)
+ if x['kind']=='FB':
+  y=dict(x,id='FC-'+x['pair'],kind='FC',question=prefix+bp.question(*x['time_key']));rows.append(y)
+assert len(rows)==200 and len({x['id'] for x in rows})==200
+assert [x for x in rows if x['kind']!='FC']==prior
+timed=[x for x in rows if x['kind']!='SG'];pairs=sorted({tuple(x['time_key']) for x in timed})
+assert len(pairs)==44 and {1439,1440,1441,2879,2880,2881}<={sum(x) for x in pairs}
+assert not set(shots)&set(pairs)
+for x in timed:
+ s,d=x['time_key'];assert x['expected']==bp.time_steps_c(s,d)[1]
+ assert not bp.invalid_claims(bp.time_steps_c(s,d)[0])
+save(P/'boundary-probes.json',rows)
+from transformers import AutoTokenizer
+tok=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+system=read(P/'system.json')['system']
+lengths=[len(tok(tok.apply_chat_template([dict(role='system',content=system),dict(role='user',content=x['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False),add_special_tokens=False)['input_ids']) for x in rows]
+assert max(lengths)<2048
+rr=read(P.parent/'eva-learning-cycle11-diversity-20261111-4c1f2095/report-responses.json');dd={k:{x['id']:x['response'] for x in v} for k,v in rr.items()}
+matches={a+'__'+b:sum(dd[a][i]==dd[b][i] for i in dd[a]) for a,b in [('parent','step102'),('step102','step204'),('step102','e4a204'),('step204','e4a204')]}
+for name in ['worker.py','controller.py','finish.py']:
+ tree=ast.parse((P/name).read_text());calls=[x.func.attr if isinstance(x.func,ast.Attribute) else x.func.id if isinstance(x.func,ast.Name) else '' for x in ast.walk(tree) if isinstance(x,ast.Call)]
+ assert not set(calls)&{'backward','step','train','init_process_group','DistributedDataParallel'},(name,set(calls))
+plan=dict(source_commit='7f0415799eed33cc1ba84ee1b72038e185f45786',training=False,automatic_promotion=False,max_generations=200,problems=44,sign_probes=24,old_156_questions_identical=True,default_builder_unchanged=True,shot_pairs=shots,kind_counts=dict(collections.Counter(x['kind'] for x in rows)),sign_counts=dict(collections.Counter(x['stratum'] for x in rows if x['kind']=='SG')),input_tokens_max=max(lengths),batch=16,regime='Fresh paired batch16, not asserted equivalent to historical batch1 probes',baseline_gate='192 fresh parent outputs must exactly match E4a baseline at same GPU/batch before probes',sign_gate='24 strict value+sign+unit correct, otherwise skip FB44; no training',final_reserved_read=False,c319_text_matches=matches,interpretation='Repetition-only hypothesis weakened at this dose; template causality and absence of hybrid transition for C not established')
+save(P/'experiment-plan.json',plan)
+files=[x for x in P.iterdir() if x.is_file() and x.name not in ['launch-manifest.json','original-tests.log']]
+save(P/'launch-manifest.json',{x.name:sha(x) for x in files})
+print(json.dumps(plan,ensure_ascii=False))
