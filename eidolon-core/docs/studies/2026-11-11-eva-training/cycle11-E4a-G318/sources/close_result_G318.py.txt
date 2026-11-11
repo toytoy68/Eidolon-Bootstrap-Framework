@@ -1,0 +1,119 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : close_result_G318.py
+# Description : Cloture CPU et conservation des preuves E4a
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from pathlib import Path
+import json,time,subprocess as sp,re,collections
+names=['parent','step102','step204','e4a204']
+assert read(P/'campaign-status.json')['phase']=='finished'
+assert read(P/'control-lexeme/status.json')['phase']=='finished'
+for unit in ['eidolon-eva-c11-e4a-4c1f2095.service','eidolon-eva-c11-control-4c1f2095.service']:
+ s=sp.run(['systemctl','show',unit,'-p','ActiveState','-p','Result'],text=True,capture_output=True,check=True).stdout
+ assert 'ActiveState=inactive' in s and 'Result=success' in s,s
+compute=sp.check_output(['nvidia-smi','--query-compute-apps=pid,process_name,gpu_uuid','--format=csv,noheader'],text=True)
+assert not compute.strip(),compute
+original=read(P/'result-saved.json');bad=[n for n,h in original['files'].items() if sha(P/n)!=h]
+assert not bad,bad
+frozen=read(P/'launch-manifest.json');assert len(frozen)==33
+assert all(sha(P/n)==h for n,h in frozen.items())
+assert all(sha(P/n)==h for n,h in read(P/'control-manifest.json').items())
+for c in read(P/'candidates-control.json'):assert [sha(Path(c['path'])/'adapter_model.safetensors') for _ in range(2)]==[c['sha256']]*2
+for r in range(2):
+ assert read(P/'run'/f'prefix-loaded-rank{r}.json')['passed']
+ assert read(P/'run'/f'resumed-rank{r}.json')['optimizer_restored']
+ assert read(P/'after'/f'baseline-crossload-rank{r}.json')['passed']
+out=P/'closure-G318';out.mkdir(exist_ok=False)
+for n in ['Rapport_Eva_cycle11_E4a.txt','resultat-final.json','result-saved.json']:(out/('original-'+n)).write_bytes((P/n).read_bytes())
+kernel=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True)
+alerts=[x for x in kernel.splitlines() if re.search(r'BUG:|Oops:|general protection fault|Machine check|Hardware Error|NVRM: Xid|EDAC.*(?:CE|UE|error)|segfault',x,re.I)]
+save(out/'kernel-review.json',dict(boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),patterns='BUG/Oops/GPF/MCE/Hardware Error/Xid/EDAC/segfault',alerts=alerts,epoch=time.time()))
+assert not alerts,alerts
+ecc=sp.check_output(['nvidia-smi','--query-gpu=index,name,ecc.errors.corrected.volatile.total,ecc.errors.uncorrected.volatile.total,power.limit','--format=csv'],text=True)
+(out/'hardware-after.txt').write_text(ecc+'\nCompute apps:\n'+compute)
+assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()=='4c1f2095-f683-4b6c-8c17-9d9a21474ee5'
+d=read(P/'resultat-final.json');supp=read(P/'control-lexeme/summary.json')
+expected={x['id'] for x in read(P/'nll-examples.json') if x['group']=='target'}
+for name in names:
+ rows=sum([read(P/'control-lexeme'/f'control-{name}-rank{r}.json')['rows'] for r in range(2)],[])
+ assert len(rows)==320 and len({x['id'] for x in rows})==320 and {x['id'] for x in rows}==expected
+ assert all(x['candidate']==name and x['training'] is False for x in rows)
+ assert supp[name]['roles']['counter_jour']['tokens']==384
+ assert supp[name]['crossload_max_abs_nll']<=1e-3
+canaries=read(P/'canaries.json')
+assert all(len(v)==8 and len({x['id'] for x in v})==8 and not any(x['truncated'] for x in v) for v in canaries.values())
+same=sum(a['response']==b['response'] for a,b in zip(canaries['step204'],canaries['e4a204']))
+review=dict(reviewed=32,truncated=0,e4a_vs_e3_204_identical=same,qualitative=True,not_a_general_validation=True,notes=[
+'Les 32 reponses ont ete lues : francais, fiction demandee, arguments des deux sens, correction 16coeurs/32threads, absence du mot de passe, question de clarification conserves.',
+'La preference verte est retrouvee mais attribuee a l atelier plutot qu a la personne ; formulation imprecise commune.',
+'La distinction memoire partagee/dediee est tres simplifiee et depend du contexte ; aucune certification technique.',
+'Idee creative de stimulation des plantes par sons non etayee chez 102/204/E4a ; ne pas prendre la fiction pour une preuve scientifique.',
+'Les huit canaris E4a sont textuellement identiques a E3-204 ; pas de regression qualitative supplementaire evidente sur ces huit seuls cas.'])
+save(out/'canary-review.json',review)
+def telemetry(folder):
+ xs=[json.loads(x) for x in (P/folder/'telemetry.jsonl').read_text().splitlines()]
+ valid=[x for x in xs if isinstance(x.get('meter',{}).get('energy_wh'),(int,float))]
+ power=[x for x in xs if isinstance(x.get('meter',{}).get('wall_w'),(int,float))]
+ return dict(seconds=xs[-1]['epoch']-xs[0]['epoch'],samples=len(xs),gpus=[{k:dict(mean=sum(x['gpus'][r][k] for x in xs)/len(xs),max=max(x['gpus'][r][k] for x in xs)) for k in ['gpu_w','gpu_c','hbm_c','cpu_c','vram_mib']} for r in range(2)],wall_w_mean=sum(x['meter']['wall_w'] for x in power)/len(power),wall_w_max=max(x['meter']['wall_w'] for x in power),energy_wh=valid[-1]['meter']['energy_wh']-valid[0]['meter']['energy_wh'],meter_missing=len(xs)-len(valid),energy_interval_seconds=valid[-1]['epoch']-valid[0]['epoch'])
+t=dict(d['telemetry']);t['control-lexeme']=telemetry('control-lexeme')
+for folder in t:assert not (P/folder/'guard-trip.json').exists()
+audit=dict(epoch=time.time(),original_files_checked=len(original['files']),original_bad=bad,frozen_sources_checked=len(frozen),control_sources_checked=len(read(P/'control-manifest.json')),control_rows=1280,control_word_tokens_per_model=384,compute_apps=[],kernel_alerts=alerts,old_and_new_adapters_double_hash_passed=True,canaries=review,telemetry=t,automatic_promotion=False,training_or_power_action=False)
+save(out/'verification.json',audit)
+save(out/'closure-result.json',dict(original_result_sha256=sha(P/'resultat-final.json'),original_manifest_sha256=sha(P/'result-saved.json'),supplement=supp,verification=audit,reference='parent-cycle5',decision='E4a sans gain convaincant face E3-204 et regression face parent; pas adopte',claude_review='C317 4182507ffd205c74977ee8f9817668b6ca3afb1d'))
+L=['RAPPORT EVA — CYCLE11 / E4a STRICTE','Eidolon Core Technologies (ECT) — 11 novembre 2026','Cloture G318, apres revue Claude C317 et mesure complementaire du mot « jour ».','',
+'RESULTAT','E4a : 57/320 horaires justes, E3-204 : 56/320, parent : 86/320. Aucun gain convaincant de la diversite a cette dose. La reference reste le parent cycle5 ; aucun modele promu.',
+'La garde sans-minuit echoue (43/64 contre55/64, minimum54). Les acquis font25/32 (minimum25 atteint), contre26/32 parent/E3-204.',
+'Les 169 nouveaux exemples sont conformes ; ce resultat ne demontre ni incapacite generale du modele, ni inutilite d un autre curriculum.','',
+'PROTOCOLE ET INTEGRITE','Premier passage identique : sauvegarde COMPLETE E3-102 heritee (poids, optimiseur, scheduler, scaler, RNG2ranks). 102 nouvelles mises a jour seulement, soit204 cumulees. Les preuves prefix-loaded/resumed attestent la restauration ; le champ initial_adapter_state du training-summary est capture avant restauration, et designe le parent initial, pas le poids utilise au pas103.',
+'Seuls169 horaires du second passage ont change ;338 problemes horaires distincts au total. 709 non-horaires/passage inchanges, position et longueurs completes/supervisees exactement appariees. 408 packs512/passage,4packs/updateglobal.',
+'120218 tokens supervises cumules :56974 horaires (47,392237%),63244 autres ;344968 tokens nonpadding. LRmax3e-6, calendrier102pas repete, FP16/NF4doublequant, LoRAr8alpha16,2V100 a200W.',
+'Parent/ancien204 ont reproduit exactement les reponses historiques avant optimisation. Parent recharge apres entrainement reproduit192 reponses selection. Memes lots16/GPU parID pour les comparaisons.',
+'Boot actuel qualifie par memtester4GiBmlock, copiesRAM2x et doublesSHA ; controles frais avant chaque chargement et supplement. Cela ne certifie pas128GiB ni la disparition de l ancien defaut RAM.',
+'33 sources figees inchangées. Tous les checkpoints, poids, donnees et logs sont conserves. Aucun testfinalreserve lu.','',
+'SCORES — selection /160 ; rapport /320 ; acquis /32']
+for c in names:
+ q=d['quality'];L.append(f"{c}: {q['selection'][c]['subsets']['target']['correct']} ; {q['report'][c]['subsets']['target']['correct']} ; {q['report'][c]['subsets']['anchor']['correct']}")
+L+=['','COMPARAISONS APPARIEES EXPLORATOIRES']
+for scope in ['selection','report']:
+ for c,z in d['quality'][scope]['paired'].items():L.append(f"{scope}, E4a vs {c}: {z['gains']} gains / {z['losses']} pertes ; p exact exploratoire={z['p_exact_exploratory']:.9g}")
+L+=['Jeux connus reutilises, choix/modeles multiples : ces p ne sont pas une nouvelle validation aveugle ni une preuve causale universelle. E4a vs E3 ne change qu un point net sur320.','','STRATES DU RAPPORT — parent /102 /E3-204 /E4a, sur32 parligne']
+for st,z in d['quality']['report']['parent']['strata'].items():
+ if st.startswith('day'):L.append(st+' : '+' / '.join(str(d['quality']['report'][c]['strata'][st]['correct']) for c in names))
+L+=['Les128 cas jour2 restent a0 pour les quatre etats ; les64 jour1-long aussi. Composition entrainee heritee :110/169 jour0 et21/169 jour2 ;25 totaux proches frontiere au secondpassage contre28 au premier. E4a teste la diversite avec cette couverture, pas un curriculum cible sur les difficultes.','','FORMAT GENERE — horaires320']
+for c in names:
+ z=d['quality']['report'][c]['subsets']['target'];L.append(f"{c}: DebutDepart={z['starts_Depart']}, chaineAcanonique_verifiee={z['required_A_verified']}, hybrides_prefixe={z['hybrid_prefix']}, comparaisons={z['control_compares']}, compteurs={z['control_counters']}, reponses_avec_affirmation_fausse_detectee={z['detected_false_claims']}, tronquees={z['truncated']}")
+L+=['Le parseur canonique et les invariants detectables sont partiels. Zero chaine canonique ne signifie pas zero operation apprise. Les occurrences comptent tout le corpus ; ne pas confondre avec le sous-ensemble40soustractions de C315.','','NLL TEACHER-FORCED — plus faible signifie cible plus probable, PAS calcul libre plus juste','ordre : parent /102 /E3-204 /E4a']
+for role in ['numeric_union','days','HHMM','conversion','total','remainder','reconversion','control']:
+ L.append(role+' : '+' / '.join(f"{d['nll'][c]['roles'][role]['nll_per_token']:.9f}" for c in names))
+L.append('cible complete : '+' / '.join(f"{d['nll'][c]['groups']['target']['nll_per_token']:.9f}" for c in names))
+L.append('Probabilite moyenne prefixe Depart, en % : '+' / '.join(f"{100*d['nll'][c]['mean_p_prefix']:.6f}" for c in names))
+L+=['Ces roles peuvent se chevaucher : ne pas additionner leurs NLL. Les bonnes etapes precedentes sont forcees, donc la NLL numerique ne mesure pas la capacite a produire la chaine librement. La NLL des chiffres de jours se degrade face au parent alors que la forme globale s apprend.','','COMPLEMENT C317 — MOT « jour » ET CONTROLE']
+for role in ['counter_jour','decision_operator','counter_value','control_overlap']:
+ z=supp['parent']['roles'][role];L.append(f"{role}, {z['tokens']} tokens : "+' / '.join(f"{supp[c]['roles'][role]['nll_per_token']:.9f}" for c in names))
+L+=['Regle : tout recouvrement de caracteres strictement positif inclut le token entier, espace initial compris. Les384tokens exacts « jour » exclus du masque strict original sont maintenant mesures.320cibles parmodele,1280lignes,aucune generation/backward/optimiseur ; base chargee une fois parGPU,4adaptateurs successifs.',
+'Les sorties originales et leurs manifestes sont conserves intacts. Cette mesure complementaire ne change ni le training ni les scores. NLL totale reproduite a1e-3 parreponse, delta max : '+json.dumps({c:supp[c]['crossload_max_abs_nll'] for c in names}),
+'Le lexeme peut devenir probable sans que son compteur soit produit au bon endroit ni mathematiquement correct.','',
+'TEMPS, PUISSANCES ET ENERGIE PAR ETAPE','Puissances moyennes GPU : rank0 /rank1. Secteur : machine complete et autres services eventuels, pas GPU seul.']
+for st,z in t.items():
+ L.append(f"{st}: {z['seconds']:.3f}s ; GPUmoy {z['gpus'][0]['gpu_w']['mean']:.3f}/{z['gpus'][1]['gpu_w']['mean']:.3f}W ; secteurmoy {z['wall_w_mean']:.3f}W max {z['wall_w_max']:.3f}W ; energie {z['energy_wh']:.3f}Wh ; compteurabsent {z['meter_missing']} ; intervallecompteur {z['energy_interval_seconds']:.3f}s.")
+ L.append('  Max GPU/HBM/CPU : '+' ; '.join(f"rank{r} {g['gpu_c']['max']:.3f}/{g['hbm_c']['max']:.3f}/{g['cpu_c']['max']:.3f} degC, GPUmax {g['gpu_w']['max']:.3f}W" for r,g in enumerate(z['gpus'])))
+L+=[f"Entrainement effectif102updates : {max(x['seconds'] for x in d['training_summary']['ranks']):.3f}s, egalite replicas delta0. Etape run comprend chargement et sauvegardes. VRAM allouee pointe5430.588MiB parrank.",
+f"Total des intervalles surveilles : {sum(x['seconds'] for x in t.values()):.3f}s ; energie secteur {sum(x['energy_wh'] for x in t.values()):.3f}Wh. Hors preparationCPU et pauses entre services ; ne recompte pas le premierpassage herite.",
+'Les limites configurees200W ne sont pas un plafond instantane garanti : pointes echantillonnees superieures publiees ci-dessus. Aucun guard-trip. Aucune nouvelle alerte noyau des motifs verifies, aucun processus GPU compute restant.','',
+'CANARIS CONVERSATIONNELS','32 reponses lues,0tronquee. E4a etE3-204 identiques sur8/8. Reponses francaises, fiction, debat, correction des32threads, absence du motdepasse et clarification conservees. Reserves : attribution imprecise de preference, definition memoire simplifiee, idee botanique creative non etayee. Pas de score automatique de qualite generale.','',
+'DECISION ET SUITE BORNEE','Parent cycle5 conserve ;E4a non adopte. Aucun E4b, changementLR, nouveau cycle, outil de calcul substitue ou modification de pilote lance. La machine reste allumee.',
+'Piste suivante a discuter : exercices supervises des decisions/compteurs et reconversion finale, avec criteres parstrate et controles acquis. Aucun resultat de cet essai ne suffit a en choisir automatiquement dose/LR.',
+f"Verification : {len(original['files'])} empreintes principales conformes,33sources figees,3sources du complement,anciens/nouveladaptateurs doublehash conformes. Manifestefinal closure-G318/closure-saved.json.",
+'Dossier serveur : '+str(P),'Rapport brut original : Rapport_Eva_cycle11_E4a.txt ;resultat-final.json etresult-saved.json inchanges.']
+report=P/'Rapport_Eva_cycle11_E4a_final.txt';report.write_text('\n'.join(L)+'\n')
+files=dict(original['files'])
+for folder in ['control-lexeme','closure-G318']:
+ for f in (P/folder).rglob('*'):
+  if f.is_file() and f.name!='closure-saved.json' and '__pycache__' not in f.parts and '.tmp' not in f.name:files[str(f.relative_to(P))]=sha(f)
+for n in ['Rapport_Eva_cycle11_E4a_final.txt','word_nll_worker.py','word_nll_controller.py','candidates-control.json','control-manifest.json','close_result_G318.py','result-saved.json']:files[n]=sha(P/n)
+save(out/'closure-saved.json',dict(state='finished',files=files,epoch=time.time(),automatic_promotion=False))
+assert all(sha(P/n)==h for n,h in files.items())
+print(json.dumps(dict(saved=True,verified_files=len(files),report_sha256=sha(report),supplement=supp,telemetry=t['control-lexeme']),ensure_ascii=False))

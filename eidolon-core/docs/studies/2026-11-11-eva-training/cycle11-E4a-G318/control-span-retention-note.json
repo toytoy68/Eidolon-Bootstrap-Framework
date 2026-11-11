@@ -1,0 +1,7 @@
+{
+  "excluded_control_boundary_tokens": {
+    " jour": 384
+  },
+  "interpretation": "Strict containment omits leading-space jour tokens from control NLL. Comparison tokens and numeric counters are covered. Generated lexical comparator/counter counts are measured separately. Do not claim specific jour-word likelihood was measured.",
+  "active_sources_unchanged": true
+}

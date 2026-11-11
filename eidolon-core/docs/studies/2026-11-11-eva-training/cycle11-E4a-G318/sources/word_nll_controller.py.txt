@@ -1,0 +1,73 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : word_nll_controller.py
+# Description : Mesure post-E4a bornee des lexemes de controle
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from pathlib import Path
+import os,time,fcntl,subprocess as sp,signal,socket,json
+assert sp.run(['systemctl','is-active','eidolon-eva-c11-e4a-4c1f2095.service'],capture_output=True,text=True).stdout.strip()=='inactive'
+assert read(P/'campaign-status.json')['phase']=='finished'
+locks=[open(x,'a') for x in ['/run/eidolon-eva-learning.lock','/run/eidolon-eva-cycle9-orchestration.lock']]
+for f in locks:fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
+OUT=P/'control-lexeme';OUT.mkdir(exist_ok=False);children=[];guard=None
+def notify(ready=False):
+ a=os.environ.get('NOTIFY_SOCKET')
+ if a:
+  if a.startswith('@'):a='\0'+a[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall((b'READY=1\n' if ready else b'')+b'WATCHDOG=1')
+def state(phase,**kw):save(OUT/'status.json',dict(phase=phase,heartbeat=time.time(),epoch=time.time(),**kw));notify()
+def stop(*args):raise RuntimeError('guard/operator termination')
+signal.signal(signal.SIGTERM,stop)
+(OUT/'controller.pid').write_text(str(os.getpid()));state('starting');notify(True)
+def watch(phase,seconds):
+ deadline=time.time()+seconds
+ while any(c.poll() is None for c in children):
+  assert all(c.poll() is None or c.returncode==0 for c in children),'Worker failed'
+  assert guard.poll() is None and not (OUT/'guard-trip.json').exists(),'Guard stopped/tripped'
+  assert time.time()<deadline,'Postmetric timeout'
+  for r in range(2):
+   f=OUT/f'progress-rank{r}.json'
+   if f.exists():
+    d=read(f);assert d['stage']=='finished' or time.time()-d['epoch']<600
+  state(phase);time.sleep(.5)
+ assert all(c.returncode==0 for c in children)
+try:
+ for n,h in read(P/'control-manifest.json').items():assert sha(P/n)==h
+ import sampler_rtx,sampler_v100
+ assert not sampler_rtx.busy() and not sampler_v100.busy()
+ for sampler in [sampler_rtx,sampler_v100]:sampler.power(200)
+ env=dict(os.environ,EVA_OUTPUT=str(OUT),TOKENIZERS_PARALLELISM='false',OMP_NUM_THREADS='4')
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py')],env=env,stdout=(OUT/'guard.log').open('w'),stderr=sp.STDOUT)
+ deadline=time.time()+15
+ while not (OUT/'guard-status.json').exists():assert guard.poll() is None and time.time()<deadline;state('starting_guard');time.sleep(.2)
+ children=[sp.Popen(['/usr/bin/python3',str(P/'live_check.py')],env=env,stdout=(OUT/'integrity.log').open('w'),stderr=sp.STDOUT,start_new_session=True)]
+ watch('integrity',600);children=[]
+ config=read(P/'config.json')
+ children=[sp.Popen([str(P/'venv/bin/python'),str(P/'word_nll_worker.py')],env=dict(env,EVA_RANK=str(rank),EVA_DIAGNOSTIC='control-lexeme',EVA_CANDIDATES_FILE='candidates-control.json',CUDA_VISIBLE_DEVICES=config['uuids'][rank]),stdout=(OUT/f'worker-rank{rank}.log').open('w'),stderr=sp.STDOUT,start_new_session=True) for rank in range(2)]
+ watch('control_nll',1200);children=[]
+ summary={}
+ for c in read(P/'candidates-control.json'):
+  rows=sum([read(OUT/f'control-{c["name"]}-rank{r}.json')['rows'] for r in range(2)],[])
+  assert len(rows)==320 and len({x['id'] for x in rows})==320
+  roles={}
+  for role in ['control_overlap','counter_jour','decision_operator','counter_value']:
+   vs=[x['roles'][role] for x in rows if role in x['roles']]
+   roles[role]=dict(responses=len(vs),tokens=sum(x['tokens'] for x in vs),nll_per_token=sum(x['nll_sum'] for x in vs)/sum(x['tokens'] for x in vs),mean_response_nll=sum(x['mean_nll'] for x in vs)/len(vs))
+  assert roles['counter_jour']['tokens']==384
+  summary[c['name']]=dict(roles=roles,crossload_max_abs_nll=max(x['crossload_abs_nll_delta'] for x in rows))
+ save(OUT/'summary.json',summary);state('finished',training=False)
+except BaseException as e:
+ save(OUT/'failure.json',dict(reason=repr(e),epoch=time.time(),training=False));state('failed',reason=repr(e));raise
+finally:
+ for c in children:
+  if c.poll() is None:
+   os.killpg(c.pid,signal.SIGTERM)
+   try:c.wait(timeout=12)
+   except sp.TimeoutExpired:os.killpg(c.pid,signal.SIGKILL);c.wait()
+ (OUT/'guard-stop').touch()
+ if guard:
+  try:guard.wait(timeout=6)
+  except sp.TimeoutExpired:guard.terminate();guard.wait(timeout=5)

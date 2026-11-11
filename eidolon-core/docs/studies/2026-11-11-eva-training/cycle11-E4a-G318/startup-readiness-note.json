@@ -1,0 +1,5 @@
+{
+  "note": "systemd-run Type=notify waited for READY while campaign emitted WATCHDOG only. Explicit systemd-notify --pid=MainPID --ready sent once during activation; service then active. No frozen source edited and no GPU worker relaunched.",
+  "epoch": 1794410539.5309749,
+  "active_sources_unchanged": true
+}

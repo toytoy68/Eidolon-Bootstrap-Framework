@@ -1,0 +1,13 @@
+{
+  "dataset_sha256": "847684ba52ab296ffedf3e20fc17437fdb8e4ee55bda05eeb5ecd31a7fb8eada",
+  "source_e3_dataset_sha256": "69ca4e7a6a84de1cb33a04bd2b9cca2236d132ec4895218e09c27ec4ee841329",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "inherited_checkpoint": "/srv/eidolon/work/eva-learning-cycle11-diversity-20261111-4c1f2095/inherited/step-102",
+  "inherited_optimizer_steps": 102,
+  "new_optimizer_steps": 102,
+  "total_optimizer_steps": 204,
+  "first_pass_copied_verbatim": true,
+  "second_nonhour_rows_identical": true,
+  "all_new_hours_matched_full_and_supervised_lengths": true,
+  "automatic_promotion": false
+}

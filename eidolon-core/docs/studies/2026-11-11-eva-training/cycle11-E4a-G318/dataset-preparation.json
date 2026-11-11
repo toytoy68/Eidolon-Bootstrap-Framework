@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "examples_per_pass": 878,
+  "hours_per_pass": 169,
+  "unique_hour_problems_total": 338,
+  "non_hours_per_pass": 709,
+  "packs_per_pass": 408,
+  "updates_per_pass": 102,
+  "inherited_updates": 102,
+  "new_updates": 102,
+  "total_updates": 204,
+  "nonpadding_tokens_per_pass": 172484,
+  "supervised_tokens_per_pass": {
+    "non_hours": 31622,
+    "hours": 28487
+  },
+  "supervised_tokens_total": {
+    "non_hours": 63244,
+    "hours": 56974
+  },
+  "hours_supervised_share": 0.47392237435325824,
+  "matched_examples": 169,
+  "max_attempts": 10798,
+  "seed": 111116,
+  "seconds": 20.313350677490234,
+  "training": false,
+  "model_loaded": false
+}

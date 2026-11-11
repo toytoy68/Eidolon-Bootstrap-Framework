@@ -1,0 +1,97 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : word_nll_worker.py
+# Description : Evaluation independante, sans DDP ni entrainement
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+import os,time,json,math,hashlib,random
+from pathlib import Path
+from common import P,read,save,sha,item_path
+RANK=int(os.environ['EVA_RANK']);OUT=Path(os.environ['EVA_OUTPUT']);MODE=os.environ['EVA_DIAGNOSTIC'];START=time.time()
+def progress(stage,**kw):save(OUT/f'progress-rank{RANK}.json',dict(stage=stage,rank=RANK,epoch=time.time(),mode=MODE,**kw))
+progress('importing')
+import torch
+import torch.nn.functional as F
+from transformers import AutoTokenizer,AutoModelForCausalLM,BitsAndBytesConfig
+from peft import PeftModel,prepare_model_for_kbit_training,set_peft_model_state_dict,get_peft_model_state_dict
+from safetensors.torch import load_file
+import eva_boundary_probes as probes
+from curriculum import grade,CANARIES
+from audit_metrics import chain_metrics
+torch.set_num_threads(4);torch.manual_seed(1234);random.seed(1234);torch.set_grad_enabled(False)
+assert torch.cuda.device_count()==1 and torch.cuda.get_device_capability(0)==(7,0)
+C=read(P/'config.json');SYSTEM=read(P/'system.json')['system'];CANDIDATES=read(P/os.environ['EVA_CANDIDATES_FILE'])
+assert os.environ['CUDA_VISIBLE_DEVICES']==C['uuids'][RANK]
+proof=read(OUT/'integrity-proof.json');assert proof['passed'] and proof['boot_id']==Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+for n,h in read(P/'launch-manifest.json').items():assert sha(P/n)==h,n
+tok=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+if tok.pad_token_id is None:tok.pad_token_id=tok.eos_token_id
+tok.padding_side='left'
+progress('loading_model')
+q=BitsAndBytesConfig(load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=torch.float16)
+base=AutoModelForCausalLM.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False,quantization_config=q,torch_dtype=torch.float16,device_map={'':0},attn_implementation='sdpa')
+base=prepare_model_for_kbit_training(base,use_gradient_checkpointing=True,gradient_checkpointing_kwargs={'use_reentrant':False})
+model=None;STATE=None
+def adapter(c):
+ global model,STATE
+ progress('adapter_loading',candidate=c['name']);f=Path(c['path'])/'adapter_model.safetensors'
+ hs=[sha(f),sha(f)];assert hs==[c['sha256']]*2
+ raw=load_file(str(f),device='cpu')
+ if model is None:model=PeftModel.from_pretrained(base,c['path'],is_trainable=False)
+ else:
+  r=set_peft_model_state_dict(model,raw);assert not r.unexpected_keys
+ model.requires_grad_(False);model.eval();model.config.use_cache=False
+ assert not any(x.requires_grad for x in model.parameters())
+ STATE=hashlib.sha256(b''.join(v.detach().cpu().contiguous().view(torch.uint8).numpy().tobytes() for k,v in sorted(get_peft_model_state_dict(model).items()))).hexdigest()
+ expected_state=hashlib.sha256(b''.join(v.contiguous().view(torch.uint8).numpy().tobytes() for k,v in sorted(raw.items()))).hexdigest();assert STATE==expected_state,'Adapter tensor contents mismatch'
+ if c['name']=='parent':assert STATE=='0883c80e45904bdcb85aa6a27d20e921eea7a6bf5574990375e51835d4163a52'
+ save(OUT/f'identity-{c["name"]}-rank{RANK}.json',dict(candidate=c,adapter_state_sha256=STATE,adapter_hashes=hs,gpu_uuid=C['uuids'][RANK],precision='FP16/NF4 doublequant',base_model_loads_per_worker=1,training=False))
+def identity(c,batch,ids,kind):
+ return dict(adapter_sha256=c['sha256'],adapter_state_sha256=STATE,gpu_uuid=C['uuids'][RANK],precision='FP16/NF4 doublequant',batch_size=batch,batch_ids=ids,kind=kind,system_sha256=sha(P/'system.json'),source_revision=C['source_revision'],max_new_tokens=384,do_sample=False)
+def prompt(ex):return tok.apply_chat_template([dict(role='system',content=ex.get('system',SYSTEM)),dict(role='user',content=ex['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False)
+import re
+data=[x for i,x in enumerate(read(P/'nll-examples.json')) if x['group']=='target' and i%2==RANK]
+def encode(ex):
+ pre=prompt(ex);full=tok.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question']),dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+ assert full.startswith(pre)
+ enc=tok(full,add_special_tokens=False,return_offsets_mapping=True)
+ spans={'control_overlap':[],'counter_jour':[],'decision_operator':[],'counter_value':[]}
+ for span in ex['roles']:
+  if span['role']!='control':continue
+  a,b=span['start']+len(pre),span['end']+len(pre);spans['control_overlap'].append((a,b))
+  if span['text'].startswith('jour '):
+   spans['counter_jour'].append((a,a+4));spans['counter_value'].append((a+5,b))
+  else:
+   for match in re.finditer('[≥<]',span['text']):spans['decision_operator'].append((a+match.start(),a+match.end()))
+ positions=[i for i,(a,b) in enumerate(enc['offset_mapping']) if a>=len(pre) and b>a]
+ masks={role:{i for i,(x,y) in enumerate(enc['offset_mapping']) if y>x and any(y>a and x<b for a,b in ss)} for role,ss in spans.items()}
+ assert all(indices.issubset(set(positions)) for indices in masks.values())
+ for i in masks['counter_jour']:assert tok.decode([enc['input_ids'][i]])==' jour'
+ return dict(ex=ex,ids=enc['input_ids'],positions=positions,masks=masks)
+encoded=[encode(ex) for ex in data]
+try:
+ for c in CANDIDATES:
+  adapter(c);rows=[]
+  prior=read(P/('after' if c['name']=='e4a204' else 'baseline')/f'roles-{c["name"]}-rank{RANK}.json')['rows'];prior={x['id']:x for x in prior}
+  for off in range(0,len(encoded),4):
+   chunk=encoded[off:off+4];progress('control_nll',candidate=c['name'],done=off,total=len(encoded))
+   size=max(len(x['ids']) for x in chunk);ids=torch.full((len(chunk),size),tok.pad_token_id,dtype=torch.long,device='cuda');mask=torch.zeros_like(ids)
+   for i,x in enumerate(chunk):ids[i,:len(x['ids'])]=torch.tensor(x['ids'],device='cuda');mask[i,:len(x['ids'])]=1
+   with torch.inference_mode(),torch.autocast('cuda',dtype=torch.float16):out=model(input_ids=ids,attention_mask=mask,use_cache=False)
+   for i,x in enumerate(chunk):
+    pos=torch.tensor(x['positions'],device='cuda');loss=F.cross_entropy(out.logits[i,pos-1,:].float(),ids[i,pos],reduction='none');assert torch.isfinite(loss).all()
+    loc={p:k for k,p in enumerate(x['positions'])};roles={}
+    for role,indices in x['masks'].items():
+     if indices:
+      values=loss[[loc[p] for p in sorted(indices)]]
+      roles[role]=dict(tokens=len(indices),nll_sum=float(values.sum()),mean_nll=float(values.mean()))
+    delta=abs(float(loss.mean())-prior[x['ex']['id']]['mean_nll'])
+    assert delta<=1e-3,'Source/model NLL changed across loads'
+    row=dict(id=x['ex']['id'],candidate=c['name'],roles=roles,mean_nll=float(loss.mean()),crossload_abs_nll_delta=delta,rank=RANK,gpu_uuid=C['uuids'][RANK],adapter_sha256=c['sha256'],adapter_state_sha256=STATE,epoch=time.time(),training=False,rule='Any positive character overlap; whole token counted, including leading-space jour')
+    save(item_path(OUT,'control-overlap',c['name'],x['ex']['id']),row);rows.append(row)
+   del out,ids,mask,loss
+  save(OUT/f'control-{c["name"]}-rank{RANK}.json',dict(rows=rows,training=False))
+ progress('finished',seconds=time.time()-START)
+except BaseException as e:
+ save(OUT/f'failure-rank{RANK}.json',dict(reason=repr(e),epoch=time.time()));raise

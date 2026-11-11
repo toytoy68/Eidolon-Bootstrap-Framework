@@ -1,0 +1,98 @@
+RAPPORT EVA — CYCLE11 / E4a STRICTE
+Eidolon Core Technologies (ECT) — 11 novembre 2026
+Cloture G318, apres revue Claude C317 et mesure complementaire du mot « jour ».
+
+RESULTAT
+E4a : 57/320 horaires justes, E3-204 : 56/320, parent : 86/320. Aucun gain convaincant de la diversite a cette dose. La reference reste le parent cycle5 ; aucun modele promu.
+La garde sans-minuit echoue (43/64 contre55/64, minimum54). Les acquis font25/32 (minimum25 atteint), contre26/32 parent/E3-204.
+Les 169 nouveaux exemples sont conformes ; ce resultat ne demontre ni incapacite generale du modele, ni inutilite d un autre curriculum.
+
+PROTOCOLE ET INTEGRITE
+Premier passage identique : sauvegarde COMPLETE E3-102 heritee (poids, optimiseur, scheduler, scaler, RNG2ranks). 102 nouvelles mises a jour seulement, soit204 cumulees. Les preuves prefix-loaded/resumed attestent la restauration ; le champ initial_adapter_state du training-summary est capture avant restauration, et designe le parent initial, pas le poids utilise au pas103.
+Seuls169 horaires du second passage ont change ;338 problemes horaires distincts au total. 709 non-horaires/passage inchanges, position et longueurs completes/supervisees exactement appariees. 408 packs512/passage,4packs/updateglobal.
+120218 tokens supervises cumules :56974 horaires (47,392237%),63244 autres ;344968 tokens nonpadding. LRmax3e-6, calendrier102pas repete, FP16/NF4doublequant, LoRAr8alpha16,2V100 a200W.
+Parent/ancien204 ont reproduit exactement les reponses historiques avant optimisation. Parent recharge apres entrainement reproduit192 reponses selection. Memes lots16/GPU parID pour les comparaisons.
+Boot actuel qualifie par memtester4GiBmlock, copiesRAM2x et doublesSHA ; controles frais avant chaque chargement et supplement. Cela ne certifie pas128GiB ni la disparition de l ancien defaut RAM.
+33 sources figees inchangées. Tous les checkpoints, poids, donnees et logs sont conserves. Aucun testfinalreserve lu.
+
+SCORES — selection /160 ; rapport /320 ; acquis /32
+parent: 39 ; 86 ; 26
+step102: 41 ; 84 ; 25
+step204: 31 ; 56 ; 26
+e4a204: 29 ; 57 ; 25
+
+COMPARAISONS APPARIEES EXPLORATOIRES
+selection, E4a vs parent: 4 gains / 14 pertes ; p exact exploratoire=0.0308837891
+selection, E4a vs step204: 1 gains / 3 pertes ; p exact exploratoire=0.625
+report, E4a vs parent: 7 gains / 36 pertes ; p exact exploratoire=8.96303936e-06
+report, E4a vs step204: 2 gains / 1 pertes ; p exact exploratoire=1
+Jeux connus reutilises, choix/modeles multiples : ces p ne sont pas une nouvelle validation aveugle ni une preuve causale universelle. E4a vs E3 ne change qu un point net sur320.
+
+STRATES DU RAPPORT — parent /102 /E3-204 /E4a, sur32 parligne
+day0-short-template0 : 32 / 32 / 21 / 21
+day0-short-template1 : 23 / 22 / 21 / 22
+day1-long-template0 : 0 / 0 / 0 / 0
+day1-long-template1 : 0 / 0 / 0 / 0
+day1-short-template0 : 22 / 22 / 10 / 10
+day1-short-template1 : 9 / 8 / 4 / 4
+day2-long-template0 : 0 / 0 / 0 / 0
+day2-long-template1 : 0 / 0 / 0 / 0
+day2-short-template0 : 0 / 0 / 0 / 0
+day2-short-template1 : 0 / 0 / 0 / 0
+Les128 cas jour2 restent a0 pour les quatre etats ; les64 jour1-long aussi. Composition entrainee heritee :110/169 jour0 et21/169 jour2 ;25 totaux proches frontiere au secondpassage contre28 au premier. E4a teste la diversite avec cette couverture, pas un curriculum cible sur les difficultes.
+
+FORMAT GENERE — horaires320
+parent: DebutDepart=0, chaineAcanonique_verifiee=0, hybrides_prefixe=0, comparaisons=0, compteurs=0, reponses_avec_affirmation_fausse_detectee=5, tronquees=0
+step102: DebutDepart=0, chaineAcanonique_verifiee=0, hybrides_prefixe=0, comparaisons=0, compteurs=0, reponses_avec_affirmation_fausse_detectee=6, tronquees=0
+step204: DebutDepart=174, chaineAcanonique_verifiee=0, hybrides_prefixe=174, comparaisons=3, compteurs=1, reponses_avec_affirmation_fausse_detectee=26, tronquees=0
+e4a204: DebutDepart=178, chaineAcanonique_verifiee=0, hybrides_prefixe=178, comparaisons=5, compteurs=1, reponses_avec_affirmation_fausse_detectee=27, tronquees=0
+Le parseur canonique et les invariants detectables sont partiels. Zero chaine canonique ne signifie pas zero operation apprise. Les occurrences comptent tout le corpus ; ne pas confondre avec le sous-ensemble40soustractions de C315.
+
+NLL TEACHER-FORCED — plus faible signifie cible plus probable, PAS calcul libre plus juste
+ordre : parent /102 /E3-204 /E4a
+numeric_union : 0.073341323 / 0.064411942 / 0.055778607 / 0.054763589
+days : 0.241119434 / 0.263090843 / 0.306572605 / 0.300167550
+HHMM : 0.216713752 / 0.170397799 / 0.113444715 / 0.111480935
+conversion : 0.008402772 / 0.008148063 / 0.005163930 / 0.005142936
+total : 0.011556403 / 0.011413879 / 0.008711378 / 0.008635458
+remainder : 0.005702823 / 0.004750910 / 0.002971362 / 0.002928865
+reconversion : 0.025778288 / 0.013964532 / 0.007436068 / 0.007475048
+control : 1.119607958 / 0.653915707 / 0.352280648 / 0.347977328
+cible complete : 1.096107196 / 0.694806751 / 0.447987079 / 0.446678651
+Probabilite moyenne prefixe Depart, en % : 0.000935 / 0.279999 / 37.563224 / 38.027913
+Ces roles peuvent se chevaucher : ne pas additionner leurs NLL. Les bonnes etapes precedentes sont forcees, donc la NLL numerique ne mesure pas la capacite a produire la chaine librement. La NLL des chiffres de jours se degrade face au parent alors que la forme globale s apprend.
+
+COMPLEMENT C317 — MOT « jour » ET CONTROLE
+counter_jour, 384 tokens : 5.890400115 / 4.168260675 / 2.283981295 / 2.323669558
+decision_operator, 704 tokens : 6.603158281 / 4.506229452 / 2.171477472 / 2.132264680
+counter_value, 384 tokens : 0.143782789 / 0.163298049 / 0.197928798 / 0.185627351
+control_overlap, 7875 tokens : 1.352240869 / 0.825281864 / 0.446474053 / 0.444315845
+Regle : tout recouvrement de caracteres strictement positif inclut le token entier, espace initial compris. Les384tokens exacts « jour » exclus du masque strict original sont maintenant mesures.320cibles parmodele,1280lignes,aucune generation/backward/optimiseur ; base chargee une fois parGPU,4adaptateurs successifs.
+Les sorties originales et leurs manifestes sont conserves intacts. Cette mesure complementaire ne change ni le training ni les scores. NLL totale reproduite a1e-3 parreponse, delta max : {"parent": 0.0, "step102": 0.0, "step204": 0.0, "e4a204": 0.0}
+Le lexeme peut devenir probable sans que son compteur soit produit au bon endroit ni mathematiquement correct.
+
+TEMPS, PUISSANCES ET ENERGIE PAR ETAPE
+Puissances moyennes GPU : rank0 /rank1. Secteur : machine complete et autres services eventuels, pas GPU seul.
+qualification-dual: 49.572s ; GPUmoy 61.998/61.411W ; secteurmoy 250.112W max 517.000W ; energie 3.429Wh ; compteurabsent 0 ; intervallecompteur 49.572s.
+  Max GPU/HBM/CPU : rank0 35.000/37.000/41.500 degC, GPUmax 201.941W ; rank1 36.000/37.000/41.500 degC, GPUmax 205.903W
+baseline: 818.209s ; GPUmoy 135.175/131.967W ; secteurmoy 412.749W max 544.300W ; energie 93.875Wh ; compteurabsent 1 ; intervallecompteur 817.670s.
+  Max GPU/HBM/CPU : rank0 41.000/47.000/42.625 degC, GPUmax 243.273W ; rank1 43.000/47.000/42.625 degC, GPUmax 242.181W
+run: 180.792s ; GPUmoy 140.215/140.412W ; secteurmoy 433.157W max 533.800W ; energie 21.647Wh ; compteurabsent 0 ; intervallecompteur 180.792s.
+  Max GPU/HBM/CPU : rank0 41.000/46.000/44.125 degC, GPUmax 225.471W ; rank1 43.000/46.000/44.750 degC, GPUmax 219.373W
+after: 446.395s ; GPUmoy 132.323/129.802W ; secteurmoy 405.690W max 541.000W ; energie 50.366Wh ; compteurabsent 0 ; intervallecompteur 446.395s.
+  Max GPU/HBM/CPU : rank0 42.000/48.000/43.500 degC, GPUmax 246.770W ; rank1 43.000/48.000/43.375 degC, GPUmax 249.032W
+control-lexeme: 98.044s ; GPUmoy 130.285/126.308W ; secteurmoy 401.833W max 550.100W ; energie 10.931Wh ; compteurabsent 0 ; intervallecompteur 98.044s.
+  Max GPU/HBM/CPU : rank0 39.000/44.000/41.500 degC, GPUmax 216.400W ; rank1 40.000/45.000/41.375 degC, GPUmax 224.460W
+Entrainement effectif102updates : 138.608s, egalite replicas delta0. Etape run comprend chargement et sauvegardes. VRAM allouee pointe5430.588MiB parrank.
+Total des intervalles surveilles : 1593.012s ; energie secteur 180.248Wh. Hors preparationCPU et pauses entre services ; ne recompte pas le premierpassage herite.
+Les limites configurees200W ne sont pas un plafond instantane garanti : pointes echantillonnees superieures publiees ci-dessus. Aucun guard-trip. Aucune nouvelle alerte noyau des motifs verifies, aucun processus GPU compute restant.
+
+CANARIS CONVERSATIONNELS
+32 reponses lues,0tronquee. E4a etE3-204 identiques sur8/8. Reponses francaises, fiction, debat, correction des32threads, absence du motdepasse et clarification conservees. Reserves : attribution imprecise de preference, definition memoire simplifiee, idee botanique creative non etayee. Pas de score automatique de qualite generale.
+
+DECISION ET SUITE BORNEE
+Parent cycle5 conserve ;E4a non adopte. Aucun E4b, changementLR, nouveau cycle, outil de calcul substitue ou modification de pilote lance. La machine reste allumee.
+Piste suivante a discuter : exercices supervises des decisions/compteurs et reconversion finale, avec criteres parstrate et controles acquis. Aucun resultat de cet essai ne suffit a en choisir automatiquement dose/LR.
+Verification : 4215 empreintes principales conformes,33sources figees,3sources du complement,anciens/nouveladaptateurs doublehash conformes. Manifestefinal closure-G318/closure-saved.json.
+Dossier serveur : /srv/eidolon/work/eva-learning-cycle11-diversity-20261111-4c1f2095
+Rapport brut original : Rapport_Eva_cycle11_E4a.txt ;resultat-final.json etresult-saved.json inchanges.
