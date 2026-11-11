@@ -23,8 +23,8 @@ Sur les 40 réponses avec « N − 1440 = R » :
 - **0/40** écrivent la décision « ≥ 1440 » ou « < 1440 » ;
 - 12 réponses ont le bon reste et la bonne heure (ex. « 1652 − 1440 = 212 … 03:32 »)
   mais annoncent 0 jour au lieu de 1 ;
-- 16 s'arrêtent après une soustraction alors qu'il en faut deux (reste ≥ 1440) ;
-- 6 annoncent 40, 47 ou 48 « jours » (heures prises pour des jours).
+- 19 s'arrêtent après une soustraction avec un reste encore ≥ 1440 (il en fallait deux) ;
+- 6 annoncent 40, 47 ou 48 « jours » (heures prises pour des jours ; 3 recoupent le cas précédent).
 
 Le modèle a retenu l'opération et laissé tomber les deux pièces de contrôle : quand
 soustraire, et compter. Ce sont des tokens courts et peu nombreux dans chaque texte.
