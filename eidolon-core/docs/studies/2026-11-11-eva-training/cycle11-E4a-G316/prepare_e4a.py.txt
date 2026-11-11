@@ -1,0 +1,129 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : prepare_e4a.py
+# Description : Diversite appariee et prefixe complet E3-102 conserve
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import ast,json,random,re,copy,hashlib,time,collections,shutil,os
+from transformers import AutoTokenizer
+from review_tools import time_steps,time_operands
+P=Path(__file__).resolve().parent
+OLD=P.parent/'eva-learning-cycle10-repetition-20261111-4c1f2095'
+START=time.time()
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for b in iter(lambda:f.read(8388608),b''):h.update(b)
+ return h.hexdigest()
+def save(n,x):
+ q=P/(n+'.tmp');q.write_text(json.dumps(x,ensure_ascii=False,indent=2));q.replace(P/n)
+def state(**kw):save('preparation-progress.json',dict(epoch=time.time(),**kw))
+data=json.loads((OLD/'dataset.json').read_text());first=data['train'];second=copy.deepcopy(first)
+C=json.loads((P/'config.json').read_text())
+tok=AutoTokenizer.from_pretrained(P/'source-model',local_files_only=True,trust_remote_code=False)
+tree=ast.parse((P/'encoding-source.py').read_text())
+SYSTEM=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets))
+def signature(ex):
+ messages=[dict(role='system',content=SYSTEM),dict(role='user',content=ex['question'])]
+ pre=tok.apply_chat_template(messages,tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tok.apply_chat_template(messages+[dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+ assert full.startswith(pre)
+ enc=tok(full,add_special_tokens=False,return_offsets_mapping=True)
+ return len(enc['input_ids']),sum(o[0]>=len(pre) for o in enc['offset_mapping'])
+seen=set();exclusions=[]
+def collect(x):
+ if isinstance(x,dict):
+  if isinstance(x.get('question'),str):
+   pair=x.get('time_key') or time_operands(x['question'])
+   if pair:seen.add(tuple(pair))
+  for k,v in x.items():
+   if k not in ['question','answer','response']:collect(v)
+ elif isinstance(x,list):
+  for v in x:collect(v)
+paths=list(P.parent.glob('eva-learning-*/dataset.json'))
+paths += [P.parent/'eva-learning-cycle9-hours-20261110'/n/'dataset.json' for n in ['e1-f006076b','e2-f006076b']]
+paths += [P.parent/'eva-diagnostics-c309-20261111-4c1f2095'/n for n in ['boundary-probes.json','report-examples.json','selection.json']]
+for f in dict.fromkeys(paths):
+ if f.is_file() and f.parent!=P:
+  assert f.name!='final-test-reserved.json'
+  collect(json.loads(f.read_text()));exclusions.append(dict(path=str(f),sha256=sha(f)))
+f=P.parent/'eva-learning-cycle9-hours-20261110/probes-c303-f006076b/probes.jsonl'
+for line in f.read_text().splitlines():collect(json.loads(line))
+exclusions.append(dict(path=str(f),sha256=sha(f)))
+oldpairs=[tuple(x.get('time_key') or time_operands(x['question'])) for x in first if x['expected']['unite']=='heure']
+assert len(oldpairs)==len(set(oldpairs))==169
+initial_seen=len(seen);seen.update(oldpairs)
+rng=random.Random(111116);matchlog=[];alllengths=[]
+def new_question(q,s0,d0,s,d):
+ hh=list(re.finditer(r'(?<!\d)\d{2}:\d{2}(?!\d)',q));assert len(hh)==1
+ t=hh[0]
+ ds=[m for m in re.finditer(r'(?<!\d)'+str(d0)+r'(?!\d)',q) if not (m.start()<t.end() and m.end()>t.start())]
+ assert len(ds)==1,(q,d0)
+ reps=[(t.start(),t.end(),f'{s//60:02}:{s%60:02}'),(ds[0].start(),ds[0].end(),str(d))]
+ for a,b,v in sorted(reps,reverse=True):q=q[:a]+v+q[b:]
+ assert tuple(time_operands(q))==(s,d),(q,s,d)
+ return q
+for i,ex in enumerate(first):
+ sig=signature(ex);alllengths.append(sig)
+ if ex['expected']['unite']!='heure':continue
+ s0,d0=tuple(ex.get('time_key') or time_operands(ex['question']))
+ a0,e0=time_steps(s0,d0)
+ assert ex['answer']==a0 and ex['expected']==e0,ex['id']
+ day=(s0+d0)//1440;hi=d0>1500;boundary=d0==4320
+ for attempt in range(1,50001):
+  if time.time()-START>900:raise RuntimeError('Bounded preparation timeout')
+  s=rng.randrange(1440)
+  lo=max(1,day*1440-s,1501 if hi else 1);up=min(4320,(day+1)*1440-1-s,4320 if hi else 1500)
+  if boundary:lo=up=4320
+  if lo>up:continue
+  d=rng.randint(lo,up)
+  if (s,d) in seen or (s+d)//1440!=day:continue
+  a,e=time_steps(s,d);candidate=copy.deepcopy(ex)
+  candidate.update(id='e4a-second-'+ex['id'],question=new_question(ex['question'],s0,d0,s,d),answer=a,expected=e,time_key=[s,d])
+  candidate.pop('semantic_key',None)
+  if signature(candidate)!=sig:continue
+  second[i]=candidate;seen.add((s,d))
+  matchlog.append(dict(index=i,original_id=ex['id'],new_id=candidate['id'],old_pair=[s0,d0],new_pair=[s,d],stratum=ex['stratum'],group=ex['group'],days=day,high_duration=hi,full_tokens=sig[0],supervised_tokens=sig[1],attempts=attempt))
+  state(phase='matching',done=len(matchlog),total=169,last_attempts=attempt)
+  break
+ else:raise RuntimeError('No exact token-length match '+ex['id'])
+assert len(matchlog)==169
+assert all(x==y for x,y in zip(first,second) if x['expected']['unite']!='heure')
+secondpairs=[tuple(x['time_key']) for x in second if x['expected']['unite']=='heure']
+assert len(set(oldpairs+secondpairs))==338
+def packs(lengths):
+ out=[];n=0
+ for length in lengths:
+  if n+length>512:out.append(n);n=0
+  n+=length
+ if n:out.append(n)
+ return out
+assert all(signature(x)==sig for x,sig in zip(second,alllengths))
+assert len(packs([x[0] for x in alllengths]))==408
+counts=collections.Counter()
+for ex,(full,sup) in zip(first,alllengths):counts['hours' if ex['expected']['unite']=='heure' else 'non_hours']+=sup
+assert dict(counts)==dict(hours=28487,non_hours=31622)
+data['train_second']=second
+save('dataset.json',data)
+# Full immutable shared prefix, including optimizer/scheduler/scaler and per-rank RNG.
+manifest=json.loads((OLD/'failure-audit-saved-G306.json').read_text())['files']
+checkpoint=OLD/'resume/step-102';inherited=P/'inherited/step-102'
+inherited.parent.mkdir(exist_ok=True);shutil.copytree(checkpoint,inherited)
+prefix_hashes={}
+for f in inherited.rglob('*'):
+ if not f.is_file():continue
+ relative='resume/step-102/'+str(f.relative_to(inherited));assert relative in manifest
+ hs=[sha(f),sha(f)];assert hs==[manifest[relative]]*2
+ prefix_hashes[str(f.relative_to(inherited))]=hs
+assert prefix_hashes['training-state.pt'][0]=='255759a0ae250d316647a236393f05133ae2e989d88f20e113341326b29c24f2'
+save('prefix-checkpoint-proof.json',dict(passed=True,source=str(checkpoint),files=prefix_hashes,inherited_first_pass_updates=102,original_dataset_sha256=sha(OLD/'dataset.json')))
+lineage=dict(dataset_sha256=sha(P/'dataset.json'),source_e3_dataset_sha256=sha(OLD/'dataset.json'),parent_adapter=C['parent_adapter'],inherited_checkpoint=str(inherited),inherited_optimizer_steps=102,new_optimizer_steps=102,total_optimizer_steps=204,first_pass_copied_verbatim=True,second_nonhour_rows_identical=True,all_new_hours_matched_full_and_supervised_lengths=True,automatic_promotion=False)
+save('lineage.json',lineage)
+save('matched-replacements.json',matchlog)
+save('exclusion-sources.json',dict(excluded_before_generation=initial_seen,files=exclusions,final_reserved_read=False))
+stats=dict(passed=True,examples_per_pass=878,hours_per_pass=169,unique_hour_problems_total=338,non_hours_per_pass=709,packs_per_pass=408,updates_per_pass=102,inherited_updates=102,new_updates=102,total_updates=204,nonpadding_tokens_per_pass=sum(x[0] for x in alllengths),supervised_tokens_per_pass=dict(counts),supervised_tokens_total={k:v*2 for k,v in counts.items()},hours_supervised_share=counts['hours']/sum(counts.values()),matched_examples=169,max_attempts=max(x['attempts'] for x in matchlog),seed=111116,seconds=time.time()-START,training=False,model_loaded=False)
+save('dataset-preparation.json',stats)
+state(phase='finished',done=169,total=169)
+print(json.dumps(stats))

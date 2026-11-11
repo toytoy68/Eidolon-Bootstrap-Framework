@@ -1,0 +1,3382 @@
+[
+  {
+    "index": 1,
+    "original_id": "c9-train-boundary-0",
+    "new_id": "e4a-second-c9-train-boundary-0",
+    "old_pair": [
+      0,
+      4320
+    ],
+    "new_pair": [
+      1,
+      4320
+    ],
+    "stratum": "day3-boundary4320",
+    "group": "target",
+    "days": 3,
+    "high_duration": true,
+    "full_tokens": 361,
+    "supervised_tokens": 233,
+    "attempts": 110
+  },
+  {
+    "index": 6,
+    "original_id": "44774-3085",
+    "new_id": "e4a-second-44774-3085",
+    "old_pair": [
+      483,
+      404
+    ],
+    "new_pair": [
+      369,
+      279
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 149,
+    "attempts": 4
+  },
+  {
+    "index": 14,
+    "original_id": "c5-train-0-6-294",
+    "new_id": "e4a-second-c5-train-0-6-294",
+    "old_pair": [
+      143,
+      17
+    ],
+    "new_pair": [
+      348,
+      25
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 18
+  },
+  {
+    "index": 17,
+    "original_id": "c9-train-boundary-1",
+    "new_id": "e4a-second-c9-train-boundary-1",
+    "old_pair": [
+      60,
+      4320
+    ],
+    "new_pair": [
+      66,
+      4320
+    ],
+    "stratum": "day3-boundary4320",
+    "group": "target",
+    "days": 3,
+    "high_duration": true,
+    "full_tokens": 369,
+    "supervised_tokens": 241,
+    "attempts": 24
+  },
+  {
+    "index": 23,
+    "original_id": "c5-train-1-6-86",
+    "new_id": "e4a-second-c5-train-1-6-86",
+    "old_pair": [
+      517,
+      15
+    ],
+    "new_pair": [
+      499,
+      11
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 4
+  },
+  {
+    "index": 31,
+    "original_id": "44774-2733",
+    "new_id": "e4a-second-44774-2733",
+    "old_pair": [
+      941,
+      25
+    ],
+    "new_pair": [
+      378,
+      39
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 149,
+    "attempts": 46
+  },
+  {
+    "index": 32,
+    "original_id": "c9-train-boundary-2",
+    "new_id": "e4a-second-c9-train-boundary-2",
+    "old_pair": [
+      720,
+      4320
+    ],
+    "new_pair": [
+      905,
+      4320
+    ],
+    "stratum": "day3-boundary4320",
+    "group": "target",
+    "days": 3,
+    "high_duration": true,
+    "full_tokens": 379,
+    "supervised_tokens": 251,
+    "attempts": 16
+  },
+  {
+    "index": 40,
+    "original_id": "44774-605",
+    "new_id": "e4a-second-44774-605",
+    "old_pair": [
+      1295,
+      287
+    ],
+    "new_pair": [
+      1348,
+      402
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 188,
+    "attempts": 1
+  },
+  {
+    "index": 48,
+    "original_id": "c9-train-0-0-0-6",
+    "new_id": "e4a-second-c9-train-0-0-0-6",
+    "old_pair": [
+      985,
+      147
+    ],
+    "new_pair": [
+      858,
+      552
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 297,
+    "supervised_tokens": 157,
+    "attempts": 11
+  },
+  {
+    "index": 49,
+    "original_id": "44774-2461",
+    "new_id": "e4a-second-44774-2461",
+    "old_pair": [
+      1200,
+      123
+    ],
+    "new_pair": [
+      385,
+      692
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 299,
+    "supervised_tokens": 156,
+    "attempts": 20
+  },
+  {
+    "index": 57,
+    "original_id": "44774-1789",
+    "new_id": "e4a-second-44774-1789",
+    "old_pair": [
+      1242,
+      142
+    ],
+    "new_pair": [
+      1188,
+      135
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 158,
+    "attempts": 46
+  },
+  {
+    "index": 60,
+    "original_id": "c9-train-1-1-0-61",
+    "new_id": "e4a-second-c9-train-1-1-0-61",
+    "old_pair": [
+      1149,
+      1642
+    ],
+    "new_pair": [
+      1055,
+      1530
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 334,
+    "supervised_tokens": 193,
+    "attempts": 4
+  },
+  {
+    "index": 66,
+    "original_id": "44774-925",
+    "new_id": "e4a-second-44774-925",
+    "old_pair": [
+      747,
+      358
+    ],
+    "new_pair": [
+      759,
+      579
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 2
+  },
+  {
+    "index": 72,
+    "original_id": "c9-train-2-0-0-100",
+    "new_id": "e4a-second-c9-train-2-0-0-100",
+    "old_pair": [
+      1412,
+      1479
+    ],
+    "new_pair": [
+      1417,
+      1487
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 357,
+    "supervised_tokens": 216,
+    "attempts": 4
+  },
+  {
+    "index": 75,
+    "original_id": "44774-309",
+    "new_id": "e4a-second-44774-309",
+    "old_pair": [
+      978,
+      241
+    ],
+    "new_pair": [
+      733,
+      328
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 7
+  },
+  {
+    "index": 83,
+    "original_id": "c5-train-1-6-326",
+    "new_id": "e4a-second-c5-train-1-6-326",
+    "old_pair": [
+      286,
+      10
+    ],
+    "new_pair": [
+      570,
+      20
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 2
+  },
+  {
+    "index": 87,
+    "original_id": "c9-train-0-0-0-58",
+    "new_id": "e4a-second-c9-train-0-0-0-58",
+    "old_pair": [
+      1062,
+      186
+    ],
+    "new_pair": [
+      1125,
+      174
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 160,
+    "attempts": 4
+  },
+  {
+    "index": 92,
+    "original_id": "c5-train-2-6-398",
+    "new_id": "e4a-second-c5-train-2-6-398",
+    "old_pair": [
+      627,
+      14
+    ],
+    "new_pair": [
+      957,
+      13
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 9
+  },
+  {
+    "index": 98,
+    "original_id": "c9-train-1-0-0-180",
+    "new_id": "e4a-second-c9-train-1-0-0-180",
+    "old_pair": [
+      158,
+      1454
+    ],
+    "new_pair": [
+      172,
+      1442
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 326,
+    "supervised_tokens": 185,
+    "attempts": 1
+  },
+  {
+    "index": 101,
+    "original_id": "44774-2421",
+    "new_id": "e4a-second-44774-2421",
+    "old_pair": [
+      742,
+      123
+    ],
+    "new_pair": [
+      643,
+      296
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 57
+  },
+  {
+    "index": 109,
+    "original_id": "44774-2925",
+    "new_id": "e4a-second-44774-2925",
+    "old_pair": [
+      1199,
+      356
+    ],
+    "new_pair": [
+      1080,
+      808
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 186,
+    "attempts": 5
+  },
+  {
+    "index": 110,
+    "original_id": "c9-train-2-0-0-170",
+    "new_id": "e4a-second-c9-train-2-0-0-170",
+    "old_pair": [
+      1399,
+      1489
+    ],
+    "new_pair": [
+      1432,
+      1450
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 352,
+    "supervised_tokens": 211,
+    "attempts": 52
+  },
+  {
+    "index": 118,
+    "original_id": "44774-2045",
+    "new_id": "e4a-second-44774-2045",
+    "old_pair": [
+      861,
+      137
+    ],
+    "new_pair": [
+      810,
+      162
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 53
+  },
+  {
+    "index": 125,
+    "original_id": "c9-train-0-0-0-55",
+    "new_id": "e4a-second-c9-train-0-0-0-55",
+    "old_pair": [
+      923,
+      514
+    ],
+    "new_pair": [
+      851,
+      209
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 297,
+    "supervised_tokens": 157,
+    "attempts": 12
+  },
+  {
+    "index": 127,
+    "original_id": "44774-2317",
+    "new_id": "e4a-second-44774-2317",
+    "old_pair": [
+      235,
+      152
+    ],
+    "new_pair": [
+      154,
+      184
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 3
+  },
+  {
+    "index": 135,
+    "original_id": "c5-train-1-6-390",
+    "new_id": "e4a-second-c5-train-1-6-390",
+    "old_pair": [
+      473,
+      35
+    ],
+    "new_pair": [
+      172,
+      61
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 34
+  },
+  {
+    "index": 136,
+    "original_id": "c9-train-1-0-0-76",
+    "new_id": "e4a-second-c9-train-1-0-0-76",
+    "old_pair": [
+      113,
+      1458
+    ],
+    "new_pair": [
+      600,
+      1345
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 325,
+    "supervised_tokens": 184,
+    "attempts": 76
+  },
+  {
+    "index": 144,
+    "original_id": "44774-2301",
+    "new_id": "e4a-second-44774-2301",
+    "old_pair": [
+      1056,
+      325
+    ],
+    "new_pair": [
+      1149,
+      107
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 158,
+    "attempts": 17
+  },
+  {
+    "index": 148,
+    "original_id": "c9-train-2-0-0-80",
+    "new_id": "e4a-second-c9-train-2-0-0-80",
+    "old_pair": [
+      1413,
+      1499
+    ],
+    "new_pair": [
+      1404,
+      1498
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 357,
+    "supervised_tokens": 216,
+    "attempts": 27
+  },
+  {
+    "index": 153,
+    "original_id": "44774-877",
+    "new_id": "e4a-second-44774-877",
+    "old_pair": [
+      915,
+      409
+    ],
+    "new_pair": [
+      845,
+      442
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 298,
+    "supervised_tokens": 155,
+    "attempts": 23
+  },
+  {
+    "index": 161,
+    "original_id": "c5-train-2-6-326",
+    "new_id": "e4a-second-c5-train-2-6-326",
+    "old_pair": [
+      1089,
+      50
+    ],
+    "new_pair": [
+      1268,
+      66
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 157,
+    "attempts": 5
+  },
+  {
+    "index": 164,
+    "original_id": "c9-train-0-0-0-15",
+    "new_id": "e4a-second-c9-train-0-0-0-15",
+    "old_pair": [
+      1390,
+      11
+    ],
+    "new_pair": [
+      1394,
+      20
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 298,
+    "supervised_tokens": 159,
+    "attempts": 18
+  },
+  {
+    "index": 170,
+    "original_id": "44774-2237",
+    "new_id": "e4a-second-44774-2237",
+    "old_pair": [
+      1059,
+      496
+    ],
+    "new_pair": [
+      1209,
+      499
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 186,
+    "attempts": 15
+  },
+  {
+    "index": 176,
+    "original_id": "c9-train-1-1-0-187",
+    "new_id": "e4a-second-c9-train-1-1-0-187",
+    "old_pair": [
+      963,
+      1534
+    ],
+    "new_pair": [
+      845,
+      1630
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 331,
+    "supervised_tokens": 190,
+    "attempts": 26
+  },
+  {
+    "index": 179,
+    "original_id": "44774-933",
+    "new_id": "e4a-second-44774-933",
+    "old_pair": [
+      391,
+      342
+    ],
+    "new_pair": [
+      194,
+      579
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 31
+  },
+  {
+    "index": 187,
+    "original_id": "44774-357",
+    "new_id": "e4a-second-44774-357",
+    "old_pair": [
+      654,
+      203
+    ],
+    "new_pair": [
+      811,
+      145
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 137
+  },
+  {
+    "index": 189,
+    "original_id": "c9-train-2-1-0-91",
+    "new_id": "e4a-second-c9-train-2-1-0-91",
+    "old_pair": [
+      784,
+      2134
+    ],
+    "new_pair": [
+      76,
+      2889
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 352,
+    "supervised_tokens": 211,
+    "attempts": 13
+  },
+  {
+    "index": 196,
+    "original_id": "44774-669",
+    "new_id": "e4a-second-44774-669",
+    "old_pair": [
+      547,
+      99
+    ],
+    "new_pair": [
+      513,
+      91
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 290,
+    "supervised_tokens": 148,
+    "attempts": 119
+  },
+  {
+    "index": 203,
+    "original_id": "c9-train-0-0-0-185",
+    "new_id": "e4a-second-c9-train-0-0-0-185",
+    "old_pair": [
+      261,
+      205
+    ],
+    "new_pair": [
+      400,
+      108
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 290,
+    "supervised_tokens": 150,
+    "attempts": 7
+  },
+  {
+    "index": 205,
+    "original_id": "44774-461",
+    "new_id": "e4a-second-44774-461",
+    "old_pair": [
+      248,
+      253
+    ],
+    "new_pair": [
+      73,
+      683
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 148,
+    "attempts": 44
+  },
+  {
+    "index": 213,
+    "original_id": "c9-train-1-1-0-81",
+    "new_id": "e4a-second-c9-train-1-1-0-81",
+    "old_pair": [
+      715,
+      1969
+    ],
+    "new_pair": [
+      734,
+      1937
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 333,
+    "supervised_tokens": 192,
+    "attempts": 9
+  },
+  {
+    "index": 214,
+    "original_id": "44774-1509",
+    "new_id": "e4a-second-44774-1509",
+    "old_pair": [
+      942,
+      143
+    ],
+    "new_pair": [
+      605,
+      568
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 298,
+    "supervised_tokens": 155,
+    "attempts": 7
+  },
+  {
+    "index": 222,
+    "original_id": "44774-2413",
+    "new_id": "e4a-second-44774-2413",
+    "old_pair": [
+      1359,
+      381
+    ],
+    "new_pair": [
+      1316,
+      243
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 186,
+    "attempts": 20
+  },
+  {
+    "index": 226,
+    "original_id": "c9-train-2-1-0-25",
+    "new_id": "e4a-second-c9-train-2-1-0-25",
+    "old_pair": [
+      1150,
+      2716
+    ],
+    "new_pair": [
+      1182,
+      2332
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 365,
+    "supervised_tokens": 224,
+    "attempts": 24
+  },
+  {
+    "index": 231,
+    "original_id": "44774-317",
+    "new_id": "e4a-second-44774-317",
+    "old_pair": [
+      286,
+      278
+    ],
+    "new_pair": [
+      144,
+      208
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 29
+  },
+  {
+    "index": 239,
+    "original_id": "44774-2061",
+    "new_id": "e4a-second-44774-2061",
+    "old_pair": [
+      207,
+      89
+    ],
+    "new_pair": [
+      232,
+      78
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 149,
+    "attempts": 35
+  },
+  {
+    "index": 240,
+    "original_id": "c9-train-0-0-0-62",
+    "new_id": "e4a-second-c9-train-0-0-0-62",
+    "old_pair": [
+      878,
+      32
+    ],
+    "new_pair": [
+      643,
+      38
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 290,
+    "supervised_tokens": 151,
+    "attempts": 84
+  },
+  {
+    "index": 248,
+    "original_id": "44774-1717",
+    "new_id": "e4a-second-44774-1717",
+    "old_pair": [
+      948,
+      97
+    ],
+    "new_pair": [
+      953,
+      77
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 298,
+    "supervised_tokens": 156,
+    "attempts": 86
+  },
+  {
+    "index": 250,
+    "original_id": "c9-train-1-1-0-167",
+    "new_id": "e4a-second-c9-train-1-1-0-167",
+    "old_pair": [
+      326,
+      2118
+    ],
+    "new_pair": [
+      549,
+      2046
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 330,
+    "supervised_tokens": 189,
+    "attempts": 24
+  },
+  {
+    "index": 257,
+    "original_id": "44774-3141",
+    "new_id": "e4a-second-44774-3141",
+    "old_pair": [
+      1019,
+      462
+    ],
+    "new_pair": [
+      817,
+      710
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 323,
+    "supervised_tokens": 180,
+    "attempts": 14
+  },
+  {
+    "index": 263,
+    "original_id": "c9-train-2-0-0-58",
+    "new_id": "e4a-second-c9-train-2-0-0-58",
+    "old_pair": [
+      1435,
+      1449
+    ],
+    "new_pair": [
+      1394,
+      1494
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 352,
+    "supervised_tokens": 211,
+    "attempts": 142
+  },
+  {
+    "index": 266,
+    "original_id": "44774-1469",
+    "new_id": "e4a-second-44774-1469",
+    "old_pair": [
+      310,
+      290
+    ],
+    "new_pair": [
+      126,
+      853
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 149,
+    "attempts": 44
+  },
+  {
+    "index": 274,
+    "original_id": "44774-1861",
+    "new_id": "e4a-second-44774-1861",
+    "old_pair": [
+      1333,
+      486
+    ],
+    "new_pair": [
+      1369,
+      586
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 188,
+    "attempts": 3
+  },
+  {
+    "index": 278,
+    "original_id": "c9-train-0-0-0-156",
+    "new_id": "e4a-second-c9-train-0-0-0-156",
+    "old_pair": [
+      377,
+      559
+    ],
+    "new_pair": [
+      557,
+      442
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 151,
+    "attempts": 15
+  },
+  {
+    "index": 283,
+    "original_id": "44774-125",
+    "new_id": "e4a-second-44774-125",
+    "old_pair": [
+      273,
+      492
+    ],
+    "new_pair": [
+      229,
+      447
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 8
+  },
+  {
+    "index": 288,
+    "original_id": "c9-train-1-0-0-178",
+    "new_id": "e4a-second-c9-train-1-0-0-178",
+    "old_pair": [
+      1395,
+      847
+    ],
+    "new_pair": [
+      1433,
+      922
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 189,
+    "attempts": 54
+  },
+  {
+    "index": 292,
+    "original_id": "c5-train-2-6-62",
+    "new_id": "e4a-second-c5-train-2-6-62",
+    "old_pair": [
+      363,
+      59
+    ],
+    "new_pair": [
+      361,
+      68
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 283,
+    "supervised_tokens": 145,
+    "attempts": 5745
+  },
+  {
+    "index": 300,
+    "original_id": "44774-2669",
+    "new_id": "e4a-second-44774-2669",
+    "old_pair": [
+      1195,
+      204
+    ],
+    "new_pair": [
+      1185,
+      241
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 303,
+    "supervised_tokens": 160,
+    "attempts": 12
+  },
+  {
+    "index": 301,
+    "original_id": "c9-train-2-1-0-67",
+    "new_id": "e4a-second-c9-train-2-1-0-67",
+    "old_pair": [
+      1202,
+      2062
+    ],
+    "new_pair": [
+      1143,
+      2145
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 362,
+    "supervised_tokens": 221,
+    "attempts": 6
+  },
+  {
+    "index": 309,
+    "original_id": "44774-2221",
+    "new_id": "e4a-second-44774-2221",
+    "old_pair": [
+      956,
+      429
+    ],
+    "new_pair": [
+      747,
+      573
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 298,
+    "supervised_tokens": 155,
+    "attempts": 10
+  },
+  {
+    "index": 316,
+    "original_id": "c9-train-0-0-0-184",
+    "new_id": "e4a-second-c9-train-0-0-0-184",
+    "old_pair": [
+      1320,
+      5
+    ],
+    "new_pair": [
+      1206,
+      2
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 154,
+    "attempts": 86
+  },
+  {
+    "index": 318,
+    "original_id": "44774-1397",
+    "new_id": "e4a-second-44774-1397",
+    "old_pair": [
+      620,
+      364
+    ],
+    "new_pair": [
+      708,
+      103
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 17
+  },
+  {
+    "index": 326,
+    "original_id": "44774-213",
+    "new_id": "e4a-second-44774-213",
+    "old_pair": [
+      35,
+      260
+    ],
+    "new_pair": [
+      51,
+      242
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 146,
+    "attempts": 138
+  },
+  {
+    "index": 327,
+    "original_id": "c9-train-1-1-0-165",
+    "new_id": "e4a-second-c9-train-1-1-0-165",
+    "old_pair": [
+      930,
+      1529
+    ],
+    "new_pair": [
+      922,
+      1544
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 331,
+    "supervised_tokens": 190,
+    "attempts": 2
+  },
+  {
+    "index": 335,
+    "original_id": "44774-2021",
+    "new_id": "e4a-second-44774-2021",
+    "old_pair": [
+      225,
+      360
+    ],
+    "new_pair": [
+      396,
+      115
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 7
+  },
+  {
+    "index": 341,
+    "original_id": "c9-train-2-0-0-12",
+    "new_id": "e4a-second-c9-train-2-0-0-12",
+    "old_pair": [
+      1385,
+      1497
+    ],
+    "new_pair": [
+      1384,
+      1500
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 350,
+    "supervised_tokens": 209,
+    "attempts": 246
+  },
+  {
+    "index": 344,
+    "original_id": "c5-train-0-6-334",
+    "new_id": "e4a-second-c5-train-0-6-334",
+    "old_pair": [
+      220,
+      7
+    ],
+    "new_pair": [
+      718,
+      5
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 148,
+    "attempts": 30
+  },
+  {
+    "index": 352,
+    "original_id": "44774-2829",
+    "new_id": "e4a-second-44774-2829",
+    "old_pair": [
+      721,
+      80
+    ],
+    "new_pair": [
+      704,
+      21
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 149,
+    "attempts": 112
+  },
+  {
+    "index": 356,
+    "original_id": "c9-train-0-0-0-44",
+    "new_id": "e4a-second-c9-train-0-0-0-44",
+    "old_pair": [
+      333,
+      863
+    ],
+    "new_pair": [
+      535,
+      873
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 296,
+    "supervised_tokens": 156,
+    "attempts": 13
+  },
+  {
+    "index": 361,
+    "original_id": "44774-1261",
+    "new_id": "e4a-second-44774-1261",
+    "old_pair": [
+      1294,
+      11
+    ],
+    "new_pair": [
+      1393,
+      14
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 159,
+    "attempts": 2
+  },
+  {
+    "index": 368,
+    "original_id": "c9-train-1-0-0-186",
+    "new_id": "e4a-second-c9-train-1-0-0-186",
+    "old_pair": [
+      694,
+      1070
+    ],
+    "new_pair": [
+      742,
+      1207
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 327,
+    "supervised_tokens": 186,
+    "attempts": 32
+  },
+  {
+    "index": 370,
+    "original_id": "44774-2365",
+    "new_id": "e4a-second-44774-2365",
+    "old_pair": [
+      1,
+      174
+    ],
+    "new_pair": [
+      7,
+      169
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 142,
+    "attempts": 539
+  },
+  {
+    "index": 378,
+    "original_id": "44774-741",
+    "new_id": "e4a-second-44774-741",
+    "old_pair": [
+      449,
+      388
+    ],
+    "new_pair": [
+      406,
+      205
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 7
+  },
+  {
+    "index": 382,
+    "original_id": "c9-train-2-0-0-4",
+    "new_id": "e4a-second-c9-train-2-0-0-4",
+    "old_pair": [
+      1424,
+      1483
+    ],
+    "new_pair": [
+      1422,
+      1479
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 357,
+    "supervised_tokens": 216,
+    "attempts": 6
+  },
+  {
+    "index": 387,
+    "original_id": "44774-2637",
+    "new_id": "e4a-second-44774-2637",
+    "old_pair": [
+      574,
+      339
+    ],
+    "new_pair": [
+      149,
+      764
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 7
+  },
+  {
+    "index": 395,
+    "original_id": "44774-901",
+    "new_id": "e4a-second-44774-901",
+    "old_pair": [
+      560,
+      120
+    ],
+    "new_pair": [
+      196,
+      580
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 2
+  },
+  {
+    "index": 397,
+    "original_id": "c9-train-0-0-0-68",
+    "new_id": "e4a-second-c9-train-0-0-0-68",
+    "old_pair": [
+      21,
+      67
+    ],
+    "new_pair": [
+      53,
+      37
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 279,
+    "supervised_tokens": 140,
+    "attempts": 510
+  },
+  {
+    "index": 404,
+    "original_id": "c5-train-1-6-262",
+    "new_id": "e4a-second-c5-train-1-6-262",
+    "old_pair": [
+      176,
+      58
+    ],
+    "new_pair": [
+      901,
+      47
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 99
+  },
+  {
+    "index": 407,
+    "original_id": "c9-train-1-0-0-126",
+    "new_id": "e4a-second-c9-train-1-0-0-126",
+    "old_pair": [
+      593,
+      986
+    ],
+    "new_pair": [
+      1264,
+      277
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 324,
+    "supervised_tokens": 184,
+    "attempts": 266
+  },
+  {
+    "index": 413,
+    "original_id": "44774-725",
+    "new_id": "e4a-second-44774-725",
+    "old_pair": [
+      1137,
+      417
+    ],
+    "new_pair": [
+      1145,
+      445
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 186,
+    "attempts": 27
+  },
+  {
+    "index": 419,
+    "original_id": "c9-train-2-1-0-115",
+    "new_id": "e4a-second-c9-train-2-1-0-115",
+    "old_pair": [
+      258,
+      3198
+    ],
+    "new_pair": [
+      572,
+      2538
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 360,
+    "supervised_tokens": 219,
+    "attempts": 10
+  },
+  {
+    "index": 422,
+    "original_id": "44774-1181",
+    "new_id": "e4a-second-44774-1181",
+    "old_pair": [
+      1190,
+      375
+    ],
+    "new_pair": [
+      1116,
+      429
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 329,
+    "supervised_tokens": 186,
+    "attempts": 1
+  },
+  {
+    "index": 430,
+    "original_id": "44774-2789",
+    "new_id": "e4a-second-44774-2789",
+    "old_pair": [
+      489,
+      204
+    ],
+    "new_pair": [
+      181,
+      715
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 149,
+    "attempts": 115
+  },
+  {
+    "index": 435,
+    "original_id": "c9-train-0-0-0-76",
+    "new_id": "e4a-second-c9-train-0-0-0-76",
+    "old_pair": [
+      1191,
+      12
+    ],
+    "new_pair": [
+      1267,
+      89
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 296,
+    "supervised_tokens": 157,
+    "attempts": 58
+  },
+  {
+    "index": 439,
+    "original_id": "44774-2405",
+    "new_id": "e4a-second-44774-2405",
+    "old_pair": [
+      1153,
+      3
+    ],
+    "new_pair": [
+      1431,
+      3
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 299,
+    "supervised_tokens": 158,
+    "attempts": 8
+  },
+  {
+    "index": 446,
+    "original_id": "c9-train-1-1-0-133",
+    "new_id": "e4a-second-c9-train-1-1-0-133",
+    "old_pair": [
+      1073,
+      1788
+    ],
+    "new_pair": [
+      1198,
+      1599
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 336,
+    "supervised_tokens": 195,
+    "attempts": 5
+  },
+  {
+    "index": 448,
+    "original_id": "44774-2309",
+    "new_id": "e4a-second-44774-2309",
+    "old_pair": [
+      1269,
+      129
+    ],
+    "new_pair": [
+      1265,
+      161
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 158,
+    "attempts": 87
+  },
+  {
+    "index": 456,
+    "original_id": "44774-237",
+    "new_id": "e4a-second-44774-237",
+    "old_pair": [
+      393,
+      356
+    ],
+    "new_pair": [
+      321,
+      486
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 21
+  },
+  {
+    "index": 460,
+    "original_id": "c9-train-2-1-0-159",
+    "new_id": "e4a-second-c9-train-2-1-0-159",
+    "old_pair": [
+      156,
+      3866
+    ],
+    "new_pair": [
+      1370,
+      1722
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 364,
+    "supervised_tokens": 223,
+    "attempts": 3
+  },
+  {
+    "index": 465,
+    "original_id": "44774-893",
+    "new_id": "e4a-second-44774-893",
+    "old_pair": [
+      733,
+      166
+    ],
+    "new_pair": [
+      489,
+      900
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 37
+  },
+  {
+    "index": 473,
+    "original_id": "44774-2989",
+    "new_id": "e4a-second-44774-2989",
+    "old_pair": [
+      277,
+      377
+    ],
+    "new_pair": [
+      146,
+      481
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 16
+  },
+  {
+    "index": 475,
+    "original_id": "c9-train-0-0-0-69",
+    "new_id": "e4a-second-c9-train-0-0-0-69",
+    "old_pair": [
+      82,
+      508
+    ],
+    "new_pair": [
+      32,
+      879
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 147,
+    "attempts": 68
+  },
+  {
+    "index": 482,
+    "original_id": "44774-1349",
+    "new_id": "e4a-second-44774-1349",
+    "old_pair": [
+      1058,
+      438
+    ],
+    "new_pair": [
+      780,
+      784
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 324,
+    "supervised_tokens": 181,
+    "attempts": 252
+  },
+  {
+    "index": 485,
+    "original_id": "c9-train-1-1-0-125",
+    "new_id": "e4a-second-c9-train-1-1-0-125",
+    "old_pair": [
+      411,
+      1654
+    ],
+    "new_pair": [
+      322,
+      2064
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 327,
+    "supervised_tokens": 186,
+    "attempts": 12
+  },
+  {
+    "index": 491,
+    "original_id": "44774-3181",
+    "new_id": "e4a-second-44774-3181",
+    "old_pair": [
+      468,
+      441
+    ],
+    "new_pair": [
+      420,
+      344
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 149,
+    "attempts": 35
+  },
+  {
+    "index": 499,
+    "original_id": "c9-train-2-1-0-139",
+    "new_id": "e4a-second-c9-train-2-1-0-139",
+    "old_pair": [
+      305,
+      3073
+    ],
+    "new_pair": [
+      120,
+      3214
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 358,
+    "supervised_tokens": 217,
+    "attempts": 12
+  },
+  {
+    "index": 500,
+    "original_id": "44774-1437",
+    "new_id": "e4a-second-44774-1437",
+    "old_pair": [
+      893,
+      459
+    ],
+    "new_pair": [
+      806,
+      309
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 11
+  },
+  {
+    "index": 508,
+    "original_id": "44774-3021",
+    "new_id": "e4a-second-44774-3021",
+    "old_pair": [
+      155,
+      40
+    ],
+    "new_pair": [
+      512,
+      23
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 149,
+    "attempts": 73
+  },
+  {
+    "index": 514,
+    "original_id": "c9-train-0-0-0-196",
+    "new_id": "e4a-second-c9-train-0-0-0-196",
+    "old_pair": [
+      1264,
+      71
+    ],
+    "new_pair": [
+      1355,
+      27
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 296,
+    "supervised_tokens": 157,
+    "attempts": 5
+  },
+  {
+    "index": 517,
+    "original_id": "44774-589",
+    "new_id": "e4a-second-44774-589",
+    "old_pair": [
+      321,
+      363
+    ],
+    "new_pair": [
+      535,
+      154
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 8
+  },
+  {
+    "index": 525,
+    "original_id": "c9-train-1-1-0-71",
+    "new_id": "e4a-second-c9-train-1-1-0-71",
+    "old_pair": [
+      75,
+      2408
+    ],
+    "new_pair": [
+      667,
+      1780
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 329,
+    "supervised_tokens": 188,
+    "attempts": 52
+  },
+  {
+    "index": 526,
+    "original_id": "44774-2693",
+    "new_id": "e4a-second-44774-2693",
+    "old_pair": [
+      102,
+      56
+    ],
+    "new_pair": [
+      118,
+      14
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 290,
+    "supervised_tokens": 148,
+    "attempts": 492
+  },
+  {
+    "index": 534,
+    "original_id": "44774-917",
+    "new_id": "e4a-second-44774-917",
+    "old_pair": [
+      1166,
+      101
+    ],
+    "new_pair": [
+      1020,
+      153
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 158,
+    "attempts": 4
+  },
+  {
+    "index": 537,
+    "original_id": "c9-train-2-1-0-105",
+    "new_id": "e4a-second-c9-train-2-1-0-105",
+    "old_pair": [
+      1339,
+      2205
+    ],
+    "new_pair": [
+      1008,
+      2125
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 363,
+    "supervised_tokens": 222,
+    "attempts": 114
+  },
+  {
+    "index": 543,
+    "original_id": "c5-train-1-6-134",
+    "new_id": "e4a-second-c5-train-1-6-134",
+    "old_pair": [
+      319,
+      2
+    ],
+    "new_pair": [
+      776,
+      4
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 148,
+    "attempts": 3
+  },
+  {
+    "index": 551,
+    "original_id": "c9-train-0-0-0-130",
+    "new_id": "e4a-second-c9-train-0-0-0-130",
+    "old_pair": [
+      527,
+      875
+    ],
+    "new_pair": [
+      350,
+      940
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 296,
+    "supervised_tokens": 156,
+    "attempts": 39
+  },
+  {
+    "index": 552,
+    "original_id": "44774-1453",
+    "new_id": "e4a-second-44774-1453",
+    "old_pair": [
+      301,
+      334
+    ],
+    "new_pair": [
+      546,
+      281
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 149,
+    "attempts": 12
+  },
+  {
+    "index": 560,
+    "original_id": "44774-637",
+    "new_id": "e4a-second-44774-637",
+    "old_pair": [
+      128,
+      408
+    ],
+    "new_pair": [
+      151,
+      211
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 148,
+    "attempts": 31
+  },
+  {
+    "index": 562,
+    "original_id": "c9-train-1-0-0-184",
+    "new_id": "e4a-second-c9-train-1-0-0-184",
+    "old_pair": [
+      117,
+      1418
+    ],
+    "new_pair": [
+      57,
+      1486
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 320,
+    "supervised_tokens": 179,
+    "attempts": 170
+  },
+  {
+    "index": 569,
+    "original_id": "c5-train-2-6-94",
+    "new_id": "e4a-second-c5-train-2-6-94",
+    "old_pair": [
+      671,
+      32
+    ],
+    "new_pair": [
+      610,
+      34
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 79
+  },
+  {
+    "index": 575,
+    "original_id": "c9-train-2-1-0-53",
+    "new_id": "e4a-second-c9-train-2-1-0-53",
+    "old_pair": [
+      816,
+      3224
+    ],
+    "new_pair": [
+      753,
+      3559
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 367,
+    "supervised_tokens": 226,
+    "attempts": 14
+  },
+  {
+    "index": 578,
+    "original_id": "c5-train-2-6-22",
+    "new_id": "e4a-second-c5-train-2-6-22",
+    "old_pair": [
+      44,
+      97
+    ],
+    "new_pair": [
+      305,
+      63
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 283,
+    "supervised_tokens": 145,
+    "attempts": 698
+  },
+  {
+    "index": 586,
+    "original_id": "44774-2797",
+    "new_id": "e4a-second-44774-2797",
+    "old_pair": [
+      702,
+      135
+    ],
+    "new_pair": [
+      798,
+      161
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 152,
+    "attempts": 9
+  },
+  {
+    "index": 590,
+    "original_id": "c9-train-0-0-0-10",
+    "new_id": "e4a-second-c9-train-0-0-0-10",
+    "old_pair": [
+      480,
+      2
+    ],
+    "new_pair": [
+      423,
+      1
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 282,
+    "supervised_tokens": 144,
+    "attempts": 10798
+  },
+  {
+    "index": 595,
+    "original_id": "c5-train-1-6-118",
+    "new_id": "e4a-second-c5-train-1-6-118",
+    "old_pair": [
+      374,
+      56
+    ],
+    "new_pair": [
+      669,
+      99
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 68
+  },
+  {
+    "index": 600,
+    "original_id": "c9-train-1-1-0-87",
+    "new_id": "e4a-second-c9-train-1-1-0-87",
+    "old_pair": [
+      973,
+      1693
+    ],
+    "new_pair": [
+      882,
+      1857
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 333,
+    "supervised_tokens": 192,
+    "attempts": 1
+  },
+  {
+    "index": 604,
+    "original_id": "44774-1829",
+    "new_id": "e4a-second-44774-1829",
+    "old_pair": [
+      1152,
+      76
+    ],
+    "new_pair": [
+      1357,
+      39
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 159,
+    "attempts": 4
+  },
+  {
+    "index": 612,
+    "original_id": "44774-1685",
+    "new_id": "e4a-second-44774-1685",
+    "old_pair": [
+      281,
+      283
+    ],
+    "new_pair": [
+      200,
+      110
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 3
+  },
+  {
+    "index": 613,
+    "original_id": "c9-train-2-0-0-94",
+    "new_id": "e4a-second-c9-train-2-0-0-94",
+    "old_pair": [
+      1418,
+      1497
+    ],
+    "new_pair": [
+      1396,
+      1495
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 357,
+    "supervised_tokens": 216,
+    "attempts": 49
+  },
+  {
+    "index": 621,
+    "original_id": "c5-train-2-6-390",
+    "new_id": "e4a-second-c5-train-2-6-390",
+    "old_pair": [
+      121,
+      19
+    ],
+    "new_pair": [
+      128,
+      64
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 147,
+    "attempts": 11
+  },
+  {
+    "index": 628,
+    "original_id": "c9-train-0-0-0-146",
+    "new_id": "e4a-second-c9-train-0-0-0-146",
+    "old_pair": [
+      1137,
+      293
+    ],
+    "new_pair": [
+      1242,
+      182
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 160,
+    "attempts": 3
+  },
+  {
+    "index": 630,
+    "original_id": "44774-421",
+    "new_id": "e4a-second-44774-421",
+    "old_pair": [
+      544,
+      60
+    ],
+    "new_pair": [
+      94,
+      45
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 288,
+    "supervised_tokens": 146,
+    "attempts": 789
+  },
+  {
+    "index": 638,
+    "original_id": "c9-train-1-0-0-78",
+    "new_id": "e4a-second-c9-train-1-0-0-78",
+    "old_pair": [
+      826,
+      1005
+    ],
+    "new_pair": [
+      839,
+      1051
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 327,
+    "supervised_tokens": 186,
+    "attempts": 1
+  },
+  {
+    "index": 639,
+    "original_id": "c5-train-2-6-366",
+    "new_id": "e4a-second-c5-train-2-6-366",
+    "old_pair": [
+      869,
+      72
+    ],
+    "new_pair": [
+      885,
+      67
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 67
+  },
+  {
+    "index": 647,
+    "original_id": "c5-train-2-6-110",
+    "new_id": "e4a-second-c5-train-2-6-110",
+    "old_pair": [
+      748,
+      36
+    ],
+    "new_pair": [
+      257,
+      54
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 1
+  },
+  {
+    "index": 652,
+    "original_id": "c9-train-2-1-0-1",
+    "new_id": "e4a-second-c9-train-2-1-0-1",
+    "old_pair": [
+      782,
+      3450
+    ],
+    "new_pair": [
+      1030,
+      2834
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 365,
+    "supervised_tokens": 224,
+    "attempts": 49
+  },
+  {
+    "index": 656,
+    "original_id": "c5-train-0-6-70",
+    "new_id": "e4a-second-c5-train-0-6-70",
+    "old_pair": [
+      220,
+      5
+    ],
+    "new_pair": [
+      321,
+      6
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 148,
+    "attempts": 146
+  },
+  {
+    "index": 664,
+    "original_id": "44774-141",
+    "new_id": "e4a-second-44774-141",
+    "old_pair": [
+      713,
+      41
+    ],
+    "new_pair": [
+      839,
+      98
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 151,
+    "attempts": 20
+  },
+  {
+    "index": 667,
+    "original_id": "c9-train-0-0-0-191",
+    "new_id": "e4a-second-c9-train-0-0-0-191",
+    "old_pair": [
+      376,
+      425
+    ],
+    "new_pair": [
+      332,
+      338
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 151,
+    "attempts": 3
+  },
+  {
+    "index": 673,
+    "original_id": "44774-2965",
+    "new_id": "e4a-second-44774-2965",
+    "old_pair": [
+      1124,
+      205
+    ],
+    "new_pair": [
+      1086,
+      289
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 301,
+    "supervised_tokens": 158,
+    "attempts": 5
+  },
+  {
+    "index": 678,
+    "original_id": "c9-train-1-1-0-119",
+    "new_id": "e4a-second-c9-train-1-1-0-119",
+    "old_pair": [
+      1144,
+      1734
+    ],
+    "new_pair": [
+      1203,
+      1646
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 334,
+    "supervised_tokens": 193,
+    "attempts": 23
+  },
+  {
+    "index": 682,
+    "original_id": "c5-train-2-6-54",
+    "new_id": "e4a-second-c5-train-2-6-54",
+    "old_pair": [
+      803,
+      8
+    ],
+    "new_pair": [
+      762,
+      7
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 150,
+    "attempts": 542
+  },
+  {
+    "index": 690,
+    "original_id": "44774-2245",
+    "new_id": "e4a-second-44774-2245",
+    "old_pair": [
+      853,
+      314
+    ],
+    "new_pair": [
+      917,
+      363
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 1
+  },
+  {
+    "index": 691,
+    "original_id": "c9-train-2-1-0-79",
+    "new_id": "e4a-second-c9-train-2-1-0-79",
+    "old_pair": [
+      728,
+      3068
+    ],
+    "new_pair": [
+      254,
+      2953
+    ],
+    "stratum": "day2-long-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": true,
+    "full_tokens": 360,
+    "supervised_tokens": 219,
+    "attempts": 1
+  },
+  {
+    "index": 699,
+    "original_id": "44774-861",
+    "new_id": "e4a-second-44774-861",
+    "old_pair": [
+      1004,
+      437
+    ],
+    "new_pair": [
+      547,
+      915
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 318,
+    "supervised_tokens": 175,
+    "attempts": 372
+  },
+  {
+    "index": 707,
+    "original_id": "c9-train-0-0-0-35",
+    "new_id": "e4a-second-c9-train-0-0-0-35",
+    "old_pair": [
+      533,
+      211
+    ],
+    "new_pair": [
+      237,
+      459
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 151,
+    "attempts": 11
+  },
+  {
+    "index": 708,
+    "original_id": "c5-train-0-6-246",
+    "new_id": "e4a-second-c5-train-0-6-246",
+    "old_pair": [
+      187,
+      20
+    ],
+    "new_pair": [
+      484,
+      32
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 147,
+    "attempts": 34
+  },
+  {
+    "index": 716,
+    "original_id": "44774-3109",
+    "new_id": "e4a-second-44774-3109",
+    "old_pair": [
+      510,
+      133
+    ],
+    "new_pair": [
+      347,
+      397
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 294,
+    "supervised_tokens": 151,
+    "attempts": 5
+  },
+  {
+    "index": 717,
+    "original_id": "c9-train-1-1-0-73",
+    "new_id": "e4a-second-c9-train-1-1-0-73",
+    "old_pair": [
+      740,
+      1755
+    ],
+    "new_pair": [
+      957,
+      1599
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 333,
+    "supervised_tokens": 192,
+    "attempts": 12
+  },
+  {
+    "index": 725,
+    "original_id": "c5-train-1-6-222",
+    "new_id": "e4a-second-c5-train-1-6-222",
+    "old_pair": [
+      649,
+      31
+    ],
+    "new_pair": [
+      621,
+      50
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 26
+  },
+  {
+    "index": 731,
+    "original_id": "c9-train-2-0-0-90",
+    "new_id": "e4a-second-c9-train-2-0-0-90",
+    "old_pair": [
+      1392,
+      1499
+    ],
+    "new_pair": [
+      1400,
+      1499
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 357,
+    "supervised_tokens": 216,
+    "attempts": 17
+  },
+  {
+    "index": 734,
+    "original_id": "44774-1125",
+    "new_id": "e4a-second-44774-1125",
+    "old_pair": [
+      896,
+      346
+    ],
+    "new_pair": [
+      810,
+      539
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 5
+  },
+  {
+    "index": 742,
+    "original_id": "c5-train-2-6-6",
+    "new_id": "e4a-second-c5-train-2-6-6",
+    "old_pair": [
+      880,
+      71
+    ],
+    "new_pair": [
+      748,
+      58
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 86
+  },
+  {
+    "index": 747,
+    "original_id": "c9-train-0-0-0-123",
+    "new_id": "e4a-second-c9-train-0-0-0-123",
+    "old_pair": [
+      787,
+      255
+    ],
+    "new_pair": [
+      814,
+      274
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 295,
+    "supervised_tokens": 155,
+    "attempts": 16
+  },
+  {
+    "index": 751,
+    "original_id": "44774-1477",
+    "new_id": "e4a-second-44774-1477",
+    "old_pair": [
+      1217,
+      492
+    ],
+    "new_pair": [
+      1210,
+      626
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 188,
+    "attempts": 27
+  },
+  {
+    "index": 758,
+    "original_id": "c9-train-1-1-0-157",
+    "new_id": "e4a-second-c9-train-1-1-0-157",
+    "old_pair": [
+      129,
+      2741
+    ],
+    "new_pair": [
+      367,
+      2179
+    ],
+    "stratum": "day1-long-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": true,
+    "full_tokens": 330,
+    "supervised_tokens": 189,
+    "attempts": 31
+  },
+  {
+    "index": 760,
+    "original_id": "44774-2429",
+    "new_id": "e4a-second-44774-2429",
+    "old_pair": [
+      196,
+      197
+    ],
+    "new_pair": [
+      692,
+      150
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 28
+  },
+  {
+    "index": 768,
+    "original_id": "c5-train-0-6-350",
+    "new_id": "e4a-second-c5-train-0-6-350",
+    "old_pair": [
+      209,
+      6
+    ],
+    "new_pair": [
+      158,
+      6
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 148,
+    "attempts": 110
+  },
+  {
+    "index": 770,
+    "original_id": "c9-train-2-0-0-70",
+    "new_id": "e4a-second-c9-train-2-0-0-70",
+    "old_pair": [
+      1387,
+      1498
+    ],
+    "new_pair": [
+      1385,
+      1498
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 350,
+    "supervised_tokens": 209,
+    "attempts": 75
+  },
+  {
+    "index": 777,
+    "original_id": "44774-2133",
+    "new_id": "e4a-second-44774-2133",
+    "old_pair": [
+      669,
+      413
+    ],
+    "new_pair": [
+      726,
+      288
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 296,
+    "supervised_tokens": 153,
+    "attempts": 73
+  },
+  {
+    "index": 784,
+    "original_id": "c9-train-0-0-0-168",
+    "new_id": "e4a-second-c9-train-0-0-0-168",
+    "old_pair": [
+      624,
+      304
+    ],
+    "new_pair": [
+      629,
+      306
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 292,
+    "supervised_tokens": 152,
+    "attempts": 78
+  },
+  {
+    "index": 786,
+    "original_id": "44774-541",
+    "new_id": "e4a-second-44774-541",
+    "old_pair": [
+      893,
+      265
+    ],
+    "new_pair": [
+      630,
+      421
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 300,
+    "supervised_tokens": 157,
+    "attempts": 2
+  },
+  {
+    "index": 794,
+    "original_id": "c5-train-0-6-22",
+    "new_id": "e4a-second-c5-train-0-6-22",
+    "old_pair": [
+      121,
+      5
+    ],
+    "new_pair": [
+      484,
+      3
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 281,
+    "supervised_tokens": 144,
+    "attempts": 1147
+  },
+  {
+    "index": 795,
+    "original_id": "c9-train-1-0-0-74",
+    "new_id": "e4a-second-c9-train-1-0-0-74",
+    "old_pair": [
+      241,
+      1296
+    ],
+    "new_pair": [
+      158,
+      1307
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 319,
+    "supervised_tokens": 178,
+    "attempts": 7
+  },
+  {
+    "index": 803,
+    "original_id": "c5-train-2-6-262",
+    "new_id": "e4a-second-c5-train-2-6-262",
+    "old_pair": [
+      880,
+      12
+    ],
+    "new_pair": [
+      754,
+      45
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 151,
+    "attempts": 45
+  },
+  {
+    "index": 807,
+    "original_id": "c9-train-2-0-0-110",
+    "new_id": "e4a-second-c9-train-2-0-0-110",
+    "old_pair": [
+      1384,
+      1496
+    ],
+    "new_pair": [
+      1385,
+      1495
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 350,
+    "supervised_tokens": 209,
+    "attempts": 1156
+  },
+  {
+    "index": 812,
+    "original_id": "44774-773",
+    "new_id": "e4a-second-44774-773",
+    "old_pair": [
+      470,
+      6
+    ],
+    "new_pair": [
+      585,
+      2
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 289,
+    "supervised_tokens": 148,
+    "attempts": 69
+  },
+  {
+    "index": 820,
+    "original_id": "44774-965",
+    "new_id": "e4a-second-44774-965",
+    "old_pair": [
+      373,
+      118
+    ],
+    "new_pair": [
+      292,
+      204
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 6
+  },
+  {
+    "index": 822,
+    "original_id": "c9-train-0-0-0-32",
+    "new_id": "e4a-second-c9-train-0-0-0-32",
+    "old_pair": [
+      402,
+      273
+    ],
+    "new_pair": [
+      169,
+      456
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 291,
+    "supervised_tokens": 151,
+    "attempts": 9
+  },
+  {
+    "index": 829,
+    "original_id": "c5-train-2-6-254",
+    "new_id": "e4a-second-c5-train-2-6-254",
+    "old_pair": [
+      110,
+      30
+    ],
+    "new_pair": [
+      546,
+      83
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 286,
+    "supervised_tokens": 148,
+    "attempts": 295
+  },
+  {
+    "index": 833,
+    "original_id": "c9-train-1-0-0-40",
+    "new_id": "e4a-second-c9-train-1-0-0-40",
+    "old_pair": [
+      1090,
+      1147
+    ],
+    "new_pair": [
+      1111,
+      1271
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 190,
+    "attempts": 48
+  },
+  {
+    "index": 838,
+    "original_id": "44774-701",
+    "new_id": "e4a-second-44774-701",
+    "old_pair": [
+      1232,
+      473
+    ],
+    "new_pair": [
+      1097,
+      680
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 188,
+    "attempts": 6
+  },
+  {
+    "index": 845,
+    "original_id": "c9-train-2-0-0-142",
+    "new_id": "e4a-second-c9-train-2-0-0-142",
+    "old_pair": [
+      1387,
+      1495
+    ],
+    "new_pair": [
+      1385,
+      1500
+    ],
+    "stratum": "day2-short-template0",
+    "group": "target",
+    "days": 2,
+    "high_duration": false,
+    "full_tokens": 350,
+    "supervised_tokens": 209,
+    "attempts": 45
+  },
+  {
+    "index": 847,
+    "original_id": "44774-2277",
+    "new_id": "e4a-second-44774-2277",
+    "old_pair": [
+      660,
+      293
+    ],
+    "new_pair": [
+      177,
+      241
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 293,
+    "supervised_tokens": 150,
+    "attempts": 10
+  },
+  {
+    "index": 855,
+    "original_id": "44774-477",
+    "new_id": "e4a-second-44774-477",
+    "old_pair": [
+      1358,
+      411
+    ],
+    "new_pair": [
+      1331,
+      304
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 331,
+    "supervised_tokens": 188,
+    "attempts": 8
+  },
+  {
+    "index": 860,
+    "original_id": "c9-train-0-0-0-121",
+    "new_id": "e4a-second-c9-train-0-0-0-121",
+    "old_pair": [
+      852,
+      555
+    ],
+    "new_pair": [
+      814,
+      519
+    ],
+    "stratum": "day0-short-template0",
+    "group": "target",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 297,
+    "supervised_tokens": 157,
+    "attempts": 8
+  },
+  {
+    "index": 864,
+    "original_id": "c5-train-0-6-318",
+    "new_id": "e4a-second-c5-train-0-6-318",
+    "old_pair": [
+      143,
+      9
+    ],
+    "new_pair": [
+      964,
+      6
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 285,
+    "supervised_tokens": 148,
+    "attempts": 832
+  },
+  {
+    "index": 871,
+    "original_id": "c9-train-1-0-0-114",
+    "new_id": "e4a-second-c9-train-1-0-0-114",
+    "old_pair": [
+      961,
+      746
+    ],
+    "new_pair": [
+      982,
+      826
+    ],
+    "stratum": "day1-short-template0",
+    "group": "target",
+    "days": 1,
+    "high_duration": false,
+    "full_tokens": 323,
+    "supervised_tokens": 183,
+    "attempts": 14
+  },
+  {
+    "index": 873,
+    "original_id": "c5-train-1-6-22",
+    "new_id": "e4a-second-c5-train-1-6-22",
+    "old_pair": [
+      605,
+      30
+    ],
+    "new_pair": [
+      262,
+      22
+    ],
+    "stratum": "replay-5",
+    "group": "replay",
+    "days": 0,
+    "high_duration": false,
+    "full_tokens": 287,
+    "supervised_tokens": 149,
+    "attempts": 34
+  }
+]

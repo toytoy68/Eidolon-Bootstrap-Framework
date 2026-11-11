@@ -1,0 +1,75 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : finish.py
+# Description : Bilan E4a, scores, controles, energie et empreintes
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+import json,time,math,collections
+def rows(folder,stage,candidate):
+ out=[]
+ for rank in range(2):out+=read(P/folder/f'{stage}-{candidate}-rank{rank}.json')['rows']
+ assert len({x['id'] for x in out})==len(out)
+ return out
+def score(rr):
+ return dict(n=len(rr),correct=sum(x['evaluation']['content_correct'] for x in rr),truncated=sum(x['truncated'] for x in rr),starts_Depart=sum(x.get('chain_metrics',{}).get('starts_Depart',False) for x in rr),required_A_verified=sum(x.get('chain_metrics',{}).get('required_chain_A_verified',False) for x in rr),hybrid_prefix=sum(x.get('chain_metrics',{}).get('hybrid_prefix_without_required_chain',False) for x in rr),control_compares=sum(x.get('chain_metrics',{}).get('control_compare_count',0) for x in rr),control_counters=sum(x.get('chain_metrics',{}).get('control_counter_count',0) for x in rr),detected_false_claims=sum(bool(x.get('invalid_claims')) for x in rr))
+def compare(a,b):
+ aa={x['id']:x for x in a};bb={x['id']:x for x in b};assert aa.keys()==bb.keys()
+ assert all(aa[k]['identity']['gpu_uuid']==bb[k]['identity']['gpu_uuid'] and aa[k]['identity']['batch_ids']==bb[k]['identity']['batch_ids'] for k in aa)
+ g=sum(not aa[k]['evaluation']['content_correct'] and bb[k]['evaluation']['content_correct'] for k in aa);l=sum(aa[k]['evaluation']['content_correct'] and not bb[k]['evaluation']['content_correct'] for k in aa);n=g+l
+ return dict(before=score(a),after=score(b),gains=g,losses=l,p_exact_exploratory=min(1.,2*sum(math.comb(n,i) for i in range(min(g,l)+1))/2**n) if n else 1.)
+candidates=['parent','step102','step204','e4a204'];data={};quality={}
+for scope,n in [('selection',192),('report',352)]:
+ result={}
+ for c in candidates:
+  rr=rows('after' if c=='e4a204' else 'baseline','eval-'+scope,c);assert len(rr)==n
+  result[c]=rr
+ save(P/(scope+'-responses.json'),result);data[scope]=result
+ quality[scope]={c:{'overall':score(rr),'subsets':{g:score([x for x in rr if x['group']==g]) for g in ['target','anchor']},'strata':{s:score([x for x in rr if x['stratum']==s]) for s in sorted({x['stratum'] for x in rr})}} for c,rr in result.items()}
+ quality[scope]['paired']={c:compare([x for x in result[c] if x['group']=='target'],[x for x in result['e4a204'] if x['group']=='target']) for c in ['parent','step204']}
+canaries={c:rows('after' if c=='e4a204' else 'baseline','eval-canary',c) for c in candidates}
+assert all(len(v)==8 for v in canaries.values());save(P/'canaries.json',canaries)
+nll={}
+for c in candidates:
+ rr=rows('after' if c=='e4a204' else 'baseline','roles',c);assert len(rr)==352
+ groups={}
+ for name in ['all','target','anchor']:
+  xs=rr if name=='all' else [x for x in rr if x['group']==name]
+  groups[name]=dict(n=len(xs),tokens=sum(x['assistant_tokens'] for x in xs),nll_per_token=sum(x['nll_sum'] for x in xs)/sum(x['assistant_tokens'] for x in xs))
+ rs={}
+ for role in sorted({k for x in rr for k in x['roles']}):
+  values=[x['roles'][role] for x in rr if role in x['roles']]
+  rs[role]=dict(responses=len(values),tokens=sum(x['tokens'] for x in values),nll_per_token=sum(x['nll_sum'] for x in values)/sum(x['tokens'] for x in values),mean_response_nll=sum(x['mean_nll'] for x in values)/len(values))
+ nll[c]=dict(groups=groups,roles=rs,mean_p_prefix=sum(x.get('p_prefix',0) for x in rr if x['group']=='target')/320)
+save(P/'nll-role-summary.json',nll)
+telemetry={}
+for name in ['qualification-dual','baseline','run','after']:
+ xs=[json.loads(s) for s in (P/name/'telemetry.jsonl').read_text().splitlines()]
+ valid=[x for x in xs if isinstance(x.get('meter',{}).get('energy_wh'),(int,float))]
+ power=[x for x in xs if isinstance(x.get('meter',{}).get('wall_w'),(int,float))]
+ telemetry[name]=dict(seconds=xs[-1]['epoch']-xs[0]['epoch'],samples=len(xs),gpus=[{k:dict(mean=sum(x['gpus'][rank][k] for x in xs)/len(xs),max=max(x['gpus'][rank][k] for x in xs)) for k in ['gpu_w','gpu_c','hbm_c','cpu_c','vram_mib']} for rank in range(2)],wall_w_mean=sum(x['meter']['wall_w'] for x in power)/len(power),wall_w_max=max(x['meter']['wall_w'] for x in power),energy_wh=valid[-1]['meter']['energy_wh']-valid[0]['meter']['energy_wh'],meter_missing=len(xs)-len(valid),energy_interval_seconds=valid[-1]['epoch']-valid[0]['epoch'])
+ assert read(P/name/'status.json')['phase']=='finished' and not (P/name/'guard-trip.json').exists()
+for rank in range(2):assert read(P/'after'/f'baseline-crossload-rank{rank}.json')['passed']
+report=quality['report'];day0=lambda c:sum(x['evaluation']['content_correct'] for x in data['report'][c] if x['stratum'].startswith('day0-'))
+guards=dict(day0_before=day0('parent'),day0_after=day0('e4a204'),day0_pass=day0('e4a204')>=day0('parent')-1,acquired_after=report['e4a204']['subsets']['anchor']['correct'],acquired_pass=report['e4a204']['subsets']['anchor']['correct']>=25)
+result=dict(state='finished',training_summary=read(P/'run/training-summary.json'),data=read(P/'dataset-preparation.json'),quality=quality,nll=nll,telemetry=telemetry,guards=guards,model_reference='parent-cycle5',automatic_promotion=False,canaries_human_review_required=True,final_reserved_read=False,warning='E3 shared prefix inherited102 updates; only102new updates. Known report/selection reused: exploratory. Teacher-forced numeric/control NLL is not generated correctness; required canonical A is partial parsing.')
+save(P/'resultat-final.json',result)
+lines=['Eva cycle11 E4a — diversite horaire stricte','Premier passage E3-102 herite avec optimiseur, scheduler, scaler et RNG ;102mises a jour nouvelles,204cumulees.','Aucun modele promu automatiquement. Parent cycle5 conserve comme reference.','338problemes horaires distincts ;169remplacements apparies exactement en longueur complete et supervisee, strate et position.','Tokens supervises horaires56974, nonhoraires63244,total120218 ;47,392237% horaires.','','Scores (memes lots16 et GPU parquestion) :']
+for scope in ['selection','report']:
+ for c in candidates:
+  d=quality[scope][c];t=d['subsets']['target'];a=d['subsets']['anchor']
+  lines.append(f"{scope} {c}: horaires {t['correct']}/{t['n']},acquis {a['correct']}/32,DebutDepart {t['starts_Depart']},chaineArequise {t['required_A_verified']},hybrides {t['hybrid_prefix']},troncatures {t['truncated']}.")
+ for c,d in quality[scope]['paired'].items():lines.append(f"E4a vs {c}: {d['gains']}gains/{d['losses']}pertes,p exploratoire {d['p_exact_exploratory']}.")
+lines+=['','Gardes jour0/acquis :'+json.dumps(guards),'','Strates rapport :']
+for st in report['parent']['strata']:lines.append(st+' : '+' ; '.join(c+' '+str(report[c]['strata'][st]['correct'])+'/'+str(report[c]['strata'][st]['n']) for c in candidates))
+lines+=['','NLL forcee parrole (numerique/controle) :'+json.dumps(nll,ensure_ascii=False),'Les spans calcules sont etiquetes parrole, pas exclus parce que leurs chiffres figurent dans laquestion. Les chevauchements entre roles ne doivent pas etre additionnes. Couverture et tokensfrontiere dans metric-self-check.json.','NLL forcee et prefixe ne prouvent pas la justesse generee. Le parseurA ne verifie que les composants canoniques requis et les affirmations detectables ;nonparsable ne signifie pas calculfaux.','','Temps/puissance/temperatures/energie :'+json.dumps(telemetry,ensure_ascii=False),'Limites200W configurees parGPU ;pointes echantillonnees peuvent depasser200W. Energie secteur surintervalle compteur renseigne, echantillons absents explicites.','Jeux connus reutilises apres diagnostics :resultats exploratoires,pas nouveau testaveugle. Le testfinalreserve na pas ete lu.','32canaris conserves pourrevue qualitative. Tousadaptateurs/checkpoints/logs conserves. AucunE4b,hausseLR,arretou redemarrage automatique.','Dossier :'+str(P)]
+(P/'Rapport_Eva_cycle11_E4a.txt').write_text('\n'.join(lines)+'\n')
+hashes={}
+for folder in ['qualification-dual','baseline','run','after','resume','inherited']:
+ for f in (P/folder).rglob('*'):
+  if f.is_file() and '__pycache__' not in f.parts and '.tmp' not in f.name:hashes[str(f.relative_to(P))]=sha(f)
+for name in ['Rapport_Eva_cycle11_E4a.txt','resultat-final.json','selection-responses.json','report-responses.json','canaries.json','nll-role-summary.json','launch-manifest.json','dataset-preparation.json','lineage.json','metric-self-check.json','self-check.json']:
+ hashes[name]=sha(P/name)
+save(P/'result-saved.json',dict(state='finished',files=hashes,epoch=time.time(),automatic_promotion=False))
+assert all(sha(P/n)==h for n,h in hashes.items());print(json.dumps(dict(saved=True,verified_files=len(hashes))))

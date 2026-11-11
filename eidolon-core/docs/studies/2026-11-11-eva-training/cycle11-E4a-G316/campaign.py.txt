@@ -1,0 +1,118 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : campaign.py
+# Description : E4a borne, entrainement DDP et evaluations independantes
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from pathlib import Path
+import os,time,subprocess as sp,signal,fcntl,socket,json
+C=read(P/'config.json');BOOT=C['boot_id'];children=[];guard=None;OUT=None
+leases=[open(n,'a') for n in ['/run/eidolon-eva-cycle9-orchestration.lock','/run/eidolon-eva-learning.lock']]
+for lease in leases:fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+def notify():
+ address=os.environ.get('NOTIFY_SOCKET')
+ if address:
+  if address.startswith('@'):address='\0'+address[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as sock:sock.connect(address);sock.sendall(b'WATCHDOG=1')
+def campaign(phase,**kw):save(P/'campaign-status.json',dict(phase=phase,epoch=time.time(),boot_id=BOOT,**kw));notify()
+def heartbeat(phase,**kw):save(OUT/'status.json',dict(phase=phase,heartbeat=time.time(),epoch=time.time(),**kw));notify()
+def stop(*args):raise RuntimeError('operator/systemd/guard termination')
+signal.signal(signal.SIGTERM,stop)
+def kill_children():
+ global children
+ for child in children:
+  if child.poll() is None:
+   try:os.killpg(child.pid,signal.SIGTERM)
+   except ProcessLookupError:pass
+ for child in children:
+  if child.poll() is None:
+   try:child.wait(timeout=12)
+   except sp.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=5)
+ children=[]
+def monitor(phase,deadline,progress=True):
+ while any(child.poll() is None for child in children):
+  if any(child.poll() is not None and child.returncode!=0 for child in children):raise RuntimeError('Child exited nonzero in '+phase)
+  assert not (OUT/'guard-trip.json').exists(),'Guard trip '+(OUT/'guard-trip.json').read_text() if (OUT/'guard-trip.json').exists() else 'guard'
+  assert guard.poll() is None,'Guard process stopped'
+  assert time.time()<deadline,'Stage timeout '+phase
+  if progress:
+   paths=[OUT/'progress-check.json'] if phase=='integrity_check' else [OUT/f'progress-rank{rank}.json' for rank in range(2)]
+   for file in paths:
+    if file.exists():
+     item=read(file)
+     if item.get('stage')!='finished':assert time.time()-item['epoch']<600,'Progress stale '+str(file)
+  heartbeat(phase);time.sleep(.5)
+ assert all(child.returncode==0 for child in children),'Child exit error '+phase
+def gate():
+ assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()==BOOT
+ proof=read(P/'cpu-preflight.json');assert proof['passed'] and proof['memtester_passed'] and proof['boot_id']==BOOT
+ for n,h in read(P/'launch-manifest.json').items():assert sha(P/n)==h,n
+ assert read(P/'self-check.json')['passed'] and read(P/'dataset-preparation.json')['passed']
+def stage(name,kind):
+ global OUT,guard,children
+ gate();OUT=P/name;OUT.mkdir(exist_ok=False);campaign(name,training=kind=='train',new_updates=102 if kind=='train' else 0)
+ (OUT/'controller.pid').write_text(str(os.getpid()));heartbeat('starting')
+ import sampler_rtx,sampler_v100
+ assert not sampler_rtx.busy() and not sampler_v100.busy(),'GPU busy before stage'
+ for sampler in [sampler_rtx,sampler_v100]:sampler.power(200)
+ env=dict(os.environ,EVA_OUTPUT=str(OUT),TOKENIZERS_PARALLELISM='false',HF_HUB_DISABLE_XET='1',HF_HOME=str(P/'hf-cache'),OMP_NUM_THREADS='4')
+ guard=sp.Popen(['/usr/bin/python3',str(P/'guard.py')],env=env,stdout=(OUT/'guard.log').open('w'),stderr=sp.STDOUT)
+ try:
+  deadline=time.time()+15
+  while not (OUT/'guard-status.json').exists():
+   assert guard.poll() is None and time.time()<deadline,'Guard startup failed'
+   heartbeat('guard_starting');time.sleep(.2)
+  child=sp.Popen(['/usr/bin/python3',str(P/'live_check.py')],env=env,stdout=(OUT/'integrity.log').open('w'),stderr=sp.STDOUT,start_new_session=True);children=[child]
+  monitor('integrity_check',time.time()+600);children=[]
+  assert read(OUT/'integrity-proof.json')['passed']
+  if kind in ['smoke','train']:
+   ev=dict(env,EVA_MODE=kind,CUDA_VISIBLE_DEVICES=','.join(C['uuids']),TORCH_NCCL_ASYNC_ERROR_HANDLING='1',NCCL_DEBUG='INFO',NCCL_DEBUG_SUBSYS='INIT,GRAPH,P2P')
+   children=[sp.Popen([str(P/'venv/bin/python'),'-m','torch.distributed.run','--standalone','--nnodes=1','--nproc-per-node=2',str(P/'train.py')],env=ev,stdout=(OUT/'train.log').open('w'),stderr=sp.STDOUT,start_new_session=True)]
+   timeout=900 if kind=='smoke' else 2400
+  else:
+   candidate_file='candidates-baseline.json' if kind=='baseline' else 'candidates-after.json'
+   children=[sp.Popen([str(P/'venv/bin/python'),str(P/'audit_worker.py')],env=dict(env,EVA_RANK=str(rank),EVA_DIAGNOSTIC=kind,EVA_CANDIDATES_FILE=candidate_file,CUDA_VISIBLE_DEVICES=C['uuids'][rank]),stdout=(OUT/f'worker-rank{rank}.log').open('w'),stderr=sp.STDOUT,start_new_session=True) for rank in range(2)]
+   timeout=7200
+  monitor(kind,time.time()+timeout);children=[]
+  if kind=='smoke':assert read(OUT/'passed.json')['passed']
+  elif kind=='train':assert read(OUT/'training-summary.json')['coverage_verified']
+  else:
+   assert all(read(OUT/f'progress-rank{rank}.json')['stage']=='finished' for rank in range(2))
+  heartbeat('finished',kind=kind)
+ finally:
+  kill_children();(OUT/'guard-stop').touch()
+  if guard:
+   try:guard.wait(timeout=6)
+   except sp.TimeoutExpired:guard.terminate();guard.wait(timeout=5)
+  guard=None
+try:
+ campaign('qualification',training=False);stage('qualification-dual','smoke')
+ stage('baseline','baseline')
+ assert all(read(P/'baseline'/f'parent-repeat-rank{rank}.json')['passed'] for rank in range(2))
+ for rank in range(2):
+  for candidate in ['parent','step204']:
+   for scope in ['selection','report']:assert read(P/'baseline'/f'historical-{scope}-{candidate}-rank{rank}.json')['passed']
+ stage('run','train')
+ candidate=dict(name='e4a204',path=str(P/'run/adapter-final'),sha256=sha(P/'run/adapter-final/adapter_model.safetensors'))
+ save(P/'candidates-after.json',[read(P/'candidates-baseline.json')[0],candidate])
+ stage('after','after');campaign('saving_results',training=False)
+ child=sp.Popen(['/usr/bin/python3',str(P/'finish.py')],stdout=(P/'finalize.log').open('w'),stderr=sp.STDOUT,start_new_session=True);children=[child]
+ deadline=time.time()+300
+ while child.poll() is None:
+  assert time.time()<deadline,'Finalizer timeout';notify();time.sleep(.5)
+ assert child.returncode==0,'Finalizer failed';children=[]
+ assert read(P/'result-saved.json')['state']=='finished'
+ campaign('finished',training=False,result_saved=True,automatic_promotion=False)
+except BaseException as e:
+ campaign('failed',training=False,reason=repr(e))
+ failure=dict(state='failed',reason=repr(e),epoch=time.time(),boot_id=BOOT,all_artifacts_retained=True,automatic_promotion=False)
+ save(P/'failed-result.json',failure)
+ report=P/'Rapport_Eva_cycle11_failure.txt';report.write_text('Eva E4a — essai arrete, aucune promotion.\n'+json.dumps(failure,ensure_ascii=False,indent=2)+'\nTous checkpoints, donnees et logs conserves. Aucune relance automatique.\n')
+ save(P/'failure-saved.json',dict(state='failed',files={report.name:sha(report),'failed-result.json':sha(P/'failed-result.json')}));raise
+finally:
+ kill_children()
+ if OUT is not None:
+  (OUT/'guard-stop').touch()
+ if guard and guard.poll() is None:guard.terminate()

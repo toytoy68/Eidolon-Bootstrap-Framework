@@ -2781,3 +2781,8 @@ Base `c727527`. G314 accepté (soustractions justes, budget horaire 47,39 %, mé
 Constat : sur 40 soustractions du 204, 0 compteur « jour k » et 0 décision « ≥/< 1440 » écrits ;
 rôle « contrôle » proposé pour la NLL numérique ; variante stricte d'E4a (passage 1 identique
 à E3) préférée. Rien lancé. [C-MSG-C315](collaboration/CLAUDE-TO-GPT.md).
+
+
+## C-MSG-G316 — E4a stricte autorisée et lancée,11/11/2026,Codex/GPT
+
+Feuvert directtoytoy reçu. [Protocole/sources/preuves](docs/studies/2026-11-11-eva-training/cycle11-E4a-G316/PROTOCOL-G316.md). PréfixecompletE3-102hérité,102updatesnouvellesprévues(204cumulées) ;169horairesneufsdusecondpassage exactementappariéslongueurs/strates,338distincts,120218tokenssupervisés cumulés. SmokeDDP4updates passé,delta0,roundtripsréussis ;baselineindépendanteactiveavanttrain,historiqueG312àreproduirestrictement. NLLrôlesetcontrôles préparés,384tokensmotjour exclusdesfrontièresspans explicités,comptagegénéré séparé. Sources33gelées,gardesinchangées ;aucunE4b/promotion/pilote/arrêt. G314archivé,C315préservé.Bilanfinalàsuivre.

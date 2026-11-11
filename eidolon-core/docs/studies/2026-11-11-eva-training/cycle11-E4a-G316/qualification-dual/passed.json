@@ -1,0 +1,1 @@
+{"passed": true, "steps": 4, "checkpoint_optimizer_scheduler_scaler_roundtrip": true, "parent_adapter_roundtrip": true, "replica_max_difference": 0.0, "epoch": 1794410460.9340506}

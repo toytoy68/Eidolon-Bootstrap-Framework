@@ -1,0 +1,38 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : self_check.py
+# Description : Validation CPU des donnees et de la reprise complete E4a
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save
+import ast,torch
+from safetensors.torch import load_file
+for name in ['train.py','campaign.py','audit_worker.py','finish.py','guard.py','live_check.py','audit_metrics.py','prepare_e4a.py','prepare_audit.py']:ast.parse((P/name).read_text())
+train=ast.parse((P/'train.py').read_text());audit=ast.parse((P/'audit_worker.py').read_text())
+assert not any(isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=='generate' for n in ast.walk(train))
+assert not any(isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr in ['backward','step'] for n in ast.walk(audit))
+assert 'init_process_group' not in (P/'audit_worker.py').read_text()
+d=read(P/'dataset.json');old=read(P.parent/'eva-learning-cycle10-repetition-20261111-4c1f2095/dataset.json')
+assert d['train']==old['train'] and len(d['train_second'])==878
+assert sum(x!=y for x,y in zip(d['train'],d['train_second']))==169
+assert all(x==y for x,y in zip(d['train'],d['train_second']) if x['expected']['unite']!='heure')
+s=torch.load(P/'inherited/step-102/training-state.pt',map_location='cpu',weights_only=False)
+weights=load_file(str(P/'inherited/step-102/adapter/adapter_model.safetensors'))
+assert s['step']==102 and s['world_size']==2 and s['totals']==[172484,60109,208896]
+assert s['scheduler']['last_epoch']==102 and len(s['rngs'])==2 and all('cpu' in x and 'cuda' in x for x in s['rngs'])
+opt=s['optimizer']['state']
+assert len(opt)==len(weights)==504
+assert sum(v['exp_avg'].numel() for v in opt.values())==sum(v.numel() for v in weights.values())==16515072
+assert all(v['exp_avg'].shape==v['exp_avg_sq'].shape and float(v['step'])==102 for v in opt.values())
+assert sorted(tuple(v['exp_avg'].shape) for v in opt.values())==sorted(tuple(v.shape) for v in weights.values())
+ns=[3,17,5,11];x=torch.tensor(2.,requires_grad=True);loss=sum((x-(i+1))**2*n for i,n in enumerate(ns))/sum(ns);loss.backward();want=x.grad.item();got=[]
+for rank in range(2):
+ y=torch.tensor(2.,requires_grad=True);v=sum((y-(i+1))**2*2*ns[i]/sum(ns) for i in range(rank,4,2));v.backward();got.append(y.grad.item())
+assert abs(sum(got)/2-want)<1e-6
+for epoch in range(2):
+ indices=[(i%102)*4+j*2+r for i in range(epoch*102,(epoch+1)*102) for r in range(2) for j in range(2)]
+ assert len(indices)==408 and set(indices)==set(range(408))
+assert read(P/'dataset-preparation.json')['passed'] and read(P/'metric-self-check.json')['passed']
+save(P/'self-check.json',dict(passed=True,full_prefix_step102=True,optimizer_parameters=len(opt),scheduler_last_epoch=s['scheduler']['last_epoch'],two_rank_rng=True,ddp_token_gradient_equivalence=True,two_pass_pack_coverage=True,training_generation_separated=True,first_pass_identical=True,non_hours_identical=True,exact_length_matched169=True,metric_oracles320=True,model_loaded=False))
+print(read(P/'self-check.json'))

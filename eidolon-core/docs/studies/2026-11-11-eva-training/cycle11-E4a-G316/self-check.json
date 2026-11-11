@@ -1,0 +1,1 @@
+{"passed": true, "full_prefix_step102": true, "optimizer_parameters": 504, "scheduler_last_epoch": 102, "two_rank_rng": true, "ddp_token_gradient_equivalence": true, "two_pass_pack_coverage": true, "training_generation_separated": true, "first_pass_identical": true, "non_hours_identical": true, "exact_length_matched169": true, "metric_oracles320": true, "model_loaded": false}

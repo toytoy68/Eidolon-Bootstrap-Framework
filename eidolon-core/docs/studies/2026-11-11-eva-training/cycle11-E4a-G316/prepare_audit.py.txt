@@ -1,0 +1,51 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : prepare_audit.py
+# Description : Corpus gele, masques numeriques et tests CPU E4a
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from pathlib import Path
+import ast,json,copy,re,collections,hashlib
+from transformers import AutoTokenizer
+from audit_metrics import annotations,chain_metrics
+from review_tools import time_steps
+OLD=P.parent/'eva-learning-cycle10-repetition-20261111-4c1f2095'
+D=P.parent/'eva-diagnostics-c309-20261111-4c1f2095'
+for n in ['selection.json','report-examples.json','system.json']:(P/n).write_bytes((D/n).read_bytes())
+examples=read(P/'report-examples.json')
+for ex in examples:
+ if ex['group']=='target':
+  s,d=ex['time_key'];assert time_steps(s,d)[0]==ex['answer'];ex['roles']=annotations(s,d)
+  assert chain_metrics(ex['answer'],s,d)['required_chain_A_verified']
+save(P/'nll-examples.json',examples)
+parent=read(P/'config.json')['parent_adapter']
+candidates=[dict(name='parent',path=parent,sha256='c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30'),dict(name='step102',path=str(P/'inherited/step-102/adapter'),sha256='ac55b0a89890520590ef8364f40f601f2e383524cbd3c738211b29d326832142'),dict(name='step204',path=str(OLD/'resume/step-204/adapter'),sha256='df3e8c7de5a23b8e2c4d3f19caffc03197ee257640cc39ad5f1dcde990b6e7e2')]
+save(P/'candidates-baseline.json',candidates)
+tok=AutoTokenizer.from_pretrained(P/'source-model',local_files_only=True,trust_remote_code=False);system=read(P/'system.json')['system'];coverage=collections.Counter();excluded=collections.Counter()
+for ex in examples:
+ if ex['group']!='target':continue
+ pre=tok.apply_chat_template([dict(role='system',content=system),dict(role='user',content=ex['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tok.apply_chat_template([dict(role='system',content=system),dict(role='user',content=ex['question']),dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+ assert full.startswith(pre);offset=len(pre)
+ enc=tok(full,add_special_tokens=False,return_offsets_mapping=True)
+ for span in ex['roles']:
+  a,b=span['start']+offset,span['end']+offset
+  included=[i for i,(x,y) in enumerate(enc['offset_mapping']) if x>=a and y<=b and y>x]
+  crossing=[i for i,(x,y) in enumerate(enc['offset_mapping']) if y>a and x<b and not (x>=a and y<=b)]
+  assert included,(ex['id'],span)
+  coverage[span['role']]+=len(included);excluded[span['role']]+=len(crossing)
+# Canonical chain decisions and counters must reject targeted corruptions.
+for start,d in [(0,1),(60,30),(1439,1),(1439,2),(1200,2000),(0,4320)]:
+ text,expected=time_steps(start,d);assert chain_metrics(text,start,d)['required_chain_A_verified']
+ assert not chain_metrics(text.replace('Arrivée','Retour'),start,d)['required_chain_A_verified']
+ if expected['jours']:
+  assert not chain_metrics(text.replace(', jour 1.',', jour 0.'),start,d)['required_chain_A_verified']
+  assert not chain_metrics(text.replace('≥ 1440 :','> seuil :',1),start,d)['required_chain_A_verified']
+ else:
+  assert not chain_metrics(text.replace('< 1440 :','< seuil :',1),start,d)['required_chain_A_verified']
+short='90 minutes. {"resultat":"01:30","unite":"heure","jours":0}'
+m=chain_metrics(short,60,30);assert m['content_correct'] and not m['required_chain_A_verified']
+save(P/'metric-self-check.json',dict(passed=True,oracle_targets_verified=320,policy_cases=6,content_correct_unparsed_preserved=True,role_tokens=dict(coverage),excluded_token_span_crossings=dict(excluded),numeric_definition='computed-value spans annotated by role, not set difference against input digits',control_role='comparisons and jour counters; may overlap numeric roles',training=False))
+print(json.dumps(read(P/'metric-self-check.json')))

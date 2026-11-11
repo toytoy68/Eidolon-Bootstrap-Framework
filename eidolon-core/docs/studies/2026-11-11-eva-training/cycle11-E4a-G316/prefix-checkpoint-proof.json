@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "source": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-102",
+  "files": {
+    "training-state.pt": [
+      "255759a0ae250d316647a236393f05133ae2e989d88f20e113341326b29c24f2",
+      "255759a0ae250d316647a236393f05133ae2e989d88f20e113341326b29c24f2"
+    ],
+    "complete.json": [
+      "0e2df470afb435419947837819b2b1cf265b91f695719b78c63654429ed283ce",
+      "0e2df470afb435419947837819b2b1cf265b91f695719b78c63654429ed283ce"
+    ],
+    "adapter/README.md": [
+      "5a16b04f516187c793b27feb47c165a3438cb84021d1836c8be0e4dd4d4a0bb2",
+      "5a16b04f516187c793b27feb47c165a3438cb84021d1836c8be0e4dd4d4a0bb2"
+    ],
+    "adapter/adapter_model.safetensors": [
+      "ac55b0a89890520590ef8364f40f601f2e383524cbd3c738211b29d326832142",
+      "ac55b0a89890520590ef8364f40f601f2e383524cbd3c738211b29d326832142"
+    ],
+    "adapter/adapter_config.json": [
+      "12760467162251cb71438656e0c95727c5a18154d73f40fdd4d3af3e873ca02f",
+      "12760467162251cb71438656e0c95727c5a18154d73f40fdd4d3af3e873ca02f"
+    ]
+  },
+  "inherited_first_pass_updates": 102,
+  "original_dataset_sha256": "69ca4e7a6a84de1cb33a04bd2b9cca2236d132ec4895218e09c27ec4ee841329"
+}
