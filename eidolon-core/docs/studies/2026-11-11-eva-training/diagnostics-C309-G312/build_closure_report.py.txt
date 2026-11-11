@@ -1,0 +1,73 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : build_closure_report.py
+# Description : Cloture CPU des diagnostics C309
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import json,time,sys
+p=Path('/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095');sys.path.insert(0,str(p))
+from common import read,save,sha
+backup=p/'finalization-recovery'
+for name in ['result-saved.json','resultat-final.json','Rapport_Eva_diagnostics_C309.txt']:
+ dst=backup/('recovered-initial-'+name);assert not dst.exists();dst.write_bytes((p/name).read_bytes())
+r=read(p/'resultat-final.json');a=read(p/'closure-audit-G312.json')
+r.update(closure_audit_file='closure-audit-G312.json',finalization_recovered_cpu_only=True,original_systemd_result='failed: finalizer KeyError energy_wh, duplicate training kwarg',canaries_human_review_required=False,canaries_qualitative_review=a['canaries_review'])
+save(p/'resultat-final.json',r)
+lines=['EVA — DIAGNOSTICS C309 ET CHECKPOINT E3-204','Bilan du 11 novembre 2026, Europe/Paris — Codex/GPT, G312','',
+'Conclusion : checkpoint204 en régression horaire. Parent cycle5 conservé. Aucun nouvel entraînement ni promotion.',
+'Comparaison neuve en lots16, mêmes GPU et mêmes groupes de questions pour parent et204.']
+for scope in ['selection','report']:
+ d=r['quality'][scope];t=d['subsets']['target'];v=d['subsets']['anchor']
+ lines += [f"{scope}: horaires {t['before']['correct']}→{t['after']['correct']}/{t['before']['n']}, acquis {v['before']['correct']}→{v['after']['correct']}/32.",
+ f"Horaires : {t['gains']} gains,{t['losses']} pertes,p exact apparié exploratoire={t['p_exact_exploratory']:.9g}. Troncatures après={d['after']['truncated']}.",
+ f"Réponses horaires avec affirmation fausse détectée :{t['before']['false_claims']}→{t['after']['false_claims']}."]
+lines += ['','STRATES HORAIRES (sélection / rapport)']
+for st,d in r['quality']['report']['strata'].items():
+ if st.startswith('anchor'):continue
+ s=r['quality']['selection']['strata'][st]
+ lines.append(f"{st}: {s['before']['correct']}→{s['after']['correct']}/16 ; {d['before']['correct']}→{d['after']['correct']}/32.")
+lines += ['Les cas jour2 restent0/128 au rapport ; jour1-long0/64. Pertes surtout jour0 et jour1-court. Acquis26/32 stables au total avec1gain et1perte.',
+'','VRAISEMBLANCE ET FORMAT',
+'NLL cible/token parent1,096109→102:0,694805→204:0,447986. P moyenne Départ (2tokens):0,000935%→0,279948%→37,563079%. Probabilité de séquence, pas taux de réussite.',
+'Préfixe Départ effectivement observé : sélection0→91/160 ; rapport0→174/320. Zéro sortie204 classée strictementA ouB par les regexC309 ; sorties hybrides. Le préfixe appris ne démontre pas une chaîne de calcul maîtrisée.',
+'Exemple :22:47 converti en1427min au lieu de1367 ; ailleurs une soustraction1440 négative entraîne quand même un jour de décalage. Les validateurs partiels manquent des étapes omises ou mal recopiées.',
+'','SONDES PARENT C309',
+'SG24/24 :11négatifs,1zéro,12positifs. B admissible au test, pas validé globalement.',
+'44problèmes temporels appariés×3 et24SG=156générations.']
+for kind,d in a['probes'].items():lines.append(f"{kind}: {d['correct']}/{d['n']} justes, {d['correct_without_detected_false_claim']} justes sans affirmation fausse détectée, {d['truncated']} tronquées.")
+lines += ['B contreA :4gains/3pertes, pas de supériorité convaincante ;8troncaturesB à384tokens contre0A/ZS. Une réponseB finale juste contient une affirmation fausse détectée.',
+'','HARNAIS ET INTÉGRITÉ',
+'Lots16 exactement répétables sur192questions ;2réponses changent entrelots1/16. Nouveau chargement parent reproduit192/192sorties lot16 avant204. Nouveau régime exploratoire : pas de raccord direct aux anciens scoreslot1.',
+'Un processusCUDA indépendant parV100200W ; GTX1060 exclue. AucunDDP/NCCL/backward/optimiseur. ParentNLL identique surles2GPU. Un chargementbase/GPU au stageNLL, adaptateurs successifs.',
+'Avant chacun des4stages :copiesRAM2x avec12compteurs zéro/passage,doublesSHA source,boot/noyau. Préflight initial memtester4GiBmlock conservé, pas certification128GiB.',
+'25sources de lancement inchangées. Parent et12adaptateurs relus2fois et conformes. Aucun calculGPU restant au contrôle final ; aucunECC corrigé/noncorrigé ni alerte noyau ciblée observés.',
+'','CANARIS',
+'16réponses relues sans troncature. Préférencevert,32processeurslogiques,motdepasseabsent préservés ; fiction/débat pertinents,pas de basculeJSONarithmétique. Explication mémoire dédiée/partagée trop simplifiée dansles2modèles. Le204 suggère une croissance parfréquencessonores nonétayée dans un brainstorming fictif. Huitquestions/modèle ne valident pas la conversation générale.',
+'','TEMPS / PUISSANCE / TEMPÉRATURE / ÉNERGIE',
+'Limite configurée200W/GPU ; les pointes échantillonnées peuvent dépasser instantanément200W. ÉnergieGPU parintégration trapézoïdale, secteur parcompteurShelly.']
+for stage,t in r['telemetry'].items():
+ lines.append(f"{stage}: {t['seconds']:.1f}s ({t['seconds']/60:.2f}min), secteur {t['wall_w_mean']:.1f}W moyen / {t['wall_w_max']:.1f}W max, {t['wall_energy_wh']:.3f}Wh.")
+ for i,g in enumerate(t['gpus']):
+  lines.append(f"  rank{i}: {g['gpu_w']['mean']:.1f}W moyen / {g['gpu_w']['max']:.1f}W max ; GPUmax{g['gpu_c']['max']:.1f}°C,HBMmax{g['hbm_c']['max']:.1f}°C,CPUmax{g['cpu_c']['max']:.3f}°C ; énergieGPU {g['energy_wh']:.3f}Wh.")
+lines += [f"Somme des intervalles :{sum(x['seconds'] for x in r['telemetry'].values())/60:.2f}min,{sum(x['wall_energy_wh'] for x in r['telemetry'].values()):.3f}Wh secteur.",
+'Une lectureShelly absente au début d’eval : compteur couvert542,565s/543,100s. Aucune énergie manquante inventée.',
+'','FINALISATION RÉCUPÉRÉE SUR CPU',
+'Service systemd failed conservé :tous stagesGPU finished ; finish.py a supposé energy_wh toujours présent. Gestionnaire erreur training dupliqué, statut bloqué saving_results. Originaux et traceback archivés finalization-recovery.',
+'finish_recovered.py traite la lecture absente et les séparateurs du rapport, CPU seulement ; aucune génération relancée. Reçu systemd original reste un échec logiciel.',
+'','LIMITES ET SUITE',
+'Sélection et rapportE3 réutilisés après NLL forcée, exploratoires ; testfinalréservé nonlu. Plusieurscomparaisons,p-values exploratoires ; matérielDDP différent E1/E2 etE3 interrompu204/306.',
+'La répétition àLR3e-6 modifie les préférences sans améliorer ici la justesse. Aucun motif de poursuite automatique ni hausseLR×10. Proposition bornée à décider : travailler conversionHH:MM↔minutes et normalisation/jours avec cibles équilibrées aux frontières et nonrégression. AucunE4 lancé.',
+'Tous poids/checkpoints/données/logs conservés ; machine laissée allumée. SourcesdiagnosticG310 inchangées ; bilanG312.',
+'Dossier :'+str(p)]
+(p/'Rapport_Eva_diagnostics_C309.txt').write_text('\n'.join(lines)+'\n')
+m=read(p/'result-saved.json')
+extra=['closure-audit-G312.json','Rapport_Eva_diagnostics_C309.txt','resultat-final.json']+[str(f.relative_to(p)) for f in backup.iterdir() if f.is_file()]
+for stage in ['nll','probes','batch','eval']:
+ extra += [str(f.relative_to(p)) for f in (p/stage).glob('*.json') if f.name!='guard-status.json']
+for n in extra:m['files'][n]=sha(p/n)
+m.update(finalization_recovered_cpu_only=True,epoch=time.time());save(p/'result-saved.json',m)
+assert all(sha(p/n)==h for n,h in m['files'].items())
+save(p/'campaign-status.json',dict(phase='finished_recovered',training=False,original_service_result='failed',recovery='CPU-only; no GPU rerun',epoch=time.time(),result_manifest_sha256=sha(p/'result-saved.json')))
+print(json.dumps({'files_verified':len(m['files']),'report_sha256':sha(p/'Rapport_Eva_diagnostics_C309.txt'),'report_bytes':(p/'Rapport_Eva_diagnostics_C309.txt').stat().st_size,'result_sha256':sha(p/'resultat-final.json')}))

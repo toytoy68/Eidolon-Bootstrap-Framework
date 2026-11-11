@@ -1,0 +1,1 @@
+{"repeatability_passed": true, "exact_equivalence": false, "changed": ["c9-selection-1-1-0-2", "c9-selection-0-0-1-5"], "n": 192, "chosen_batch_size": 16, "warning": "New parent/candidate comparison at fixedbatch16. Historical batch1 scores must not be directly compared if changed.", "config_changed": true}

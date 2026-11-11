@@ -1,0 +1,1 @@
+{"phase": "finished_recovered", "training": false, "original_service_result": "failed", "recovery": "CPU-only; no GPU rerun", "epoch": 1794407415.6006885, "result_manifest_sha256": "e0f7112541329d7e5d758681ec0e162054bf5f286dd265bfc88c2a1a5c56345f"}

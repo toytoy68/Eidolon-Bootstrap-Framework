@@ -1,0 +1,22 @@
+nov. 11 14:32:02 eidolon-os systemd[1]: Started eidolon-eva-diagnostics-c309-4c1f2095.service - [systemd-run] /usr/bin/python3 /srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/controller.py.
+nov. 11 15:20:56 eidolon-os python3[42513]: Traceback (most recent call last):
+nov. 11 15:20:56 eidolon-os python3[42513]:   File "/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/controller.py", line 111, in <module>
+nov. 11 15:20:56 eidolon-os python3[42513]:     r=sp.run([str(P/'venv/bin/python'),str(P/'finish.py')],capture_output=True,text=True,timeout=300);(P/'finalize.log').write_text(r.stdout+'\n'+r.stderr);assert r.returncode==0,r.stderr
+nov. 11 15:20:56 eidolon-os python3[42513]:                                                                                                                                                                    ^^^^^^^^^^^^^^^
+nov. 11 15:20:56 eidolon-os python3[42513]: AssertionError: Traceback (most recent call last):
+nov. 11 15:20:56 eidolon-os python3[42513]:   File "/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/finish.py", line 43, in <module>
+nov. 11 15:20:56 eidolon-os python3[42513]:     out['wall_energy_wh']=rows[-1]['meter']['energy_wh']-rows[0]['meter']['energy_wh'];out['wall_w_mean']=sum(x['meter']['wall_w'] for x in rows)/len(rows);telemetry[stage]=out
+nov. 11 15:20:56 eidolon-os python3[42513]:                                                          ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+nov. 11 15:20:56 eidolon-os python3[42513]: KeyError: 'energy_wh'
+nov. 11 15:20:56 eidolon-os python3[42513]: During handling of the above exception, another exception occurred:
+nov. 11 15:20:56 eidolon-os python3[42513]: Traceback (most recent call last):
+nov. 11 15:20:56 eidolon-os python3[42513]:   File "/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/controller.py", line 114, in <module>
+nov. 11 15:20:56 eidolon-os python3[42513]:     campaign('failed',reason=repr(e),training=False);save(P/'failure.json',dict(reason=repr(e),epoch=time.time(),training=False));raise
+nov. 11 15:20:56 eidolon-os python3[42513]:     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+nov. 11 15:20:56 eidolon-os python3[42513]:   File "/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/controller.py", line 16, in campaign
+nov. 11 15:20:56 eidolon-os python3[42513]:     def campaign(phase,**kw):save(P/'campaign-status.json',dict(phase=phase,epoch=time.time(),boot_id=BOOT,training=False,**kw))
+nov. 11 15:20:56 eidolon-os python3[42513]:                                                            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+nov. 11 15:20:56 eidolon-os python3[42513]: TypeError: dict() got multiple values for keyword argument 'training'
+nov. 11 15:20:56 eidolon-os systemd[1]: eidolon-eva-diagnostics-c309-4c1f2095.service: Main process exited, code=exited, status=1/FAILURE
+nov. 11 15:20:56 eidolon-os systemd[1]: eidolon-eva-diagnostics-c309-4c1f2095.service: Failed with result 'exit-code'.
+nov. 11 15:20:56 eidolon-os systemd[1]: eidolon-eva-diagnostics-c309-4c1f2095.service: Consumed 1h 39min 55.227s CPU time, 2.9G memory peak.

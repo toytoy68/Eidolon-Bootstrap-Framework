@@ -1,0 +1,6 @@
+
+Traceback (most recent call last):
+  File "/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095/finish.py", line 43, in <module>
+    out['wall_energy_wh']=rows[-1]['meter']['energy_wh']-rows[0]['meter']['energy_wh'];out['wall_w_mean']=sum(x['meter']['wall_w'] for x in rows)/len(rows);telemetry[stage]=out
+                                                         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'energy_wh'

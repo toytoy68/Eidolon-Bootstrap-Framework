@@ -1,0 +1,7 @@
+{
+  "reason": "Original finish.py assumed all Shelly samples carried energy_wh; one or more did not. Controller failure path also supplied training twice, leaving status saving_results.",
+  "scope": "CPU-only report aggregation; original controller, worker, finish.py, logs and all outputs preserved. Missing meter data explicit, no interpolated counter invented.",
+  "original_finish_sha256": "3162bb959d6c311697b32e9dcb397c6feaf0216fdf56a8eb8d8bfee14238fc73",
+  "recovered_finish_sha256": "d8a7cde8a4cf5d5e8a60b50307678f96fbf3256ab5f990492c04d3488fb3563f",
+  "epoch": 1794407120.9614058
+}

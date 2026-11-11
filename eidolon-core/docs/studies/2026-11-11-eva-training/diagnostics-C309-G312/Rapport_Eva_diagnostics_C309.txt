@@ -1,0 +1,73 @@
+EVA — DIAGNOSTICS C309 ET CHECKPOINT E3-204
+Bilan du 11 novembre 2026, Europe/Paris — Codex/GPT, G312
+
+Conclusion : checkpoint204 en régression horaire. Parent cycle5 conservé. Aucun nouvel entraînement ni promotion.
+Comparaison neuve en lots16, mêmes GPU et mêmes groupes de questions pour parent et204.
+selection: horaires 39→31/160, acquis 26→26/32.
+Horaires : 6 gains,14 pertes,p exact apparié exploratoire=0.115318298. Troncatures après=3.
+Réponses horaires avec affirmation fausse détectée :3→19.
+report: horaires 86→56/320, acquis 26→26/32.
+Horaires : 7 gains,37 pertes,p exact apparié exploratoire=5.29958174e-06. Troncatures après=0.
+Réponses horaires avec affirmation fausse détectée :5→26.
+
+STRATES HORAIRES (sélection / rapport)
+day0-short-template0: 15→8/16 ; 32→21/32.
+day0-short-template1: 12→11/16 ; 23→21/32.
+day1-long-template0: 0→0/16 ; 0→0/32.
+day1-long-template1: 0→0/16 ; 0→0/32.
+day1-short-template0: 11→8/16 ; 22→10/32.
+day1-short-template1: 1→4/16 ; 9→4/32.
+day2-long-template0: 0→0/16 ; 0→0/32.
+day2-long-template1: 0→0/16 ; 0→0/32.
+day2-short-template0: 0→0/16 ; 0→0/32.
+day2-short-template1: 0→0/16 ; 0→0/32.
+Les cas jour2 restent0/128 au rapport ; jour1-long0/64. Pertes surtout jour0 et jour1-court. Acquis26/32 stables au total avec1gain et1perte.
+
+VRAISEMBLANCE ET FORMAT
+NLL cible/token parent1,096109→102:0,694805→204:0,447986. P moyenne Départ (2tokens):0,000935%→0,279948%→37,563079%. Probabilité de séquence, pas taux de réussite.
+Préfixe Départ effectivement observé : sélection0→91/160 ; rapport0→174/320. Zéro sortie204 classée strictementA ouB par les regexC309 ; sorties hybrides. Le préfixe appris ne démontre pas une chaîne de calcul maîtrisée.
+Exemple :22:47 converti en1427min au lieu de1367 ; ailleurs une soustraction1440 négative entraîne quand même un jour de décalage. Les validateurs partiels manquent des étapes omises ou mal recopiées.
+
+SONDES PARENT C309
+SG24/24 :11négatifs,1zéro,12positifs. B admissible au test, pas validé globalement.
+44problèmes temporels appariés×3 et24SG=156générations.
+ZS: 19/44 justes, 19 justes sans affirmation fausse détectée, 0 tronquées.
+FA: 27/44 justes, 27 justes sans affirmation fausse détectée, 0 tronquées.
+FB: 28/44 justes, 27 justes sans affirmation fausse détectée, 8 tronquées.
+B contreA :4gains/3pertes, pas de supériorité convaincante ;8troncaturesB à384tokens contre0A/ZS. Une réponseB finale juste contient une affirmation fausse détectée.
+
+HARNAIS ET INTÉGRITÉ
+Lots16 exactement répétables sur192questions ;2réponses changent entrelots1/16. Nouveau chargement parent reproduit192/192sorties lot16 avant204. Nouveau régime exploratoire : pas de raccord direct aux anciens scoreslot1.
+Un processusCUDA indépendant parV100200W ; GTX1060 exclue. AucunDDP/NCCL/backward/optimiseur. ParentNLL identique surles2GPU. Un chargementbase/GPU au stageNLL, adaptateurs successifs.
+Avant chacun des4stages :copiesRAM2x avec12compteurs zéro/passage,doublesSHA source,boot/noyau. Préflight initial memtester4GiBmlock conservé, pas certification128GiB.
+25sources de lancement inchangées. Parent et12adaptateurs relus2fois et conformes. Aucun calculGPU restant au contrôle final ; aucunECC corrigé/noncorrigé ni alerte noyau ciblée observés.
+
+CANARIS
+16réponses relues sans troncature. Préférencevert,32processeurslogiques,motdepasseabsent préservés ; fiction/débat pertinents,pas de basculeJSONarithmétique. Explication mémoire dédiée/partagée trop simplifiée dansles2modèles. Le204 suggère une croissance parfréquencessonores nonétayée dans un brainstorming fictif. Huitquestions/modèle ne valident pas la conversation générale.
+
+TEMPS / PUISSANCE / TEMPÉRATURE / ÉNERGIE
+Limite configurée200W/GPU ; les pointes échantillonnées peuvent dépasser instantanément200W. ÉnergieGPU parintégration trapézoïdale, secteur parcompteurShelly.
+nll: 261.5s (4.36min), secteur 485.1W moyen / 550.5W max, 35.792Wh.
+  rank0: 167.6W moyen / 224.5W max ; GPUmax41.0°C,HBMmax47.0°C,CPUmax40.625°C ; énergieGPU 12.298Wh.
+  rank1: 166.2W moyen / 227.8W max ; GPUmax42.0°C,HBMmax48.0°C,CPUmax40.625°C ; énergieGPU 12.204Wh.
+probes: 1309.8s (21.83min), secteur 285.5W moyen / 345.5W max, 103.948Wh.
+  rank0: 78.2W moyen / 218.7W max ; GPUmax36.0°C,HBMmax37.0°C,CPUmax44.000°C ; énergieGPU 28.457Wh.
+  rank1: 74.2W moyen / 207.5W max ; GPUmax36.0°C,HBMmax39.0°C,CPUmax44.750°C ; énergieGPU 27.024Wh.
+batch: 816.3s (13.61min), secteur 308.1W moyen / 465.7W max, 70.084Wh.
+  rank0: 88.8W moyen / 205.9W max ; GPUmax37.0°C,HBMmax42.0°C,CPUmax41.500°C ; énergieGPU 20.146Wh.
+  rank1: 84.7W moyen / 240.9W max ; GPUmax38.0°C,HBMmax42.0°C,CPUmax41.500°C ; énergieGPU 19.221Wh.
+eval: 543.1s (9.05min), secteur 401.0W moyen / 489.7W max, 60.655Wh.
+  rank0: 129.2W moyen / 259.5W max ; GPUmax40.0°C,HBMmax46.0°C,CPUmax45.125°C ; énergieGPU 19.513Wh.
+  rank1: 127.9W moyen / 250.0W max ; GPUmax41.0°C,HBMmax46.0°C,CPUmax45.125°C ; énergieGPU 19.316Wh.
+Somme des intervalles :48.85min,270.479Wh secteur.
+Une lectureShelly absente au début d’eval : compteur couvert542,565s/543,100s. Aucune énergie manquante inventée.
+
+FINALISATION RÉCUPÉRÉE SUR CPU
+Service systemd failed conservé :tous stagesGPU finished ; finish.py a supposé energy_wh toujours présent. Gestionnaire erreur training dupliqué, statut bloqué saving_results. Originaux et traceback archivés finalization-recovery.
+finish_recovered.py traite la lecture absente et les séparateurs du rapport, CPU seulement ; aucune génération relancée. Reçu systemd original reste un échec logiciel.
+
+LIMITES ET SUITE
+Sélection et rapportE3 réutilisés après NLL forcée, exploratoires ; testfinalréservé nonlu. Plusieurscomparaisons,p-values exploratoires ; matérielDDP différent E1/E2 etE3 interrompu204/306.
+La répétition àLR3e-6 modifie les préférences sans améliorer ici la justesse. Aucun motif de poursuite automatique ni hausseLR×10. Proposition bornée à décider : travailler conversionHH:MM↔minutes et normalisation/jours avec cibles équilibrées aux frontières et nonrégression. AucunE4 lancé.
+Tous poids/checkpoints/données/logs conservés ; machine laissée allumée. SourcesdiagnosticG310 inchangées ; bilanG312.
+Dossier :/srv/eidolon/work/eva-diagnostics-c309-20261111-4c1f2095

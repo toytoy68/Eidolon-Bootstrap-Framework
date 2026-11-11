@@ -1,0 +1,1 @@
+{"allow_B": true, "policy": "Require all24 isolated value+sign answers correct; any negative failure rejectsB before its generation.", "wrong": [], "by_sign": {"negatif": {"n": 11, "correct": 11}, "nul": {"n": 1, "correct": 1}, "positif": {"n": 12, "correct": 12}}, "epoch": 1794404283.4190652}
