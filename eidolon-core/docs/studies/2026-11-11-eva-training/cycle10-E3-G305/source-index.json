@@ -1,0 +1,87 @@
+{
+  "train.py.txt": {
+    "server_name": "train.py",
+    "original_sha256": "17a5698ba2e53cacaaf77e506f74e601714cae1f1a08adaacf91979c8b97a6a9",
+    "public_sha256": "17a5698ba2e53cacaaf77e506f74e601714cae1f1a08adaacf91979c8b97a6a9"
+  },
+  "controller.py.txt": {
+    "server_name": "controller.py",
+    "original_sha256": "1fef7ca594ce6fbbab6b9f66021ff00c5441439a436a46ca6cce8c4c9f79deee",
+    "public_sha256": "1fef7ca594ce6fbbab6b9f66021ff00c5441439a436a46ca6cce8c4c9f79deee"
+  },
+  "guard.py.txt": {
+    "server_name": "guard.py",
+    "original_sha256": "c78eebccca29093bbd8c6df3d54f59f429ae25ad742e9091f31381d5afd65c9a",
+    "public_sha256": "c78eebccca29093bbd8c6df3d54f59f429ae25ad742e9091f31381d5afd65c9a"
+  },
+  "sampler_rtx.py.txt": {
+    "server_name": "sampler_rtx.py",
+    "original_sha256": "d0deddcd6e1e38a5903419245fade0d1382b329146efeb7f230d05823f636ffc",
+    "public_sha256": "b80f806c7fa51f84fb40132de04289d0ee82628892a44de355c1053c1d9f714e"
+  },
+  "sampler_v100.py.txt": {
+    "server_name": "sampler_v100.py",
+    "original_sha256": "287b26bbc689add0d8757d1b84e733ac0eaf5b72e6542c806e4eb3554f03cd6d",
+    "public_sha256": "6c2d93e7e480e538be5dd116802a1b4fe166a97cfa75ca7d310b8471cec20172"
+  },
+  "live_integrity.py.txt": {
+    "server_name": "live_integrity.py",
+    "original_sha256": "176b36b710ae3bcd55f37ca6d09e72b9b2cf0f3889ffc6097be1486fbe29baab",
+    "public_sha256": "176b36b710ae3bcd55f37ca6d09e72b9b2cf0f3889ffc6097be1486fbe29baab"
+  },
+  "preflight.py.txt": {
+    "server_name": "preflight.py",
+    "original_sha256": "d1e91680a8e87508f21b35c0e878b9516fb6a178fcfd1618bf080f64512f8277",
+    "public_sha256": "d1e91680a8e87508f21b35c0e878b9516fb6a178fcfd1618bf080f64512f8277"
+  },
+  "prepare.py.txt": {
+    "server_name": "prepare.py",
+    "original_sha256": "d68d4564a6714feb9d5aa1f765715b022c17e14a3482cf783699f606346db304",
+    "public_sha256": "d68d4564a6714feb9d5aa1f765715b022c17e14a3482cf783699f606346db304"
+  },
+  "self_check.py.txt": {
+    "server_name": "self_check.py",
+    "original_sha256": "854f20e1beefff1b3f4260187aad2771e0cdeb05101a376278eda9c0a0029c7b",
+    "public_sha256": "854f20e1beefff1b3f4260187aad2771e0cdeb05101a376278eda9c0a0029c7b"
+  },
+  "checkpoint_selector.py.txt": {
+    "server_name": "checkpoint_selector.py",
+    "original_sha256": "757482cad12d1b82edb8e96f1351afe388165dabbade7dd9a4abdc43378c94c4",
+    "public_sha256": "757482cad12d1b82edb8e96f1351afe388165dabbade7dd9a4abdc43378c94c4"
+  },
+  "finish_result.py.txt": {
+    "server_name": "finish_result.py",
+    "original_sha256": "de9ec08305231a46217c143cf5a0d6013d8adb9e37aa59513742ac95e2dff66c",
+    "public_sha256": "de9ec08305231a46217c143cf5a0d6013d8adb9e37aa59513742ac95e2dff66c"
+  },
+  "campaign.py.txt": {
+    "server_name": "campaign.py",
+    "original_sha256": "7bab13f24a9081c00e8586952f694c35eb6f8f274eecb8bc64141523621934e6",
+    "public_sha256": "7bab13f24a9081c00e8586952f694c35eb6f8f274eecb8bc64141523621934e6"
+  },
+  "config.json": {
+    "server_name": "config.json",
+    "original_sha256": "906fbfd3fe5100c59edffb839c379723934d7b1bcb659425f905f5e22ba3f1af",
+    "public_sha256": "54647b5c77ee91da11ff0630c98717483cf3b68d15677fd20cff2e749f79930d"
+  },
+  "dataset-preparation.json": {
+    "server_name": "dataset-preparation.json",
+    "original_sha256": "3f81ab497f42880b17946fbab3edaa9697a7d908036cd49c8677c3e027dec34c",
+    "public_sha256": "3f81ab497f42880b17946fbab3edaa9697a7d908036cd49c8677c3e027dec34c"
+  },
+  "lineage.json": {
+    "server_name": "lineage.json",
+    "original_sha256": "776487ddd86e20c6d556e5d82dcc5cb47296781e0cfeaa11dc1e5daebf96d35e",
+    "public_sha256": "776487ddd86e20c6d556e5d82dcc5cb47296781e0cfeaa11dc1e5daebf96d35e"
+  },
+  "launch-manifest.json": {
+    "server_name": "launch-manifest.json",
+    "original_sha256": "1ea982b41da4e007c983f97bea12f069e9b1f17c3da5d93dfc1bcbded1addbda",
+    "public_sha256": "1ea982b41da4e007c983f97bea12f069e9b1f17c3da5d93dfc1bcbded1addbda"
+  },
+  "self-check.json": {
+    "server_name": "self-check.json",
+    "original_sha256": "cef1e0ed74d3b69d8309d04ac2db1f3a6a3f5fa73abb733c8a610071c7355dc0",
+    "public_sha256": "cef1e0ed74d3b69d8309d04ac2db1f3a6a3f5fa73abb733c8a610071c7355dc0"
+  }
+}

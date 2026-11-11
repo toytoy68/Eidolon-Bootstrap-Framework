@@ -1,0 +1,68 @@
+from pathlib import Path
+import json,random,hashlib,ast,collections
+import torch
+from transformers import AutoTokenizer
+from review_tools import time_steps,time_operands
+from curriculum import grade
+P=Path(__file__).resolve().parent
+C=json.loads((P/'config.json').read_text())
+OLD=P.parent/'eva-learning-cycle9-hours-20261110/e2-f006076b'
+data=json.loads((OLD/'dataset.json').read_text());old_train=json.dumps(data['train'],sort_keys=True,ensure_ascii=False)
+seen=set()
+def collect(obj):
+ if isinstance(obj,dict):
+  if isinstance(obj.get('question'),str):
+   ops=time_operands(obj['question'])
+   if ops:seen.add(tuple(ops))
+  else:
+   for v in obj.values():collect(v)
+ elif isinstance(obj,list):
+  for v in obj:collect(v)
+for root in P.parent.glob('eva-learning-*'):
+ f=root/'dataset.json'
+ if f.is_file():collect(json.loads(f.read_text()))
+for d in ['e1-f006076b','e2-f006076b']:
+ collect(json.loads((OLD.parent/d/'dataset.json').read_text()))
+probes=OLD.parent/'probes-c303-f006076b/probes.jsonl'
+for line in probes.read_text().splitlines():collect(json.loads(line))
+r=random.Random(111103);cells=[(d,hi,t) for d,hi in [(0,False),(1,False),(1,True),(2,False),(2,True)] for t in [0,1]]
+rows=[]
+for day,hi,t in cells:
+ for i in range(32):
+  while True:
+   s=r.randrange(1440)
+   lo=max(1,day*1440-s,1501 if hi else 1);up=min(4320,(day+1)*1440-1-s,4320 if hi else 1500)
+   if lo>up:continue
+   dur=r.randint(lo,up)
+   if (s,dur) not in seen:seen.add((s,dur));break
+  answer,expected=time_steps(s,dur);h,m=divmod(s,60)
+  q=(f'Départ à {h:02d}:{m:02d}, durée {dur} minutes. Donne l’heure d’arrivée et le décalage en jours.' if t==0 else f'Un délai de {dur} minutes commence à {h:02d}:{m:02d}. À quelle heure se termine-t-il et combien de jours sont franchis ?')
+  q+=' Termine par un objet JSON avec resultat (chaîne ou null), unite exactement « heure » et jours, un entier.'
+  rows.append(dict(id=f'c10-report-{day}-{int(hi)}-{t}-{i}',family=5,skill='time',group='target',stratum=f'day{day}-'+('long' if hi else 'short')+f'-template{t}',question=q,answer=answer,expected=expected,time_key=[s,dur]))
+data['heldout']=rows+[x for x in data['heldout'] if x['group']=='anchor']
+assert len(data['heldout'])==352
+assert old_train==json.dumps(data['train'],sort_keys=True,ensure_ascii=False)
+for split,examples in data.items():
+ assert len({x['id'] for x in examples})==len(examples)
+ assert all(grade(x['answer'],x['expected'])['exact'] for x in examples)
+assert not {tuple(time_operands(x['question'])) for x in data['train'] if time_operands(x['question'])}&{tuple(x['time_key']) for x in rows}
+tokenizer=AutoTokenizer.from_pretrained(P/'source-model',local_files_only=True,trust_remote_code=False)
+if tokenizer.pad_token_id is None:tokenizer.pad_token=tokenizer.eos_token
+old=P/'encoding-source.py';tree=ast.parse(old.read_text())
+nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='encode' or isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM' for t in n.targets)]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(old),'exec'))
+packs,info=encode(data['train']);assert len(packs)==408
+counts=collections.Counter()
+for ex in data['train']:
+ pre=tokenizer.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tokenizer.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question']),dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False)
+ assert full.startswith(pre)
+ enc=tokenizer(full,add_special_tokens=False,return_offsets_mapping=True)
+ counts[ex['group']]+=sum(o[0]>=len(pre) for o in enc['offset_mapping'])
+assert dict(counts)=={'replay':47334,'target':12775}
+assert sum(counts.values())==sum(int((b['labels'][:,1:]!=-100).sum()) for b in packs)
+raw=json.dumps(data,ensure_ascii=False);(P/'dataset.json').write_text(raw)
+lineage=dict(dataset_sha256=hashlib.sha256(raw.encode()).hexdigest(),parent_adapter=json.loads((P/'config.json').read_text())['parent_adapter'],source_revision='3497c4c82493fabf3ee118e9865b047d8aecccf2',automatic_promotion=False,training_rows_identical_E2=True,train_rows_sha256=hashlib.sha256(old_train.encode()).hexdigest(),source_e2_dataset_sha256=hashlib.sha256((OLD/'dataset.json').read_bytes()).hexdigest())
+(P/'lineage.json').write_text(json.dumps(lineage,indent=2))
+stats=dict(train=info,supervised_tokens_per_pass=dict(counts),supervised_tokens_total={k:v*3 for k,v in counts.items()},target_share=counts['target']/sum(counts.values()),epochs=3,updates_per_epoch=102,updates=306,train_examples=len(data['train']),replay_hours=sum(x['group']=='replay' and x['expected']['unite']=='heure' for x in data['train']),target_examples=sum(x['group']=='target' for x in data['train']),selection_reused_E2=True,report_time_fresh=320,report_acquired_reused=32,heldout_seed=111103,excluded_known_pairs=len(seen),final_reserved_read=False)
+(P/'dataset-preparation.json').write_text(json.dumps(stats,indent=2));print(json.dumps(stats))

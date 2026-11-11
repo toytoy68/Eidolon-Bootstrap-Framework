@@ -1,0 +1,9 @@
+{
+  "dataset_sha256": "69ca4e7a6a84de1cb33a04bd2b9cca2236d132ec4895218e09c27ec4ee841329",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "automatic_promotion": false,
+  "training_rows_identical_E2": true,
+  "train_rows_sha256": "92587f95964664cbb0884210016cab262481cae4e2f0170f914b4093f69589f8",
+  "source_e2_dataset_sha256": "ab564987c617f773de2a9eb8faea14f05fa280928a75357a71c693ee4157d8c2"
+}

@@ -1,0 +1,53 @@
+from pathlib import Path
+import json,time,os,subprocess as sp,fcntl,socket,hashlib,signal
+P=Path(__file__).resolve().parent;START=time.time();child=None
+BOOT='4c1f2095-f683-4b6c-8c17-9d9a21474ee5'
+lease=open('/run/eidolon-eva-cycle9-orchestration.lock','w');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+def notify():
+ a=os.environ.get('NOTIFY_SOCKET')
+ if a:
+  if a.startswith('@'):a='\0'+a[1:]
+  with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as s:s.connect(a);s.sendall(b'WATCHDOG=1')
+def state(phase,**kw):
+ q=P/'campaign-status.tmp';q.write_text(json.dumps(dict(phase=phase,epoch=time.time(),boot_id=BOOT,**kw)));q.replace(P/'campaign-status.json');notify()
+def stopped(*a):raise RuntimeError('operator/systemd termination')
+signal.signal(signal.SIGTERM,stopped)
+def gate():
+ assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()==BOOT
+ proof=json.loads((P/'cpu-preflight.json').read_text());assert proof['passed'] and proof['memtester_passed'] and proof['boot_id']==BOOT
+ for n,h in json.loads((P/'launch-manifest.json').read_text()).items():assert hashlib.sha256((P/n).read_bytes()).hexdigest()==h,n
+ assert json.loads((P/'self-check.json').read_text())['passed']
+def stage(mode,folder):
+ global child
+ gate();output=P/folder;assert not output.exists(),'Never overwrite a previous stage';state(mode,output=str(output))
+ env=dict(os.environ,EVA_MODE=mode,EVA_SINGLE='0',EVA_OUTPUT=str(output))
+ child=sp.Popen(['/usr/bin/python3',str(P/'controller.py')],env=env,stdout=(P/(mode+'-controller.log')).open('w'),stderr=sp.STDOUT)
+ while child.poll() is None:notify();time.sleep(2)
+ assert child.returncode==0,(mode,child.returncode)
+ assert json.loads((output/'status.json').read_text())['phase']=='finished';child=None
+try:
+ state('waiting_preflight')
+ while True:
+  s=json.loads((P/'preflight-status.json').read_text())
+  if s['phase']=='failed':raise RuntimeError('Qualification failed: '+str(s.get('reason')))
+  if s['phase']=='finished':break
+  assert time.time()-START<2400,'Qualification timeout'
+  state('waiting_preflight',preflight=s);time.sleep(3)
+ gate();stage('smoke','qualification-dual')
+ assert json.loads((P/'qualification-dual/passed.json').read_text())['passed']
+ stage('train','run');state('saving_results')
+ r=sp.run([str(P/'venv/bin/python'),str(P/'finish_result.py')],capture_output=True,text=True,timeout=600)
+ (P/'finalize.log').write_text(r.stdout+'\n'+r.stderr);assert r.returncode==0,r.stderr
+ assert json.loads((P/'result-saved.json').read_text())['state']=='finished'
+ state('finished',result_saved=True,automatic_promotion=False)
+except BaseException as e:
+ state('failed',reason=repr(e))
+ failure=dict(state='failed',boot_id=BOOT,epoch=time.time(),reason=repr(e),automatic_promotion=False,all_artifacts_retained=True)
+ (P/'failed-result.json').write_text(json.dumps(failure,indent=2))
+ report=P/'Rapport_Eva_cycle10_failure.txt';report.write_text('Eva cycle10 — essai arrêté sans promotion.\n'+json.dumps(failure,ensure_ascii=False,indent=2)+'\nConsulter les états, gardes et journaux conservés. Aucune relance automatique.\n')
+ (P/'failure-saved.json').write_text(json.dumps(dict(state='failed',files={f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in [report,P/'failed-result.json']}),indent=2));raise
+finally:
+ if child and child.poll() is None:
+  child.terminate()
+  try:child.wait(timeout=20)
+  except sp.TimeoutExpired:child.kill();child.wait(timeout=5)

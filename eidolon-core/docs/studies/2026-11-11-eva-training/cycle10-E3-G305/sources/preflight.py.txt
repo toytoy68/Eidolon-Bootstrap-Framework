@@ -1,0 +1,52 @@
+from pathlib import Path
+import subprocess as sp,json,time,hashlib,re,threading,os,signal
+P=Path(__file__).resolve().parent
+import fcntl
+lease=open('/run/eidolon-eva-requalification.lock','w');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+BOOT='4c1f2095-f683-4b6c-8c17-9d9a21474ee5'
+assert Path('/proc/sys/kernel/random/boot_id').read_text().strip()==BOOT
+START=time.time()
+def kernel_check():
+ k=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True)
+ assert not re.search(r'Oops:|BUG:|Hardware Error|NVRM: Xid|hard LOCKUP|soft lockup',k),'Kernel fault on current boot'
+(P/'kernel-before.log').write_text(sp.check_output(['journalctl','-k','-b','--no-pager'],text=True))
+kernel_check()
+import sampler_v100
+def status(phase,**kw):
+ q=P/'preflight-status.tmp';q.write_text(json.dumps(dict(phase=phase,epoch=time.time(),**kw)));q.replace(P/'preflight-status.json')
+def run(cmd,name):
+ status(name)
+ log=(P/(name+'.log')).open('w');child=sp.Popen(cmd,stdout=log,stderr=sp.STDOUT,start_new_session=True)
+ deadline=time.time()+1800
+ while child.poll() is None:
+  try:
+   assert sampler_v100.sample()['cpu_c']<70,'CPU temperature threshold'
+   assert time.time()<deadline,'CPU qualification timeout'
+   kernel_check()
+  except BaseException:
+   os.killpg(child.pid,signal.SIGTERM);child.wait(timeout=10);raise
+  status(name);time.sleep(2)
+ log.close();assert child.returncode==0,(name,child.returncode)
+ return (P/(name+'.log')).read_text()
+try:
+ status('memory_copy')
+ copies=[]
+ for i in range(2):
+  text=run([str(P/'memory_copy_test')],'copy-'+str(i));errs=list(map(int,re.findall(r'(?:destination|source)_errors=(\d+)',text)));assert len(errs)==12 and not any(errs),text;copies.append(text)
+ memlog=run(['/usr/sbin/memtester','4G','1'],'memtester')
+ assert 'locked' in memlog and 'Done.' in memlog and not re.search(r'FAILURE|FAIL:|failed',memlog,re.I), 'memtester evidence incomplete'
+ kernel_check()
+ m=json.loads((P/'source-manifest.json').read_text());checks={}
+ for name,v in m['files'].items():
+  hashes=[]
+  for i in range(2):
+   status('source_hash',file=name,pass_index=i)
+   h=hashlib.sha256()
+   with (P/'source-model'/name).open('rb') as f:
+    for b in iter(lambda:f.read(8388608),b''):h.update(b)
+   hashes.append(h.hexdigest())
+  assert hashes==[v['sha256']]*2,(name,hashes);checks[name]=hashes
+ f=Path(json.loads((P/'config.json').read_text())['parent_adapter'])/'adapter_model.safetensors';ahs=[hashlib.sha256(f.read_bytes()).hexdigest() for _ in range(2)];ah=ahs[0];assert ahs[0]==ahs[1];assert ah=='c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30'
+ proof=dict(passed=True,boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),source_hashes=checks,adapter_sha256=ah,epoch=time.time(),memory_copies=copies,memtester_passed=True,adapter_hashes=ahs,seconds=time.time()-START)
+ (P/'cpu-preflight.json').write_text(json.dumps(proof,indent=2));status('finished',passed=True)
+except BaseException as e:status('failed',reason=repr(e));raise

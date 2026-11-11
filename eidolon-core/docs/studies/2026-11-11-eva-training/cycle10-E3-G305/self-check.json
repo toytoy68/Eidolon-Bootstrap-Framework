@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "policy_cases": 4,
+  "ddp_weighted_gradient_equivalence": true,
+  "pack_coverage_three_passes": true,
+  "training_rows_identical_E2": true,
+  "epochs": 3,
+  "updates": 306
+}

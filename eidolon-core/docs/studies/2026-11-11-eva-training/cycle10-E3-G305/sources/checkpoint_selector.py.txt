@@ -1,0 +1,54 @@
+import json,time,math
+import torch
+import torch.distributed as dist
+from curriculum import grade
+
+def decision(baseline,rows,smoke=False):
+ b={x['id']:x for x in baseline};assert b.keys()=={x['id'] for x in rows}
+ target=[x for x in rows if x['group']=='target'];anchors=[x for x in rows if x['group']=='anchor']
+ ok=lambda x:bool(x['evaluation']['content_correct'])
+ gains=sum(ok(x) and not ok(b[x['id']]) for x in target);losses=sum(ok(b[x['id']]) and not ok(x) for x in target)
+ n=gains+losses;p=min(1.,2*sum(math.comb(n,k) for k in range(min(gains,losses)+1))/2**n) if n else 1.
+ anchor_loss=sum(ok(b[x['id']]) for x in anchors)-sum(ok(x) for x in anchors)
+ strata=sorted({x['stratum'] for x in target})
+ stratum_ok=all(sum(ok(x) for x in target if x['stratum']==s)>=sum(ok(b[x['id']]) for x in target if x['stratum']==s)-1 for s in strata)
+ accepted=gains-losses>=6 and p<=.05 and anchor_loss<=1 and stratum_ok
+ return dict(accepted=bool(accepted),gains=gains,losses=losses,p_exact=p,anchor_loss=anchor_loss,stratum_guard=bool(stratum_ok),exploratory=True)
+
+class CheckpointSelector:
+ def __init__(self,model,tokenizer,system,root,output,state_dir,config,data,rank,world,dtype,progress):
+  self.model=model;self.tokenizer=tokenizer;self.system=system;self.root=root;self.output=output;self.state_dir=state_dir;self.config=config;self.examples=data['selection'];self.rank=rank;self.world=world;self.dtype=dtype;self.progress=progress
+  assert world==2 and len(self.examples)==config['selection_examples']
+  self.smoke=bool(config.get('selection_smoke'));self.state_root=output if self.smoke else root
+  self.path=self.state_root/'checkpoint-selection.json';self.state=None;self.baseline=None
+  assert not self.path.exists(),'Existing selection state: explicit continuation required'
+  self.dataset_hash=json.loads((root/'lineage.json').read_text())['dataset_sha256']
+ def evaluate(self,step):
+  self.progress('waiting_peer',optimizer_step=step)
+  if self.rank==0:self._evaluate_local(step)
+  box=[self.state];dist.broadcast_object_list(box,src=0);self.state=box[0]
+  self.model.train();return self.state
+ def _evaluate_local(self,step):
+  self.model.eval();rows=[]
+  for i,ex in enumerate(self.examples):
+   self.progress('selection_validation',optimizer_step=step,done=i,total=len(self.examples))
+   ids=self.tokenizer.apply_chat_template([dict(role='system',content=self.system),dict(role='user',content=ex['question'])],tokenize=True,add_generation_prompt=True,enable_thinking=False,return_tensors='pt').to('cuda')
+   with torch.inference_mode(),torch.autocast('cuda',dtype=self.dtype):
+    out=self.model.generate(input_ids=ids,attention_mask=torch.ones_like(ids),max_new_tokens=384,do_sample=False,use_cache=True,pad_token_id=self.tokenizer.pad_token_id,eos_token_id=self.tokenizer.eos_token_id)
+   text=self.tokenizer.decode(out[0,ids.shape[1]:],skip_special_tokens=True)
+   rows.append(dict(id=ex['id'],family=ex['family'],stratum=ex['stratum'],group=ex['group'],question=ex['question'],expected=ex['expected'],response=text,evaluation=grade(text,ex['expected']),truncated=out.shape[1]-ids.shape[1]>=384))
+  correct=lambda sub:sum(x['evaluation']['content_correct'] for x in sub)
+  score=dict(step=step,n=len(rows),correct=correct(rows),target_correct=correct([x for x in rows if x['group']=='target']),anchors_correct=correct([x for x in rows if x['group']=='anchor']),families={str(f):correct([x for x in rows if x['family']==f]) for f in range(8)},adapter=self.config['parent_adapter'] if step==0 else str(self.state_dir/f'step-{step}'/'adapter'))
+  if step==0:
+   self.baseline=rows
+   if not self.smoke:assert score['target_correct']+6<=160,'Selection saturated: do not train against an unreachable margin'
+   self.state=dict(dataset_sha256=self.dataset_hash,baseline=score,best=score,checks=0,rule='Target net gain>=6, paired exact p<=0.05 exploratory, acquired score loss<=1, each target stratum loss<=1. No promotion.')
+   verdict=dict(accepted=True,baseline=True)
+  else:
+   verdict=decision(self.baseline,rows,self.smoke)
+   if verdict['accepted']:self.state['best']=score
+  self.state.update(checks=self.state['checks']+1,last=score,epoch=time.time(),last_decision=verdict)
+  tmp=self.path.with_suffix('.tmp');tmp.write_text(json.dumps(self.state,indent=2));tmp.replace(self.path)
+  with (self.state_root/'selection-history.jsonl').open('a') as f:f.write(json.dumps(dict(score=score,decision=verdict,rows=rows),ensure_ascii=False)+'\n')
+  self.model.train();self.progress('selection_complete',optimizer_step=step,best_step=self.state['best']['step'],validation_correct=score['correct']);return self.state
+

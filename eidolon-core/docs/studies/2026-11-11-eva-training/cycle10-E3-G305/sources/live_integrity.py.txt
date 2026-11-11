@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,hashlib,time,subprocess as sp,re
+def validate(root,progress):
+ proof=json.loads((root/'cpu-preflight.json').read_text())
+ boot=Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+ assert proof['passed'] and proof['memtester_passed'] and proof['boot_id']==boot
+ kernel=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True)
+ assert not re.search(r'Oops:|BUG:|Hardware Error|NVRM: Xid',kernel),'Current boot contains kernel fault'
+ for i in range(2):
+  progress('memory_recheck',pass_index=i)
+  r=sp.run([str(root/'memory_copy_test')],capture_output=True,text=True,check=True,timeout=30)
+  es=list(map(int,re.findall(r'(?:destination|source)_errors=(\d+)',r.stdout)))
+  assert len(es)==12 and not any(es),r.stdout
+  (root/('live-copy-'+str(i)+'.txt')).write_text(r.stdout)
+ m=json.loads((root/'source-manifest.json').read_text());checks={}
+ for name,v in m['files'].items():
+  hs=[]
+  for j in range(2):
+   progress('source_recheck',file=name,pass_index=j)
+   h=hashlib.sha256()
+   with (root/'source-model'/name).open('rb') as f:
+    for b in iter(lambda:f.read(8388608),b''):h.update(b)
+   hs.append(h.hexdigest())
+  assert hs==[v['sha256']]*2,name
+  checks[name]=hs
+ c=json.loads((root/'config.json').read_text());ah=hashlib.sha256((Path(c['parent_adapter'])/'adapter_model.safetensors').read_bytes()).hexdigest()
+ assert ah=='c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30'
+ (root/'live-integrity.json').write_text(json.dumps(dict(passed=True,boot_id=boot,source_hashes=checks,adapter_sha256=ah,epoch=time.time()),indent=2))
+

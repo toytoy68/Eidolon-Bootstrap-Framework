@@ -1,0 +1,34 @@
+from pathlib import Path
+import ast,json,hashlib
+import torch
+from checkpoint_selector import decision
+P=Path(__file__).resolve().parent
+for n in ['train.py','checkpoint_selector.py','controller.py','live_integrity.py','prepare.py','campaign.py','finish_result.py']:ast.parse((P/n).read_text())
+c=json.loads((P/'config.json').read_text());d=json.loads((P/'dataset.json').read_text());s=json.loads((P/'dataset-preparation.json').read_text())
+assert c['world_size']==2 and len(set(c['uuids']))==2 and c['max_updates']==306 and c['epochs']==3 and c['learning_rate']==3e-6
+assert s['train']['packs']==408 and len(d['train'])==878 and len(d['selection'])==192 and len(d['heldout'])==352
+assert hashlib.sha256((P/'dataset.json').read_bytes()).hexdigest()==json.loads((P/'lineage.json').read_text())['dataset_sha256']
+expected=set(range(408))
+for epoch in range(3):
+ indices=[(i%102)*4+j*2+r for i in range(epoch*102,(epoch+1)*102) for r in range(2) for j in range(2)]
+ assert len(indices)==408 and set(indices)==expected
+# DDP averages gradients across ranks. WORLD*n/total must recover the
+# single-process supervised-token mean even when rank token counts differ.
+ns=[3,17,5,11];total=sum(ns);a=torch.tensor(2.,requires_grad=True)
+ref=sum((a-(j+1))**2*n for j,n in enumerate(ns))/total;ref.backward();want=a.grad.item()
+gs=[]
+for rank in range(2):
+ x=torch.tensor(2.,requires_grad=True)
+ loss=sum((x-(j+1))**2*2*ns[j]/total for j in range(rank,4,2));loss.backward();gs.append(x.grad.item())
+assert abs(sum(gs)/2-want)<1e-6
+def row(i,ok,anchor=False,stratum='a'):return dict(id=str(i),evaluation=dict(content_correct=ok),group='anchor' if anchor else 'target',stratum=stratum)
+b=[row(i,False) for i in range(8)]+[row(20,True,True),row(21,True,True)]
+a=[dict(x,evaluation=dict(content_correct=int(x['id'])<6 or x['group']=='anchor')) for x in b]
+assert decision(b,a)['accepted'] and not decision(b,b)['accepted']
+assert not decision(b,[dict(x,evaluation=dict(content_correct=False)) if x['group']=='anchor' else x for x in a])['accepted']
+b=[row(i,False) for i in range(12)]+[row(50,True,stratum='b'),row(51,True,stratum='b')]
+assert not decision(b,[dict(x,evaluation=dict(content_correct=x['stratum']=='a')) for x in b])['accepted']
+assert '--nproc-per-node=2' in (P/'controller.py').read_text()
+assert all(x['id'] not in {y['id'] for y in d['train']} for x in d['selection']+d['heldout'])
+proof=dict(passed=True,policy_cases=4,ddp_weighted_gradient_equivalence=True,pack_coverage_three_passes=True,training_rows_identical_E2=True,epochs=3,updates=306)
+(P/'self-check.json').write_text(json.dumps(proof,indent=2));print(json.dumps(proof))

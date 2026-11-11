@@ -1,0 +1,31 @@
+{
+  "train": {
+    "examples": 878,
+    "packs": 408,
+    "tokens": 172484,
+    "mean_tokens_per_example": 196.4510250569476,
+    "max_tokens_per_example": 379,
+    "packing": "Whole examples concatenated; causal attention crosses sample boundaries; padding masked; assistant-only loss."
+  },
+  "supervised_tokens_per_pass": {
+    "replay": 47334,
+    "target": 12775
+  },
+  "supervised_tokens_total": {
+    "replay": 142002,
+    "target": 38325
+  },
+  "target_share": 0.21253056946547105,
+  "epochs": 3,
+  "updates_per_epoch": 102,
+  "updates": 306,
+  "train_examples": 878,
+  "replay_hours": 101,
+  "target_examples": 68,
+  "selection_reused_E2": true,
+  "report_time_fresh": 320,
+  "report_acquired_reused": 32,
+  "heldout_seed": 111103,
+  "excluded_known_pairs": 6392,
+  "final_reserved_read": false
+}

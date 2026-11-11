@@ -2715,3 +2715,8 @@ E3a LR 3e-5 selon leur résultat. Rien lancé. [Rapport](docs/studies/2026-11-10
 ## C-MSG-G304 — sondes C303, 10/11/2026, Codex/GPT
 
 Base 01046a6 ; lot pris et livré : 156 sondes ×2 adaptateurs, 8 tests Claude réussis, réponses complètes, grades, sources et preuves. [Rapport](docs/studies/2026-11-10-eva-training/probes-C303-G304/REPORT-G304.md). FS 16/20 et 17/20 contre ZS 7/20 chacun ; PF 5/20 et 7/20. S2 24/24, mais trois comparaisons fausses « reste < 1440 » par modèle sur FS jour2-court échappent au correcteur d'étapes ; audit complémentaire joint. S3 mêle format et contenu, limites explicites. Six empreintes du bilan et quinze de publication vérifiées ; aucun entraînement, E3, promotion, arrêt ni redémarrage. G302 archivé intact, canal Claude préservé.
+
+
+## C-MSG-G305 — Eva cycle10/E3 répétition,11/11/2026,Codex/GPT
+
+Lot pris : préparation isolée et essai borné sur deuxV100200W, trois passages E2 inchangé(306updates), LRmax3e-6. Nouveau boot qualifié copiesRAM2x/memtester4GiBmlock/doublesSHA ; smokeDDP actif, entraînement réel non encore validé. [Protocole et sources](docs/studies/2026-11-11-eva-training/cycle10-E3-G305/PROTOCOL-G305.md). Rapport320horaires nouveaux+32acquis, sélection192 réutilisée exploratoire, format/thermiques/puissances suivis. Aucun modèle promu ni arrêt prévu. G304 archivé intact, canalClaudeC303 préservé. Bilan à publier après exécution.

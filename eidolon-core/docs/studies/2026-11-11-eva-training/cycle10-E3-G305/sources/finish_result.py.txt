@@ -1,0 +1,58 @@
+from pathlib import Path
+import json,time,hashlib,re,collections
+from checkpoint_selector import decision
+P=Path(__file__).resolve().parent;R=P/'run'
+def save(n,d):
+ q=P/(n+'.tmp');q.write_text(json.dumps(d,ensure_ascii=False,indent=2));q.replace(P/n)
+assert json.loads((R/'status.json').read_text())['phase']=='finished'
+assert not (R/'guard-trip.json').exists()
+training=json.loads((R/'training-summary.json').read_text());assert training['coverage_verified'] and training['world_size']==2 and training['epochs']==3
+assert all(x['optimizer_steps']==306 and x['replica_max_difference']<=1e-6 for x in training['ranks'])
+assert json.loads((R/'baseline-equivalence.json').read_text())['passed']
+before=json.loads((R/'evaluation-before-rank0.json').read_text())['rows'];after=json.loads((R/'evaluation-after-rank0.json').read_text())['rows']
+assert len(before)==len(after)==352 and [r['id'] for r in before]==[r['id'] for r in after]
+assert len({x['id'] for x in before})==352
+assert all(a['identity']['gpu_uuid']==b['identity']['gpu_uuid'] and a['identity']['precision']==b['identity']['precision'] and not a['reused'] and not b['reused'] for a,b in zip(before,after))
+def formats(rows):
+ rows=[r for r in rows if r['expected']['unite']=='heure'];start=complete=bad=0
+ details=[]
+ for x in rows:
+  t=x['response'];first=bool(re.match(r'^\s*Départ\s+\d{2}:\d{2}\s*=',t))
+  nsub=len(re.findall(r'−\s*1440\s*=',t));sections=first and 'Arrivée' in t and bool(re.search(r'\d+\s*<\s*1440',t)) and bool(re.search(r'\d+\s*<\s*60',t))
+  claims=[m[0] for m in re.finditer(r'(\d+)\s*(<|≥)\s*1440',t) if (int(m[1])>=1440 if m[2]=='<' else int(m[1])<1440)]
+  start+=first;complete+=bool(sections and nsub==x['expected']['jours']);bad+=bool(claims)
+  if claims:details.append(dict(id=x['id'],false_claims=claims))
+ return dict(n=len(rows),format_start=start,structure_heuristic=complete,false_comparison_responses=bad,details=details,limitation='Structure heuristic and comparisons are partial checks, not a complete arithmetic-chain oracle.')
+fmt=dict(before=formats(before),after=formats(after));save('format-audit.json',fmt)
+tel=[json.loads(x) for x in (R/'telemetry.jsonl').read_text().splitlines()]
+def summarize(rows):
+ out=dict(seconds=rows[-1]['epoch']-rows[0]['epoch'],samples=len(rows),gpus=[])
+ for i in range(2):
+  d={}
+  for k in ['gpu_c','hbm_c','cpu_c','gpu_w','vram_mib','gpu_util_pct']:
+   vs=[r['gpus'][i][k] for r in rows];d[k]=dict(mean=sum(vs)/len(vs),max=max(vs))
+  d['energy_wh']=sum((b['epoch']-a['epoch'])*(a['gpus'][i]['gpu_w']+b['gpus'][i]['gpu_w'])/7200 for a,b in zip(rows,rows[1:]));out['gpus'].append(d)
+ wall=[r['meter']['wall_w'] for r in rows if 'wall_w' in r.get('meter',{})]
+ out['wall_w']=dict(mean=sum(wall)/len(wall),max=max(wall)) if wall else None
+ return out
+telemetry=summarize(tel);phases={}
+groups=collections.defaultdict(list)
+for row in tel:groups[row.get('mode','unknown')+':'+row.get('ranks',[{}])[0].get('stage','starting')].append(row)
+for k,rows in groups.items():
+ # Disjoint occurrences must not count the intervening stages as active time.
+ summary=summarize(rows);summary['seconds']=sum(min(2,b['epoch']-a['epoch']) for a,b in zip(rows,rows[1:]));summary.pop('gpus',None)
+ phases[k]=summary
+selection=json.loads((P/'checkpoint-selection.json').read_text());quality=json.loads((R/'quality-comparison.json').read_text());stats=json.loads((P/'dataset-preparation.json').read_text())
+result=dict(state='finished',epoch=time.time(),boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),training=training,comparison=quality,paired_report=decision(before,after),selection=selection,data=stats,format_audit=fmt,telemetry=telemetry,phase_times=phases,automatic_promotion=False,final_reserved_test_evaluated=False,canaries_review_required=True)
+save('resultat-final.json',result)
+a=quality['before'];b=quality['after'];lines=['Eva — cycle10 / E3 répétition sur deux V100','Essai terminé ; aucun modèle promu.','3 passages du jeu E2 inchangé : 878 exemples, 408 packs par passage, 306 mises à jour.','Même parent cycle5, QLoRA NF4 double quantification / FP16, LoRA r8 alpha16.','Deux V100 à 200 W chacune en DDP : un adaptateur commun, gradients synchronisés.','Pic LR3e-6 ; calendrier E2 de102 pas répété à chaque passage, état optimiseur conservé.','Le matériel et le nombre de passages changent ; aucun gain de qualité ne peut être attribué au second GPU seul.','Sélection192 réutilisée ; rapport320 horaires nouvellement générés +32 acquis réutilisés.','Répétabilité avant entraînement : deux générations neuves identiques dans un même chargement par GPU.','',f"Horaires : {a['subsets']['target']['content_correct']} → {b['subsets']['target']['content_correct']}/320",f"Acquis : {a['subsets']['anchor']['content_correct']} → {b['subsets']['anchor']['content_correct']}/32",f"Total : {a['content_correct']} → {b['content_correct']}/352"]
+for s in a['strata']:lines.append(s+': '+str(a['strata'][s]['content_correct'])+' → '+str(b['strata'][s]['content_correct'])+'/'+str(b['strata'][s]['n']))
+lines+=['','Comparaison appariée exploratoire : '+json.dumps(result['paired_report'],ensure_ascii=False),'Sélection : '+json.dumps(selection,ensure_ascii=False),'Format détaillé : '+json.dumps(fmt,ensure_ascii=False),'Statistiques données : '+json.dumps(stats,ensure_ascii=False),'Temps et puissance : '+json.dumps(telemetry,ensure_ascii=False),'Étapes : '+json.dumps(phases,ensure_ascii=False),'Les canaris et réponses complètes sont conservés pour revue.','Le test final réservé n’a été ni évalué ni utilisé pour entraîner.','Résultats exploratoires ; pas de validation générale du modèle.','Dossier : '+str(P)]
+(P/'Rapport_Eva_cycle10_E3.txt').write_text('\n'.join(lines)+'\n')
+files={}
+for f in P.rglob('*'):
+ if f.is_file() and not f.is_symlink() and '__pycache__' not in f.parts and f.name not in ['result-saved.json','campaign-status.json','finalize.log'] and f.suffix in ['.json','.jsonl','.py','.txt','.log','.pt','.safetensors']:
+  files[str(f.relative_to(P))]=hashlib.sha256(f.read_bytes()).hexdigest()
+save('result-saved.json',dict(state='finished',files=files,epoch=time.time(),automatic_promotion=False))
+assert all(hashlib.sha256((P/n).read_bytes()).hexdigest()==h for n,h in files.items())
+print(json.dumps(dict(saved=True,verified=len(files))))
