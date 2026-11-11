@@ -1,0 +1,83 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : close_e3.py
+# Description : Audit et conservation de l'essai E3 interrompu
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from pathlib import Path
+import json,time,re,hashlib,subprocess as sp,collections,datetime
+from zoneinfo import ZoneInfo
+P=Path('/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095');R=P/'run'
+def sha(f):
+ h=hashlib.sha256()
+ with f.open('rb') as stream:
+  for b in iter(lambda:stream.read(8388608),b''):h.update(b)
+ return h.hexdigest()
+def save(n,d):
+ q=P/(n+'.audit.tmp');q.write_text(json.dumps(d,ensure_ascii=False,indent=2));q.replace(P/n)
+assert json.loads((P/'campaign-status.json').read_text())['phase']=='failed'
+assert json.loads((R/'status.json').read_text())['phase']=='aborted'
+assert not sp.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
+assert not (R/'guard-trip.json').exists()
+kernel=sp.check_output(['journalctl','-k','-b','--no-pager'],text=True)
+faults=re.findall(r'^.*(?:Oops:|BUG:|Hardware Error|NVRM: Xid|hard LOCKUP|soft lockup).*$',kernel,re.M);assert not faults
+for n,h in json.loads((P/'failure-saved.json').read_text())['files'].items():assert sha(P/n)==h
+for n,h in json.loads((P/'launch-manifest.json').read_text()).items():assert sha(P/n)==h,n
+parent=Path('/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final/adapter_model.safetensors')
+assert sha(parent)=='c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30'
+hashes={};checkpoints=[]
+for folder in sorted((P/'resume').glob('step-*'),key=lambda f:int(f.name.split('-')[1])):
+ complete=json.loads((folder/'complete.json').read_text());step=int(folder.name.split('-')[1]);assert complete['step']==step
+ for f in folder.rglob('*'):
+  if f.is_file():
+   a=sha(f);b=sha(f);assert a==b,str(f);hashes[str(f.relative_to(P))]=a
+ checkpoints.append(complete)
+assert checkpoints[-1]['step']==204 and checkpoints[-1]['totals']==[344968,120218,417792]
+steps=[[json.loads(s) for s in (R/f'steps-rank{i}.jsonl').read_text().splitlines()] for i in range(2)]
+assert all([x['optimizer_step'] for x in rank]==list(range(1,205)) for rank in steps)
+assert sum(x['supervised_tokens'] for rank in steps for x in rank)==120218
+assert sum(x['nonpadding_tokens'] for rank in steps for x in rank)==344968
+assert all(abs(a['gradient_norm']-b['gradient_norm'])<1e-6 for a,b in zip(*steps))
+noise=json.loads((R/'baseline-equivalence.json').read_text());assert noise['passed']
+history=[json.loads(x) for x in (P/'selection-history.jsonl').read_text().splitlines()];assert [x['score']['step'] for x in history]==[0,102]
+def rowstats(rows):
+ result={}
+ for s in sorted({r['stratum'] for r in rows}):
+  sub=[r for r in rows if r['stratum']==s];result[s]=dict(n=len(sub),correct=sum(r['evaluation']['content_correct'] for r in sub))
+ hours=[r for r in rows if r['expected']['unite']=='heure']
+ return dict(strata=result,hours_format_start=sum(bool(re.match(r'^\s*Départ\s+\d{2}:\d{2}\s*=',r['response'])) for r in hours),hours_n=len(hours),truncated=sum(r['truncated'] for r in rows))
+selection=[dict(score=x['score'],decision=x['decision'],analysis=rowstats(x['rows'])) for x in history]
+tel=[json.loads(s) for s in (R/'telemetry.jsonl').read_text().splitlines()]
+for i in range(2):
+ for key in ['ecc_corrected','ecc_uncorrected','ecc_aggregate_corrected','ecc_aggregate_uncorrected']:
+  assert all(r['gpus'][i][key]==tel[0]['gpus'][i][key] for r in tel)
+ assert all(r['gpus'][i]['gpu_c']<83 and r['gpus'][i]['hbm_c']<83 and r['gpus'][i]['cpu_c']<70 for r in tel)
+def telemetry(rows):
+ out=dict(samples=len(rows),seconds=rows[-1]['epoch']-rows[0]['epoch'],gpus=[])
+ for i in range(2):
+  d={}
+  for key in ['gpu_w','gpu_c','hbm_c','cpu_c','vram_mib']:
+   vals=[r['gpus'][i][key] for r in rows];d[key]=dict(mean=sum(vals)/len(vals),max=max(vals))
+  d['energy_wh']=sum((b['epoch']-a['epoch'])*(a['gpus'][i]['gpu_w']+b['gpus'][i]['gpu_w'])/7200 for a,b in zip(rows,rows[1:]));out['gpus'].append(d)
+ wall=[r['meter']['wall_w'] for r in rows if 'wall_w' in r.get('meter',{})];out['wall_w']=dict(mean=sum(wall)/len(wall),max=max(wall))
+ out['wall_energy_wh_meter']=rows[-1]['meter']['energy_wh']-rows[0]['meter']['energy_wh']
+ return out
+power=telemetry(tel)
+stage_seconds=collections.Counter()
+for a,b in zip(tel,tel[1:]):
+ stage=a.get('ranks',[{}])[0].get('stage','starting');stage_seconds[stage]+=b['epoch']-a['epoch']
+status=json.loads((R/'status.json').read_text());p0=json.loads((R/'progress-rank0.json').read_text());p1=json.loads((R/'progress-rank1.json').read_text())
+log=(R/'train.log').read_text();timeout_lines=[l for l in log.splitlines() if 'Watchdog caught collective operation timeout' in l]
+assert timeout_lines and p0['done']==168 and p0['optimizer_step']==204
+canaries=json.loads((R/'canaries-before.json').read_text());assert len(canaries)==8
+before=json.loads((R/'evaluation-before.json').read_text())
+result=dict(state='failed',reason='Selection only runs on rank0; rank1 entered broadcast wait. Supervisor stale-wait limit1800s and NCCL collective timeout1800000ms expired while rank0 still evaluated question168/192.',stopped_at=datetime.datetime.fromtimestamp(json.loads((P/'campaign-status.json').read_text())['epoch'],ZoneInfo('Europe/Paris')).isoformat(),optimizer_steps=204,planned_steps=306,passes_completed=2,selection=selection,rank0_last=p0,rank1_last=p1,run_status=status,timeout_lines=timeout_lines,checkpoint_complete=checkpoints,compute_seconds_per_rank=[sum(x['seconds'] for x in rank) for rank in steps],supervised_tokens=120218,nonpadding_tokens=344968,telemetry=power,rank0_stage_seconds=dict(stage_seconds),fresh_report_parent=before,fresh_report_candidate=None,after_canaries_available=False,noise=noise,kernel_faults=faults,gpu_compute_remaining=False,parent_sha256=sha(parent),automatic_promotion=False,final_reserved_read=False,limitations=['Second-pass selection has no completed score or saved complete response set.','No independent AFTER report or canaries exist for step204.','Root live-integrity recheck files were overwritten between loaders; train copy and initial full CPU proof retained.','Known-pair count6392 includes320 new evaluation pairs;6072 prior pairs were excluded.','Passing4GiB memtester is not a full128GiB certification.'],checkpoint_double_hashes_match=True)
+save('failure-audit-G306.json',result)
+lines=['Eva cycle10 / E3 — bilan d’interruption,11/11/2026','État : essai interrompu après204/306 mises à jour ; deux passages terminés.','Arrêt : '+result['stopped_at'],'Cause confirmée dans le code et les journaux : sélection séquentielle sur rank0 ; rank1 attendait en broadcast. Après1800s, surveillance et NCCL ont expiré alors que rank0 avançait encore(168/192).','Erreur du harnais logiciel ; aucun défaut mémoire/noyau/ECC/thermique observé dans les preuves de cette exécution.','Aucune relance, promotion, extinction ou évaluation du test final réservé.','', 'Sélection complète disponible seulement au premier passage : horaires39→41/160 ; acquis26→25/32 ; total65→66/192.','Deux gains horaires, zéro perte horaire ; p apparié exploratoire0,5. Candidat102 non retenu.','Début du format time_steps :0/164 réponses horaires avant comme après102 ; aucune troncature dans cette sélection.','Le score du deuxième passage(204) est INDISPONIBLE ; ne pas le remplacer par le score102.','Rapport neuf : parent86/320 horaires et26/32 acquis ; aucun score APRÈS disponible. E1/E2 avaient des questions différentes : comparaison directe des totaux interdite.','', 'Calcul effectif des204 mises à jour : '+str(round(max(result['compute_seconds_per_rank']),3))+' secondes en parallèle sur les deuxV100.','Durée du service de calcul, chargement et évaluations inclus : '+str(round(power['seconds'],3))+' secondes.','Les évaluations dominent le temps total ; aucune preuve que changer Ollama résolve cela, ce trainer utilise PyTorch/Transformers/PEFT.','Puissances, températures et énergie : '+json.dumps(power,ensure_ascii=False),'Durées par état du rank0 : '+json.dumps(dict(stage_seconds),ensure_ascii=False),'', 'Douze checkpoints complets préservés (20/40/60/80/100/102/120/140/160/180/200/204).','Chaque fichier de checkpoint a deuxSHA256 identiques lors de la clôture ; modèle parent conforme à son empreinte attendue.','Checkpoint204 :344968tokens non-padding et120218tokens supervisés.','Réplicas du smoke DDP identiques ; normes de gradient des204 pas identiques. Aucun hash final des deux réplicas204 n’a été produit avant interruption.','Tous les poids, données et journaux présents sont conservés ; les réponses intermédiaires non écrites du bloc de sélection204 ne sont pas récupérables.','Canaris avant conservés ; aucun canari après204.','', 'Correction proposée, non appliquée : répartir la sélection sur les deuxGPU, persister chaque réponse, reprendre une évaluation interrompue depuis le checkpoint et surveiller le progrès réel de chaque rang. Mesurer le batching sur un jeu fixe avant de changer ses paramètres. Gardes thermiques et intégrité conservées.','Limites : '+json.dumps(result['limitations'],ensure_ascii=False),'Dossier serveur : '+str(P)]
+(P/'Rapport_Eva_cycle10_E3_interrompu.txt').write_text('\n'.join(lines)+'\n')
+for n in ['Rapport_Eva_cycle10_E3_interrompu.txt','failure-audit-G306.json','failure-saved.json','failed-result.json','run/status.json','run/train.log','train-controller.log','checkpoint-selection.json','selection-history.jsonl','run/baseline-equivalence.json','run/evaluation-before.json','run/evaluation-before-rank0.json','run/evaluation-repeat-rank0.json','run/canaries-before.json','run/canaries-repeat.json','run/steps-rank0.jsonl','run/steps-rank1.jsonl','run/telemetry.jsonl','dataset.json','lineage.json','config.json']:
+ hashes[n]=sha(P/n)
+save('failure-audit-saved-G306.json',dict(state='failed',files=hashes,epoch=time.time()))
+assert all(sha(P/n)==h for n,h in hashes.items())
+print(json.dumps(dict(saved=True,verified_files=len(hashes),checkpoints=len(checkpoints),report_sha256=hashes['Rapport_Eva_cycle10_E3_interrompu.txt'],power=power,rank0_stage_seconds=dict(stage_seconds)),ensure_ascii=False))

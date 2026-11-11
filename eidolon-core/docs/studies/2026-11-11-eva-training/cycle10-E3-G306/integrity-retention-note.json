@@ -1,0 +1,4 @@
+{
+  "epoch": 1794386575.0677953,
+  "note": "Shared root live-integrity files are replaced by each loader; after the train load, copies are archived under run. Initial full CPU proof remains intact; separate smoke recheck JSON was not archived before replacement. Do not claim two separately archived recheck manifests."
+}

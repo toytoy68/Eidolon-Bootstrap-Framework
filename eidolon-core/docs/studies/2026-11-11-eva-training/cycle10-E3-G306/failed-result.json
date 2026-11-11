@@ -1,0 +1,8 @@
+{
+  "state": "failed",
+  "boot_id": "4c1f2095-f683-4b6c-8c17-9d9a21474ee5",
+  "epoch": 1794393656.266638,
+  "reason": "AssertionError(('train', 1))",
+  "automatic_promotion": false,
+  "all_artifacts_retained": true
+}

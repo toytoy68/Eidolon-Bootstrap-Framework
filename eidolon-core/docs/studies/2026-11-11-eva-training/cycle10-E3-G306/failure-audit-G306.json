@@ -1,0 +1,579 @@
+{
+  "state": "failed",
+  "reason": "Selection only runs on rank0; rank1 entered broadcast wait. Supervisor stale-wait limit1800s and NCCL collective timeout1800000ms expired while rank0 still evaluated question168/192.",
+  "stopped_at": "2026-11-11T11:40:56.266174+01:00",
+  "optimizer_steps": 204,
+  "planned_steps": 306,
+  "passes_completed": 2,
+  "selection": [
+    {
+      "score": {
+        "step": 0,
+        "n": 192,
+        "correct": 65,
+        "target_correct": 39,
+        "anchors_correct": 26,
+        "families": {
+          "0": 4,
+          "1": 3,
+          "2": 2,
+          "3": 4,
+          "4": 4,
+          "5": 41,
+          "6": 3,
+          "7": 4
+        },
+        "adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final"
+      },
+      "decision": {
+        "accepted": true,
+        "baseline": true
+      },
+      "analysis": {
+        "strata": {
+          "anchor-0": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-1": {
+            "n": 4,
+            "correct": 3
+          },
+          "anchor-2": {
+            "n": 4,
+            "correct": 2
+          },
+          "anchor-3": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-4": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-5": {
+            "n": 4,
+            "correct": 2
+          },
+          "anchor-6": {
+            "n": 4,
+            "correct": 3
+          },
+          "anchor-7": {
+            "n": 4,
+            "correct": 4
+          },
+          "day0-short-template0": {
+            "n": 16,
+            "correct": 15
+          },
+          "day0-short-template1": {
+            "n": 16,
+            "correct": 12
+          },
+          "day1-long-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day1-long-template1": {
+            "n": 16,
+            "correct": 0
+          },
+          "day1-short-template0": {
+            "n": 16,
+            "correct": 11
+          },
+          "day1-short-template1": {
+            "n": 16,
+            "correct": 1
+          },
+          "day2-long-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-long-template1": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-short-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-short-template1": {
+            "n": 16,
+            "correct": 0
+          }
+        },
+        "hours_format_start": 0,
+        "hours_n": 164,
+        "truncated": 0
+      }
+    },
+    {
+      "score": {
+        "step": 102,
+        "n": 192,
+        "correct": 66,
+        "target_correct": 41,
+        "anchors_correct": 25,
+        "families": {
+          "0": 4,
+          "1": 3,
+          "2": 2,
+          "3": 4,
+          "4": 4,
+          "5": 43,
+          "6": 2,
+          "7": 4
+        },
+        "adapter": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/resume/step-102/adapter"
+      },
+      "decision": {
+        "accepted": false,
+        "gains": 2,
+        "losses": 0,
+        "p_exact": 0.5,
+        "anchor_loss": 1,
+        "stratum_guard": true,
+        "exploratory": true
+      },
+      "analysis": {
+        "strata": {
+          "anchor-0": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-1": {
+            "n": 4,
+            "correct": 3
+          },
+          "anchor-2": {
+            "n": 4,
+            "correct": 2
+          },
+          "anchor-3": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-4": {
+            "n": 4,
+            "correct": 4
+          },
+          "anchor-5": {
+            "n": 4,
+            "correct": 2
+          },
+          "anchor-6": {
+            "n": 4,
+            "correct": 2
+          },
+          "anchor-7": {
+            "n": 4,
+            "correct": 4
+          },
+          "day0-short-template0": {
+            "n": 16,
+            "correct": 16
+          },
+          "day0-short-template1": {
+            "n": 16,
+            "correct": 12
+          },
+          "day1-long-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day1-long-template1": {
+            "n": 16,
+            "correct": 0
+          },
+          "day1-short-template0": {
+            "n": 16,
+            "correct": 12
+          },
+          "day1-short-template1": {
+            "n": 16,
+            "correct": 1
+          },
+          "day2-long-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-long-template1": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-short-template0": {
+            "n": 16,
+            "correct": 0
+          },
+          "day2-short-template1": {
+            "n": 16,
+            "correct": 0
+          }
+        },
+        "hours_format_start": 0,
+        "hours_n": 164,
+        "truncated": 0
+      }
+    }
+  ],
+  "rank0_last": {
+    "stage": "selection_validation",
+    "epoch": 1794393650.2244394,
+    "rank": 0,
+    "optimizer_step": 204,
+    "done": 168,
+    "total": 192
+  },
+  "rank1_last": {
+    "stage": "waiting_peer",
+    "epoch": 1794391853.303074,
+    "rank": 1,
+    "optimizer_step": 204
+  },
+  "run_status": {
+    "phase": "aborted",
+    "epoch": 1794393653.6111872,
+    "heartbeat": 1794393653.6111875,
+    "output": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/run",
+    "single_v100": false,
+    "reason": "RuntimeError('Rank progress stale 1 waiting_peer')",
+    "mode": "train"
+  },
+  "timeout_lines": [
+    "[rank1]:[E1111 11:40:53.547908004 ProcessGroupNCCL.cpp:629] [Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=891, OpType=BROADCAST, NumelIn=1, NumelOut=1, Timeout(ms)=1800000) ran for 1800059 milliseconds before timing out."
+  ],
+  "checkpoint_complete": [
+    {
+      "step": 20,
+      "totals": [
+        33118,
+        11697,
+        40960
+      ]
+    },
+    {
+      "step": 40,
+      "totals": [
+        65914,
+        23169,
+        81920
+      ]
+    },
+    {
+      "step": 60,
+      "totals": [
+        100737,
+        35116,
+        122880
+      ]
+    },
+    {
+      "step": 80,
+      "totals": [
+        134919,
+        47037,
+        163840
+      ]
+    },
+    {
+      "step": 100,
+      "totals": [
+        168767,
+        58807,
+        204800
+      ]
+    },
+    {
+      "step": 102,
+      "totals": [
+        172484,
+        60109,
+        208896
+      ]
+    },
+    {
+      "step": 120,
+      "totals": [
+        202078,
+        70655,
+        245760
+      ]
+    },
+    {
+      "step": 140,
+      "totals": [
+        234863,
+        82052,
+        286720
+      ]
+    },
+    {
+      "step": 160,
+      "totals": [
+        269617,
+        94005,
+        327680
+      ]
+    },
+    {
+      "step": 180,
+      "totals": [
+        304098,
+        106004,
+        368640
+      ]
+    },
+    {
+      "step": 200,
+      "totals": [
+        337751,
+        117723,
+        409600
+      ]
+    },
+    {
+      "step": 204,
+      "totals": [
+        344968,
+        120218,
+        417792
+      ]
+    }
+  ],
+  "compute_seconds_per_rank": [
+    262.7910885810852,
+    262.81194138526917
+  ],
+  "supervised_tokens": 120218,
+  "nonpadding_tokens": 344968,
+  "telemetry": {
+    "samples": 13147,
+    "seconds": 7174.362103223801,
+    "gpus": [
+      {
+        "gpu_w": {
+          "mean": 85.61804563778809,
+          "max": 222.785
+        },
+        "gpu_c": {
+          "mean": 30.801171369894274,
+          "max": 38.0
+        },
+        "hbm_c": {
+          "mean": 30.99657716589336,
+          "max": 42.0
+        },
+        "cpu_c": {
+          "mean": 40.35152506275196,
+          "max": 43.125
+        },
+        "vram_mib": {
+          "mean": 7378.923732600593,
+          "max": 7555.0625
+        },
+        "energy_wh": 170.9554638053037
+      },
+      {
+        "gpu_w": {
+          "mean": 71.94738875789155,
+          "max": 214.443
+        },
+        "gpu_c": {
+          "mean": 30.898760173423593,
+          "max": 40.0
+        },
+        "hbm_c": {
+          "mean": 30.721609492659923,
+          "max": 42.0
+        },
+        "cpu_c": {
+          "mean": 40.35134441317411,
+          "max": 43.125
+        },
+        "vram_mib": {
+          "mean": 6989.761186012018,
+          "max": 7185.0625
+        },
+        "energy_wh": 143.7541923200838
+      }
+    ],
+    "wall_w": {
+      "mean": 291.1661291549403,
+      "max": 542.5
+    },
+    "wall_energy_wh_meter": 581.2499999999982
+  },
+  "rank0_stage_seconds": {
+    "starting": 2.182140350341797,
+    "importing": 3.2717976570129395,
+    "memory_recheck": 10.898595571517944,
+    "source_recheck": 10.368513107299805,
+    "tokenizer": 1.071521282196045,
+    "loading_model": 11.552638292312622,
+    "waiting_peer": 2.2940149307250977,
+    "evaluation_before": 1221.1642332077026,
+    "evaluation_repeat": 1220.216315984726,
+    "selection_validation": 4421.60152721405,
+    "training": 248.55260300636292,
+    "checkpoint": 20.01253628730774,
+    "selection_complete": 1.175666332244873
+  },
+  "fresh_report_parent": {
+    "n": 352,
+    "content_correct": 112,
+    "exact_json": 112,
+    "truncated": 0,
+    "subsets": {
+      "target": {
+        "n": 320,
+        "content_correct": 86,
+        "exact_json": 86,
+        "truncated": 0
+      },
+      "anchor": {
+        "n": 32,
+        "content_correct": 26,
+        "exact_json": 26,
+        "truncated": 0
+      }
+    },
+    "strata": {
+      "anchor-0": {
+        "n": 4,
+        "content_correct": 4,
+        "exact_json": 4,
+        "truncated": 0
+      },
+      "anchor-1": {
+        "n": 4,
+        "content_correct": 3,
+        "exact_json": 3,
+        "truncated": 0
+      },
+      "anchor-2": {
+        "n": 4,
+        "content_correct": 2,
+        "exact_json": 2,
+        "truncated": 0
+      },
+      "anchor-3": {
+        "n": 4,
+        "content_correct": 4,
+        "exact_json": 4,
+        "truncated": 0
+      },
+      "anchor-4": {
+        "n": 4,
+        "content_correct": 4,
+        "exact_json": 4,
+        "truncated": 0
+      },
+      "anchor-5": {
+        "n": 4,
+        "content_correct": 2,
+        "exact_json": 2,
+        "truncated": 0
+      },
+      "anchor-6": {
+        "n": 4,
+        "content_correct": 3,
+        "exact_json": 3,
+        "truncated": 0
+      },
+      "anchor-7": {
+        "n": 4,
+        "content_correct": 4,
+        "exact_json": 4,
+        "truncated": 0
+      },
+      "day0-short-template0": {
+        "n": 32,
+        "content_correct": 32,
+        "exact_json": 32,
+        "truncated": 0
+      },
+      "day0-short-template1": {
+        "n": 32,
+        "content_correct": 23,
+        "exact_json": 23,
+        "truncated": 0
+      },
+      "day1-long-template0": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      },
+      "day1-long-template1": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      },
+      "day1-short-template0": {
+        "n": 32,
+        "content_correct": 22,
+        "exact_json": 22,
+        "truncated": 0
+      },
+      "day1-short-template1": {
+        "n": 32,
+        "content_correct": 9,
+        "exact_json": 9,
+        "truncated": 0
+      },
+      "day2-long-template0": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      },
+      "day2-long-template1": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      },
+      "day2-short-template0": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      },
+      "day2-short-template1": {
+        "n": 32,
+        "content_correct": 0,
+        "exact_json": 0,
+        "truncated": 0
+      }
+    },
+    "seconds": 1221.626800775528
+  },
+  "fresh_report_candidate": null,
+  "after_canaries_available": false,
+  "noise": {
+    "passed": true,
+    "responses_changed": [],
+    "canaries_changed": [],
+    "n": 352,
+    "fresh_generation": true,
+    "cache_reused": false,
+    "same_process": true,
+    "model_loads_per_rank": 1
+  },
+  "kernel_faults": [],
+  "gpu_compute_remaining": false,
+  "parent_sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30",
+  "automatic_promotion": false,
+  "final_reserved_read": false,
+  "limitations": [
+    "Second-pass selection has no completed score or saved complete response set.",
+    "No independent AFTER report or canaries exist for step204.",
+    "Root live-integrity recheck files were overwritten between loaders; train copy and initial full CPU proof retained.",
+    "Known-pair count6392 includes320 new evaluation pairs;6072 prior pairs were excluded.",
+    "Passing4GiB memtester is not a full128GiB certification."
+  ],
+  "checkpoint_double_hashes_match": true
+}

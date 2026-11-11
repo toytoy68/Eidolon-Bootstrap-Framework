@@ -1,0 +1,29 @@
+Eva cycle10 / E3 — bilan d’interruption,11/11/2026
+État : essai interrompu après204/306 mises à jour ; deux passages terminés.
+Arrêt : 2026-11-11T11:40:56.266174+01:00
+Cause confirmée dans le code et les journaux : sélection séquentielle sur rank0 ; rank1 attendait en broadcast. Après1800s, surveillance et NCCL ont expiré alors que rank0 avançait encore(168/192).
+Erreur du harnais logiciel ; aucun défaut mémoire/noyau/ECC/thermique observé dans les preuves de cette exécution.
+Aucune relance, promotion, extinction ou évaluation du test final réservé.
+
+Sélection complète disponible seulement au premier passage : horaires39→41/160 ; acquis26→25/32 ; total65→66/192.
+Deux gains horaires, zéro perte horaire ; p apparié exploratoire0,5. Candidat102 non retenu.
+Début du format time_steps :0/164 réponses horaires avant comme après102 ; aucune troncature dans cette sélection.
+Le score du deuxième passage(204) est INDISPONIBLE ; ne pas le remplacer par le score102.
+Rapport neuf : parent86/320 horaires et26/32 acquis ; aucun score APRÈS disponible. E1/E2 avaient des questions différentes : comparaison directe des totaux interdite.
+
+Calcul effectif des204 mises à jour : 262.812 secondes en parallèle sur les deuxV100.
+Durée du service de calcul, chargement et évaluations inclus : 7174.362 secondes.
+Les évaluations dominent le temps total ; aucune preuve que changer Ollama résolve cela, ce trainer utilise PyTorch/Transformers/PEFT.
+Puissances, températures et énergie : {"samples": 13147, "seconds": 7174.362103223801, "gpus": [{"gpu_w": {"mean": 85.61804563778809, "max": 222.785}, "gpu_c": {"mean": 30.801171369894274, "max": 38.0}, "hbm_c": {"mean": 30.99657716589336, "max": 42.0}, "cpu_c": {"mean": 40.35152506275196, "max": 43.125}, "vram_mib": {"mean": 7378.923732600593, "max": 7555.0625}, "energy_wh": 170.9554638053037}, {"gpu_w": {"mean": 71.94738875789155, "max": 214.443}, "gpu_c": {"mean": 30.898760173423593, "max": 40.0}, "hbm_c": {"mean": 30.721609492659923, "max": 42.0}, "cpu_c": {"mean": 40.35134441317411, "max": 43.125}, "vram_mib": {"mean": 6989.761186012018, "max": 7185.0625}, "energy_wh": 143.7541923200838}], "wall_w": {"mean": 291.1661291549403, "max": 542.5}, "wall_energy_wh_meter": 581.2499999999982}
+Durées par état du rank0 : {"starting": 2.182140350341797, "importing": 3.2717976570129395, "memory_recheck": 10.898595571517944, "source_recheck": 10.368513107299805, "tokenizer": 1.071521282196045, "loading_model": 11.552638292312622, "waiting_peer": 2.2940149307250977, "evaluation_before": 1221.1642332077026, "evaluation_repeat": 1220.216315984726, "selection_validation": 4421.60152721405, "training": 248.55260300636292, "checkpoint": 20.01253628730774, "selection_complete": 1.175666332244873}
+
+Douze checkpoints complets préservés (20/40/60/80/100/102/120/140/160/180/200/204).
+Chaque fichier de checkpoint a deuxSHA256 identiques lors de la clôture ; modèle parent conforme à son empreinte attendue.
+Checkpoint204 :344968tokens non-padding et120218tokens supervisés.
+Réplicas du smoke DDP identiques ; normes de gradient des204 pas identiques. Aucun hash final des deux réplicas204 n’a été produit avant interruption.
+Tous les poids, données et journaux présents sont conservés ; les réponses intermédiaires non écrites du bloc de sélection204 ne sont pas récupérables.
+Canaris avant conservés ; aucun canari après204.
+
+Correction proposée, non appliquée : répartir la sélection sur les deuxGPU, persister chaque réponse, reprendre une évaluation interrompue depuis le checkpoint et surveiller le progrès réel de chaque rang. Mesurer le batching sur un jeu fixe avant de changer ses paramètres. Gardes thermiques et intégrité conservées.
+Limites : ["Second-pass selection has no completed score or saved complete response set.", "No independent AFTER report or canaries exist for step204.", "Root live-integrity recheck files were overwritten between loaders; train copy and initial full CPU proof retained.", "Known-pair count6392 includes320 new evaluation pairs;6072 prior pairs were excluded.", "Passing4GiB memtester is not a full128GiB certification."]
+Dossier serveur : /srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095

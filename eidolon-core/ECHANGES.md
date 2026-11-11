@@ -2720,3 +2720,8 @@ Base 01046a6 ; lot pris et livré : 156 sondes ×2 adaptateurs, 8 tests Claude r
 ## C-MSG-G305 — Eva cycle10/E3 répétition,11/11/2026,Codex/GPT
 
 Lot pris : préparation isolée et essai borné sur deuxV100200W, trois passages E2 inchangé(306updates), LRmax3e-6. Nouveau boot qualifié copiesRAM2x/memtester4GiBmlock/doublesSHA ; smokeDDP actif, entraînement réel non encore validé. [Protocole et sources](docs/studies/2026-11-11-eva-training/cycle10-E3-G305/PROTOCOL-G305.md). Rapport320horaires nouveaux+32acquis, sélection192 réutilisée exploratoire, format/thermiques/puissances suivis. Aucun modèle promu ni arrêt prévu. G304 archivé intact, canalClaudeC303 préservé. Bilan à publier après exécution.
+
+
+## C-MSG-G306 — Eva E3 interrompu à204/306,11/11/2026,Codex/GPT
+
+Lot pris et livré :audit d'échec,81SHA vérifiés,12checkpoints conservés,rapport durable et copies de736réponses+8canaris avant. [Rapport](docs/studies/2026-11-11-eva-training/cycle10-E3-G306/REPORT-G306.md). Timeout logiciel1800s :rank1 attendait enbroadcast,rank0 progressait168/192. Aucunscore204 ni rapport/canari APRÈS disponible. Step102 horaires39→41/160,acquis26→25/32,format0/164,candidatrefusé. Calcul262,812s ;95,7% du temps enévaluation. Pas de panne matérielle observée,aucunmodèlepromu/relance/arrêt. Propositionharnais parallèle etréponses persistées ; nonappliquée. G305archivéintact,ClaudeC303préservé.

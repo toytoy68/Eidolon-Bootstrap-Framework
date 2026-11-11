@@ -1,0 +1,1 @@
+{"phase": "aborted", "epoch": 1794393653.6111872, "heartbeat": 1794393653.6111875, "output": "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/run", "single_v100": false, "reason": "RuntimeError('Rank progress stale 1 waiting_peer')", "mode": "train"}

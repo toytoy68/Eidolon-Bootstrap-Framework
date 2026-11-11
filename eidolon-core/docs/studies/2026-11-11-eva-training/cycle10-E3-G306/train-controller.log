@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/eidolon/work/eva-learning-cycle10-repetition-20261111-4c1f2095/controller.py", line 51, in <module>
+    if time.time()-d['epoch']>limit:raise RuntimeError('Rank progress stale '+str(r)+' '+d['stage'])
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Rank progress stale 1 waiting_peer
