@@ -83,6 +83,23 @@ def time_steps_a(start, delta):
     return ' '.join(parts) + '\n' + json.dumps(expected, ensure_ascii=False), expected
 
 
+def time_steps_c(start, delta):
+    """Format C (C319) : le format court déjà produit par le modèle, enrichi
+    seulement de la décision et du compteur entre le total et « Cela donne ».
+    Le début de réponse reste celui du parent (« a + b = c minutes depuis minuit »)."""
+    total, days = start + delta, 0
+    parts = [f'{start} + {delta} = {total} minutes depuis minuit.']
+    while total >= 1440:
+        parts.append(f'{total} ≥ 1440 : {total} − 1440 = {total - 1440}, jour {days + 1}.')
+        total -= 1440
+        days += 1
+    parts.append(f'{total} < 1440.')
+    result = hhmm(total)
+    parts.append(f'Cela donne {result}, avec {days} jour(s).')
+    expected = {'resultat': result, 'unite': 'heure', 'jours': days}
+    return ' '.join(parts) + '\n' + json.dumps(expected, ensure_ascii=False), expected
+
+
 def time_steps_b(start, delta):
     """Format B : soustraction toujours posée, décision sur le signe."""
     h, m = divmod(start, 60)
@@ -113,8 +130,8 @@ CMP_RE = re.compile(rf'(?<![\d:])(?=({NUM})\s*(<|≥|>|≤)\s*({NUM})(?![\d:]))'
 DAY_RE = re.compile(r'\bjour (\d+)\b')
 SIGN_RE = re.compile(r'(?<![\d:])([−-]?\d+), (négatif|positif ou nul)')
 REST_RE = re.compile(r'on garde (\d+)')
-REST_A_RE = re.compile(r'(?<![\d:])(\d+) < 1440 :')
-FINAL_DAYS_RE = re.compile(r'(\d+) jour\(s\) franchi\(s\)|décalage (?:de )?(\d+) jour\(s\)')
+REST_A_RE = re.compile(r'(?<![\d:])(\d+) < 1440 ?[:.]')
+FINAL_DAYS_RE = re.compile(r'(\d+) jour\(s\) franchi\(s\)|(?:décalage (?:de )?|avec )(\d+) jour\(s\)')
 
 
 def _int(s):
@@ -139,6 +156,15 @@ def _eval(expr):
     return total
 
 
+def _decimal_edge(text, start, end):
+    """Vrai si l'extrait touche un nombre décimal ou contient une partie décimale."""
+    before = text[max(0, start - 2):start]
+    after = text[end:end + 2]
+    inside = text[start:end]
+    return bool(re.search(r'\d[.,]$', before) or re.match(r'[.,]\d', after)
+                or re.search(r'\d[.,]\d', inside))
+
+
 def invalid_claims(text):
     """Liste des affirmations fausses : (catégorie, extrait)."""
     body = text
@@ -149,6 +175,8 @@ def invalid_claims(text):
     for m in CHAIN_RE.finditer(body):
         if body[:m.start()].rstrip()[-1:] in ('÷', '/'):
             continue                      # division non évaluée ici (quotient entier ou fraction)
+        if _decimal_edge(body, m.start(), m.end()):
+            continue                      # nombres décimaux (« 29.51 + 2 = 31.51 ») : hors périmètre
         members = [s for s in re.split(r'\s*=\s*', m[1])]
         try:
             vals = [_eval(s) for s in members]
@@ -157,6 +185,8 @@ def invalid_claims(text):
         if len(set(vals)) > 1:
             out.append(('calcul', m[1]))
     for m in CMP_RE.finditer(body):
+        if _decimal_edge(body, m.start(1), m.end(3)):
+            continue
         if re.match(r'\s*\?', body[m.end(3):]):
             continue                      # « 780 < 60 ? Non » : question, pas affirmation
         a, op, b = _int(m[1]), m[2], _int(m[3])
@@ -215,6 +245,8 @@ def _correct(obj, exp):
 
 
 def format_of(text):
+    if re.search(r'minutes depuis minuit\. \d+ [≥<] 1440', text):
+        return 'C'
     if re.search(r'− 1440 = [−-]?\d+, (positif ou nul|négatif)', text):
         return 'B'
     if re.search(r'Départ \d{2}:\d{2} = \d+ × 60', text):
@@ -243,12 +275,13 @@ def question(s, d):
     return f'Départ à {hhmm(s)}, durée {d} minutes. Donne l’heure d’arrivée et le décalage en jours.' + JSON_TAIL
 
 
-def build(seed, per, exclude, exact=2):
+def build(seed, per, exclude, exact=2, formats=('FA', 'FB')):
     rng = random.Random(seed)
     seen = set(exclude)
     shot_pairs = [boundary_pair(rng, 1440, 'dessus', seen), boundary_pair(rng, 2880, 'dessus', seen)]
     pre = {}
-    for name, fn in (('FA', time_steps_a), ('FB', time_steps_b)):
+    fns = {'FA': time_steps_a, 'FB': time_steps_b, 'FC': time_steps_c}
+    for name, fn in ((n, fns[n]) for n in formats):
         pre[name] = 'Voici deux exemples résolus.\n\n' + '\n\n'.join(
             f'Question : {question(s, d)}\nRéponse : {fn(s, d)[0]}' for s, d in shot_pairs) \
             + '\n\nRésous maintenant de la même manière.\n'
@@ -258,7 +291,7 @@ def build(seed, per, exclude, exact=2):
         exp = time_steps_a(s, d)[1]
         q = question(s, d)
         rows.append(dict(id=f'ZS-{key}', kind='ZS', stratum=st, pair=key, question=q, expected=exp, time_key=[s, d]))
-        for name in ('FA', 'FB'):
+        for name in formats:
             rows.append(dict(id=f'{name}-{key}', kind=name, stratum=st, pair=key,
                              question=pre[name] + q, expected=exp, time_key=[s, d]))
 
@@ -328,7 +361,7 @@ def grade(probes, responses):
         pairs[p['pair']][p['kind']] = ok
     paired = Counter()
     for v in pairs.values():
-        for a, b in (('FA', 'ZS'), ('FB', 'ZS'), ('FB', 'FA')):
+        for a, b in (('FA', 'ZS'), ('FB', 'ZS'), ('FB', 'FA'), ('FC', 'ZS'), ('FC', 'FA')):
             if a in v and b in v:
                 paired[f'{a}>{b}'] += v[a] and not v[b]
                 paired[f'{b}>{a}'] += v[b] and not v[a]
@@ -343,6 +376,7 @@ def main(argv):
     b.add_argument('--seed', type=int, default=3070)
     b.add_argument('--per', type=int, default=8)
     b.add_argument('--exact', type=int, default=2)
+    b.add_argument('--formats', default='FA,FB', help='parmi FA, FB, FC')
     b.add_argument('--exclude')
     g = sub.add_parser('grade'); g.add_argument('probes'); g.add_argument('responses')
     au = sub.add_parser('audit'); au.add_argument('responses')
@@ -350,7 +384,7 @@ def main(argv):
     load = lambda f: [json.loads(l) for l in open(f, encoding='utf-8') if l.strip()]
     if a.cmd == 'build':
         ex = [tuple(x) for x in json.load(open(a.exclude, encoding='utf-8'))] if a.exclude else []
-        for row in build(a.seed, a.per, ex, a.exact):
+        for row in build(a.seed, a.per, ex, a.exact, tuple(a.formats.split(','))):
             print(json.dumps(row, ensure_ascii=False))
     elif a.cmd == 'grade':
         print(json.dumps(grade(load(a.probes), load(a.responses)), ensure_ascii=False, indent=1))

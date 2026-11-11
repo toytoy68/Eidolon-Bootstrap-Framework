@@ -125,6 +125,28 @@ class Tests(unittest.TestCase):
         m4 = a.replace('Arrivée 00:26', 'Arrivée 00:27').replace('"resultat": "00:26"', '"resultat": "00:27"')
         self.assertIn('heure_vs_reste', cats(m4))
 
+    def test_format_c(self):
+        for s0, d0 in cases():
+            text, exp = ebp.time_steps_c(s0, d0)
+            self.assertEqual(exp, ert.time_steps(s0, d0)[1])
+            self.assertEqual(ebp.invalid_claims(text), [], text)
+            self.assertTrue(ebp._correct(ebp._last_object(text), exp))
+            self.assertEqual(ebp.format_of(text), 'C')
+            self.assertTrue(text.startswith(f'{s0} + {d0} = {s0 + d0} minutes depuis minuit.'))
+        t = ebp.time_steps_c(1355, 297)[0]
+        self.assertIn('1652 ≥ 1440 : 1652 − 1440 = 212, jour 1. 212 < 1440. Cela donne 03:32, avec 1 jour(s).', t)
+        cats = lambda x: {c for c, _ in ebp.invalid_claims(x)}
+        self.assertIn('json_incoherent', cats(t.replace('"jours": 1', '"jours": 0')))
+        self.assertIn('heure_vs_reste', cats(t.replace('"resultat": "03:32"', '"resultat": "03:42"')))
+        self.assertIn('compte_jours', cats(t.replace('avec 1 jour(s)', 'avec 0 jour(s)')))
+
+    def test_build_with_fc(self):
+        rows = ebp.build(3070, 8, [], formats=('FA', 'FB', 'FC'))
+        self.assertEqual(sum(r['kind'] == 'FC' for r in rows), 4 * 8 + 6 * 2)
+        self.assertEqual(rows, rows)
+        base = ebp.build(3070, 8, [])
+        self.assertEqual([r for r in rows if r['kind'] != 'FC'], base)
+
     def test_against_g304(self):
         if G304 is None:
             self.skipTest('dossier G304 non fourni')
