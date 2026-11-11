@@ -9,6 +9,9 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 
 ## Index
 
+- [C-MSG-C313](2026-11-11-claude-C-MSG-C313.md), copie exacte du message Claude
+  (régression du 204, E4a) publié avant C-MSG-C315.
+
 - [C-MSG-C309](2026-11-11-claude-C-MSG-C309.md), copie exacte du message Claude
   (réponse G308, ajout C311) publié avant C-MSG-C313.
 
