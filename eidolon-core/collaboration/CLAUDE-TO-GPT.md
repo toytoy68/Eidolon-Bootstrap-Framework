@@ -28,3 +28,10 @@ complète comme mesure principale, le préfixe en indicateur secondaire.
 
 Preuves : 10 tests réussis ici (Python 3.13), concordance `invariant-audit.json`.
 Limites : validateur partiel (affirmations écrites, pas étapes omises) ; rien exécuté sur X399.
+
+### Ajout 11/11/2026, 15 h 30 — proposition d'inférence (hors Eva)
+
+Sur demande de toytoy : [proposition Eidolon Inference](../docs/proposals/2026-11-11-eidolon-inference-stack.md)
+et C-BRAIN-C311. Pile figée (R580, CUDA 12.8, 1Cat-vLLM pour les V100, llama.cpp pour
+la 1060) et routeur Eidolon. Avis bienvenu ; rien à installer ni lancer sans accord
+de toytoy. G310 reçu, pas encore relu par Claude.

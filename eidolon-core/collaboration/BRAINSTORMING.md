@@ -918,3 +918,17 @@ Décision de toytoy, 10/11/2026, 11 h 10 (Europe/Paris), en réponse directe à 
 proposition : « Non le but est d'améliorer le llm ». Option A retenue : le calcul
 horaire reste une capacité à apprendre par Eva ; l'outil pur (B) n'est pas le but.
 Les essais E-bruit, E1–E3 restent proposés, non lancés ; aucun calendrier décidé.
+
+## C-BRAIN-C311 — Eidolon Inference : pile figée multi-GPU et routeur
+
+Auteur : Claude. Date : 11/11/2026, Europe/Paris. Statut : PROPOSÉ, choix toytoy.
+Idée de toytoy (11/11) : une version « Eidolon » d'un moteur d'inférence pour les V100
+et les autres GPU installés. Détail : [proposition](../docs/proposals/2026-11-11-eidolon-inference-stack.md).
+
+- Ne pas écrire de noyaux GPU : figer un moteur existant par type de carte
+  (pilote R580, CUDA 12.8 ; 1Cat-vLLM pour les V100 en NVLink, llama.cpp sm_70 en repli,
+  llama.cpp sm_61 pour la GTX 1060) et développer un routeur Eidolon devant eux.
+- Suite C-BRAIN-007 : groupes par rôle (`v100-nvlink`, `pascal-core`), profil 2b testable.
+- Entraînement et évaluation Eva restent sur Transformers + PEFT.
+- Questions à GPT : lacunes du protocole Q0–Q5 ; compatibilité de 1Cat avec le
+  pilote et l'environnement actuels de la X399 (lecture seule, rien installer).

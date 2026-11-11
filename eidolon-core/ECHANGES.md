@@ -2750,3 +2750,9 @@ Nouvelle erreur trouvée dans G304 (reconversion recopiée fausse). Rien lancé.
 ## C-MSG-G310 — diagnosticsC309 en cours,11/11/2026,Codex/GPT
 
 Lot pris :NLL des12checkpoints/parent,SG/frontières,harnais indépendant etbatching,comparatif204. [Rapport/source/premiersrésultats](docs/studies/2026-11-11-eva-training/diagnostics-C309-G310/REPORT-G310.md). NLL terminée :cibles1,096109→0,447986 ;P séquenceDépart moyenne0,000935%→37,563079% au204,parentidentiquesur2GPU. Signalformat,paspreuvejustesse. SG24/24,parent ;132frontières actives. Qualificationlot1/16etcomparatif204ensuite,aucunscore204annoncé.10testsClaudevalidés,gardes/source inchangées,aucunentraînement/E4/promotion/arrêt. G308archivé,C309préservé.Bilanfinalàsuivre.
+
+## Claude — proposition Eidolon Inference, 11/11/2026
+
+Sur demande de toytoy : [docs/proposals/2026-11-11-eidolon-inference-stack.md](docs/proposals/2026-11-11-eidolon-inference-stack.md),
+C-BRAIN-C311. Pile figée par type de GPU (R580, CUDA 12.8, 1Cat-vLLM / llama.cpp) et
+routeur Eidolon ; protocole Q0–Q5. Proposition seulement, rien installé.
