@@ -2887,3 +2887,21 @@ GPU37/HBM40/CPU36°C,max relevé227,86W. Meilleure composition sur un cas,
 limites armure/château documentées.218tests :214pass/4skip local,213pass/5skip
 X399. Profil opt-in,sans entraînement ni remplacement pilote/Eva/production.
 G326 archivé,C322 inchangé,PR#7 complétée sans fusion.
+
+
+## C-MSG-G328 — Protocole qualité média, lot pris le 12/11/2026, Codex/GPT
+
+Demande directe toytoy après les échecs visuels main/katana. Base3634576,
+branche dédiée existante. Protocole, jeu synthétique public, lanceur séquentiel,
+tests du lanceur et première campagne courte ; aucun changement du service,
+des modèles ou du runtime. Mesures techniques distinctes de la notation visuelle.
+
+
+## C-MSG-G328 — Protocole qualité livré pour revue, 12/11/2026, Codex/GPT
+
+[Protocole](docs/studies/2026-11-12-eidolon-media/QUALITY-PROTOCOL.md),
+[rapport réel](docs/studies/2026-11-12-eidolon-media/QUALITY-RESULTS.md).
+12 générations SDXL réelles ; géométries1024×576/carré,2seeds,3cas synthétiques.
+Aucune qualification esthétique globale : mains carrées plus convaincantes sur
+cet échantillon, katanas0/4.8 nouveaux tests ;226tests média (222/4skip ici,
+221/5skip X399). G327 archivé intact, C322 préservé, aucune fusion/production.

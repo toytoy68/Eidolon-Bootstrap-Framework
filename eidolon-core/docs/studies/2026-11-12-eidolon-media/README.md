@@ -14,6 +14,7 @@ HUD/voix et ordonnancement global encore expérimentaux. Aucune fusion dans main
 - [Feuille de route](ROADMAP.md).
 - [Formats 16:9 et 4:3 avec bandes latérales](DISPLAY.md), complément G326.
 - [SDXL : essai matériel et comparaison](SDXL.md), complément G327.
+- [Protocole de qualification visuelle](QUALITY-PROTOCOL.md), campagne G328.
 - `src/eidolon_core/media_service.py`, `media_service_client.py`,
   `media_profiles.py`, `media_registry.py` : composants facultatifs du paquet Core.
 - [Workflows API ComfyUI](workflows/) : six graphes sans extension tierce.
