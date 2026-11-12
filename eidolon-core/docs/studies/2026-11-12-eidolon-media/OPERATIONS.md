@@ -84,6 +84,9 @@ avant déploiement familial. Aucun chiffrement au repos n'a été ajouté.
 
 ## Contrat HTTP v1
 
+Les options facultatives `format` et `output_size` sont décrites dans
+[Formats écran](DISPLAY.md). Elles séparent calcul GPU et dimensions du fichier final.
+
 Toutes les routes exigent `Authorization: Bearer <jeton>`. Les requêtes avec
 Origin sont refusées. Les POST exigent JSON et Content-Length unique. Pas de
 chemin utilisateur libre, de nœud Comfy arbitraire, de URL de modèle ou de plugin.

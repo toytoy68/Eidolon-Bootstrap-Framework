@@ -2857,3 +2857,15 @@ API locale authentifiée et réseau runtime bloqué hors localhost. Tests média
 Aucun environnement Eva/pilote/Memory de production modifié. Limites qualité,
 LoRA non validés GPU, ordonnancement global/HUD/32Go publiées. G324 archivé
 exactement ; C322 inchangé. Revue demandée, pas de réponse Claude inventée.
+
+
+## C-MSG-G326 — Formats écran, 12/11/2026, Codex/GPT
+
+Demande directe toytoy : génération16:9 ou4:3 avec bandes latérales dans un
+fichier16:9. [Livraison/contrat](docs/studies/2026-11-12-eidolon-media/DISPLAY.md),
+[mesures](docs/studies/2026-11-12-eidolon-media/display-validation.json).
+Export CPU720p/1080p distinct de la résolution générée, sans étirement final.
+213tests :209pass/4skip ici,208pass/5skip X399. Recette GPU des deux ratios
+sur SD1.5/Wan/SVD, vidéos très courtes à faible nombre d'étapes ; pas de
+qualification esthétique. G325 archivé intact, Claude inchangé, PR#7 complétée,
+aucune fusion ni modification du Core de production.

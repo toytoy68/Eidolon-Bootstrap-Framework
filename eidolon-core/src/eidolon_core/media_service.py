@@ -41,6 +41,7 @@ from .media_backends import endpoint, json_http
 from .media_http import exchange
 from .media_outputs import descriptors
 from .media_profiles import PROFILES, validate, workflow
+from .media_display import canvas_size, fit, fit_png
 
 TERMINAL = {'SUCCEEDED', 'FAILED', 'CANCELLED', 'REVIEW_REQUIRED'}
 
@@ -75,7 +76,7 @@ def encode_mp4(body, request):
     output = io.BytesIO()
     with av.open(io.BytesIO(body)) as src, av.open(output, 'w', format='mp4') as dst:
         stream = dst.add_stream('libx264', rate=request['fps'])
-        stream.width = request['width']; stream.height = request['height']
+        stream.width, stream.height = canvas_size(request)
         stream.pix_fmt = 'yuv420p'; stream.options = {'crf': '18', 'threads': '2'}
         count = 0
         for frame in src.decode(video=0):
@@ -83,6 +84,8 @@ def encode_mp4(body, request):
             if count > 25: raise MediaError('FRAME_LIMIT')
             if (frame.width, frame.height) != (request['width'], request['height']):
                 raise MediaError('VIDEO_GEOMETRY_MISMATCH')
+            if request.get('format','native') != 'native':
+                frame=av.VideoFrame.from_image(fit(frame.to_image(),canvas_size(request)))
             frame.pts = count - 1
             frame.time_base = Fraction(1, request['fps'])
             for packet in stream.encode(frame): dst.mux(packet)
@@ -92,6 +95,7 @@ def encode_mp4(body, request):
     # Decode the actual exported file; a muxer receipt alone is insufficient.
     with av.open(io.BytesIO(result)) as check:
         track = check.streams.video[0]
+        if (track.width,track.height) != canvas_size(request): raise MediaError('VIDEO_EXPORT_GEOMETRY_MISMATCH')
         if track.average_rate != request['fps']: raise MediaError('VIDEO_FPS_MISMATCH')
         if sum(1 for _ in check.decode(video=0)) != request['frames']:
             raise MediaError('VIDEO_FRAME_COUNT_MISMATCH')
@@ -194,7 +198,10 @@ class ComfyEngine:
                            None, {}, 64*1024*1024, timeout=30)
         if ref['media_type'] == 'video/webm':
             return encode_mp4(body, job['request']), 'result.mp4'
-        return png(body), 'result.png'
+        body=png(body)
+        if job['request'].get('format','native') != 'native':
+            r=job['request'];body=fit_png(body,canvas_size(r),expected=(r['width'],r['height']))
+        return body, 'result.png'
 
 class MediaService:
     def __init__(self, root, engine, *, enabled=('sd15-text', 'sd15-edit', 'sd15-inpaint'), clock=time.time, registry=None, artifact_root=None):
@@ -262,6 +269,10 @@ class MediaService:
             if len(jobs) >= 128: raise MediaError('QUEUE_CAPACITY')
             for field in ('source','mask'):
                 if field in req: png(self.artifacts.read(req[field])[0])
+            if req.get('format','native') != 'native' and 'mask' in req:
+                from PIL import Image
+                with Image.open(io.BytesIO(self.artifacts.read(req['source'])[0])) as source, Image.open(io.BytesIO(self.artifacts.read(req['mask'])[0])) as mask:
+                    if source.size != mask.size: raise MediaError('MASK_SOURCE_GEOMETRY_MISMATCH')
             now = self.clock()
             j = dict(id=uuid.uuid4().hex, idempotency_key=key, request=req, state='WAITING',
                      created_at=now, updated_at=now, progress={'stage':'waiting'}, result=None)
@@ -329,7 +340,10 @@ class MediaService:
                 names = {}
                 for field in ('source','mask'):
                     if field in j['request']:
-                        names[field+'_name'] = self.engine.stage(self.artifacts.read(j['request'][field])[0])
+                        body=self.artifacts.read(j['request'][field])[0]
+                        if j['request'].get('format','native') != 'native':
+                            body=fit_png(body,(j['request']['width'],j['request']['height']),mask=field=='mask')
+                        names[field+'_name'] = self.engine.stage(body)
                 j['staged_inputs'] = names
                 j['graph'] = workflow(j['request'], prefix=j['id'], **names)
                 if self.registry is not None: j['graph'] = self.registry.apply(j['graph'],j['request'])

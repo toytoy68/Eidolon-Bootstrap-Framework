@@ -7,6 +7,7 @@
 # ==========================================================
 """Trusted workflow builders; callers cannot supply nodes, models or paths."""
 from .media_agents import MediaError
+from .media_display import FORMATS, OUTPUT_SIZES, generation_size
 
 PROFILES = {
     'sd15-text': {'kind': 'image', 'source': False, 'model': 'SD1.5', 'license': 'CreativeML OpenRAIL-M'},
@@ -17,7 +18,7 @@ PROFILES = {
 }
 
 def validate(value):
-    if type(value) is not dict or set(value) - {'profile', 'prompt', 'seed', 'steps', 'width', 'height', 'frames', 'fps', 'denoise', 'source', 'mask', 'checkpoint', 'loras'}:
+    if type(value) is not dict or set(value) - {'profile', 'prompt', 'seed', 'steps', 'width', 'height', 'frames', 'fps', 'denoise', 'source', 'mask', 'checkpoint', 'loras', 'format', 'output_size'}:
         raise MediaError('INVALID_REQUEST')
     r = dict(profile='sd15-text', prompt='', seed=42, steps=20, width=512, height=512,
              frames=9, fps=8, denoise=0.6)
@@ -25,13 +26,23 @@ def validate(value):
     if r['profile'] not in PROFILES:
         raise MediaError('UNKNOWN_PROFILE')
     profile = PROFILES[r['profile']]
+    format=r.get('format','native'); output=r.get('output_size','native')
+    if format not in FORMATS or output not in OUTPUT_SIZES:
+        raise MediaError('INVALID_DISPLAY_FORMAT')
+    if format == 'native' and output != 'native': raise MediaError('DISPLAY_FORMAT_REQUIRED')
+    preset=generation_size(profile['kind'],format)
+    if preset:
+        for key, size in zip(('width','height'),preset):
+            if key in value and (type(value[key]) is not int or value[key] != size):
+                raise MediaError('FORMAT_GEOMETRY_CONFLICT')
+            r[key]=size
     if not isinstance(r['prompt'], str) or len(r['prompt'].encode()) > 4000:
         raise MediaError('INVALID_PROMPT')
     for key, lo, hi in [('seed', 0, 2**32-1), ('steps', 1, 40), ('width', 256, 768),
                         ('height', 256, 768), ('frames', 5, 25), ('fps', 1, 24)]:
         if type(r[key]) is not int or not lo <= r[key] <= hi:
             raise MediaError('INVALID_' + key.upper())
-    if r['width'] % 64 or r['height'] % 64:
+    if not preset and (r['width'] % 64 or r['height'] % 64):
         raise MediaError('INVALID_GEOMETRY')
     if profile['kind'] == 'video' and (r['width'] > 512 or r['height'] > 320):
         raise MediaError('VIDEO_BUDGET_EXCEEDED')
