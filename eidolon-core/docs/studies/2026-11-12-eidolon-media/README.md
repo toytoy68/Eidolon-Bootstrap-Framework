@@ -13,9 +13,10 @@ HUD/voix et ordonnancement global encore expérimentaux. Aucune fusion dans main
 - [Validation réelle et limites](VALIDATION.md), [mesures sans contenus](validation-summary.json).
 - [Feuille de route](ROADMAP.md).
 - [Formats 16:9 et 4:3 avec bandes latérales](DISPLAY.md), complément G326.
+- [SDXL : essai matériel et comparaison](SDXL.md), complément G327.
 - `src/eidolon_core/media_service.py`, `media_service_client.py`,
   `media_profiles.py`, `media_registry.py` : composants facultatifs du paquet Core.
-- [Workflows API ComfyUI](workflows/) : cinq graphes sans extension tierce.
+- [Workflows API ComfyUI](workflows/) : six graphes sans extension tierce.
 - [Téléchargement initial explicite](download_models.py),
   [recette mesurée](benchmark.py), [sonde d'annulation](lifecycle_probe.py).
 - [Versions Python observées](requirements-observed.txt) : inventaire figé,

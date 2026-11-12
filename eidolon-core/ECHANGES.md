@@ -2869,3 +2869,21 @@ Export CPU720p/1080p distinct de la résolution générée, sans étirement fina
 sur SD1.5/Wan/SVD, vidéos très courtes à faible nombre d'étapes ; pas de
 qualification esthétique. G325 archivé intact, Claude inchangé, PR#7 complétée,
 aucune fusion ni modification du Core de production.
+
+
+## C-MSG-G327 — SDXL, lot pris le 12/11/2026, Codex/GPT
+
+Accord direct toytoy après les limites visuelles SD1.5 : tester SDXL isolément,
+avec sondes matérielles et comparaison de la même scène. Base74f38e0, PR#7,
+profil opt-in sdxl-text, poids officiels figés, aucun entraînement ni changement
+de pilote/production. Licence OpenRAIL++ examinée, validation GPU à réaliser.
+
+
+## C-MSG-G327 — SDXL livré pour revue,12/11/2026,Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SDXL.md) et preuves agrégées.
+SDXL1024×576 réel sur V10016Go :17,94/18,65s,deux PNG identiques,8880Mio,
+GPU37/HBM40/CPU36°C,max relevé227,86W. Meilleure composition sur un cas,
+limites armure/château documentées.218tests :214pass/4skip local,213pass/5skip
+X399. Profil opt-in,sans entraînement ni remplacement pilote/Eva/production.
+G326 archivé,C322 inchangé,PR#7 complétée sans fusion.

@@ -7,7 +7,8 @@
 # ==========================================================
 """Run only during installation. Immutable revisions and upstream LFS SHA256.
 
-SD1.5: CreativeML OpenRAIL-M. Wan: Apache-2.0. SVD: Stability Community
+SD1.5: CreativeML OpenRAIL-M. SDXL: CreativeML Open RAIL++-M.
+Wan: Apache-2.0. SVD: Stability Community
 2024-07-05 (personal/non-commercial evaluation here; not an unrestricted license).
 No downloaded Python, pickle, extension or installer is executed.
 """
@@ -19,6 +20,7 @@ import urllib.request
 from urllib.parse import urlsplit
 
 MODELS = [
+    ('sdxl', 'stabilityai/stable-diffusion-xl-base-1.0', '462165984030d82259a11f4367a4eed129e94a7b', 'sd_xl_base_1.0.safetensors', 'checkpoints', '31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b', 6938078334),
     ('sd15', 'stable-diffusion-v1-5/stable-diffusion-v1-5', '451f4fe16113bff5a5d2269ed5ad43b0592e9a14', 'v1-5-pruned-emaonly.safetensors', 'checkpoints', '6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa', 4265146304),
     ('wan', 'Comfy-Org/Wan_2.1_ComfyUI_repackaged', '123acf1cc74bccbb9bfff8ac1ee72edc08c2341d', 'split_files/diffusion_models/wan2.1_t2v_1.3B_fp16.safetensors', 'diffusion_models', 'be531024cd9018cb5b48c40cfbb6a6191645b1c792eb8bf4f8c1c6e10f924dc5', 2838303560),
     ('wan', 'Comfy-Org/Wan_2.1_ComfyUI_repackaged', '123acf1cc74bccbb9bfff8ac1ee72edc08c2341d', 'split_files/text_encoders/umt5_xxl_fp16.safetensors', 'text_encoders', '7b8850f1961e1cf8a77cca4c964a358d303f490833c6c087d0cff4b2f99db2af', 11366399385),
@@ -29,7 +31,7 @@ MODELS = [
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root', type=Path, required=True)
-    p.add_argument('--profile', choices=['sd15', 'wan', 'svd'], required=True)
+    p.add_argument('--profile', choices=['sd15', 'sdxl', 'wan', 'svd'], required=True)
     args = p.parse_args()
     for profile, repo, rev, name, directory, expected, size in MODELS:
         if profile != args.profile:

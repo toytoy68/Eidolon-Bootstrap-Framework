@@ -12,8 +12,9 @@ from .media_agents import MediaError
 FORMATS = ('native', '16:9', '4:3-pillarbox')
 OUTPUT_SIZES = ('native', '720p', '1080p')
 
-def generation_size(kind, format):
+def generation_size(kind, format, *, profile=None):
     if format == 'native': return None
+    if profile == 'sdxl-text': return (1024,576) if format == '16:9' else (768,576)
     if kind == 'video': return (512,288) if format == '16:9' else (384,288)
     return (768,432) if format == '16:9' else (576,432)
 

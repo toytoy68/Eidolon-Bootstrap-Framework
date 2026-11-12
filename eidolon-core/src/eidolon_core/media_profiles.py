@@ -10,6 +10,7 @@ from .media_agents import MediaError
 from .media_display import FORMATS, OUTPUT_SIZES, generation_size
 
 PROFILES = {
+    'sdxl-text': {'kind': 'image', 'source': False, 'model': 'SDXL base 1.0', 'license': 'CreativeML Open RAIL++-M'},
     'sd15-text': {'kind': 'image', 'source': False, 'model': 'SD1.5', 'license': 'CreativeML OpenRAIL-M'},
     'sd15-edit': {'kind': 'image', 'source': True, 'model': 'SD1.5', 'license': 'CreativeML OpenRAIL-M'},
     'sd15-inpaint': {'kind': 'image', 'source': True, 'model': 'SD1.5', 'license': 'CreativeML OpenRAIL-M'},
@@ -26,11 +27,13 @@ def validate(value):
     if r['profile'] not in PROFILES:
         raise MediaError('UNKNOWN_PROFILE')
     profile = PROFILES[r['profile']]
+    if r['profile'] == 'sdxl-text':
+        r['width']=value.get('width',1024);r['height']=value.get('height',1024)
     format=r.get('format','native'); output=r.get('output_size','native')
     if format not in FORMATS or output not in OUTPUT_SIZES:
         raise MediaError('INVALID_DISPLAY_FORMAT')
     if format == 'native' and output != 'native': raise MediaError('DISPLAY_FORMAT_REQUIRED')
-    preset=generation_size(profile['kind'],format)
+    preset=generation_size(profile['kind'],format,profile=r['profile'])
     if preset:
         for key, size in zip(('width','height'),preset):
             if key in value and (type(value[key]) is not int or value[key] != size):
@@ -38,8 +41,9 @@ def validate(value):
             r[key]=size
     if not isinstance(r['prompt'], str) or len(r['prompt'].encode()) > 4000:
         raise MediaError('INVALID_PROMPT')
-    for key, lo, hi in [('seed', 0, 2**32-1), ('steps', 1, 40), ('width', 256, 768),
-                        ('height', 256, 768), ('frames', 5, 25), ('fps', 1, 24)]:
+    dimension_max=1024 if r['profile']=='sdxl-text' else 768
+    for key, lo, hi in [('seed', 0, 2**32-1), ('steps', 1, 40), ('width', 256, dimension_max),
+                        ('height', 256, dimension_max), ('frames', 5, 25), ('fps', 1, 24)]:
         if type(r[key]) is not int or not lo <= r[key] <= hi:
             raise MediaError('INVALID_' + key.upper())
     if not preset and (r['width'] % 64 or r['height'] % 64):
@@ -81,7 +85,7 @@ def workflow(request, *, prefix, source_name=None, mask_name=None):
         if name is not None and (not name.endswith('.png') or not name[:-4].isalnum()):
             raise MediaError('INVALID_STAGED_NAME')
     p = r['profile']
-    if p.startswith('sd15'):
+    if p.startswith('sd15') or p == 'sdxl-text':
         g = {
             '1': node('CheckpointLoaderSimple', ckpt_name='v1-5-pruned-emaonly.safetensors'),
             '2': node('CLIPTextEncode', text=r['prompt'], clip=['1', 1]),
@@ -93,6 +97,14 @@ def workflow(request, *, prefix, source_name=None, mask_name=None):
             '6': node('VAEDecode', samples=['5', 0], vae=['1', 2]),
             '7': node('SaveImage', images=['6', 0], filename_prefix=prefix),
         }
+        if p == 'sdxl-text':
+            g['1']['inputs']['ckpt_name']='sd_xl_base_1.0.safetensors'
+            for key,text in (('2',r['prompt']),('3','blurry, distorted, text, watermark')):
+                g[key]=node('CLIPTextEncodeSDXL',clip=['1',1],text_g=text,text_l=text,
+                            width=r['width'],height=r['height'],crop_w=0,crop_h=0,
+                            target_width=r['width'],target_height=r['height'])
+            g['5']['inputs'].update(cfg=6.0,sampler_name='dpmpp_2m',scheduler='karras')
+            return g
         if p != 'sd15-text':
             g['8'] = node('LoadImage', image=source_name)
             g['9'] = node('ImageScale', image=['8', 0], upscale_method='bicubic',

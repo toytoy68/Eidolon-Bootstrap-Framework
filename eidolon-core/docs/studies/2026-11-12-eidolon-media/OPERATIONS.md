@@ -14,7 +14,8 @@ de cette page sont des actions opérateur explicites, jamais exécutées par une
 - Métadonnées privées : `LAB/api/jobs.sqlite3`. Jeton : `LAB/token`, 0600.
 - Catalogue : `LAB/registry.json`, hashes vérifiés au démarrage de l'API.
 - Unités transitoires : `eidolon-media-comfy-20261112.service` et
-  `eidolon-media-api-final-20261112.service`, exécutées sous `toytoy`.
+  `eidolon-media-api-sdxl-20261112.service`, exécutées sous `toytoy`.
+  Cette API remplace l'unité finale G325/G326 lors de G327 ; voir [SDXL](SDXL.md).
 
 La séparation des volumes a été contrôlée par lecture d'un résultat antérieur
 et génération d'un nouveau résultat via LocalGenerationClient. Ne pas remplacer

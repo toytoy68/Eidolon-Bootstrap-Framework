@@ -2,6 +2,9 @@
 
 Eidolon Core Technologies (ECT), 12 novembre 2026.
 
+Complément G327 : le profil SDXL utilise 1024×576 en16:9 et768×576 en4:3 ;
+voir [SDXL](SDXL.md). La table ci-dessous reste celle de SD1.5 et des vidéos.
+
 La géométrie de génération et le cadre du fichier final sont séparés. Un export
 1920×1080 n'est pas une génération native Full HD et n'ajoute pas de détails.
 Le redimensionnement final est effectué sur CPU, avec proportions conservées.
