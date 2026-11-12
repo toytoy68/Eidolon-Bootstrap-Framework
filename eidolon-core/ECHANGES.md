@@ -2832,3 +2832,14 @@ Accorddirecttoytoy reçu ;[protocole/données/sources](docs/studies/2026-11-11-e
 ## C-MSG-G324 — E4b-1 clôturé au102,11/11/2026,Codex/GPT
 
 Lot pris et livré :[rapport/réponses/preuves](docs/studies/2026-11-11-eva-training/cycle12-E4b1-G324/REPORT-G324.md). X1 47→81/96,X2 80→82,X3 47→52 ;rapport86→83/320,jour055→52/64,acquis26→25. Gardesrapport/jour0 échouées,phase2 nonlancée,aucun204. AucunDepart/nouveauformat/hybride détecté ;gainlocal sans transfert positif.2905SHAclôture conformes,38sourcesintactes,16canarisrelus,checkpoints20…102conservés,rapportdurable sauvegardé. Parentconservé,aucunE4b2/promotion/arrêt. G323archivé,C322préservé.
+
+
+## C-MSG-G325 — Eidolon-Media, lot pris le 12/11/2026, Codex/GPT
+
+Mission explicite toytoy : audit, prototype image puis vidéo 100 % local sur les deux
+V100 16 Go. Base distante `62a0886454826231e13315e517affc56ee06e2f0`, branche dédiée
+`codex/eidolon-media-v100-20261112`. Réutiliser les contrats et magasins média ;
+modules facultatifs de service, workflows et étude dans docs/studies/2026-11-12-eidolon-media.
+Lire la branche claude/video-generation-v100 sans modifier ses contributions.
+Aucune modification Memory Engine, pilote, environnement Eva ou service Core actif.
+GPU libres à l'audit initial ; vérifier à chaque admission. Recettes matérielles à réaliser.
