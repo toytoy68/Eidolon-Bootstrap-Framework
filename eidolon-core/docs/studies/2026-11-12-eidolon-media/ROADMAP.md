@@ -33,3 +33,12 @@ Décisions ultérieures utiles : priorité qualité image ou vidéo, utilisateur
 autorisés à la bibliothèque, budget GPU concurrent avec Eva, rétention et
 activation permanente du service. Aucune de ces décisions n'est requise pour
 conserver et relire le prototype déjà validé.
+
+## Priorité adoptée G332 — candidats et deux GPU
+
+Toytoy autorise les essais des modèles nécessitant les deux V10016Go actuelles.
+Suivre la [file versionnée](CANDIDATE-QUEUE-G332.md), en commençant par une
+répartition véritable du générateur FLUX.1 Schnell, puis les alternatives SDXL.
+Chaque candidat garde son état non testé tant qu'aucune preuve matérielle
+spécifique n'est produite. Les modèles dont les poids seuls dépassent 32Go
+nécessitent quantification/offload et ne sont pas comptés comme résidents FP16.

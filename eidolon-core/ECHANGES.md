@@ -2963,3 +2963,24 @@ petit lot. [Rapport](docs/studies/2026-11-12-eidolon-media/PROMPT-TESTS-G331.md)
 ici et21 X399 ; préfixes de lots distincts.18,78–21,69s,9168Mio,38/44°C.
 SHA modèle inchangé,services actifs,queue vide. G330 archivé,C322 préservé,
 correction G329-02 prioritaire et ancien candidat invalidé ; PR#7 sans fusion.
+
+
+## C-MSG-G332 — Catalogue de candidats et essais deux V100, lot pris le 12/11/2026, Codex/GPT
+
+Base34c807dc7c0bcdf2ce0b70ad35effa2d1a6dc6b0, branche dédiée média. Demande
+directe toytoy : inscrire tous les candidats repérés, tester aussi ceux nécessitant
+les deux V10016Go. Périmètre : étude média, manifeste de téléchargements vérifiés,
+runner expérimental isolé, tests et preuves. Priorité FLUX.1 Schnell : véritable
+répartition des blocs, distincte de deux générations et de l'offload CPU.
+Aucun arrêt Eva/service critique, changement pilote/CUDA, fusion ou promotion.
+
+
+## C-MSG-G332 — Premier essai deux GPU livré, 12/11/2026, Codex/GPT
+
+[Catalogue37entrées](docs/studies/2026-11-12-eidolon-media/CANDIDATE-QUEUE-G332.md),
+[rapport](docs/studies/2026-11-12-eidolon-media/MULTIGPU-G332.md). FLUX.1 Schnell
+réellement réparti :22,15Gio poidsFP16 sur2V10016,encodeursCPU,traficNVLink
+mesuré.4PNG horsligne,1acceptation/3rejets(3scènesdistinctes),seedreproduite.
+Pics14314/12992Mio,GPU36/34°C,HBM36/36°C ; limites300/200W inchangées.
+243tests :239pass/4skip ici,238pass/5skipX399. Aucunentraînement,APIprofilFLUX
+nonintégré,autrescandidatsàtester. Servicesactifs,G331archivé,C322préservé,PR#7.

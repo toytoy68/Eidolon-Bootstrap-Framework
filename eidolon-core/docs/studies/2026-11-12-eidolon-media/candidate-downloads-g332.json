@@ -1,0 +1,34 @@
+[
+  {
+    "repo": "Comfy-Org/flux1-schnell",
+    "revision": "d31e04067066d92c55ece2b01748dcc337725d7a",
+    "path": "flux1-schnell.safetensors",
+    "name": "flux1-schnell.safetensors",
+    "sha256": "9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a",
+    "bytes": 23782506688
+  },
+  {
+    "repo": "comfyanonymous/flux_text_encoders",
+    "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+    "path": "clip_l.safetensors",
+    "name": "clip_l.safetensors",
+    "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+    "bytes": 246144152
+  },
+  {
+    "repo": "comfyanonymous/flux_text_encoders",
+    "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+    "path": "t5xxl_fp16.safetensors",
+    "name": "t5xxl_fp16.safetensors",
+    "sha256": "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",
+    "bytes": 9787841024
+  },
+  {
+    "repo": "Comfy-Org/Z-Image-Turbo",
+    "revision": "6fc90a3b1b653e935a0d175e260736de25b84df5",
+    "path": "split_files/vae/ae.safetensors",
+    "name": "ae.safetensors",
+    "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+    "bytes": 335304388
+  }
+]

@@ -7,7 +7,7 @@ Poids ouverts/gratuits ne signifient pas code et données intégralement open so
 | Solution | Licence des poids / restrictions | Poids sélectionnés ou repérés | V100 16 Go / 32 Go | FP16 et usages |
 | --- | --- | --- | --- | --- |
 | SD 1.5 | CreativeML OpenRAIL-M : licence avec restrictions d'usage et obligations de redistribution | Checkpoint safetensors 4,265 Go | **Testé 16 Go**, environ 4,0–4,3 Gio observés ; 32 Go non testée | Texte/image, img2img et masque réels ; base standard, pas checkpoint spécialisé inpainting |
-| SDXL base 1.0 | CreativeML Open RAIL++-M, restrictions d'usage | 6,938 Go, sans refiner | **Testé 16 Go en G327**, 8880 Mio au pic ; 32 Go non testée | FP16 + VAE FP32 réels, 1024×576, 17,94–18,65 s ; carré1024² non testé. Voir SDXL.md |
+| SDXL base 1.0 | CreativeML Open RAIL++-M, restrictions d'usage | 6,938 Go, sans refiner | **Testé 16 Go en G327**, 8880 Mio au pic ; 32 Go non testée | FP16 + VAE FP32 réels, 1024×576, 17,94–18,65 s ; carré1024² testé G328/G331, pic G331 9168 Mio et 18,78–21,69 s. Voir SDXL.md et PROMPT-TESTS-G331.md |
 | Wan 2.1 T2V 1.3B | Apache-2.0 pour le dépôt de poids retenu ; notices à conserver | Diffusion FP16 2,838 Go + UMT5 FP16 11,366 Go + VAE 0,254 Go | **Testé 16 Go**, pic observé 13 200–13 264 Mio ; 32 Go non testée | T2V réel ; ce checkpoint T2V n'est pas un modèle I2V |
 | Stable Video Diffusion, 14 images | Stability AI Community License du 05/07/2024 ; usage personnel/évaluation gratuit. Usage commercial : conditions dont enregistrement et seuil de revenu, pas licence permissive inconditionnelle | `svd.safetensors` 9,560 Go | **Testé 16 Go**, 5 008–11 888 Mio selon ordre/cache ; 32 Go non testée | I2V réel ; pas de commande textuelle détaillée de l'animation |
 | AnimateDiff SD1.5 | Module Apache-2.0 ; licence du modèle de base également applicable | Module v1.5/v2 environ 1,67/1,82 Go, en plus du checkpoint | Candidat 16 Go, budget exploratoire 8–14 Gio ; **non testé** | FP16 envisageable ; 256/512², 16 images à commencer. Extension Comfy dédiée à auditer |
@@ -72,3 +72,10 @@ Les cinq fichiers réellement téléchargés, leurs tailles, révisions et SHA25
 complets sont figés dans `download_models.py`. Aucun poids n'est redistribué
 dans ce dépôt. Pour chaque futur checkpoint/LoRA, vérifier sa propre licence,
 son modèle de base et ses éventuelles restrictions avant de l'inscrire au catalogue.
+
+## Extension G332
+
+La [file complète des candidats repérés](CANDIDATE-QUEUE-G332.md) ajoute les
+variantes image/vidéo et distingue une carte, composants, blocs répartis,
+quantification et offload CPU. Les [résultats matériels deux V100](MULTIGPU-G332.md)
+sont séparés des estimations ci-dessus ; pas de mémoire unifiée implicite.

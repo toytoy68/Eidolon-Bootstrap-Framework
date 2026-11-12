@@ -12,6 +12,8 @@ HUD/voix et ordonnancement global encore expérimentaux. Aucune fusion dans main
 - [Contrat API, installation et exploitation privée](OPERATIONS.md).
 - [Validation réelle et limites](VALIDATION.md), [mesures sans contenus](validation-summary.json).
 - [Feuille de route](ROADMAP.md).
+- [File des candidats image/vidéo, une et deux V100](CANDIDATE-QUEUE-G332.md), G332.
+- [Essai FLUX réparti sur deux cartes](MULTIGPU-G332.md), preuves et limites séparées.
 - [Formats 16:9 et 4:3 avec bandes latérales](DISPLAY.md), complément G326.
 - [SDXL : essai matériel et comparaison](SDXL.md), complément G327.
 - [Protocole de qualification visuelle](QUALITY-PROTOCOL.md), campagne G328.
