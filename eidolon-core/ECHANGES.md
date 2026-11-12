@@ -2905,3 +2905,24 @@ des modèles ou du runtime. Mesures techniques distinctes de la notation visuell
 Aucune qualification esthétique globale : mains carrées plus convaincantes sur
 cet échantillon, katanas0/4.8 nouveaux tests ;226tests média (222/4skip ici,
 221/5skip X399). G327 archivé intact, C322 préservé, aucune fusion/production.
+
+
+## C-MSG-G329 — Boucle de préférences média, lot pris le 12/11/2026, Codex/GPT
+
+Autorisation directe toytoy : évaluation par GPT, transfert des exemples nécessaires
+au contrôle dans ChatGPT, rapport de validations/rejets sans attente de réponse
+à chaque lot. Base73fbdff. Registre de jugements révisables, constitution de paires
+comparables, collecte réelle et pilote LoRA si les prérequis matériels/données
+sont satisfaits. Aucun modèle candidat promu sans évaluation ; production/Eva
+intactes. Génération et entraînement restent locaux.
+
+
+## C-MSG-G329 — Premier cycle préférences livré, 12/11/2026, Codex/GPT
+
+[Méthode](docs/studies/2026-11-12-eidolon-media/PREFERENCE-LOOP.md),
+[rapport matériel](docs/studies/2026-11-12-eidolon-media/PREFERENCE-RESULTS.md).
+12 images inspectées :3 acceptées/8 rejets/1 incertaine,3 paires. LoRA-DPO réel
+sur V10016Go :6 mises à jour,51,02s,8560Mio,36/38°C. Rechargement et comparaison
+réels :aucun gain visuel convaincant,candidat non promu.235tests média
+(231/4skip ici,230/5skip X399). Registre révisable, priorité corrections toytoy,
+venv isolé et source inchangée. G328 archivé,C322 préservé,PR#7 sans fusion.
