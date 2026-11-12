@@ -1,0 +1,35 @@
+# Suite proposée après revue
+
+Eidolon Core Technologies (ECT), 12 novembre 2026.
+
+1. **Revue de G325** : sécurité des chemins et du catalogue, reprise incertaine,
+   interruption Comfy globale, bornes de ressources et licences. Corriger avant
+   d'activer au boot ; aucune fusion automatique.
+2. **Qualité image** : jeu de prompts non privés, vérification humaine, SDXL et
+   checkpoint d'inpainting revu ; un seul nouveau modèle à la fois, seed fixe,
+   mesure chargement/inférence séparée. LoRA générique légalement utilisable à
+   installer explicitement et tester réellement avant annonce de compatibilité.
+3. **Qualité vidéo** : augmenter progressivement étapes, durée puis résolution,
+   avec garde mémoire ; évaluer cohérence temporelle. AnimateDiff seulement
+   après audit de l'extension. Ne pas appeler le profil Wan T2V un moteur I2V.
+4. **Ordonnancement commun** : bail GPU atomique adopté par Eva, Ollama et Media,
+   réservation libérée sur panne. Mesurer mode A (instances indépendantes), B
+   (affectation image/vidéo), puis C uniquement avec un backend supportant un
+   vrai placement multi-GPU. Mesurer PCIe/P2P/NVLink, énergie et latence. Aucun
+   regroupement implicite de VRAM ; la surveillance PID actuelle reste coopérative.
+5. **Exploitation privée** : compte système distinct, ACL par utilisateur familial,
+   quotas/rétention DB et fichiers temporaires, sauvegarde chiffrée si souhaitée,
+   rotation jetons, miroir de roues et licences, service permanent durci.
+6. **Intégration Core** : brancher LocalGenerationClient dans les couches
+   conversation_media existantes, cartes de progression et affichage résultats
+   dans le HUD, puis voix. Maintenir les octets volumineux hors Memory Engine ;
+   indexer seulement une sélection explicite de métadonnées utiles.
+7. **Deux V100 32 Go** : refaire entièrement la recette mémoire/thermique/énergie,
+   essayer SDXL et vidéos plus longues sur une carte, puis répartition explicite.
+   Les 64 Go physiques cumulés ne deviennent pas automatiquement un tensor de
+   64 Go utilisable. Aucun achat requis pour les résultats de la phase présente.
+
+Décisions ultérieures utiles : priorité qualité image ou vidéo, utilisateurs
+autorisés à la bibliothèque, budget GPU concurrent avec Eva, rétention et
+activation permanente du service. Aucune de ces décisions n'est requise pour
+conserver et relire le prototype déjà validé.

@@ -81,9 +81,12 @@ class _Connection(HTTPConnection):
 
 
 def exchange(method, url, body, headers, max_response, *, timeout=DEFAULT_SECONDS,
-             status_error="INVALID_BACKEND_RESPONSE"):
+             status_error="INVALID_BACKEND_RESPONSE", accepted_statuses=(200,)):
     """Return content type + bounded body; Content-Length/chunk framing remains strict."""
     from .media_backends import endpoint
+    if (type(accepted_statuses) is not tuple or not accepted_statuses
+            or any(type(s) is not int or s not in {200, 201, 202} for s in accepted_statuses)):
+        raise MediaError("INVALID_HTTP_SUCCESS_STATUSES")
     if type(timeout) not in (int, float) or not math.isfinite(timeout) or not 0 < timeout <= 3600:
         raise MediaError("INVALID_MEDIA_HTTP_TIMEOUT")
     if method not in {"GET", "POST"} or body is not None and type(body) is not bytes:
@@ -105,7 +108,7 @@ def exchange(method, url, body, headers, max_response, *, timeout=DEFAULT_SECOND
     try:
         connection.request(method, path, body=body, headers=headers)
         with connection.getresponse() as response:
-            if response.status != 200:
+            if response.status not in accepted_statuses:
                 raise MediaError(status_error)
             content_type = response.headers.get_content_type()
             result = read_body(response, max_response, MediaError)

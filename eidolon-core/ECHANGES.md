@@ -2843,3 +2843,17 @@ modules facultatifs de service, workflows et étude dans docs/studies/2026-11-12
 Lire la branche claude/video-generation-v100 sans modifier ses contributions.
 Aucune modification Memory Engine, pilote, environnement Eva ou service Core actif.
 GPU libres à l'audit initial ; vérifier à chaque admission. Recettes matérielles à réaliser.
+
+
+## C-MSG-G325 — Eidolon-Media livré pour revue, 12/11/2026, Codex/GPT
+
+[Livrables et audit](docs/studies/2026-11-12-eidolon-media/README.md),
+[preuves agrégées](docs/studies/2026-11-12-eidolon-media/validation-summary.json),
+[message de revue](collaboration/GPT-TO-CLAUDE.md). Branche dédiée
+`codex/eidolon-media-v100-20261112`, aucune fusion ni activation Core.
+Images SD1.5 et retouche réelle, Wan T2V et SVD I2V réels en MP4 sur une V10016Go,
+API locale authentifiée et réseau runtime bloqué hors localhost. Tests média :
+202/205 +3skip ici, 200/205 +5skip X399 ; catégories complémentaires documentées.
+Aucun environnement Eva/pilote/Memory de production modifié. Limites qualité,
+LoRA non validés GPU, ordonnancement global/HUD/32Go publiées. G324 archivé
+exactement ; C322 inchangé. Revue demandée, pas de réponse Claude inventée.

@@ -17,7 +17,7 @@ PROFILES = {
 }
 
 def validate(value):
-    if type(value) is not dict or set(value) - {'profile', 'prompt', 'seed', 'steps', 'width', 'height', 'frames', 'fps', 'denoise', 'source', 'mask'}:
+    if type(value) is not dict or set(value) - {'profile', 'prompt', 'seed', 'steps', 'width', 'height', 'frames', 'fps', 'denoise', 'source', 'mask', 'checkpoint', 'loras'}:
         raise MediaError('INVALID_REQUEST')
     r = dict(profile='sd15-text', prompt='', seed=42, steps=20, width=512, height=512,
              frames=9, fps=8, denoise=0.6)
@@ -45,6 +45,18 @@ def validate(value):
         raise MediaError('SOURCE_MISMATCH')
     if bool(r.get('mask')) != (r['profile'] == 'sd15-inpaint'):
         raise MediaError('MASK_MISMATCH')
+    if 'checkpoint' in r or 'loras' in r:
+        import re
+        if not r['profile'].startswith('sd15'): raise MediaError('MODEL_SELECTION_PROFILE_MISMATCH')
+        if 'checkpoint' in r and (not isinstance(r['checkpoint'],str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,64}',r['checkpoint'])):
+            raise MediaError('INVALID_MODEL_ID')
+        loras=r.get('loras',[])
+        if type(loras) is not list or len(loras)>2: raise MediaError('LORA_LIMIT')
+        for lora in loras:
+            if type(lora) is not dict or set(lora)!={'id','strength'} or not isinstance(lora['id'],str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,64}',lora['id']):
+                raise MediaError('INVALID_LORA')
+            if type(lora['strength']) not in (int,float) or not 0<=lora['strength']<=1:
+                raise MediaError('INVALID_LORA_STRENGTH')
     # References are validated by the existing ArtifactStore before execution.
     return r
 
@@ -79,6 +91,9 @@ def workflow(request, *, prefix, source_name=None, mask_name=None):
         if p == 'sd15-inpaint':
             g['10'] = node('LoadImageMask', image=mask_name, channel='red')
             g['4'] = node('VAEEncodeForInpaint', pixels=['9', 0], vae=['1', 2], mask=['10', 0], grow_mask_by=6)
+            g['11'] = node('ImageCompositeMasked', destination=['9', 0], source=['6', 0],
+                           x=0, y=0, resize_source=False, mask=['10', 0])
+            g['7']['inputs']['images'] = ['11', 0]
         return g
     if p == 'wan21-text':
         g = {

@@ -14,9 +14,11 @@ Ollama clients which bypass this service. Deployment must retain that limitation
 """
 from __future__ import annotations
 import argparse
+import asyncio
 import base64
 import contextlib
 import fcntl
+from fractions import Fraction
 import hashlib
 import hmac
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -67,12 +69,73 @@ def png(body):
         im.convert('RGB').save(out, format='PNG')
     return out.getvalue()
 
+def encode_mp4(body, request):
+    """CPU H.264 export with explicit timestamps and bounded frame count."""
+    import av
+    output = io.BytesIO()
+    with av.open(io.BytesIO(body)) as src, av.open(output, 'w', format='mp4') as dst:
+        stream = dst.add_stream('libx264', rate=request['fps'])
+        stream.width = request['width']; stream.height = request['height']
+        stream.pix_fmt = 'yuv420p'; stream.options = {'crf': '18', 'threads': '2'}
+        count = 0
+        for frame in src.decode(video=0):
+            count += 1
+            if count > 25: raise MediaError('FRAME_LIMIT')
+            if (frame.width, frame.height) != (request['width'], request['height']):
+                raise MediaError('VIDEO_GEOMETRY_MISMATCH')
+            frame.pts = count - 1
+            frame.time_base = Fraction(1, request['fps'])
+            for packet in stream.encode(frame): dst.mux(packet)
+        for packet in stream.encode(): dst.mux(packet)
+        if count != request['frames']: raise MediaError('FRAME_COUNT_MISMATCH')
+    result = output.getvalue()
+    # Decode the actual exported file; a muxer receipt alone is insufficient.
+    with av.open(io.BytesIO(result)) as check:
+        track = check.streams.video[0]
+        if track.average_rate != request['fps']: raise MediaError('VIDEO_FPS_MISMATCH')
+        if sum(1 for _ in check.decode(video=0)) != request['frames']:
+            raise MediaError('VIDEO_FRAME_COUNT_MISMATCH')
+        duration = float(track.duration * track.time_base)
+        if abs(duration - request['frames']/request['fps']) > 0.001:
+            raise MediaError('VIDEO_DURATION_MISMATCH')
+    return result
+
 class ComfyEngine:
     """Dedicated engine: no arbitrary paths/nodes or third-party endpoints."""
     def __init__(self, url, input_directory, gpu_uuid, engine_pid):
         self.url = endpoint(url)
         self.inputs = Path(input_directory)
         self.gpu_uuid, self.engine_pid = gpu_uuid, engine_pid
+        self.client_id = uuid.uuid4().hex
+        self.events = {}
+        self.event_lock = threading.Lock()
+
+    def start_progress(self):
+        """Optional local WebSocket observations; never used as success evidence."""
+        async def listen():
+            import aiohttp
+            async with aiohttp.ClientSession(trust_env=False) as session:
+                async with session.ws_connect(self.url.replace('http:', 'ws:')+'/ws?clientId='+self.client_id,
+                                              max_msg_size=65536, heartbeat=20) as ws:
+                    async for message in ws:
+                        if message.type != aiohttp.WSMsgType.TEXT: continue
+                        event = json.loads(message.data)
+                        data = event.get('data', {})
+                        pid = data.get('prompt_id')
+                        if event.get('type') == 'progress' and isinstance(pid, str):
+                            value, maximum = data.get('value'), data.get('max')
+                            if type(value) is int and type(maximum) is int and 0 <= value <= maximum and maximum > 0:
+                                with self.event_lock:
+                                    if len(self.events) >= 128: self.events.clear()
+                                    self.events[pid] = {'stage':'sampling_or_decode', 'node':data.get('node'),
+                                                        'value':value, 'maximum':maximum, 'fraction':value/maximum}
+        def run():
+            try: asyncio.run(listen())
+            except Exception: pass  # stage-only polling still works; no inferred percentage
+        threading.Thread(target=run, daemon=True).start()
+
+    def progress(self, prompt_id):
+        with self.event_lock: return self.events.get(prompt_id)
 
     def call(self, method, path, payload=None):
         return json_http(method, self.url + path, payload, timeout=10)
@@ -83,6 +146,9 @@ class ComfyEngine:
         probe['ready'] = probe['ready'] and not q['queue_running'] and not q['queue_pending']
         return probe
 
+    def observe(self):
+        return gpu_probe(self.gpu_uuid, self.engine_pid)
+
     def stage(self, body):
         name = uuid.uuid4().hex + '.png'
         # Operator-owned directory; never accept a client filename.
@@ -92,7 +158,7 @@ class ComfyEngine:
         return name
 
     def submit(self, graph):
-        r = self.call('POST', '/prompt', {'prompt': graph})
+        r = self.call('POST', '/prompt', {'prompt': graph, 'client_id': self.client_id})
         if r.get('node_errors') or r.get('error') or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}', r.get('prompt_id', '')):
             raise MediaError('INVALID_ENGINE_RECEIPT')
         return r['prompt_id']
@@ -127,40 +193,27 @@ class ComfyEngine:
         _, body = exchange('GET', self.url+'/view?'+urllib.parse.urlencode({k: ref[k] for k in ('filename','subfolder','type')}),
                            None, {}, 64*1024*1024, timeout=30)
         if ref['media_type'] == 'video/webm':
-            # PyAV uses bundled FFmpeg; CPU H.264 export, no network subprocess.
-            import av
-            output = io.BytesIO()
-            with av.open(io.BytesIO(body)) as src, av.open(output, 'w', format='mp4') as dst:
-                stream = dst.add_stream('libx264', rate=job['request']['fps'])
-                stream.width = job['request']['width']; stream.height = job['request']['height']
-                stream.pix_fmt = 'yuv420p'; stream.options = {'crf': '18', 'threads': '2'}
-                count = 0
-                for frame in src.decode(video=0):
-                    count += 1
-                    if count > 25:
-                        raise MediaError('FRAME_LIMIT')
-                    frame.pts = None
-                    for packet in stream.encode(frame): dst.mux(packet)
-                for packet in stream.encode(): dst.mux(packet)
-                if count != job['request']['frames']:
-                    raise MediaError('FRAME_COUNT_MISMATCH')
-            return output.getvalue(), 'result.mp4'
+            return encode_mp4(body, job['request']), 'result.mp4'
         return png(body), 'result.png'
 
 class MediaService:
-    def __init__(self, root, engine, *, enabled=('sd15-text', 'sd15-edit', 'sd15-inpaint'), clock=time.time):
+    def __init__(self, root, engine, *, enabled=('sd15-text', 'sd15-edit', 'sd15-inpaint'), clock=time.time, registry=None, artifact_root=None):
         self.root = Path(root)
         self.root.mkdir(mode=0o700, parents=False, exist_ok=True)
         info = self.root.lstat()
         if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
             raise MediaError('PRIVATE_ROOT_REQUIRED')
         self.process_lock = os.open(self.root/'service.lock', os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
-        fcntl.flock(self.process_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        try: fcntl.flock(self.process_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except Exception:
+            os.close(self.process_lock); raise
         db_path = self.root/'jobs.sqlite3'
         if db_path.is_symlink(): raise MediaError('SYMLINK_REFUSED')
-        if not (self.root/'artifacts').exists(): initialize(self.root/'artifacts')
-        self.artifacts = ArtifactStore(self.root/'artifacts')
+        artifact_root = Path(artifact_root) if artifact_root is not None else self.root/'artifacts'
+        if not artifact_root.exists(): initialize(artifact_root)
+        self.artifacts = ArtifactStore(artifact_root)
         self.engine, self.clock, self.enabled = engine, clock, tuple(enabled)
+        self.registry = registry
         if not set(self.enabled) <= PROFILES.keys(): raise MediaError('UNKNOWN_PROFILE')
         self.lock = threading.RLock()
         self.db = sqlite3.connect(db_path, check_same_thread=False)
@@ -194,6 +247,9 @@ class MediaService:
 
     def submit(self, request, key):
         req = validate(request)
+        if 'checkpoint' in req or req.get('loras'):
+            if self.registry is None: raise MediaError('MODEL_REGISTRY_REQUIRED')
+            self.registry.validate(req)
         if req['profile'] not in self.enabled: raise MediaError('MODEL_NOT_ENABLED')
         if not isinstance(key, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', key):
             raise MediaError('IDEMPOTENCY_KEY_REQUIRED')
@@ -230,6 +286,15 @@ class MediaService:
             if active is not None:
                 j = active
                 try:
+                    if hasattr(self.engine, 'observe') and j['state'] == 'RUNNING':
+                        observed_gpu = self.engine.observe()
+                        j['resource_observation'] = observed_gpu
+                        if not observed_gpu['ready']:
+                            j['state'] = 'CANCEL_REQUESTED'; self.save(j)
+                            self.engine.cancel(j['prompt_id'])
+                    if hasattr(self.engine, 'progress'):
+                        observed = self.engine.progress(j['prompt_id'])
+                        if observed: j['progress'] = observed
                     history = self.engine.poll(j['prompt_id'])
                     entry = history.get(j['prompt_id'])
                     if entry:
@@ -267,6 +332,7 @@ class MediaService:
                         names[field+'_name'] = self.engine.stage(self.artifacts.read(j['request'][field])[0])
                 j['staged_inputs'] = names
                 j['graph'] = workflow(j['request'], prefix=j['id'], **names)
+                if self.registry is not None: j['graph'] = self.registry.apply(j['graph'],j['request'])
                 self.save(j)
                 j['prompt_id'] = self.engine.submit(j['graph'])
                 j.update(state='RUNNING', progress={'stage':'engine_running', 'fraction':None})
@@ -294,7 +360,9 @@ def handler(service, token):
                     self.send(401, {'error':'UNAUTHORIZED'}); return
                 if self.command == 'GET':
                     if self.path == '/health': self.send(200, {'service':'Eidolon-Media','experimental':True}); return
-                    if self.path == '/v1/models': self.send(200, {k:PROFILES[k] for k in service.enabled}); return
+                    if self.path == '/v1/models':
+                        self.send(200, {'profiles':{k:PROFILES[k] for k in service.enabled},
+                                        'registry':service.registry.entries if service.registry else {}}); return
                     if self.path == '/v1/jobs': self.send(200, [service.public(j) for j in service.jobs()]); return
                     m = re.fullmatch(r'/v1/jobs/([0-9a-f]{32})(/result|/metadata)?', self.path)
                     if not m: raise MediaError('NOT_FOUND')
@@ -333,16 +401,25 @@ def handler(service, token):
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root', required=True); p.add_argument('--token-file', required=True)
+    p.add_argument('--artifact-root', help='Optional separate private data volume')
     p.add_argument('--engine', default='http://127.0.0.1:8189'); p.add_argument('--inputs', required=True)
     p.add_argument('--gpu-uuid', required=True); p.add_argument('--engine-pid', type=int, required=True)
     p.add_argument('--port', type=int, default=8190); p.add_argument('--enable', action='append', choices=PROFILES)
+    p.add_argument('--registry'); p.add_argument('--models-root')
     a = p.parse_args(argv); os.umask(0o077)
     info = os.lstat(a.token_file)
     if info.st_uid != os.getuid() or info.st_mode & 0o077: raise MediaError('PRIVATE_TOKEN_REQUIRED')
     token = read_regular(a.token_file, 256).decode().strip()
     if not re.fullmatch(r'[A-Za-z0-9_-]{32,128}', token): raise MediaError('INVALID_TOKEN')
     engine = ComfyEngine(a.engine, a.inputs, a.gpu_uuid, a.engine_pid)
-    service = MediaService(a.root, engine, enabled=a.enable or ('sd15-text','sd15-edit','sd15-inpaint'))
+    engine.start_progress()
+    registry = None
+    if a.registry:
+        if not a.models_root: raise MediaError('MODEL_ROOT_REQUIRED')
+        from .media_registry import ModelRegistry
+        from .media_agents import load_json
+        registry = ModelRegistry(load_json(a.registry), a.models_root)
+    service = MediaService(a.root, engine, enabled=a.enable or ('sd15-text','sd15-edit','sd15-inpaint'), registry=registry, artifact_root=a.artifact_root)
     stop = threading.Event()
     def work():
         while not stop.wait(0.5):

@@ -79,8 +79,31 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(j['state'],'SUCCEEDED'); self.assertEqual(self.service.artifacts.read(j['result']['reference'])[0],PNG)
     def test_metadata_not_in_status(self):
         j = self.submit(); self.assertNotIn('request',self.service.public(j))
+    def test_foreign_gpu_client_withdraws_our_job_only(self):
+        j = self.submit(); self.service.tick()
+        self.engine.observe = lambda: {'ready':False,'reason':'OTHER_GPU_CLIENT'}
+        self.service.tick()
+        self.assertEqual(self.service.get(j['id'])['state'],'CANCEL_REQUESTED')
+        self.assertEqual(self.engine.cancels,['engine-id'])
+    def test_progress_is_an_observation_not_completion(self):
+        j = self.submit(); self.service.tick()
+        self.engine.progress = lambda _: {'stage':'sampling','fraction':1.0}
+        self.service.tick()
+        self.assertEqual(self.service.get(j['id'])['state'],'RUNNING')
+        self.assertEqual(self.service.get(j['id'])['progress']['fraction'],1.0)
+    def test_model_selection_needs_operator_registry(self):
+        with self.assertRaisesRegex(MediaError,'MODEL_REGISTRY_REQUIRED'):self.submit(checkpoint='unknown')
     def test_dedicated_process_lock(self):
         with self.assertRaises(BlockingIOError): MediaService(self.root,self.engine)
+    def test_separate_artifact_volume_preserves_references(self):
+        import shutil
+        ref=self.service.artifacts.import_bytes(PNG,display_name='test.png')['reference']
+        self.service.close()
+        destination=Path(self.tmp.name)/'separate-data'
+        shutil.move(self.root/'artifacts',destination)
+        self.service=MediaService(self.root,self.engine,artifact_root=destination)
+        self.assertEqual(self.service.artifacts.read(ref)[0],PNG)
+        self.assertFalse((self.root/'artifacts').exists())
     def test_disabled_video_refused(self):
         with self.assertRaisesRegex(MediaError,'MODEL_NOT_ENABLED'):
             self.submit(profile='wan21-text',height=320)
