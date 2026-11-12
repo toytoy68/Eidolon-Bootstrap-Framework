@@ -50,3 +50,10 @@ ajouté. Le jeton reste dans le fichier privé indiqué dans OPERATIONS.
 Les unités de recette sont **transitoires**, sans activation au démarrage. Le
 serveur reste allumé. Consulter OPERATIONS avant une remise en route : le PID du
 moteur est un paramètre de sécurité et doit correspondre à l'instance courante.
+
+
+## Tests de formulation G331
+
+[Plan et résultats réels](PROMPT-TESTS-G331.md) :12 générations SDXL, prompts
+original/détaillé comparés à seeds et réglages constants.12 succès techniques,
+12 rejets visuels,aucune nouvelle paire ni entraînement. [Preuves](prompt-validation-g331.json).

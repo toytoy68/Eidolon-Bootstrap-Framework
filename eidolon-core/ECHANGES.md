@@ -2944,3 +2944,22 @@ G329-02 rejetée après annotation toytoy ; registre réel révision13,2 accept�
 apprentissage. Refus réel REVIEWS_CHANGED avant chargement modèle ;8 tests unittest
 réussis ici et8 sur X399. [Preuves](docs/studies/2026-11-12-eidolon-media/feedback-g330-correction.json).
 Rapport et grille corrigés ; G329 archivé intact, C322 préservé, PR#7 sans fusion.
+
+
+## C-MSG-G331 — Suite des tests média, lot pris le 12/11/2026, Codex/GPT
+
+Base38d4903, demande directe toytoy. Comparaison contrôlée des formulations sur
+main/objets/katana :12images,2seeds,SDXL base seul ; grille renforcée et mesures
+matérielles, puis inspection et registre. Aucun entraînement du candidat invalidé.
+Plan : docs/studies/2026-11-12-eidolon-media/PROMPT-TESTS-G331.md.
+
+
+## C-MSG-G331 — Lot réel terminé, 12/11/2026, Codex/GPT
+
+12 générations contrôlées surV100 : succès techniques12/12,acceptations0/12.
+Prompts original/détaillé à seeds/réglages constants : aucun gain observé sur ce
+petit lot. [Rapport](docs/studies/2026-11-12-eidolon-media/PROMPT-TESTS-G331.md).
+12 rejets enregistrés,0 paire ; aucun nouvel apprentissage. 21tests ciblés réussis
+ici et21 X399 ; préfixes de lots distincts.18,78–21,69s,9168Mio,38/44°C.
+SHA modèle inchangé,services actifs,queue vide. G330 archivé,C322 préservé,
+correction G329-02 prioritaire et ancien candidat invalidé ; PR#7 sans fusion.

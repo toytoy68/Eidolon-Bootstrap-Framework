@@ -11,12 +11,19 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 from eidolon_core.media_feedback import FeedbackLedger, checksum, verify_pair_files
+
+def asset_prefix(value):
+    if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]{0,59}', value):
+        raise argparse.ArgumentTypeError('Invalid campaign asset prefix')
+    return value
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--campaign',type=Path,required=True)
     p.add_argument('--decisions',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--asset-prefix', type=asset_prefix, default='g329')
     a=p.parse_args();os.umask(0o077);a.output.mkdir(mode=0o700)
     assets=a.output/'assets';assets.mkdir(mode=0o700)
     book=FeedbackLedger(a.output/'ledger')
@@ -33,7 +40,7 @@ def main():
         if sha!=summary[i]['sha256']:raise RuntimeError('RESULT_HASH_MISMATCH')
         r=metadata['request'];graph=json.loads(json.dumps(metadata['graph']))
         graph['5']['inputs'].pop('seed');graph['7']['inputs']['filename_prefix']='feedback'
-        asset=f'g329-{i:02}';(assets/(asset+'.png')).write_bytes(body)
+        asset=f'{a.asset_prefix}-{i:02}';(assets/(asset+'.png')).write_bytes(body)
         record=dict(asset_id=asset,image_sha256=sha,prompt=r['prompt'],config_sha256=checksum(graph),
             model_sha256=manifest['model_sha256'],width=r['width'],height=r['height'],split='train',
             decision=d['decision'],reason=d['reason'],reviewer='gpt',confidence=d['confidence'],
