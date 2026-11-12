@@ -2926,3 +2926,21 @@ sur V10016Go :6 mises à jour,51,02s,8560Mio,36/38°C. Rechargement et comparais
 réels :aucun gain visuel convaincant,candidat non promu.235tests média
 (231/4skip ici,230/5skip X399). Registre révisable, priorité corrections toytoy,
 venv isolé et source inchangée. G328 archivé,C322 préservé,PR#7 sans fusion.
+
+
+## C-MSG-G330 — Correction utilisateur G329-02, lot pris le 12/11/2026, Codex/GPT
+
+Base0a5ac8788a8bc6bcfa9a8b6a267fb642fe3a1d92, branche dédiée média.
+Annotation directe de toytoy : défauts des raccords doigts-paume et plis près
+du pouce. Révision prioritaire du registre, retrait de la paire préférant02,
+invalidation explicite du candidat dérivé, rapport corrigé et preuves conservées.
+Aucun calcul GPU ni changement de production prévu.
+
+
+## C-MSG-G330 — Correction appliquée, 12/11/2026, Codex/GPT
+
+G329-02 rejetée après annotation toytoy ; registre réel révision13,2 acceptées/
+9 rejets/1 incertaine,2 paires. Ancien LoRA invalidé, jamais activé ; aucun nouvel
+apprentissage. Refus réel REVIEWS_CHANGED avant chargement modèle ;8 tests unittest
+réussis ici et8 sur X399. [Preuves](docs/studies/2026-11-12-eidolon-media/feedback-g330-correction.json).
+Rapport et grille corrigés ; G329 archivé intact, C322 préservé, PR#7 sans fusion.

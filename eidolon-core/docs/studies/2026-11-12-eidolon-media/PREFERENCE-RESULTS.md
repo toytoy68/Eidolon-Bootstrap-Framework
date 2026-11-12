@@ -2,9 +2,36 @@
 
 12 novembre 2026 · Eidolon Core Technologies (ECT).
 **La boucle technique fonctionne sur V10016Go. Aucun gain visuel général établi ;
-le candidat n'est pas promu.** [Méthode](PREFERENCE-LOOP.md),
+le candidat, jamais promu, est désormais invalidé après correction utilisateur.** [Méthode](PREFERENCE-LOOP.md),
 [jugements explicites](feedback-g329-decisions.json),
 [preuves matérielles](preference-validation.json).
+
+## Correction utilisateur — G330, état courant
+
+G329-02 est **REJETÉE** à la suite de l'annotation directe de toytoy : raccords
+doigts-paume et plis incohérents à la base des doigts ; replis déformés près du
+pouce. La validation GPT initiale était trop permissive. Les scores révisés par
+GPT sont distingués du signalement utilisateur, qui ne donnait pas de notes.
+
+Registre réel X399 : révision13, **2 acceptées (01,04), 9 rejetées, 1 incertaine**.
+Snapshot corrigé `LAB/preference-lab/dataset-g329/dataset-rev13.json` ; deux paires
+restantes `01>00` et `04>05`. `02>03` retirée. Les douze anciennes décisions et le
+snapshot de la révision12 sont conservés sans réécriture, avec vérification du hash.
+
+Le candidat de six mises à jour est **INVALIDATED_BY_USER_REVIEW**, inéligible à
+toute promotion ; déclaration dans `LAB/preference-lab/pilot-g329/invalidation.json`.
+Il n'avait jamais été activé. Ses poids sont conservés comme preuve historique :
+la correction ne défait pas l'apprentissage. Aucun nouveau LoRA entraîné dans G330.
+Un nouvel entraînement depuis la base et une nouvelle évaluation sont nécessaires.
+
+Contrôles réellement exécutés : 8 tests du registre réussis ici et 8 sur X399 ;
+script de comparaison refusant l'ancien candidat avec `REVIEWS_CHANGED`, avant
+tout chargement de modèle ou génération (GPU masqués pour ce contrôle).
+Hashes des deux paires restantes revérifiés. Aucun service redémarré.
+[Correction et preuves](feedback-g330-correction.json).
+
+**Les sections suivantes décrivent l'historique G329 avant cette correction** :
+les trois paires y désignent bien celles utilisées par le pilote initial.
 
 ## Existant réutilisé et développement
 

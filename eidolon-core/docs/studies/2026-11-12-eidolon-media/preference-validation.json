@@ -1179,7 +1179,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Six doigts visibles pour une main demand\u00e9e \u00e0 cinq doigts : d\u00e9faut \u00e9liminatoire.",
+        "reason": "Six doigts visibles pour une main demandée à cinq doigts : défaut éliminatoire.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1199,7 +1199,7 @@
         "height": 1024,
         "split": "train",
         "decision": "ACCEPT",
-        "reason": "Une seule paume ouverte, cinq doigts distincts, orientation conforme. Plis et proportions imparfaits mais pas de d\u00e9faut \u00e9liminatoire \u00e9vident \u00e0 l'inspection.",
+        "reason": "Une seule paume ouverte, cinq doigts distincts, orientation conforme. Plis et proportions imparfaits mais pas de défaut éliminatoire évident à l'inspection.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1219,7 +1219,7 @@
         "height": 1024,
         "split": "train",
         "decision": "ACCEPT",
-        "reason": "Une seule main, cinq doigts s\u00e9par\u00e9s, paume face cam\u00e9ra et poignet en bas. Relief de peau accentu\u00e9 ; acceptable pour ce lot, sans validation m\u00e9dicale.",
+        "reason": "Une seule main, cinq doigts séparés, paume face caméra et poignet en bas. Relief de peau accentué ; acceptable pour ce lot, sans validation médicale.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1239,7 +1239,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Deux mains au lieu d'une, doigts d\u00e9form\u00e9s : nombre de sujets incorrect.",
+        "reason": "Deux mains au lieu d'une, doigts déformés : nombre de sujets incorrect.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1259,7 +1259,7 @@
         "height": 1024,
         "split": "train",
         "decision": "ACCEPT",
-        "reason": "Une tasse rouge \u00e0 gauche et un bol bleu \u00e0 droite, entiers et s\u00e9par\u00e9s, conform\u00e9ment \u00e0 la demande.",
+        "reason": "Une tasse rouge à gauche et un bol bleu à droite, entiers et séparés, conformément à la demande.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1279,7 +1279,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Image divis\u00e9e en deux sc\u00e8nes avec quatre r\u00e9cipients au lieu de deux : d\u00e9faut \u00e9liminatoire de nombre et de composition.",
+        "reason": "Image divisée en deux scènes avec quatre récipients au lieu de deux : défaut éliminatoire de nombre et de composition.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1299,7 +1299,7 @@
         "height": 1024,
         "split": "train",
         "decision": "UNCERTAIN",
-        "reason": "Le r\u00e9cipient bleu poss\u00e8de une anse et ressemble \u00e0 une seconde tasse. Un bol \u00e0 anse existe : ambigu\u00eft\u00e9 de cat\u00e9gorie, exemple exclu de l'apprentissage.",
+        "reason": "Le récipient bleu possède une anse et ressemble à une seconde tasse. Un bol à anse existe : ambiguïté de catégorie, exemple exclu de l'apprentissage.",
         "reviewer": "gpt",
         "confidence": "medium",
         "scores": {
@@ -1319,7 +1319,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Deux r\u00e9cipients \u00e0 anses avec m\u00e9lange rouge/bleu ; aucun bol bleu distinct conforme \u00e0 la relation demand\u00e9e.",
+        "reason": "Deux récipients à anses avec mélange rouge/bleu ; aucun bol bleu distinct conforme à la relation demandée.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1339,7 +1339,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Lame avec \u00e9l\u00e9ment de poign\u00e9e transversal incoh\u00e9rent ; aucun fourreau s\u00e9par\u00e9.",
+        "reason": "Lame avec élément de poignée transversal incohérent ; aucun fourreau séparé.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1359,7 +1359,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Collage de d\u00e9tails, \u00e9l\u00e9ments coup\u00e9s et assemblage incoh\u00e9rent : ni katana ni fourreau complets c\u00f4te \u00e0 c\u00f4te.",
+        "reason": "Collage de détails, éléments coupés et assemblage incohérent : ni katana ni fourreau complets côte à côte.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1379,7 +1379,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Plusieurs lames et accessoires au lieu d'un katana avec son seul fourreau ; objets partiellement coup\u00e9s.",
+        "reason": "Plusieurs lames et accessoires au lieu d'un katana avec son seul fourreau ; objets partiellement coupés.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1399,7 +1399,7 @@
         "height": 1024,
         "split": "train",
         "decision": "REJECT",
-        "reason": "Deux lames et plusieurs \u00e9l\u00e9ments coup\u00e9s ; le couple unique katana/fourreau demand\u00e9 n'est pas respect\u00e9.",
+        "reason": "Deux lames et plusieurs éléments coupés ; le couple unique katana/fourreau demandé n'est pas respecté.",
         "reviewer": "gpt",
         "confidence": "high",
         "scores": {
@@ -1774,7 +1774,7 @@
           3,
           3
         ],
-        "reason": "Positions gauche/droite invers\u00e9es et armure noire absente dans les deux images. Aucun gain convaincant.",
+        "reason": "Positions gauche/droite inversées et armure noire absente dans les deux images. Aucun gain convaincant.",
         "reviewer": "gpt"
       },
       {
@@ -1787,7 +1787,7 @@
           4,
           3
         ],
-        "reason": "Pont en pierre avec trois ouvertures visibles et ville ancienne. Aspect comparable avant/apr\u00e8s, aucune pr\u00e9f\u00e9rence nette.",
+        "reason": "Pont en pierre avec trois ouvertures visibles et ville ancienne. Aspect comparable avant/après, aucune préférence nette.",
         "reviewer": "gpt"
       },
       {
@@ -1800,7 +1800,7 @@
           2,
           3
         ],
-        "reason": "Vue de trois quarts au lieu du profil demand\u00e9 ; pi\u00e8ce flottante pr\u00e8s de l'avant et d\u00e9tails m\u00e9caniques incoh\u00e9rents dans les deux images.",
+        "reason": "Vue de trois quarts au lieu du profil demandé ; pièce flottante près de l'avant et détails mécaniques incohérents dans les deux images.",
         "reviewer": "gpt"
       }
     ]
@@ -1825,5 +1825,18 @@
       "x399_pass": 230,
       "x399_skip": 5
     }
+  },
+  "subsequent_user_correction": {
+    "lot": "G330",
+    "evidence_file": "feedback-g330-correction.json",
+    "revision": 13,
+    "status": "INVALIDATED_BY_USER_REVIEW",
+    "historical_results_preserved": true,
+    "current_decisions": {
+      "ACCEPT": 2,
+      "REJECT": 9,
+      "UNCERTAIN": 1
+    },
+    "current_pairs": 2
   }
 }

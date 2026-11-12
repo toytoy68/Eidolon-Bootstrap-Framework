@@ -36,6 +36,19 @@ Un correctif de dataset **n'efface pas** un apprentissage déjà réalisé : le 
 concerné doit être réentraîné/revalidé. Les pilotes vérifient le hash des avis
 avant et pendant l'exécution ; aucune promotion automatique n'est implémentée.
 
+## Contrôle visuel renforcé après G329-02
+
+Une main avec cinq doigts ne suffit pas pour être acceptée. Examiner à résolution
+native les raccords doigts-paume, les espaces entre doigts, la continuité des
+volumes et des plis autour des articulations, ainsi que la jonction pouce-paume.
+Un pli isolé n'est pas une preuve anatomique ; un assemblage visuellement
+incohérent élimine l'exemple positif. Si le défaut reste ambigu, classer INCERTAIN.
+Séparer texture photographique convaincante et cohérence de structure. Ces
+critères relèvent de la qualité d'image, sans revendication de validation médicale.
+
+G330 applique la première correction réelle : révision13 et deux paires courantes.
+Le candidat G329 reste archivé avec son invalidation, jamais comme parent promouvable.
+
 ## Construction des paires
 
 Uniquement un accepté et un rejeté de confiance élevée, pour un même prompt,
