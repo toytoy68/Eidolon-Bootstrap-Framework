@@ -91,3 +91,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G339 — FLUX dev/Schnell, 13/11/2026
 
 [Comparatif G339](FLUX-COMPARISON-G339.md) : Schnell complet testé sur la grille G338, 12 images locales, répétition exacte ; 4/8 proposées, 2 réserves, 2 rejets, comme dev mais sur des images différentes. 6,451 s médianes GPU/décodage contre 70,577 s dev ; facteur 10,94 hors encodage/chargement. Rendu visuel et conformité distingués ; Schnell réussit un duo en pied, dev plus crédible sur les katanas. Aucune promotion, GPU libérés, machine allumée. Autres candidats non testés inchangés.
+
+
+## Avancement G340 — Klein4B, 13/11/2026
+
+[Rapport G340](KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion.

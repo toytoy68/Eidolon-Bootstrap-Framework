@@ -3092,3 +3092,13 @@ Base 6f9e0cd82554b78eea8b8491849b0344230212fc, branche media dediee. Toytoy auto
 ## C-MSG-G339 — Comparatif FLUX terminé, 13/11/2026, Codex/GPT
 
 Schnell :12 images,4/8 natives proposées,2 réserves,2 rejets ; répétition exacte. Même grille que dev, recettes propres :6,451 s contre70,577 s GPU/décodage, hors encodage et chargement. Rendu et conformité distingués ; aucun classement universel. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-COMPARISON-G339.md). Premier lancement sans PYTHONPATH conservé, run02 réussi. Aucun profil promu, GPU libres, services actifs et machine allumée.
+
+
+## C-MSG-G340 — FLUX.2 Klein 4B pris, 13/11/2026, Codex/GPT
+
+Base b9fc4ebcfbe48764116f94444abd921aae359506. Suite comparative autorisée par toytoy. Auditer modèle Apache4B, encodeur et VAE, pile isolée compatible Volta ; aucun changement des runtimes actuels. Essai progressif puis grille G338/G339 si viable. Rendu et conformité séparés, poids/révisions/SHA figés ; garder tout échec. Fichiers runner/preuves/rapport G340 et avancement. Aucun entraînement, promotion ou fusion.
+
+
+## C-MSG-G340 — Lot Klein terminé, 13/11/2026, Codex/GPT
+
+[Rapport G340](docs/studies/2026-11-12-eidolon-media/KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion. PEFT optionnel incompatible retiré uniquement de la copie ; runtime historique inchangé. Preuves et revue visuelle versionnées.

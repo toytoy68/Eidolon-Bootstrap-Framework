@@ -1,0 +1,170 @@
+{
+  "model": "FLUX.2-klein-4B",
+  "precision": "fp16",
+  "files": [
+    {
+      "repo": "black-forest-labs/FLUX.2-klein-4B",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "path": "text_encoder/model-00001-of-00002.safetensors",
+      "name": "model-00001-of-00002.safetensors",
+      "bytes": 4967215360,
+      "sha256": "8c0506e7f4936fa7e26183a4fd8da4e2bdbc5990ba64ae441f965d51228f36ea"
+    },
+    {
+      "repo": "black-forest-labs/FLUX.2-klein-4B",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "path": "text_encoder/model-00002-of-00002.safetensors",
+      "name": "model-00002-of-00002.safetensors",
+      "bytes": 3077766632,
+      "sha256": "82f2bd839378541b0557bfabaf37c7d3d637071fdcb73302dedd7cf61162ce07"
+    },
+    {
+      "repo": "black-forest-labs/FLUX.2-klein-4B",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "path": "transformer/diffusion_pytorch_model.safetensors",
+      "name": "diffusion_pytorch_model.safetensors",
+      "bytes": 7751109744,
+      "sha256": "9f29f9edcfdae452a653ffb51a534ca4decd389952c225724ff3b94042612a6e"
+    },
+    {
+      "repo": "black-forest-labs/FLUX.2-klein-4B",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "name": "diffusion_pytorch_model.safetensors",
+      "bytes": 168120878,
+      "sha256": "ca70d2202afe6415bdbcb8793ba8cd99fd159cfe6192381504d6c4d3036e0f04"
+    }
+  ],
+  "text_encoder": "Qwen3 CPU FP32,512 tokens,layers9/18/27",
+  "vae": "GPU0 FP32,tiled512px",
+  "attention": "PyTorch EFFICIENT_ATTENTION",
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "encode_seconds": 57.17462049599999,
+  "embeddings_reused": false,
+  "load_seconds": 4.620224676000362,
+  "parameter_bytes_by_device": {
+    "cuda:0": 7751089152
+  },
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "shift": 3.0,
+    "use_dynamic_shifting": true,
+    "base_shift": 0.5,
+    "max_shift": 1.15,
+    "base_image_seq_len": 256,
+    "max_image_seq_len": 4096,
+    "invert_sigmas": false,
+    "shift_terminal": null,
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "time_shift_type": "exponential",
+    "stochastic_sampling": false,
+    "_class_name": "FlowMatchEulerDiscreteScheduler",
+    "_diffusers_version": "0.37.0.dev0"
+  },
+  "steps": 4,
+  "guidance": 1.0,
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen4x3"
+    }
+  ],
+  "runner_sha256": "9a19d776244490cdf5bcff6fe937e8cf560039ebab6e08769ff20c607f90a2cd",
+  "promotion_allowed": false
+}
