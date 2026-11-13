@@ -76,3 +76,8 @@ Médiane GPU/décodage +41%, VRAM 9,60 Gio, sans progrès qualitatif global éta
 Sprint et encodeur GPU1 restent non testés. Ne pas prioriser la seule taille :
 poursuivre une autre architecture ou la vidéo après audit précis du candidat.
 PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez toytoy.
+
+
+## Avancement G337 - AnimateDiff, 13/11/2026
+
+[Diagnostic G337](ANIMATEDIFF-G337.md) : G336 retrouve non revu ; 6 nouveaux clips apres correction beta schedule, toujours rejetes. 2 controles SD1.5 reconnaissables : defaut localise a la chaine AnimateDiff, cause non resolue. Aucun modele promu. GPU liberes, machine allumee. FLUX.1 dev reste I10 non teste.

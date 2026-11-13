@@ -79,7 +79,7 @@ tiers ni téléchargement automatique n'est activé.
 | V01 — Wan 2.1 T2V 1.3B | Reprendre témoin 320×256, 9/17 images ; monter progressivement | Déjà généré sur une V100, qualité encore expérimentale |
 | V02 — SVD 14 images | I2V, témoin local puis résolution native progressive | Déjà généré ; licence Stability à conserver |
 | V03 — SVD-XT 25 images | I2V, besoin mémoire supérieur au SVD testé | Poids/licence exacts à auditer ; non testé |
-| V04 — AnimateDiff SD1.5 | 16 images modestes puis durée/résolution progressive | Module/base/extension à auditer ; non testé |
+| V04 — AnimateDiff SD1.5 | G336 retrouvé, G337 : 6 clips, 2 contrôles SD1.5 | **Non validé** : textures sans scène ; SD1.5 seul fonctionne. Diagnostic de la chaîne vidéo à poursuivre. [Rapport G337](ANIMATEDIFF-G337.md) |
 | V05 — Wan 2.1 T2V 14B | ~28 Go de générateur : blocs sur deux V100, T5 CPU | Activations vidéo peuvent dépasser le budget ; FP16 à tester |
 | V06 — Wan 2.1 I2V 14B 480p | Même partage, encodeur image en plus | Pas de 480p d'emblée ; compatibilité bas format à vérifier |
 | V07 — Wan 2.1 I2V 14B 720p | Après V06 seulement | Modèle distinct ; 720p cible amont, pas capacité validée |

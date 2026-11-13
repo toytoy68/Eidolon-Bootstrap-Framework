@@ -3062,3 +3062,13 @@ Aucun changement code/runtime/pilote, aucune promotion/formation/fusion.
 PDF 16 pages livré, G334 archivé intact, C322 préservé ; PR #7 brouillon.
 Services/VM actifs, GPU libérés, API/Comfy temporaires toujours inactifs.
 Machine allumée. Sprint/encodeur GPU1 et autres candidats restent non testés.
+
+
+## C-MSG-G337 — Reprise AnimateDiff, 13/11/2026, Codex/GPT
+
+Reprise explicite toytoy; base edde825. G336 run02 retrouve termine mais non revu, premieres planches grises. Prise en charge isolee: animatediff_probe_g337.py et rapport G337; fichiers G336 non modifies. Test causal beta_schedule linear suivant documentation Diffusers, meme grille et poids; pas de promotion, entrainement, modification des services.
+
+
+## C-MSG-G337 - Lot diagnostic termine, 13/11/2026, Codex/GPT
+
+6 clips G337 +2 controles SD15 locaux ; repetition exacte, GPU/HBM41/43C. AnimateDiff non valide (textures), SD15 seul reconnaissable. Cause exacte ouverte. [Rapport](docs/studies/2026-11-12-eidolon-media/ANIMATEDIFF-G337.md). Poids/runtime/services preserves, GPU liberes, machine allumee. Aucune promotion/formation.
