@@ -1250,5 +1250,12 @@ STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
 - [x] Sana 600M : 12 générations locales, répétition, formats et 13 fichiers revus ; [preuves](docs/studies/2026-11-12-eidolon-media/SANA-G334.md).
 - [x] Conserver les trois échecs de préparation et leurs corrections sans changer le runtime.
 - [ ] Contrôle toytoy des deux propositions et deux doutes ; aucune promotion automatique.
-- [ ] Sana 1,6B/Sprint et encodeur GPU1 restent à qualifier séparément.
+- [x] Sana 1,6B qualifié séparément G335 ; Sprint et encodeur GPU1 restent non testés.
 - [ ] Poursuivre les autres candidats et la vidéo ; aucune validation extrapolée à partir de Sana 600M.
+
+## Eidolon-Media — suivi G335 (13/11/2026)
+
+- [x] Sana 1,6B : 12 générations et 13 fichiers revus ; [résultats](docs/studies/2026-11-12-eidolon-media/SANA-G335.md).
+- [x] Comparaison au 600M à plan/runner constants, mesures et PDF complet.
+- [ ] Contrôle toytoy de G335-04 proposé et G335-01/02 douteux, sans bloquer la suite.
+- [ ] Poursuivre les autres architectures ou la vidéo ; aucune promotion Sana à ce stade.

@@ -15,7 +15,7 @@ HUD/voix et ordonnancement global encore expérimentaux. Aucune fusion dans main
 - [File des candidats image/vidéo, une et deux V100](CANDIDATE-QUEUE-G332.md), G332.
 - [Essai FLUX réparti sur deux cartes](MULTIGPU-G332.md), preuves et limites séparées.
 - [Comparaison SDXL, RealVisXL et Juggernaut](CHECKPOINTS-G333.md),27générations réelles et revue complète,13/11.
-- [Sana 600M FP16 sur V100](SANA-G334.md), G334 : 12 générations, revue et mesures ; 1,6B non testé.
+- [Sana 600M](SANA-G334.md) et [Sana 1,6B](SANA-G335.md) : 12 générations par variante, comparaison et revue complète ; aucune promotion.
 - [Formats 16:9 et 4:3 avec bandes latérales](DISPLAY.md), complément G326.
 - [SDXL : essai matériel et comparaison](SDXL.md), complément G327.
 - [Protocole de qualification visuelle](QUALITY-PROTOCOL.md), campagne G328.
@@ -35,9 +35,9 @@ aucun modèle et ne modifie pas Memory Engine.
 
 ## Résultat immédiatement utilisable
 
-**État au13/11 après redémarrage (G334)** : les unités transitoires ci-dessous
+**État au13/11 après redémarrage (G335)** : les unités transitoires ci-dessous
 sont inactives. Les recettes G325–G332 restent des résultats historiques ;
-G333 et G334 testent les candidats via des runners Diffusers isolés, sans les
+G333 à G335 testent les candidats via des runners Diffusers isolés, sans les
 déclarer intégrés à cette API. Voir OPERATIONS pour une remise en route contrôlée.
 
 API authentifiée : `http://127.0.0.1:8190`. ComfyUI dédié : `127.0.0.1:8189`.

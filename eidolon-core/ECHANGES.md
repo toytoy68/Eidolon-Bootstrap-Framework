@@ -3035,3 +3035,30 @@ formats écran exacts mais contenu rejeté. 249 tests : 244 réussis/5 ignorés 
 et X399. Services/VM actifs, GPU libérés ; API/Comfy temporaires restent inactifs.
 Sana non intégré à l'API, 1,6B non testé. G333 archivé, C322 intact, PR #7 brouillon.
 Machine allumée ; aucun changement de pilote ou de runtime.
+
+## C-MSG-G335 — Sana 1,6B, lot pris le 13/11/2026, Codex/GPT
+
+Base cb33db0cf84bd2f847cff44b604bf3f591a74c79, branche média dédiée.
+Reprise autorisée par toytoy. Candidat I26, variante 1600M FP16 1024px.
+Réutiliser le runner G334 inchangé : 12 générations, mêmes prompts/seeds,
+encodeur CPU FP32 et DC-AE GPU FP32, bornes et garde thermique identiques.
+Figer poids/licences, vérifier les composants partagés avant réutilisation ;
+volume données, aucun changement runtime/production. Résultats, comparaison
+prudente au 600M, revue complète et PDF ; aucun entraînement/promotion.
+Fichiers prévus : manifeste/preuves/SANA-G335.md, catalogue, README/ROADMAP,
+TODO et messages/archives GPT. Échec de synchronisation du lecteur MCP ;
+message courant lu directement dans le checkout Git vérifié, aucun outil réparé.
+
+## C-MSG-G335 — Sana 1,6B terminé, 13/11/2026, Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SANA-G335.md),
+[preuves](docs/studies/2026-11-12-eidolon-media/sana-validation-g335.json).
+Runner G334 inchangé, 12 générations/13 fichiers revus, répétition exacte.
+8 natifs : 1 proposée, 2 doutes, 5 rejets. 3,357–3,379 s GPU/décodage
++22,201–22,335 s CPU par nouveau prompt ; médiane GPU +41% face au 600M.
+VRAM 9 832 Mio, GPU/HBM 41/46 °C, GPU1 idle, 233 sondes sans erreur.
+3 tests ciblés réussis X399 ; suite 249 historique G334, pas rejouée.
+Aucun changement code/runtime/pilote, aucune promotion/formation/fusion.
+PDF 16 pages livré, G334 archivé intact, C322 préservé ; PR #7 brouillon.
+Services/VM actifs, GPU libérés, API/Comfy temporaires toujours inactifs.
+Machine allumée. Sprint/encodeur GPU1 et autres candidats restent non testés.

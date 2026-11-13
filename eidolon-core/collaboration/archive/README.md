@@ -949,3 +949,5 @@ son auteur ou reformuler ses propos. Les modèles vides ne sont pas des réponse
 - [C-MSG-G332 avant G333](2026-11-13-gpt-C-MSG-G332.md) — catalogue et essai FLUX deux V100, octets conservés.
 
 - [C-MSG-G333 avant G334](2026-11-13-gpt-C-MSG-G333.md) — comparaison checkpoints et preuves, octets conservés.
+
+- [C-MSG-G334 avant G335](2026-11-13-gpt-C-MSG-G334.md) — Sana 600M, incidents et résultats, octets conservés.

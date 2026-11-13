@@ -67,3 +67,12 @@ restrictions propres ; ne pas présenter ce pipeline comme libre de toute restri
 Sana 1,6B, Sprint et encodage GPU1 restent non testés. Tester le placement de
 l'encodeur sur GPU1 ne constitue qu'une piste pour les 22 s CPU, sans gain mesuré.
 Poursuivre la file et la vidéo ; aucun profil ou entraînement promu.
+
+## Avancement G335 — Sana 1,6B, 13/11/2026
+
+[Sana 1600M FP16](SANA-G335.md) testé avec runner/plan G334 inchangés :
+12 générations, répétition exacte, 1/8 native proposée, 2 doutes et 5 rejets.
+Médiane GPU/décodage +41%, VRAM 9,60 Gio, sans progrès qualitatif global établi.
+Sprint et encodeur GPU1 restent non testés. Ne pas prioriser la seule taille :
+poursuivre une autre architecture ou la vidéo après audit précis du candidat.
+PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez toytoy.
