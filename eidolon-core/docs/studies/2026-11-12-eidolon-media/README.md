@@ -71,3 +71,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G338 — FLUX.1 dev, 13/11/2026
 
 [Rapport G338](FLUX-DEV-G338.md) : générateur FP16 réellement réparti sur deux V10016, encodeurs CPU ; 12 images, répétition exacte. Grille native : 4/8 proposées, 2 réserves, 2 rejets pour cadrage. 70,58 s médianes GPU/décodage 1024². Correctif VAE par tuiles après OOM initial conservé. GPU/HBM max 47/51 °C ; aucune promotion. Formats écran générés mais cadrage non conforme. GPU libérés, machine allumée.
+
+
+## Avancement G339 — FLUX dev/Schnell, 13/11/2026
+
+[Comparatif G339](FLUX-COMPARISON-G339.md) : Schnell complet testé sur la grille G338, 12 images locales, répétition exacte ; 4/8 proposées, 2 réserves, 2 rejets, comme dev mais sur des images différentes. 6,451 s médianes GPU/décodage contre 70,577 s dev ; facteur 10,94 hors encodage/chargement. Rendu visuel et conformité distingués ; Schnell réussit un duo en pied, dev plus crédible sur les katanas. Aucune promotion, GPU libérés, machine allumée. Autres candidats non testés inchangés.

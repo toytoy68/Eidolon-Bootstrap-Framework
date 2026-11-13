@@ -1,0 +1,14 @@
+{
+  "model": "FLUX.1-schnell",
+  "weights_reused_from": "G332",
+  "weight_manifest": "manifest.json",
+  "license": "Apache-2.0",
+  "license_source": "https://raw.githubusercontent.com/black-forest-labs/flux/main/model_licenses/LICENSE-FLUX1-schnell",
+  "license_sha256": "15ec800f93139ec3f09a72d6afafca51496ad40cb3adf5112fd80c28e69d5140",
+  "schedule_source": "https://github.com/black-forest-labs/flux/blob/main/demo_st.py",
+  "schedule_source_sha256": "7125d7ab2fec9282058b0db21e53f1800e8c30872547a6528ba76f218e84af73",
+  "schedule_rule": "shift=(not is_schnell), therefore no dynamic shifting",
+  "reference_run": "flux-dev-g338/run02",
+  "comparison": "Same prompts, seeds, resolutions; model-specific steps/guidance/schedule. Historical dev run, not regenerated.",
+  "configuration_fetch_note": "Official HF scheduler resolve returned401. Public official BFL demo read and archived; no gate bypass."
+}

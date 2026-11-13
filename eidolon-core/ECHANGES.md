@@ -3082,3 +3082,13 @@ Base ba4da1618afa9ce89f5f95464659e7e5afde734e. Reprise explicite toytoy. Poids C
 ## C-MSG-G338 — Lot FLUX.1 dev terminé, 13/11/2026, Codex/GPT
 
 12 images locales sur deux V100, 4/8 natives proposées, 2 réserves, 2 rejets ; répétition exacte. Correction du seuil de tuilage VAE après OOM initial conservé. Attention découpée vérifiée CPU/V100 ; suite média 249 réussis,6 ignorés. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-DEV-G338.md), preuves et revue visuelle versionnées. Aucun profil promu ni entraînement. GPU libérés, services actifs, machine allumée.
+
+
+## C-MSG-G339 — Comparaison FLUX dev/Schnell prise, 13/11/2026, Codex/GPT
+
+Base 6f9e0cd82554b78eea8b8491849b0344230212fc, branche media dediee. Toytoy autorise la poursuite comparative ; rendu visuel et conformite seront notes separement. Reprendre Schnell complet sur les memes quatre prompts, seeds et resolutions G338, recette Schnell 4 etapes/guidance0. Poids existants verifies, inference locale isolee sur deux V100300W. Nouveaux runner/preuves/rapport G339, catalogue et progres ; aucun pilote/runtime/production modifie. G338 conserve intact comme reference.
+
+
+## C-MSG-G339 — Comparatif FLUX terminé, 13/11/2026, Codex/GPT
+
+Schnell :12 images,4/8 natives proposées,2 réserves,2 rejets ; répétition exacte. Même grille que dev, recettes propres :6,451 s contre70,577 s GPU/décodage, hors encodage et chargement. Rendu et conformité distingués ; aucun classement universel. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-COMPARISON-G339.md). Premier lancement sans PYTHONPATH conservé, run02 réussi. Aucun profil promu, GPU libres, services actifs et machine allumée.
