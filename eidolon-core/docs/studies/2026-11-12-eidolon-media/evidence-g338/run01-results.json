@@ -1,0 +1,33 @@
+[
+  {
+    "index": 0,
+    "case": "hand",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "width": 512,
+    "height": 512,
+    "seed": 20261113,
+    "steps": 20,
+    "condition": "smoke",
+    "guidance": 3.5,
+    "seconds": 7.128108617998805,
+    "png_sha256": "350471a1f13f5a6672807162bb0a1ad1ae6ab59fd1e2054d5b3695a768dc9bb1",
+    "pixel_sha256": "d526cd8e2c699dc805b7afcc0385a158a12c99cbf2e3d02a484446577171a8db",
+    "visual": "NOT_REVIEWED",
+    "nvlink_before": {
+      "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 0 KiB\n\t Link 0: Data Rx: 0 KiB\n\t Link 1: Data Tx: 0 KiB\n\t Link 1: Data Rx: 0 KiB\n\t Link 2: Data Tx: 0 KiB\n\t Link 2: Data Rx: 0 KiB\n\t Link 3: Data Tx: 0 KiB\n\t Link 3: Data Rx: 0 KiB\n\t Link 4: Data Tx: 0 KiB\n\t Link 4: Data Rx: 0 KiB\n\t Link 5: Data Tx: 0 KiB\n\t Link 5: Data Rx: 0 KiB\n",
+      "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 0 KiB\n\t Link 0: Data Rx: 0 KiB\n\t Link 1: Data Tx: 0 KiB\n\t Link 1: Data Rx: 0 KiB\n\t Link 2: Data Tx: 0 KiB\n\t Link 2: Data Rx: 0 KiB\n\t Link 3: Data Tx: 0 KiB\n\t Link 3: Data Rx: 0 KiB\n\t Link 4: Data Tx: 0 KiB\n\t Link 4: Data Rx: 0 KiB\n\t Link 5: Data Tx: 0 KiB\n\t Link 5: Data Rx: 0 KiB\n"
+    },
+    "nvlink_after": {
+      "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 197220 KiB\n\t Link 0: Data Rx: 427 KiB\n\t Link 1: Data Tx: 197220 KiB\n\t Link 1: Data Rx: 427 KiB\n\t Link 2: Data Tx: 196820 KiB\n\t Link 2: Data Rx: 425 KiB\n\t Link 3: Data Tx: 196820 KiB\n\t Link 3: Data Rx: 425 KiB\n\t Link 4: Data Tx: 197220 KiB\n\t Link 4: Data Rx: 427 KiB\n\t Link 5: Data Tx: 197220 KiB\n\t Link 5: Data Rx: 427 KiB\n",
+      "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 425 KiB\n\t Link 0: Data Rx: 196820 KiB\n\t Link 1: Data Tx: 425 KiB\n\t Link 1: Data Rx: 196820 KiB\n\t Link 2: Data Tx: 427 KiB\n\t Link 2: Data Rx: 197220 KiB\n\t Link 3: Data Tx: 427 KiB\n\t Link 3: Data Rx: 197220 KiB\n\t Link 4: Data Tx: 427 KiB\n\t Link 4: Data Rx: 197220 KiB\n\t Link 5: Data Tx: 427 KiB\n\t Link 5: Data Rx: 197220 KiB\n"
+    },
+    "torch_peak_allocated_bytes": [
+      12798990336,
+      12298881536
+    ],
+    "torch_peak_reserved_bytes": [
+      13610516480,
+      12452888576
+    ]
+  }
+]

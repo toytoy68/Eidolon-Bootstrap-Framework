@@ -81,3 +81,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G337 - AnimateDiff, 13/11/2026
 
 [Diagnostic G337](ANIMATEDIFF-G337.md) : G336 retrouve non revu ; 6 nouveaux clips apres correction beta schedule, toujours rejetes. 2 controles SD1.5 reconnaissables : defaut localise a la chaine AnimateDiff, cause non resolue. Aucun modele promu. GPU liberes, machine allumee. FLUX.1 dev reste I10 non teste.
+
+
+## Avancement G338 — FLUX.1 dev, 13/11/2026
+
+[Rapport G338](FLUX-DEV-G338.md) : générateur FP16 réellement réparti sur deux V10016, encodeurs CPU ; 12 images, répétition exacte. Grille native : 4/8 proposées, 2 réserves, 2 rejets pour cadrage. 70,58 s médianes GPU/décodage 1024². Correctif VAE par tuiles après OOM initial conservé. GPU/HBM max 47/51 °C ; aucune promotion. Formats écran générés mais cadrage non conforme. GPU libérés, machine allumée.

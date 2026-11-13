@@ -3072,3 +3072,13 @@ Reprise explicite toytoy; base edde825. G336 run02 retrouve termine mais non rev
 ## C-MSG-G337 - Lot diagnostic termine, 13/11/2026, Codex/GPT
 
 6 clips G337 +2 controles SD15 locaux ; repetition exacte, GPU/HBM41/43C. AnimateDiff non valide (textures), SD15 seul reconnaissable. Cause exacte ouverte. [Rapport](docs/studies/2026-11-12-eidolon-media/ANIMATEDIFF-G337.md). Poids/runtime/services preserves, GPU liberes, machine allumee. Aucune promotion/formation.
+
+
+## C-MSG-G338 - FLUX.1 dev, lot pris le 13/11/2026, Codex/GPT
+
+Base ba4da1618afa9ce89f5f95464659e7e5afde734e. Reprise explicite toytoy. Poids Comfy-Org de SHA identique BFL, licence auteur archivee, usage recherche local non commercial. Generateur FP16 reparti sur les deux V100, encodeurs CPU, VAE GPU FP32. Ajouter attention par blocs de requetes pour limiter les activations, avec comparaison numerique au processeur amont avant execution. Tests progressifs, garde thermique et non-fini, aucune promotion/formation/modification de production. Fichiers flux_dev_probe.py, flux_chunked_attention.py, tests, rapport/preuves et catalogue G338.
+
+
+## C-MSG-G338 — Lot FLUX.1 dev terminé, 13/11/2026, Codex/GPT
+
+12 images locales sur deux V100, 4/8 natives proposées, 2 réserves, 2 rejets ; répétition exacte. Correction du seuil de tuilage VAE après OOM initial conservé. Attention découpée vérifiée CPU/V100 ; suite média 249 réussis,6 ignorés. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-DEV-G338.md), preuves et revue visuelle versionnées. Aucun profil promu ni entraînement. GPU libérés, services actifs, machine allumée.

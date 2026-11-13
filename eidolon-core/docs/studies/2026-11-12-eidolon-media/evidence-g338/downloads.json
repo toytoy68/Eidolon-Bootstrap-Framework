@@ -1,0 +1,10 @@
+[
+  {
+    "repo": "Comfy-Org/Flux-1-Dev",
+    "revision": "10cf201a3d49f7ff4de84d6a97d6a32cdfa8cb86",
+    "path": "flux1-dev.safetensors",
+    "name": "flux1-dev.safetensors",
+    "bytes": 23802932552,
+    "sha256": "4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7"
+  }
+]

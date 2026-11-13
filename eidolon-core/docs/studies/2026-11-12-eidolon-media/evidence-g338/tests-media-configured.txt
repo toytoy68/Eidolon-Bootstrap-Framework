@@ -1,0 +1,10 @@
+..................s.........................................../srv/eidolon/workspaces/media-20261112/source/eidolon-core/tests/test_media_display.py:40: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  self.assertEqual(set(image.getdata()),{(0,0,0),(255,255,255)})
+...................s............ssss..................................................comparison cpu torch.float32 max_abs 0.0
+/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=79702) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  self.pid = os.fork()
+...........................................................................................................
+----------------------------------------------------------------------
+Ran 255 tests in 14.993s
+
+OK (skipped=6)

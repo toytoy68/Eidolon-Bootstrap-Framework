@@ -66,3 +66,8 @@ moteur est un paramètre de sécurité et doit correspondre à l'instance couran
 [Plan et résultats réels](PROMPT-TESTS-G331.md) :12 générations SDXL, prompts
 original/détaillé comparés à seeds et réglages constants.12 succès techniques,
 12 rejets visuels,aucune nouvelle paire ni entraînement. [Preuves](prompt-validation-g331.json).
+
+
+## Avancement G338 — FLUX.1 dev, 13/11/2026
+
+[Rapport G338](FLUX-DEV-G338.md) : générateur FP16 réellement réparti sur deux V10016, encodeurs CPU ; 12 images, répétition exacte. Grille native : 4/8 proposées, 2 réserves, 2 rejets pour cadrage. 70,58 s médianes GPU/décodage 1024². Correctif VAE par tuiles après OOM initial conservé. GPU/HBM max 47/51 °C ; aucune promotion. Formats écran générés mais cadrage non conforme. GPU libérés, machine allumée.
