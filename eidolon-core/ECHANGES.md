@@ -2984,3 +2984,30 @@ mesuré.4PNG horsligne,1acceptation/3rejets(3scènesdistinctes),seedreproduite.
 Pics14314/12992Mio,GPU36/34°C,HBM36/36°C ; limites300/200W inchangées.
 243tests :239pass/4skip ici,238pass/5skipX399. Aucunentraînement,APIprofilFLUX
 nonintégré,autrescandidatsàtester. Servicesactifs,G331archivé,C322préservé,PR#7.
+
+
+## C-MSG-G333 — Reprise des candidats SDXL, lot pris le 13/11/2026, Codex/GPT
+
+Base 22ccdd5977b86e94837811a4a9f26c2d3e0e5085, branche média dédiée.
+Demande directe toytoy : reprendre la liste. RealVisXL V5.0 et Juggernaut XL v9
+comparés à SDXL base dans le même runtime, prompts/seeds/recette communs, puis
+recette auteur si nécessaire. Poids officiels vérifiés, exécution hors ligne,
+rapport visuel avec tous les rejets. Aucun entraînement ni promotion automatique.
+Décision utilisateur du jour : 300 W par V100 pour image/vidéo, 200 W pour Eva
+et discussion ; refroidissement double 300 W déclaré validé par toytoy, sondes
+conservées. Ce lot n'implémente pas encore la bascule automatique de puissance.
+
+
+## C-MSG-G333 — Lot checkpoints livré,13/11/2026,Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/CHECKPOINTS-G333.md),
+[preuves](docs/studies/2026-11-12-eidolon-media/checkpoint-validation-g333.json).
+RealVisXL V5.0/Juggernaut XL v9 comparés à SDXL :27générations1024²,
+3répétitions pixel-identiques.30étapes17,54–17,99s ; RealVis50:28,86–28,88s.
+GPU0≤11548Mio,48°C,HBM56°C,limite300W,GPU1idle. Hors répétitions :5propositions
+GPT,3doutes,16rejets ; contrôle toytoy en attente, aucun entraînement/promotion.
+246tests :242pass/4skip ici,241pass/5skip X399. Services critiques/VM actifs,
+API/Comfy temporaires inactifs depuis boot ; nouvelles recettes hors API.
+G332 archivé intact,C322préservé,PR#7brouillon.300W média/200W Eva documentés,
+bascule automatique non implémentée. Modèles14,75Gio libres : gros prochains
+poids sur stockage dédié volume données226,86Gio libres. Machine laissée allumée.

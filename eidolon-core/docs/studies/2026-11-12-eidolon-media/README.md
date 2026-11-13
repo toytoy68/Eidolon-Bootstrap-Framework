@@ -14,6 +14,7 @@ HUD/voix et ordonnancement global encore expérimentaux. Aucune fusion dans main
 - [Feuille de route](ROADMAP.md).
 - [File des candidats image/vidéo, une et deux V100](CANDIDATE-QUEUE-G332.md), G332.
 - [Essai FLUX réparti sur deux cartes](MULTIGPU-G332.md), preuves et limites séparées.
+- [Comparaison SDXL, RealVisXL et Juggernaut](CHECKPOINTS-G333.md),27générations réelles et revue complète,13/11.
 - [Formats 16:9 et 4:3 avec bandes latérales](DISPLAY.md), complément G326.
 - [SDXL : essai matériel et comparaison](SDXL.md), complément G327.
 - [Protocole de qualification visuelle](QUALITY-PROTOCOL.md), campagne G328.
@@ -32,6 +33,11 @@ agrégées. Le service ne contacte aucun fournisseur d'inférence, ne téléchar
 aucun modèle et ne modifie pas Memory Engine.
 
 ## Résultat immédiatement utilisable
+
+**État au13/11 après redémarrage (G333)** : les unités transitoires ci-dessous
+sont inactives. Les recettes G325–G332 restent des résultats historiques ;
+G333 teste les nouveaux checkpoints via un runner Diffusers isolé, sans les
+déclarer intégrés à cette API. Voir OPERATIONS pour une remise en route contrôlée.
 
 API authentifiée : `http://127.0.0.1:8190`. ComfyUI dédié : `127.0.0.1:8189`.
 Accès depuis la machine uniquement. Aucun port public, tunnel ou exposition LAN

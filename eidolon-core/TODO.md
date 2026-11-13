@@ -1233,3 +1233,14 @@ STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
   [Contrat et limites](docs/PROFILE-REGISTRY-G184.md).
 - [ ] Import dans le stockage actif, sessions/droits et isolation mémoire :
   toujours ouverts. Aucun compte actif ni gabarit réel créé par G184.
+
+
+## Eidolon-Media — suivi G333 (13/11/2026)
+
+- [x] Comparer RealVisXL V5.0 et Juggernaut XL v9 à SDXL sur V100 : 27 sorties,
+  revue de chacune et mesures. Voir [CHECKPOINTS-G333](docs/studies/2026-11-12-eidolon-media/CHECKPOINTS-G333.md).
+- [ ] Faire confirmer les propositions et doutes par toytoy ; aucun entraînement automatique.
+- [ ] Étendre aux prompts de confirmation, autres seeds et formats écran avant promotion.
+- [ ] Poursuivre les candidats image/vidéo de la file ; préparer le stockage sur le volume données avant les gros poids.
+- [ ] Intégrer les nouveaux profils à l’API après qualification ; restaurer les unités de test avec leur PID réel.
+- [ ] Implémenter avec le bail GPU commun la politique 300 W média / 200 W Eva-discussion.

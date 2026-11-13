@@ -42,3 +42,18 @@ répartition véritable du générateur FLUX.1 Schnell, puis les alternatives SD
 Chaque candidat garde son état non testé tant qu'aucune preuve matérielle
 spécifique n'est produite. Les modèles dont les poids seuls dépassent 32Go
 nécessitent quantification/offload et ne sont pas comptés comme résidents FP16.
+
+## Avancement G333 —13/11/2026
+
+RealVisXL V5.0 et Juggernaut XL v9 testés sur V10016Go, témoin SDXL régénéré,
+27images avec paramètres comparables. [Résultats](CHECKPOINTS-G333.md) :
+5propositions visuelles,3doutes,16rejets hors répétitions. Aucun profil promu.
+Confirmation hors réglage/multi-seeds et formats écran restent nécessaires.
+Poursuivre ensuite les autres architectures et la vidéo selon la file ; ne pas
+assimiler le succès FP16 SDXL à une validation des kernels des autres modèles.
+
+Politique toytoy :300W par V100 pour image/vidéo,200W pour Eva/discussion.
+La bascule automatique nécessite le bail GPU commun ; aucun réglage modifié G333.
+Modèles :14,75Gio libres ; données :226,86Gio. Préparer un emplacement dédié sur
+le volume données avant de télécharger d'autres gros poids, sans suppression
+automatique des modèles ni changement de pilote/environnement existant.
