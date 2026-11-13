@@ -64,7 +64,7 @@ Les colonnes matérielles décrivent un **chemin d'essai**, pas une compatibilit
 | I23 — FLUX.3 Image Klein Base | Idem, davantage d'étapes | Idem I22 | Idem I22 | Non testé |
 | I24 — Stable Diffusion 3.5 Medium 2,5B | Générateur modeste mais encodeurs lourds | Encodeurs et/ou blocs séparés | Stability Community License, conditions/revenu à vérifier | Non testé, stabilité FP16 à vérifier |
 | I25 — Stable Diffusion 3.5 Large / Large Turbo 8B | Générateur proche de 16 Go, offload nécessaire | Blocs répartis, encodeurs CPU | Idem I24, variante exacte à figer | Candidats deux GPU, non testés |
-| I26 — Sana 0,6B / 1,6B FP16 | Versions FP16 explicitement publiées | Contrôle débit ou encodeur séparé | Licence des poids + encodeur à auditer | Non testé ; éviter de prendre la variante BF16 à sa place |
+| I26 — Sana 0,6B / 1,6B FP16 | **600M testé G334** : générateur FP16, encodeur CPU FP32, DC-AE GPU FP32 ; pic 7 878 Mio | Encodeur séparé / débit non testés ; GPU1 au repos G334 | Sana/DC-AE Apache-2.0 ; Gemma2 soumis à ses propres conditions et restrictions | **600M seulement** : 12 générations, natifs 2/8 proposés, 2 doutes, 4 rejets ; [rapport](SANA-G334.md). **1,6B reste non testé** |
 | I27 — Sana Sprint 0,6B / 1,6B | Recette distillée distincte | Selon budget encodeur | Licence et FP16 à auditer séparément | Non testé ; annonce mémoire ≠ mesure V100 |
 
 Les variantes d'une même ligne restent des essais séparés et auront leur propre

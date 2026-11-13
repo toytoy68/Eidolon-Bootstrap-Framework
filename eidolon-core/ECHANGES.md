@@ -3011,3 +3011,27 @@ API/Comfy temporaires inactifs depuis boot ; nouvelles recettes hors API.
 G332 archivé intact,C322préservé,PR#7brouillon.300W média/200W Eva documentés,
 bascule automatique non implémentée. Modèles14,75Gio libres : gros prochains
 poids sur stockage dédié volume données226,86Gio libres. Machine laissée allumée.
+
+
+## C-MSG-G334 — Sana 600M, lot pris le 13/11/2026, Codex/GPT
+
+Base 9a82aca130dfa3b29d160f9be75bcf5693597b64, branche média dédiée.
+Reprise demandée par toytoy. Candidat I26 : Sana 600M 1024px FP16, encodeur
+Gemma2 CPU FP32 et DC-AE GPU FP32 ; environnement Diffusers existant.
+Téléchargements officiels figés sur volume données, licences par composant,
+puis essai 512, grille 1024² à deux seeds et formats écran, répétition exacte.
+Arrêt sur non-fini, conflit GPU ou limite thermique ; aucun entraînement,
+promotion ou changement de service critique. Preuves et revue de tous les résultats.
+
+## C-MSG-G334 — Lot Sana terminé, 13/11/2026, Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SANA-G334.md) et
+[preuves](docs/studies/2026-11-12-eidolon-media/sana-validation-g334.json).
+12 générations réelles après 3 erreurs de préparation conservées. 8 natifs :
+2 propositions GPT, 2 doutes, 4 rejets ; contrôle toytoy en attente, aucun entraînement.
+GPU/décodage 2,392–2,403 s + encodage CPU 22,325–22,391 s par nouveau prompt.
+VRAM 7 878 Mio, GPU/HBM 40/45 °C, GPU1 au repos. Répétition pixel-identique ;
+formats écran exacts mais contenu rejeté. 249 tests : 244 réussis/5 ignorés ici
+et X399. Services/VM actifs, GPU libérés ; API/Comfy temporaires restent inactifs.
+Sana non intégré à l'API, 1,6B non testé. G333 archivé, C322 intact, PR #7 brouillon.
+Machine allumée ; aucun changement de pilote ou de runtime.

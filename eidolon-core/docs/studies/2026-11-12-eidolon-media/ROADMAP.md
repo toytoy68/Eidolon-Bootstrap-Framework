@@ -57,3 +57,13 @@ La bascule automatique nécessite le bail GPU commun ; aucun réglage modifié G
 Modèles :14,75Gio libres ; données :226,86Gio. Préparer un emplacement dédié sur
 le volume données avant de télécharger d'autres gros poids, sans suppression
 automatique des modèles ni changement de pilote/environnement existant.
+
+## Avancement G334 — Sana 600M, 13/11/2026
+
+[Sana 600M](SANA-G334.md) fonctionne sur une V100 avec encodage CPU FP32 :
+12 générations, 2/8 images natives proposées, 2 douteuses et 4 rejetées.
+Formats écran réussis techniquement, contenu non conforme. Gemma2 soumis à ses
+restrictions propres ; ne pas présenter ce pipeline comme libre de toute restriction.
+Sana 1,6B, Sprint et encodage GPU1 restent non testés. Tester le placement de
+l'encodeur sur GPU1 ne constitue qu'une piste pour les 22 s CPU, sans gain mesuré.
+Poursuivre la file et la vidéo ; aucun profil ou entraînement promu.

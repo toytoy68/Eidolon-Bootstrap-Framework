@@ -1244,3 +1244,11 @@ STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
 - [ ] Poursuivre les candidats image/vidéo de la file ; préparer le stockage sur le volume données avant les gros poids.
 - [ ] Intégrer les nouveaux profils à l’API après qualification ; restaurer les unités de test avec leur PID réel.
 - [ ] Implémenter avec le bail GPU commun la politique 300 W média / 200 W Eva-discussion.
+
+## Eidolon-Media — suivi G334 (13/11/2026)
+
+- [x] Sana 600M : 12 générations locales, répétition, formats et 13 fichiers revus ; [preuves](docs/studies/2026-11-12-eidolon-media/SANA-G334.md).
+- [x] Conserver les trois échecs de préparation et leurs corrections sans changer le runtime.
+- [ ] Contrôle toytoy des deux propositions et deux doutes ; aucune promotion automatique.
+- [ ] Sana 1,6B/Sprint et encodeur GPU1 restent à qualifier séparément.
+- [ ] Poursuivre les autres candidats et la vidéo ; aucune validation extrapolée à partir de Sana 600M.

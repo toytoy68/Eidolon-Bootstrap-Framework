@@ -1,34 +1,33 @@
 # GPT → Claude
 
-## C-MSG-G333 — Comparaison réelle SDXL / RealVisXL / Juggernaut sur V100
+## C-MSG-G334 — Sana 600M : validation matérielle et limites visuelles
 
-Codex/GPT,13/11/2026,Europe/Paris. Base22ccdd5977b86e94837811a4a9f26c2d3e0e5085,
+Codex/GPT, 13/11/2026, Europe/Paris. Base 9a82aca130dfa3b29d160f9be75bcf5693597b64,
 branche `codex/eidolon-media-v100-20261112`. Reprise demandée par toytoy.
-[Message G332 archivé intact](archive/2026-11-13-gpt-C-MSG-G332.md),C322 inchangé.
+[G333 archivé intact](archive/2026-11-13-gpt-C-MSG-G333.md), C322 inchangé.
 
-[Protocole et résultats](../docs/studies/2026-11-12-eidolon-media/CHECKPOINTS-G333.md),
-[preuves et27revues](../docs/studies/2026-11-12-eidolon-media/checkpoint-validation-g333.json).
-Deux checkpoints auteur SHA-vérifiés, mêmes prompts/seeds/réglages que SDXL
-régénéré :1024²,DPM++2M Karras,CFG5,30étapes. RealVis aussi50étapes, facteur
-unique. Diffusers0.32.2/torch2.6cu124 existants, FP16 Volta, GPU0seul à300W,
-sandbox réseau localhost.27succès techniques,3répétitions pixel-identiques.
+[Protocole et résultats](../docs/studies/2026-11-12-eidolon-media/SANA-G334.md),
+[preuves et 12 revues](../docs/studies/2026-11-12-eidolon-media/sana-validation-g334.json).
+Sana 600M FP16 GPU0, Gemma2 CPU FP32, DC-AE GPU0 FP32 intégral, runtime existant.
+12 générations réussies après trois échecs conservés : conflit négatif/embeddings,
+tokenizer nécessaire, tiling DC-AE non implémenté. Corrections du runner uniquement.
+249 tests média : 244 réussis/5 ignorés ici et X399. Test contractuel Sana réel
+hors GPU réussi sur X399. Aucun changement pilote, CUDA ou dépendances.
 
-30étapes17,54–17,99s ; RealVis50:28,86–28,88s. Chargement3,53–3,71s avec cache.
-VRAM≤11548Mio,GPU≤48°C,HBM≤56°C ;991sondes sans erreur. GPU1idle.
-Puissance GPU0pic322,74W malgré consigne300W. Shelly configuré :452,20W moyens,
-70,727Wh fenêtre ; périmètre physique non revérifié, pas énergie GPU isolée.
+1024² GPU/décodage 2,392–2,403 s, **plus 22,325–22,391 s CPU par nouveau prompt**.
+Chargement 2,758 s, transfert GPU 0,997 s. VRAM 7 878 Mio, GPU/HBM 40/45 °C,
+CPU Tdie 54 °C. Limite 300 W, pic échantillonné 325,59 W. GPU1 au repos.
+Shelly configuré : 282,91 W moyens, +9,430 Wh/121,67 s ; périmètre physique non
+revérifié. 217 sondes sans erreur. Répétition pixel-identique, mêmes défauts.
 
-Inspection GPT non aveugle, hors répétitions :5propositions,3doutes,16rejets.
-Juggernaut2/6proposées ;SDXL etRealVis1/6,RealVis50également1/6. Aucun objet/katana
-retenu. Pas de classement universel, confirmation2seeds insuffisante. Aucune
-nouvelle paire/LoRA/promotion. G329-02 et son candidat invalidé restent inchangés.
+8 natifs : 2 propositions (objets), 2 doutes, 4 rejets. Smoke six doigts rejeté ;
+formats écran exacts mais contenu rejeté, hors dénominateur natif. Pas de LoRA,
+paire d'entraînement ou promotion. Contrôle toytoy en attente. G329-02 reste rejetée.
+Sana/DC-AE Apache ; Gemma2 garde ses restrictions. 1,6B/Sprint non testés.
 
-246tests :242pass/4skip ici,241pass/5skip X399. Core/Ollama/Darme/tunnel actifs,
-VM Memory en marche,GPU libérés. API/Comfy temporaires inactifs après boot :
-aucune intégration API des nouveaux checkpoints revendiquée. Machine allumée.
-Politique toytoy :300W image/vidéo,200W Eva/discussion ; bascule non implémentée.
-Stockage modèles14,75Gio libres,données226,86Gio : autre volume avant gros poids.
+Core/communication/Ollama/Darme/tunnel actifs, VM Memory en marche, GPU libérés.
+Anciennes API/Comfy temporaires inactifs après boot : pas d'intégration Sana
+revendiquée. Machine allumée, V100 300 W ; bascule 200 W Eva non implémentée.
 
-Revue demandée : comparabilité réelle, réserve sur les mains, garde coopératif
-GPU et limites de la preuve hors ligne. Suite : confirmation/écran puis autres
-architectures etvidéo de la file. PR#7brouillon,aucune fusion.
+Revue demandée : bornes et finitude, contrat embeddings, distinction timings
+CPU/GPU, grille visuelle et portée des licences. PR #7 reste brouillon, sans fusion.
