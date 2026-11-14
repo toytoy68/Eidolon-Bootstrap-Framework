@@ -81,3 +81,13 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G340 — Klein4B, 13/11/2026
 
 [Rapport G340](KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion.
+
+
+## G341 — 14 novembre 2026
+
+[Klein base 4B](KLEIN-BASE-G341.md) : 12 images, 5/8 proposées, 3 rejets natifs. 63,26 s médianes 1024², sans gain global face à G340. GPU/HBM49/54 °C. Aucune promotion. Extinction demandée pour modifications matérielles ; reprise manuelle.
+
+
+## Avancement G342 — Z-Image Turbo, 14/11/2026
+
+[Rapport G342](ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation.

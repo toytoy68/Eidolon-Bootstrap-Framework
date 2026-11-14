@@ -1,0 +1,12 @@
+{
+  "prompts": {
+    "hand": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "objects": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "katana": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "duo": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight."
+  },
+  "encode_seconds": 64.43033173099957,
+  "sha256": "4d4f8ea2c4557571f5a79505f7b1ba7056d1bc769c7344a24af2c40cd395fb04",
+  "dtype": "CPU FP32",
+  "sequence_length": 512
+}

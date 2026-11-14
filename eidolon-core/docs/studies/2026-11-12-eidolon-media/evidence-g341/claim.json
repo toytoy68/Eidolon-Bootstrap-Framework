@@ -1,0 +1,11 @@
+{
+  "lot": "G341",
+  "purpose": "Resume I12 Klein base 4B, matched G340 comparison",
+  "base": "b6ffa9a342d9ab536de89424b10349f1f4ede997",
+  "scope": "isolated benchmark only",
+  "state": "completed_reviewed",
+  "production_changes": false,
+  "launched": "2026-11-14T08:34:36.400032+01:00",
+  "native_proposed": 5,
+  "native_rejected": 3
+}

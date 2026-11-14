@@ -1,0 +1,230 @@
+[
+  {
+    "index": 0,
+    "case": "hand",
+    "width": 512,
+    "height": 512,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "smoke",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 4.0,
+    "seconds": 17.99038925700006,
+    "png_sha256": "c59cf9c4f79ce01bbd479e26efcc2d6536e0f98695f5dfcc33e4097e29f86dda",
+    "pixel_sha256": "0e4724e4bb97e0550d2af85f92816b375da2fb9c0db036f876b07b4bf5c1dbe8",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8906755072,
+      0
+    ]
+  },
+  {
+    "index": 1,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 4.0,
+    "seconds": 63.048369369000284,
+    "png_sha256": "c168da2e96631693083c2f681a3a226b0dabfbccb17565da2f5a9e1cea6e6165",
+    "pixel_sha256": "8d640657dd402c471c25791d5b3e80e519c579fb8bab2139dc01a014bd6a0d59",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 2,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 4.0,
+    "seconds": 63.19756603899805,
+    "png_sha256": "f3f83e1018bb0a28c5859b1018a5345d188e14242a703499e23fabe582adf25b",
+    "pixel_sha256": "836963854b93a73d4e0a1e949aa234468f3007a31aad55d825999a4689c95e62",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 3,
+    "case": "objects",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "guidance": 4.0,
+    "seconds": 63.16218194600151,
+    "png_sha256": "52f5e957635807431c17b6118f4e6d9099db9eb6508756dc46e180bae24e2cd9",
+    "pixel_sha256": "7c15b1485be176ba458d6b057abfb638afbeeab26949a16ef4964e80c129c71b",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 4,
+    "case": "objects",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "guidance": 4.0,
+    "seconds": 63.23917471099776,
+    "png_sha256": "b10f7c895bcb65edc10cdb08d25cee0f8882ac82e88c7c4c8f163558f421108b",
+    "pixel_sha256": "ece63fa3601e7322a615285cd00a531f40e12bee6daf157212fac6f78bac2f0f",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 5,
+    "case": "katana",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "guidance": 4.0,
+    "seconds": 63.28070065399879,
+    "png_sha256": "c28c871b6d28ec02155007823628f271423306ca2de58eacd1f0686a37fb760a",
+    "pixel_sha256": "a4233bf654e23f638616b41dc4c6768578135fd66a62f57f1625006871dae78f",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 6,
+    "case": "katana",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "guidance": 4.0,
+    "seconds": 63.32754540799942,
+    "png_sha256": "753dfa314693937c73fe05872f5cc229e389369d6c37e34b23436e5822114264",
+    "pixel_sha256": "def8b6f6c45d29fc4eb7ddf882ec41532f6481b9098ace3100e3fdac1fe3a885",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 7,
+    "case": "duo",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 4.0,
+    "seconds": 63.43712254899947,
+    "png_sha256": "e43fbaa3a0282c4465270d5e7700caaa1b345947a8107e05939b51dbdfc895d2",
+    "pixel_sha256": "0474c8887dd6023400d42e10ab6ed71881a4a887bcb1718e6b1d872661e39feb",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 8,
+    "case": "duo",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 50,
+    "condition": "quality",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 4.0,
+    "seconds": 63.462331131999235,
+    "png_sha256": "b66bd5d179c2f2eb883bb96d9d6dbcac3341fc8fde22e84832edc5d7b74f9900",
+    "pixel_sha256": "e88ceb83aaddd0d1a0cd3cd0c945c91d35748428cc36655d4e69a4496bc2982e",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 9,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "repeat",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 4.0,
+    "seconds": 63.48486305900224,
+    "png_sha256": "c168da2e96631693083c2f681a3a226b0dabfbccb17565da2f5a9e1cea6e6165",
+    "pixel_sha256": "8d640657dd402c471c25791d5b3e80e519c579fb8bab2139dc01a014bd6a0d59",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8921172992,
+      0
+    ]
+  },
+  {
+    "index": 10,
+    "case": "duo",
+    "width": 1024,
+    "height": 576,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "screen16x9",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 4.0,
+    "seconds": 34.72648451599889,
+    "png_sha256": "8de8f00a6a8b3fd3d44bd34b5756c3658fb6662c2790243212ea17fac8399429",
+    "pixel_sha256": "09ad185dc00ce2c9add387008e91647df201d827af45c15e11a6dacf6fed9674",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8911801344,
+      0
+    ]
+  },
+  {
+    "index": 11,
+    "case": "duo",
+    "width": 768,
+    "height": 576,
+    "seed": 20261113,
+    "steps": 50,
+    "condition": "screen4x3",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 4.0,
+    "seconds": 27.35444240599827,
+    "png_sha256": "5749179ed317d1620059a51c23a51b3a4f0cc5a28b5068e5d28b1cf27ff350ee",
+    "pixel_sha256": "2af9b274174ce478d1892d498234e2bf73854f5849cb254f6f09bb3e96d3cc4d",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      8907295744,
+      0
+    ]
+  }
+]

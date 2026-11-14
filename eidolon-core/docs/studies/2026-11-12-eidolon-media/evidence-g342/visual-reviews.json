@@ -1,0 +1,146 @@
+{
+  "0": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Cinq doigts distincts, paume et poignet visibles. Structure plausible et lumière douce. Contrôle 512² exclu du score natif.",
+    "comparison": "Z-Image, Klein et dev réussissent le contrôle des cinq doigts. Z-Image restitue une paume détaillée sans surexposition marquée sur cette sortie.",
+    "rendering": "Peau et plis convaincants à cette résolution."
+  },
+  "1": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Cinq doigts séparés, paume de face et poignet entier. Volumes et articulations plausibles ; légère raideur des doigts sans défaut éliminatoire évident.",
+    "comparison": "Z-Image maîtrise mieux l’exposition que Klein sur cette paire. Il évite la réserve marquée de dev sur la base du pouce ; cette observation ne suffit pas à valider toutes les mains.",
+    "rendering": "Éclairage doux, plis et dégradés de peau lisibles."
+  },
+  "2": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Cinq doigts distincts, poignet et paume correctement cadrés. Petit doigt fortement écarté ; forme et plis globalement plausibles sur cet aperçu.",
+    "comparison": "Klein, dev et Z-Image proposent ici une main plausible. La paume de Z-Image est assez douce, avec une exposition régulière.",
+    "rendering": "Peau et lumière naturelles ; doigts légèrement rigides."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "comment": "Exactement une tasse rouge à gauche et un bol bleu à droite, tous deux entiers. Anse, surfaces et ombres cohérentes.",
+    "comparison": "Les trois modèles respectent cette scène simple. Z-Image offre une céramique et des reflets convaincants, sans avantage décisif démontré.",
+    "rendering": "Photographie de produit sobre, matières bien lisibles."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "comment": "Deux objets entiers, tasse rouge à gauche et bol bleu à droite. Anse, forme du bol et reflets plausibles.",
+    "comparison": "Les trois modèles réussissent cette consigne. Les deux seeds Z-Image donnent des compositions très proches ; cela ne démontre pas une grande diversité.",
+    "rendering": "Céramique et ombres crédibles, fond sobre."
+  },
+  "5": {
+    "verdict": "À revoir",
+    "scores": [
+      3,
+      2,
+      4,
+      4
+    ],
+    "comment": "Lame avec poignée et pièce noire distincte, toutes deux entières. Mais la pièce noire porte une garde et une extension ressemblant à une poignée : fourreau ambigu, construction douteuse.",
+    "comparison": "Z-Image rend mieux les éléments que Klein, mais ne résout pas complètement leur construction. Comme dev sur cette seed, il reste sous réserve structurelle.",
+    "rendering": "Métal, laque et tissu convaincants ; belle finition insuffisante pour proposer l’image."
+  },
+  "6": {
+    "verdict": "À revoir",
+    "scores": [
+      3,
+      2,
+      4,
+      4
+    ],
+    "comment": "Katana entier et pièce noire séparée, mais le fourreau reproduit une garde et une forme de poignée. Même ambiguïté structurelle que sur la première seed.",
+    "comparison": "Dev reste le plus crédible pour le katana de cette paire. Z-Image évite la lame détachée de Klein, mais la construction de la pièce noire reste douteuse.",
+    "rendering": "Métal et tissu détaillés, résultat trop ambigu pour être proposé."
+  },
+  "7": {
+    "verdict": "Rejet",
+    "scores": [
+      2,
+      3,
+      4,
+      4
+    ],
+    "comment": "Duo principal entier, mains et pieds visibles, tenues et positions correctes. Plusieurs visiteurs supplémentaires apparaissent derrière : la contrainte de deux adultes exactement n’est pas respectée.",
+    "comparison": "Z-Image réussit le cadrage que dev manquait et produit une armure convaincante. Klein garde deux personnages sans visiteurs visibles ; son respect du nombre est meilleur ici.",
+    "rendering": "Portrait photographique soigné ; rejet de conformité, pas de finition."
+  },
+  "8": {
+    "verdict": "Rejet",
+    "scores": [
+      2,
+      3,
+      4,
+      4
+    ],
+    "comment": "Deux sujets principaux entiers et correctement vêtus, mains et pieds visibles. Des visiteurs supplémentaires sont présents à droite du château : le comptage strict de deux adultes échoue.",
+    "comparison": "Z-Image réussit le cadrage et rend les costumes de façon convaincante. Klein respecte mieux le nombre de personnages ; dev coupe les sujets.",
+    "rendering": "Rendu photographique naturel ; défaut de conformité indépendant de la qualité visuelle."
+  },
+  "9": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Répétition de la main 01, pixels identiques vérifiés. Même anatomie plausible et éclairage doux. Contrôle exclu du score principal.",
+    "comparison": "Même constat que la paire 01 ; la reproductibilité est vérifiée séparément pour chaque modèle.",
+    "rendering": "Peau et lumière naturelles."
+  },
+  "10": {
+    "verdict": "Rejet",
+    "scores": [
+      2,
+      3,
+      1,
+      4
+    ],
+    "comment": "Duo principal coupé au bas du corps, pieds hors cadre. Nombreux visiteurs supplémentaires à l’arrière-plan.",
+    "comparison": "Les trois modèles échouent au cadrage en pied en 16:9. Z-Image ajoute en plus des personnes malgré la consigne de comptage.",
+    "rendering": "Portrait et costumes soignés ; composition non conforme."
+  },
+  "11": {
+    "verdict": "Rejet",
+    "scores": [
+      2,
+      3,
+      2,
+      4
+    ],
+    "comment": "Duo presque entier, pieds au bord inférieur ; plusieurs visiteurs supplémentaires occupent l’arrière-plan. Échec du comptage strict.",
+    "comparison": "Z-Image montre plus du corps que dev, mais conserve les visiteurs. Klein ne les ajoutait pas ; son propre cadrage restait trop serré.",
+    "rendering": "Matières et lumière agréables ; ne valide pas la scène demandée."
+  }
+}

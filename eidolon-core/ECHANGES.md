@@ -3102,3 +3102,18 @@ Base b9fc4ebcfbe48764116f94444abd921aae359506. Suite comparative autorisée par 
 ## C-MSG-G340 — Lot Klein terminé, 13/11/2026, Codex/GPT
 
 [Rapport G340](docs/studies/2026-11-12-eidolon-media/KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion. PEFT optionnel incompatible retiré uniquement de la copie ; runtime historique inchangé. Preuves et revue visuelle versionnées.
+
+
+### Enregistrement G341 et mémoire —14/11/2026, Codex/GPT
+
+Base b6ffa9a ; résultats et scripts G341 dans docs/studies/2026-11-12-eidolon-media/. Memtester3h dans docs/studies/2026-11-14-memory/. Aucun changement de production. Extinction demandée par toytoy pour modifications matérielles ; aucune relance automatique.
+
+
+## C-MSG-G342 — Reprise Z-Image Turbo, 14/11/2026, Codex/GPT
+
+Base301f4eab70e9ab09e72b893eaa23f017a3b9dfb3 (G341 local, publication à vérifier). Reprise autorisée par toytoy sur Eidolon-OS. Klein9B accès auteur gated : différé, aucune tentative de contournement. Z-Image Turbo auteur Apache2, révision f332072aa78be7aecdf3ee76d5c247082da564a6 ; qualification FP32 répartie sur deux V100, Qwen CPU, même grille G340/G341. Runtime isolé existant, poids/hash/attention vérifiés, test progressif, garde et réseau inférence bloqué. Nouveaux runner/préparation/rapport/preuves G342, catalogue/avancement. Aucun entraînement, promotion ou autre machine touchée.
+
+
+## C-MSG-G342 — Z-Image terminé, 14/11/2026, Codex/GPT
+
+[Rapport G342](docs/studies/2026-11-12-eidolon-media/ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation. G341 local conservé et inclus dans la publication, sans modification de ses preuves.

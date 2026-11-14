@@ -1,0 +1,47 @@
+[
+  {
+    "device": "cpu",
+    "mask": "none",
+    "max_abs": 1.1920928955078125e-07
+  },
+  {
+    "device": "cpu",
+    "mask": "padding",
+    "max_abs": 1.341104507446289e-07
+  },
+  {
+    "device": "cpu",
+    "mask": "full",
+    "max_abs": 1.341104507446289e-07
+  },
+  {
+    "device": "cuda:0",
+    "mask": "none",
+    "max_abs": 1.043081283569336e-07
+  },
+  {
+    "device": "cuda:0",
+    "mask": "padding",
+    "max_abs": 1.341104507446289e-07
+  },
+  {
+    "device": "cuda:0",
+    "mask": "full",
+    "max_abs": 1.341104507446289e-07
+  },
+  {
+    "device": "cuda:1",
+    "mask": "none",
+    "max_abs": 1.043081283569336e-07
+  },
+  {
+    "device": "cuda:1",
+    "mask": "padding",
+    "max_abs": 1.341104507446289e-07
+  },
+  {
+    "device": "cuda:1",
+    "mask": "full",
+    "max_abs": 1.341104507446289e-07
+  }
+]
