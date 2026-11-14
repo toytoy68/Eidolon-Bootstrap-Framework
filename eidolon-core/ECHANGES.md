@@ -3162,3 +3162,13 @@ Base668fa03777cab90cb22fac3e42ac0564a7db7498. Suite autorisée ; I24, recette Di
 ## C-MSG-G346 — SD3.5 Medium terminé, 14/11/2026, Codex/GPT
 
 [Rapport G346](docs/studies/2026-11-12-eidolon-media/SD35-MEDIUM-G346.md) : SD3.5 Medium FP16 sur une V100, trois encodeurs CPU FP32,40étapes/CFG4,5 sans SLG ;12images, répétition exacte. Natives :1/8 proposée,1 réserve,6 rejets. Médiane22,376s, encodage cinq textes42,891s. Pic10 552Mio, GPU/HBM46/49°C. Deux mains à six doigts, katanas incohérents, duos non conformes. Incidents avant génération conservés ; aucun runtime modifié. GPU libres, services actifs, machine allumée ; aucune promotion. SLG et Large/Turbo non testés. Rapport illustré enregistré ; preuves et incidents conservés dans evidence-g346. Aucun avis utilisateur attribué aux nouvelles images.
+
+
+## C-MSG-G347 — SD3.5 Medium SLG pris, 14/11/2026, Codex/GPT
+
+Baseaab5088941b4ff4a21fefab4e8f1093ef0f8dafa. Suite autorisée. Comparatif contrôlé G346 : mêmes poids, prompts, graines, encodeurs/caches,40étapes/CFG4,5, FP16 GPU0/VAE FP32. Ajout SLG natif Diffusers couches7/8/9, force2,8, fenêtre0,01–0,2. Douze images, vérification appels effectifs, aucune production ni autre machine. Scripts/preuves/rapport G347 et avancement.
+
+
+## C-MSG-G347 — SD3.5 Medium SLG terminé, 14/11/2026, Codex/GPT
+
+[Rapport G347](docs/studies/2026-11-12-eidolon-media/SD35-SLG-G347.md) : SD3.5 Medium FP16 avec SLG[7,8,9]/2,8/0,01–0,2,40étapes/CFG4,5 ;12images, répétition exacte. Natives :3/8 proposées,5rej et0réserve ;24,054s médianes (+7,50% vsG346). Main02 et anse04 corrigées, main01 toujours six doigts, katanas et duos non conformes. Pic10 556Mio, GPU/HBM47/52°C.47appels dont7SLG vérifiés/image. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.

@@ -121,3 +121,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G346 — SD3.5 Medium, 14/11/2026
 
 [Rapport G346](SD35-MEDIUM-G346.md) : SD3.5 Medium FP16 sur une V100, trois encodeurs CPU FP32,40étapes/CFG4,5 sans SLG ;12images, répétition exacte. Natives :1/8 proposée,1 réserve,6 rejets. Médiane22,376s, encodage cinq textes42,891s. Pic10 552Mio, GPU/HBM46/49°C. Deux mains à six doigts, katanas incohérents, duos non conformes. Incidents avant génération conservés ; aucun runtime modifié. GPU libres, services actifs, machine allumée ; aucune promotion. SLG et Large/Turbo non testés.
+
+
+## Avancement G347 — SD3.5 Medium SLG, 14/11/2026
+
+[Rapport G347](SD35-SLG-G347.md) : SD3.5 Medium FP16 avec SLG[7,8,9]/2,8/0,01–0,2,40étapes/CFG4,5 ;12images, répétition exacte. Natives :3/8 proposées,5rej et0réserve ;24,054s médianes (+7,50% vsG346). Main02 et anse04 corrigées, main01 toujours six doigts, katanas et duos non conformes. Pic10 556Mio, GPU/HBM47/52°C.47appels dont7SLG vérifiés/image. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion.
