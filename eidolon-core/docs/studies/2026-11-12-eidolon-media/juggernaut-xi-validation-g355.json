@@ -1,0 +1,1616 @@
+{
+  "results": [
+    {
+      "model": "v11",
+      "index": 0,
+      "condition": "smoke",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 512,
+      "height": 512,
+      "seconds": 3.7675865450000856,
+      "sha256": "aa9e699f27795644f204756177ed7e0fcbf83f883a143264a18c783ade7256d5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "44fedba30559f9a2cfa202cceac23dd4bb6b9b34ad6209591409278c58f9174c",
+      "peak_allocated_bytes": 8012839424,
+      "peak_reserved_bytes": 8973713408,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 1,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.816020441001456,
+      "sha256": "65d0c0b1e99606aecb29988b3a14ad105e281ce9657a60f70f272d677c76edc5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "e3c86b07ead196ac48c9d71bf2d7580f8d2f00b34614ecbad206fd26c6541c51",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11695816704,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 2,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.55690367599891,
+      "sha256": "8edd832f83b453c4266262f312388bd12d760047bb21ea50f95ec56b519d3232",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "c1d4cebb830db3cff15e65e48e5e17514968925f9a8f7ede8c573920aa4e20fc",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11695816704,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 3,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.541535096999723,
+      "sha256": "c9d05f77e801e05a6f1a7c9b2c322de3e6c4f184e15ffcc7aa7d8099d4dd2255",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "044ad3144661f26acd5b3c8764fad2e3cb29a06e7c8d23f580d79ba3fa245255",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 4,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.55078516100184,
+      "sha256": "e26759c9a5ff88066b868093855da9b00fd914ddf050c2f34120bd02086a157c",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "df4ca102789d04a36ee7ff3b0c9ccea80a9ea94322b5d26245b572ad041e10bd",
+      "peak_allocated_bytes": 10433427968,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 5,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.562559276004322,
+      "sha256": "d2dcb8b028c9d174ef6721b3b562c91e155b1664c78ca5df99a71ee76e860f52",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "83dad4871871ab61b92bd9bd1e73a1650c3bd3f9a9d750700c6be0034947e191",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 6,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.560720189998392,
+      "sha256": "5f91a4602155dfdbf274c189bc3f3c155d86ab150df140ef58248d03294159bf",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "55d520ab8c93092138c94b8bff5c7f2795fbae98d396a5677974aae084f48118",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 7,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.586192734997894,
+      "sha256": "79f62290f78279e6435d78d64b2e283a09c02922f488d4946888f88a9842c951",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "f1c3466898b2995817551b51f1642a200ffa7a40610c883d2364f7e8eac0a3e8",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 8,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.579023497004528,
+      "sha256": "f9a4bdd7e5e5d7b31bc21c4caed87e1952e710b8b0f650805f65b40f7756442f",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "b8ee1a5377e5db64e0f188105c5be802ada697366668bf46c412823913d41dfc",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "À revoir"
+    },
+    {
+      "model": "v11",
+      "index": 9,
+      "condition": "repeat",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.590631970000686,
+      "sha256": "65d0c0b1e99606aecb29988b3a14ad105e281ce9657a60f70f272d677c76edc5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "e3c86b07ead196ac48c9d71bf2d7580f8d2f00b34614ecbad206fd26c6541c51",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 10,
+      "condition": "screen16x9",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 576,
+      "seconds": 8.950289709995559,
+      "sha256": "80d67234ceff0d5f023e40720116e88c6a94b02d5bc6a04bc43d09780e5b9df4",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "1464248825072304e053b0f9ecf042cc88fe8a5731a4947a08a81b986c2b8a47",
+      "peak_allocated_bytes": 9022781952,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 11,
+      "condition": "screen4x3",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 768,
+      "height": 576,
+      "seconds": 5.981397073002881,
+      "sha256": "43f99156c1dd1f93277c0ebec61f7caddb1799d0c6986272a83b27e27ed7be68",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "9ef355428ce62d2dee8d29bed9f2b1a7ca97a35565dd0478e69e352d4a2e5ae9",
+      "peak_allocated_bytes": 8569612800,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "À revoir"
+    },
+    {
+      "model": "v9",
+      "index": 0,
+      "condition": "smoke",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 512,
+      "height": 512,
+      "seconds": 3.4631118910037912,
+      "sha256": "7f157a62ead72c596648d336f503b484c6a923edda95f1ee3b4081ed4dcb026f",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "c8e6c97a3f171ffe4a1a0f450869839615241bc3c270d7c372dd43317128bcf5",
+      "peak_allocated_bytes": 8011962880,
+      "peak_reserved_bytes": 8912896000,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 1,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.583999035996385,
+      "sha256": "225660c393c574f7d3722207f2c03639a26b693d08efa0d7fb3fc74258c920bc",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "907fbba7098fa87d0704c5a1cf91ebc0d3bc2a443575a0fbaeeb63b07624909c",
+      "peak_allocated_bytes": 10428865024,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v9",
+      "index": 2,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.591644937994715,
+      "sha256": "41ca4eff15484d5c28bed7bbe39e3f226704c87a0563373290457f33bb8c56c7",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "e5d6822273f6ea6ca84b773d5351fe62ffed2afddc89767703a7e071224eda2e",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v9",
+      "index": 3,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.591553215002932,
+      "sha256": "8f6bfa19dcc3c76ac9793efe38e3a6a14a4b8c24b6e110dfe00b39a481615b61",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "cf48f8c13d6c1d3675f40a85387d843d9280a47e8a93fbf3b4ca5cf0b8a7d4a7",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 4,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.596999772002164,
+      "sha256": "9f70f081cc479f1932fc454a88964ca18bc345d57e20835c87bd1f63fa8bb12a",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "4e2947c8dd478449cff929e4481911899e33e1c1d1c4eb47e8a10847bf9b4532",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 5,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.603602803006652,
+      "sha256": "05c5bc5ccd77ef66014d71da77e7a064e1e7711c5f16913cae2ae65cfd934450",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "d39dd2d113f4cb2c36fcc290650cc2bf21b909ce3302a388998f9f57af2f34e7",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 6,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.60667192999972,
+      "sha256": "155fc4647d76b00361bba25e122c9fe8b0559011b643d7e7f829c840aa7ba1fe",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "0d57f85466c8ea770cc3e012b0542cd9a9be3f867749030c41a6d3ca98ab9b30",
+      "peak_allocated_bytes": 10428865024,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 7,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.624991812997905,
+      "sha256": "39fdb86be77be55261f7cb5b99d8a9a1b781a0468e5cf7eb01b38155e0a94f8f",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "3bbeb97640823d4e382ce52a1d402171299080f13788a2afe4300cc71fe74b17",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 8,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.623646569998527,
+      "sha256": "faf7cd6bc09017a6e20b1740aeb8a5e7ca3430da11441df0d9588865eb269039",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "b16f7506632ce4e1466a865d20433dd72c4621c87c91bb79ac36364712ae5fec",
+      "peak_allocated_bytes": 10428865024,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v9",
+      "index": 9,
+      "condition": "repeat",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.62228836199938,
+      "sha256": "225660c393c574f7d3722207f2c03639a26b693d08efa0d7fb3fc74258c920bc",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "907fbba7098fa87d0704c5a1cf91ebc0d3bc2a443575a0fbaeeb63b07624909c",
+      "peak_allocated_bytes": 10429913600,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v9",
+      "index": 10,
+      "condition": "screen16x9",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 576,
+      "seconds": 8.946163344000524,
+      "sha256": "4d55bc92655028aa411017d26526a09e81f1b62f4a73292d33f755d9939c6ff7",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "cab897b1e34f6fb3a42f4f226a85a5cd0c70db80ad84a1be99a454355755bc2d",
+      "peak_allocated_bytes": 9020054016,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v9",
+      "index": 11,
+      "condition": "screen4x3",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 768,
+      "height": 576,
+      "seconds": 5.974486062004871,
+      "sha256": "b51778890053faaaad840856b67aae821bec3141b3a183deaa87d9e3a03ca35a",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "0b3727b0b4dc7a701a14502434d6f56a538ad12101ac4825e09804ac4f5b249a",
+      "peak_allocated_bytes": 8566884864,
+      "peak_reserved_bytes": 13008633856,
+      "visual": "À revoir"
+    }
+  ],
+  "manifest": {
+    "runner_sha256": "f860e33074f63f6918c8d34de255ee75dee3661c451ccdcabff045478ea84fe9",
+    "gpu_uuid": "GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75",
+    "runtime": {
+      "torch": "2.6.0+cu124",
+      "diffusers": "0.32.2"
+    },
+    "mode": "quality",
+    "models": [
+      {
+        "id": "v11",
+        "path": "/srv/eidolon/data/media-models-20261113/juggernaut-xi-g355/Juggernaut-XI-byRunDiffusion.safetensors",
+        "sha256": "33e58e86686f6b386c526682b5da9228ead4f91d994abd4b053442dc5b42719e",
+        "plan": [
+          {
+            "condition": "smoke",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 512,
+            "height": 512
+          },
+          {
+            "condition": "quality",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "duo",
+            "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "quality",
+            "case": "duo",
+            "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "repeat",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "screen16x9",
+            "case": "duo",
+            "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 576
+          },
+          {
+            "condition": "screen4x3",
+            "case": "duo",
+            "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 768,
+            "height": 576
+          }
+        ]
+      }
+    ],
+    "scheduler": "DPM++ 2M Karras",
+    "denoiser_dtype": "FP16",
+    "vae": "upcast FP32 for decode",
+    "offline_required": true,
+    "training_or_promotion_allowed": false
+  },
+  "completion": {
+    "generated": 11,
+    "repeat_same_pixels": {
+      "v11": true
+    },
+    "training_or_promotion_allowed": false,
+    "visual_acceptance": "REVIEWED_NOT_PROMOTED",
+    "generated_total": 12
+  },
+  "telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 11538.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 51.89,
+          "max": 332.98
+        },
+        "temperature.gpu": {
+          "min": 28.0,
+          "max": 45.0
+        },
+        "temperature.memory": {
+          "min": 27.0,
+          "max": 52.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 38.17,
+          "max": 39.18
+        },
+        "temperature.gpu": {
+          "min": 26.0,
+          "max": 29.0
+        },
+        "temperature.memory": {
+          "min": 25.0,
+          "max": 28.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 5.75,
+          "max": 7.88
+        },
+        "temperature.gpu": {
+          "min": 30.0,
+          "max": 31.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 26.0,
+      "max": 48.375
+    }
+  },
+  "telemetry_by_model": {
+    "v11": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 310.0,
+            "max": 11538.0
+          },
+          "utilization.gpu": {
+            "min": 0.0,
+            "max": 100.0
+          },
+          "power.draw": {
+            "min": 51.89,
+            "max": 332.98
+          },
+          "temperature.gpu": {
+            "min": 28.0,
+            "max": 45.0
+          },
+          "temperature.memory": {
+            "min": 27.0,
+            "max": 52.0
+          },
+          "power.limit": {
+            "min": 300.0,
+            "max": 300.0
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "utilization.gpu": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "power.draw": {
+            "min": 38.17,
+            "max": 39.18
+          },
+          "temperature.gpu": {
+            "min": 26.0,
+            "max": 29.0
+          },
+          "temperature.memory": {
+            "min": 25.0,
+            "max": 28.0
+          },
+          "power.limit": {
+            "min": 300.0,
+            "max": 300.0
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2.0,
+            "max": 2.0
+          },
+          "utilization.gpu": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "power.draw": {
+            "min": 5.75,
+            "max": 7.88
+          },
+          "temperature.gpu": {
+            "min": 30.0,
+            "max": 31.0
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120.0,
+            "max": 120.0
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 26.0,
+        "max": 48.375
+      }
+    }
+  },
+  "loads": [
+    {
+      "model": "v11",
+      "load_seconds": 3.766941677000432
+    }
+  ],
+  "health_final": {
+    "time": "2026-11-14T21:36:31.299944+00:00",
+    "gpu": {
+      "exit": 0,
+      "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 31, 33, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 29, 28, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 31, N/A, 2 MiB, 120.00 W\n",
+      "stderr": ""
+    },
+    "clients": {
+      "exit": 0,
+      "stdout": "pid, process_name\n",
+      "stderr": ""
+    },
+    "services": {
+      "exit": 0,
+      "stdout": "active\nactive\nactive\nactive\nactive\n",
+      "stderr": ""
+    },
+    "vms": {
+      "exit": 0,
+      "stdout": " ID   Nom                            État\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d’exécution\n -    eidolon-audit-smoke-20261102   fermé\n -    Eidolon-Debian12-Test          fermé\n -    Eidolon-Memory-Engine-Test     fermé\n -    Eidolon-Memory-Engine-v2       fermé\n -    Eidolon-Memory-Lab             fermé\n -    Eidolon-Memory-Lab-v2          fermé\n -    Eidolon-Ubuntu-Diagnostic      fermé\n -    Memory-engine-tests            fermé\n -    Memory-tests                   fermé\n -    nomifactory-test               fermé\n\n",
+      "stderr": ""
+    },
+    "runtime_unchanged": true,
+    "source_checks": [
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl.py",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/schedulers/scheduling_dpmsolver_multistep.py",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/unets/unet_2d_condition.py",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl.py",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/model_index.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/scheduler/scheduler_config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/text_encoder/config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/text_encoder_2/config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/merges.txt",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/special_tokens_map.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/tokenizer_config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/vocab.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/merges.txt",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/special_tokens_map.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/tokenizer_config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/vocab.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/unet/config.json",
+        "match": true
+      },
+      {
+        "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/vae/config.json",
+        "match": true
+      }
+    ],
+    "png_checks": [
+      {
+        "model": "v11",
+        "index": 0,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 1,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 2,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 3,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 4,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 5,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 6,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 7,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 8,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 9,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 10,
+        "match": true
+      },
+      {
+        "model": "v11",
+        "index": 11,
+        "match": true
+      }
+    ]
+  },
+  "pipelines": {
+    "v11": {
+      "scheduler": {
+        "num_train_timesteps": 1000,
+        "beta_start": 0.00085,
+        "beta_end": 0.012,
+        "beta_schedule": "scaled_linear",
+        "trained_betas": null,
+        "solver_order": 2,
+        "prediction_type": "epsilon",
+        "thresholding": false,
+        "dynamic_thresholding_ratio": 0.995,
+        "sample_max_value": 1.0,
+        "algorithm_type": "dpmsolver++",
+        "solver_type": "midpoint",
+        "lower_order_final": true,
+        "euler_at_final": false,
+        "use_karras_sigmas": true,
+        "use_exponential_sigmas": false,
+        "use_beta_sigmas": false,
+        "use_lu_lambdas": false,
+        "use_flow_sigmas": false,
+        "flow_shift": 1.0,
+        "final_sigmas_type": "zero",
+        "lambda_min_clipped": "-inf",
+        "variance_type": null,
+        "timestep_spacing": "leading",
+        "steps_offset": 1,
+        "rescale_betas_zero_snr": false,
+        "_use_default_values": [
+          "flow_shift",
+          "use_exponential_sigmas",
+          "solver_type",
+          "rescale_betas_zero_snr",
+          "dynamic_thresholding_ratio",
+          "thresholding",
+          "lower_order_final",
+          "use_flow_sigmas",
+          "final_sigmas_type",
+          "euler_at_final",
+          "variance_type",
+          "use_lu_lambdas",
+          "lambda_min_clipped",
+          "use_beta_sigmas"
+        ],
+        "interpolation_type": "linear",
+        "_class_name": "DPMSolverMultistepScheduler",
+        "_diffusers_version": "0.19.0.dev0",
+        "clip_sample": false,
+        "set_alpha_to_one": false,
+        "skip_prk_steps": true
+      },
+      "vae": {
+        "in_channels": 3,
+        "out_channels": 3,
+        "down_block_types": [
+          "DownEncoderBlock2D",
+          "DownEncoderBlock2D",
+          "DownEncoderBlock2D",
+          "DownEncoderBlock2D"
+        ],
+        "up_block_types": [
+          "UpDecoderBlock2D",
+          "UpDecoderBlock2D",
+          "UpDecoderBlock2D",
+          "UpDecoderBlock2D"
+        ],
+        "block_out_channels": [
+          128,
+          256,
+          512,
+          512
+        ],
+        "layers_per_block": 2,
+        "act_fn": "silu",
+        "latent_channels": 4,
+        "norm_num_groups": 32,
+        "sample_size": 1024,
+        "scaling_factor": 0.13025,
+        "shift_factor": null,
+        "latents_mean": null,
+        "latents_std": null,
+        "force_upcast": true,
+        "use_quant_conv": true,
+        "use_post_quant_conv": true,
+        "mid_block_add_attention": true,
+        "_use_default_values": [
+          "latents_std",
+          "latents_mean",
+          "use_quant_conv",
+          "shift_factor",
+          "use_post_quant_conv",
+          "mid_block_add_attention"
+        ],
+        "_class_name": "AutoencoderKL",
+        "_diffusers_version": "0.20.0.dev0",
+        "_name_or_path": "../sdxl-vae/"
+      },
+      "vae_tiling": true,
+      "components": {
+        "unet": {
+          "device": "cuda:0",
+          "dtype": "torch.float16"
+        },
+        "text_encoder": {
+          "device": "cuda:0",
+          "dtype": "torch.float16"
+        },
+        "text_encoder_2": {
+          "device": "cuda:0",
+          "dtype": "torch.float16"
+        },
+        "vae": {
+          "device": "cuda:0",
+          "dtype": "torch.float16"
+        }
+      }
+    }
+  },
+  "reference": {
+    "campaign": "G353",
+    "commit": "e72dd12369cbd2e0d2ee4e5d8c9420b0f75c705b",
+    "source_sha256": "f78bb0947a18baf1e57b27bc0820ea7fb3299a18d329d7c3eec0ad0891f4707f",
+    "source_path": "juggernaut-x-validation-g353.json",
+    "regenerated_in_G355": false,
+    "summary": {
+      "proposed": 3,
+      "review": 0,
+      "rejected": 5,
+      "median_seconds": 17.600301287504408,
+      "min_seconds": 17.583999035996385,
+      "max_seconds": 17.624991812997905,
+      "peak_mib": 12790.0,
+      "gpu_c": 46.0,
+      "hbm_c": 55.0,
+      "power_w": 313.64
+    },
+    "reviews": {
+      "0": {
+        "verdict": "Rejetée",
+        "comment": "Quatre doigts visibles, pouce compris ; poignet latéral et anatomie déformée."
+      },
+      "1": {
+        "verdict": "Proposée",
+        "comment": "Cinq doigts séparés, main entière et poignet visible ; rendu de peau plausible."
+      },
+      "2": {
+        "verdict": "Proposée",
+        "comment": "Cinq doigts distincts et main entière ; anatomie visuellement plausible."
+      },
+      "3": {
+        "verdict": "Rejetée",
+        "comment": "Quatre récipients au lieu de deux, avec bol à gauche et couleurs répétées."
+      },
+      "4": {
+        "verdict": "Rejetée",
+        "comment": "Trois récipients au lieu de deux ; bol bicolore central et tasse rouge à droite."
+      },
+      "5": {
+        "verdict": "Rejetée",
+        "comment": "Plusieurs lames et poignées ; éléments tronqués et assemblage incohérent."
+      },
+      "6": {
+        "verdict": "Rejetée",
+        "comment": "Plusieurs poignées et éléments de sabre ; géométrie incompatible avec un seul katana et son fourreau."
+      },
+      "7": {
+        "verdict": "Rejetée",
+        "comment": "Trois adultes au lieu de deux : le samurai est dupliqué."
+      },
+      "8": {
+        "verdict": "Proposée",
+        "comment": "Deux adultes en pied, samurai à gauche et kimono rouge à droite ; positions et tenues respectées."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "comment": "Répétition exacte de la main 01, avec cinq doigts distincts."
+      },
+      "10": {
+        "verdict": "Rejetée",
+        "comment": "Positions inversées et cadrage à mi-corps ; la consigne en pied échoue."
+      },
+      "11": {
+        "verdict": "À revoir",
+        "comment": "Deux adultes en pied, positions et tenues correctes ; rendu flou et décor intérieur ambigu face au château demandé."
+      }
+    }
+  },
+  "new_results": [
+    {
+      "model": "v11",
+      "index": 0,
+      "condition": "smoke",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 512,
+      "height": 512,
+      "seconds": 3.7675865450000856,
+      "sha256": "aa9e699f27795644f204756177ed7e0fcbf83f883a143264a18c783ade7256d5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "44fedba30559f9a2cfa202cceac23dd4bb6b9b34ad6209591409278c58f9174c",
+      "peak_allocated_bytes": 8012839424,
+      "peak_reserved_bytes": 8973713408,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 1,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.816020441001456,
+      "sha256": "65d0c0b1e99606aecb29988b3a14ad105e281ce9657a60f70f272d677c76edc5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "e3c86b07ead196ac48c9d71bf2d7580f8d2f00b34614ecbad206fd26c6541c51",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11695816704,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 2,
+      "condition": "quality",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.55690367599891,
+      "sha256": "8edd832f83b453c4266262f312388bd12d760047bb21ea50f95ec56b519d3232",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "c1d4cebb830db3cff15e65e48e5e17514968925f9a8f7ede8c573920aa4e20fc",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11695816704,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 3,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.541535096999723,
+      "sha256": "c9d05f77e801e05a6f1a7c9b2c322de3e6c4f184e15ffcc7aa7d8099d4dd2255",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "044ad3144661f26acd5b3c8764fad2e3cb29a06e7c8d23f580d79ba3fa245255",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 4,
+      "condition": "quality",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.55078516100184,
+      "sha256": "e26759c9a5ff88066b868093855da9b00fd914ddf050c2f34120bd02086a157c",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "df4ca102789d04a36ee7ff3b0c9ccea80a9ea94322b5d26245b572ad041e10bd",
+      "peak_allocated_bytes": 10433427968,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 5,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.562559276004322,
+      "sha256": "d2dcb8b028c9d174ef6721b3b562c91e155b1664c78ca5df99a71ee76e860f52",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "83dad4871871ab61b92bd9bd1e73a1650c3bd3f9a9d750700c6be0034947e191",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 6,
+      "condition": "quality",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.560720189998392,
+      "sha256": "5f91a4602155dfdbf274c189bc3f3c155d86ab150df140ef58248d03294159bf",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "55d520ab8c93092138c94b8bff5c7f2795fbae98d396a5677974aae084f48118",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 7,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.586192734997894,
+      "sha256": "79f62290f78279e6435d78d64b2e283a09c02922f488d4946888f88a9842c951",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "f1c3466898b2995817551b51f1642a200ffa7a40610c883d2364f7e8eac0a3e8",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 8,
+      "condition": "quality",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.579023497004528,
+      "sha256": "f9a4bdd7e5e5d7b31bc21c4caed87e1952e710b8b0f650805f65b40f7756442f",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "b8ee1a5377e5db64e0f188105c5be802ada697366668bf46c412823913d41dfc",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "À revoir"
+    },
+    {
+      "model": "v11",
+      "index": 9,
+      "condition": "repeat",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.590631970000686,
+      "sha256": "65d0c0b1e99606aecb29988b3a14ad105e281ce9657a60f70f272d677c76edc5",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "e3c86b07ead196ac48c9d71bf2d7580f8d2f00b34614ecbad206fd26c6541c51",
+      "peak_allocated_bytes": 10432641536,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Proposée"
+    },
+    {
+      "model": "v11",
+      "index": 10,
+      "condition": "screen16x9",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 576,
+      "seconds": 8.950289709995559,
+      "sha256": "80d67234ceff0d5f023e40720116e88c6a94b02d5bc6a04bc43d09780e5b9df4",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "1464248825072304e053b0f9ecf042cc88fe8a5731a4947a08a81b986c2b8a47",
+      "peak_allocated_bytes": 9022781952,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "Rejetée"
+    },
+    {
+      "model": "v11",
+      "index": 11,
+      "condition": "screen4x3",
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 768,
+      "height": 576,
+      "seconds": 5.981397073002881,
+      "sha256": "43f99156c1dd1f93277c0ebec61f7caddb1799d0c6986272a83b27e27ed7be68",
+      "unet_calls": 30,
+      "decoder_calls": 1,
+      "pixel_sha256": "9ef355428ce62d2dee8d29bed9f2b1a7ca97a35565dd0478e69e352d4a2e5ae9",
+      "peak_allocated_bytes": 8569612800,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "À revoir"
+    }
+  ],
+  "reviews": {
+    "v11": {
+      "0": {
+        "verdict": "Rejetée",
+        "comment": "Cinq doigts apparents, mais plusieurs doigts repliés et poignet latéral : pose demandée non respectée."
+      },
+      "1": {
+        "verdict": "Proposée",
+        "comment": "Une main entière, cinq doigts distincts et poignet en bas ; anatomie visuellement plausible."
+      },
+      "2": {
+        "verdict": "Rejetée",
+        "comment": "Quatre doigts seulement, pouce compris ; un doigt manque."
+      },
+      "3": {
+        "verdict": "Rejetée",
+        "comment": "Trois récipients au lieu de deux ; bol à gauche et tasse bleue supplémentaire à droite."
+      },
+      "4": {
+        "verdict": "Rejetée",
+        "comment": "Trois récipients, bol bicolore au centre et tasse rouge à droite ; nombre et positions incorrects."
+      },
+      "5": {
+        "verdict": "Rejetée",
+        "comment": "Deux lames avec poignées et gardes ; le fourreau séparé demandé n’est pas représenté correctement."
+      },
+      "6": {
+        "verdict": "Rejetée",
+        "comment": "Un seul sabre ; aucun fourreau séparé."
+      },
+      "7": {
+        "verdict": "Proposée",
+        "comment": "Deux adultes en pied, armure noire à gauche et kimono rouge à droite ; visages et pose cohérents."
+      },
+      "8": {
+        "verdict": "À revoir",
+        "comment": "Duo, tenues et positions corrects ; le sabre ajouté présente une lame terminée à plat, peu crédible."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "comment": "Répétition exacte de 01 : une main entière avec cinq doigts distincts."
+      },
+      "10": {
+        "verdict": "Rejetée",
+        "comment": "Deux adultes en pied, mais femme à gauche et samurai à droite : positions inversées."
+      },
+      "11": {
+        "verdict": "À revoir",
+        "comment": "Deux adultes en pied, positions et tenues correctes ; mains peu détaillées et élément de sabre/fourreau ambigu entre les jambes."
+      }
+    },
+    "v9": {
+      "0": {
+        "verdict": "Rejetée",
+        "comment": "Quatre doigts visibles, pouce compris ; poignet latéral et anatomie déformée."
+      },
+      "1": {
+        "verdict": "Proposée",
+        "comment": "Cinq doigts séparés, main entière et poignet visible ; rendu de peau plausible."
+      },
+      "2": {
+        "verdict": "Proposée",
+        "comment": "Cinq doigts distincts et main entière ; anatomie visuellement plausible."
+      },
+      "3": {
+        "verdict": "Rejetée",
+        "comment": "Quatre récipients au lieu de deux, avec bol à gauche et couleurs répétées."
+      },
+      "4": {
+        "verdict": "Rejetée",
+        "comment": "Trois récipients au lieu de deux ; bol bicolore central et tasse rouge à droite."
+      },
+      "5": {
+        "verdict": "Rejetée",
+        "comment": "Plusieurs lames et poignées ; éléments tronqués et assemblage incohérent."
+      },
+      "6": {
+        "verdict": "Rejetée",
+        "comment": "Plusieurs poignées et éléments de sabre ; géométrie incompatible avec un seul katana et son fourreau."
+      },
+      "7": {
+        "verdict": "Rejetée",
+        "comment": "Trois adultes au lieu de deux : le samurai est dupliqué."
+      },
+      "8": {
+        "verdict": "Proposée",
+        "comment": "Deux adultes en pied, samurai à gauche et kimono rouge à droite ; positions et tenues respectées."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "comment": "Répétition exacte de la main 01, avec cinq doigts distincts."
+      },
+      "10": {
+        "verdict": "Rejetée",
+        "comment": "Positions inversées et cadrage à mi-corps ; la consigne en pied échoue."
+      },
+      "11": {
+        "verdict": "À revoir",
+        "comment": "Deux adultes en pied, positions et tenues correctes ; rendu flou et décor intérieur ambigu face au château demandé."
+      }
+    }
+  },
+  "comparisons": {
+    "0": "Les deux versions échouent sur la pose de main en 512².",
+    "1": "Les deux versions produisent ici une main à cinq doigts, visuellement plausible.",
+    "2": "V9 garde cinq doigts ; XI v11 n’en montre que quatre.",
+    "3": "XI réduit le nombre de récipients de quatre à trois, mais la cible reste exactement deux.",
+    "4": "Aucun progrès sur le comptage ni le placement des récipients.",
+    "5": "XI simplifie la scène en deux sabres ; le fourreau demandé reste absent ou incorrect.",
+    "6": "XI produit un seul sabre, sans le fourreau ; aucune des deux recettes ne respecte la paire demandée.",
+    "7": "XI respecte le duo et les tenues, alors que v9 ajoutait un troisième adulte.",
+    "8": "V9 était proposé ; XI conserve le duo mais ajoute un sabre à l’extrémité peu crédible.",
+    "9": "Les deux répétitions sont exactes et reprennent chacune une main conforme.",
+    "10": "Les deux inversent gauche et droite ; XI améliore le cadrage en pied.",
+    "11": "XI améliore la composition et les vêtements, mais conserve des détails ambigus ; les deux contrôles restent à revoir, hors du score natif."
+  },
+  "summary": {
+    "v11": {
+      "proposed": 2,
+      "review": 1,
+      "rejected": 5,
+      "median_seconds": 17.561639733001357,
+      "min_seconds": 17.541535096999723,
+      "max_seconds": 17.816020441001456,
+      "peak_mib": 11538.0,
+      "gpu_c": 45.0,
+      "hbm_c": 52.0,
+      "power_w": 332.98
+    },
+    "v9": {
+      "proposed": 3,
+      "review": 0,
+      "rejected": 5,
+      "median_seconds": 17.600301287504408,
+      "min_seconds": 17.583999035996385,
+      "max_seconds": 17.624991812997905,
+      "peak_mib": 12790.0,
+      "gpu_c": 46.0,
+      "hbm_c": 55.0,
+      "power_w": 313.64
+    }
+  },
+  "speed_ratio_vs_v9": 1.0022014774867747,
+  "conclusion": "<b>XI v11 : 2/8 images proposées, contre 3/8 pour v9.</b> Médiane 17.56 s contre 17,60 s pour v9 G353. Recette commune : 30 étapes, CFG5.",
+  "summary_paragraphs": [
+    "<b>Constat visuel :</b> XI réussit un duo que v9 manquait, mais perd une main correcte. Le second duo garde une réserve sur le sabre ajouté. Comptage des objets et katanas restent non conformes.",
+    "<b>Comparaison :</b> 12 nouvelles images v11 face aux 12 références v9 du lot G353. Scènes, seeds, DPM++2M Karras, 30 étapes, CFG5 et matériel identiques ; v9 non régénéré dans ce lot.",
+    "<b>Matériel :</b> une V100 ; maxima GPU/HBM 45/52 °C. Répétition pixel-identique. Temps incluant encodage texte, génération et décodage, hors chargement et sauvegarde.",
+    "<b>Décision :</b> Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille. Avis GPT provisoires, aucune validation utilisateur attribuée."
+  ],
+  "method_paragraphs": [
+    "<b>Plan :</b> douze images XI v11 : contrôle 512², huit natives 1024², répétition, duo 1024 × 576 et 768 × 576. Seeds 20261113/20261114, prompts figés et négatif vide. Aucun refiner, LoRA, retouche ni sélection des seeds.",
+    "<b>Recette :</b> DPMSolverMultistepScheduler, DPM++2M Karras, 30 étapes, CFG5 ; trente appels UNet mesurés. Dimensions originales/cibles égales à la sortie, crop0. Même recette que v9 G353, dont les résultats sont repris sans nouvelle exécution.",
+    "<b>Précision :</b> UNet et deux encodeurs FP16 GPU0, VAE upcast FP32 et tuilage. PyTorch2.6.0+cu124, Diffusers0.32.2, Transformers4.49.0 ; aucun paquet ni pilote modifié. Sources et configurations vérifiées avant/après.",
+    "<b>Provenance :</b> RunDiffusion/Juggernaut-XI-v11, révision f836518c, fichier 7,105 Go, SHA256 33e58e86…5b42719e. Checkpoint complet : UNet, encodeurs et VAE propres au modèle. Carte auteur et licences archivées.",
+    "<b>Licence et attribution :</b> modèle RunDiffusion / KandooAI, CC BY-NC-ND4.0, conditions auteur additionnelles et licence du SDXL de base. Essai privé non commercial, poids non redistribués. Attribution conservée sur les images du rapport.",
+    "<b>Compatibilité :</b> le buffer CLIP position_ids stocké en FP16 contient des valeurs non entières. Transformers l’ignore et recrée la séquence standard0–76. Aucun poids modifié ; équivalence avec d’autres interfaces non vérifiée.",
+    "<b>Accès :</b> carte mentionnant un accès soumis à acceptation, mais API officielle gated=false et URL auteur accessible publiquement sans authentification (HTTP200). Aucun formulaire, compte ou renseignement personnel transmis.",
+    "<b>Isolation et mesure :</b> une V100 à300W, garde GPU/HBM65/70°C ; inférence sans réseau sortant, verrou et limites de ressources. Latents et décodage finis contrôlés. Temps encodage + débruitage + décodage + contrôles ; pics échantillonnés.",
+    "<b>Limites :</b> huit natives, revue GPT non aveugle sur aperçus réduits. Carré1024² commun au comparatif ; formats auteur832×1216/1216×832 non testés. V9 historique, pas de classement universel. Machine allumée, GPU libres et services actifs."
+  ],
+  "short_decision": "Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille.",
+  "promotion_allowed": false,
+  "execution_summary": "12 nouvelles générations achevées, 30 appels UNet chacune, répétition exacte. 12 PNG vérifiés, sources/configs/runtime inchangés. GPU libres, cinq services actifs et Memory-engine en marche. Machine allumée.",
+  "library_file_id": "libfile_fde3_f-8431962ca3fc819190a05aa9ede44d70_d168d29c22b4819186c4d3b8d1b7451f",
+  "reviewed_at": "2026-11-14T21:39:27.951911+00:00"
+}

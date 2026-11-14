@@ -146,3 +146,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G354 — Juggernaut Lightning, 14/11/2026
 
 [Rapport G354](JUGGERNAUT-LIGHTNING-G354.md) : Juggernaut XL Lightning, une V100 FP16, DPM++ SDE Karras6/CFG1,8, 11 appels UNet ; 12 images et répétition exacte. 1/8 proposées, 0 réserves, 7 rejets ; médiane 6.843s, temps divisé par 2.57 face au v9 G353 historique (recettes différentes). Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette. Aucun déploiement ; runtime inchangé, services actifs, GPU libres, machine allumée.
+
+
+## Avancement G355 — Juggernaut XI v11, 14/11/2026
+
+[Rapport G355](JUGGERNAUT-XI-G355.md) : Juggernaut XI v11, une V100 FP16, DPM++2M Karras30/CFG5 ; 12 nouvelles images et répétition exacte. 2/8 proposées, 1 réserves, 5 rejets ; médiane 17.562s. V9 G353 historique3/8/17,600s, même recette. Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille. Runtime inchangé, services actifs, GPU libres, machine allumée. Attribution RunDiffusion/KandooAI, CC BY-NC-ND4.0 et conditions auteur conservées ; aucun poids redistribué.

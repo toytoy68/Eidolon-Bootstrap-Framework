@@ -1,0 +1,68 @@
+{
+  "reviews": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Cinq doigts apparents, mais plusieurs doigts repliés et poignet latéral : pose demandée non respectée."
+    },
+    "1": {
+      "verdict": "Proposée",
+      "comment": "Une main entière, cinq doigts distincts et poignet en bas ; anatomie visuellement plausible."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts seulement, pouce compris ; un doigt manque."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients au lieu de deux ; bol à gauche et tasse bleue supplémentaire à droite."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients, bol bicolore au centre et tasse rouge à droite ; nombre et positions incorrects."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Deux lames avec poignées et gardes ; le fourreau séparé demandé n’est pas représenté correctement."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Un seul sabre ; aucun fourreau séparé."
+    },
+    "7": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes en pied, armure noire à gauche et kimono rouge à droite ; visages et pose cohérents."
+    },
+    "8": {
+      "verdict": "À revoir",
+      "comment": "Duo, tenues et positions corrects ; le sabre ajouté présente une lame terminée à plat, peu crédible."
+    },
+    "9": {
+      "verdict": "Proposée",
+      "comment": "Répétition exacte de 01 : une main entière avec cinq doigts distincts."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Deux adultes en pied, mais femme à gauche et samurai à droite : positions inversées."
+    },
+    "11": {
+      "verdict": "À revoir",
+      "comment": "Deux adultes en pied, positions et tenues correctes ; mains peu détaillées et élément de sabre/fourreau ambigu entre les jambes."
+    }
+  },
+  "comparisons": {
+    "0": "Les deux versions échouent sur la pose de main en 512².",
+    "1": "Les deux versions produisent ici une main à cinq doigts, visuellement plausible.",
+    "2": "V9 garde cinq doigts ; XI v11 n’en montre que quatre.",
+    "3": "XI réduit le nombre de récipients de quatre à trois, mais la cible reste exactement deux.",
+    "4": "Aucun progrès sur le comptage ni le placement des récipients.",
+    "5": "XI simplifie la scène en deux sabres ; le fourreau demandé reste absent ou incorrect.",
+    "6": "XI produit un seul sabre, sans le fourreau ; aucune des deux recettes ne respecte la paire demandée.",
+    "7": "XI respecte le duo et les tenues, alors que v9 ajoutait un troisième adulte.",
+    "8": "V9 était proposé ; XI conserve le duo mais ajoute un sabre à l’extrémité peu crédible.",
+    "9": "Les deux répétitions sont exactes et reprennent chacune une main conforme.",
+    "10": "Les deux inversent gauche et droite ; XI améliore le cadrage en pied.",
+    "11": "XI améliore la composition et les vêtements, mais conserve des détails ambigus ; les deux contrôles restent à revoir, hors du score natif."
+  },
+  "visual_summary": "XI réussit un duo que v9 manquait, mais perd une main correcte. Le second duo garde une réserve sur le sabre ajouté. Comptage des objets et katanas restent non conformes.",
+  "decision": "Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille."
+}

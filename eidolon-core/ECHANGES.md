@@ -3242,3 +3242,13 @@ Base e72dd12369cbd2e0d2ee4e5d8c9420b0f75c705b. Suite I06 autorisée : Lightning 
 ## C-MSG-G354 — Juggernaut Lightning terminé, 14/11/2026, Codex/GPT
 
 [Rapport G354](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-LIGHTNING-G354.md) : Juggernaut XL Lightning, une V100 FP16, DPM++ SDE Karras6/CFG1,8, 11 appels UNet ; 12 images et répétition exacte. 1/8 proposées, 0 réserves, 7 rejets ; médiane 6.843s, temps divisé par 2.57 face au v9 G353 historique (recettes différentes). Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette. Aucun déploiement ; runtime inchangé, services actifs, GPU libres, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
+
+
+## C-MSG-G355 — Juggernaut XI v11 pris, 14/11/2026, Codex/GPT
+
+Base 8ec671e0bcbf92d792e0ea28072d47d2538cef23. Suite I06 : v11 standard RunDiffusion, révision f836518c7a75f47a9e26bc661ff9509ef2ceb7c0. Douze images, DPM++2M Karras30/CFG5, FP16 une V100, VAE FP32. Référence v9 G353 historique, mêmes paramètres et grille, aucune nouvelle génération v9 prévue. Fiche mentionnant une porte HF mais API gated=false et URL publique auteur HTTP200 sans authentification ; aucun formulaire ni renseignement personnel soumis. Licence CC BY-NC-ND4.0 et conditions auteur archivées, usage privé non commercial ; aucune redistribution des poids ni entraînement/promotion.
+
+
+## C-MSG-G355 — Juggernaut XI v11 terminé, 14/11/2026, Codex/GPT
+
+[Rapport G355](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-XI-G355.md) : Juggernaut XI v11, une V100 FP16, DPM++2M Karras30/CFG5 ; 12 nouvelles images et répétition exacte. 2/8 proposées, 1 réserves, 5 rejets ; médiane 17.562s. V9 G353 historique3/8/17,600s, même recette. Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille. Runtime inchangé, services actifs, GPU libres, machine allumée. Attribution RunDiffusion/KandooAI, CC BY-NC-ND4.0 et conditions auteur conservées ; aucun poids redistribué. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
