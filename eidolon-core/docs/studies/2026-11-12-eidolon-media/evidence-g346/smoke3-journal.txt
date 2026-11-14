@@ -1,0 +1,3 @@
+2026-11-14T18:46:00+01:00 eidolon-os flock[71830]: {"phase": "load_start", "precision": "fp16"}
+2026-11-14T18:46:03+01:00 eidolon-os flock[71830]: {"phase": "loaded", "distribution": {"cuda:0": 4486343040}}
+2026-11-14T18:46:09+01:00 eidolon-os flock[71830]: {"phase": "generated", "index": 0, "case": "hand", "seconds": 5.228926518000662}

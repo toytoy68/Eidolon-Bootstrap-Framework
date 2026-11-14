@@ -1,0 +1,27 @@
+[
+  {
+    "case": "hand",
+    "identical": true,
+    "tokens": 33
+  },
+  {
+    "case": "objects",
+    "identical": true,
+    "tokens": 39
+  },
+  {
+    "case": "katana",
+    "identical": true,
+    "tokens": 55
+  },
+  {
+    "case": "duo",
+    "identical": true,
+    "tokens": 64
+  },
+  {
+    "case": "negative",
+    "identical": true,
+    "tokens": 1
+  }
+]

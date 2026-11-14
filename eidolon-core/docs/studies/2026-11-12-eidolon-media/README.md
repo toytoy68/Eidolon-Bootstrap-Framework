@@ -101,3 +101,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G345 — Sana Sprint, 14/11/2026
 
 [Rapport G345](SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée.
+
+
+## Avancement G346 — SD3.5 Medium, 14/11/2026
+
+[Rapport G346](SD35-MEDIUM-G346.md) : SD3.5 Medium FP16 sur une V100, trois encodeurs CPU FP32,40étapes/CFG4,5 sans SLG ;12images, répétition exacte. Natives :1/8 proposée,1 réserve,6 rejets. Médiane22,376s, encodage cinq textes42,891s. Pic10 552Mio, GPU/HBM46/49°C. Deux mains à six doigts, katanas incohérents, duos non conformes. Incidents avant génération conservés ; aucun runtime modifié. GPU libres, services actifs, machine allumée ; aucune promotion. SLG et Large/Turbo non testés.

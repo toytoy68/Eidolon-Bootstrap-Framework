@@ -1,0 +1,218 @@
+{
+  "model": "SD3.5-Medium",
+  "precision": "fp16",
+  "files": [
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "text_encoder/model.safetensors",
+      "bytes": 247323896,
+      "sha256": "71e183d11db0c6b6282a4d9e0abb74125edc8692393e89ed8ee5571005f35cb1",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "text_encoder_2/model.safetensors",
+      "bytes": 1389382176,
+      "sha256": "ec310df2af79c318e24d20511b601a591ca8cd4f1fce1d8dff822a356bcdb1f4",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "text_encoder_3/model-00001-of-00002.safetensors",
+      "bytes": 4994582104,
+      "sha256": "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "text_encoder_3/model-00002-of-00002.safetensors",
+      "bytes": 4530066248,
+      "sha256": "f63154532130422309532ff56f11945fbea8266c958e3133e8e5aef85c6293c7",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "transformer/diffusion_pytorch_model.safetensors",
+      "bytes": 4939433672,
+      "sha256": "f81eb93a348be218af757dd095cbda45090380d9bbda91049442e0e40bb4cc95",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-medium-ungated",
+      "revision": "1cb9becf522803da9d25c2713d1a82b41bc6198d",
+      "author_repo": "stabilityai/stable-diffusion-3.5-medium",
+      "author_revision": "b940f670f0eda2d07fbb75229e779da1ad11eb80",
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "bytes": 167666902,
+      "sha256": "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",
+      "source": "download"
+    }
+  ],
+  "text_encoder": "CLIP-L + CLIP-G + T5-XXL CPU FP32,256 T5 tokens",
+  "vae": "GPU0 FP32, native tiling",
+  "attention": "PyTorch EFFICIENT_ATTENTION transformer; MATH VAE",
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "encode_seconds": 42.89130972800194,
+  "embeddings_reused": true,
+  "load_seconds": 3.6438071110023884,
+  "parameter_bytes_by_device": {
+    "cuda:0": 4486343040
+  },
+  "device_map": {
+    "": 0
+  },
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "shift": 3.0,
+    "use_dynamic_shifting": false,
+    "base_shift": 0.5,
+    "max_shift": 1.15,
+    "base_image_seq_len": 256,
+    "max_image_seq_len": 4096,
+    "invert_sigmas": false,
+    "shift_terminal": null,
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "time_shift_type": "exponential",
+    "stochastic_sampling": false,
+    "_use_default_values": [
+      "use_dynamic_shifting",
+      "max_image_seq_len",
+      "max_shift",
+      "use_karras_sigmas",
+      "stochastic_sampling",
+      "base_image_seq_len",
+      "invert_sigmas",
+      "base_shift",
+      "shift_terminal",
+      "use_beta_sigmas",
+      "time_shift_type",
+      "use_exponential_sigmas"
+    ],
+    "_class_name": "FlowMatchEulerDiscreteScheduler",
+    "_diffusers_version": "0.29.0.dev0"
+  },
+  "steps": 40,
+  "guidance": 4.5,
+  "negative_prompt": "",
+  "skip_guidance_layers": null,
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 40,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 40,
+      "condition": "screen4x3"
+    }
+  ],
+  "pipeline_source_sha256": "386b07eb4848fd8025990f108b276c0d1fb4202ca13e900e7bb7e824ca7ac628",
+  "runner_sha256": "639c2760ee64693426af53e2e23ba8ae41e9d6d627443f2f7a12347ae080815c",
+  "promotion_allowed": false
+}

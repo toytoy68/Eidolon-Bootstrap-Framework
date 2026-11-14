@@ -1,0 +1,128 @@
+[
+  {
+    "path": "LICENSE.md",
+    "bytes": 11726,
+    "sha256": "9b60b9d0411f54d4087484ad4acf28ca6fd9f6a84c30ddacb04de2c623254749",
+    "author_blob": "b07f871a39b333819b9a986ac2dbb7f6fcb7a95e"
+  },
+  {
+    "path": "model_index.json",
+    "bytes": 706,
+    "sha256": "b5e97ca0d3c0cd9a1e3ed91a71bbdd489de7941b23fe038b3aaa9acf36fd1543",
+    "author_blob": "d1e85db2887d95ee9e0f6206771a4c52f9233e2f"
+  },
+  {
+    "path": "scheduler/scheduler_config.json",
+    "bytes": 141,
+    "sha256": "677e1ed36ca0de4ac8cc766ca58869e8649673d5f1d47eb8f8aef511a18ae8f7",
+    "author_blob": "eca5b2eed3727b3ad375eb20e467e4264120fd5d"
+  },
+  {
+    "path": "text_encoder/config.json",
+    "bytes": 574,
+    "sha256": "3ae637e6409ed10c125e13b935461060d629ee069eea7cb8c3e9eee26b01ff1a",
+    "author_blob": "dbda34b6008657d7be7423051c47abd4c94e263a"
+  },
+  {
+    "path": "text_encoder_2/config.json",
+    "bytes": 570,
+    "sha256": "786ac791f8ae2168eca583978d89e97b704579e4873a2ca36e2d8b5af561f625",
+    "author_blob": "35886d089e214b9e35db394d4d3d122a19baf231"
+  },
+  {
+    "path": "text_encoder_3/config.json",
+    "bytes": 740,
+    "sha256": "9035948b0904c536918a88b5d984a52cfca26a5c57efa9e90149790cf38c151e",
+    "author_blob": "5f020057278e664f8d4875a172b8266a9707c249"
+  },
+  {
+    "path": "text_encoder_3/model.safetensors.index.json",
+    "bytes": 19885,
+    "sha256": "3bacec0f0cf392399d4a385908f67dd73df99c9e9cfee669f148858ba9fbdb0a",
+    "author_blob": "c8728bc3dca59d2616a2a594cbac3ddb9eb77d5b"
+  },
+  {
+    "path": "tokenizer/merges.txt",
+    "bytes": 524619,
+    "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+    "author_blob": "76e821f1b6f0a9709293c3b6b51ed90980b3166b"
+  },
+  {
+    "path": "tokenizer/special_tokens_map.json",
+    "bytes": 588,
+    "sha256": "2cdb3b8331a60c92fc1e55a13e9fd61fd2293c5a51275fdcccd62b780052530e",
+    "author_blob": "cf0682d6de72c1547f41b4f6d7c59f62deffef94"
+  },
+  {
+    "path": "tokenizer/tokenizer_config.json",
+    "bytes": 705,
+    "sha256": "6bdcee9ccce2a16ca2b4c0c5ed00b42c50ea225f4472a8c4c1e963a2902c2881",
+    "author_blob": "180a4e1be2a7d0b38a44108d6f24f585f35147b1"
+  },
+  {
+    "path": "tokenizer/vocab.json",
+    "bytes": 1059962,
+    "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349",
+    "author_blob": "469be27c5c010538f845f518c4f5e8574c78f7c8"
+  },
+  {
+    "path": "tokenizer_2/merges.txt",
+    "bytes": 524619,
+    "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+    "author_blob": "76e821f1b6f0a9709293c3b6b51ed90980b3166b"
+  },
+  {
+    "path": "tokenizer_2/special_tokens_map.json",
+    "bytes": 576,
+    "sha256": "c4dbb96da703fb38f10ccf0490df2fd476811c5a3e71b7e0189cffeed3224e25",
+    "author_blob": "b3b93aa8e7fd8552501067e63e04e2958298c2b2"
+  },
+  {
+    "path": "tokenizer_2/tokenizer_config.json",
+    "bytes": 856,
+    "sha256": "e70eb3e2b85a508e32bb81c32c13fc3f2b015548ca469b94627c2f32e445cba1",
+    "author_blob": "f4299b251265219ef1369503c04d837bd9528f0a"
+  },
+  {
+    "path": "tokenizer_2/vocab.json",
+    "bytes": 1059962,
+    "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349",
+    "author_blob": "469be27c5c010538f845f518c4f5e8574c78f7c8"
+  },
+  {
+    "path": "tokenizer_3/special_tokens_map.json",
+    "bytes": 2543,
+    "sha256": "7a1985a994c41886db38c719d2a3d2f40606663cc19d7c5d6a85d349320e06d2",
+    "author_blob": "17ade346a1042cbe0c1436f5bedcbd85c099d582"
+  },
+  {
+    "path": "tokenizer_3/spiece.model",
+    "bytes": 791656,
+    "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+    "author_blob": "317a5ccbde45300f5d1d970d4d449af2108b147e"
+  },
+  {
+    "path": "tokenizer_3/tokenizer.json",
+    "bytes": 2424035,
+    "sha256": "652ffdfc379606bad8edfb653f92dcf28e2e5dbf1cdfe50d685d29b2cad12dd6",
+    "author_blob": "6f055030106071d446e559644b285557a82fefd4"
+  },
+  {
+    "path": "tokenizer_3/tokenizer_config.json",
+    "bytes": 20617,
+    "sha256": "83b3e7737eef754efca607d9f580798cc35457daa96052cc60179f095a375c14",
+    "author_blob": "15377e70a0e43e060a98bbc5cb6245664d906e6c"
+  },
+  {
+    "path": "transformer/config.json",
+    "bytes": 524,
+    "sha256": "b6ea8128277df286573ce1937c36ce42a5a84e976331091ffccb1d05893dc299",
+    "author_blob": "313f18cd3d297a5d77ceab073ef54dbec312c0f0"
+  },
+  {
+    "path": "vae/config.json",
+    "bytes": 809,
+    "sha256": "58557f2439dfa867450caef425b5d11160be8aa9c34d60dbf23a94a6a94cb060",
+    "author_blob": "059ae000f22d9c502030ead3c3f1db2718ae6f1f"
+  }
+]

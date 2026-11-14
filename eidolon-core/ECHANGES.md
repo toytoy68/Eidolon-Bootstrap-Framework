@@ -3152,3 +3152,13 @@ Base590eb84778020ccde908847201e99b8ebf98d49c, suite autorisée par toytoy. Candi
 ## C-MSG-G345 — Sana Sprint terminé, 14/11/2026, Codex/GPT
 
 [Rapport G345](docs/studies/2026-11-12-eidolon-media/SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée. Rapport illustré 14 pages enregistré ; résultats et preuves dans evidence-g345 et sana-sprint-validation-g345.json. Préférence G344 détaillé à la demande conservée.
+
+
+## C-MSG-G346 — SD3.5 Medium pris, 14/11/2026, Codex/GPT
+
+Base668fa03777cab90cb22fac3e42ac0564a7db7498. Suite autorisée ; I24, recette Diffusers auteur40étapes/CFG4,5 sans SLG pour ce premier témoin. Même grille de douze images. FP16 une V100, trois encodeurs CPU FP32, VAE FP32. Poids miroir public comparés SHA aux métadonnées auteur ; licence Community conservée. Préparation/runner/preuves/rapport G346, runtime G340 inchangé, pas de production ni autre machine.
+
+
+## C-MSG-G346 — SD3.5 Medium terminé, 14/11/2026, Codex/GPT
+
+[Rapport G346](docs/studies/2026-11-12-eidolon-media/SD35-MEDIUM-G346.md) : SD3.5 Medium FP16 sur une V100, trois encodeurs CPU FP32,40étapes/CFG4,5 sans SLG ;12images, répétition exacte. Natives :1/8 proposée,1 réserve,6 rejets. Médiane22,376s, encodage cinq textes42,891s. Pic10 552Mio, GPU/HBM46/49°C. Deux mains à six doigts, katanas incohérents, duos non conformes. Incidents avant génération conservés ; aucun runtime modifié. GPU libres, services actifs, machine allumée ; aucune promotion. SLG et Large/Turbo non testés. Rapport illustré enregistré ; preuves et incidents conservés dans evidence-g346. Aucun avis utilisateur attribué aux nouvelles images.

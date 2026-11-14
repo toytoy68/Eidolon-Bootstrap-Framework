@@ -1,0 +1,1 @@
+["sudo", "-n", "systemd-run", "--unit=eidolon-media-sd35-g346-prepare", "--collect", "--property=User=toytoy", "--property=RuntimeMaxSec=3600", "/usr/bin/python3", "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/prepare_g346.py"]

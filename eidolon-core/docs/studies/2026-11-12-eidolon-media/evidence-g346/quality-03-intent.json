@@ -1,0 +1,8 @@
+{
+  "case": "objects",
+  "width": 1024,
+  "height": 1024,
+  "seed": 20261113,
+  "steps": 40,
+  "condition": "quality"
+}

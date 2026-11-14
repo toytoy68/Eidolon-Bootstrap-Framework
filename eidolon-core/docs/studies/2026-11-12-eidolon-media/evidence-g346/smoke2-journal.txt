@@ -1,0 +1,17 @@
+2026-11-14T18:44:37+01:00 eidolon-os flock[71324]: {"phase": "encode_cpu_start"}
+2026-11-14T18:44:37+01:00 eidolon-os flock[71324]: `torch_dtype` is deprecated! Use `dtype` instead!
+2026-11-14T18:44:39+01:00 eidolon-os flock[71324]: [334B blob data]
+2026-11-14T18:44:47+01:00 eidolon-os flock[71324]: {"phase": "encoded", "case": "hand", "shape": [1, 333, 4096]}
+2026-11-14T18:44:55+01:00 eidolon-os flock[71324]: {"phase": "encoded", "case": "objects", "shape": [1, 333, 4096]}
+2026-11-14T18:45:03+01:00 eidolon-os flock[71324]: {"phase": "encoded", "case": "katana", "shape": [1, 333, 4096]}
+2026-11-14T18:45:11+01:00 eidolon-os flock[71324]: {"phase": "encoded", "case": "duo", "shape": [1, 333, 4096]}
+2026-11-14T18:45:20+01:00 eidolon-os flock[71324]: {"phase": "encoded", "case": "negative", "shape": [1, 333, 4096]}
+2026-11-14T18:45:20+01:00 eidolon-os flock[71324]: {"phase": "load_start", "precision": "fp16"}
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]: Traceback (most recent call last):
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/sd35_medium_probe_g346.py", line 146, in <module>
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:     if __name__=='__main__':main()
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:                             ^^^^^^
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/sd35_medium_probe_g346.py", line 110, in main
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:     pipe=StableDiffusion3Pipeline(scheduler=scheduler,vae=vae,text_encoder=None,tokenizer=None,transformer=transformer);pipe.set_progress_bar_config(disable=True)
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]:          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T18:45:23+01:00 eidolon-os flock[71324]: TypeError: StableDiffusion3Pipeline.__init__() missing 4 required positional arguments: 'text_encoder_2', 'tokenizer_2', 'text_encoder_3', and 'tokenizer_3'

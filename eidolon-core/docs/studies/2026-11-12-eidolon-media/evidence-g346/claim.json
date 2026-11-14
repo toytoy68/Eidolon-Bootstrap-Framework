@@ -1,0 +1,8 @@
+{
+  "base": "668fa03777cab90cb22fac3e42ac0564a7db7498",
+  "time": "2026-11-14T17:39:57.825492+00:00",
+  "model": "SD3.5 Medium",
+  "recipe": "40 steps CFG4.5; no SLG initial baseline; FP16 single V100; three CPU FP32 encoders; FP32 VAE; native256 tokens",
+  "authorization": "User: Ok attaque la suite",
+  "promotion_allowed": false
+}

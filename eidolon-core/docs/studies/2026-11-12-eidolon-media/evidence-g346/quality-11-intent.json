@@ -1,0 +1,8 @@
+{
+  "case": "duo",
+  "width": 768,
+  "height": 576,
+  "seed": 20261113,
+  "steps": 40,
+  "condition": "screen4x3"
+}

@@ -1,0 +1,7 @@
+2026-11-14T18:41:25+01:00 eidolon-os python3[70532]: {"verified": "text_encoder/model.safetensors", "source": "download"}
+2026-11-14T18:41:34+01:00 eidolon-os python3[70532]: {"verified": "text_encoder_2/model.safetensors", "source": "download"}
+2026-11-14T18:42:13+01:00 eidolon-os python3[70532]: {"verified": "text_encoder_3/model-00001-of-00002.safetensors", "source": "download"}
+2026-11-14T18:42:35+01:00 eidolon-os python3[70532]: {"verified": "text_encoder_3/model-00002-of-00002.safetensors", "source": "download"}
+2026-11-14T18:43:00+01:00 eidolon-os python3[70532]: {"verified": "transformer/diffusion_pytorch_model.safetensors", "source": "download"}
+2026-11-14T18:43:01+01:00 eidolon-os python3[70532]: {"verified": "vae/diffusion_pytorch_model.safetensors", "source": "download"}
+2026-11-14T18:43:01+01:00 eidolon-os python3[70532]: PREPARED
