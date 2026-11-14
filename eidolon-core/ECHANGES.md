@@ -3142,3 +3142,13 @@ Z-Image non Turbo FP32 réparti : contrôle512²59,816s puis première native102
 ## C-MSG-G344 — Z-Image non Turbo terminé, 14/11/2026, Codex/GPT
 
 Douze images et répétition exacte ;6/8 natives proposées,2 réserves katana,0 rejet natif. Formats écran rejetés pour cadrage coupé. Médiane279,383s, encodage5textes69,896s ; maxima GPU51/49°C,HBM53/53°C, pics14 514/14 494Mio. Rendu01 apprécié par toytoy ; délai prohibitif, candidat réservé aux demandes détaillées. Rapport illustré complété sous la même identité, version1. Preuves finales dans docs/studies/2026-11-12-eidolon-media/evidence-g344/ ; checkpoints intermédiaires conservés. Aucun entraînement ni promotion, GPU libres, services actifs et machine allumée.
+
+
+## C-MSG-G345 — Sana Sprint1,6B pris, 14/11/2026, Codex/GPT
+
+Base590eb84778020ccde908847201e99b8ebf98d49c, suite autorisée par toytoy. Candidat rapide I27 : Sana Sprint1,6B auteur19683c58b7ea290e55cedd8950ae1d86ada7ef96. Quatre étapes/guidage intégré4,5, grilleG344inchangée. FP32 sur une V100 pour préserver la plage des poidsBF16 ; Gemma2 CPU, DC-AE FP32. Qualification512² puis natives si viable, runtime isoléG340 conservé. Préparation/runner/preuves/rapport G345 et avancement, sans production ni entraînement. Qwen2.1 demande une pile absente (QwenImage21, Transformers5.17), étude distincte avant ses essais.
+
+
+## C-MSG-G345 — Sana Sprint terminé, 14/11/2026, Codex/GPT
+
+[Rapport G345](docs/studies/2026-11-12-eidolon-media/SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée. Rapport illustré 14 pages enregistré ; résultats et preuves dans evidence-g345 et sana-sprint-validation-g345.json. Préférence G344 détaillé à la demande conservée.

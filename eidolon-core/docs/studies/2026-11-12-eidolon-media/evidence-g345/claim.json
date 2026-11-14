@@ -1,0 +1,11 @@
+{
+  "lot": "G345",
+  "base": "590eb84778020ccde908847201e99b8ebf98d49c",
+  "time": "2026-11-14T14:22:25.152624+00:00",
+  "candidate": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+  "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+  "steps": 4,
+  "guidance": 4.5,
+  "precision": "FP32 on V100, author BF16 weights",
+  "grid": "G339-G344 identical prompts/seeds/dimensions"
+}

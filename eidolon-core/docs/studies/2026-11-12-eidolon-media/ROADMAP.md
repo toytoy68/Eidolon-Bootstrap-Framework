@@ -111,3 +111,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G344 — Z-Image non Turbo, 14/11/2026
 
 [Rapport G344](ZIMAGE-BASE-G344.md) :12images terminées,6/8 natives proposées,2 réserves katana ;279,383s médianes,28étapes/CFG4,FP32 sur deux V100. Formats écran rejetés pour cadrage. Maxima GPU51/49°C,HBM53/53°C ; répétition exacte. Usage détaillé à la demande selon toytoy, aucune promotion. GPU libres, services actifs, machine allumée.
+
+
+## Avancement G345 — Sana Sprint, 14/11/2026
+
+[Rapport G345](SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée.

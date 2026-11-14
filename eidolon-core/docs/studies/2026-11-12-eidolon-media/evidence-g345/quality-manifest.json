@@ -1,0 +1,176 @@
+{
+  "model": "Sana-Sprint-1.6B",
+  "precision": "fp32",
+  "files": [
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+      "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+      "path": "text_encoder/model-00001-of-00002.safetensors",
+      "name": "model-00001-of-00002.safetensors",
+      "bytes": 4988024144,
+      "sha256": "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71"
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+      "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+      "path": "text_encoder/model-00002-of-00002.safetensors",
+      "name": "model-00002-of-00002.safetensors",
+      "bytes": 240691624,
+      "sha256": "48e14f6b7a917e54cabc4ff2047ac2bfe0dae663e771eed3a8acf4ea27dcac18"
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+      "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+      "path": "transformer/diffusion_pytorch_model.safetensors",
+      "name": "diffusion_pytorch_model.safetensors",
+      "bytes": 3220530536,
+      "sha256": "effac51c73537487ac1505993f0e7fbd292c310b23aae96f2c3e53131e876f2d"
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+      "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "name": "diffusion_pytorch_model.safetensors",
+      "bytes": 1249044836,
+      "sha256": "dfd991d1b54ffabf22745c5885589d8f2a7bc59930d95d92bd741c4fc64454bb"
+    }
+  ],
+  "text_encoder": "Gemma2 CPU FP32 eager,300 tokens",
+  "vae": "GPU0 FP32,tiled512px",
+  "attention": "native Sana linear attention FP32; PyTorch MATH for other attention",
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "encode_seconds": 26.757161907999034,
+  "embeddings_reused": true,
+  "load_seconds": 3.4981397909996303,
+  "parameter_bytes_by_device": {
+    "cuda:0": 6440949888
+  },
+  "device_map": {
+    "": 0
+  },
+  "prompt_instruction": [
+    "Given a user prompt, generate an 'Enhanced prompt' that provides detailed visual descriptions suitable for image generation. Evaluate the level of detail in the user prompt:",
+    "- If the prompt is simple, focus on adding specifics about colors, shapes, sizes, textures, and spatial relationships to create vivid and concrete scenes.",
+    "- If the prompt is already detailed, refine and enhance the existing details slightly without overcomplicating.",
+    "Here are examples of how to transform or refine prompts:",
+    "- User Prompt: A cat sleeping -> Enhanced: A small, fluffy white cat curled up in a round shape, sleeping peacefully on a warm sunny windowsill, surrounded by pots of blooming red flowers.",
+    "- User Prompt: A busy city street -> Enhanced: A bustling city street scene at dusk, featuring glowing street lamps, a diverse crowd of people in colorful clothing, and a double-decker bus passing by towering glass skyscrapers.",
+    "Please generate only the enhanced description for the prompt below and avoid including any additional commentary or evaluations:",
+    "User Prompt: "
+  ],
+  "resolution_binning": false,
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "prediction_type": "trigflow",
+    "sigma_data": 0.5,
+    "_class_name": "SCMScheduler",
+    "_diffusers_version": "0.33.0.dev0"
+  },
+  "steps": 4,
+  "guidance": 4.5,
+  "max_timesteps": 1.5708,
+  "intermediate_timesteps": null,
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen4x3"
+    }
+  ],
+  "pipeline_source_sha256": "15c9013e9c0485e68b43f7e7cc5b76fe7430ea04c0b98b39bcafb4b7055acdf8",
+  "runner_sha256": "4bc0791582dfd7fd7c734dc3e99000048b99bcb6a8ca11f5bca8571a13c37fb3",
+  "promotion_allowed": false
+}
