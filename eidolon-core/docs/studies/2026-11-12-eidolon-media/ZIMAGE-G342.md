@@ -46,8 +46,11 @@ Sources : [modèle auteur](https://huggingface.co/Tongyi-MAI/Z-Image-Turbo), [co
 | Pics NVML puissance GPU0 / GPU1 | 322,05 / 325,01 W ; consigne300W |
 | CPU Tdie maximal | 55,625 °C |
 
-Comparaison de recettes : Klein G340 3,39566s et6/8 proposés ; dev G338 70,57697s et4/8 proposés. Z-Image enrichit le comparatif par ses matières et portraits convaincants, sans résoudre toutes les consignes. Les compteurs identiques à dev ne portent pas sur les mêmes images. FP16 et attention efficace de Z-Image non testés ; aucune conclusion sur leur stabilité/vitesse. La fiche auteur annonce8NFEs pour son exemple9étapes, mais notre pile0.37.0 mesure9appels : la mesure réelle est conservée.
+Comparaison de recettes : Klein G340 3,39566s et5/8 proposés ; dev G338 70,57697s et4/8 proposés. Z-Image enrichit le comparatif par ses matières et portraits convaincants, sans résoudre toutes les consignes. Les compteurs identiques à dev ne portent pas sur les mêmes images. FP16 et attention efficace de Z-Image non testés ; aucune conclusion sur leur stabilité/vitesse. La fiche auteur annonce8NFEs pour son exemple9étapes, mais notre pile0.37.0 mesure9appels : la mesure réelle est conservée.
 
 Runtime historique inchangé, PNG natifs revérifiés par SHA256, GPU sans client au contrôle final ; cinq services actifs et VM Memory-engine en marche. Machine laissée allumée. Rapport illustré `Eidolon-comparatif-ZImage-G342.pdf`.
 
 G341 a été retrouvé dans un commit local absent de la référence distante. Son contenu est conservé avec ce lot ; commit original301f4eab70e9ab09e72b893eaa23f017a3b9dfb3 gardé dans la branche locale `codex/archive-g341-before-g342`. La publication inclut les fichiers G341 et les résultats de qualification RAM sans les modifier.
+
+
+Rectificatif du 14 novembre (G343), signalement toytoy confirmé : référence Klein01 et répétition09 rejetées pour six doigts. Klein corrigé à5/8 proposées,3rejets ; Z-Image reste4/8. PNG et mesures inchangés. Détail avant/après : `visual-correction-g343.json`.

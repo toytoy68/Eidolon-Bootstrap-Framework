@@ -498,10 +498,16 @@
       "rendering": "Éclairage doux et forme cohérente."
     },
     "1": {
-      "verdict": "Proposée",
-      "comment": "Cinq doigts séparés et cadrage conformes, anatomie globalement plausible sur cet aperçu. Paume très lumineuse, détails localement lavés.",
-      "comparison": "Klein paraît plus photographique que Schnell, avec un poignet et une texture plus détaillés. Il évite l'excroissance marquée du pouce de dev, mais son exposition est moins maîtrisée.",
-      "rendering": "Texture crédible, éclairage trop fort sur la paume."
+      "verdict": "Rejet",
+      "scores": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage.",
+      "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+      "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
     },
     "2": {
       "verdict": "Proposée",
@@ -546,10 +552,16 @@
       "rendering": "Ensemble photographique agréable, visages un peu lissés."
     },
     "9": {
-      "verdict": "Proposée",
-      "comment": "Répétition exacte de G340-01 : mêmes pixels et même paume trop lumineuse. Contrôle hors score principal.",
-      "comparison": "Même constat que la paire 01. La répétition exacte est contrôlée séparément pour chaque modèle.",
-      "rendering": "Texture plausible ; exposition excessive de la paume."
+      "verdict": "Rejet",
+      "scores": [
+        1,
+        1,
+        4,
+        3
+      ],
+      "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage. Répétition identique de 01, hors score natif.",
+      "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+      "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
     },
     "10": {
       "verdict": "Rejet",
@@ -566,9 +578,9 @@
   },
   "reviewer": "GPT, non-blind JPEG previews, toytoy pending",
   "native_summary": {
-    "proposed": 6,
+    "proposed": 5,
     "review": 0,
-    "rejected": 2,
+    "rejected": 3,
     "median_gpu_decode_s": 3.395657406497776
   },
   "historical_references": [
@@ -578,5 +590,6 @@
   "runtime_preparation_issue": "Copied optional PEFT0.14 blocked Diffusers import; removed only in isolated clone, then pip check/imports passed. Original preparation script preserved, corrected runtime freeze authoritative.",
   "run_path": "/srv/eidolon/workspaces/media-20261112/klein-g340/run01",
   "library_report_id": "libfile_60c16c9d7d5c819189777f02ff516bdf",
-  "promotion_allowed": false
+  "promotion_allowed": false,
+  "visual_correction": "visual-correction-g343.json"
 }

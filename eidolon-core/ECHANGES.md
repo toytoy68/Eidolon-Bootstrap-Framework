@@ -3117,3 +3117,13 @@ Base301f4eab70e9ab09e72b893eaa23f017a3b9dfb3 (G341 local, publication à vérifi
 ## C-MSG-G342 — Z-Image terminé, 14/11/2026, Codex/GPT
 
 [Rapport G342](docs/studies/2026-11-12-eidolon-media/ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation. G341 local conservé et inclus dans la publication, sans modification de ses preuves.
+
+
+## C-MSG-G343 — Rectification visuelle prise, 14/11/2026, Codex/GPT
+
+Signalement toytoy : six doigts sur la référence Klein de G342-01. Recomptage confirmé : un pouce et cinq autres doigts sur Klein G340-01, répétition identique G340-09. Correction des revues, compteurs, synthèses et PDF G340/G342 ; aucune nouvelle inférence ni modification des PNG ou mesures. Base3848baf5e9b5d317dd3f5d91880cca9efa176982.
+
+
+## C-MSG-G343 — Rectification visuelle terminée, 14/11/2026, Codex/GPT
+
+Erreur de comptage reconnue : Klein G340-01 a six doigts ; sa répétition09 aussi. Revues et synthèses corrigées :5/8 proposées,0réserve,3rejets natifs. Référence Klein des pages01/09 G342 corrigée ; Z-Image reste4/8 proposées,2réserves,2rejets. Deux PDF corrigés sous leur identité existante (version1). Historique avant/après dans docs/studies/2026-11-12-eidolon-media/visual-correction-g343.json. Aucune inférence ; PNG, mesures et systèmes inchangés. L'entrée G340 historique ci-dessus est remplacée par ce rectificatif pour les verdicts et compteurs.

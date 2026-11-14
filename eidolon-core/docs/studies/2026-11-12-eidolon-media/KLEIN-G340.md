@@ -30,7 +30,7 @@ Sources primaires : [modèle](https://huggingface.co/black-forest-labs/FLUX.2-kl
 
 ## Résultats réels et conclusion
 
-Les 12 images du run01 sont terminées sans non-fini ni erreur d'inférence. Les indices1 et9 ont des pixels identiques. Huit natives1024² : **6 proposées, 0 réserve, 2 rejets** après revue GPT. Deux mains, deux scènes d'objets et deux duos en pied proposés ; deux katanas rejetés pour assemblage impossible ou lame détachée de sa poignée. Le contrôle512² est proposé ; les formats1024×576 et768×576 sont rejetés pour pieds rognés. Aucun ajustement de prompt entre modèles.
+Les 12 images du run01 sont terminées sans non-fini ni erreur d'inférence. Les indices1 et9 ont des pixels identiques. Huit natives1024² : **5 proposées, 0 réserve, 3 rejets** après revue GPT. Une main, deux scènes d'objets et deux duos en pied proposés ; main01 rejetée pour six doigts, deux katanas rejetés pour assemblage impossible ou lame détachée de sa poignée. Le contrôle512² est proposé ; les formats1024×576 et768×576 sont rejetés pour pieds rognés. Aucun ajustement de prompt entre modèles.
 
 | Mesure | Dev G338 | Schnell G339 | Klein G340 |
 | --- | --- | --- | --- |
@@ -38,11 +38,14 @@ Les 12 images du run01 sont terminées sans non-fini ni erreur d'inférence. Les
 | Médiane GPU + décodage1024² | 70,57697 s | 6,45102 s | 3,39566 s |
 | Encodage CPU des4textes | 35,86490 s | 35,43868 s | 57,17462 s |
 | Chargement/placement | 13,17699 s | 13,15788 s | 4,62022 s |
-| Propositions GPT natives | 4/8 | 4/8 | 6/8 |
+| Propositions GPT natives | 4/8 | 4/8 | 5/8 |
 | Pic mémoire GPU0/GPU1 | 13 366/13 082 Mio | 13 346/13 082 Mio | 9 728/310 Mio |
 
 Klein : paramètres du générateur7751089152octets sur cuda:0 ; GPU1 sans calcul. Allocation PyTorch maximale8921172992octets GPU0, différente de la mémoire totale NVML. Maxima GPU/HBM41/43°C, CPU Tdie56,875°C ; pic NVML319,62W malgré une consigne300W. Les pics ne sont pas une énergie ni une puissance moyenne. GPU1 reste à0%utilisation.
 
-Le rendu des textures et des portraits est convaincant, avec parfois une lumière trop forte et des visages lissés. Klein satisfait mieux le cadrage carré sur ce lot ; dev reste plus crédible sur les katanas. Six propositions sur huit ne prouvent pas une supériorité générale. Le backend d'attention plus efficace et les différences d'architecture interdisent d'attribuer toute la vitesse au modèle seul. La prochaine étude utile peut comparer les variantes Klein base, ou l'attention efficace sur FLUX.1 dans un lot distinct ; aucune de ces pistes n'est ici exécutée.
+Le rendu des textures et des portraits est convaincant, avec parfois une lumière trop forte et des visages lissés. Klein satisfait mieux le cadrage carré sur ce lot ; dev reste plus crédible sur les katanas. Cinq propositions sur huit ne prouvent pas une supériorité générale. Le backend d'attention plus efficace et les différences d'architecture interdisent d'attribuer toute la vitesse au modèle seul. La prochaine étude utile peut comparer les variantes Klein base, ou l'attention efficace sur FLUX.1 dans un lot distinct ; aucune de ces pistes n'est ici exécutée.
 
 État final vérifié : GPU sans client, cinq services actifs, VM Memory-engine en cours ; runtime historique inchangé, machine allumée. PNG natifs revérifiés par SHA256. Aucun entraînement ni promotion. Rapport illustré `Eidolon-comparatif-Klein-G340.pdf`, Library `libfile_60c16c9d7d5c819189777f02ff516bdf`.
+
+
+Rectificatif du 14 novembre (G343), signalement toytoy confirmé : référence Klein01 et répétition09 rejetées pour six doigts. Klein corrigé à5/8 proposées,3rejets ; Z-Image reste4/8. PNG et mesures inchangés. Détail avant/après : `visual-correction-g343.json`.

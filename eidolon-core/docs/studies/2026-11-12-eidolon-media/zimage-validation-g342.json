@@ -603,7 +603,7 @@
         4
       ],
       "comment": "Cinq doigts séparés, paume de face et poignet entier. Volumes et articulations plausibles ; légère raideur des doigts sans défaut éliminatoire évident.",
-      "comparison": "Z-Image maîtrise mieux l’exposition que Klein sur cette paire. Il évite la réserve marquée de dev sur la base du pouce ; cette observation ne suffit pas à valider toutes les mains.",
+      "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
       "rendering": "Éclairage doux, plis et dégradés de peau lisibles."
     },
     "2": {
@@ -699,7 +699,7 @@
         4
       ],
       "comment": "Répétition de la main 01, pixels identiques vérifiés. Même anatomie plausible et éclairage doux. Contrôle exclu du score principal.",
-      "comparison": "Même constat que la paire 01 ; la reproductibilité est vérifiée séparément pour chaque modèle.",
+      "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
       "rendering": "Peau et lumière naturelles."
     },
     "10": {
@@ -740,5 +740,6 @@
   ],
   "library_report_id": "libfile_fde3_f-73fd3150fe6c8191a15654ec349ff4f3_d168d29c22b4819186c4d3b8d1b7451f",
   "run_path": "/srv/eidolon/workspaces/media-20261112/zimage-g342/run01",
-  "promotion_allowed": false
+  "promotion_allowed": false,
+  "visual_correction": "visual-correction-g343.json"
 }

@@ -80,7 +80,7 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 
 ## Avancement G340 — Klein4B, 13/11/2026
 
-[Rapport G340](KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion.
+[Rapport G340](KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native5/8 proposées,3rejets (main01 à six doigts et deux katanas) ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion.
 
 
 ## G341 — 14 novembre 2026
