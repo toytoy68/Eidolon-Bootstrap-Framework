@@ -141,3 +141,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G353 — Juggernaut v10/v9, 14/11/2026
 
 [Rapport G353](JUGGERNAUT-X-G353.md) : Juggernaut v10/v9, même DPM++2M Karras30/CFG5 sur une V100 ; 24 images et deux répétitions exactes. V10 1/8 proposées, 1 réserves, 6 rejets / 17.565s ; v9 3/8 proposées, 0 réserves, 5 rejets / 17.600s. V10 ne remplace pas v9 pour cette grille. Conserver les deux comme options spécialisées ; aucun nouveau modèle par défaut. Export JSON du scheduler corrigé avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G354 — Juggernaut Lightning, 14/11/2026
+
+[Rapport G354](JUGGERNAUT-LIGHTNING-G354.md) : Juggernaut XL Lightning, une V100 FP16, DPM++ SDE Karras6/CFG1,8, 11 appels UNet ; 12 images et répétition exacte. 1/8 proposées, 0 réserves, 7 rejets ; médiane 6.843s, temps divisé par 2.57 face au v9 G353 historique (recettes différentes). Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette. Aucun déploiement ; runtime inchangé, services actifs, GPU libres, machine allumée.

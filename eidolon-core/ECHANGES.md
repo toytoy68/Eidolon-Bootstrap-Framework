@@ -3232,3 +3232,13 @@ Base 67e16550b3129c3346a6641d2306916a04d1a1ac. Suite I06 : v10 standard auteur, 
 ## C-MSG-G353 — Juggernaut v10/v9 terminé, 14/11/2026, Codex/GPT
 
 [Rapport G353](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-X-G353.md) : Juggernaut v10/v9, même DPM++2M Karras30/CFG5 sur une V100 ; 24 images et deux répétitions exactes. V10 1/8 proposées, 1 réserves, 6 rejets / 17.565s ; v9 3/8 proposées, 0 réserves, 5 rejets / 17.600s. V10 ne remplace pas v9 pour cette grille. Conserver les deux comme options spécialisées ; aucun nouveau modèle par défaut. Export JSON du scheduler corrigé avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
+
+
+## C-MSG-G354 — Juggernaut XL Lightning pris, 14/11/2026, Codex/GPT
+
+Base e72dd12369cbd2e0d2ee4e5d8c9420b0f75c705b. Suite I06 autorisée : Lightning standard, révision 9c35e7ca1112b7e567ae7b24400b83935909916d. Douze images, DPM++ SDE Karras6/CFG1,8, FP16 une V100, VAE FP32. Recette distincte de v9 G353 réutilisé comme référence visuelle, sans prétendre isoler les poids. Scheduler Diffusers DPMSolverSDEScheduler, bruit brownien fixé par seed ; appels UNet réellement comptés. Licences et SHA avant génération, runtime inchangé, aucun déploiement ni promotion.
+
+
+## C-MSG-G354 — Juggernaut Lightning terminé, 14/11/2026, Codex/GPT
+
+[Rapport G354](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-LIGHTNING-G354.md) : Juggernaut XL Lightning, une V100 FP16, DPM++ SDE Karras6/CFG1,8, 11 appels UNet ; 12 images et répétition exacte. 1/8 proposées, 0 réserves, 7 rejets ; médiane 6.843s, temps divisé par 2.57 face au v9 G353 historique (recettes différentes). Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette. Aucun déploiement ; runtime inchangé, services actifs, GPU libres, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
