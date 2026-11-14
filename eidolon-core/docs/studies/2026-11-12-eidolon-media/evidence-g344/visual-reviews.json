@@ -1,0 +1,153 @@
+{
+  "0": {
+    "reviewer": "GPT",
+    "time": "2026-11-14T13:00:05.112515+00:00",
+    "index": 0,
+    "verdict": "Proposée",
+    "digits_count": 5,
+    "comment": "Un pouce et quatre autres doigts, paume et poignet visibles. Contrôle512², exclu du score natif.",
+    "promotion_allowed": false,
+    "comparison": "Les trois modèles proposent une main à cinq doigts sur leur contrôle512².",
+    "rendering": "Paume et poignet visibles ; contrôle exclu du score principal."
+  },
+  "1": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "digits_count": 5,
+    "comment": "Un pouce et quatre autres doigts ; main et poignet entiers, paume de face. Plis plausibles et texture légèrement lissée.",
+    "comparison": "Cinq doigts comme Turbo ; Klein est rejeté pour six doigts. Cette paire seule ne démontre pas un gain général.",
+    "rendering": "Peau douce, léger lissage ; rendu apprécié par toytoy."
+  },
+  "2": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "digits_count": 5,
+    "comment": "Un pouce à droite et quatre autres doigts distincts ; main et poignet entiers. Texture légèrement lissée, anatomie globalement plausible.",
+    "reviewer": "GPT",
+    "comparison": "Deuxième graine : cinq doigts et cadrage entier. La réussite ne dépend pas seulement de la première graine.",
+    "rendering": "Texture de peau légèrement lissée, éclairage diffus."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "comment": "Exactement une tasse rouge à gauche et un bol bleu à droite, entiers, sur fond gris. Reflets céramiques convaincants.",
+    "reviewer": "GPT",
+    "comparison": "La base conserve les deux objets, leurs couleurs et leur ordre, également respectés par Turbo et Klein sur ces références.",
+    "rendering": "Céramique brillante et reflets cohérents ; formes entièrement cadrées."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "comment": "Exactement une tasse rouge à gauche et un bol bleu à droite, entiers, sur fond gris. Reflets céramiques convaincants.",
+    "reviewer": "GPT",
+    "comparison": "La base conserve les deux objets, leurs couleurs et leur ordre, également respectés par Turbo et Klein sur ces références.",
+    "rendering": "Céramique brillante et reflets cohérents ; formes entièrement cadrées."
+  },
+  "5": {
+    "verdict": "À revoir",
+    "scores": [
+      3,
+      2,
+      4,
+      4
+    ],
+    "comment": "Katana assemblé et fourreau distinct, cadrage entier. Forte courbure de lame face à un fourreau beaucoup plus droit : cohérence mécanique douteuse. Ne pas proposer sur la seule qualité des reflets.",
+    "reviewer": "GPT",
+    "comparison": "Assemblage plus plausible que les échecs Klein, mais le doute sur la correspondance lame/fourreau demeure. Pas de proposition automatique.",
+    "rendering": "Métal et tissu détaillés ; forte courbure de lame."
+  },
+  "6": {
+    "verdict": "À revoir",
+    "scores": [
+      2,
+      2,
+      4,
+      4
+    ],
+    "comment": "Lame et poignée assemblées, fourreau distinct mais la pointe rejoint son extrémité. Courbures incompatibles en apparence, séparation des objets insuffisante ; rendu brillant convaincant.",
+    "reviewer": "GPT",
+    "comparison": "La réserve mécanique n’est pas résolue par le temps de calcul supplémentaire. La pointe rejoint le fourreau et leur séparation est insuffisante.",
+    "rendering": "Reflets convaincants, géométrie à revoir."
+  },
+  "7": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Exactement deux adultes, homme à gauche et kimono rouge à droite ; casque et pieds entiers, château visible, aucun visiteur ajouté. Armure noire avec nombreux éléments bleus ; mains partiellement gantées ou superposées, détail anatomique moins vérifiable.",
+    "comparison": "La base respecte ici le duo et le cadrage, là où Turbo ajoutait des visiteurs. Klein réussissait aussi les duos carrés.",
+    "rendering": "Portraits et étoffes détaillés ; bonne séparation avec le décor."
+  },
+  "8": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "comment": "Exactement deux adultes, homme à gauche et kimono rouge à droite ; casque et pieds entiers, château visible, aucun visiteur ajouté. Armure noire avec nombreux éléments bleus ; mains partiellement gantées ou superposées, détail anatomique moins vérifiable.",
+    "comparison": "La base respecte ici le duo et le cadrage, là où Turbo ajoutait des visiteurs. Klein réussissait aussi les duos carrés.",
+    "rendering": "Portraits et étoffes détaillés ; bonne séparation avec le décor."
+  },
+  "9": {
+    "verdict": "Proposée",
+    "scores": [
+      4,
+      3,
+      4,
+      4
+    ],
+    "digits_count": 5,
+    "comment": "Répétition de01 : pixels identiques vérifiés. Même main à cinq doigts ; contrôle exclu du score natif.",
+    "comparison": "Cinq doigts comme Turbo ; Klein est rejeté pour six doigts. Cette paire seule ne démontre pas un gain général.",
+    "rendering": "Peau douce, léger lissage ; rendu apprécié par toytoy."
+  },
+  "10": {
+    "verdict": "Rejet",
+    "scores": [
+      1,
+      3,
+      4,
+      4
+    ],
+    "comment": "Deux adultes et couleurs présents, mais cadrage coupé aux cuisses : jambes et pieds absents malgré la consigne en pied.",
+    "comparison": "La base ne résout pas le cadrage écran ; une belle image reste non conforme à la demande.",
+    "rendering": "Portraits soignés, cadrage trop rapproché."
+  },
+  "11": {
+    "verdict": "Rejet",
+    "scores": [
+      1,
+      3,
+      4,
+      4
+    ],
+    "comment": "Portrait rapproché coupé à la taille : jambes et pieds absents, mains incomplètement visibles.",
+    "comparison": "Le passage en4:3 ne suffit pas à conserver les corps entiers. Format écran exclu du compteur natif.",
+    "rendering": "Visages détaillés, composition incompatible avec le plein pied."
+  }
+}

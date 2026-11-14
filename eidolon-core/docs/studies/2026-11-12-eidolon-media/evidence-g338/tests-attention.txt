@@ -1,0 +1,9 @@
+test_full_transformer_fp32 (test_media_flux_dev.FluxDevAttentionTests.test_full_transformer_fp32) ... ok
+test_full_transformer_v100_fp16 (test_media_flux_dev.FluxDevAttentionTests.test_full_transformer_v100_fp16) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 4.183s
+
+OK
+comparison cpu torch.float32 max_abs 0.0
+comparison cuda:0 torch.float16 max_abs 0.0

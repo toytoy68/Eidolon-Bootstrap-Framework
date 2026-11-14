@@ -1,0 +1,7 @@
+{
+  "time": "2026-11-14T12:56:01.059401+00:00",
+  "hostname": "eidolon-os\n",
+  "gpu": "index, uuid, memory.used [MiB], temperature.gpu, temperature.memory, power.limit [W]\n0, GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, 1 MiB, 27, 27, 300.00 W\n1, GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 1 MiB, 26, 26, 300.00 W\n2, GPU-4e1c4053-29c2-f0b6-5267-3f561379c058, 2 MiB, 31, N/A, 120.00 W\n",
+  "services": "active\nactive\nactive\nactive\nactive\n",
+  "vms": " ID   Nom                            \u00c9tat\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d\u2019ex\u00e9cution\n -    eidolon-audit-smoke-20261102   ferm\u00e9\n -    Eidolon-Debian12-Test          ferm\u00e9\n -    Eidolon-Memory-Engine-Test     ferm\u00e9\n -    Eidolon-Memory-Engine-v2       ferm\u00e9\n -    Eidolon-Memory-Lab             ferm\u00e9\n -    Eidolon-Memory-Lab-v2          ferm\u00e9\n -    Eidolon-Ubuntu-Diagnostic      ferm\u00e9\n -    Memory-engine-tests            ferm\u00e9\n -    Memory-tests                   ferm\u00e9\n -    nomifactory-test               ferm\u00e9\n\n"
+}

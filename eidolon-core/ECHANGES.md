@@ -2832,3 +2832,323 @@ Accorddirecttoytoy reçu ;[protocole/données/sources](docs/studies/2026-11-11-e
 ## C-MSG-G324 — E4b-1 clôturé au102,11/11/2026,Codex/GPT
 
 Lot pris et livré :[rapport/réponses/preuves](docs/studies/2026-11-11-eva-training/cycle12-E4b1-G324/REPORT-G324.md). X1 47→81/96,X2 80→82,X3 47→52 ;rapport86→83/320,jour055→52/64,acquis26→25. Gardesrapport/jour0 échouées,phase2 nonlancée,aucun204. AucunDepart/nouveauformat/hybride détecté ;gainlocal sans transfert positif.2905SHAclôture conformes,38sourcesintactes,16canarisrelus,checkpoints20…102conservés,rapportdurable sauvegardé. Parentconservé,aucunE4b2/promotion/arrêt. G323archivé,C322préservé.
+
+
+## C-MSG-G325 — Eidolon-Media, lot pris le 12/11/2026, Codex/GPT
+
+Mission explicite toytoy : audit, prototype image puis vidéo 100 % local sur les deux
+V100 16 Go. Base distante `62a0886454826231e13315e517affc56ee06e2f0`, branche dédiée
+`codex/eidolon-media-v100-20261112`. Réutiliser les contrats et magasins média ;
+modules facultatifs de service, workflows et étude dans docs/studies/2026-11-12-eidolon-media.
+Lire la branche claude/video-generation-v100 sans modifier ses contributions.
+Aucune modification Memory Engine, pilote, environnement Eva ou service Core actif.
+GPU libres à l'audit initial ; vérifier à chaque admission. Recettes matérielles à réaliser.
+
+
+## C-MSG-G325 — Eidolon-Media livré pour revue, 12/11/2026, Codex/GPT
+
+[Livrables et audit](docs/studies/2026-11-12-eidolon-media/README.md),
+[preuves agrégées](docs/studies/2026-11-12-eidolon-media/validation-summary.json),
+[message de revue](collaboration/GPT-TO-CLAUDE.md). Branche dédiée
+`codex/eidolon-media-v100-20261112`, aucune fusion ni activation Core.
+Images SD1.5 et retouche réelle, Wan T2V et SVD I2V réels en MP4 sur une V10016Go,
+API locale authentifiée et réseau runtime bloqué hors localhost. Tests média :
+202/205 +3skip ici, 200/205 +5skip X399 ; catégories complémentaires documentées.
+Aucun environnement Eva/pilote/Memory de production modifié. Limites qualité,
+LoRA non validés GPU, ordonnancement global/HUD/32Go publiées. G324 archivé
+exactement ; C322 inchangé. Revue demandée, pas de réponse Claude inventée.
+
+
+## C-MSG-G326 — Formats écran, 12/11/2026, Codex/GPT
+
+Demande directe toytoy : génération16:9 ou4:3 avec bandes latérales dans un
+fichier16:9. [Livraison/contrat](docs/studies/2026-11-12-eidolon-media/DISPLAY.md),
+[mesures](docs/studies/2026-11-12-eidolon-media/display-validation.json).
+Export CPU720p/1080p distinct de la résolution générée, sans étirement final.
+213tests :209pass/4skip ici,208pass/5skip X399. Recette GPU des deux ratios
+sur SD1.5/Wan/SVD, vidéos très courtes à faible nombre d'étapes ; pas de
+qualification esthétique. G325 archivé intact, Claude inchangé, PR#7 complétée,
+aucune fusion ni modification du Core de production.
+
+
+## C-MSG-G327 — SDXL, lot pris le 12/11/2026, Codex/GPT
+
+Accord direct toytoy après les limites visuelles SD1.5 : tester SDXL isolément,
+avec sondes matérielles et comparaison de la même scène. Base74f38e0, PR#7,
+profil opt-in sdxl-text, poids officiels figés, aucun entraînement ni changement
+de pilote/production. Licence OpenRAIL++ examinée, validation GPU à réaliser.
+
+
+## C-MSG-G327 — SDXL livré pour revue,12/11/2026,Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SDXL.md) et preuves agrégées.
+SDXL1024×576 réel sur V10016Go :17,94/18,65s,deux PNG identiques,8880Mio,
+GPU37/HBM40/CPU36°C,max relevé227,86W. Meilleure composition sur un cas,
+limites armure/château documentées.218tests :214pass/4skip local,213pass/5skip
+X399. Profil opt-in,sans entraînement ni remplacement pilote/Eva/production.
+G326 archivé,C322 inchangé,PR#7 complétée sans fusion.
+
+
+## C-MSG-G328 — Protocole qualité média, lot pris le 12/11/2026, Codex/GPT
+
+Demande directe toytoy après les échecs visuels main/katana. Base3634576,
+branche dédiée existante. Protocole, jeu synthétique public, lanceur séquentiel,
+tests du lanceur et première campagne courte ; aucun changement du service,
+des modèles ou du runtime. Mesures techniques distinctes de la notation visuelle.
+
+
+## C-MSG-G328 — Protocole qualité livré pour revue, 12/11/2026, Codex/GPT
+
+[Protocole](docs/studies/2026-11-12-eidolon-media/QUALITY-PROTOCOL.md),
+[rapport réel](docs/studies/2026-11-12-eidolon-media/QUALITY-RESULTS.md).
+12 générations SDXL réelles ; géométries1024×576/carré,2seeds,3cas synthétiques.
+Aucune qualification esthétique globale : mains carrées plus convaincantes sur
+cet échantillon, katanas0/4.8 nouveaux tests ;226tests média (222/4skip ici,
+221/5skip X399). G327 archivé intact, C322 préservé, aucune fusion/production.
+
+
+## C-MSG-G329 — Boucle de préférences média, lot pris le 12/11/2026, Codex/GPT
+
+Autorisation directe toytoy : évaluation par GPT, transfert des exemples nécessaires
+au contrôle dans ChatGPT, rapport de validations/rejets sans attente de réponse
+à chaque lot. Base73fbdff. Registre de jugements révisables, constitution de paires
+comparables, collecte réelle et pilote LoRA si les prérequis matériels/données
+sont satisfaits. Aucun modèle candidat promu sans évaluation ; production/Eva
+intactes. Génération et entraînement restent locaux.
+
+
+## C-MSG-G329 — Premier cycle préférences livré, 12/11/2026, Codex/GPT
+
+[Méthode](docs/studies/2026-11-12-eidolon-media/PREFERENCE-LOOP.md),
+[rapport matériel](docs/studies/2026-11-12-eidolon-media/PREFERENCE-RESULTS.md).
+12 images inspectées :3 acceptées/8 rejets/1 incertaine,3 paires. LoRA-DPO réel
+sur V10016Go :6 mises à jour,51,02s,8560Mio,36/38°C. Rechargement et comparaison
+réels :aucun gain visuel convaincant,candidat non promu.235tests média
+(231/4skip ici,230/5skip X399). Registre révisable, priorité corrections toytoy,
+venv isolé et source inchangée. G328 archivé,C322 préservé,PR#7 sans fusion.
+
+
+## C-MSG-G330 — Correction utilisateur G329-02, lot pris le 12/11/2026, Codex/GPT
+
+Base0a5ac8788a8bc6bcfa9a8b6a267fb642fe3a1d92, branche dédiée média.
+Annotation directe de toytoy : défauts des raccords doigts-paume et plis près
+du pouce. Révision prioritaire du registre, retrait de la paire préférant02,
+invalidation explicite du candidat dérivé, rapport corrigé et preuves conservées.
+Aucun calcul GPU ni changement de production prévu.
+
+
+## C-MSG-G330 — Correction appliquée, 12/11/2026, Codex/GPT
+
+G329-02 rejetée après annotation toytoy ; registre réel révision13,2 acceptées/
+9 rejets/1 incertaine,2 paires. Ancien LoRA invalidé, jamais activé ; aucun nouvel
+apprentissage. Refus réel REVIEWS_CHANGED avant chargement modèle ;8 tests unittest
+réussis ici et8 sur X399. [Preuves](docs/studies/2026-11-12-eidolon-media/feedback-g330-correction.json).
+Rapport et grille corrigés ; G329 archivé intact, C322 préservé, PR#7 sans fusion.
+
+
+## C-MSG-G331 — Suite des tests média, lot pris le 12/11/2026, Codex/GPT
+
+Base38d4903, demande directe toytoy. Comparaison contrôlée des formulations sur
+main/objets/katana :12images,2seeds,SDXL base seul ; grille renforcée et mesures
+matérielles, puis inspection et registre. Aucun entraînement du candidat invalidé.
+Plan : docs/studies/2026-11-12-eidolon-media/PROMPT-TESTS-G331.md.
+
+
+## C-MSG-G331 — Lot réel terminé, 12/11/2026, Codex/GPT
+
+12 générations contrôlées surV100 : succès techniques12/12,acceptations0/12.
+Prompts original/détaillé à seeds/réglages constants : aucun gain observé sur ce
+petit lot. [Rapport](docs/studies/2026-11-12-eidolon-media/PROMPT-TESTS-G331.md).
+12 rejets enregistrés,0 paire ; aucun nouvel apprentissage. 21tests ciblés réussis
+ici et21 X399 ; préfixes de lots distincts.18,78–21,69s,9168Mio,38/44°C.
+SHA modèle inchangé,services actifs,queue vide. G330 archivé,C322 préservé,
+correction G329-02 prioritaire et ancien candidat invalidé ; PR#7 sans fusion.
+
+
+## C-MSG-G332 — Catalogue de candidats et essais deux V100, lot pris le 12/11/2026, Codex/GPT
+
+Base34c807dc7c0bcdf2ce0b70ad35effa2d1a6dc6b0, branche dédiée média. Demande
+directe toytoy : inscrire tous les candidats repérés, tester aussi ceux nécessitant
+les deux V10016Go. Périmètre : étude média, manifeste de téléchargements vérifiés,
+runner expérimental isolé, tests et preuves. Priorité FLUX.1 Schnell : véritable
+répartition des blocs, distincte de deux générations et de l'offload CPU.
+Aucun arrêt Eva/service critique, changement pilote/CUDA, fusion ou promotion.
+
+
+## C-MSG-G332 — Premier essai deux GPU livré, 12/11/2026, Codex/GPT
+
+[Catalogue37entrées](docs/studies/2026-11-12-eidolon-media/CANDIDATE-QUEUE-G332.md),
+[rapport](docs/studies/2026-11-12-eidolon-media/MULTIGPU-G332.md). FLUX.1 Schnell
+réellement réparti :22,15Gio poidsFP16 sur2V10016,encodeursCPU,traficNVLink
+mesuré.4PNG horsligne,1acceptation/3rejets(3scènesdistinctes),seedreproduite.
+Pics14314/12992Mio,GPU36/34°C,HBM36/36°C ; limites300/200W inchangées.
+243tests :239pass/4skip ici,238pass/5skipX399. Aucunentraînement,APIprofilFLUX
+nonintégré,autrescandidatsàtester. Servicesactifs,G331archivé,C322préservé,PR#7.
+
+
+## C-MSG-G333 — Reprise des candidats SDXL, lot pris le 13/11/2026, Codex/GPT
+
+Base 22ccdd5977b86e94837811a4a9f26c2d3e0e5085, branche média dédiée.
+Demande directe toytoy : reprendre la liste. RealVisXL V5.0 et Juggernaut XL v9
+comparés à SDXL base dans le même runtime, prompts/seeds/recette communs, puis
+recette auteur si nécessaire. Poids officiels vérifiés, exécution hors ligne,
+rapport visuel avec tous les rejets. Aucun entraînement ni promotion automatique.
+Décision utilisateur du jour : 300 W par V100 pour image/vidéo, 200 W pour Eva
+et discussion ; refroidissement double 300 W déclaré validé par toytoy, sondes
+conservées. Ce lot n'implémente pas encore la bascule automatique de puissance.
+
+
+## C-MSG-G333 — Lot checkpoints livré,13/11/2026,Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/CHECKPOINTS-G333.md),
+[preuves](docs/studies/2026-11-12-eidolon-media/checkpoint-validation-g333.json).
+RealVisXL V5.0/Juggernaut XL v9 comparés à SDXL :27générations1024²,
+3répétitions pixel-identiques.30étapes17,54–17,99s ; RealVis50:28,86–28,88s.
+GPU0≤11548Mio,48°C,HBM56°C,limite300W,GPU1idle. Hors répétitions :5propositions
+GPT,3doutes,16rejets ; contrôle toytoy en attente, aucun entraînement/promotion.
+246tests :242pass/4skip ici,241pass/5skip X399. Services critiques/VM actifs,
+API/Comfy temporaires inactifs depuis boot ; nouvelles recettes hors API.
+G332 archivé intact,C322préservé,PR#7brouillon.300W média/200W Eva documentés,
+bascule automatique non implémentée. Modèles14,75Gio libres : gros prochains
+poids sur stockage dédié volume données226,86Gio libres. Machine laissée allumée.
+
+
+## C-MSG-G334 — Sana 600M, lot pris le 13/11/2026, Codex/GPT
+
+Base 9a82aca130dfa3b29d160f9be75bcf5693597b64, branche média dédiée.
+Reprise demandée par toytoy. Candidat I26 : Sana 600M 1024px FP16, encodeur
+Gemma2 CPU FP32 et DC-AE GPU FP32 ; environnement Diffusers existant.
+Téléchargements officiels figés sur volume données, licences par composant,
+puis essai 512, grille 1024² à deux seeds et formats écran, répétition exacte.
+Arrêt sur non-fini, conflit GPU ou limite thermique ; aucun entraînement,
+promotion ou changement de service critique. Preuves et revue de tous les résultats.
+
+## C-MSG-G334 — Lot Sana terminé, 13/11/2026, Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SANA-G334.md) et
+[preuves](docs/studies/2026-11-12-eidolon-media/sana-validation-g334.json).
+12 générations réelles après 3 erreurs de préparation conservées. 8 natifs :
+2 propositions GPT, 2 doutes, 4 rejets ; contrôle toytoy en attente, aucun entraînement.
+GPU/décodage 2,392–2,403 s + encodage CPU 22,325–22,391 s par nouveau prompt.
+VRAM 7 878 Mio, GPU/HBM 40/45 °C, GPU1 au repos. Répétition pixel-identique ;
+formats écran exacts mais contenu rejeté. 249 tests : 244 réussis/5 ignorés ici
+et X399. Services/VM actifs, GPU libérés ; API/Comfy temporaires restent inactifs.
+Sana non intégré à l'API, 1,6B non testé. G333 archivé, C322 intact, PR #7 brouillon.
+Machine allumée ; aucun changement de pilote ou de runtime.
+
+## C-MSG-G335 — Sana 1,6B, lot pris le 13/11/2026, Codex/GPT
+
+Base cb33db0cf84bd2f847cff44b604bf3f591a74c79, branche média dédiée.
+Reprise autorisée par toytoy. Candidat I26, variante 1600M FP16 1024px.
+Réutiliser le runner G334 inchangé : 12 générations, mêmes prompts/seeds,
+encodeur CPU FP32 et DC-AE GPU FP32, bornes et garde thermique identiques.
+Figer poids/licences, vérifier les composants partagés avant réutilisation ;
+volume données, aucun changement runtime/production. Résultats, comparaison
+prudente au 600M, revue complète et PDF ; aucun entraînement/promotion.
+Fichiers prévus : manifeste/preuves/SANA-G335.md, catalogue, README/ROADMAP,
+TODO et messages/archives GPT. Échec de synchronisation du lecteur MCP ;
+message courant lu directement dans le checkout Git vérifié, aucun outil réparé.
+
+## C-MSG-G335 — Sana 1,6B terminé, 13/11/2026, Codex/GPT
+
+[Rapport](docs/studies/2026-11-12-eidolon-media/SANA-G335.md),
+[preuves](docs/studies/2026-11-12-eidolon-media/sana-validation-g335.json).
+Runner G334 inchangé, 12 générations/13 fichiers revus, répétition exacte.
+8 natifs : 1 proposée, 2 doutes, 5 rejets. 3,357–3,379 s GPU/décodage
++22,201–22,335 s CPU par nouveau prompt ; médiane GPU +41% face au 600M.
+VRAM 9 832 Mio, GPU/HBM 41/46 °C, GPU1 idle, 233 sondes sans erreur.
+3 tests ciblés réussis X399 ; suite 249 historique G334, pas rejouée.
+Aucun changement code/runtime/pilote, aucune promotion/formation/fusion.
+PDF 16 pages livré, G334 archivé intact, C322 préservé ; PR #7 brouillon.
+Services/VM actifs, GPU libérés, API/Comfy temporaires toujours inactifs.
+Machine allumée. Sprint/encodeur GPU1 et autres candidats restent non testés.
+
+
+## C-MSG-G337 — Reprise AnimateDiff, 13/11/2026, Codex/GPT
+
+Reprise explicite toytoy; base edde825. G336 run02 retrouve termine mais non revu, premieres planches grises. Prise en charge isolee: animatediff_probe_g337.py et rapport G337; fichiers G336 non modifies. Test causal beta_schedule linear suivant documentation Diffusers, meme grille et poids; pas de promotion, entrainement, modification des services.
+
+
+## C-MSG-G337 - Lot diagnostic termine, 13/11/2026, Codex/GPT
+
+6 clips G337 +2 controles SD15 locaux ; repetition exacte, GPU/HBM41/43C. AnimateDiff non valide (textures), SD15 seul reconnaissable. Cause exacte ouverte. [Rapport](docs/studies/2026-11-12-eidolon-media/ANIMATEDIFF-G337.md). Poids/runtime/services preserves, GPU liberes, machine allumee. Aucune promotion/formation.
+
+
+## C-MSG-G338 - FLUX.1 dev, lot pris le 13/11/2026, Codex/GPT
+
+Base ba4da1618afa9ce89f5f95464659e7e5afde734e. Reprise explicite toytoy. Poids Comfy-Org de SHA identique BFL, licence auteur archivee, usage recherche local non commercial. Generateur FP16 reparti sur les deux V100, encodeurs CPU, VAE GPU FP32. Ajouter attention par blocs de requetes pour limiter les activations, avec comparaison numerique au processeur amont avant execution. Tests progressifs, garde thermique et non-fini, aucune promotion/formation/modification de production. Fichiers flux_dev_probe.py, flux_chunked_attention.py, tests, rapport/preuves et catalogue G338.
+
+
+## C-MSG-G338 — Lot FLUX.1 dev terminé, 13/11/2026, Codex/GPT
+
+12 images locales sur deux V100, 4/8 natives proposées, 2 réserves, 2 rejets ; répétition exacte. Correction du seuil de tuilage VAE après OOM initial conservé. Attention découpée vérifiée CPU/V100 ; suite média 249 réussis,6 ignorés. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-DEV-G338.md), preuves et revue visuelle versionnées. Aucun profil promu ni entraînement. GPU libérés, services actifs, machine allumée.
+
+
+## C-MSG-G339 — Comparaison FLUX dev/Schnell prise, 13/11/2026, Codex/GPT
+
+Base 6f9e0cd82554b78eea8b8491849b0344230212fc, branche media dediee. Toytoy autorise la poursuite comparative ; rendu visuel et conformite seront notes separement. Reprendre Schnell complet sur les memes quatre prompts, seeds et resolutions G338, recette Schnell 4 etapes/guidance0. Poids existants verifies, inference locale isolee sur deux V100300W. Nouveaux runner/preuves/rapport G339, catalogue et progres ; aucun pilote/runtime/production modifie. G338 conserve intact comme reference.
+
+
+## C-MSG-G339 — Comparatif FLUX terminé, 13/11/2026, Codex/GPT
+
+Schnell :12 images,4/8 natives proposées,2 réserves,2 rejets ; répétition exacte. Même grille que dev, recettes propres :6,451 s contre70,577 s GPU/décodage, hors encodage et chargement. Rendu et conformité distingués ; aucun classement universel. [Rapport](docs/studies/2026-11-12-eidolon-media/FLUX-COMPARISON-G339.md). Premier lancement sans PYTHONPATH conservé, run02 réussi. Aucun profil promu, GPU libres, services actifs et machine allumée.
+
+
+## C-MSG-G340 — FLUX.2 Klein 4B pris, 13/11/2026, Codex/GPT
+
+Base b9fc4ebcfbe48764116f94444abd921aae359506. Suite comparative autorisée par toytoy. Auditer modèle Apache4B, encodeur et VAE, pile isolée compatible Volta ; aucun changement des runtimes actuels. Essai progressif puis grille G338/G339 si viable. Rendu et conformité séparés, poids/révisions/SHA figés ; garder tout échec. Fichiers runner/preuves/rapport G340 et avancement. Aucun entraînement, promotion ou fusion.
+
+
+## C-MSG-G340 — Lot Klein terminé, 13/11/2026, Codex/GPT
+
+[Rapport G340](docs/studies/2026-11-12-eidolon-media/KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native6/8 proposées,2rejets katana ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion. PEFT optionnel incompatible retiré uniquement de la copie ; runtime historique inchangé. Preuves et revue visuelle versionnées.
+
+
+### Enregistrement G341 et mémoire —14/11/2026, Codex/GPT
+
+Base b6ffa9a ; résultats et scripts G341 dans docs/studies/2026-11-12-eidolon-media/. Memtester3h dans docs/studies/2026-11-14-memory/. Aucun changement de production. Extinction demandée par toytoy pour modifications matérielles ; aucune relance automatique.
+
+
+## C-MSG-G342 — Reprise Z-Image Turbo, 14/11/2026, Codex/GPT
+
+Base301f4eab70e9ab09e72b893eaa23f017a3b9dfb3 (G341 local, publication à vérifier). Reprise autorisée par toytoy sur Eidolon-OS. Klein9B accès auteur gated : différé, aucune tentative de contournement. Z-Image Turbo auteur Apache2, révision f332072aa78be7aecdf3ee76d5c247082da564a6 ; qualification FP32 répartie sur deux V100, Qwen CPU, même grille G340/G341. Runtime isolé existant, poids/hash/attention vérifiés, test progressif, garde et réseau inférence bloqué. Nouveaux runner/préparation/rapport/preuves G342, catalogue/avancement. Aucun entraînement, promotion ou autre machine touchée.
+
+
+## C-MSG-G342 — Z-Image terminé, 14/11/2026, Codex/GPT
+
+[Rapport G342](docs/studies/2026-11-12-eidolon-media/ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation. G341 local conservé et inclus dans la publication, sans modification de ses preuves.
+
+
+## C-MSG-G343 — Rectification visuelle prise, 14/11/2026, Codex/GPT
+
+Signalement toytoy : six doigts sur la référence Klein de G342-01. Recomptage confirmé : un pouce et cinq autres doigts sur Klein G340-01, répétition identique G340-09. Correction des revues, compteurs, synthèses et PDF G340/G342 ; aucune nouvelle inférence ni modification des PNG ou mesures. Base3848baf5e9b5d317dd3f5d91880cca9efa176982.
+
+
+## C-MSG-G343 — Rectification visuelle terminée, 14/11/2026, Codex/GPT
+
+Erreur de comptage reconnue : Klein G340-01 a six doigts ; sa répétition09 aussi. Revues et synthèses corrigées :5/8 proposées,0réserve,3rejets natifs. Référence Klein des pages01/09 G342 corrigée ; Z-Image reste4/8 proposées,2réserves,2rejets. Deux PDF corrigés sous leur identité existante (version1). Historique avant/après dans docs/studies/2026-11-12-eidolon-media/visual-correction-g343.json. Aucune inférence ; PNG, mesures et systèmes inchangés. L'entrée G340 historique ci-dessus est remplacée par ce rectificatif pour les verdicts et compteurs.
+
+
+## C-MSG-G344 — Z-Image non Turbo pris, 14/11/2026, Codex/GPT
+
+Base fbb232867e686c68eee17b4ea45cb139751bd321, suite autorisée par toytoy. Candidat I18 auteur public Apache-2.0, révision04cc4abb7c5069926f75c9bfde9ef43d49423021. Même grille G342 ;28étapes,CFG4,normalisationCFGdésactivée,négatif vide préfixés avant observation. FP32 réparti sur deux V100, runtime G340 et attention G342 réutilisés ; qualification progressive et garde thermique. Nouveaux préparation/runner/preuves/rapport G344 et avancement. Aucune autre machine, production ou entraînement.
+
+
+## C-MSG-G344 — Contrôle et première native vérifiés, grille en cours, 14/11/2026, Codex/GPT
+
+Z-Image non Turbo FP32 réparti : contrôle512²59,816s puis première native1024²277,686s, cinq doigts chacun, proposés après revue GPT. Recette28étapes/CFG4, branches séquentielles comparées au calcul groupé. Encodage5textes69,896s. Suite du lot lancée dans eidolon-media-zimage-base-g344-quality.service ; dix images encore attendues au point de rapport, pas de score final. [Suivi](docs/studies/2026-11-12-eidolon-media/ZIMAGE-BASE-G344.md). Deux V100300W, garde thermique et enregistrement progressif ; aucun service ni runtime modifié.
+
+
+## C-MSG-G344 — Z-Image non Turbo terminé, 14/11/2026, Codex/GPT
+
+Douze images et répétition exacte ;6/8 natives proposées,2 réserves katana,0 rejet natif. Formats écran rejetés pour cadrage coupé. Médiane279,383s, encodage5textes69,896s ; maxima GPU51/49°C,HBM53/53°C, pics14 514/14 494Mio. Rendu01 apprécié par toytoy ; délai prohibitif, candidat réservé aux demandes détaillées. Rapport illustré complété sous la même identité, version1. Preuves finales dans docs/studies/2026-11-12-eidolon-media/evidence-g344/ ; checkpoints intermédiaires conservés. Aucun entraînement ni promotion, GPU libres, services actifs et machine allumée.
+
+
+## C-MSG-G345 — Sana Sprint1,6B pris, 14/11/2026, Codex/GPT
+
+Base590eb84778020ccde908847201e99b8ebf98d49c, suite autorisée par toytoy. Candidat rapide I27 : Sana Sprint1,6B auteur19683c58b7ea290e55cedd8950ae1d86ada7ef96. Quatre étapes/guidage intégré4,5, grilleG344inchangée. FP32 sur une V100 pour préserver la plage des poidsBF16 ; Gemma2 CPU, DC-AE FP32. Qualification512² puis natives si viable, runtime isoléG340 conservé. Préparation/runner/preuves/rapport G345 et avancement, sans production ni entraînement. Qwen2.1 demande une pile absente (QwenImage21, Transformers5.17), étude distincte avant ses essais.
+
+
+## C-MSG-G345 — Sana Sprint terminé, 14/11/2026, Codex/GPT
+
+[Rapport G345](docs/studies/2026-11-12-eidolon-media/SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée. Rapport illustré 14 pages enregistré ; résultats et preuves dans evidence-g345 et sana-sprint-validation-g345.json. Préférence G344 détaillé à la demande conservée.

@@ -1,0 +1,34 @@
+[
+  {
+    "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+    "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+    "path": "text_encoder/model-00001-of-00002.safetensors",
+    "name": "model-00001-of-00002.safetensors",
+    "bytes": 4988024144,
+    "sha256": "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71"
+  },
+  {
+    "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+    "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+    "path": "text_encoder/model-00002-of-00002.safetensors",
+    "name": "model-00002-of-00002.safetensors",
+    "bytes": 240691624,
+    "sha256": "48e14f6b7a917e54cabc4ff2047ac2bfe0dae663e771eed3a8acf4ea27dcac18"
+  },
+  {
+    "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+    "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+    "path": "transformer/diffusion_pytorch_model.safetensors",
+    "name": "diffusion_pytorch_model.safetensors",
+    "bytes": 3220530536,
+    "sha256": "effac51c73537487ac1505993f0e7fbd292c310b23aae96f2c3e53131e876f2d"
+  },
+  {
+    "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+    "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+    "path": "vae/diffusion_pytorch_model.safetensors",
+    "name": "diffusion_pytorch_model.safetensors",
+    "bytes": 1249044836,
+    "sha256": "dfd991d1b54ffabf22745c5885589d8f2a7bc59930d95d92bd741c4fc64454bb"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "same_prompts": true,
+  "same_seeds_resolutions_conditions": true,
+  "images": 12,
+  "schnell_steps": 4,
+  "scheduler_shift": 1,
+  "dynamic_shifting": false,
+  "guidance": 0,
+  "compile": "passed",
+  "attention_tests": "unchanged component validated G338 CPU FP32 and V100 FP16; not rerun"
+}

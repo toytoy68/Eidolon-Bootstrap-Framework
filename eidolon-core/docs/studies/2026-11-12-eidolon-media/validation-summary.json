@@ -1,0 +1,691 @@
+{
+  "generated_at": "2026-11-12T11:25:28+01:00",
+  "tests": [
+    {
+      "suite": "benchmark-image-20261112-111745",
+      "name": "edit",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.951677307999944,
+      "sha256": "6292588a0af7f056323519778aebbf141a52593298141008f6bd3d4e832e5056",
+      "workflow_sha256": "16aa4342d50c6d26e4595caf9f0ec7f5621cc857e179f4de8bee469d4cd101bd",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4400,
+      "gpu_watts_max": 209.66,
+      "gpu_c_max": 35,
+      "hbm_c_max": 36,
+      "samples": 10,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 0.2139999999999418,
+      "host_c_max": 36.75,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            255
+          ],
+          [
+            0,
+            255
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          89.06163072497378,
+          89.17153946134087,
+          91.91903471784047
+        ],
+        "pixels_sha256": "3cf8ee1c4f66984d95eb02accfdfae6dfa2e86f8e287d2c6895910b136cfadb0"
+      }
+    },
+    {
+      "suite": "benchmark-image-20261112-111745",
+      "name": "inpaint",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.603787033000117,
+      "sha256": "a2128d775246c1232052f10c4b3b5d4ebf5948b2c9ecae27794ae9f9f491ad89",
+      "workflow_sha256": "75320b7f5015587462162b0cacbf7719daad07c599bf037e90a6ea6c03fe64aa",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4400,
+      "gpu_watts_max": 193.65,
+      "gpu_c_max": 35,
+      "hbm_c_max": 38,
+      "samples": 9,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 0.4290000000000873,
+      "host_c_max": 36.875,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            254
+          ],
+          [
+            0,
+            247
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          64.33762720598261,
+          59.912735894059686,
+          65.81878765178796
+        ],
+        "pixels_sha256": "3020d989d258c81ddba8745f27763ed44e3dbae18ade619d36452c40c39a5b57"
+      }
+    },
+    {
+      "suite": "benchmark-image-20261112-111745",
+      "name": "repeat",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.422504092000054,
+      "sha256": "bab49e2154ecd142a8a13920c78a35eddc6ed84c3d9f27ae0aea1acab65a1f73",
+      "workflow_sha256": "e509dfeb39c46373841b03eb8ff1b4936dc771e9fbcc4eab23f3e1eddaa7e69d",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4080,
+      "gpu_watts_max": 175.09,
+      "gpu_c_max": 35,
+      "hbm_c_max": 37,
+      "samples": 9,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 0.2139999999999418,
+      "host_c_max": 36.625,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            254
+          ],
+          [
+            0,
+            250
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          65.18482036096955,
+          68.67627891322022,
+          74.01260759980703
+        ],
+        "pixels_sha256": "e081580fa0690b1752d7796967bfdce790ed4eb115741f90ed66b9963c3d9f2e"
+      }
+    },
+    {
+      "suite": "benchmark-image-20261112-111745",
+      "name": "text",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.377261182999973,
+      "sha256": "bab49e2154ecd142a8a13920c78a35eddc6ed84c3d9f27ae0aea1acab65a1f73",
+      "workflow_sha256": "27781c82f81925b532c8364745575d072ad086df54686ef2ec060811290c0b6b",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4080,
+      "gpu_watts_max": 196.05,
+      "gpu_c_max": 35,
+      "hbm_c_max": 35,
+      "samples": 9,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 0.4290000000000873,
+      "host_c_max": 38,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            254
+          ],
+          [
+            0,
+            250
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          65.18482036096955,
+          68.67627891322022,
+          74.01260759980703
+        ],
+        "pixels_sha256": "e081580fa0690b1752d7796967bfdce790ed4eb115741f90ed66b9963c3d9f2e"
+      }
+    },
+    {
+      "suite": "benchmark-video-20261112-111812",
+      "name": "wan-17",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 23.283754734000013,
+      "sha256": "65ea294ccad85935865ab68b44c6bda07197b1ee8f0d1e1085b6a972df43ad0c",
+      "workflow_sha256": "c4feb33da6dbe0f08c2a611915930ba8214c57f853d63af0dc889afc7ab3042f",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 13200,
+      "gpu_watts_max": 238.04,
+      "gpu_c_max": 36,
+      "hbm_c_max": 40,
+      "samples": 44,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 1.7150000000001455,
+      "host_c_max": 48.75,
+      "decoded": {
+        "codec": "h264",
+        "fps": "8",
+        "frames": 17,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          84.12808759004004,
+          83.89443220643888,
+          83.57461038276716,
+          83.35563965951107,
+          81.39803019011394,
+          82.14551881914082,
+          82.20027064750421,
+          81.84645988476866,
+          79.05033996235633,
+          81.05407308752577,
+          81.37317888098212,
+          81.10703620108214,
+          77.93302939007773,
+          81.61491110179325,
+          81.86819115641963,
+          82.1069611260456,
+          81.91796157090553
+        ],
+        "mean_frame_change": 3.8072774251302084
+      }
+    },
+    {
+      "suite": "benchmark-video-20261112-111812",
+      "name": "wan-repeat",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 18.401725366999926,
+      "sha256": "705738db6e075540f0e7bdfd4143e46ebfbaf6f78e5c08e84323b64c504f75ba",
+      "workflow_sha256": "91b2de7b611824e0b0b74892d27e81357aba9f10bd210e88b181499c5823fbef",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 10,
+      "seed": 42,
+      "vram_max_mib": 13264,
+      "gpu_watts_max": 207.74,
+      "gpu_c_max": 35,
+      "hbm_c_max": 37,
+      "samples": 35,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 1.2860000000000582,
+      "host_c_max": 47.375,
+      "decoded": {
+        "codec": "h264",
+        "fps": "8",
+        "frames": 9,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          75.07400633915522,
+          82.87627110774592,
+          83.33724949898911,
+          82.59658255737658,
+          79.25905756160662,
+          83.57293787764868,
+          83.6696305942187,
+          83.04048111584943,
+          83.3619708360118
+        ],
+        "mean_frame_change": 9.136037190755209
+      }
+    },
+    {
+      "suite": "benchmark-video-20261112-111812",
+      "name": "wan-smoke",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 15.08717337600001,
+      "sha256": "705738db6e075540f0e7bdfd4143e46ebfbaf6f78e5c08e84323b64c504f75ba",
+      "workflow_sha256": "15ec2430d3d64af2051372bffb80129c16aa5b46bebe03a4bb8e8f061c7e54eb",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 10,
+      "seed": 42,
+      "vram_max_mib": 13264,
+      "gpu_watts_max": 207.61,
+      "gpu_c_max": 35,
+      "hbm_c_max": 37,
+      "samples": 29,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 1.0720000000001164,
+      "host_c_max": 45,
+      "decoded": {
+        "codec": "h264",
+        "fps": "8",
+        "frames": 9,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          75.07400633915522,
+          82.87627110774592,
+          83.33724949898911,
+          82.59658255737658,
+          79.25905756160662,
+          83.57293787764868,
+          83.6696305942187,
+          83.04048111584943,
+          83.3619708360118
+        ],
+        "mean_frame_change": 9.136037190755209
+      }
+    },
+    {
+      "suite": "benchmark-svd-20261112-111915",
+      "name": "svd-14",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 21.6731686359999,
+      "sha256": "5f0fa9c7d7dc0a8c65fdd012367a72465a427c02871676b2f41c59e134b2874f",
+      "workflow_sha256": "b7d919a0578a16f8e7accbefd884a1c6977d9c9bf82d438d908dde8ba2418afb",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 15,
+      "seed": 42,
+      "vram_max_mib": 11888,
+      "gpu_watts_max": 213.01,
+      "gpu_c_max": 36,
+      "hbm_c_max": 40,
+      "samples": 41,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 1.9290000000000873,
+      "host_c_max": 47.25,
+      "decoded": {
+        "codec": "h264",
+        "fps": "7",
+        "frames": 14,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          62.7246013146432,
+          63.56903110778202,
+          64.15526589086954,
+          65.14132589119559,
+          65.23340501028224,
+          65.73598219587018,
+          65.77094757679646,
+          65.86696823585842,
+          66.80207226381407,
+          66.05380087844411,
+          65.83634018560355,
+          66.14130129948025,
+          66.07255972003699,
+          65.64044871891095
+        ],
+        "mean_frame_change": 15.547707895132211
+      }
+    },
+    {
+      "suite": "benchmark-svd-20261112-111915",
+      "name": "svd-repeat",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 18.12575346199992,
+      "sha256": "5f0fa9c7d7dc0a8c65fdd012367a72465a427c02871676b2f41c59e134b2874f",
+      "workflow_sha256": "07ff6de020eb415f69e48ce3eba47ca1608e2d596c4e2ae533bcc26bca0d137a",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 15,
+      "seed": 42,
+      "vram_max_mib": 5008,
+      "gpu_watts_max": 208.08,
+      "gpu_c_max": 36,
+      "hbm_c_max": 40,
+      "samples": 34,
+      "sampling_progress_observed": false,
+      "wall_energy_wh": 1.5010000000002037,
+      "host_c_max": 47.75,
+      "decoded": {
+        "codec": "h264",
+        "fps": "7",
+        "frames": 14,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          62.7246013146432,
+          63.56903110778202,
+          64.15526589086954,
+          65.14132589119559,
+          65.23340501028224,
+          65.73598219587018,
+          65.77094757679646,
+          65.86696823585842,
+          66.80207226381407,
+          66.05380087844411,
+          65.83634018560355,
+          66.14130129948025,
+          66.07255972003699,
+          65.64044871891095
+        ],
+        "mean_frame_change": 15.547707895132211
+      }
+    },
+    {
+      "suite": "benchmark-release-20261112-112414",
+      "name": "masked-edit",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.507331642999816,
+      "sha256": "e19d6588c56337189371c167bfd2ded7254120538c947ce5e5d814620a634995",
+      "workflow_sha256": "1101ab3c26a847a9c498375d6747cdc79f77abbea421cb1ddd990058f7e8ce3e",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4400,
+      "gpu_watts_max": 206.37,
+      "gpu_c_max": 35,
+      "hbm_c_max": 37,
+      "samples": 9,
+      "sampling_progress_observed": true,
+      "wall_energy_wh": 0.21500000000014552,
+      "host_c_max": 40,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            254
+          ],
+          [
+            0,
+            255
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          64.38538067261119,
+          58.683539047154014,
+          64.15748130304772
+        ],
+        "pixels_sha256": "e92369461bec9eb0a455f0ef2ba6247f3929207c1ff94741961df0e63500bc72"
+      }
+    },
+    {
+      "suite": "benchmark-release-20261112-112414",
+      "name": "registered-image",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 4.3524510130000635,
+      "sha256": "bab49e2154ecd142a8a13920c78a35eddc6ed84c3d9f27ae0aea1acab65a1f73",
+      "workflow_sha256": "becc7c4c6bdc5f5f3ee4441939b0e194ca2bcd97007f7708fb075545cf58e285",
+      "resolution": [
+        512,
+        512
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 4080,
+      "gpu_watts_max": 181.32,
+      "gpu_c_max": 34,
+      "hbm_c_max": 36,
+      "samples": 9,
+      "sampling_progress_observed": true,
+      "wall_energy_wh": 0.2139999999999418,
+      "host_c_max": 35.75,
+      "decoded": {
+        "size": [
+          512,
+          512
+        ],
+        "extrema": [
+          [
+            0,
+            254
+          ],
+          [
+            0,
+            250
+          ],
+          [
+            0,
+            255
+          ]
+        ],
+        "stddev": [
+          65.18482036096955,
+          68.67627891322022,
+          74.01260759980703
+        ],
+        "pixels_sha256": "e081580fa0690b1752d7796967bfdce790ed4eb115741f90ed66b9963c3d9f2e"
+      }
+    },
+    {
+      "suite": "benchmark-release-20261112-112414",
+      "name": "svd-final",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 21.38750716300001,
+      "sha256": "5f0fa9c7d7dc0a8c65fdd012367a72465a427c02871676b2f41c59e134b2874f",
+      "workflow_sha256": "419a33154a9ea3f30b8bb202792e7b94da5596eae5b406beef62bad01968f8b7",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 15,
+      "seed": 42,
+      "vram_max_mib": 11888,
+      "gpu_watts_max": 206.79,
+      "gpu_c_max": 37,
+      "hbm_c_max": 39,
+      "samples": 38,
+      "sampling_progress_observed": true,
+      "wall_energy_wh": 1.9290000000000873,
+      "host_c_max": 47.5,
+      "decoded": {
+        "codec": "h264",
+        "fps": "7",
+        "frames": 14,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          62.7246013146432,
+          63.56903110778202,
+          64.15526589086954,
+          65.14132589119559,
+          65.23340501028224,
+          65.73598219587018,
+          65.77094757679646,
+          65.86696823585842,
+          66.80207226381407,
+          66.05380087844411,
+          65.83634018560355,
+          66.14130129948025,
+          66.07255972003699,
+          65.64044871891095
+        ],
+        "mean_frame_change": 15.547707895132211
+      }
+    },
+    {
+      "suite": "benchmark-release-20261112-112414",
+      "name": "wan-final",
+      "state": "SUCCEEDED",
+      "elapsed_seconds": 20.20726079499991,
+      "sha256": "65ea294ccad85935865ab68b44c6bda07197b1ee8f0d1e1085b6a972df43ad0c",
+      "workflow_sha256": "048978704be7f9ab77035349644f1a573e87d97f35e7b28e6856423b0bace987",
+      "resolution": [
+        320,
+        256
+      ],
+      "steps": 20,
+      "seed": 42,
+      "vram_max_mib": 13200,
+      "gpu_watts_max": 247.43,
+      "gpu_c_max": 37,
+      "hbm_c_max": 40,
+      "samples": 36,
+      "sampling_progress_observed": true,
+      "wall_energy_wh": 1.5,
+      "host_c_max": 39.5,
+      "decoded": {
+        "codec": "h264",
+        "fps": "8",
+        "frames": 17,
+        "width": 320,
+        "height": 256,
+        "frame_stddev": [
+          84.12808759004004,
+          83.89443220643888,
+          83.57461038276716,
+          83.35563965951107,
+          81.39803019011394,
+          82.14551881914082,
+          82.20027064750421,
+          81.84645988476866,
+          79.05033996235633,
+          81.05407308752577,
+          81.37317888098212,
+          81.10703620108214,
+          77.93302939007773,
+          81.61491110179325,
+          81.86819115641963,
+          82.1069611260456,
+          81.91796157090553
+        ],
+        "mean_frame_change": 3.8072774251302084
+      }
+    }
+  ],
+  "mask_preservation": {
+    "outside_mask_pixels_equal": true
+  },
+  "lifecycle": {
+    "unauthorized": 401,
+    "browser_origin": 401,
+    "idempotency_same_id": true,
+    "progress_before_cancel": {
+      "stage": "sampling_or_decode",
+      "node": "5",
+      "value": 3,
+      "maximum": 40,
+      "fraction": 0.075
+    },
+    "waiting_cancel": {
+      "id": "f3024fe1069848f3ac732ec46956166d",
+      "state": "CANCELLED",
+      "created_at": 1794478979.735952,
+      "updated_at": 1794478979.738482,
+      "progress": {
+        "stage": "waiting"
+      },
+      "result": null
+    },
+    "running_cancel_request": "CANCEL_REQUESTED",
+    "running_cancel_confirmed": {
+      "id": "f636bfe94d4643a98c2684191db06a99",
+      "state": "CANCELLED",
+      "created_at": 1794478977.0712569,
+      "updated_at": 1794478980.236423,
+      "progress": {
+        "stage": "sampling_or_decode",
+        "node": "5",
+        "value": 3,
+        "maximum": 40,
+        "fraction": 0.075
+      },
+      "result": null,
+      "resource_observation": {
+        "ready": true,
+        "free_mib": 5761,
+        "gpu_c": 34,
+        "hbm_c": 36,
+        "watts": 183.47
+      },
+      "started_at": 1794478977.4491694,
+      "prompt_id": "e921bc1f-4466-4ead-9e42-d33932b03df5",
+      "error": "ENGINE_INTERRUPTED"
+    }
+  },
+  "eidolon-media-comfy-20261112-egress": {
+    "local": "connected",
+    "external": "TimeoutError:timed out"
+  },
+  "eidolon-media-api-20261112-egress": {
+    "local": "connected",
+    "external": "TimeoutError:timed out"
+  },
+  "post_storage": {
+    "old_result_readable": true,
+    "client_new_job_state": "SUCCEEDED",
+    "seconds": 6.309356794999985,
+    "result_bytes": 473908,
+    "sha256": "754abe61e8b4ed66168e4b44b3eead3967db9ee5879943abfbdb4d5b92ee3b15"
+  },
+  "final_egress": {
+    "engine": {
+      "local": "connected",
+      "external": "TimeoutError"
+    },
+    "api_final": {
+      "local": "connected",
+      "external": "TimeoutError"
+    },
+    "unconfined_control": "connected"
+  },
+  "kernel_check": {
+    "since": "2026-11-12 08:00:00 host local",
+    "xid_or_uncorrectable_ecc_matches": 0
+  }
+}

@@ -1,0 +1,8 @@
+nov. 13 19:40:58 eidolon-os flock[95474]: Traceback (most recent call last):
+nov. 13 19:40:58 eidolon-os flock[95474]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/flux_schnell_probe_g339.py", line 255, in <module>
+nov. 13 19:40:58 eidolon-os flock[95474]:     main()
+nov. 13 19:40:58 eidolon-os flock[95474]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/flux_schnell_probe_g339.py", line 70, in main
+nov. 13 19:40:58 eidolon-os flock[95474]:     import quality_probe as probe
+nov. 13 19:40:58 eidolon-os flock[95474]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/quality_probe.py", line 23, in <module>
+nov. 13 19:40:58 eidolon-os flock[95474]:     from eidolon_core.media_profiles import validate, workflow
+nov. 13 19:40:58 eidolon-os flock[95474]: ModuleNotFoundError: No module named 'eidolon_core'

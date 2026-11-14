@@ -1,0 +1,104 @@
+[
+  {
+    "profile": "sd15-text",
+    "format": "16:9",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      768,
+      432
+    ],
+    "frames": 1,
+    "seconds": 5.197544275999462,
+    "state": "SUCCEEDED",
+    "bars_verified": false,
+    "quality_assessment": false
+  },
+  {
+    "profile": "sd15-text",
+    "format": "4:3-pillarbox",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      576,
+      432
+    ],
+    "frames": 1,
+    "seconds": 5.135190250000051,
+    "state": "SUCCEEDED",
+    "bars_verified": true,
+    "quality_assessment": false
+  },
+  {
+    "profile": "wan21-text",
+    "format": "16:9",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      512,
+      288
+    ],
+    "frames": 5,
+    "seconds": 21.15210289999959,
+    "state": "SUCCEEDED",
+    "bars_verified": false,
+    "quality_assessment": false
+  },
+  {
+    "profile": "wan21-text",
+    "format": "4:3-pillarbox",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      384,
+      288
+    ],
+    "frames": 5,
+    "seconds": 19.327674242000285,
+    "state": "SUCCEEDED",
+    "bars_verified": true,
+    "quality_assessment": false
+  },
+  {
+    "profile": "svd-image",
+    "format": "16:9",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      512,
+      288
+    ],
+    "frames": 5,
+    "seconds": 19.525689473000057,
+    "state": "SUCCEEDED",
+    "bars_verified": false,
+    "quality_assessment": false
+  },
+  {
+    "profile": "svd-image",
+    "format": "4:3-pillarbox",
+    "output_size": [
+      1920,
+      1080
+    ],
+    "generation_size": [
+      384,
+      288
+    ],
+    "frames": 5,
+    "seconds": 10.977671074999307,
+    "state": "SUCCEEDED",
+    "bars_verified": true,
+    "quality_assessment": false
+  }
+]

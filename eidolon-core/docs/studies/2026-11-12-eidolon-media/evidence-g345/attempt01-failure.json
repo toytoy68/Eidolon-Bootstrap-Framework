@@ -1,0 +1,4 @@
+{
+  "error": "ValueError",
+  "message": "Intermediate timesteps for SCM is not supported when num_inference_steps != 2."
+}

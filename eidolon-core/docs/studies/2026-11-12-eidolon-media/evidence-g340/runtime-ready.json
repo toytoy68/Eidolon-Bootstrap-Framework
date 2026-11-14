@@ -1,0 +1,8 @@
+{
+  "base_runtime_unchanged": true,
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "pip_check": "passed",
+  "optional_peft_removed": "Old optional PEFT0.14 incompatible; no LoRA needed. Removed only from isolated runtime."
+}

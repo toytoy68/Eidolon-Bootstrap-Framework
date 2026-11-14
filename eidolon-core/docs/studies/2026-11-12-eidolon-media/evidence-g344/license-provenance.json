@@ -1,0 +1,10 @@
+{
+  "repo": "Tongyi-MAI/Z-Image",
+  "revision": "26f23eda626ffadda020b04ff79488e1d72004cd",
+  "path": "LICENSE",
+  "model_license_declaration": "Apache-2.0 in pinned model card",
+  "qwen_license_reference": "Qwen/Qwen3-4B Apache-2.0, archived with G340",
+  "model_repo": "Tongyi-MAI/Z-Image",
+  "model_revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+  "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+}

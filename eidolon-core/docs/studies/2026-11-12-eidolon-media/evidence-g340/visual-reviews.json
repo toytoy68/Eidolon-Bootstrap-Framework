@@ -1,0 +1,86 @@
+{
+  "0": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts distincts, paume et poignet visibles, structure plausible. Contrôle 512² hors score natif.",
+    "comparison": "Klein réussit le contrôle des cinq doigts, comme dev ; Schnell en avait omis un. Le rendu reste naturel malgré une peau assez lisse.",
+    "rendering": "Éclairage doux et forme cohérente."
+  },
+  "1": {
+    "verdict": "Rejet",
+    "scores": [
+      1,
+      1,
+      4,
+      3
+    ],
+    "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage.",
+    "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+    "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
+  },
+  "2": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts distincts, paume et poignet visibles. Plis et texture plausibles ; pouce un peu anguleux sans anomalie éliminatoire évidente sur cet aperçu.",
+    "comparison": "Klein et dev donnent une main plausible sur cette seed ; Schnell conserve une réserve sur la base du pouce.",
+    "rendering": "Texture détaillée, lumière assez naturelle."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Deux objets entiers : tasse rouge à gauche, bol bleu à droite. Géométrie, ombres et reflets cohérents.",
+    "comparison": "Les trois modèles respectent cette consigne. Klein restitue une céramique brillante et un bol texturé convaincants.",
+    "rendering": "Rendu produit photographique et propre."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Tasse rouge et bol bleu entiers, séparés et correctement placés. Reflets et surfaces plausibles.",
+    "comparison": "Les trois modèles réussissent la composition. Les différences de lumière et de texture ne suffisent pas à désigner un gagnant général.",
+    "rendering": "Céramique crédible, lumière douce."
+  },
+  "5": {
+    "verdict": "Rejet",
+    "comment": "Objets incohérents : une pièce courbe mélange lame, poignée et fourreau ; l’autre porte une poignée sur un corps noir trop court. Aucun katana complet crédible.",
+    "comparison": "Dev conserve les bons objets avec une réserve géométrique. Schnell ajoute un deuxième sabre ; Klein fusionne des pièces malgré de belles matières.",
+    "rendering": "Métal, laque et tissu convaincants ; construction impossible."
+  },
+  "6": {
+    "verdict": "Rejet",
+    "comment": "Lame détachée sans poignée à gauche, poignée montée sur le fourreau à droite : le katana entier demandé manque.",
+    "comparison": "Dev est le plus convaincant sur cette paire. Schnell garde une géométrie douteuse ; Klein sépare les mauvais éléments.",
+    "rendering": "Textures réalistes, défaut structurel majeur."
+  },
+  "7": {
+    "verdict": "Proposée",
+    "comment": "Deux adultes entiers, mains visibles, homme en armure noire à gauche, femme en kimono rouge à droite, château présent. Contrôle fin des doigts recommandé.",
+    "comparison": "Klein respecte ici le cadrage en pied, contrairement à dev et Schnell. Le costume et la scène sont convaincants, sans valider leur exactitude historique.",
+    "rendering": "Lumière et matières riches ; rendu parfois très lissé."
+  },
+  "8": {
+    "verdict": "Proposée",
+    "comment": "Deux adultes de la tête aux pieds, positions et couleurs correctes, mains visibles. Détails fins des doigts à confirmer sur le PNG natif.",
+    "comparison": "Klein et Schnell satisfont le cadrage, alors que dev coupe les personnages. Klein garde des détails de vêtements et de décor lisibles.",
+    "rendering": "Ensemble photographique agréable, visages un peu lissés."
+  },
+  "9": {
+    "verdict": "Rejet",
+    "scores": [
+      1,
+      1,
+      4,
+      3
+    ],
+    "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage. Répétition identique de 01, hors score natif.",
+    "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+    "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
+  },
+  "10": {
+    "verdict": "Rejet",
+    "comment": "Duo, couleurs et château présents, mais les pieds sont rognés au bord inférieur. La consigne en pied reste incomplète.",
+    "comparison": "Les trois modèles échouent au cadrage dans ce format. Klein montre davantage des jambes, sans résoudre entièrement le défaut.",
+    "rendering": "Portrait et costumes propres ; cadrage trop serré."
+  },
+  "11": {
+    "verdict": "Rejet",
+    "comment": "Personnages presque entiers mais pieds au bord inférieur et rognés. Mains visibles ; marge insuffisante pour valider le cadrage demandé.",
+    "comparison": "Klein élargit nettement la scène face aux deux références. Le bas du cadre reste trop serré pour une proposition sans réserve.",
+    "rendering": "Armure et kimono détaillés ; défaut de cadrage persistant."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "gpus": {
+    "returncode": 0,
+    "stdout": "0, GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, 1 MiB, 0 %, 300.00 W, 28, 28\n1, GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 624 MiB, 0 %, 200.00 W, 29, 28\n2, GPU-4e1c4053-29c2-f0b6-5267-3f561379c058, 2 MiB, 0 %, 120.00 W, 34, N/A\n"
+  },
+  "processes": {
+    "returncode": 0,
+    "stdout": "GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 12976, 620 MiB\n"
+  },
+  "errors0": {
+    "returncode": 0,
+    "stdout": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Replay Errors: 0\n\t Link 0: Recovery Errors: 0\n\t Link 0: CRC Errors: 0\n\n\t Link 1: Replay Errors: 0\n\t Link 1: Recovery Errors: 0\n\t Link 1: CRC Errors: 0\n\n\t Link 2: Replay Errors: 0\n\t Link 2: Recovery Errors: 0\n\t Link 2: CRC Errors: 0\n\n\t Link 3: Replay Errors: 0\n\t Link 3: Recovery Errors: 0\n\t Link 3: CRC Errors: 0\n\n\t Link 4: Replay Errors: 0\n\t Link 4: Recovery Errors: 0\n\t Link 4: CRC Errors: 0\n\n\t Link 5: Replay Errors: 0\n\t Link 5: Recovery Errors: 0\n\t Link 5: CRC Errors: 0\n\n"
+  },
+  "errors1": {
+    "returncode": 0,
+    "stdout": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Replay Errors: 0\n\t Link 0: Recovery Errors: 0\n\t Link 0: CRC Errors: 0\n\n\t Link 1: Replay Errors: 0\n\t Link 1: Recovery Errors: 0\n\t Link 1: CRC Errors: 0\n\n\t Link 2: Replay Errors: 0\n\t Link 2: Recovery Errors: 0\n\t Link 2: CRC Errors: 0\n\n\t Link 3: Replay Errors: 0\n\t Link 3: Recovery Errors: 0\n\t Link 3: CRC Errors: 0\n\n\t Link 4: Replay Errors: 0\n\t Link 4: Recovery Errors: 0\n\t Link 4: CRC Errors: 0\n\n\t Link 5: Replay Errors: 0\n\t Link 5: Recovery Errors: 0\n\t Link 5: CRC Errors: 0\n\n"
+  },
+  "services": {
+    "returncode": 0,
+    "stdout": "  eidolon-comm.service                    loaded active running Eidolon communication (voix, synthèse, image ponctuelle) — boucle locale\n  eidolon-core-api.service                loaded active running Eidolon Core beta local conversation API\n  eidolon-daily-recorder.service          loaded active running Eidolon 14-day thermal and power recorder\n  eidolon-darme-ssh.service               loaded active running Eidolon DARME reduced signed SSH authentication collector\n  eidolon-darme.service                   loaded active running Eidolon DARME passive local monitoring\n  eidolon-hwmon.service                   loaded active running Eidolon hardware monitoring (2 second samples, 10000 second retention)\n  eidolon-media-api-sdxl-20261112.service loaded active running [systemd-run] /srv/eidolon/workspaces/media-20261112/venv/bin/python -m eidolon_core.media_service --root /srv/eidolon/workspaces/media-20261112/api --artifact-root /srv/eidolon/data/media-20261112/artifacts --token-file /srv/eidolon/workspaces/media-20261112/token --inputs /srv/eidolon/data/media-20261112/input --gpu-uuid GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b --engine-pid 12976 --registry /srv/eidolon/workspaces/media-20261112/registry.json --models-root /srv/eidolon/models/media-20261112 --enable sd15-text --enable sd15-edit --enable sd15-inpaint --enable wan21-text --enable svd-image --enable sdxl-text\n  eidolon-media-comfy-20261112.service    loaded active running [systemd-run] /srv/eidolon/workspaces/media-20261112/venv/bin/python /srv/eidolon/workspaces/media-20261112/engine/main.py --listen 127.0.0.1 --port 8189 --force-fp16 --fp32-vae --fp16-text-enc --disable-xformers --use-split-cross-attention --disable-all-custom-nodes --disable-auto-launch --disable-metadata --deterministic --reserve-vram 2\n  eidolon-memory-tunnel.service           loaded active running Eidolon native Core to X399 Memory tunnel\n  eidolon-monitor.service                 loaded active running Eidolon monitor (statut DARME en lecture seule pour le dashboard) — boucle locale\n  eidolon-shelly.service                  loaded active running Eidolon Shelly local power telemetry\n  ollama.service                          loaded active running Eidolon local Ollama inference"
+  },
+  "disk": {
+    "returncode": 0,
+    "stdout": "Sys. de fichiers              Taille Utilisé Dispo Uti% Monté sur\n/dev/mapper/vg_eidolon-models   442G    410G   28G  94% /srv/eidolon/models\n"
+  },
+  "clock": {
+    "returncode": 0,
+    "stdout": "2026-11-12T21:43:03+01:00\n"
+  },
+  "queue": {
+    "queue_running": [],
+    "queue_pending": []
+  },
+  "jobs": {
+    "SUCCEEDED": 77,
+    "CANCELLED": 2
+  }
+}

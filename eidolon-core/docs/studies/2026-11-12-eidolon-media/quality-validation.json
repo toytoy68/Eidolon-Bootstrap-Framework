@@ -1,0 +1,1199 @@
+{
+  "summary": [
+    {
+      "case": "control",
+      "seed": 104729,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 14.871012759998848,
+      "seconds_service": 14.496061086654663,
+      "sha256": "2383bc0ef45534bdd09f609a89248b102fd2dad3dcb17deee5d4ae9f96e97f3f",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.8
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 31
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.28,
+              "max": 235.02
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 41
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 26.625,
+          "max": 36.5
+        }
+      }
+    },
+    {
+      "case": "control",
+      "seed": 104729,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 22.175945180999406,
+      "seconds_service": 21.726183652877808,
+      "sha256": "d4cc74660b1e85716509765cba789ad683236ae0654ce0082a562b5fab68ef9c",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.78
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 31
+            },
+            "temperature.memory": {
+              "min": 30,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 58.63,
+              "max": 246.79
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 42
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.11,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27,
+          "max": 37.375
+        }
+      }
+    },
+    {
+      "case": "control",
+      "seed": 130363,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 21.420073722998495,
+      "seconds_service": 20.986937046051025,
+      "sha256": "84fddd22a157ce132c667ec82e961169e84fedf8c457b6217d33de499cbb3a78",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.29,
+              "max": 38.78
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 31
+            },
+            "temperature.memory": {
+              "min": 30,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 55.24,
+              "max": 207.47
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 43
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.41
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27,
+          "max": 38.75
+        }
+      }
+    },
+    {
+      "case": "control",
+      "seed": 130363,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 17.172803113000555,
+      "seconds_service": 16.7325279712677,
+      "sha256": "00671ce6f1ab68120d13b1b8ae03ed3a88c05489fc0784f1c72c70a31b329d74",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 30,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 94
+            },
+            "power.draw": {
+              "min": 55.24,
+              "max": 228.32
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 42
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.51
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 34,
+          "max": 38.5
+        }
+      }
+    },
+    {
+      "case": "hand",
+      "seed": 104729,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 17.791993467000793,
+      "seconds_service": 17.329329013824463,
+      "sha256": "dfd2567fe8d1964ede12d5f673dc88634a6771d63a2d34f511934322782880a2",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.24,
+              "max": 38.78
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 30,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 55.24,
+              "max": 254.08
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 41
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.12,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27.75,
+          "max": 37.375
+        }
+      }
+    },
+    {
+      "case": "hand",
+      "seed": 104729,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 21.954280595000455,
+      "seconds_service": 21.473400354385376,
+      "sha256": "021085b1b0a975339b7e8567974544d96450bfd1b44a19b0baf67ca9e99f87f2",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.78
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 31
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 60.52,
+              "max": 209.66
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 43
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27.75,
+          "max": 37.375
+        }
+      }
+    },
+    {
+      "case": "hand",
+      "seed": 130363,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 21.380734934999055,
+      "seconds_service": 20.940367937088013,
+      "sha256": "99c09aeb854bfd4392aaa7884470648566c2b45ea0ac74d40b5cf495afb06bfa",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.29,
+              "max": 38.8
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 31
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.76,
+              "max": 209.38
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 32,
+              "max": 43
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27.75,
+          "max": 42.25
+        }
+      }
+    },
+    {
+      "case": "hand",
+      "seed": 130363,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 17.26755788400078,
+      "seconds_service": 16.821205377578735,
+      "sha256": "cc0117a3f28595e853f1901d005a35d869fecac51cdf75ce00e3a7b90da8f35b",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 37.83,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.76,
+              "max": 222.72
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 41
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 27.75,
+          "max": 37.125
+        }
+      }
+    },
+    {
+      "case": "katana",
+      "seed": 104729,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 18.3029085929993,
+      "seconds_service": 17.822904109954834,
+      "sha256": "ee9530ea285f98842a6880d9ba2cd262311cac98b748e9eae1d213206473b1da",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 37.83,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.76,
+              "max": 234.07
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 42
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.11,
+              "max": 10.41
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 28.25,
+          "max": 37.75
+        }
+      }
+    },
+    {
+      "case": "katana",
+      "seed": 104729,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 22.16873860800115,
+      "seconds_service": 21.708534717559814,
+      "sha256": "216afac46e63fbb198a5133e18a335b4971c6feaed5e24610e4c47d4ca820fa1",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 55.24,
+              "max": 206.31
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 31,
+              "max": 44
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.41
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 28,
+          "max": 39.375
+        }
+      }
+    },
+    {
+      "case": "katana",
+      "seed": 130363,
+      "size": [
+        1024,
+        1024
+      ],
+      "seconds_wall": 21.539434901000277,
+      "seconds_service": 21.085304021835327,
+      "sha256": "3155e21ca491bcf3d8a7de960bb252143ee6c73e72ad56ee1c86dc153814d049",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 30,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 9168
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.76,
+              "max": 217.02
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 38
+            },
+            "temperature.memory": {
+              "min": 32,
+              "max": 44
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.5
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 33.25,
+          "max": 38.75
+        }
+      }
+    },
+    {
+      "case": "katana",
+      "seed": 130363,
+      "size": [
+        1024,
+        576
+      ],
+      "seconds_wall": 17.296725830001378,
+      "seconds_service": 16.850731134414673,
+      "sha256": "41c6d75f9d67d22a9a504ce40625b01e16b3643347041e2b112dda13f7d59956",
+      "technical": "PASS",
+      "visual": "NOT_REVIEWED",
+      "telemetry": {
+        "sample_errors": 0,
+        "gpus": {
+          "0": {
+            "memory.used": {
+              "min": 1,
+              "max": 1
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 38.27,
+              "max": 38.4
+            },
+            "temperature.gpu": {
+              "min": 29,
+              "max": 30
+            },
+            "temperature.memory": {
+              "min": 29,
+              "max": 30
+            },
+            "power.limit": {
+              "min": 300,
+              "max": 300
+            }
+          },
+          "1": {
+            "memory.used": {
+              "min": 624,
+              "max": 8880
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 100
+            },
+            "power.draw": {
+              "min": 54.76,
+              "max": 232.32
+            },
+            "temperature.gpu": {
+              "min": 31,
+              "max": 37
+            },
+            "temperature.memory": {
+              "min": 32,
+              "max": 41
+            },
+            "power.limit": {
+              "min": 200,
+              "max": 200
+            }
+          },
+          "2": {
+            "memory.used": {
+              "min": 2,
+              "max": 2
+            },
+            "utilization.gpu": {
+              "min": 0,
+              "max": 0
+            },
+            "power.draw": {
+              "min": 10.21,
+              "max": 10.51
+            },
+            "temperature.gpu": {
+              "min": 34,
+              "max": 35
+            },
+            "temperature.memory": null,
+            "power.limit": {
+              "min": 120,
+              "max": 120
+            }
+          }
+        },
+        "cpu_tdie_c": {
+          "min": 28,
+          "max": 42.75
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+    "engine_cmdline": "/srv/eidolon/workspaces/media-20261112/venv/bin/python /srv/eidolon/workspaces/media-20261112/engine/main.py --listen 127.0.0.1 --port 8189 --force-fp16 --fp32-vae --fp16-text-enc --disable-xformers --use-split-cross-attention --disable-all-custom-nodes --disable-auto-launch --disable-metadata --deterministic --reserve-vram 2 ",
+    "plan_sha256": "ac0846ff94c5c903e87da011dce998d640b1ed137f39f0bf1f2f9ab5d07372d4",
+    "cache_policy": "unload Comfy models before each trial; OS cache unchanged",
+    "source_head": "3634576858039f0636830d5fc730ad2c758d9d0e",
+    "engine_head": "9aac21f894a122ddb8d825c57ad61c0db5e630db",
+    "runner_sha256": "c8782af8116605f4c6fdc6add53e2ab8d32812ebff4976f3252ba6b7631cea19"
+  },
+  "aggregates": {
+    "576": {
+      "n": 6,
+      "time_min": 14.871012759998848,
+      "time_median": 17.28214185700108,
+      "time_max": 18.3029085929993,
+      "vram_max": 8880,
+      "gpu_c_max": 37,
+      "hbm_c_max": 42,
+      "watts_max": 254.08
+    },
+    "1024": {
+      "n": 6,
+      "time_min": 21.380734934999055,
+      "time_median": 21.746857748000366,
+      "time_max": 22.175945180999406,
+      "vram_max": 9168,
+      "gpu_c_max": 38,
+      "hbm_c_max": 44,
+      "watts_max": 246.79
+    }
+  }
+}

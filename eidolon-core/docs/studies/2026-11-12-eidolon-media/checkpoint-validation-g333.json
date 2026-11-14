@@ -1,0 +1,1773 @@
+{
+  "loads.json": [
+    {
+      "model": "sdxl",
+      "load_seconds": 3.7063979619999827
+    },
+    {
+      "model": "realvis",
+      "load_seconds": 3.530662565999819
+    },
+    {
+      "model": "juggernaut",
+      "load_seconds": 3.592903596000042
+    }
+  ],
+  "completion.json": {
+    "generated": 27,
+    "repeat_same_pixels": {
+      "sdxl": true,
+      "realvis": true,
+      "juggernaut": true
+    },
+    "training_or_promotion_allowed": false,
+    "visual_acceptance": "PENDING_REVIEW"
+  },
+  "telemetry.json": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310,
+          "max": 11548
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 100
+        },
+        "power.draw": {
+          "min": 51.41,
+          "max": 322.74
+        },
+        "temperature.gpu": {
+          "min": 26,
+          "max": 48
+        },
+        "temperature.memory": {
+          "min": 26,
+          "max": 56
+        },
+        "power.limit": {
+          "min": 300,
+          "max": 300
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1,
+          "max": 1
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 38.14,
+          "max": 39.8
+        },
+        "temperature.gpu": {
+          "min": 25,
+          "max": 32
+        },
+        "temperature.memory": {
+          "min": 24,
+          "max": 31
+        },
+        "power.limit": {
+          "min": 300,
+          "max": 300
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2,
+          "max": 2
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 10.01,
+          "max": 10.59
+        },
+        "temperature.gpu": {
+          "min": 30,
+          "max": 35
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120,
+          "max": 120
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 26,
+      "max": 38.375
+    }
+  },
+  "telemetry-by-model.json": {
+    "sdxl": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 310,
+            "max": 11540
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 51.41,
+            "max": 319.41
+          },
+          "temperature.gpu": {
+            "min": 26,
+            "max": 43
+          },
+          "temperature.memory": {
+            "min": 26,
+            "max": 51
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 1,
+            "max": 1
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 38.14,
+            "max": 38.83
+          },
+          "temperature.gpu": {
+            "min": 25,
+            "max": 27
+          },
+          "temperature.memory": {
+            "min": 24,
+            "max": 26
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2,
+            "max": 2
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 10.01,
+            "max": 10.4
+          },
+          "temperature.gpu": {
+            "min": 30,
+            "max": 32
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120,
+            "max": 120
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 26,
+        "max": 37.25
+      }
+    },
+    "realvis": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 402,
+            "max": 11548
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 62.05,
+            "max": 322.74
+          },
+          "temperature.gpu": {
+            "min": 32,
+            "max": 47
+          },
+          "temperature.memory": {
+            "min": 36,
+            "max": 55
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 1,
+            "max": 1
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 38.62,
+            "max": 39.69
+          },
+          "temperature.gpu": {
+            "min": 27,
+            "max": 31
+          },
+          "temperature.memory": {
+            "min": 26,
+            "max": 30
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2,
+            "max": 2
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 10.01,
+            "max": 10.5
+          },
+          "temperature.gpu": {
+            "min": 30,
+            "max": 34
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120,
+            "max": 120
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 26.25,
+        "max": 38.375
+      }
+    },
+    "juggernaut": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 402,
+            "max": 11548
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 62.09,
+            "max": 317.24
+          },
+          "temperature.gpu": {
+            "min": 36,
+            "max": 48
+          },
+          "temperature.memory": {
+            "min": 40,
+            "max": 56
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 1,
+            "max": 1
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 39.13,
+            "max": 39.8
+          },
+          "temperature.gpu": {
+            "min": 31,
+            "max": 32
+          },
+          "temperature.memory": {
+            "min": 30,
+            "max": 31
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2,
+            "max": 2
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 10.02,
+            "max": 10.59
+          },
+          "temperature.gpu": {
+            "min": 34,
+            "max": 35
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120,
+            "max": 120
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 26.375,
+        "max": 38.125
+      }
+    }
+  },
+  "results": [
+    {
+      "model": "sdxl",
+      "index": 0,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.99005707699996,
+      "sha256": "c3f2e85247ecc0fbacc33fd19562e3e1ab24f95353b566236725718290168e47",
+      "pixel_sha256": "d29593082f7a13625e3ce3ea08143cf8c10b1493060d5f682d861138ffcfca90",
+      "peak_allocated_bytes": 10429610496,
+      "peak_reserved_bytes": 11697913856,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S00",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts séparés, paume visible et cadrage conforme. Ensemble plausible ; plis des bases des doigts encore stylisés. Acceptation visuelle proposée, sans certification anatomique.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 1,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.54705831600006,
+      "sha256": "de1ae02411f152cde072f04caf694625040fefb2924f95046bba19898239668e",
+      "pixel_sha256": "27db4523a0735b94431c443d397647671e31a1f01abbae4c49c52f82e2556693",
+      "peak_allocated_bytes": 10429610496,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S01",
+        "reviewer": "Codex/GPT",
+        "status": "UNCERTAIN",
+        "scores": {
+          "fidelity": 3,
+          "structure": 2,
+          "composition": 3,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts présents, mais paume oblique et jonction pouce/paume très plissée et pincée. Doute structurel : ne pas retenir pour apprentissage sans revue humaine.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 2,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.53895823400012,
+      "sha256": "5b5f689807a666ecbdd0f7d969f447ac6b13e8527e2129a67e03d62fe9a920fc",
+      "pixel_sha256": "d4473e3b8679a10d7449328c7e2adcba8190467b983a8f0e7a297370245b88d3",
+      "peak_allocated_bytes": 10428955136,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S02",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 2,
+          "composition": 3,
+          "finish": 3
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Cinq récipients au lieu de deux, couleurs et positions mélangées ; un objet bleu couché porte une excroissance. Nombre demandé non respecté.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 3,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.552326427000025,
+      "sha256": "e6e291f9f0e03ae6cc6738031b4c7215a8fb8f259fb9b2349e209e2f962edc2b",
+      "pixel_sha256": "9415bb151ce8df174e109a8a902cf4f9848fddf7cb8424e7283176bb51df710b",
+      "peak_allocated_bytes": 10428955136,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S03",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 2,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Deux objets présents, mais bol à gauche et tasse à droite : relation explicitement inversée. Le bol mélange aussi rouge et bleu.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 4,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.556383351000022,
+      "sha256": "14d0933d8c69113abff10b42c7016600103eb8be993d7163884fc259524fef99",
+      "pixel_sha256": "36501a21f28f21c34d5beefc1b9ae02295d8c9a933d5cb7798b79be2237999c9",
+      "peak_allocated_bytes": 10428955136,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S04",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 1,
+          "composition": 1,
+          "finish": 3
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Plusieurs lames et poignées, fragments détachés et montage en collage. Aucun ensemble unique katana + fourreau cohérent.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 5,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.568719644999874,
+      "sha256": "df76870af19ad58641abe1f660fcbccf89e71ca5686123a52f36acb0eeeae3bd",
+      "pixel_sha256": "a58e9b0c62f404264758e596827966136a12b3527bd45376eccf60969e88bac5",
+      "peak_allocated_bytes": 10429610496,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S05",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 2,
+          "structure": 1,
+          "composition": 3,
+          "finish": 3
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Les deux objets portent une poignée et une garde ; le fourreau séparé vide est remplacé par un deuxième assemblage de sabre.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "sdxl",
+      "index": 6,
+      "condition": "repeat30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.570172665999962,
+      "sha256": "c3f2e85247ecc0fbacc33fd19562e3e1ab24f95353b566236725718290168e47",
+      "pixel_sha256": "d29593082f7a13625e3ce3ea08143cf8c10b1493060d5f682d861138ffcfca90",
+      "peak_allocated_bytes": 10428955136,
+      "peak_reserved_bytes": 11700011008,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-S06",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Répétition pixel-identique, examinée aussi visuellement. Cinq doigts séparés, paume visible et cadrage conforme. Ensemble plausible ; plis des bases des doigts encore stylisés. Acceptation visuelle proposée, sans certification anatomique.",
+        "repeat_of": "G333-S00",
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 0,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.540294843000083,
+      "sha256": "f56b89a3358eb2d1db5db8d43f4e1f1a3be64151a8cf08aaf33acf4d3d701023",
+      "pixel_sha256": "b539e03cdacea058bce5e0816b758377c06e891fa86482e16098c86e772721c4",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11704205312,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R00",
+        "reviewer": "Codex/GPT",
+        "status": "UNCERTAIN",
+        "scores": {
+          "fidelity": 4,
+          "structure": 2,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts séparés et belle peau, mais extrémité du pouce anormalement plate/biseautée. À revoir sur le PNG original ; pas de validation automatique de cette main.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 1,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.551098347000107,
+      "sha256": "7eec72275bab1f7a54f21586a44b41979d5ce044ec22883e8d21674b17071bb1",
+      "pixel_sha256": "294102afd1ee24e93444b3a6649800811e656f01e287fb44880095051978cb9a",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11706302464,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R01",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts séparés, paume et poignet cohérents à cette inspection. Texture un peu lissée ; aucune anomalie éliminatoire évidente. Validation proposée seulement.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 2,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.546172837000086,
+      "sha256": "7e2636db81100f684ec3770c27eba0225b8af069ee4b6d3287bef23d734cd4c4",
+      "pixel_sha256": "4d79ec7b8506f56fc0a8f3f1ee76bcf908c753bd39a2915ca8faaf90c910772e",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11706302464,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R02",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 3,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Trois récipients dont une tasse bleue couverte, au lieu de la paire demandée. Bol à gauche, relation spatiale incorrecte.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 3,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.546163063999984,
+      "sha256": "4f9840054a2fddb2fb12bbee969a6c25f1d3e2b70861dcc46ef022e1ad830720",
+      "pixel_sha256": "14ee27fba1dc030f2b77e12bc55b18214488038b7a488c84e19f852911cfe1a9",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R03",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 3,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Trois récipients ; tasse bleue supplémentaire et bol rouge/bleu. Tasse rouge à droite au lieu de gauche.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 4,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.561926419999963,
+      "sha256": "e494b0e2c2ce7c73c724bd265f3d8b344c9ab61207d9910060a4ebc8e7680c69",
+      "pixel_sha256": "78e05590a1745c39b96aa4ac9f8d4b295d5d3ffca4a54939b5fec283010accbd",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R04",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 2,
+          "structure": 1,
+          "composition": 1,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Poignée et lame coupées par le cadre ; l’autre objet comporte également une garde et un montage ambigu. Objets entiers non fournis.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 5,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.56482778999998,
+      "sha256": "b56bea1306ba495bb0e0019b31fbd3aa0edcf10a3158c36521daf2e0812085db",
+      "pixel_sha256": "51bba9e07e1541c7a02d4f97c19c471c12e097b76b7cf020ff172a0b232594f1",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R05",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 3,
+          "structure": 1,
+          "composition": 4,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Un sabre et un objet noir séparé, mais le fourreau est manifestement trop court pour la lame et porte une garde de sabre. Belle finition, géométrie fonctionnelle incohérente.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 6,
+      "condition": "repeat30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.570877111000073,
+      "sha256": "f56b89a3358eb2d1db5db8d43f4e1f1a3be64151a8cf08aaf33acf4d3d701023",
+      "pixel_sha256": "b539e03cdacea058bce5e0816b758377c06e891fa86482e16098c86e772721c4",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R06",
+        "reviewer": "Codex/GPT",
+        "status": "UNCERTAIN",
+        "scores": {
+          "fidelity": 4,
+          "structure": 2,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Répétition pixel-identique, examinée aussi visuellement. Cinq doigts séparés et belle peau, mais extrémité du pouce anormalement plate/biseautée. À revoir sur le PNG original ; pas de validation automatique de cette main.",
+        "repeat_of": "G333-R00",
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 7,
+      "condition": "author50",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.86341282500007,
+      "sha256": "5a0fe6a02fa6f68b4cc40ad80e0dd33f34dd7d271f40558fffeb4b7b91116ea3",
+      "pixel_sha256": "55f8236a68720d0dce82744646ef2e2deb02797920fa4bfec6ac4b96a383004c",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R07",
+        "reviewer": "Codex/GPT",
+        "status": "UNCERTAIN",
+        "scores": {
+          "fidelity": 4,
+          "structure": 2,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Même doute sur le bout du pouce aplati/biseauté qu’à 30 étapes. Les 20 étapes supplémentaires ne lèvent pas cette réserve.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 8,
+      "condition": "author50",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.860060268000097,
+      "sha256": "1eba0e90b537d4224d1a3ed08c7ebefc48abe1b1532d13315903e4a748501884",
+      "pixel_sha256": "cf7b85b9bba03a8fd9ab55e02d43c052f77a3528ed3855c2062ed2133f29ebc3",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R08",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Main à cinq doigts, paume et poignet plausibles ; résultat très proche de la condition 30 étapes. Aucun gain net démontré.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 9,
+      "condition": "author50",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.86742369700005,
+      "sha256": "7bbdf7e0a6bcdc1658fdcc39863d13e5706fc9848d7db703c9b7d0fd4d3a0034",
+      "pixel_sha256": "13c113f7564839fca6d7c9e5ef17aab8d08f075ac94e52aca4a1ec5c6c6242c4",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R09",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 3,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Toujours trois objets : une tasse rouge et deux bols bleus. La tasse bleue couverte a disparu, mais le nombre reste faux.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 10,
+      "condition": "author50",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.8707484680001,
+      "sha256": "917ea57eff4c4e04c28b1a286463ed5e351c07c4beb709031526947e6db189e2",
+      "pixel_sha256": "cc19dda33603c9906e7ce3469f64acb8e4a68806c7ee69da053467200937149f",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R10",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 3,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Toujours trois récipients et tasse rouge à droite. Les détails changent, pas les erreurs de composition.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 11,
+      "condition": "author50",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.871454825,
+      "sha256": "6cdbdea9206ea78a0192162f2683b94d78d20be12fc69cb8ee3a7752a7d246d5",
+      "pixel_sha256": "d35e8cff9368995e7f49998191d297cd35b952cd0fe7148119354524b4a0597f",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R11",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 2,
+          "structure": 1,
+          "composition": 1,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Lame et poignée encore tronquées ; faux fourreau avec garde. Le surcroît d’étapes ne rétablit pas un ensemble entier et cohérent.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "realvis",
+      "index": 12,
+      "condition": "author50",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 50,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 28.876286700000037,
+      "sha256": "de01923da0bcaaa68ca866f8455d0037af30bd131e13cd53bbe3dddab67f68f2",
+      "pixel_sha256": "8cb7c2e23d7f2d2b5721d4cd4def963934af9a993af93b23cc35de8519a7e67c",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-R12",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 3,
+          "structure": 1,
+          "composition": 4,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Fourreau encore trop court et muni d’une garde. La finition évolue, la géométrie fonctionnelle reste incohérente.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 0,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.61102562500014,
+      "sha256": "225660c393c574f7d3722207f2c03639a26b693d08efa0d7fb3fc74258c920bc",
+      "pixel_sha256": "907fbba7098fa87d0704c5a1cf91ebc0d3bc2a443575a0fbaeeb63b07624909c",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11704205312,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J00",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts séparés, main ouverte et jonction pouce/paume lisible. Plis un peu accentués et peau lissée ; pas de défaut structurel majeur évident à cette inspection.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 1,
+      "condition": "common30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.60749373900012,
+      "sha256": "41ca4eff15484d5c28bed7bbe39e3f226704c87a0563373290457f33bb8c56c7",
+      "pixel_sha256": "e5d6822273f6ea6ca84b773d5351fe62ffed2afddc89767703a7e071224eda2e",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11706302464,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J01",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Cinq doigts séparés, orientation paume et continuité du poignet plausibles. Éclairage fort sur la paume ; validation visuelle proposée, à confirmer par toytoy.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 2,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.62315350100016,
+      "sha256": "8f6bfa19dcc3c76ac9793efe38e3a6a14a4b8c24b6e110dfe00b39a481615b61",
+      "pixel_sha256": "cf48f8c13d6c1d3675f40a85387d843d9280a47e8a93fbf3b4ca5cf0b8a7d4a7",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11706302464,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J02",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 4,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Quatre récipients au lieu de deux ; tasse bleue et récipient rouge supplémentaires. Bol placé à gauche.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 3,
+      "condition": "common30",
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.62944994999998,
+      "sha256": "9f70f081cc479f1932fc454a88964ca18bc345d57e20835c87bd1f63fa8bb12a",
+      "pixel_sha256": "4e2947c8dd478449cff929e4481911899e33e1c1d1c4eb47e8a10847bf9b4532",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J03",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 4,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Trois récipients dont un vase bleu non demandé. Tasse rouge à droite et bol rouge à l’extérieur : composition demandée non respectée.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 4,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.630081087999997,
+      "sha256": "05c5bc5ccd77ef66014d71da77e7a064e1e7711c5f16913cae2ae65cfd934450",
+      "pixel_sha256": "d39dd2d113f4cb2c36fcc290650cc2bf21b909ce3302a388998f9f57af2f34e7",
+      "peak_allocated_bytes": 10431068672,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J04",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 1,
+          "composition": 1,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Multiplication des lames et poignées, pièces isolées, objets tronqués. Le fourreau séparé est confondu avec un autre sabre.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 5,
+      "condition": "common30",
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "seed": 20261114,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.624839171000076,
+      "sha256": "155fc4647d76b00361bba25e122c9fe8b0559011b643d7e7f829c840aa7ba1fe",
+      "pixel_sha256": "0d57f85466c8ea770cc3e012b0542cd9a9be3f867749030c41a6d3ca98ab9b30",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J05",
+        "reviewer": "Codex/GPT",
+        "status": "REJECT",
+        "scores": {
+          "fidelity": 1,
+          "structure": 1,
+          "composition": 2,
+          "finish": 4
+        },
+        "critical_for_this_prompt": true,
+        "reason": "Plusieurs poignées/gardes, lames croisées et pièces noires ambiguës : absence de paire unique katana + fourreau.",
+        "repeat_of": null,
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    },
+    {
+      "model": "juggernaut",
+      "index": 6,
+      "condition": "repeat30",
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "seed": 20261113,
+      "steps": 30,
+      "cfg": 5,
+      "negative_prompt": "",
+      "width": 1024,
+      "height": 1024,
+      "seconds": 17.627133696999863,
+      "sha256": "225660c393c574f7d3722207f2c03639a26b693d08efa0d7fb3fc74258c920bc",
+      "pixel_sha256": "907fbba7098fa87d0704c5a1cf91ebc0d3bc2a443575a0fbaeeb63b07624909c",
+      "peak_allocated_bytes": 10430413312,
+      "peak_reserved_bytes": 11708399616,
+      "visual": "NOT_REVIEWED",
+      "review": {
+        "id": "G333-J06",
+        "reviewer": "Codex/GPT",
+        "status": "PROPOSE_ACCEPT",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        },
+        "critical_for_this_prompt": false,
+        "reason": "Répétition pixel-identique, examinée aussi visuellement. Cinq doigts séparés, main ouverte et jonction pouce/paume lisible. Plis un peu accentués et peau lissée ; pas de défaut structurel majeur évident à cette inspection.",
+        "repeat_of": "G333-J00",
+        "user_review": "PENDING",
+        "training_allowed": false
+      }
+    }
+  ],
+  "manifest": {
+    "runner_sha256": "df6a5223914eecae40e098c4605de72440fd8ea9e0c6276846bdc5a27ebbbb72",
+    "gpu_uuid": "GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75",
+    "runtime": {
+      "torch": "2.6.0+cu124",
+      "diffusers": "0.32.2"
+    },
+    "models": [
+      {
+        "id": "sdxl",
+        "path": "/srv/eidolon/workspaces/media-20261112/engine/models/checkpoints/sd_xl_base_1.0.safetensors",
+        "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "plan": [
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "repeat30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "id": "realvis",
+        "path": "/srv/eidolon/models/media-20261112/checkpoints-g333/RealVisXL_V5.0_fp16.safetensors",
+        "sha256": "6a35a7855770ae9820a3c931d4964c3817b6d9e3c6f9c4dabb5b3a94e5643b80",
+        "plan": [
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "repeat30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261114,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261113,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261114,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261113,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "author50",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261114,
+            "steps": 50,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "id": "juggernaut",
+        "path": "/srv/eidolon/models/media-20261112/checkpoints-g333/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+        "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca",
+        "plan": [
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "objects",
+            "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "common30",
+            "case": "katana",
+            "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+            "seed": 20261114,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "condition": "repeat30",
+            "case": "hand",
+            "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+            "seed": 20261113,
+            "steps": 30,
+            "cfg": 5,
+            "negative_prompt": "",
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      }
+    ],
+    "scheduler": "DPM++ 2M Karras",
+    "denoiser_dtype": "FP16",
+    "vae": "upcast FP32 for decode",
+    "offline_required": true,
+    "training_or_promotion_allowed": false
+  },
+  "final_state": {
+    "recorded_epoch": 1794563527.6011293,
+    "runner_exit": {
+      "exit_code": 0,
+      "stdout": "Result=success\nExecMainStatus=0",
+      "stderr": ""
+    },
+    "services": {
+      "eidolon-core-api": "active",
+      "eidolon-comm": "active",
+      "ollama": "active",
+      "eidolon-darme": "active",
+      "eidolon-memory-tunnel": "active",
+      "eidolon-media-api-sdxl-20261112": "inactive",
+      "eidolon-media-comfy-20261112": "inactive"
+    },
+    "vm": {
+      "exit_code": 0,
+      "stdout": "ID   Nom                            État\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d’exécution\n -    eidolon-audit-smoke-20261102   fermé\n -    Eidolon-Debian12-Test          fermé\n -    Eidolon-Memory-Engine-Test     fermé\n -    Eidolon-Memory-Engine-v2       fermé\n -    Eidolon-Memory-Lab             fermé\n -    Eidolon-Memory-Lab-v2          fermé\n -    Eidolon-Ubuntu-Diagnostic      fermé\n -    Memory-engine-tests            fermé\n -    Memory-tests                   fermé\n -    nomifactory-test               fermé",
+      "stderr": ""
+    },
+    "gpu": {
+      "exit_code": 0,
+      "stdout": "index, uuid, memory.used [MiB], power.limit [W], temperature.gpu, temperature.memory\n0, GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, 1 MiB, 300.00 W, 32, 32\n1, GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 1 MiB, 300.00 W, 31, 30\n2, GPU-4e1c4053-29c2-f0b6-5267-3f561379c058, 2 MiB, 120.00 W, 35, N/A",
+      "stderr": ""
+    },
+    "compute_clients": {
+      "exit_code": 0,
+      "stdout": "pid, process_name",
+      "stderr": ""
+    },
+    "disk": {
+      "exit_code": 0,
+      "stdout": "Sys. de fichiers               blocs de 1B      Utilisé   Disponible Uti% Monté sur\n/dev/mapper/vg_eidolon-models 474451066880 453767680000  15834771456  97% /srv/eidolon/models\n/dev/mapper/vg_eidolon-data   421606629376 156525633536 243589382144  40% /srv/eidolon/data",
+      "stderr": ""
+    },
+    "shelly": {
+      "source": "existing eidolon-shelly service at 192.168.1.197",
+      "n": 278,
+      "electrical_scope": "not independently verified this run",
+      "start": [
+        1794562773.3537805,
+        208.9,
+        20634.837
+      ],
+      "end": [
+        1794563334.9817064,
+        463.8,
+        20705.564
+      ],
+      "min_w": 208.9,
+      "max_w": 472.7,
+      "mean_sample_w": 452.1956834532374,
+      "energy_counter_delta_wh": 70.72699999999895,
+      "max_sample_gap_s": 2.0502233505249023
+    },
+    "sample_count": 991,
+    "sample_first_epoch": 1794562771.732403,
+    "sample_last_epoch": 1794563335.331902,
+    "raw_proof_sha256": {
+      "samples.jsonl": "ab4b185cce07fb1955b5a65ccfe7d751b4fd778e0ebffca47c4e7c2a9da485ac",
+      "manifest.json": "bf33fc34600e43705837a60086373fc9ff4a3d90e6e97da18bb42f66ef077e30",
+      "results.json": "0efd51cbbe7160666725a4813d29d2edcae00a97eaaecadfca00167baac22cf6",
+      "completion.json": "0e715ab8688ec244bb52e93a5da1822b432f107020c51d4df374a1c1afae4549",
+      "sandbox.txt": "7439ed948d24ac7e8c9f81b340108e81b99247cb87d4422cbb58205586be7b40",
+      "tests.txt": "d39d6cb8bcee2b1a1be729f7fdedef0a5c8c5867602a2ce14d0c17f0df8e49c1",
+      "shelly-samples.json": "c537c37d0fdff2f487d21a12463557c4b817f61ca5589bb6fdfc083b5d71e52f"
+    },
+    "duration_stats": {
+      "sdxl-common30": {
+        "n": 6,
+        "min_s": 17.53895823400012,
+        "median_s": 17.554354889000024,
+        "max_s": 17.99005707699996
+      },
+      "realvis-common30": {
+        "n": 6,
+        "min_s": 17.540294843000083,
+        "median_s": 17.548635592000096,
+        "max_s": 17.56482778999998
+      },
+      "realvis-author50": {
+        "n": 6,
+        "min_s": 28.860060268000097,
+        "median_s": 28.869086082500075,
+        "max_s": 28.876286700000037
+      },
+      "juggernaut-common30": {
+        "n": 6,
+        "min_s": 17.60749373900012,
+        "median_s": 17.62399633600012,
+        "max_s": 17.630081087999997
+      }
+    }
+  },
+  "review_policy": {
+    "scale": "0–4 ; ordre fidélité, structure, composition, finition",
+    "accept": "Tous ≥3, aucun défaut éliminatoire ; proposition de GPT à confirmer par toytoy.",
+    "uncertain": "Doute non résolu ; exclu des acceptations et de tout entraînement.",
+    "reject": "Non conforme pour ce prompt. Une belle texture ne compense pas un défaut de nombre, position ou structure.",
+    "blind": false,
+    "professional_anatomical_validation": false,
+    "training_or_promotion": false,
+    "limitations": "Seulement 2 seeds et 3 prompts ; les variantes 50 étapes réutilisent les seeds. Aucun classement universel ni estimation statistique de fiabilité."
+  },
+  "tests": {
+    "local": {
+      "run": 246,
+      "passed": 242,
+      "skipped": 4
+    },
+    "x399": {
+      "run": 246,
+      "passed": 241,
+      "skipped": 5
+    }
+  },
+  "counts_no_repeats": {
+    "PROPOSE_ACCEPT": 5,
+    "UNCERTAIN": 3,
+    "REJECT": 16
+  },
+  "illustrated_report": {
+    "filename": "Eidolon-validations-G333.html",
+    "sha256": "b59965c63dce4d61e798af301dcacd207b9dac70264dc428467f00728e21f6ce",
+    "images": 27,
+    "previews_px": 768,
+    "original_png_px": 1024
+  }
+}

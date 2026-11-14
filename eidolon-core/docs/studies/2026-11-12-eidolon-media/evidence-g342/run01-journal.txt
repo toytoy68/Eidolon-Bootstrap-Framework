@@ -1,0 +1,25 @@
+2026-11-14T12:44:33+01:00 eidolon-os systemd[1]: Started eidolon-media-zimage-g342.service - [systemd-run] /usr/bin/flock -n /srv/eidolon/workspaces/media-20261112/quality-campaign.lock /srv/eidolon/workspaces/media-20261112/klein-g340/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/zimage_probe_g342.py --work /srv/eidolon/workspaces/media-20261112/zimage-g342 --models /srv/eidolon/data/media-models-20261113/zimage-turbo --output /srv/eidolon/workspaces/media-20261112/zimage-g342/run01.
+2026-11-14T12:45:08+01:00 eidolon-os flock[13182]: {"phase": "encode_cpu_start"}
+2026-11-14T12:45:08+01:00 eidolon-os flock[13182]: `torch_dtype` is deprecated! Use `dtype` instead!
+2026-11-14T12:45:10+01:00 eidolon-os flock[13182]: [326B blob data]
+2026-11-14T12:45:25+01:00 eidolon-os flock[13182]: {"phase": "encoded", "case": "hand", "shape": [37, 2560]}
+2026-11-14T12:45:41+01:00 eidolon-os flock[13182]: {"phase": "encoded", "case": "objects", "shape": [44, 2560]}
+2026-11-14T12:45:57+01:00 eidolon-os flock[13182]: {"phase": "encoded", "case": "katana", "shape": [51, 2560]}
+2026-11-14T12:46:13+01:00 eidolon-os flock[13182]: {"phase": "encoded", "case": "duo", "shape": [61, 2560]}
+2026-11-14T12:46:13+01:00 eidolon-os flock[13182]: {"phase": "load_start", "precision": "fp32"}
+2026-11-14T12:46:13+01:00 eidolon-os flock[13182]: [158B blob data]
+2026-11-14T12:46:22+01:00 eidolon-os flock[13182]: {"phase": "loaded", "distribution": {"cuda:0": 11594090752, "cuda:1": 13025544192}}
+2026-11-14T12:46:32+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 0, "case": "hand", "seconds": 9.983868762999919}
+2026-11-14T12:47:17+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 1, "case": "hand", "seconds": 45.29302403299971}
+2026-11-14T12:48:03+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 2, "case": "hand", "seconds": 45.397874822999256}
+2026-11-14T12:48:49+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 3, "case": "objects", "seconds": 45.42211235200011}
+2026-11-14T12:49:35+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 4, "case": "objects", "seconds": 45.46684828799971}
+2026-11-14T12:50:21+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 5, "case": "katana", "seconds": 45.49507400099992}
+2026-11-14T12:51:06+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 6, "case": "katana", "seconds": 45.5257305289997}
+2026-11-14T12:51:52+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 7, "case": "duo", "seconds": 45.57326947299953}
+2026-11-14T12:52:38+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 8, "case": "duo", "seconds": 45.6065589509999}
+2026-11-14T12:53:24+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 9, "case": "hand", "seconds": 45.629813280000235}
+2026-11-14T12:53:48+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 10, "case": "duo", "seconds": 23.598612241999945}
+2026-11-14T12:54:04+01:00 eidolon-os flock[13182]: {"phase": "generated", "index": 11, "case": "duo", "seconds": 16.326348292000148}
+2026-11-14T12:54:06+01:00 eidolon-os systemd[1]: eidolon-media-zimage-g342.service: Deactivated successfully.
+2026-11-14T12:54:06+01:00 eidolon-os systemd[1]: eidolon-media-zimage-g342.service: Consumed 16min 19.245s CPU time, 45G memory peak.

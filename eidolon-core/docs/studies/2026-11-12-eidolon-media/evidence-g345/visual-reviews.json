@@ -1,0 +1,74 @@
+{
+  "0": {
+    "verdict": "Rejetée",
+    "comment": "Main de cinq doigts, mais rendu cireux, contours fantômes et articulations artificielles.",
+    "comparison": "Le petit format confirme seulement le fonctionnement technique.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "1": {
+    "verdict": "À revoir",
+    "comment": "Cinq doigts séparés. Texture convaincante, mais petit doigt déformé et proportions de la paume discutables.",
+    "comparison": "Le détail de peau ne suffit pas à valider l’anatomie ; G344-01 reste une meilleure référence.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "2": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts visibles : quatre doigts centraux et deux appendices latéraux.",
+    "comparison": "Même défaut rédhibitoire que sur la référence Klein G340-01 corrigée après ton retour.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Exactement une tasse rouge à gauche et un bol bleu à droite, entièrement visibles.",
+    "comparison": "Les trois modèles respectent ici le sujet ; Sprint conserve une matière crédible à très faible coût.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Deux objets complets, couleurs et disposition conformes. Céramique et ombres cohérentes.",
+    "comparison": "Cette scène simple est le meilleur argument en faveur de Sprint dans ce lot.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Multiplication des lames et pièces, assemblage incohérent et éléments coupés en haut.",
+    "comparison": "Échec de structure nettement plus grave que les réserves géométriques sur les katanas G344.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Plusieurs lames, poignées et fourreaux ; la consigne d’un katana et de son fourreau séparé échoue.",
+    "comparison": "Le tissu et les métaux sont séduisants, mais le produit représenté n’est pas cohérent.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes bien placés, mais mains de la femme masquées et pieds non discernables sous le kimono.",
+    "comparison": "Cadrage plus large que G345-08, toutefois la visibilité demandée des mains et pieds n’est pas satisfaite.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Deux personnages, couleurs et décor présents ; jambes et pieds coupés par le cadre.",
+    "comparison": "Belle apparence au premier regard, sans respect du portrait de la tête aux pieds.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "9": {
+    "verdict": "À revoir",
+    "comment": "Répétition exacte de G345-01 : mêmes pixels et même PNG ; mêmes réserves anatomiques.",
+    "comparison": "La reproductibilité est confirmée, sans constituer une nouvelle réussite visuelle.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format 16:9 : personnages coupés sous la taille, pieds absents.",
+    "comparison": "Les références G344 et Klein présentent aussi des limites de cadrage ; aucune dérogation au prompt.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Format 4:3 : scène entière mais mains masquées et pieds de la femme non discernables ; détails mous.",
+    "comparison": "Cadrage amélioré par rapport au 16:9, conformité et précision encore insuffisantes.",
+    "rendering": "Avis GPT provisoire ; validation utilisateur non sollicitée à ce stade."
+  }
+}

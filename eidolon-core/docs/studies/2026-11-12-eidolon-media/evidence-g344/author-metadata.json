@@ -1,0 +1,297 @@
+{
+  "_id": "69734718096a4384dda41548",
+  "id": "Tongyi-MAI/Z-Image",
+  "private": false,
+  "pipeline_tag": "text-to-image",
+  "library_name": "diffusers",
+  "tags": [
+    "diffusers",
+    "safetensors",
+    "text-to-image",
+    "en",
+    "arxiv:2511.22699",
+    "license:apache-2.0",
+    "diffusers:ZImagePipeline",
+    "deploy:azure",
+    "region:us"
+  ],
+  "downloads": 46766,
+  "likes": 1304,
+  "modelId": "Tongyi-MAI/Z-Image",
+  "author": "Tongyi-MAI",
+  "sha": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+  "lastModified": "2026-01-28T14:26:13.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {
+    "diffusers": {
+      "_class_name": "ZImagePipeline"
+    }
+  },
+  "cardData": {
+    "license": "apache-2.0",
+    "language": [
+      "en"
+    ],
+    "pipeline_tag": "text-to-image",
+    "library_name": "diffusers"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "9400c1f57289e6207429b5947a848509a17ea0c3",
+      "size": 1751
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "91b1a9c82dda06434778e3471ec7d0c8e7f866ec",
+      "size": 6015
+    },
+    {
+      "rfilename": "model_index.json",
+      "blobId": "d5196294cf2e60ba96614b92140c144276bbe9cd",
+      "size": 467
+    },
+    {
+      "rfilename": "scheduler/scheduler_config.json",
+      "blobId": "2ef5ba9b0dd36307eba0a09a00fc6491ad03ba67",
+      "size": 173
+    },
+    {
+      "rfilename": "teaser.jpg",
+      "blobId": "16156c47252b9542332fda77a513db80a2b1b1ae",
+      "size": 8983250,
+      "lfs": {
+        "sha256": "6944f032282144ec4bba1942de2a5df01ae2f6534ad973e61939f835b7ebfdc2",
+        "size": 8983250,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "text_encoder/config.json",
+      "blobId": "e49eccdc32f36da9c09cfa0e737084f9e0105e5e",
+      "size": 726
+    },
+    {
+      "rfilename": "text_encoder/generation_config.json",
+      "blobId": "20a8a9156fc8c3f25295ca067f61fdf120d517c5",
+      "size": 239
+    },
+    {
+      "rfilename": "text_encoder/model-00001-of-00003.safetensors",
+      "blobId": "546625baab99f4de2b975842100c119fec83919f",
+      "size": 3957900840,
+      "lfs": {
+        "sha256": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223",
+        "size": 3957900840,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "text_encoder/model-00002-of-00003.safetensors",
+      "blobId": "3e4d29aad0be87c083e078b50765cd056e793c51",
+      "size": 3987450520,
+      "lfs": {
+        "sha256": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5",
+        "size": 3987450520,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "text_encoder/model-00003-of-00003.safetensors",
+      "blobId": "8a83739c1b3794759b2565002478cf8397b4a09d",
+      "size": 99630640,
+      "lfs": {
+        "sha256": "7ca841ee75b9c61267c0c6148fd8d096d3d21b6d3e161256a9b878154f91fc52",
+        "size": 99630640,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "text_encoder/model.safetensors.index.json",
+      "blobId": "95c0a0059df040d75dc6c396b174382cf61d2f91",
+      "size": 32819
+    },
+    {
+      "rfilename": "tokenizer/merges.txt",
+      "blobId": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+      "size": 1671853
+    },
+    {
+      "rfilename": "tokenizer/tokenizer.json",
+      "blobId": "cd71f61a15a522601badb3dc960d800d9cb3766c",
+      "size": 11422654,
+      "lfs": {
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size": 11422654,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "tokenizer/tokenizer_config.json",
+      "blobId": "417d038a63fa3de29cfde265caedae14d1a58d92",
+      "size": 9732
+    },
+    {
+      "rfilename": "tokenizer/vocab.json",
+      "blobId": "4783fe10ac3adce15ac8f358ef5462739852c569",
+      "size": 2776833
+    },
+    {
+      "rfilename": "transformer/config.json",
+      "blobId": "968b15c93e80ad592f5bb4e2a0b886932b461a0a",
+      "size": 500
+    },
+    {
+      "rfilename": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "blobId": "af83a841c6d83b4af245fe9046433274cc0783c9",
+      "size": 9973727144,
+      "lfs": {
+        "sha256": "ecd5df7768856215812af84d5cc785ba9d84c6d8c84e6939c7ccf30a2e0d2425",
+        "size": 9973727144,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "blobId": "bf31f47ad87026b7d646536a35d52327b233d979",
+      "size": 2336146728,
+      "lfs": {
+        "sha256": "e2d5fb75ca504b2d669a33af9380b68e0c1632ecddbfca85f82631958a4b81b1",
+        "size": 2336146728,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "transformer/diffusion_pytorch_model.safetensors.index.json",
+      "blobId": "e9dc2eb305272c7c9e93a6a50c55e8511b147e2e",
+      "size": 48969
+    },
+    {
+      "rfilename": "vae/config.json",
+      "blobId": "4f7c628fc8e59fc842c9846ed74414249052ba0b",
+      "size": 820
+    },
+    {
+      "rfilename": "vae/diffusion_pytorch_model.safetensors",
+      "blobId": "3557b83a132d75a1f71bde9963021e667b1a0d2d",
+      "size": 167666902,
+      "lfs": {
+        "sha256": "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",
+        "size": 167666902,
+        "pointerSize": 134
+      }
+    }
+  ],
+  "spaces": [
+    "Tongyi-MAI/Z-Image-Turbo",
+    "Tongyi-MAI/Z-Image",
+    "Or1290/LP12",
+    "Dekonstruktio/Fluxus",
+    "Maynor996/z-image-turbo-demo",
+    "mcp-tools/Z-Image-Turbo",
+    "prithivMLmods/PiD-Image-Upscaler",
+    "inclusionAI/ming-image-0-1-design-demo",
+    "AiSudo/Z-Image-to-LoRA",
+    "FINAL-Bench/POCKET-Image-Studio",
+    "2025-ai-timeline/2025-ai-timeline",
+    "DiffSynth-Studio/Z-Image-i2L",
+    "multimodalart/pid",
+    "mrfakename/Z-Image",
+    "AiSudo/Z-Image-Base",
+    "artificialguybr/JUGGERNAUT-Z-IMAGE",
+    "bobber/Z-Image-to-LoRA",
+    "techfreakworm/z-image-studio",
+    "cronos3k/CharacterForgePro",
+    "ItNero/ImageGen-32",
+    "Gramlin/ImageGennew",
+    "akhaliq/daggr-new",
+    "victor/Z-Image-MCP",
+    "chipfoxx/zeta-chroma-test-bench",
+    "Tinchote/ImageGen",
+    "rahul7star/ZIMG_LORAS",
+    "runebloodstone/img_test",
+    "Gramlin/ImageGen",
+    "Azure99/Z-Image-Turbo",
+    "Sergeyterm/Tongyi-MAI-Z-Image",
+    "akhaliq/anycoder-f11c79d8",
+    "baiyue/z-image-ncnn-vulkan",
+    "Hranitel-2908i/Tongyi-MAI-Z-Image",
+    "furaidosu/Z-Image-LoRA-DLC",
+    "fatslappa/Z-Image-to-LoRA",
+    "Hinterm/Tongyi-MAI-Z-Image",
+    "J0BL1N/Tongyi-MAI-Z-Image",
+    "ahmed010964/Imagegenerator",
+    "Dehiri/Tongyi-MAI-Z-Image",
+    "kines9661/Tongyi-MAI-Z-Image",
+    "Deadmon/Z-Image-Turbo",
+    "BeelineFox/Z-Image-Turbo",
+    "yangguangduodejia/Tongyi-MAI-Z-Image",
+    "haivcci/tinhhoadongtay",
+    "Jasonbrown1/lora-studio-auto",
+    "Alexkopeck65/Tongyi-MAI-Z-Image",
+    "andreyruch/Tongyi-MAI-Z-Image",
+    "nikkp/Tongyi-MAI-Z-Image",
+    "Waheed786dar/Z-Image",
+    "dscdls/Tongyi-MAI-Z-Image",
+    "aitchxr/Tongyi-MAI-Z-Image",
+    "godofwarvetri999/Tongyi-MAI-Z-Image",
+    "Chunkynator/Tongyi-MAI-Z-Image",
+    "Daniyal1997/Danny",
+    "moyan7864/Tongyi-MAI-Z-Image",
+    "Sashank1290/ww",
+    "gosf1992/Tongyi-MAI-Z-Image",
+    "elemes11/Tongyi-MAI-Z-Image",
+    "JAMS2023/Z-Image-Turbo",
+    "Saeki-Hug/Tongyi-MAI-Z-Image",
+    "Kiadee/Tongyi-MAI-Z-Image",
+    "skavtech/Tongyi-MAI-Z-Image",
+    "David3603/Tongyi-MAI-Z-Image",
+    "ife3243/Tongyi-MAI-Z-Image",
+    "Normalize32/Tongyi-MAI-Z-Image",
+    "dolinskijuju/Tongyi-MAI-Z-Image",
+    "R08235/Tongyi-MAI-Z-Image",
+    "johnsonzhang2023/Tongyi-MAI-Z-Image",
+    "sourish9384/Z-Image-Turbo",
+    "marcos121xas/Tongyi-MAI-Z-Image",
+    "sdfsdfdsfdsfsdfs/Z-Image-Turbo",
+    "Zaida88/Z-Image",
+    "APPVed1234/Z-Image-Turbo",
+    "AzmanK/Tongyi-MAI-Z-Image",
+    "JSCPPProgrammer/gensearcher-firered",
+    "chathula83/Z-Image-Turbo",
+    "amwolf36/Tongyi-MAI-Z-Image",
+    "youneeds/Z-Image",
+    "Karter93/Z-Image-to-LoRA",
+    "Vairus619/PiD-Image-Upscaler",
+    "serdarsezgin/PiD-Image-Upscaler",
+    "qkrsogusl3/Z-Image-Turbo",
+    "nonlap/Z-Image-Turbo",
+    "dasdasdasd12/JUGGERNAUT-Z-IMAGE",
+    "jorgeadev/Tongyi-MAI-Z-Image",
+    "mamedialos/PiD-Image-Upscaler",
+    "kishandavda/Tongyi-MAI-Z-Image",
+    "zhiyinya/Tongyi-MAI-Z-Image",
+    "dASD23rewffds/Z-Image-i2L",
+    "kp-forks/Z-Image-Turbo",
+    "Atstek-Paulo/Z-Image-Turbo",
+    "0ldManSplinter/z-image-studio",
+    "0ldManSplinter/JUGGERNAUT-Z-IMAGE",
+    "unisebaracu/PiD-Image-Upscaler",
+    "Moonpush/Z-Image-Turbo",
+    "Arnaud66/Z-Image-Turbo",
+    "xxxtsarxxx/Z-Image-i2L",
+    "huwenjie123/Z-Image",
+    "PinPerson/Tongyi-MAI-Z-Image",
+    "mrhangetsbetter/ImageGen"
+  ],
+  "createdAt": "2026-01-23T10:02:00.000Z",
+  "safetensors": {
+    "parameters": {
+      "BF16": 6154908736
+    },
+    "total": 6154908736
+  },
+  "usedStorage": 45166717609
+}
