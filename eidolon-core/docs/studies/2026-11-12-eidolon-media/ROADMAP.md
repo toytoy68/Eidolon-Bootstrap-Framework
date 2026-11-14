@@ -171,3 +171,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G356 — Juggernaut XI Lightning, 14/11/2026
 
 [Rapport G356](JUGGERNAUT-XI-LIGHTNING-G356.md) : XI Lightning Civitai-Version, une V100 FP16/VAE upcast FP32, SDE Karras6/CFG1,8,11 appels UNet ;12 nouvelles images, répétition exacte. 0/8 proposées,0 réserves,8 rejets ;6.840s. Références historiques XI standard2/8+1réserve/17,562s et XL Lightning1/8/6,843s. Ne pas retenir XI Lightning comme modèle principal avec cette recette. Sa vitesse est utile, mais la conformité est insuffisante sur cette petite grille ; le contrôle 4:3 mérite une confirmation sur plusieurs seeds avant tout usage régulier. Licences/attribution conservées, runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G357 - SDXL Inpainting, 14/11/2026
+
+[Rapport G357](SDXL-INPAINT-G357.md) : SDXL Inpainting 0.1 dédié, une V100, 21 générations ; 8 retouches avec prompts initiaux et 8 avec prompts ciblés, 0/8 proposées + 1 réserve dans chaque passe. Médianes 11,836/11,841 s ; 10 564 Mio, GPU/HBM 44/51 °C. Deux répétitions exactes ; hors masque inchangé après collage explicite, sortie brute non identique. Chaîne viable, correction automatique non retenue avec cette recette. Sources/masques/SHA/licence archivés, runtime inchangé, GPU libres, services actifs, machine allumée.

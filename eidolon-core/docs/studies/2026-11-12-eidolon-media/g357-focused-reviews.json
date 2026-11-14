@@ -1,0 +1,11 @@
+{
+ "1":{"verdict":"À revoir","comment":"Cinq doigts sont présents, mais deux doigts centraux restent collés et la pose rigide. Le raccord du poignet et la différence de fond restent perceptibles. Aucun gain décisif face au prompt initial."},
+ "2":{"verdict":"Rejetée","comment":"Toujours quatre doigts, malgré la mention explicite d'un pouce et de quatre doigts longs. Raccord tonal et texture peu naturelle."},
+ "3":{"verdict":"Rejetée","comment":"La formulation ciblée améliore l'anse rouge, mais conserve trois récipients et le bol à gauche. Le défaut principal n'est pas réparé."},
+ "4":{"verdict":"Rejetée","comment":"Le bol imbriqué disparaît, mais il reste un bol bicolore à gauche et deux tasses. Nombre, couleurs et positions ne respectent pas la demande."},
+ "5":{"verdict":"Rejetée","comment":"Aucun fourreau ajouté, même en décrivant uniquement une gaine noire vide. La zone traitée reste du tissu ; le sabre est préservé par le composite."},
+ "6":{"verdict":"Rejetée","comment":"Le fourreau reste absent. Changement de texture dans la bande masquée, sans création de l'objet demandé."},
+ "7":{"verdict":"Rejetée","comment":"La ceinture et son pan deviennent plus rouges, mais manches, épaules et jupe demeurent noires. La consigne ciblant ces surfaces n'est pas satisfaite."},
+ "8":{"verdict":"Rejetée","comment":"Tenue toujours noire et ceinture rouge, proche de la première passe. La recoloration demandée échoue."},
+ "9":{"verdict":"À revoir","comment":"Répétition pixel-identique à 01 pour les versions brute et recomposée. Les cinq doigts et les mêmes réserves sont reproduits."}
+}

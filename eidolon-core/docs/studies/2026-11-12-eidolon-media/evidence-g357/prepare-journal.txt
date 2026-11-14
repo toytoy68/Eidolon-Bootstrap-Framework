@@ -1,0 +1,4 @@
+2026-11-14T23:43:14+01:00 eidolon-os systemd[1]: Started eidolon-media-sdxl-inpaint-g357-prepare.service - [systemd-run] /srv/eidolon/workspaces/media-20261112/preference-lab/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/prepare_g357.py.
+2026-11-14T23:44:26+01:00 eidolon-os python[129523]: Preparation verified
+2026-11-14T23:44:26+01:00 eidolon-os systemd[1]: eidolon-media-sdxl-inpaint-g357-prepare.service: Deactivated successfully.
+2026-11-14T23:44:26+01:00 eidolon-os systemd[1]: eidolon-media-sdxl-inpaint-g357-prepare.service: Consumed 28.110s CPU time, 2G memory peak.

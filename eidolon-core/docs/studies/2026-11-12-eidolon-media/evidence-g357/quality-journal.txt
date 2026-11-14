@@ -1,0 +1,22 @@
+2026-11-14T23:47:27+01:00 eidolon-os systemd[1]: Started eidolon-media-sdxl-inpaint-g357-quality.service - [systemd-run] /usr/bin/flock -n /srv/eidolon/workspaces/media-20261112/quality-campaign.lock /srv/eidolon/workspaces/media-20261112/preference-lab/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/sdxl_inpaint_probe_g357.py --root /srv/eidolon/workspaces/media-20261112 --manifest /srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/manifest.json --mode quality --output /srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02.
+2026-11-14T23:47:36+01:00 eidolon-os flock[130595]: 
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
+Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:01,  4.24it/s]
+Loading pipeline components...:  29%|██▊       | 2/7 [00:00<00:00,  5.01it/s]The config attributes {'decay': 0.9999, 'inv_gamma': 1.0, 'min_decay': 0.0, 'optimization_step': 37000, 'power': 0.6666666666666666, 'update_after_step': 0, 'use_ema_warmup': False} were passed to UNet2DConditionModel, but are not expected and will be ignored. Please verify your config.json configuration file.
+2026-11-14T23:47:36+01:00 eidolon-os flock[130595]: 
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00,  7.12it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  8.22it/s]
+2026-11-14T23:47:39+01:00 eidolon-os flock[130595]: {"loaded": "sdxl_inpaint", "seconds": 3.659768557001371}
+2026-11-14T23:47:52+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 1, "case": "hand", "seconds": 12.246505586001149}
+2026-11-14T23:48:05+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 2, "case": "hand", "seconds": 11.832826799000031}
+2026-11-14T23:48:18+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 3, "case": "objects", "seconds": 11.826557988002605}
+2026-11-14T23:48:31+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 4, "case": "objects", "seconds": 11.82577800800209}
+2026-11-14T23:48:44+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 5, "case": "katana", "seconds": 11.839942348000477}
+2026-11-14T23:48:57+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 6, "case": "katana", "seconds": 11.832388395996531}
+2026-11-14T23:49:10+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 7, "case": "duo", "seconds": 11.846508230999461}
+2026-11-14T23:49:23+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 8, "case": "duo", "seconds": 11.84378946400102}
+2026-11-14T23:49:37+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 9, "case": "hand", "seconds": 11.84644849000324}
+2026-11-14T23:49:50+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 10, "case": "objects", "seconds": 11.834741628998017}
+2026-11-14T23:50:02+01:00 eidolon-os flock[130595]: {"generated": "sdxl_inpaint", "index": 11, "case": "objects", "seconds": 11.840920051996363}
+2026-11-14T23:50:04+01:00 eidolon-os systemd[1]: eidolon-media-sdxl-inpaint-g357-quality.service: Deactivated successfully.
+2026-11-14T23:50:04+01:00 eidolon-os systemd[1]: eidolon-media-sdxl-inpaint-g357-quality.service: Consumed 2min 48.272s CPU time, 1.5G memory peak.

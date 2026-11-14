@@ -1,0 +1,9 @@
+{
+  "health_utility_initial_failures": [
+    "system python lacks PIL",
+    "venv python needs eidolon_core source path"
+  ],
+  "resolution": "run with existing preference-lab venv; explicitly add repository src for existing summarizer",
+  "generations_affected": false,
+  "packages_changed": false
+}

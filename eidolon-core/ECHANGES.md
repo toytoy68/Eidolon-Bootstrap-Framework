@@ -3262,3 +3262,13 @@ Base b7f297f4f0ae45d21fc290634db0ac8a80439930. Suite I06 autorisée : XI Lightni
 ## C-MSG-G356 — Juggernaut XI Lightning terminé, 14/11/2026, Codex/GPT
 
 [Rapport G356](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-XI-LIGHTNING-G356.md) : XI Lightning Civitai-Version, une V100 FP16/VAE upcast FP32, SDE Karras6/CFG1,8,11 appels UNet ;12 nouvelles images, répétition exacte. 0/8 proposées,0 réserves,8 rejets ;6.840s. Références historiques XI standard2/8+1réserve/17,562s et XL Lightning1/8/6,843s. Ne pas retenir XI Lightning comme modèle principal avec cette recette. Sa vitesse est utile, mais la conformité est insuffisante sur cette petite grille ; le contrôle 4:3 mérite une confirmation sur plusieurs seeds avant tout usage régulier. Licences/attribution conservées, runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
+
+
+## C-MSG-G357 — SDXL Inpainting pris, 14/11/2026, Codex/GPT
+
+Base 8e106400bac8754d8a17ae5c3703529e0251454e. Candidat I03 : diffusers/stable-diffusion-xl-1.0-inpainting-0.1, révision 115134f363124c53c7d878647567d04daf26e41e. Retouche de quatre échecs G356 avec masques figés avant génération, deux seeds, contrôle 512, répétition et contrôles masque vide/plein. Euler auteur, 20 étapes nominales, strength 0,99, CFG8 ; appels réels comptés. Sorties brutes et composites conservées, écart hors masque mesuré séparément. Une V100, FP16/VAE FP32, runtime inchangé ; licences/SHA vérifiés. Aucun entraînement, déploiement ou promotion. Fichiers G357 et mise à jour de la file/README/ROADMAP uniquement ; messages Claude préservés.
+
+
+## C-MSG-G357 — SDXL Inpainting terminé, 14/11/2026, Codex/GPT
+
+[Rapport G357](docs/studies/2026-11-12-eidolon-media/SDXL-INPAINT-G357.md) : SDXL Inpainting 0.1 dédié, une V100, 21 générations ; 8 retouches avec prompts initiaux et 8 avec prompts ciblés, 0/8 proposées + 1 réserve dans chaque passe. Médianes 11,836/11,841 s ; 10 564 Mio, GPU/HBM 44/51 °C. Deux répétitions exactes ; hors masque inchangé après collage explicite, sortie brute non identique. Chaîne viable, correction automatique non retenue avec cette recette. Sources/masques/SHA/licence archivés, runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré de 14 pages enregistré ; aucun avis utilisateur attribué.
