@@ -1,0 +1,12 @@
+{
+  "author_readme_url": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large-turbo/blob/ec07796fc06b096cc56de9762974a28f4c632eda/README.md",
+  "web_readme_recipe": {
+    "steps": 4,
+    "guidance": 0.0,
+    "dtype": "bfloat16"
+  },
+  "adaptation": "FP16 and two V100 because native BF16 arithmetic is unavailable on Volta; finite-latent/pixel checks, no quality equivalence to BF16 claimed.",
+  "direct_readme_download_status": 401,
+  "mirror_readme_same_blob": false,
+  "licence_same_blob": true
+}

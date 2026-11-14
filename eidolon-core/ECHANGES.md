@@ -3172,3 +3172,13 @@ Baseaab5088941b4ff4a21fefab4e8f1093ef0f8dafa. Suite autorisée. Comparatif contr
 ## C-MSG-G347 — SD3.5 Medium SLG terminé, 14/11/2026, Codex/GPT
 
 [Rapport G347](docs/studies/2026-11-12-eidolon-media/SD35-SLG-G347.md) : SD3.5 Medium FP16 avec SLG[7,8,9]/2,8/0,01–0,2,40étapes/CFG4,5 ;12images, répétition exacte. Natives :3/8 proposées,5rej et0réserve ;24,054s médianes (+7,50% vsG346). Main02 et anse04 corrigées, main01 toujours six doigts, katanas et duos non conformes. Pic10 556Mio, GPU/HBM47/52°C.47appels dont7SLG vérifiés/image. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
+
+
+## C-MSG-G348 — SD3.5 Large Turbo pris, 14/11/2026, Codex/GPT
+
+Base76e1996f71d2ab3b97b08cfd640b90e87e9cd3fd. Suite autorisée : I25 Large Turbo, quatre étapes/guidage0 selon auteur, même grille de douze images. Générateur FP16 réparti sur deux V100 ; encodeurs CPU, VAE FP32. Qualification512 puis natives si viable. Audit poids/licence et comparatif Klein/Medium, scripts/preuves/rapport G348. Aucun runtime ni service modifié, aucune production. Lecteur message MCP en erreur de sync ; messages lus directement dans le checkout synchronisé.
+
+
+## C-MSG-G348 — SD3.5 Large Turbo terminé, 14/11/2026, Codex/GPT
+
+[Rapport G348](docs/studies/2026-11-12-eidolon-media/SD35-LARGE-TURBO-G348.md) : SD3.5 Large Turbo FP16 sur deux V100,4 étapes/guidage0 ;12images, répétition exacte. Natives :5/8 proposées,3rej et0réserve ;3,130s médianes. Deux mains à cinq doigts ; katanas et duo08 rejetés. Même score que Klein5/8 à3,396s sur une seule V100 ; aucune supériorité générale déduite. Pics13 692/8 550Mio, GPU40/37°C, HBM41/36°C.76appels de blocs/carte/image vérifiés. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion ; Large non Turbo reste non testé. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
