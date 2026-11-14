@@ -136,3 +136,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G349 — SD3.5 Large, 14/11/2026
 
 [Rapport G349](SD35-LARGE-G349.md) : SD3.5 Large FP16 sur deux V100,28étapes/CFG3,5 ;12images, répétition exacte. Natives :2/8 proposées,0réserves,6rejets ;36.020s médianes. Deux mains à six doigts, katanas incohérents ; aucun avantage global établi face à Turbo malgré les détails supplémentaires. Pics14078/8926Mio, GPU46/42°C.532appels de blocs/carte/image vérifiés. Runtime inchangé, GPU libres, services actifs, machine allumée. Aucune promotion.
+
+
+## Avancement G350 — Sana Sprint0,6B, 14/11/2026
+
+[Rapport G350](SANA-SPRINT-600M-G350.md) : Sana Sprint 0,6B FP32 sur une V100, 4 étapes / guidage intégré 4,5 ; 12 images, répétition exacte. Natives : 2/8 proposées, 0 réserve, 6 rejets ; 1.279 s médianes contre 1.833 s en 1,6B. Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion. Pic 5336 Mio, GPU 42 °C, HBM 43 °C. Quatre appels du générateur vérifiés par image. Runtime inchangé, GPU libres, services actifs, machine allumée.

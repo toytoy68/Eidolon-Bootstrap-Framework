@@ -3192,3 +3192,13 @@ Baseae096682c798c13f8ac95ae8b89271b975747c87. Suite autorisée : I25 Large non T
 ## C-MSG-G349 — SD3.5 Large terminé, 14/11/2026, Codex/GPT
 
 [Rapport G349](docs/studies/2026-11-12-eidolon-media/SD35-LARGE-G349.md) : SD3.5 Large FP16 sur deux V100,28étapes/CFG3,5 ;12images, répétition exacte. Natives :2/8 proposées,0réserves,6rejets ;36.020s médianes. Deux mains à six doigts, katanas incohérents ; aucun avantage global établi face à Turbo malgré les détails supplémentaires. Pics14078/8926Mio, GPU46/42°C.532appels de blocs/carte/image vérifiés. Runtime inchangé, GPU libres, services actifs, machine allumée. Aucune promotion. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
+
+
+## C-MSG-G350 — Sana Sprint0,6B pris, 14/11/2026, Codex/GPT
+
+Basee028398467fd651a07d7802909ff466d10b6cd77. Suite autorisée : I27 Sprint0,6B, quatre étapes SCM/guidage intégré4,5, même grille de douze images. Comparatif Sprint1,6B G345 et Klein G340. FP32 une V100, Gemma2 CPU FP32, DC-AE FP32, runtime G340 inchangé. Poids/configs/licences vérifiés avant génération ; scripts/preuves/rapport G350. Aucune production ni entraînement.
+
+
+## C-MSG-G350 — Sana Sprint0,6B terminé, 14/11/2026, Codex/GPT
+
+[Rapport G350](docs/studies/2026-11-12-eidolon-media/SANA-SPRINT-600M-G350.md) : Sana Sprint 0,6B FP32 sur une V100, 4 étapes / guidage intégré 4,5 ; 12 images, répétition exacte. Natives : 2/8 proposées, 0 réserve, 6 rejets ; 1.279 s médianes contre 1.833 s en 1,6B. Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion. Pic 5336 Mio, GPU 42 °C, HBM 43 °C. Quatre appels du générateur vérifiés par image. Runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
