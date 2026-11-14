@@ -1,0 +1,272 @@
+{
+  "model": "SD3.5-Large",
+  "precision": "fp16",
+  "files": [
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "text_encoder/model.safetensors",
+      "bytes": 247323896,
+      "sha256": "71e183d11db0c6b6282a4d9e0abb74125edc8692393e89ed8ee5571005f35cb1",
+      "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder/model.safetensors"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "text_encoder_2/model.safetensors",
+      "bytes": 1389382176,
+      "sha256": "ec310df2af79c318e24d20511b601a591ca8cd4f1fce1d8dff822a356bcdb1f4",
+      "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_2/model.safetensors"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "text_encoder_3/model-00001-of-00002.safetensors",
+      "bytes": 4994582104,
+      "sha256": "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",
+      "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00001-of-00002.safetensors"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "text_encoder_3/model-00002-of-00002.safetensors",
+      "bytes": 4530066248,
+      "sha256": "f63154532130422309532ff56f11945fbea8266c958e3133e8e5aef85c6293c7",
+      "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00002-of-00002.safetensors"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "bytes": 9985185992,
+      "sha256": "8ec9c4af8093417fded1eec8638f313f5671c7dd0a17a3bf64807bee9954a3e0",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "bytes": 6307519304,
+      "sha256": "a84bad7103aa22d8ddf6baafc7664868b1edcd316ca6dd9c7e1f667345bd99db",
+      "source": "download"
+    },
+    {
+      "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+      "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+      "author_repo": "stabilityai/stable-diffusion-3.5-large",
+      "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "bytes": 167666902,
+      "sha256": "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",
+      "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/vae/diffusion_pytorch_model.safetensors"
+    }
+  ],
+  "split": "blocks0-18 GPU0, blocks19-37 GPU1, embeddings and output GPU0",
+  "text_encoder": "CLIP-L + CLIP-G + T5-XXL CPU FP32,256 T5 tokens",
+  "vae": "GPU0 FP32, native tiling",
+  "attention": "PyTorch EFFICIENT_ATTENTION transformer; MATH VAE",
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "encode_seconds": 42.89130972800194,
+  "embeddings_reused": true,
+  "load_seconds": 9.07922826399954,
+  "parameter_bytes_by_device": {
+    "cuda:0": 8173096064,
+    "cuda:1": 7940158976
+  },
+  "device_map": {
+    "pos_embed": 0,
+    "time_text_embed": 0,
+    "context_embedder": 0,
+    "norm_out": 0,
+    "proj_out": 0,
+    "transformer_blocks.0": 0,
+    "transformer_blocks.1": 0,
+    "transformer_blocks.2": 0,
+    "transformer_blocks.3": 0,
+    "transformer_blocks.4": 0,
+    "transformer_blocks.5": 0,
+    "transformer_blocks.6": 0,
+    "transformer_blocks.7": 0,
+    "transformer_blocks.8": 0,
+    "transformer_blocks.9": 0,
+    "transformer_blocks.10": 0,
+    "transformer_blocks.11": 0,
+    "transformer_blocks.12": 0,
+    "transformer_blocks.13": 0,
+    "transformer_blocks.14": 0,
+    "transformer_blocks.15": 0,
+    "transformer_blocks.16": 0,
+    "transformer_blocks.17": 0,
+    "transformer_blocks.18": 0,
+    "transformer_blocks.19": 1,
+    "transformer_blocks.20": 1,
+    "transformer_blocks.21": 1,
+    "transformer_blocks.22": 1,
+    "transformer_blocks.23": 1,
+    "transformer_blocks.24": 1,
+    "transformer_blocks.25": 1,
+    "transformer_blocks.26": 1,
+    "transformer_blocks.27": 1,
+    "transformer_blocks.28": 1,
+    "transformer_blocks.29": 1,
+    "transformer_blocks.30": 1,
+    "transformer_blocks.31": 1,
+    "transformer_blocks.32": 1,
+    "transformer_blocks.33": 1,
+    "transformer_blocks.34": 1,
+    "transformer_blocks.35": 1,
+    "transformer_blocks.36": 1,
+    "transformer_blocks.37": 1
+  },
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "shift": 3.0,
+    "use_dynamic_shifting": false,
+    "base_shift": 0.5,
+    "max_shift": 1.15,
+    "base_image_seq_len": 256,
+    "max_image_seq_len": 4096,
+    "invert_sigmas": false,
+    "shift_terminal": null,
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "time_shift_type": "exponential",
+    "stochastic_sampling": false,
+    "_use_default_values": [
+      "use_exponential_sigmas",
+      "max_image_seq_len",
+      "use_karras_sigmas",
+      "shift_terminal",
+      "time_shift_type",
+      "base_shift",
+      "use_dynamic_shifting",
+      "max_shift",
+      "use_beta_sigmas",
+      "stochastic_sampling",
+      "invert_sigmas",
+      "base_image_seq_len"
+    ],
+    "_class_name": "FlowMatchEulerDiscreteScheduler",
+    "_diffusers_version": "0.29.0.dev0"
+  },
+  "steps": 28,
+  "guidance": 3.5,
+  "negative_prompt": "",
+  "skip_guidance_layers": null,
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "screen4x3"
+    }
+  ],
+  "pipeline_source_sha256": "386b07eb4848fd8025990f108b276c0d1fb4202ca13e900e7bb7e824ca7ac628",
+  "runner_sha256": "9ac74d195952652575b33a4688e293319aba1170be70c432a41a1d6ce1b00c20",
+  "promotion_allowed": false
+}

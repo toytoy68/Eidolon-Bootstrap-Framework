@@ -1,0 +1,72 @@
+[
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "text_encoder/model.safetensors",
+    "bytes": 247323896,
+    "sha256": "71e183d11db0c6b6282a4d9e0abb74125edc8692393e89ed8ee5571005f35cb1",
+    "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder/model.safetensors"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "text_encoder_2/model.safetensors",
+    "bytes": 1389382176,
+    "sha256": "ec310df2af79c318e24d20511b601a591ca8cd4f1fce1d8dff822a356bcdb1f4",
+    "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_2/model.safetensors"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "text_encoder_3/model-00001-of-00002.safetensors",
+    "bytes": 4994582104,
+    "sha256": "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",
+    "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00001-of-00002.safetensors"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "text_encoder_3/model-00002-of-00002.safetensors",
+    "bytes": 4530066248,
+    "sha256": "f63154532130422309532ff56f11945fbea8266c958e3133e8e5aef85c6293c7",
+    "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00002-of-00002.safetensors"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+    "bytes": 9985185992,
+    "sha256": "8ec9c4af8093417fded1eec8638f313f5671c7dd0a17a3bf64807bee9954a3e0",
+    "source": "download"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+    "bytes": 6307519304,
+    "sha256": "a84bad7103aa22d8ddf6baafc7664868b1edcd316ca6dd9c7e1f667345bd99db",
+    "source": "download"
+  },
+  {
+    "repo": "adamo1139/stable-diffusion-3.5-large-ungated",
+    "revision": "5d868ffde1c2396697cc1ab7555dc5f64e056a63",
+    "author_repo": "stabilityai/stable-diffusion-3.5-large",
+    "author_revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+    "path": "vae/diffusion_pytorch_model.safetensors",
+    "bytes": 167666902,
+    "sha256": "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",
+    "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/vae/diffusion_pytorch_model.safetensors"
+  }
+]

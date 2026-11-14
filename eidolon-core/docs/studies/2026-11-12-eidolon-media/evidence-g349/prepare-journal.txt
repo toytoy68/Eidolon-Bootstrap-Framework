@@ -1,0 +1,8 @@
+2026-11-14T19:49:31+01:00 eidolon-os python3[84902]: {"verified": "text_encoder/model.safetensors", "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder/model.safetensors"}
+2026-11-14T19:49:32+01:00 eidolon-os python3[84902]: {"verified": "text_encoder_2/model.safetensors", "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_2/model.safetensors"}
+2026-11-14T19:49:38+01:00 eidolon-os python3[84902]: {"verified": "text_encoder_3/model-00001-of-00002.safetensors", "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00001-of-00002.safetensors"}
+2026-11-14T19:49:44+01:00 eidolon-os python3[84902]: {"verified": "text_encoder_3/model-00002-of-00002.safetensors", "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/text_encoder_3/model-00002-of-00002.safetensors"}
+2026-11-14T19:51:02+01:00 eidolon-os python3[84902]: {"verified": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors", "source": "download"}
+2026-11-14T19:51:49+01:00 eidolon-os python3[84902]: {"verified": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors", "source": "download"}
+2026-11-14T19:51:50+01:00 eidolon-os python3[84902]: {"verified": "vae/diffusion_pytorch_model.safetensors", "source": "/srv/eidolon/data/media-models-20261113/sd35-large-turbo/vae/diffusion_pytorch_model.safetensors"}
+2026-11-14T19:51:50+01:00 eidolon-os python3[84902]: PREPARED

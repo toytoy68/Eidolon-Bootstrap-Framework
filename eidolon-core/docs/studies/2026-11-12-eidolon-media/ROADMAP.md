@@ -131,3 +131,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G348 — SD3.5 Large Turbo, 14/11/2026
 
 [Rapport G348](SD35-LARGE-TURBO-G348.md) : SD3.5 Large Turbo FP16 sur deux V100,4 étapes/guidage0 ;12images, répétition exacte. Natives :5/8 proposées,3rej et0réserve ;3,130s médianes. Deux mains à cinq doigts ; katanas et duo08 rejetés. Même score que Klein5/8 à3,396s sur une seule V100 ; aucune supériorité générale déduite. Pics13 692/8 550Mio, GPU40/37°C, HBM41/36°C.76appels de blocs/carte/image vérifiés. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion ; Large non Turbo reste non testé.
+
+
+## Avancement G349 — SD3.5 Large, 14/11/2026
+
+[Rapport G349](SD35-LARGE-G349.md) : SD3.5 Large FP16 sur deux V100,28étapes/CFG3,5 ;12images, répétition exacte. Natives :2/8 proposées,0réserves,6rejets ;36.020s médianes. Deux mains à six doigts, katanas incohérents ; aucun avantage global établi face à Turbo malgré les détails supplémentaires. Pics14078/8926Mio, GPU46/42°C.532appels de blocs/carte/image vérifiés. Runtime inchangé, GPU libres, services actifs, machine allumée. Aucune promotion.
