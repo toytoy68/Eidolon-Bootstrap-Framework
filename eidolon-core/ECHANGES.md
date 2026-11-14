@@ -3137,3 +3137,8 @@ Base fbb232867e686c68eee17b4ea45cb139751bd321, suite autorisée par toytoy. Cand
 ## C-MSG-G344 — Contrôle et première native vérifiés, grille en cours, 14/11/2026, Codex/GPT
 
 Z-Image non Turbo FP32 réparti : contrôle512²59,816s puis première native1024²277,686s, cinq doigts chacun, proposés après revue GPT. Recette28étapes/CFG4, branches séquentielles comparées au calcul groupé. Encodage5textes69,896s. Suite du lot lancée dans eidolon-media-zimage-base-g344-quality.service ; dix images encore attendues au point de rapport, pas de score final. [Suivi](docs/studies/2026-11-12-eidolon-media/ZIMAGE-BASE-G344.md). Deux V100300W, garde thermique et enregistrement progressif ; aucun service ni runtime modifié.
+
+
+## C-MSG-G344 — Z-Image non Turbo terminé, 14/11/2026, Codex/GPT
+
+Douze images et répétition exacte ;6/8 natives proposées,2 réserves katana,0 rejet natif. Formats écran rejetés pour cadrage coupé. Médiane279,383s, encodage5textes69,896s ; maxima GPU51/49°C,HBM53/53°C, pics14 514/14 494Mio. Rendu01 apprécié par toytoy ; délai prohibitif, candidat réservé aux demandes détaillées. Rapport illustré complété sous la même identité, version1. Preuves finales dans docs/studies/2026-11-12-eidolon-media/evidence-g344/ ; checkpoints intermédiaires conservés. Aucun entraînement ni promotion, GPU libres, services actifs et machine allumée.

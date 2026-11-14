@@ -95,4 +95,4 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 
 ## Avancement G344 — Z-Image non Turbo, 14/11/2026
 
-[Suivi provisoire](ZIMAGE-BASE-G344.md) : contrôle512² terminé, cinq doigts et revue GPT proposée. Grille native en cours,28étapes/CFG4,FP32 sur les deux V100. Aucun score final ni promotion ; PNG et mesures enregistrés progressivement.
+[Rapport G344](ZIMAGE-BASE-G344.md) :12images terminées,6/8 natives proposées,2 réserves katana ;279,383s médianes,28étapes/CFG4,FP32 sur deux V100. Formats écran rejetés pour cadrage. Maxima GPU51/49°C,HBM53/53°C ; répétition exacte. Usage détaillé à la demande selon toytoy, aucune promotion. GPU libres, services actifs, machine allumée.

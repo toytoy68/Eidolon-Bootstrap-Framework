@@ -1,8 +1,10 @@
 # Z-Image non Turbo — G344, 14 novembre 2026
 
-## Statut provisoire
+## Résultat final
 
-Contrôle512² et première native1024² terminés et proposés après revue GPT : cinq doigts, main et poignet visibles. Première native277,686s,28appels/56séquences. La grille qualité est en cours dans `zimage-base-g344/run02` ; aucun résultat final ni score natif annoncé.
+Douze images terminées, répétition identique pixel à pixel, aucune erreur. Huit natives1024² : **6 proposées,2 à revoir,0 rejet** après revue GPT. Deux mains à cinq doigts, deux scènes d’objets et deux duos en pied proposés. Katanas sous réserve : cohérence lame/fourreau et séparation douteuses. Les formats16:9 et4:3 sont rejetés pour cadrage coupé, hors score principal.
+
+Médiane native **279,383s (4min39s)** ; environ6,1fois le temps de Turbo et82fois Klein dans les recettes testées. Le gain sur ce lot concerne surtout les duos face à Turbo. Petit échantillon, pas de supériorité générale démontrée.
 
 ## Protocole fixé avant génération
 
@@ -23,6 +25,10 @@ UUID V100 imposés, aucune autre carte utilisée, consigne300W. Verrou de campag
 Sources : [carte auteur](https://huggingface.co/Tongyi-MAI/Z-Image/tree/04cc4abb7c5069926f75c9bfde9ef43d49423021), [code auteur](https://github.com/Tongyi-MAI/Z-Image). PNG, latents et journaux sous `/srv/eidolon/workspaces/media-20261112/zimage-base-g344/`. Aucune promotion ni entraînement.
 
 
-## Point de suivi après la première native
+## Clôture
 
-La grille continue dans le service `eidolon-media-zimage-base-g344-quality.service`, sans intervention requise pour les dix sorties restantes. Ce fichier et `evidence-g344/*partial*` sont une photographie provisoire, pas un bilan final. Résultats, PNG et mesures sont enregistrés par le processus local ; `completion.json` ou `failure.json` donnera son issue. Revue complète encore à effectuer. Rapport illustré provisoire `Eidolon-suivi-ZImage-G344.pdf`, Library `libfile_fde3_f-a7e55dafbd00819188d3e98b84c1204c_d168d29c22b4819186c4d3b8d1b7451f`, version0.
+Lot qualité terminé à14h46 le14novembre, heure de Paris. Maxima GPU51/49°C et HBM53/53°C ; pics VRAM14 514/14 494Mio. Pics instantanés323/337,57W malgré consigne300W, pas une énergie ni puissance moyenne. Douze PNG revérifiés, runtime inchangé, aucun client GPU, cinq services actifs et VM Memory-engine en marche. Machine laissée allumée.
+
+Choix toytoy enregistré : rendu de01 très apprécié, délai prohibitif pour les itérations ; réserver ce candidat à la génération détaillée à la demande. Aucune promotion automatique au service.
+
+Rapport illustré complet `Eidolon-suivi-ZImage-G344.pdf`, même identité Library, version1. Les fichiers `*partial*` conservent le point intermédiaire ; les fichiers sans ce suffixe et `zimage-base-validation-g344.json` portent le bilan final.
