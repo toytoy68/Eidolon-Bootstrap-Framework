@@ -91,3 +91,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G342 — Z-Image Turbo, 14/11/2026
 
 [Rapport G342](ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation.
+
+
+## Avancement G344 — Z-Image non Turbo, 14/11/2026
+
+[Suivi provisoire](ZIMAGE-BASE-G344.md) : contrôle512² terminé, cinq doigts et revue GPT proposée. Grille native en cours,28étapes/CFG4,FP32 sur les deux V100. Aucun score final ni promotion ; PNG et mesures enregistrés progressivement.

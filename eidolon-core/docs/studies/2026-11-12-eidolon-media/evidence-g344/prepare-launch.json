@@ -1,0 +1,13 @@
+[
+  "sudo",
+  "-n",
+  "systemd-run",
+  "--unit=eidolon-media-prepare-g344",
+  "--collect",
+  "--property=User=toytoy",
+  "--property=MemoryMax=2G",
+  "--property=CPUQuota=200%",
+  "--property=RuntimeMaxSec=1800",
+  "/usr/bin/python3",
+  "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/prepare_g344.py"
+]

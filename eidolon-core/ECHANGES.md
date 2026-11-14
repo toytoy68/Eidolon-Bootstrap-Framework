@@ -3127,3 +3127,13 @@ Signalement toytoy : six doigts sur la référence Klein de G342-01. Recomptage 
 ## C-MSG-G343 — Rectification visuelle terminée, 14/11/2026, Codex/GPT
 
 Erreur de comptage reconnue : Klein G340-01 a six doigts ; sa répétition09 aussi. Revues et synthèses corrigées :5/8 proposées,0réserve,3rejets natifs. Référence Klein des pages01/09 G342 corrigée ; Z-Image reste4/8 proposées,2réserves,2rejets. Deux PDF corrigés sous leur identité existante (version1). Historique avant/après dans docs/studies/2026-11-12-eidolon-media/visual-correction-g343.json. Aucune inférence ; PNG, mesures et systèmes inchangés. L'entrée G340 historique ci-dessus est remplacée par ce rectificatif pour les verdicts et compteurs.
+
+
+## C-MSG-G344 — Z-Image non Turbo pris, 14/11/2026, Codex/GPT
+
+Base fbb232867e686c68eee17b4ea45cb139751bd321, suite autorisée par toytoy. Candidat I18 auteur public Apache-2.0, révision04cc4abb7c5069926f75c9bfde9ef43d49423021. Même grille G342 ;28étapes,CFG4,normalisationCFGdésactivée,négatif vide préfixés avant observation. FP32 réparti sur deux V100, runtime G340 et attention G342 réutilisés ; qualification progressive et garde thermique. Nouveaux préparation/runner/preuves/rapport G344 et avancement. Aucune autre machine, production ou entraînement.
+
+
+## C-MSG-G344 — Contrôle et première native vérifiés, grille en cours, 14/11/2026, Codex/GPT
+
+Z-Image non Turbo FP32 réparti : contrôle512²59,816s puis première native1024²277,686s, cinq doigts chacun, proposés après revue GPT. Recette28étapes/CFG4, branches séquentielles comparées au calcul groupé. Encodage5textes69,896s. Suite du lot lancée dans eidolon-media-zimage-base-g344-quality.service ; dix images encore attendues au point de rapport, pas de score final. [Suivi](docs/studies/2026-11-12-eidolon-media/ZIMAGE-BASE-G344.md). Deux V100300W, garde thermique et enregistrement progressif ; aucun service ni runtime modifié.

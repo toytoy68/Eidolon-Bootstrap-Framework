@@ -1,0 +1,12 @@
+nov. 14 13:54:34 eidolon-os systemd[1]: Started eidolon-media-prepare-g344.service - [systemd-run] /usr/bin/python3 /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/prepare_g344.py.
+nov. 14 13:54:39 eidolon-os python3[24463]: {"reused_verified": "text_encoder/model-00001-of-00003.safetensors"}
+nov. 14 13:54:44 eidolon-os python3[24463]: {"reused_verified": "text_encoder/model-00002-of-00003.safetensors"}
+nov. 14 13:54:44 eidolon-os python3[24463]: {"reused_verified": "text_encoder/model-00003-of-00003.safetensors"}
+nov. 14 13:54:46 eidolon-os python3[24511]: {"downloading": "diffusion_pytorch_model-00001-of-00002.safetensors", "bytes": 9973727144}
+nov. 14 13:56:07 eidolon-os python3[24511]: {"verified": "diffusion_pytorch_model-00001-of-00002.safetensors", "sha256": "ecd5df7768856215812af84d5cc785ba9d84c6d8c84e6939c7ccf30a2e0d2425"}
+nov. 14 13:56:07 eidolon-os python3[24804]: {"downloading": "diffusion_pytorch_model-00002-of-00002.safetensors", "bytes": 2336146728}
+nov. 14 13:56:19 eidolon-os python3[24804]: {"verified": "diffusion_pytorch_model-00002-of-00002.safetensors", "sha256": "e2d5fb75ca504b2d669a33af9380b68e0c1632ecddbfca85f82631958a4b81b1"}
+nov. 14 13:56:20 eidolon-os python3[24463]: {"reused_verified": "vae/diffusion_pytorch_model.safetensors"}
+nov. 14 13:56:20 eidolon-os python3[24463]: PREPARE_COMPLETE
+nov. 14 13:56:20 eidolon-os systemd[1]: eidolon-media-prepare-g344.service: Deactivated successfully.
+nov. 14 13:56:20 eidolon-os systemd[1]: eidolon-media-prepare-g344.service: Consumed 46.555s CPU time, 2G memory peak.

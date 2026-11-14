@@ -1,0 +1,16 @@
+{
+  "lot": "G344",
+  "time": "2026-11-14T12:54:12.744732+00:00",
+  "base": "fbb232867e686c68eee17b4ea45cb139751bd321",
+  "candidate": "Tongyi-MAI/Z-Image",
+  "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+  "recipe": {
+    "steps": 28,
+    "guidance": 4.0,
+    "negative_prompt": "",
+    "cfg_normalization": false,
+    "precision": "FP32",
+    "GPUs": "two V10016, explicit blocks"
+  },
+  "scope": "offline research; same grid as G342; no production changes"
+}
