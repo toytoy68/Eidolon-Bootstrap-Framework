@@ -3252,3 +3252,13 @@ Base 8ec671e0bcbf92d792e0ea28072d47d2538cef23. Suite I06 : v11 standard RunDiffu
 ## C-MSG-G355 — Juggernaut XI v11 terminé, 14/11/2026, Codex/GPT
 
 [Rapport G355](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-XI-G355.md) : Juggernaut XI v11, une V100 FP16, DPM++2M Karras30/CFG5 ; 12 nouvelles images et répétition exacte. 2/8 proposées, 1 réserves, 5 rejets ; médiane 17.562s. V9 G353 historique3/8/17,600s, même recette. Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille. Runtime inchangé, services actifs, GPU libres, machine allumée. Attribution RunDiffusion/KandooAI, CC BY-NC-ND4.0 et conditions auteur conservées ; aucun poids redistribué. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
+
+
+## C-MSG-G356 — Juggernaut XI Lightning pris, 14/11/2026, Codex/GPT
+
+Base b7f297f4f0ae45d21fc290634db0ac8a80439930. Suite I06 autorisée : XI Lightning auteur, révision dbb242e5b54f33ce3bde22464f8813c1427bf1d4, fichier Civitai-Version avec VAE stocké FP32 ; autre fichier VAE FP16 non testé. Douze images, DPM++ SDE Karras6/CFG1,8, 11 appels UNet attendus, FP16 GPU0 et VAE upcast FP32. Comparaison visuelle XI v11 G355 historique, synthèse face au XL Lightning G354 de même recette. SHA/licences avant génération, aucune modification du runtime, promotion ou redistribution de poids.
+
+
+## C-MSG-G356 — Juggernaut XI Lightning terminé, 14/11/2026, Codex/GPT
+
+[Rapport G356](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-XI-LIGHTNING-G356.md) : XI Lightning Civitai-Version, une V100 FP16/VAE upcast FP32, SDE Karras6/CFG1,8,11 appels UNet ;12 nouvelles images, répétition exacte. 0/8 proposées,0 réserves,8 rejets ;6.840s. Références historiques XI standard2/8+1réserve/17,562s et XL Lightning1/8/6,843s. Ne pas retenir XI Lightning comme modèle principal avec cette recette. Sa vitesse est utile, mais la conformité est insuffisante sur cette petite grille ; le contrôle 4:3 mérite une confirmation sur plusieurs seeds avant tout usage régulier. Licences/attribution conservées, runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.

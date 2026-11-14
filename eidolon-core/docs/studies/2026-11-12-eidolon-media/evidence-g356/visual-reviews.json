@@ -1,0 +1,152 @@
+{
+  "xi_lightning": {
+    "0": {
+      "verdict": "Proposée",
+      "comment": "Une seule main, cinq doigts séparés, paume lisible et fond gris. Le poignet arrive par le bas droit : pose oblique, mais les doigts sont globalement dirigés vers le haut. Contrôle à 512 pixels, hors score principal."
+    },
+    "1": {
+      "verdict": "Rejetée",
+      "comment": "Peau et éclairage crédibles, mais seulement quatre doigts : un pouce et trois doigts longs. Le cinquième manque malgré une paume bien orientée."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "Même défaut décisif : quatre doigts visibles au lieu de cinq. Le bon rendu de peau ne compense pas l'erreur anatomique."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients au lieu de deux : bol bleu à gauche, tasse rouge au centre et pichet bleu à droite. Socle et petit accessoire supplémentaires ; positions demandées non respectées."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois tasses ou récipients à anse, dont un grand gris. Le bol bleu séparé demandé à droite est absent ; nombre, formes et couleurs ne correspondent pas."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Assemblage incohérent : deux gardes et deux segments de poignée alignés, une lame détachée ou fusionnée avec les éléments noirs. Pas de couple katana et fourreau séparés crédible."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Un seul sabre entièrement visible, aux matériaux convaincants. Le fourreau noir séparé demandé est absent."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "Deux adultes en pied et ordre gauche-droite correct, mais la femme porte une tenue noire avec ceinture rouge, pas un kimono rouge. Une de ses mains est aussi masquée par le samouraï."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Trois adultes au lieu des deux demandés. La femme en rouge et le samouraï sont présents, mais un personnage supplémentaire occupe la gauche."
+    },
+    "9": {
+      "verdict": "Rejetée",
+      "comment": "Répétition pixel-identique à 01, donc même main à quatre doigts. La reproductibilité technique est validée, pas l'anatomie."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Duo en pied, vêtements et mains visibles, mais positions inversées : femme à gauche et samouraï à droite."
+    },
+    "11": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes en pied, samouraï en armure noire à gauche et femme en tenue rouge à droite, mains visibles. Ensemble cohérent à cette échelle ; détails des doigts peu résolus. Contrôle 4:3 hors score principal."
+    }
+  },
+  "v11": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Cinq doigts apparents, mais plusieurs doigts repliés et poignet latéral : pose demandée non respectée."
+    },
+    "1": {
+      "verdict": "Proposée",
+      "comment": "Une main entière, cinq doigts distincts et poignet en bas ; anatomie visuellement plausible."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts seulement, pouce compris ; un doigt manque."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients au lieu de deux ; bol à gauche et tasse bleue supplémentaire à droite."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients, bol bicolore au centre et tasse rouge à droite ; nombre et positions incorrects."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Deux lames avec poignées et gardes ; le fourreau séparé demandé n’est pas représenté correctement."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Un seul sabre ; aucun fourreau séparé."
+    },
+    "7": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes en pied, armure noire à gauche et kimono rouge à droite ; visages et pose cohérents."
+    },
+    "8": {
+      "verdict": "À revoir",
+      "comment": "Duo, tenues et positions corrects ; le sabre ajouté présente une lame terminée à plat, peu crédible."
+    },
+    "9": {
+      "verdict": "Proposée",
+      "comment": "Répétition exacte de 01 : une main entière avec cinq doigts distincts."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Deux adultes en pied, mais femme à gauche et samurai à droite : positions inversées."
+    },
+    "11": {
+      "verdict": "À revoir",
+      "comment": "Deux adultes en pied, positions et tenues correctes ; mains peu détaillées et élément de sabre/fourreau ambigu entre les jambes."
+    }
+  },
+  "xl_lightning": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Cinq doigts apparents, mais paume oblique et poignet arrivant du côté au lieu du bas demandé."
+    },
+    "1": {
+      "verdict": "Rejetée",
+      "comment": "Deux mains au lieu d’une, avec doigts manquants ou fusionnés."
+    },
+    "2": {
+      "verdict": "Proposée",
+      "comment": "Une main entière, cinq doigts distincts, paume et poignet conformes ; rendu de peau détaillé."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Quatre récipients au lieu de deux et supports ajoutés ; comptage non respecté."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients, bol rouge et tasse bleue ; nombre, couleurs et positions non conformes."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Poignées et pièces superposées, lame/fourreau incohérents et poignée coupée au bord inférieur."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Deux sabres à poignées au lieu d’un katana et de son fourreau ; aucune paire conforme."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "Femme à gauche, homme à droite vêtu de rouge ; positions et armure noire demandées non respectées."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Trois adultes au lieu de deux, avec un personnage supplémentaire à gauche."
+    },
+    "9": {
+      "verdict": "Rejetée",
+      "comment": "Répétition exacte de 01 : deux mains avec anatomie incorrecte."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Femme à gauche et samurai à droite, vus de dos ; positions inversées et mains masquées."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Personnage de gauche sans l’armure noire demandée ; arme déformée et rendu du visage peu défini."
+    }
+  }
+}

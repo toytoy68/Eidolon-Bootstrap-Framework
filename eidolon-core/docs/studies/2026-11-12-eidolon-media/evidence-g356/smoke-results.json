@@ -1,0 +1,37 @@
+[
+  {
+    "model": "xi_lightning",
+    "index": 0,
+    "condition": "smoke",
+    "case": "hand",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "seed": 20261113,
+    "steps": 6,
+    "cfg": 1.8,
+    "negative_prompt": "",
+    "width": 512,
+    "height": 512,
+    "seconds": 1.7222503910015803,
+    "sha256": "46572786e16dedc4febf50097633bd6478b4ee38ef94bf2c4c5ce738e5159ac3",
+    "unet_calls": 11,
+    "decoder_calls": 1,
+    "timesteps": [
+      831.0,
+      747.7458496689796,
+      654.2946157753468,
+      537.088078558445,
+      410.4855974316597,
+      269.62430769205093,
+      153.51215010881424,
+      66.72444051504135,
+      24.649323105812073,
+      6.326155990362167,
+      1.0
+    ],
+    "noise_sampler_seed": 20261113,
+    "pixel_sha256": "3c9f7a571c002dbec59b27824e03c19d93d5f9bebd3553c863713c673c4d2f9b",
+    "peak_allocated_bytes": 8018590208,
+    "peak_reserved_bytes": 8910798848,
+    "visual": "NOT_REVIEWED"
+  }
+]
