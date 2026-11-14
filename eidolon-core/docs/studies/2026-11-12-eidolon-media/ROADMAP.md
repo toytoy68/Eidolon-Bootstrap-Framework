@@ -151,3 +151,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G352 — FLUX Schnell Q4, 14/11/2026
 
 [Rapport G352](FLUX-Q4-G352.md) : FLUX Schnell GGUF Q4_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 3/8 proposées, 2 réserves, 3 rejets ; 16.212 s médianes contre 15.613 s Q8. Pic 9824 Mio (-35.2 % vs Q8), GPU/HBM 44/49 °C. Moins de VRAM, mais main 01 plus floue et poignée surnuméraire en 06 ; aucun gain de vitesse, aucune promotion. Copie de licence corrigée avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G353 — Juggernaut v10/v9, 14/11/2026
+
+[Rapport G353](JUGGERNAUT-X-G353.md) : Juggernaut v10/v9, même DPM++2M Karras30/CFG5 sur une V100 ; 24 images et deux répétitions exactes. V10 1/8 proposées, 1 réserves, 6 rejets / 17.565s ; v9 3/8 proposées, 0 réserves, 5 rejets / 17.600s. V10 ne remplace pas v9 pour cette grille. Conserver les deux comme options spécialisées ; aucun nouveau modèle par défaut. Export JSON du scheduler corrigé avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.

@@ -1,0 +1,29 @@
+2026-11-14T22:00:15+01:00 eidolon-os flock[108760]: [153B blob data]
+2026-11-14T22:00:15+01:00 eidolon-os flock[108760]:  ['text_model.embeddings.position_ids']
+2026-11-14T22:00:15+01:00 eidolon-os flock[108760]: [378B blob data]
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]: {"loaded": "v10", "seconds": 3.7608289100026013}
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]: Traceback (most recent call last):
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/juggernaut_x_probe_g353.py", line 193, in <module>
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     main()
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/juggernaut_x_probe_g353.py", line 139, in main
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     probe.write_json(folder/'pipeline.json',model_config)
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/quality_probe.py", line 61, in write_json
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     json.dump(value, f, indent=2, allow_nan=False)
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 179, in dump
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     for chunk in iterable:
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:                  ^^^^^^^^
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 432, in _iterencode
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     yield from _iterencode_dict(o, _current_indent_level)
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     yield from chunks
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 398, in _iterencode_dict
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     yield _floatstr(value)
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:           ^^^^^^^^^^^^^^^^
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:   File "/srv/eidolon/work/eva-learning-pilot-20261108/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 240, in floatstr
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]:     raise ValueError(
+2026-11-14T22:00:18+01:00 eidolon-os flock[108760]: ValueError: Out of range float values are not JSON compliant: -inf
+2026-11-14T22:01:44+01:00 eidolon-os flock[109124]: [153B blob data]
+2026-11-14T22:01:44+01:00 eidolon-os flock[109124]:  ['text_model.embeddings.position_ids']
+2026-11-14T22:01:44+01:00 eidolon-os flock[109124]: [378B blob data]
+2026-11-14T22:01:47+01:00 eidolon-os flock[109124]: {"loaded": "v10", "seconds": 3.739815280001494}
+2026-11-14T22:01:51+01:00 eidolon-os flock[109124]: {"generated": "v10", "index": 0, "case": "hand", "seconds": 3.8038727899984224}

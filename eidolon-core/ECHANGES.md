@@ -3222,3 +3222,13 @@ Base b667b862d148e5ee0aa2a22dcb720c1d402097dc. Suite autorisée : I09, conversio
 ## C-MSG-G352 — FLUX Schnell Q4 terminé, 14/11/2026, Codex/GPT
 
 [Rapport G352](docs/studies/2026-11-12-eidolon-media/FLUX-Q4-G352.md) : FLUX Schnell GGUF Q4_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 3/8 proposées, 2 réserves, 3 rejets ; 16.212 s médianes contre 15.613 s Q8. Pic 9824 Mio (-35.2 % vs Q8), GPU/HBM 44/49 °C. Moins de VRAM, mais main 01 plus floue et poignée surnuméraire en 06 ; aucun gain de vitesse, aucune promotion. Copie de licence corrigée avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
+
+
+## C-MSG-G353 — Juggernaut X v10 pris, 14/11/2026, Codex/GPT
+
+Base 67e16550b3129c3346a6641d2306916a04d1a1ac. Suite I06 : v10 standard auteur, révision 35e4f3ccbe745c3e1221715d04a452aaa1ee5761. Comparatif v9 régénéré, même grille de douze images par modèle, DPM++2M Karras30/CFG5, FP16 une V100, VAE FP32. Qualification512 v10 puis natives et contrôles. Poids/licences/SHA vérifiés avant exécution ; runtime G333 inchangé ; aucun déploiement, entraînement ou promotion.
+
+
+## C-MSG-G353 — Juggernaut v10/v9 terminé, 14/11/2026, Codex/GPT
+
+[Rapport G353](docs/studies/2026-11-12-eidolon-media/JUGGERNAUT-X-G353.md) : Juggernaut v10/v9, même DPM++2M Karras30/CFG5 sur une V100 ; 24 images et deux répétitions exactes. V10 1/8 proposées, 1 réserves, 6 rejets / 17.565s ; v9 3/8 proposées, 0 réserves, 5 rejets / 17.600s. V10 ne remplace pas v9 pour cette grille. Conserver les deux comme options spécialisées ; aucun nouveau modèle par défaut. Export JSON du scheduler corrigé avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué.
