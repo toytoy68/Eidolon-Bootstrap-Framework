@@ -1,0 +1,11 @@
+[
+  {
+    "repo": "city96/FLUX.1-schnell-gguf",
+    "revision": "f495746ed9c5efcf4661f53ef05401dceadc17d2",
+    "name": "flux1-schnell-Q8_0.gguf",
+    "path": "flux1-schnell-Q8_0.gguf",
+    "absolute": "/srv/eidolon/data/media-models-20261113/flux-schnell-q8/flux1-schnell-Q8_0.gguf",
+    "bytes": 12687821728,
+    "sha256": "f6694941193b10148dbf1f0f498d4ccd3e9875c127fc53946213b68580c66f10"
+  }
+]

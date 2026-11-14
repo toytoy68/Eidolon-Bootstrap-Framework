@@ -141,3 +141,8 @@ PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez t
 ## Avancement G350 — Sana Sprint0,6B, 14/11/2026
 
 [Rapport G350](SANA-SPRINT-600M-G350.md) : Sana Sprint 0,6B FP32 sur une V100, 4 étapes / guidage intégré 4,5 ; 12 images, répétition exacte. Natives : 2/8 proposées, 0 réserve, 6 rejets ; 1.279 s médianes contre 1.833 s en 1,6B. Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion. Pic 5336 Mio, GPU 42 °C, HBM 43 °C. Quatre appels du générateur vérifiés par image. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G351 — FLUX Schnell Q8, 14/11/2026
+
+[Rapport G351](FLUX-Q8-G351.md) : FLUX Schnell GGUF Q8_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 4/8 proposées, 2 réserves et 2 rejets ; 15.613 s médianes contre 6.451 s pour le complet réparti G339. Schnell tient sur une seule carte, mais le Q8 ne gagne pas en vitesse ; option pour libérer GPU1, aucune promotion. Pic 15158 Mio, GPU 43 °C, HBM 50 °C. Incident de placement CPU détecté puis corrigé, trace conservée. Runtime partagé inchangé, GPU libres, services actifs, machine allumée.

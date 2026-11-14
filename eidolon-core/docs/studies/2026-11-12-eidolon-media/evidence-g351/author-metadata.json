@@ -1,0 +1,178 @@
+{
+  "_id": "66bd6834f4f021dce64b20d3",
+  "id": "city96/FLUX.1-schnell-gguf",
+  "private": false,
+  "pipeline_tag": "text-to-image",
+  "library_name": "gguf",
+  "tags": [
+    "gguf",
+    "text-to-image",
+    "image-generation",
+    "flux",
+    "base_model:black-forest-labs/FLUX.1-schnell",
+    "base_model:quantized:black-forest-labs/FLUX.1-schnell",
+    "license:apache-2.0",
+    "region:us"
+  ],
+  "downloads": 181727,
+  "likes": 375,
+  "modelId": "city96/FLUX.1-schnell-gguf",
+  "author": "city96",
+  "sha": "f495746ed9c5efcf4661f53ef05401dceadc17d2",
+  "lastModified": "2024-08-18T08:13:37.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {},
+  "cardData": {
+    "base_model": "black-forest-labs/FLUX.1-schnell",
+    "library_name": "gguf",
+    "license": "apache-2.0",
+    "quantized_by": "city96",
+    "tags": [
+      "text-to-image",
+      "image-generation",
+      "flux"
+    ]
+  },
+  "gguf": {
+    "total": 11891178560,
+    "architecture": "flux",
+    "totalFileSize": 23782411168
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "5008a3bf3899ab1a86f28e28a4824904a37256a6",
+      "size": 2184
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "5084f4d1e736dfd2a23c3003c197ae3f2d8da07d",
+      "size": 675
+    },
+    {
+      "rfilename": "flux1-schnell-F16.gguf",
+      "blobId": "8fede1df304c2e934792f30c8f4645125a5cfde1",
+      "size": 23782411168,
+      "lfs": {
+        "sha256": "e13384dbdeff6dd236cdaad13345e138364f22d090fb93280865bd034c7df12b",
+        "size": 23782411168,
+        "pointerSize": 136
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q2_K.gguf",
+      "blobId": "085d080ddd1bdb79e0432b601a84a9fd003151b6",
+      "size": 4010296352,
+      "lfs": {
+        "sha256": "a385011cab7487d5a04785446e59b405ffb642f0de867b4c8f3a7a0a077599b0",
+        "size": 4010296352,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q3_K_S.gguf",
+      "blobId": "7e81e514bac6ca87bd0018bbdf6fd675ca8646a8",
+      "size": 5212210208,
+      "lfs": {
+        "sha256": "da68cf0db4bc71a9a2fb1b357521eb37f04c06c59025ce487d061ec4652905be",
+        "size": 5212210208,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q4_0.gguf",
+      "blobId": "38798b7e5ddaf288af672533e0a336eb9a585c8c",
+      "size": 6770707360,
+      "lfs": {
+        "sha256": "90a393d3a44bec691c707003f434fdde06064b870bb3c206eb7a4f109b25ff4e",
+        "size": 6770707360,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q4_1.gguf",
+      "blobId": "b824a559e3a2075689dc4991d13f0da84b4ad75e",
+      "size": 7510346656,
+      "lfs": {
+        "sha256": "a798b7196d2fe614cf9bae9a617dbd9f2c14673e454c7f2f6a500347274630b5",
+        "size": 7510346656,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q4_K_S.gguf",
+      "blobId": "f94efbfa7da5bd7e875626b25a67bc6c66030072",
+      "size": 6783943712,
+      "lfs": {
+        "sha256": "4fd16477b3a5296d0cf722c4b92a9fd7f30d09ac7495826e4465d8de9c9fd973",
+        "size": 6783943712,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q5_0.gguf",
+      "blobId": "f660490c36231c46b29edd41068ab6850124b08f",
+      "size": 8249985952,
+      "lfs": {
+        "sha256": "e0783bcfbad34efe37b67549a5337caa49258ccf35b943a6b7a2a3d49209adb3",
+        "size": 8249985952,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q5_1.gguf",
+      "blobId": "48d571e7e1b0abf44f6dc93da74f2fd363e8a2e6",
+      "size": 8989625248,
+      "lfs": {
+        "sha256": "504cf1af9d9157bd3cae49c54fed3cc04fc0fcb6798d0c0d394097a30b656897",
+        "size": 8989625248,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q5_K_S.gguf",
+      "blobId": "98f27a62d643dea0a3c213809ba6420ce90e5787",
+      "size": 8263222304,
+      "lfs": {
+        "sha256": "19f63562d9a20d2123288dddd9abb3d5560554e5694ded951aaf6bfafe46b5df",
+        "size": 8263222304,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q6_K.gguf",
+      "blobId": "cf38f4bc5d59bdf60a95a2846f2d6ce38a9cabae",
+      "size": 9834955808,
+      "lfs": {
+        "sha256": "a42fd143cec4d7194da281dc8d23a8fe54b16875a13423c042cb545d1da6fa50",
+        "size": 9834955808,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "flux1-schnell-Q8_0.gguf",
+      "blobId": "1c91dfd67d0a834858aa5db5d2c7adf73a954ef9",
+      "size": 12687821728,
+      "lfs": {
+        "sha256": "f6694941193b10148dbf1f0f498d4ccd3e9875c127fc53946213b68580c66f10",
+        "size": 12687821728,
+        "pointerSize": 136
+      }
+    }
+  ],
+  "spaces": [
+    "educatedlucifer12/whisper-ai",
+    "K00B404/FLUX-Wallpaper-HD-Maker_p",
+    "Ffftdtd5dtft/Kfkjfjd",
+    "K00B404/Hyper-FLUX-8Steps-LoRA_CPU",
+    "xfcxcxcdfdfd/Hhhhvasasasasdsddsdsxxxxxxxxxxxxx",
+    "K00B404/NEW_FLUX",
+    "kines9661/whisper-ai",
+    "shubhjn/whisper-ai",
+    "shubhjn/cosmo-ai"
+  ],
+  "createdAt": "2024-08-15T02:30:12.000Z",
+  "usedStorage": 102095526496
+}

@@ -1,0 +1,4 @@
+2026-11-14T20:20:21+01:00 eidolon-os python[92663]: Processing /srv/eidolon/workspaces/media-20261112/flux-q8-g351/gguf-0.17.1-py3-none-any.whl
+2026-11-14T20:20:21+01:00 eidolon-os python[92663]: Installing collected packages: gguf
+2026-11-14T20:20:21+01:00 eidolon-os python[92663]: Successfully installed gguf-0.17.1
+2026-11-14T20:21:48+01:00 eidolon-os python[92636]: Preparation verified

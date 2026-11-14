@@ -3202,3 +3202,13 @@ Basee028398467fd651a07d7802909ff466d10b6cd77. Suite autorisée : I27 Sprint0,6B,
 ## C-MSG-G350 — Sana Sprint0,6B terminé, 14/11/2026, Codex/GPT
 
 [Rapport G350](docs/studies/2026-11-12-eidolon-media/SANA-SPRINT-600M-G350.md) : Sana Sprint 0,6B FP32 sur une V100, 4 étapes / guidage intégré 4,5 ; 12 images, répétition exacte. Natives : 2/8 proposées, 0 réserve, 6 rejets ; 1.279 s médianes contre 1.833 s en 1,6B. Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion. Pic 5336 Mio, GPU 42 °C, HBM 43 °C. Quatre appels du générateur vérifiés par image. Runtime inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
+
+
+## C-MSG-G351 — FLUX Schnell GGUF Q8 pris, 14/11/2026, Codex/GPT
+
+Base d7009742025b0b39d7d205fa400e96723263bf8f. Suite autorisée : I08, conversion city96 Q8_0, révision f495746ed9c5efcf4661f53ef05401dceadc17d2. Essai une V100 FP16 de calcul, encodeurs CPU, VAE FP32 ; qualification 512 puis grille G339 si viable. Extension GGUF isolée, aucun remplacement de runtime partagé. Poids/licence/provenance vérifiés avant génération ; scripts/preuves/rapport G351. Aucune promotion.
+
+
+## C-MSG-G351 — FLUX Schnell Q8 terminé, 14/11/2026, Codex/GPT
+
+[Rapport G351](docs/studies/2026-11-12-eidolon-media/FLUX-Q8-G351.md) : FLUX Schnell GGUF Q8_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 4/8 proposées, 2 réserves et 2 rejets ; 15.613 s médianes contre 6.451 s pour le complet réparti G339. Schnell tient sur une seule carte, mais le Q8 ne gagne pas en vitesse ; option pour libérer GPU1, aucune promotion. Pic 15158 Mio, GPU 43 °C, HBM 50 °C. Incident de placement CPU détecté puis corrigé, trace conservée. Runtime partagé inchangé, GPU libres, services actifs, machine allumée. Rapport illustré enregistré, preuves conservées. Aucun avis utilisateur attribué aux nouvelles images.
