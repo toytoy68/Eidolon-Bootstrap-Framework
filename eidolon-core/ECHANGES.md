@@ -1,3 +1,5 @@
+> Lot Codex/GPT du 02/11/2026 : [état vérifié, preuves et limites](docs/ETAT-ACTUEL-2026-11-02.md). Les entrées suivantes sont conservées dans leur contexte historique.
+
 # Échanges de travail — Eidolon Core
 
 Canal asynchrone entre toytoy, Codex/GPT et Claude Code, créé le 05/10/2026.

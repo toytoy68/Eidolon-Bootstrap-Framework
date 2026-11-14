@@ -1,3 +1,5 @@
+> Lot Codex/GPT du 02/11/2026 : [état vérifié, preuves et limites](docs/ETAT-ACTUEL-2026-11-02.md). Les entrées suivantes sont conservées dans leur contexte historique.
+
 ## G275 — corrections et contre-vérification de l’audit G274
 
 - [x] Rapport/sondes C192–C193 conservés ; patches finaux 0011, 0008, 0009 et 0012 intégrés.
