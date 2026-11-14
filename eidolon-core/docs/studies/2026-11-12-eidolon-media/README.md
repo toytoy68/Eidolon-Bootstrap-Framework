@@ -131,3 +131,8 @@ original/détaillé comparés à seeds et réglages constants.12 succès techniq
 ## Avancement G351 — FLUX Schnell Q8, 14/11/2026
 
 [Rapport G351](FLUX-Q8-G351.md) : FLUX Schnell GGUF Q8_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 4/8 proposées, 2 réserves et 2 rejets ; 15.613 s médianes contre 6.451 s pour le complet réparti G339. Schnell tient sur une seule carte, mais le Q8 ne gagne pas en vitesse ; option pour libérer GPU1, aucune promotion. Pic 15158 Mio, GPU 43 °C, HBM 50 °C. Incident de placement CPU détecté puis corrigé, trace conservée. Runtime partagé inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G352 — FLUX Schnell Q4, 14/11/2026
+
+[Rapport G352](FLUX-Q4-G352.md) : FLUX Schnell GGUF Q4_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 3/8 proposées, 2 réserves, 3 rejets ; 16.212 s médianes contre 15.613 s Q8. Pic 9824 Mio (-35.2 % vs Q8), GPU/HBM 44/49 °C. Moins de VRAM, mais main 01 plus floue et poignée surnuméraire en 06 ; aucun gain de vitesse, aucune promotion. Copie de licence corrigée avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.
