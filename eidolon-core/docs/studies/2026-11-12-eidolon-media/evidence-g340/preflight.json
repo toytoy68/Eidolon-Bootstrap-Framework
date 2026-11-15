@@ -1,0 +1,8 @@
+{
+  "plan_matches_g339": true,
+  "prompts_seeds_resolutions_equal": true,
+  "images": 12,
+  "compile": "passed",
+  "backend_test": "sdpa-v100-test.json",
+  "base_runtime_unchanged": true
+}

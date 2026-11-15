@@ -1,0 +1,11 @@
+{
+  "source": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large/blob/ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f/README.md",
+  "steps": 28,
+  "guidance": 3.5,
+  "author_dtype": "bfloat16",
+  "local_dtype": "float16",
+  "slg": null,
+  "comparison": "Different checkpoint and sampling recipe vs G348; not isolated causal effect of steps.",
+  "mirror_readme_same_author_blob": false,
+  "author_recipe_read_from_public_web_page": true
+}

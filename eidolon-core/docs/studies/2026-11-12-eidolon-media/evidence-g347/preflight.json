@@ -1,0 +1,4 @@
+{
+  "time": "2026-11-14T18:20:17.725312+00:00",
+  "gpu": "index, memory.used [MiB], temperature.gpu, power.limit [W]\n0, 1 MiB, 27, 300.00 W\n1, 1 MiB, 27, 300.00 W\n2, 2 MiB, 30, 120.00 W\n"
+}

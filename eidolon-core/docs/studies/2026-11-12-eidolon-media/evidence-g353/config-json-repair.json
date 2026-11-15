@@ -1,0 +1,6 @@
+{
+  "time": "2026-11-14T21:01:35.355621+00:00",
+  "issue": "scheduler lambda_min_clipped=-inf cannot be serialized with allow_nan=False",
+  "change": "Only metadata exporter converts nonfinite floats to strings; scheduler calculation unchanged.",
+  "images_before_failure": 0
+}

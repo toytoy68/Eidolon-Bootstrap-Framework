@@ -1,0 +1,74 @@
+{
+  "0": {
+    "verdict": "À revoir",
+    "comment": "Cinq doigts visibles, mais paume très segmentée, articulations artificielles et reflets verdâtres. Contrôle 512² hors score.",
+    "comparison": "Meilleur comptage que les échecs natifs, sans valider un rendu anatomique naturel.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "1": {
+    "verdict": "Rejetée",
+    "comment": "Cinq doigts, mais extrémités et pouce déformés ; des ongles apparaissent côté paume. Anatomie incohérente malgré la texture.",
+    "comparison": "La 1,6B gardait une réserve anatomique ; la 0,6B ajoute des défauts marqués. Klein a six doigts sur cette seed.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "2": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts : quatre doigts centraux et deux appendices latéraux. Défaut anatomique éliminatoire.",
+    "comparison": "Même échec de comptage que Sprint 1,6B ; Klein est proposé sur cette seed.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Exactement deux objets entiers : tasse rouge à gauche et bol bleu à droite. Ombres et reflets plausibles.",
+    "comparison": "Les trois configurations respectent la composition. Quelques irrégularités de surface ne changent pas le sujet.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Tasse rouge et bol bleu séparés, complets et correctement placés. Céramique et lumière cohérentes.",
+    "comparison": "Les trois modèles réussissent cette scène simple ; aucune supériorité visuelle générale démontrée.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Lame claire détachée de la poignée ; pièce noire à droite avec poignée et garde. Aucun katana complet et fourreau distinct cohérents.",
+    "comparison": "Comme Sprint 1,6B et Klein, les matières masquent une construction impossible.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Trois éléments au lieu du couple demandé : fragment de lame séparé, pièce centrale hybride et fourreau à poignée.",
+    "comparison": "Le tissu et le métal sont détaillés, mais la structure échoue comme chez les deux références.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes et bonnes couleurs, mais cadrage coupé aux cuisses : jambes et pieds absents. Mains également peu lisibles.",
+    "comparison": "La 1,6B cadrait plus large sans tout respecter ; Klein est proposé pour son cadrage en pied.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes correctement placés devant le château ; jambes et pieds coupés par le bord inférieur.",
+    "comparison": "Même limite de cadrage que la 1,6B sur cette seed ; Klein conserve les personnages entiers.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "9": {
+    "verdict": "Rejetée",
+    "comment": "Répétition exacte de G350-01 : mêmes pixels et PNG, donc mêmes défauts anatomiques. Hors score natif.",
+    "comparison": "La reproductibilité est vérifiée ; elle ne constitue pas une nouvelle réussite visuelle.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format 16:9 : corps coupés vers la taille, mains et pieds hors cadre ; haut de la coiffure rogné.",
+    "comparison": "Aucune des trois configurations ne respecte ici le portrait complet demandé.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Format 4:3 : pieds de la femme masqués, proportions tassées, visages et mains déformés.",
+    "comparison": "Le cadrage élargit la scène, mais la petite variante perd nettement en précision et en proportions.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  }
+}

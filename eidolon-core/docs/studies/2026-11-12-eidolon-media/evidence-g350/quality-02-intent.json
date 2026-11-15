@@ -1,0 +1,8 @@
+{
+  "case": "hand",
+  "width": 1024,
+  "height": 1024,
+  "seed": 20261114,
+  "steps": 4,
+  "condition": "quality"
+}

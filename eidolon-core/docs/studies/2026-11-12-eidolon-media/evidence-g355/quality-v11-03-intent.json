@@ -1,0 +1,11 @@
+{
+  "condition": "quality",
+  "case": "objects",
+  "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+  "seed": 20261113,
+  "steps": 30,
+  "cfg": 5,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024
+}

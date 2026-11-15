@@ -1,0 +1,18 @@
+{
+  "tensor_count": 776,
+  "tensor_types": {
+    "F16": 472,
+    "Q4_0": 304
+  },
+  "sample_tensor": "double_blocks.0.img_attn.proj.weight",
+  "sample_blocks": 16,
+  "max_abs_error_vs_numpy": 0.0,
+  "cuda_capability": [
+    7,
+    0
+  ],
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.32.2",
+  "gguf": "0.17.1",
+  "proof_scope": "16 blocks only, GPU dequantization versus numpy; not a full conversion audit"
+}

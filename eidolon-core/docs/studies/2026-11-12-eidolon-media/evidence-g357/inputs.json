@@ -1,0 +1,168 @@
+{
+  "reference": "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/juggernaut-xi-lightning-validation-g356.json",
+  "reference_sha256": "b3388105ac1139dec241ca28fb559306312002fa11246a5f1eff1b4efd5a5863",
+  "reference_commit": "8e106400bac8754d8a17ae5c3703529e0251454e",
+  "masks_fixed_before_generation": true,
+  "cases": [
+    {
+      "case": "hand",
+      "index": 1,
+      "source": "/srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run02/xi_lightning/01-hand.png",
+      "source_sha256": "f8caa2e7cba6227d2e792cb952bafaebd1d5ad40edc6cd4db768503eb70c0ca0",
+      "copied_sha256": "f8caa2e7cba6227d2e792cb952bafaebd1d5ad40edc6cd4db768503eb70c0ca0",
+      "mask_sha256": "ad0b0b6b807bb1ebc13ee3fb217478fd1d0e6f1881f7c94b4dbe6d0912c65d6a",
+      "polygon": [
+        [
+          210,
+          130
+        ],
+        [
+          740,
+          130
+        ],
+        [
+          740,
+          800
+        ],
+        [
+          600,
+          900
+        ],
+        [
+          350,
+          900
+        ],
+        [
+          240,
+          750
+        ]
+      ],
+      "target": "Reconstruire une main ouverte avec cinq doigts.",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "mask_pixels": 380206,
+      "mask_fraction": 0.3625926971435547
+    },
+    {
+      "case": "objects",
+      "index": 3,
+      "source": "/srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run02/xi_lightning/03-objects.png",
+      "source_sha256": "50b99a70ce76fc55ff1175ef5df9358a29915af2ad52413efe8e0864651b5db9",
+      "copied_sha256": "50b99a70ce76fc55ff1175ef5df9358a29915af2ad52413efe8e0864651b5db9",
+      "mask_sha256": "571823c170297e370542aef79b6d79913a6fac492d2438af6141716391e028f6",
+      "polygon": [
+        [
+          10,
+          340
+        ],
+        [
+          1014,
+          340
+        ],
+        [
+          1014,
+          835
+        ],
+        [
+          10,
+          835
+        ]
+      ],
+      "target": "Remplacer tous les récipients par exactement une tasse rouge à gauche et un bol bleu à droite.",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "mask_pixels": 498480,
+      "mask_fraction": 0.4753875732421875
+    },
+    {
+      "case": "katana",
+      "index": 6,
+      "source": "/srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run02/xi_lightning/06-katana.png",
+      "source_sha256": "0e9a10a837311537bcd8df939fad70ccc611a174eb30e2b58fc4b9930c60275a",
+      "copied_sha256": "0e9a10a837311537bcd8df939fad70ccc611a174eb30e2b58fc4b9930c60275a",
+      "mask_sha256": "fd845b5113810b7a476cb2dbe6d36c50c8b4ca4f11757af8fcf6bb0dc2c31e6f",
+      "polygon": [
+        [
+          45,
+          800
+        ],
+        [
+          780,
+          65
+        ],
+        [
+          840,
+          125
+        ],
+        [
+          105,
+          860
+        ]
+      ],
+      "target": "Ajouter un fourreau noir à gauche et parallèle au sabre existant, sans modifier le sabre.",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "mask_pixels": 88996,
+      "mask_fraction": 0.08487319946289062
+    },
+    {
+      "case": "duo",
+      "index": 7,
+      "source": "/srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run02/xi_lightning/07-duo.png",
+      "source_sha256": "0dd534f1b337b7c341125cfae4b2ac12902d3fa3c255fb3d11d86ce97702930c",
+      "copied_sha256": "0dd534f1b337b7c341125cfae4b2ac12902d3fa3c255fb3d11d86ce97702930c",
+      "mask_sha256": "b2b95d8d559e2df7804c60240583bd5caa15c750f5d29b285835713635580ef3",
+      "polygon": [
+        [
+          571,
+          381
+        ],
+        [
+          636,
+          384
+        ],
+        [
+          680,
+          420
+        ],
+        [
+          703,
+          487
+        ],
+        [
+          679,
+          511
+        ],
+        [
+          660,
+          507
+        ],
+        [
+          653,
+          580
+        ],
+        [
+          668,
+          748
+        ],
+        [
+          577,
+          748
+        ],
+        [
+          569,
+          607
+        ],
+        [
+          559,
+          531
+        ],
+        [
+          559,
+          461
+        ]
+      ],
+      "target": "Changer la tenue noire de la femme en kimono rouge, en préservant les deux visages et le samouraï.",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "mask_pixels": 37049,
+      "mask_fraction": 0.035332679748535156
+    }
+  ]
+}

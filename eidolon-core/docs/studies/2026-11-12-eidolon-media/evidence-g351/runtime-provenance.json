@@ -1,0 +1,43 @@
+{
+  "files": [
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/quantizers/gguf/utils.py",
+      "sha256": "dd032407be30af4d4ec0179aaaff560b8170e15c15ef178e3d83aca3532f7db2"
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/quantizers/gguf/gguf_quantizer.py",
+      "sha256": "b182547c58413988ec335741fdafa1e52f88166bb99c487c72628c9e26dc2329"
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/transformers/transformer_flux.py",
+      "sha256": "d18a6cbe5fbfc5d89e038154fac535a75089891f207189a21a3f96563ba5e3a3"
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/flux/pipeline_flux.py",
+      "sha256": "0a3f141f9362bdcc6c64880c433541e02700c593b15f7e826cad6db37e165be7"
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/flux_chunked_attention.py",
+      "sha256": "cfeeb6253f30cd17608120c5a25a346e7e68b96648f67c30f6db2b2e6f6c42c1"
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/engine/comfy/sd.py",
+      "sha256": "eedd8ac1466e99dbd91071949722b1751e15863641421f51b78d18056b093935"
+    }
+  ],
+  "engine_commit": "9aac21f894a122ddb8d825c57ad61c0db5e630db",
+  "gguf_wheel": {
+    "name": "gguf-0.17.1-py3-none-any.whl",
+    "sha256": "7bc5aa7eeb1931f7d39b48fdc5b38fda6b294b9dca75cf607ac69557840a3943",
+    "bytes": 96224,
+    "requires_dist": [
+      "PySide6<7.0,>=6.9; (python_version >= \"3.9\" and python_version < \"3.14\") and extra == \"gui\"",
+      "numpy>=1.17",
+      "pyyaml>=5.1",
+      "tqdm>=4.27"
+    ]
+  },
+  "baseline": "G339, same preference-lab runtime and chunked-attention source",
+  "private_extension": "/srv/eidolon/workspaces/media-20261112/flux-q8-g351/vendor",
+  "custom_cuda_kernels": false
+}

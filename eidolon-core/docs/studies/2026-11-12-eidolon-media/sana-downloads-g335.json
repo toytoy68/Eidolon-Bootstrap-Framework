@@ -1,0 +1,153 @@
+{
+  "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+  "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+  "root": "/srv/eidolon/data/media-models-20261113/sana-1600m",
+  "weights": [
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "text_encoder/model-00001-of-00002.safetensors",
+      "name": "model-00001-of-00002.safetensors",
+      "bytes": 4988024144,
+      "sha256": "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "text_encoder/model-00002-of-00002.safetensors",
+      "name": "model-00002-of-00002.safetensors",
+      "bytes": 240691624,
+      "sha256": "48e14f6b7a917e54cabc4ff2047ac2bfe0dae663e771eed3a8acf4ea27dcac18",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "transformer/diffusion_pytorch_model.fp16.safetensors",
+      "name": "diffusion_pytorch_model.fp16.safetensors",
+      "bytes": 3208971144,
+      "sha256": "30cadbc6ebe74168f109fa14f1bf88badbc18cfad2a673f100322fb49a443c9c",
+      "reused_verified_g334": false
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "vae/diffusion_pytorch_model.fp16.safetensors",
+      "name": "diffusion_pytorch_model.fp16.safetensors",
+      "bytes": 1249044836,
+      "sha256": "15a4b09e56d95b768a0ec9da50b702e21d920333fc9b3480d66bb5c7fad9d87f",
+      "reused_verified_g334": true
+    }
+  ],
+  "metadata": [
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "LICENSE",
+      "name": "LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "README.md",
+      "name": "README.md",
+      "bytes": 6864,
+      "sha256": "ec96b47c889df1dea55c3fdbe193cca554e3741fe942ac27f6cafe59f73700c6",
+      "reused_verified_g334": false
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "model_index.json",
+      "name": "model_index.json",
+      "bytes": 401,
+      "sha256": "5692423f50e7908bec51264ad39e5a9b7566970600f6089a0a40759524f5569b",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "scheduler/scheduler_config.json",
+      "name": "scheduler_config.json",
+      "bytes": 840,
+      "sha256": "70e8603120cc387316aa3bc7f08cb2872f6b6eb6eff6f25df1b88b6b76389e81",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "text_encoder/config.json",
+      "name": "config.json",
+      "bytes": 875,
+      "sha256": "3b45a277b19814724be26e4985dd24c5c3efb01bebe5139af77f99254101961a",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "text_encoder/model.safetensors.index.json",
+      "name": "model.safetensors.index.json",
+      "bytes": 22495,
+      "sha256": "92764588f700e36874c52f9f05bba143857e5069fc69b14450f907a1cdf879ed",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "tokenizer/special_tokens_map.json",
+      "name": "special_tokens_map.json",
+      "bytes": 636,
+      "sha256": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "tokenizer/tokenizer.json",
+      "name": "tokenizer.json",
+      "bytes": 34362873,
+      "sha256": "5f7eee611703c5ce5d1eee32d9cdcfe465647b8aff0c1dfb3bed7ad7dbb05060",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "tokenizer/tokenizer.model",
+      "name": "tokenizer.model",
+      "bytes": 4241003,
+      "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "tokenizer/tokenizer_config.json",
+      "name": "tokenizer_config.json",
+      "bytes": 46996,
+      "sha256": "cb32b7929c62608d46572e813112b3ad8a841fb98fdd6a4da8559e368a951c89",
+      "reused_verified_g334": true
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "transformer/config.json",
+      "name": "config.json",
+      "bytes": 496,
+      "sha256": "41d305ca78eb33f4690573d73cee4d8a138efc8f51a410bad1d051907e1bc7f2",
+      "reused_verified_g334": false
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+      "revision": "ac0da2ff55fbe434795be0dce883042e4d49e2fc",
+      "path": "vae/config.json",
+      "name": "config.json",
+      "bytes": 1280,
+      "sha256": "4e5669aa03caa77615b73b21c9347c384cb11124a9590683e32a510df0176eb4",
+      "reused_verified_g334": true
+    }
+  ]
+}

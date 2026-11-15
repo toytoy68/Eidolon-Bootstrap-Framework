@@ -1,0 +1,23 @@
+[
+  {
+    "model": "v10",
+    "index": 0,
+    "condition": "smoke",
+    "case": "hand",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "seed": 20261113,
+    "steps": 30,
+    "cfg": 5,
+    "negative_prompt": "",
+    "width": 512,
+    "height": 512,
+    "seconds": 3.8038727899984224,
+    "sha256": "9930bc143c549d9697d4fb8714ad6d350569402f6eac0505074e140cf64e3ad5",
+    "unet_calls": 30,
+    "decoder_calls": 1,
+    "pixel_sha256": "3931e0cee43b5828929634d75ede9b0c33a591889a59ef0e36f4427471f52428",
+    "peak_allocated_bytes": 8020785664,
+    "peak_reserved_bytes": 8910798848,
+    "visual": "NOT_REVIEWED"
+  }
+]

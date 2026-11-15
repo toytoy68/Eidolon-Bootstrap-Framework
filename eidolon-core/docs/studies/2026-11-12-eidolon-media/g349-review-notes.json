@@ -1,0 +1,62 @@
+{
+  "0": {
+    "verdict": "Rejetée",
+    "comment": "Cinq doigts identifiables, mais trois extrémités coupées par le haut du cadre. Contrôle 512² hors score.",
+    "comparison": "Turbo échouait aussi en 512², avec seulement quatre doigts apparents ; aucune des deux images n’est proposée."
+  },
+  "1": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts : cinq dressés au-dessus de la paume et un pouce à droite. Texture de peau détaillée, anatomie non conforme.",
+    "comparison": "Régression face à Turbo G348-01, proposé avec cinq doigts. Klein G340-01 présentait aussi six doigts."
+  },
+  "2": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts distincts, malgré une paume et une texture plausibles. Comptage non conforme.",
+    "comparison": "Turbo G348-02 et Klein G340-02 avaient cinq doigts et étaient proposés."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Une tasse rouge à gauche, un bol bleu à droite, complets sur fond gris. Céramique détaillée et anse ouverte.",
+    "comparison": "Conformité maintenue face à Turbo et Klein ; textures de céramique plus marquées."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Deux objets complets, couleurs et positions conformes. Anse de la tasse ouverte et lisible.",
+    "comparison": "Scène également proposée dans les deux références ; pas de gain de conformité sur ce cas."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Poignées supplémentaires, éléments croisés et lame fusionnée avec une longue pièce noire. Assemblage katana/fourreau incohérent.",
+    "comparison": "Matières détaillées, mais aucune correction de l’échec structurel observé avec Turbo et Klein."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Une lame plausible, mais plusieurs poignées dont une isolée et un fourreau ressemblant à une seconde arme. Éléments supplémentaires.",
+    "comparison": "Lame plus lisible que certaines références, sans respecter un katana unique et son fourreau cohérent."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "Deux personnages en pied vus de dos dans une composition soignée, mais les mains féminines sont cachées.",
+    "comparison": "Ambiance et décor détaillés ; contrainte des mains non respectée, contrairement à Turbo G348-07 et Klein G340-07."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Duo en pied vu de dos, accompagné d’une foule de visiteurs au fond. Le nombre exact de deux personnes n’est pas respecté.",
+    "comparison": "Échec de comptage également présent avec Turbo ; Klein G340-08 était proposé."
+  },
+  "9": {
+    "verdict": "Rejetée",
+    "comment": "Répétition exacte de 01 : mêmes pixels, même PNG et six doigts.",
+    "comparison": "Reproductibilité confirmée, sans correction du défaut anatomique ; hors score natif."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format 16:9 : jambes et pieds coupés par le cadre, mains féminines cachées.",
+    "comparison": "Comme Turbo G348-10, le cadrage en pied n’est pas respecté ; hors score natif."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Format 4:3 : jambes et pieds coupés. La femme est de face, mais une main reste cachée dans la manche.",
+    "comparison": "Le changement de pose face à Turbo ne corrige pas le cadrage ; hors score natif."
+  }
+}

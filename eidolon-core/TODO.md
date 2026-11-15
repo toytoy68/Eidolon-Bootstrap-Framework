@@ -1233,3 +1233,29 @@ STT/TTS ne valent pas reconnaissance du locuteur. Aucun compte actif créé.
   [Contrat et limites](docs/PROFILE-REGISTRY-G184.md).
 - [ ] Import dans le stockage actif, sessions/droits et isolation mémoire :
   toujours ouverts. Aucun compte actif ni gabarit réel créé par G184.
+
+
+## Eidolon-Media — suivi G333 (13/11/2026)
+
+- [x] Comparer RealVisXL V5.0 et Juggernaut XL v9 à SDXL sur V100 : 27 sorties,
+  revue de chacune et mesures. Voir [CHECKPOINTS-G333](docs/studies/2026-11-12-eidolon-media/CHECKPOINTS-G333.md).
+- [ ] Faire confirmer les propositions et doutes par toytoy ; aucun entraînement automatique.
+- [ ] Étendre aux prompts de confirmation, autres seeds et formats écran avant promotion.
+- [ ] Poursuivre les candidats image/vidéo de la file ; préparer le stockage sur le volume données avant les gros poids.
+- [ ] Intégrer les nouveaux profils à l’API après qualification ; restaurer les unités de test avec leur PID réel.
+- [ ] Implémenter avec le bail GPU commun la politique 300 W média / 200 W Eva-discussion.
+
+## Eidolon-Media — suivi G334 (13/11/2026)
+
+- [x] Sana 600M : 12 générations locales, répétition, formats et 13 fichiers revus ; [preuves](docs/studies/2026-11-12-eidolon-media/SANA-G334.md).
+- [x] Conserver les trois échecs de préparation et leurs corrections sans changer le runtime.
+- [ ] Contrôle toytoy des deux propositions et deux doutes ; aucune promotion automatique.
+- [x] Sana 1,6B qualifié séparément G335 ; Sprint et encodeur GPU1 restent non testés.
+- [ ] Poursuivre les autres candidats et la vidéo ; aucune validation extrapolée à partir de Sana 600M.
+
+## Eidolon-Media — suivi G335 (13/11/2026)
+
+- [x] Sana 1,6B : 12 générations et 13 fichiers revus ; [résultats](docs/studies/2026-11-12-eidolon-media/SANA-G335.md).
+- [x] Comparaison au 600M à plan/runner constants, mesures et PDF complet.
+- [ ] Contrôle toytoy de G335-04 proposé et G335-01/02 douteux, sans bloquer la suite.
+- [ ] Poursuivre les autres architectures ou la vidéo ; aucune promotion Sana à ce stade.

@@ -1,0 +1,5 @@
+2026-11-14T18:40:20+01:00 eidolon-os python3[70302]: Traceback (most recent call last):
+2026-11-14T18:40:20+01:00 eidolon-os python3[70302]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/prepare_g346.py", line 20, in <module>
+2026-11-14T18:40:20+01:00 eidolon-os python3[70302]:     b=urllib.request.urlopen('https://huggingface.co/'+m['id']+'/resolve/'+m['sha']+'/'+n,timeout=45).read();assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()==f['blobId'],n
+2026-11-14T18:40:20+01:00 eidolon-os python3[70302]:                                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T18:40:20+01:00 eidolon-os python3[70302]: AssertionError: tokenizer_3/spiece.model

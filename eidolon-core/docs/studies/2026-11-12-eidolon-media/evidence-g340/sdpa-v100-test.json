@@ -1,0 +1,13 @@
+{
+  "supported": true,
+  "max_abs": 0.00048828125,
+  "finite": true,
+  "shape": [
+    1,
+    24,
+    512,
+    128
+  ],
+  "dtype": "FP16",
+  "cc": "7.0"
+}

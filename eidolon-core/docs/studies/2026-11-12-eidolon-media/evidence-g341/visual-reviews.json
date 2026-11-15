@@ -1,0 +1,70 @@
+{
+  "author": "Codex/GPT",
+  "reviewed_at": "2026-11-14T09:18:31.447362+01:00",
+  "method": "Non-blind qualitative review, 320 px previews; image 01 inspected at 640 px. Original PNG hashes verified. User review pending.",
+  "native_proposed": 5,
+  "native_rejected": 3,
+  "images": [
+    {
+      "index": 0,
+      "status": "proposed",
+      "reason": "Cinq doigts distincts et main plausible sur aperçu ; contrôle 512² hors score natif."
+    },
+    {
+      "index": 1,
+      "status": "rejected",
+      "reason": "Anatomie incohérente : trois doigts centraux et deux appendices latéraux ressemblant à des pouces ; contrôle agrandi 640 px."
+    },
+    {
+      "index": 2,
+      "status": "proposed",
+      "reason": "Cinq doigts, paume et poignet visibles ; proportions globalement plausibles sur aperçu."
+    },
+    {
+      "index": 3,
+      "status": "proposed",
+      "reason": "Tasse rouge à gauche et bol bleu à droite, deux objets entiers."
+    },
+    {
+      "index": 4,
+      "status": "proposed",
+      "reason": "Deux objets entiers, couleurs et positions conformes."
+    },
+    {
+      "index": 5,
+      "status": "rejected",
+      "reason": "Deux objets avec poignées/gardes ressemblant à des sabres ; pas de katana et fourreau séparé crédibles."
+    },
+    {
+      "index": 6,
+      "status": "rejected",
+      "reason": "Deux objets semblables à des sabres noirs avec gardes ; lame métallique et fourreau distincts non conformes."
+    },
+    {
+      "index": 7,
+      "status": "proposed",
+      "reason": "Duo adulte en pied, positions et couleurs conformes ; détails fins des mains non validés sur aperçu."
+    },
+    {
+      "index": 8,
+      "status": "proposed",
+      "reason": "Duo adulte en pied, château et vêtements conformes ; détails fins des mains non validés sur aperçu."
+    },
+    {
+      "index": 9,
+      "status": "rejected",
+      "reason": "Répétition pixel-identique à 01 : même anomalie de la main ; hors score natif."
+    },
+    {
+      "index": 10,
+      "status": "rejected",
+      "reason": "Pieds et bas des jambes hors cadre ; consigne en pied non satisfaite."
+    },
+    {
+      "index": 11,
+      "status": "rejected",
+      "reason": "Pieds hors cadre ; consigne en pied non satisfaite."
+    }
+  ],
+  "promotion_allowed": false
+}

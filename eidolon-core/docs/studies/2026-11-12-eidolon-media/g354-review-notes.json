@@ -1,0 +1,68 @@
+{
+  "reviews": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Cinq doigts apparents, mais paume oblique et poignet arrivant du côté au lieu du bas demandé."
+    },
+    "1": {
+      "verdict": "Rejetée",
+      "comment": "Deux mains au lieu d’une, avec doigts manquants ou fusionnés."
+    },
+    "2": {
+      "verdict": "Proposée",
+      "comment": "Une main entière, cinq doigts distincts, paume et poignet conformes ; rendu de peau détaillé."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Quatre récipients au lieu de deux et supports ajoutés ; comptage non respecté."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients, bol rouge et tasse bleue ; nombre, couleurs et positions non conformes."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Poignées et pièces superposées, lame/fourreau incohérents et poignée coupée au bord inférieur."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Deux sabres à poignées au lieu d’un katana et de son fourreau ; aucune paire conforme."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "Femme à gauche, homme à droite vêtu de rouge ; positions et armure noire demandées non respectées."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Trois adultes au lieu de deux, avec un personnage supplémentaire à gauche."
+    },
+    "9": {
+      "verdict": "Rejetée",
+      "comment": "Répétition exacte de 01 : deux mains avec anatomie incorrecte."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Femme à gauche et samurai à droite, vus de dos ; positions inversées et mains masquées."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Personnage de gauche sans l’armure noire demandée ; arme déformée et rendu du visage peu défini."
+    }
+  },
+  "comparisons": {
+    "0": "Lightning améliore le nombre apparent de doigts, mais échoue sur la pose demandée.",
+    "1": "V9 produit une seule main plausible ; Lightning la dédouble.",
+    "2": "Les deux recettes donnent ici une main exploitable.",
+    "3": "Les deux recettes ajoutent des objets ; Lightning ajoute aussi des supports.",
+    "4": "Aucun progrès : les deux échouent au comptage et à l’association couleur/objet.",
+    "5": "Aucune des deux versions ne respecte l’assemblage d’un katana et de son fourreau.",
+    "6": "Lightning simplifie la composition en deux sabres, mais manque toujours le fourreau.",
+    "7": "V9 ajoute un adulte ; Lightning respecte le nombre, mais inverse les positions et les vêtements.",
+    "8": "V9 respecte le duo demandé ; Lightning ajoute un adulte.",
+    "9": "Les deux répétitions sont exactes ; seule celle du v9 reprend une main conforme.",
+    "10": "Les deux inversent les personnages ; Lightning les montre en pied, mais de dos et mains masquées.",
+    "11": "V9 garde une réserve de netteté/décor ; Lightning manque l’armure et déforme l’arme."
+  },
+  "visual_summary": "Les textures restent séduisantes, mais Lightning dédouble une main et manque le comptage, les katanas et les deux duos natifs. Une seule main est proposée.",
+  "decision": "Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette."
+}

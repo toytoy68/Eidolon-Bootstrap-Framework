@@ -1,0 +1,6 @@
+{
+  "local_g341_commit": "301f4eab70e9ab09e72b893eaa23f017a3b9dfb3",
+  "preserved_local_branch": "codex/archive-g341-before-g342",
+  "remote_base": "b6ffa9a342d9ab536de89424b10349f1f4ede997",
+  "reason": "G341 was saved locally but not present on fetched remote; publication will include its exact content plus G342. Original commit retained locally."
+}
