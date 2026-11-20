@@ -1,0 +1,14 @@
+{
+  "case": "objects",
+  "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+  "target": "Remplacer tous les r\u00e9cipients par exactement une tasse rouge \u00e0 gauche et un bol bleu \u00e0 droite.",
+  "seed": 20261113,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "empty",
+  "condition": "mask_empty"
+}

@@ -1,0 +1,828 @@
+{
+  "results": [
+    {
+      "index": 0,
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "smoke",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 0.0,
+      "seconds": 1.0209251470005256,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "b553f44d22931bc55c9e36d0455ebad10dcb71143910f2086ba6ccbdf7115144",
+      "pixel_sha256": "3073f334e45c34f761e7f3cc0c6e5f59f830d744e048fc8fdd7caa016f0a93cf",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        9703112192,
+        8216359424
+      ]
+    },
+    {
+      "index": 1,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 0.0,
+      "seconds": 3.3361724189999222,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "5c75bee1fdbebbe78fb63d9cafdab81cb9f4a8ab7d8fcccd81fd50ebd49092a6",
+      "pixel_sha256": "e9115d84a5fcb514131dd75fa3194a94d64b8d8b240d9495381770da9b908269",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 2,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 0.0,
+      "seconds": 3.125886060999619,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "ee25bcfecbdab5a84e7fc6fe8e0238c6b44d31ab886e15854ab4f9ee298d7b06",
+      "pixel_sha256": "d7f908e859785bdbd9e309672897e97db2554ddf5202658ee0a9e14e5acd1c2d",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 3,
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "guidance": 0.0,
+      "seconds": 3.1230974460013385,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "be404fdae5157938394351e155a29b4784b3cbee7db95117e7efd2689339ee1b",
+      "pixel_sha256": "e5be541ae494e7cbaec7b3270a84c89756d7a262aad7b0b5a03d96de6e88e654",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 4,
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "guidance": 0.0,
+      "seconds": 3.130258649998723,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "5c3b6d73e4c8370ffb3a5efa2ea51f347fb1219af14a5d385dc8503dd1349c56",
+      "pixel_sha256": "ca1c9dd21a525e5cf924c4c4347dca0086b7904c9129c5bb60d1e72b1b105b43",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 5,
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "guidance": 0.0,
+      "seconds": 3.130261580001388,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "8fb9a97b29d5feaf5365212e31471d628c34ea9be7ba855617afa2aabd11803a",
+      "pixel_sha256": "57ba3401c6933f922b0b34a739933ebeed215bd224cf19fbebcf390dc1879d99",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 6,
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "guidance": 0.0,
+      "seconds": 3.1403885139989143,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "acf00655596baa60dd677ceeb44b7d340df639946c322021823ead13757d70eb",
+      "pixel_sha256": "05c88684ed884e4934f88479fb189f5a505756b1abb7e802e48cb79280055da4",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 7,
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 0.0,
+      "seconds": 3.1231818730011582,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "7cd1eb87528538d34a8f6ba2c8d188ee95be9d7390d5307f014b2403de2c6b1f",
+      "pixel_sha256": "214696448d68990dc1c0872cc3b64a1f4dc0acf59150f0d4e7c2d7ce064e36ee",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 8,
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 0.0,
+      "seconds": 3.1324793719977606,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "4ba070ee70767febf261e70c855e3449b82871123639f29aba4c03cc03ffcfd4",
+      "pixel_sha256": "38adce84cff5d928de90c4dbed7c89d3916a211791466f26d1c651fd8c99e989",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 9,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "repeat",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 0.0,
+      "seconds": 3.1236172869976144,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "5c75bee1fdbebbe78fb63d9cafdab81cb9f4a8ab7d8fcccd81fd50ebd49092a6",
+      "pixel_sha256": "e9115d84a5fcb514131dd75fa3194a94d64b8d8b240d9495381770da9b908269",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        12120210944,
+        8410665472
+      ]
+    },
+    {
+      "index": 10,
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen16x9",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 0.0,
+      "seconds": 1.689130576000025,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "0212d09cddbfdedb43efe4e189d519538cb0728aa7d1f7400eae3b143f059d13",
+      "pixel_sha256": "b0ea2865b281cf8e1dbeb80f2f4e5948e4728ef228ac9b6a296f182823e1720d",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        10710236672,
+        8293159424
+      ]
+    },
+    {
+      "index": 11,
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen4x3",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 0.0,
+      "seconds": 1.2854271040014282,
+      "block_calls": {
+        "0": 76,
+        "1": 76
+      },
+      "png_sha256": "b7a6714b04c03f909562368d12c632f6e5d70a811200ad7577acecfb6bbdab49",
+      "pixel_sha256": "d334c1b657f4d9b3b269c6f624e0c3006ef3764aeb83b55d09a939d5f85e07ed",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        10257030656,
+        8256737792
+      ]
+    }
+  ],
+  "manifest": {
+    "model": "SD3.5-Large-Turbo",
+    "precision": "fp16",
+    "files": [
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "text_encoder/model.safetensors",
+        "bytes": 247323896,
+        "sha256": "71e183d11db0c6b6282a4d9e0abb74125edc8692393e89ed8ee5571005f35cb1",
+        "source": "/srv/eidolon/data/media-models-20261113/sd35-medium/text_encoder/model.safetensors"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "text_encoder_2/model.safetensors",
+        "bytes": 1389382176,
+        "sha256": "ec310df2af79c318e24d20511b601a591ca8cd4f1fce1d8dff822a356bcdb1f4",
+        "source": "/srv/eidolon/data/media-models-20261113/sd35-medium/text_encoder_2/model.safetensors"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "text_encoder_3/model-00001-of-00002.safetensors",
+        "bytes": 4994582104,
+        "sha256": "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",
+        "source": "/srv/eidolon/data/media-models-20261113/sd35-medium/text_encoder_3/model-00001-of-00002.safetensors"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "text_encoder_3/model-00002-of-00002.safetensors",
+        "bytes": 4530066248,
+        "sha256": "f63154532130422309532ff56f11945fbea8266c958e3133e8e5aef85c6293c7",
+        "source": "/srv/eidolon/data/media-models-20261113/sd35-medium/text_encoder_3/model-00002-of-00002.safetensors"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+        "bytes": 9985185992,
+        "sha256": "1f5ce9ed17cd13d87fd61b4743ce046c1c114a422364542b7167121b147bc110",
+        "source": "download"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+        "bytes": 6307519304,
+        "sha256": "34374d4c2ea0d26baf986094f485dec2161c3778cc57c5b9840cabd9a8f3839a",
+        "source": "download"
+      },
+      {
+        "repo": "adamo1139/stable-diffusion-3.5-large-turbo-ungated",
+        "revision": "9ad870ac0b0e5e48ced156bb02f85d324b7275d2",
+        "author_repo": "stabilityai/stable-diffusion-3.5-large-turbo",
+        "author_revision": "ec07796fc06b096cc56de9762974a28f4c632eda",
+        "path": "vae/diffusion_pytorch_model.safetensors",
+        "bytes": 167666902,
+        "sha256": "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",
+        "source": "/srv/eidolon/data/media-models-20261113/sd35-medium/vae/diffusion_pytorch_model.safetensors"
+      }
+    ],
+    "split": "blocks0-18 GPU0, blocks19-37 GPU1, embeddings and output GPU0",
+    "text_encoder": "CLIP-L + CLIP-G + T5-XXL CPU FP32,256 T5 tokens",
+    "vae": "GPU0 FP32, native tiling",
+    "attention": "PyTorch EFFICIENT_ATTENTION transformer; MATH VAE",
+    "torch": "2.6.0+cu124",
+    "diffusers": "0.37.0",
+    "transformers": "4.56.1",
+    "encode_seconds": 42.89130972800194,
+    "embeddings_reused": true,
+    "load_seconds": 9.092311085001711,
+    "parameter_bytes_by_device": {
+      "cuda:0": 8173096064,
+      "cuda:1": 7940158976
+    },
+    "device_map": {
+      "pos_embed": 0,
+      "time_text_embed": 0,
+      "context_embedder": 0,
+      "norm_out": 0,
+      "proj_out": 0,
+      "transformer_blocks.0": 0,
+      "transformer_blocks.1": 0,
+      "transformer_blocks.2": 0,
+      "transformer_blocks.3": 0,
+      "transformer_blocks.4": 0,
+      "transformer_blocks.5": 0,
+      "transformer_blocks.6": 0,
+      "transformer_blocks.7": 0,
+      "transformer_blocks.8": 0,
+      "transformer_blocks.9": 0,
+      "transformer_blocks.10": 0,
+      "transformer_blocks.11": 0,
+      "transformer_blocks.12": 0,
+      "transformer_blocks.13": 0,
+      "transformer_blocks.14": 0,
+      "transformer_blocks.15": 0,
+      "transformer_blocks.16": 0,
+      "transformer_blocks.17": 0,
+      "transformer_blocks.18": 0,
+      "transformer_blocks.19": 1,
+      "transformer_blocks.20": 1,
+      "transformer_blocks.21": 1,
+      "transformer_blocks.22": 1,
+      "transformer_blocks.23": 1,
+      "transformer_blocks.24": 1,
+      "transformer_blocks.25": 1,
+      "transformer_blocks.26": 1,
+      "transformer_blocks.27": 1,
+      "transformer_blocks.28": 1,
+      "transformer_blocks.29": 1,
+      "transformer_blocks.30": 1,
+      "transformer_blocks.31": 1,
+      "transformer_blocks.32": 1,
+      "transformer_blocks.33": 1,
+      "transformer_blocks.34": 1,
+      "transformer_blocks.35": 1,
+      "transformer_blocks.36": 1,
+      "transformer_blocks.37": 1
+    },
+    "scheduler": {
+      "num_train_timesteps": 1000,
+      "shift": 3.0,
+      "use_dynamic_shifting": false,
+      "base_shift": 0.5,
+      "max_shift": 1.15,
+      "base_image_seq_len": 256,
+      "max_image_seq_len": 4096,
+      "invert_sigmas": false,
+      "shift_terminal": null,
+      "use_karras_sigmas": false,
+      "use_exponential_sigmas": false,
+      "use_beta_sigmas": false,
+      "time_shift_type": "exponential",
+      "stochastic_sampling": false,
+      "_use_default_values": [
+        "use_dynamic_shifting",
+        "shift_terminal",
+        "max_image_seq_len",
+        "use_karras_sigmas",
+        "use_exponential_sigmas",
+        "use_beta_sigmas",
+        "invert_sigmas",
+        "time_shift_type",
+        "base_shift",
+        "base_image_seq_len",
+        "stochastic_sampling",
+        "max_shift"
+      ],
+      "_class_name": "FlowMatchEulerDiscreteScheduler",
+      "_diffusers_version": "0.29.0.dev0"
+    },
+    "steps": 4,
+    "guidance": 0.0,
+    "negative_prompt": "",
+    "skip_guidance_layers": null,
+    "plan": [
+      {
+        "case": "hand",
+        "width": 512,
+        "height": 512,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "smoke"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "repeat"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen16x9"
+      },
+      {
+        "case": "duo",
+        "width": 768,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen4x3"
+      }
+    ],
+    "pipeline_source_sha256": "386b07eb4848fd8025990f108b276c0d1fb4202ca13e900e7bb7e824ca7ac628",
+    "runner_sha256": "bea88ac79a8936ad2ca838a4e7efd6f05ed9aa6234886cce5d0021fec262ae81",
+    "promotion_allowed": false
+  },
+  "completion": {
+    "generated": 11,
+    "repeat_same_pixels": true,
+    "visual_acceptance": "REVIEWED_NOT_PROMOTED",
+    "promotion_allowed": false,
+    "generated_total": 12
+  },
+  "telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 13692.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 52.38,
+          "max": 314.44
+        },
+        "temperature.gpu": {
+          "min": 29.0,
+          "max": 40.0
+        },
+        "temperature.memory": {
+          "min": 28.0,
+          "max": 41.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 8550.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 54.69,
+          "max": 304.18
+        },
+        "temperature.gpu": {
+          "min": 28.0,
+          "max": 37.0
+        },
+        "temperature.memory": {
+          "min": 27.0,
+          "max": 36.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 5.94,
+          "max": 7.01
+        },
+        "temperature.gpu": {
+          "min": 30.0,
+          "max": 32.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 25.25,
+      "max": 46.25
+    }
+  },
+  "health_final": {
+    "time": "2026-11-14T18:37:14.476629+00:00",
+    "gpu": {
+      "exit": 0,
+      "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 30, 32, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 29, 29, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 31, N/A, 2 MiB, 120.00 W\n",
+      "stderr": ""
+    },
+    "clients": {
+      "exit": 0,
+      "stdout": "pid, process_name\n",
+      "stderr": ""
+    },
+    "services": {
+      "exit": 0,
+      "stdout": "active\nactive\nactive\nactive\nactive\n",
+      "stderr": ""
+    },
+    "vms": {
+      "exit": 0,
+      "stdout": " ID   Nom                            État\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d’exécution\n -    eidolon-audit-smoke-20261102   fermé\n -    Eidolon-Debian12-Test          fermé\n -    Eidolon-Memory-Engine-Test     fermé\n -    Eidolon-Memory-Engine-v2       fermé\n -    Eidolon-Memory-Lab             fermé\n -    Eidolon-Memory-Lab-v2          fermé\n -    Eidolon-Ubuntu-Diagnostic      fermé\n -    Memory-engine-tests            fermé\n -    Memory-tests                   fermé\n -    nomifactory-test               fermé\n\n",
+      "stderr": ""
+    },
+    "runtime_unchanged": true,
+    "png_checks": [
+      {
+        "index": 0,
+        "match": true
+      },
+      {
+        "index": 1,
+        "match": true
+      },
+      {
+        "index": 2,
+        "match": true
+      },
+      {
+        "index": 3,
+        "match": true
+      },
+      {
+        "index": 4,
+        "match": true
+      },
+      {
+        "index": 5,
+        "match": true
+      },
+      {
+        "index": 6,
+        "match": true
+      },
+      {
+        "index": 7,
+        "match": true
+      },
+      {
+        "index": 8,
+        "match": true
+      },
+      {
+        "index": 9,
+        "match": true
+      },
+      {
+        "index": 10,
+        "match": true
+      },
+      {
+        "index": 11,
+        "match": true
+      }
+    ]
+  },
+  "reviews": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts apparents seulement, deux extrémités coupées par le cadre. Texture floue ; contrôle 512² hors score.",
+      "comparison": "Ce petit format échoue alors que les deux mains natives réussissent le comptage.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "1": {
+      "verdict": "Proposée",
+      "comment": "Cinq doigts séparés, paume et poignet visibles. Doigts fins et peau lissée, sans anomalie de comptage.",
+      "comparison": "La première seed réussit là où Medium SLG G347-01 et Klein G340-01 ont six doigts.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "2": {
+      "verdict": "Proposée",
+      "comment": "Cinq doigts distincts et cadrage complet. Paume cohérente, détail de peau assez lissé.",
+      "comparison": "Comptage également réussi par Medium SLG G347-02 et Klein G340-02.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "3": {
+      "verdict": "Proposée",
+      "comment": "Une tasse rouge orangé à gauche, un bol bleu à droite, entièrement visibles sur fond gris. Anse ouverte et céramique cohérente.",
+      "comparison": "Même conformité globale que les deux références ; rouge plus orangé et rendu plus doux.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "4": {
+      "verdict": "Proposée",
+      "comment": "Tasse rouge à gauche, bol bleu à droite, complets. Anse lisible et proportions crédibles.",
+      "comparison": "Scène également proposée avec Medium SLG et Klein.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Deux poignées et deux lames croisées ; un élément partiellement gainé. Ne représente pas un katana unique avec son fourreau séparé.",
+      "comparison": "Structure différente des références, mais duplication persistante et composition non conforme.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Lame détachée, poignée sans liaison cohérente et élément supplémentaire ; assemblage impossible.",
+      "comparison": "Échec structurel également présent avec Medium SLG et Klein.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "7": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes en pied, homme en armure noire à gauche et femme en kimono rouge à droite. Mains visibles, détails fins assez doux.",
+      "comparison": "Cadrage et visibilité meilleurs que G347-07 ; Klein G340-07 était aussi proposé. Anatomie fine à apprécier par l’utilisateur.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Duo principal en pied, mais passants supplémentaires au fond et mains féminines cachées.",
+      "comparison": "Le cadrage progresse par rapport à G347-08, mais le comptage échoue ; Klein G340-08 était proposé.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "9": {
+      "verdict": "Proposée",
+      "comment": "Répétition exacte de 01 : mêmes pixels, même PNG et cinq doigts.",
+      "comparison": "Contrôle de reproductibilité hors score natif et hors médiane.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Format 16:9 : pieds des deux personnages coupés par le bord inférieur.",
+      "comparison": "G347-10 gardait les pieds mais masquait les mains ; aucune des deux recettes ne satisfait toutes les contraintes.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Format 4:3 : jambes et pieds coupés. Femme de dos, ses deux mains ne sont pas clairement visibles.",
+      "comparison": "Régression de cadrage face à G347-11, qui était seulement à revoir ; hors score natif.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    }
+  },
+  "native_summary": {
+    "proposed": 5,
+    "review": 0,
+    "rejected": 3,
+    "total": 8,
+    "median_seconds": 3.1302601150000555,
+    "klein_seconds": 3.395657406497776,
+    "relative_time_vs_klein_percent": -7.815785272974473
+  },
+  "promotion_allowed": false,
+  "conclusion": "<b>Large Turbo : 5/8 images proposées à 3,13 s médianes.</b> Les deux mains natives réussissent le comptage. Les katanas et le second duo restent rejetés. Candidat rapide à comparer visuellement à Klein, qui obtient aussi 5/8 avec une seule V100.",
+  "summary_paragraphs": [
+    "<b>Résultats :</b> mains 01/02, objets 03/04 et duo 07 proposés. Katanas 05/06 et duo 08 rejetés. Contrôle 512² et deux formats écran rejetés ; répétition 09 identique et proposée hors score.",
+    "<b>Temps :</b> 3.13 s contre 3.40 s pour Klein, environ 7,8 % de moins sur ce lot. Turbo utilise deux V100 ; ce petit écart ne suffit pas à conclure sur l’efficacité énergétique.",
+    "<b>Matériel :</b> pics VRAM GPU0/GPU1 : 13 692 / 8 550 Mio. Maxima GPU : 40/37 °C ; HBM : 41/36 °C. Générateur réellement réparti, 19 blocs sur chaque carte.",
+    "<b>Décision :</b> conserver comme candidat rapide, sans remplacement automatique de Klein. Rendu doux et lissé ; Z-Image reste réservé aux demandes détaillées suivant ta préférence. Avis provisoires sur une petite grille."
+  ],
+  "method_paragraphs": [
+    "<b>Recette :</b> SD3.5 Large Turbo, quatre étapes, guidage 0, sans SLG, FlowMatchEuler shift 3. Même grille de quatre scènes, deux seeds 20261113/20261114, répétition, contrôle 512² et deux formats écran. Aucun prompt ou seed sélectionné après observation.",
+    "<b>Adaptation V100 :</b> générateur FP16, blocs 0-18 GPU0 et 19-37 GPU1 ; entrées et sortie GPU0. Placement effectif : 8,17 et 7,94 Go de paramètres. Chaque image exécute 76 appels de blocs par carte (19 x 4), vérifiés par compteur non modifiant. VAE GPU0 FP32 tuilé.",
+    "<b>Encodage :</b> CLIP-L, CLIP-G, T5-XXL CPU FP32, cache G346 réutilisé après comparaison SHA des poids, configurations et tokenizers. Les 42,89 s indiquent le coût initial des cinq textes ; aucun nouvel encodage G348.",
+    "<b>Chronométrage :</b> génération/décodage, contrôles numériques et sauvegarde du latent inclus. Chargement (9,09 s), encodage et écriture PNG finale exclus. Médiane sur les huit natives ; aucune mesure depuis clic ni énergie totale.",
+    "<b>Intégrité :</b> 12 PNG vérifiés, répétition identique en pixels et PNG. Aucun incident de génération ni erreur de télémétrie ; runtime inchangé. Limites 300 W par V100 ; pics ponctuels 314,44 / 304,18 W. GPU libres, services actifs, VM Memory-engine en marche.",
+    "<b>Provenance :</b> auteur Stability AI, révision ec07796 ; copie publique adamo1139, révision 9ad870a. Sept fichiers de poids aux SHA identiques auteur ; licence Stability AI Community archivée. Pas de code du miroir exécuté, génération locale sans réseau sortant.",
+    "<b>Limites :</b> recette auteur en BF16 adaptée en FP16, sans prétendre à une équivalence de qualité BF16. PyTorch 2.6.0+cu124 / Diffusers 0.37.0 / Transformers 4.56.1 inchangés. Comparaison de recettes et matériels différents, quatre scènes seulement. Large non Turbo reste non testé. Machine laissée allumée."
+  ],
+  "run_paths": [
+    "/srv/eidolon/workspaces/media-20261112/sd35-large-turbo-g348/run01",
+    "/srv/eidolon/workspaces/media-20261112/sd35-large-turbo-g348/run02"
+  ],
+  "historical_references": [
+    "G347",
+    "G340 corrected",
+    "G344"
+  ],
+  "library_file_id": "libfile_fde3_f-f3baafb4cbec8191a2686c5193a47c12_d168d29c22b4819186c4d3b8d1b7451f",
+  "reviewed_at": "2026-11-14T18:41:19.388472+00:00"
+}

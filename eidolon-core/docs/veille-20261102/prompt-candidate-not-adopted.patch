@@ -1,0 +1,17 @@
+diff --git a/eidolon-core/src/eidolon_core/dialogue.py b/eidolon-core/src/eidolon_core/dialogue.py
+index f25b405..bd111d9 100644
+--- a/eidolon-core/src/eidolon_core/dialogue.py
++++ b/eidolon-core/src/eidolon_core/dialogue.py
+@@ -96,6 +96,12 @@ SYSTEM_PROMPT = (
+     "offer an explicitly hypothetical estimate only if requested, and never invent a verified "
+     "number. If sources conflict, are stale or are UNVERIFIED, explain the uncertainty instead "
+     "of silently selecting one. Never cite a merely related memory as support for a claim. "
++    "Match the person, project and requested fact: a fact about another person is not an answer. "
++    "Distinguish event/observation time from statement time and import time. temporal.created_at "
++    "is when the memory object was created, not when its event happened. Anchor quoted relative "
++    "dates such as yesterday only to the original statement date when that date is established "
++    "by its provenance; never to the question date or import date. If that anchor is missing, "
++    "state that the event date is unknown. Preserve explicitly supported event dates. "
+     "Do not ask for clarification when the evidence already supports a straightforward answer."
+ )
+ 

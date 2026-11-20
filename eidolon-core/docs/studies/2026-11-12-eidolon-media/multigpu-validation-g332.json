@@ -1,0 +1,289 @@
+{
+  "completion": {
+    "generated": 4,
+    "repeat_same_pixels": true,
+    "visual_acceptance": "PENDING_REVIEW",
+    "promotion_allowed": false
+  },
+  "manifest": {
+    "model": "FLUX.1-schnell",
+    "files": [
+      {
+        "repo": "Comfy-Org/flux1-schnell",
+        "revision": "d31e04067066d92c55ece2b01748dcc337725d7a",
+        "path": "flux1-schnell.safetensors",
+        "name": "flux1-schnell.safetensors",
+        "sha256": "9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a",
+        "bytes": 23782506688
+      },
+      {
+        "repo": "comfyanonymous/flux_text_encoders",
+        "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+        "path": "clip_l.safetensors",
+        "name": "clip_l.safetensors",
+        "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+        "bytes": 246144152
+      },
+      {
+        "repo": "comfyanonymous/flux_text_encoders",
+        "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+        "path": "t5xxl_fp16.safetensors",
+        "name": "t5xxl_fp16.safetensors",
+        "sha256": "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",
+        "bytes": 9787841024
+      },
+      {
+        "repo": "Comfy-Org/Z-Image-Turbo",
+        "revision": "6fc90a3b1b653e935a0d175e260736de25b84df5",
+        "path": "split_files/vae/ae.safetensors",
+        "name": "ae.safetensors",
+        "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+        "bytes": 335304388
+      }
+    ],
+    "device_map": {
+      "pos_embed": 0,
+      "time_text_embed": 0,
+      "context_embedder": 0,
+      "x_embedder": 0,
+      "transformer_blocks.0": 0,
+      "transformer_blocks.1": 0,
+      "transformer_blocks.2": 0,
+      "transformer_blocks.3": 0,
+      "transformer_blocks.4": 0,
+      "transformer_blocks.5": 0,
+      "transformer_blocks.6": 0,
+      "transformer_blocks.7": 0,
+      "transformer_blocks.8": 0,
+      "transformer_blocks.9": 0,
+      "transformer_blocks.10": 0,
+      "transformer_blocks.11": 0,
+      "transformer_blocks.12": 0,
+      "transformer_blocks.13": 0,
+      "transformer_blocks.14": 0,
+      "transformer_blocks.15": 0,
+      "transformer_blocks.16": 0,
+      "transformer_blocks.17": 1,
+      "transformer_blocks.18": 1,
+      "single_transformer_blocks": 1,
+      "norm_out": 1,
+      "proj_out": 1
+    },
+    "parameter_bytes_by_device": {
+      "cuda:0": 11623900160,
+      "cuda:1": 12158456960
+    },
+    "text_encoder": "CPU FP32",
+    "denoiser": "FP16, all parameters resident on two V100, no CPU offload",
+    "vae": "GPU0 FP32",
+    "encode_seconds": 27.609673409002426,
+    "load_seconds": 13.142193041996507,
+    "torch": "2.6.0+cu124",
+    "peer_access": [
+      true,
+      true
+    ],
+    "steps": 4,
+    "cfg": 0,
+    "runner_sha256": "665575d1e70ade2420feea9eaddf62b86dcba2780b79bca70705c8ddf7527131",
+    "promotion_allowed": false
+  },
+  "results": [
+    {
+      "index": 0,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "seconds": 1.8384330670014606,
+      "png_sha256": "f79a265f6bbf213e7d4a9e295a401649b3b3154f0420d1c1e5bf07004dff1721",
+      "pixel_sha256": "d549ebb9c8a3bf566dfc4d4eb7c20a5fc3b7acb9faf9fcf17b1f3a98a4b3f194",
+      "visual": "NOT_REVIEWED",
+      "nvlink_before": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 0 KiB\n\t Link 0: Data Rx: 0 KiB\n\t Link 1: Data Tx: 0 KiB\n\t Link 1: Data Rx: 0 KiB\n\t Link 2: Data Tx: 0 KiB\n\t Link 2: Data Rx: 0 KiB\n\t Link 3: Data Tx: 0 KiB\n\t Link 3: Data Rx: 0 KiB\n\t Link 4: Data Tx: 0 KiB\n\t Link 4: Data Rx: 0 KiB\n\t Link 5: Data Tx: 0 KiB\n\t Link 5: Data Rx: 0 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 0 KiB\n\t Link 0: Data Rx: 0 KiB\n\t Link 1: Data Tx: 0 KiB\n\t Link 1: Data Rx: 0 KiB\n\t Link 2: Data Tx: 0 KiB\n\t Link 2: Data Rx: 0 KiB\n\t Link 3: Data Tx: 0 KiB\n\t Link 3: Data Rx: 0 KiB\n\t Link 4: Data Tx: 0 KiB\n\t Link 4: Data Rx: 0 KiB\n\t Link 5: Data Tx: 0 KiB\n\t Link 5: Data Rx: 0 KiB\n"
+      },
+      "nvlink_after": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 39403 KiB\n\t Link 0: Data Rx: 85 KiB\n\t Link 1: Data Tx: 39403 KiB\n\t Link 1: Data Rx: 85 KiB\n\t Link 2: Data Tx: 39444 KiB\n\t Link 2: Data Rx: 85 KiB\n\t Link 3: Data Tx: 39444 KiB\n\t Link 3: Data Rx: 85 KiB\n\t Link 4: Data Tx: 39405 KiB\n\t Link 4: Data Rx: 85 KiB\n\t Link 5: Data Tx: 39405 KiB\n\t Link 5: Data Rx: 85 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 85 KiB\n\t Link 0: Data Rx: 39444 KiB\n\t Link 1: Data Tx: 85 KiB\n\t Link 1: Data Rx: 39444 KiB\n\t Link 2: Data Tx: 85 KiB\n\t Link 2: Data Rx: 39403 KiB\n\t Link 3: Data Tx: 85 KiB\n\t Link 3: Data Rx: 39403 KiB\n\t Link 4: Data Tx: 85 KiB\n\t Link 4: Data Rx: 39405 KiB\n\t Link 5: Data Tx: 85 KiB\n\t Link 5: Data Rx: 39405 KiB\n"
+      },
+      "torch_peak_allocated_bytes": [
+        12778006528,
+        12298881536
+      ],
+      "torch_peak_reserved_bytes": [
+        13589544960,
+        12452888576
+      ]
+    },
+    {
+      "index": 1,
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "width": 768,
+      "height": 432,
+      "seed": 20261113,
+      "seconds": 1.9617087399965385,
+      "png_sha256": "0d742d6ea4c6a8291be5800934ead6a161757c36a48060a3f794c4db27a0d558",
+      "pixel_sha256": "0322c99ef18ed0dea7ab3fef011d33fa164c778baea5efbe5d5e1533edaa38e6",
+      "visual": "NOT_REVIEWED",
+      "nvlink_before": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 39403 KiB\n\t Link 0: Data Rx: 85 KiB\n\t Link 1: Data Tx: 39403 KiB\n\t Link 1: Data Rx: 85 KiB\n\t Link 2: Data Tx: 39444 KiB\n\t Link 2: Data Rx: 85 KiB\n\t Link 3: Data Tx: 39444 KiB\n\t Link 3: Data Rx: 85 KiB\n\t Link 4: Data Tx: 39405 KiB\n\t Link 4: Data Rx: 85 KiB\n\t Link 5: Data Tx: 39405 KiB\n\t Link 5: Data Rx: 85 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 85 KiB\n\t Link 0: Data Rx: 39444 KiB\n\t Link 1: Data Tx: 85 KiB\n\t Link 1: Data Rx: 39444 KiB\n\t Link 2: Data Tx: 85 KiB\n\t Link 2: Data Rx: 39403 KiB\n\t Link 3: Data Tx: 85 KiB\n\t Link 3: Data Rx: 39403 KiB\n\t Link 4: Data Tx: 85 KiB\n\t Link 4: Data Rx: 39405 KiB\n\t Link 5: Data Tx: 85 KiB\n\t Link 5: Data Rx: 39405 KiB\n"
+      },
+      "nvlink_after": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 87174 KiB\n\t Link 0: Data Rx: 193 KiB\n\t Link 1: Data Tx: 87174 KiB\n\t Link 1: Data Rx: 193 KiB\n\t Link 2: Data Tx: 87216 KiB\n\t Link 2: Data Rx: 193 KiB\n\t Link 3: Data Tx: 87216 KiB\n\t Link 3: Data Rx: 193 KiB\n\t Link 4: Data Tx: 87138 KiB\n\t Link 4: Data Rx: 193 KiB\n\t Link 5: Data Tx: 87138 KiB\n\t Link 5: Data Rx: 193 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 193 KiB\n\t Link 0: Data Rx: 87216 KiB\n\t Link 1: Data Tx: 193 KiB\n\t Link 1: Data Rx: 87216 KiB\n\t Link 2: Data Tx: 193 KiB\n\t Link 2: Data Rx: 87174 KiB\n\t Link 3: Data Tx: 193 KiB\n\t Link 3: Data Rx: 87174 KiB\n\t Link 4: Data Tx: 193 KiB\n\t Link 4: Data Rx: 87138 KiB\n\t Link 5: Data Tx: 193 KiB\n\t Link 5: Data Rx: 87138 KiB\n"
+      },
+      "torch_peak_allocated_bytes": [
+        12992055296,
+        12322753024
+      ],
+      "torch_peak_reserved_bytes": [
+        14608760832,
+        12574523392
+      ]
+    },
+    {
+      "index": 2,
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "width": 768,
+      "height": 432,
+      "seed": 20261113,
+      "seconds": 1.9590859880045173,
+      "png_sha256": "5b08f46f56502935e3c685a2f20fc6b545a9a41e30fddc2e3544bfda8ca63faa",
+      "pixel_sha256": "993011f20c7e3354d54f946a144b3c9f1dddde5fb797bef3a35704f39d46be86",
+      "visual": "NOT_REVIEWED",
+      "nvlink_before": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 87174 KiB\n\t Link 0: Data Rx: 193 KiB\n\t Link 1: Data Tx: 87174 KiB\n\t Link 1: Data Rx: 193 KiB\n\t Link 2: Data Tx: 87216 KiB\n\t Link 2: Data Rx: 193 KiB\n\t Link 3: Data Tx: 87216 KiB\n\t Link 3: Data Rx: 193 KiB\n\t Link 4: Data Tx: 87138 KiB\n\t Link 4: Data Rx: 193 KiB\n\t Link 5: Data Tx: 87138 KiB\n\t Link 5: Data Rx: 193 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 193 KiB\n\t Link 0: Data Rx: 87216 KiB\n\t Link 1: Data Tx: 193 KiB\n\t Link 1: Data Rx: 87216 KiB\n\t Link 2: Data Tx: 193 KiB\n\t Link 2: Data Rx: 87174 KiB\n\t Link 3: Data Tx: 193 KiB\n\t Link 3: Data Rx: 87174 KiB\n\t Link 4: Data Tx: 193 KiB\n\t Link 4: Data Rx: 87138 KiB\n\t Link 5: Data Tx: 193 KiB\n\t Link 5: Data Rx: 87138 KiB\n"
+      },
+      "nvlink_after": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 134945 KiB\n\t Link 0: Data Rx: 301 KiB\n\t Link 1: Data Tx: 134945 KiB\n\t Link 1: Data Rx: 301 KiB\n\t Link 2: Data Tx: 134988 KiB\n\t Link 2: Data Rx: 301 KiB\n\t Link 3: Data Tx: 134988 KiB\n\t Link 3: Data Rx: 301 KiB\n\t Link 4: Data Tx: 134871 KiB\n\t Link 4: Data Rx: 301 KiB\n\t Link 5: Data Tx: 134871 KiB\n\t Link 5: Data Rx: 301 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 301 KiB\n\t Link 0: Data Rx: 134988 KiB\n\t Link 1: Data Tx: 301 KiB\n\t Link 1: Data Rx: 134988 KiB\n\t Link 2: Data Tx: 301 KiB\n\t Link 2: Data Rx: 134945 KiB\n\t Link 3: Data Tx: 301 KiB\n\t Link 3: Data Rx: 134945 KiB\n\t Link 4: Data Tx: 301 KiB\n\t Link 4: Data Rx: 134871 KiB\n\t Link 5: Data Tx: 301 KiB\n\t Link 5: Data Rx: 134871 KiB\n"
+      },
+      "torch_peak_allocated_bytes": [
+        12992055296,
+        12322753024
+      ],
+      "torch_peak_reserved_bytes": [
+        14608760832,
+        12574523392
+      ]
+    },
+    {
+      "index": 3,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "seconds": 1.5612946030014427,
+      "png_sha256": "f79a265f6bbf213e7d4a9e295a401649b3b3154f0420d1c1e5bf07004dff1721",
+      "pixel_sha256": "d549ebb9c8a3bf566dfc4d4eb7c20a5fc3b7acb9faf9fcf17b1f3a98a4b3f194",
+      "visual": "NOT_REVIEWED",
+      "nvlink_before": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 134945 KiB\n\t Link 0: Data Rx: 301 KiB\n\t Link 1: Data Tx: 134945 KiB\n\t Link 1: Data Rx: 301 KiB\n\t Link 2: Data Tx: 134988 KiB\n\t Link 2: Data Rx: 301 KiB\n\t Link 3: Data Tx: 134988 KiB\n\t Link 3: Data Rx: 301 KiB\n\t Link 4: Data Tx: 134871 KiB\n\t Link 4: Data Rx: 301 KiB\n\t Link 5: Data Tx: 134871 KiB\n\t Link 5: Data Rx: 301 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 301 KiB\n\t Link 0: Data Rx: 134988 KiB\n\t Link 1: Data Tx: 301 KiB\n\t Link 1: Data Rx: 134988 KiB\n\t Link 2: Data Tx: 301 KiB\n\t Link 2: Data Rx: 134945 KiB\n\t Link 3: Data Tx: 301 KiB\n\t Link 3: Data Rx: 134945 KiB\n\t Link 4: Data Tx: 301 KiB\n\t Link 4: Data Rx: 134871 KiB\n\t Link 5: Data Tx: 301 KiB\n\t Link 5: Data Rx: 134871 KiB\n"
+      },
+      "nvlink_after": {
+        "0": "GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75)\n\t Link 0: Data Tx: 174348 KiB\n\t Link 0: Data Rx: 387 KiB\n\t Link 1: Data Tx: 174348 KiB\n\t Link 1: Data Rx: 387 KiB\n\t Link 2: Data Tx: 174432 KiB\n\t Link 2: Data Rx: 386 KiB\n\t Link 3: Data Tx: 174432 KiB\n\t Link 3: Data Rx: 386 KiB\n\t Link 4: Data Tx: 174276 KiB\n\t Link 4: Data Rx: 387 KiB\n\t Link 5: Data Tx: 174276 KiB\n\t Link 5: Data Rx: 387 KiB\n",
+        "1": "GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b)\n\t Link 0: Data Tx: 386 KiB\n\t Link 0: Data Rx: 174432 KiB\n\t Link 1: Data Tx: 386 KiB\n\t Link 1: Data Rx: 174432 KiB\n\t Link 2: Data Tx: 387 KiB\n\t Link 2: Data Rx: 174348 KiB\n\t Link 3: Data Tx: 387 KiB\n\t Link 3: Data Rx: 174348 KiB\n\t Link 4: Data Tx: 387 KiB\n\t Link 4: Data Rx: 174276 KiB\n\t Link 5: Data Tx: 387 KiB\n\t Link 5: Data Rx: 174276 KiB\n"
+      },
+      "torch_peak_allocated_bytes": [
+        12778006528,
+        12298881536
+      ],
+      "torch_peak_reserved_bytes": [
+        14608760832,
+        12574523392
+      ]
+    }
+  ],
+  "telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310,
+          "max": 14314
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 94
+        },
+        "power.draw": {
+          "min": 51.89,
+          "max": 304.59
+        },
+        "temperature.gpu": {
+          "min": 29,
+          "max": 36
+        },
+        "temperature.memory": {
+          "min": 29,
+          "max": 36
+        },
+        "power.limit": {
+          "min": 300,
+          "max": 300
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 930,
+          "max": 12992
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 99
+        },
+        "power.draw": {
+          "min": 53.76,
+          "max": 196.87
+        },
+        "temperature.gpu": {
+          "min": 28,
+          "max": 34
+        },
+        "temperature.memory": {
+          "min": 28,
+          "max": 36
+        },
+        "power.limit": {
+          "min": 200,
+          "max": 200
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2,
+          "max": 2
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 10.2,
+          "max": 10.41
+        },
+        "temperature.gpu": {
+          "min": 34,
+          "max": 34
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120,
+          "max": 120
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 35.75,
+      "max": 54.375
+    }
+  }
+}

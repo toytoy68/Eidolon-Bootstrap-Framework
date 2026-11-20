@@ -1,0 +1,24 @@
+[
+  {
+    "model": "v10",
+    "key": "conditioner.embedders.0.transformer.text_model.embeddings.position_ids",
+    "dtype": "torch.float16",
+    "shape": [
+      1,
+      77
+    ],
+    "standard_arange": false,
+    "first10": [
+      0.0,
+      0.6728515625,
+      1.6728515625,
+      2.689453125,
+      3.673828125,
+      5.0,
+      5.6875,
+      6.69140625,
+      7.671875,
+      8.6875
+    ]
+  }
+]

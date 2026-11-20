@@ -1,0 +1,74 @@
+{
+  "0": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts séparés, paume et poignet visibles. Texture un peu lissée ; contrôle 512² hors score.",
+    "comparison": "Même réussite du petit format que G346, sans prédire la conformité à 1024².",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "1": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts : quatre doigts centraux et deux appendices latéraux.",
+    "comparison": "SLG ne corrige pas cette seed ; même défaut que G346-01 et Klein G340-01.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "2": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts distincts : quatre dressés et un pouce à droite. Paume et poignet cohérents, légère texture lissée.",
+    "comparison": "Gain sur G346-02 qui avait six doigts ; rejoint la proposition Klein G340-02.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Une tasse rouge à gauche et un bol bleu à droite, complets sur fond gris. Anse ouverte et céramique crédible.",
+    "comparison": "Conformité maintenue par rapport à G346-03 et Klein G340-03.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Deux objets complets, couleurs et positions conformes. Anse de la tasse ouverte et lisible.",
+    "comparison": "Amélioration sur G346-04 : la réserve sur l’anse est levée dans cette revue.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Poignée et pièce ressemblant à une lame séparées ; aucun katana assemblé avec son fourreau cohérent.",
+    "comparison": "Changement de composition, mais le défaut structurel de G346-05 persiste.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Plusieurs pièces supplémentaires et dissociées, lame et poignées incompatibles ; katana non cohérent.",
+    "comparison": "Même famille d’échec que G346-06 ; les matières ne compensent pas la structure.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes en pied, mais une main de la femme reste cachée ; pieds et chaussures déformés.",
+    "comparison": "Une main féminine apparaît avec SLG, sans satisfaire complètement la visibilité demandée.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Couleurs et duo respectés, mains visibles, mais jambes et pieds coupés par le cadre.",
+    "comparison": "Cadrage toujours non conforme comme G346-08 ; Klein G340-08 était proposé.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "9": {
+    "verdict": "Rejetée",
+    "comment": "Répétition exacte de 01 : mêmes pixels, même PNG et six doigts.",
+    "comparison": "Hors score natif ; la répétition confirme le défaut de la première seed.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format 16:9 : deux adultes en pied, mais mains de la femme cachées dans les manches.",
+    "comparison": "SLG ne corrige pas la contrainte manquante de G346-10 ; hors score natif.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "11": {
+    "verdict": "À revoir",
+    "comment": "Format 4:3 : deux adultes en pied, mains visibles, mais mains/gants peu lisibles et pieds féminins disproportionnés.",
+    "comparison": "Comme G346-11, cadrage satisfaisant mais réserves anatomiques ; hors score natif.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "date": "2026-11-14",
+  "reported_by": "toytoy",
+  "verified_by": "GPT",
+  "reason": "Klein G340-01 : un pouce et cinq autres doigts ; répétition G340-09 identique. Erreur de revue initiale.",
+  "before": {
+    "g340": {
+      "1": {
+        "verdict": "Proposée",
+        "comment": "Cinq doigts séparés et cadrage conformes, anatomie globalement plausible sur cet aperçu. Paume très lumineuse, détails localement lavés.",
+        "comparison": "Klein paraît plus photographique que Schnell, avec un poignet et une texture plus détaillés. Il évite l'excroissance marquée du pouce de dev, mais son exposition est moins maîtrisée.",
+        "rendering": "Texture crédible, éclairage trop fort sur la paume."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "comment": "Répétition exacte de G340-01 : mêmes pixels et même paume trop lumineuse. Contrôle hors score principal.",
+        "comparison": "Même constat que la paire 01. La répétition exacte est contrôlée séparément pour chaque modèle.",
+        "rendering": "Texture plausible ; exposition excessive de la paume."
+      }
+    },
+    "g342": {
+      "1": {
+        "verdict": "Proposée",
+        "scores": [
+          4,
+          3,
+          4,
+          4
+        ],
+        "comment": "Cinq doigts séparés, paume de face et poignet entier. Volumes et articulations plausibles ; légère raideur des doigts sans défaut éliminatoire évident.",
+        "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
+        "rendering": "Éclairage doux, plis et dégradés de peau lisibles."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "scores": [
+          4,
+          3,
+          4,
+          4
+        ],
+        "comment": "Répétition de la main 01, pixels identiques vérifiés. Même anatomie plausible et éclairage doux. Contrôle exclu du score principal.",
+        "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
+        "rendering": "Peau et lumière naturelles."
+      }
+    }
+  },
+  "after": {
+    "g340": {
+      "1": {
+        "verdict": "Rejet",
+        "scores": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage.",
+        "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+        "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
+      },
+      "9": {
+        "verdict": "Rejet",
+        "scores": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "comment": "Six doigts visibles : un pouce et cinq autres doigts. Défaut anatomique éliminatoire, signalé par toytoy et confirmé au recomptage. Répétition identique de 01, hors score natif.",
+        "comparison": "La précédente proposition était une erreur de revue. Klein échoue au comptage ; Schnell présente cinq doigts et dev conserve sa réserve anatomique.",
+        "rendering": "Paume surexposée ; la finition ne compense pas le doigt supplémentaire."
+      }
+    },
+    "g342": {
+      "1": {
+        "verdict": "Proposée",
+        "scores": [
+          4,
+          3,
+          4,
+          4
+        ],
+        "comment": "Cinq doigts séparés, paume de face et poignet entier. Volumes et articulations plausibles ; légère raideur des doigts sans défaut éliminatoire évident.",
+        "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
+        "rendering": "Éclairage doux, plis et dégradés de peau lisibles."
+      },
+      "9": {
+        "verdict": "Proposée",
+        "scores": [
+          4,
+          3,
+          4,
+          4
+        ],
+        "comment": "Répétition de la main 01, pixels identiques vérifiés. Même anatomie plausible et éclairage doux. Contrôle exclu du score principal.",
+        "comparison": "Rectificatif toytoy : la référence Klein présente six doigts et passe en rejet. Z-Image en présente cinq ; sa proposition est conservée. Dev reste sous réserve anatomique.",
+        "rendering": "Peau et lumière naturelles."
+      }
+    }
+  },
+  "native_summary_before": {
+    "proposed": 6,
+    "review": 0,
+    "rejected": 2
+  },
+  "native_summary_after": {
+    "proposed": 5,
+    "review": 0,
+    "rejected": 3
+  },
+  "raw_images_and_measurements": "unchanged",
+  "new_inference": false
+}

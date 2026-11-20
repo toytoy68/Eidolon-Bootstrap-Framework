@@ -1,0 +1,11 @@
+2026-11-14T21:44:59+01:00 eidolon-os flock[104844]: {"phase": "encode_cpu_start"}
+2026-11-14T21:45:01+01:00 eidolon-os flock[104844]: WARNING:root:clip missing: ['text_projection.weight']
+2026-11-14T21:45:12+01:00 eidolon-os flock[104844]: {"phase": "encoded", "case": "hand", "shape": [1, 256, 4096]}
+2026-11-14T21:45:20+01:00 eidolon-os flock[104844]: {"phase": "encoded", "case": "objects", "shape": [1, 256, 4096]}
+2026-11-14T21:45:28+01:00 eidolon-os flock[104844]: {"phase": "encoded", "case": "katana", "shape": [1, 256, 4096]}
+2026-11-14T21:45:36+01:00 eidolon-os flock[104844]: {"phase": "encoded", "case": "duo", "shape": [1, 256, 4096]}
+2026-11-14T21:45:38+01:00 eidolon-os flock[104844]: {"phase": "load_transformer_start"}
+2026-11-14T21:45:44+01:00 eidolon-os flock[104844]: {"phase": "placement", "before": {"cpu": 1156}, "after": {"cuda:0": 1156}}
+2026-11-14T21:45:45+01:00 eidolon-os flock[104844]: {"phase": "loaded", "parameter_bytes_by_device": {"cuda:0": 6770653312}}
+2026-11-14T21:45:47+01:00 eidolon-os flock[104844]: {"phase": "step", "index": 0, "step": 4, "total": 4}
+2026-11-14T21:45:48+01:00 eidolon-os flock[104844]: {"phase": "generated", "case": "hand", "seconds": 2.8196488200046588}

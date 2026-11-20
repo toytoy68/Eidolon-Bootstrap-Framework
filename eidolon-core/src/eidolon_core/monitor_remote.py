@@ -100,6 +100,13 @@ def read_ssh(spec, *, ssh=SSH, timeout=TIMEOUT, **_):
             if len(raw) > MAX_REPLY:
                 error = "REPLY_TOO_LARGE"
                 break
+        # EOF closes the output stream before SSH necessarily delivers its exit status.
+        # Give a successful transport the remaining original deadline to finish.
+        if error is None:
+            try:
+                process.wait(timeout=max(0.0, deadline - time.monotonic()))
+            except subprocess.TimeoutExpired:
+                error = "TIMEOUT"
     finally:
         if process.poll() is None:
             try:

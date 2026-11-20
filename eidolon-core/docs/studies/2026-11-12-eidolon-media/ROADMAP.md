@@ -1,0 +1,178 @@
+# Suite proposée après revue
+
+Eidolon Core Technologies (ECT), 12 novembre 2026.
+
+1. **Revue de G325** : sécurité des chemins et du catalogue, reprise incertaine,
+   interruption Comfy globale, bornes de ressources et licences. Corriger avant
+   d'activer au boot ; aucune fusion automatique.
+2. **Qualité image** : jeu de prompts non privés, vérification humaine, SDXL et
+   checkpoint d'inpainting revu ; un seul nouveau modèle à la fois, seed fixe,
+   mesure chargement/inférence séparée. LoRA générique légalement utilisable à
+   installer explicitement et tester réellement avant annonce de compatibilité.
+3. **Qualité vidéo** : augmenter progressivement étapes, durée puis résolution,
+   avec garde mémoire ; évaluer cohérence temporelle. AnimateDiff seulement
+   après audit de l'extension. Ne pas appeler le profil Wan T2V un moteur I2V.
+4. **Ordonnancement commun** : bail GPU atomique adopté par Eva, Ollama et Media,
+   réservation libérée sur panne. Mesurer mode A (instances indépendantes), B
+   (affectation image/vidéo), puis C uniquement avec un backend supportant un
+   vrai placement multi-GPU. Mesurer PCIe/P2P/NVLink, énergie et latence. Aucun
+   regroupement implicite de VRAM ; la surveillance PID actuelle reste coopérative.
+5. **Exploitation privée** : compte système distinct, ACL par utilisateur familial,
+   quotas/rétention DB et fichiers temporaires, sauvegarde chiffrée si souhaitée,
+   rotation jetons, miroir de roues et licences, service permanent durci.
+6. **Intégration Core** : brancher LocalGenerationClient dans les couches
+   conversation_media existantes, cartes de progression et affichage résultats
+   dans le HUD, puis voix. Maintenir les octets volumineux hors Memory Engine ;
+   indexer seulement une sélection explicite de métadonnées utiles.
+7. **Deux V100 32 Go** : refaire entièrement la recette mémoire/thermique/énergie,
+   essayer SDXL et vidéos plus longues sur une carte, puis répartition explicite.
+   Les 64 Go physiques cumulés ne deviennent pas automatiquement un tensor de
+   64 Go utilisable. Aucun achat requis pour les résultats de la phase présente.
+
+Décisions ultérieures utiles : priorité qualité image ou vidéo, utilisateurs
+autorisés à la bibliothèque, budget GPU concurrent avec Eva, rétention et
+activation permanente du service. Aucune de ces décisions n'est requise pour
+conserver et relire le prototype déjà validé.
+
+## Priorité adoptée G332 — candidats et deux GPU
+
+Toytoy autorise les essais des modèles nécessitant les deux V10016Go actuelles.
+Suivre la [file versionnée](CANDIDATE-QUEUE-G332.md), en commençant par une
+répartition véritable du générateur FLUX.1 Schnell, puis les alternatives SDXL.
+Chaque candidat garde son état non testé tant qu'aucune preuve matérielle
+spécifique n'est produite. Les modèles dont les poids seuls dépassent 32Go
+nécessitent quantification/offload et ne sont pas comptés comme résidents FP16.
+
+## Avancement G333 —13/11/2026
+
+RealVisXL V5.0 et Juggernaut XL v9 testés sur V10016Go, témoin SDXL régénéré,
+27images avec paramètres comparables. [Résultats](CHECKPOINTS-G333.md) :
+5propositions visuelles,3doutes,16rejets hors répétitions. Aucun profil promu.
+Confirmation hors réglage/multi-seeds et formats écran restent nécessaires.
+Poursuivre ensuite les autres architectures et la vidéo selon la file ; ne pas
+assimiler le succès FP16 SDXL à une validation des kernels des autres modèles.
+
+Politique toytoy :300W par V100 pour image/vidéo,200W pour Eva/discussion.
+La bascule automatique nécessite le bail GPU commun ; aucun réglage modifié G333.
+Modèles :14,75Gio libres ; données :226,86Gio. Préparer un emplacement dédié sur
+le volume données avant de télécharger d'autres gros poids, sans suppression
+automatique des modèles ni changement de pilote/environnement existant.
+
+## Avancement G334 — Sana 600M, 13/11/2026
+
+[Sana 600M](SANA-G334.md) fonctionne sur une V100 avec encodage CPU FP32 :
+12 générations, 2/8 images natives proposées, 2 douteuses et 4 rejetées.
+Formats écran réussis techniquement, contenu non conforme. Gemma2 soumis à ses
+restrictions propres ; ne pas présenter ce pipeline comme libre de toute restriction.
+Sana 1,6B, Sprint et encodage GPU1 restent non testés. Tester le placement de
+l'encodeur sur GPU1 ne constitue qu'une piste pour les 22 s CPU, sans gain mesuré.
+Poursuivre la file et la vidéo ; aucun profil ou entraînement promu.
+
+## Avancement G335 — Sana 1,6B, 13/11/2026
+
+[Sana 1600M FP16](SANA-G335.md) testé avec runner/plan G334 inchangés :
+12 générations, répétition exacte, 1/8 native proposée, 2 doutes et 5 rejets.
+Médiane GPU/décodage +41%, VRAM 9,60 Gio, sans progrès qualitatif global établi.
+Sprint et encodeur GPU1 restent non testés. Ne pas prioriser la seule taille :
+poursuivre une autre architecture ou la vidéo après audit précis du candidat.
+PDF préféré pour les revues sur téléphone, HTML G334 ouvert en texte chez toytoy.
+
+
+## Avancement G337 - AnimateDiff, 13/11/2026
+
+[Diagnostic G337](ANIMATEDIFF-G337.md) : G336 retrouve non revu ; 6 nouveaux clips apres correction beta schedule, toujours rejetes. 2 controles SD1.5 reconnaissables : defaut localise a la chaine AnimateDiff, cause non resolue. Aucun modele promu. GPU liberes, machine allumee. FLUX.1 dev reste I10 non teste.
+
+
+## Avancement G338 — FLUX.1 dev, 13/11/2026
+
+[Rapport G338](FLUX-DEV-G338.md) : générateur FP16 réellement réparti sur deux V10016, encodeurs CPU ; 12 images, répétition exacte. Grille native : 4/8 proposées, 2 réserves, 2 rejets pour cadrage. 70,58 s médianes GPU/décodage 1024². Correctif VAE par tuiles après OOM initial conservé. GPU/HBM max 47/51 °C ; aucune promotion. Formats écran générés mais cadrage non conforme. GPU libérés, machine allumée.
+
+
+## Avancement G339 — FLUX dev/Schnell, 13/11/2026
+
+[Comparatif G339](FLUX-COMPARISON-G339.md) : Schnell complet testé sur la grille G338, 12 images locales, répétition exacte ; 4/8 proposées, 2 réserves, 2 rejets, comme dev mais sur des images différentes. 6,451 s médianes GPU/décodage contre 70,577 s dev ; facteur 10,94 hors encodage/chargement. Rendu visuel et conformité distingués ; Schnell réussit un duo en pied, dev plus crédible sur les katanas. Aucune promotion, GPU libérés, machine allumée. Autres candidats non testés inchangés.
+
+
+## Avancement G340 — Klein4B, 13/11/2026
+
+[Rapport G340](KLEIN-G340.md) : FLUX.2 Klein4B FP16 sur une V100, Qwen3 CPU FP32 ;12images, répétition exacte. Grille native5/8 proposées,3rejets (main01 à six doigts et deux katanas) ;3,396s médianes GPU/décodage, encodage57,175s/4textes. Pic9 728Mio, GPU/HBM41/43°C. Runtime isolé, attention efficace PyTorch ; recettes différentes des références dev/Schnell. GPU libérés, services actifs, machine allumée ; aucune promotion.
+
+
+## G341 — 14 novembre 2026
+
+[Klein base 4B](KLEIN-BASE-G341.md) : 12 images, 5/8 proposées, 3 rejets natifs. 63,26 s médianes 1024², sans gain global face à G340. GPU/HBM49/54 °C. Aucune promotion. Extinction demandée pour modifications matérielles ; reprise manuelle.
+
+
+## Avancement G342 — Z-Image Turbo, 14/11/2026
+
+[Rapport G342](ZIMAGE-G342.md) : Z-Image Turbo FP32 réparti sur deux V100, Qwen3 CPU ;12images, répétition exacte. Natives4/8 proposées,2 réserves katana,2 rejets pour visiteurs supplémentaires. Médiane45,481s, encodage64,430s ; GPU/HBM47/48°C, pics14 068/14 490Mio. Attention découpée et répartition vérifiées. Aucun entraînement ni promotion ; GPU libérés, services actifs, machine allumée. Klein9B différé pour accès soumis à acceptation.
+
+
+## Avancement G344 — Z-Image non Turbo, 14/11/2026
+
+[Rapport G344](ZIMAGE-BASE-G344.md) :12images terminées,6/8 natives proposées,2 réserves katana ;279,383s médianes,28étapes/CFG4,FP32 sur deux V100. Formats écran rejetés pour cadrage. Maxima GPU51/49°C,HBM53/53°C ; répétition exacte. Usage détaillé à la demande selon toytoy, aucune promotion. GPU libres, services actifs, machine allumée.
+
+
+## Avancement G345 — Sana Sprint, 14/11/2026
+
+[Rapport G345](SANA-SPRINT-G345.md) : Sana Sprint 1,6B FP32 sur une V100, quatre étapes, guidage intégré 4,5 ; douze images et répétition exacte. Natives : 2/8 proposées, 1 à revoir, 5 rejetées. Médiane 1,833 s hors encodage/chargement ; encodage CPU 26,757 s pour quatre textes. Pic 9 184 Mio, GPU/HBM 42/44 °C. Très rapide, mais six doigts, armes dupliquées et cadrages/visibilité insuffisants. Premier essai arrêté avant génération pour un défaut du paramètre SCM, corrigé et conservé. Aperçus/objets simples uniquement comme piste ; aucune promotion. Runtime inchangé, services actifs, GPU libres, machine allumée.
+
+
+## Avancement G346 — SD3.5 Medium, 14/11/2026
+
+[Rapport G346](SD35-MEDIUM-G346.md) : SD3.5 Medium FP16 sur une V100, trois encodeurs CPU FP32,40étapes/CFG4,5 sans SLG ;12images, répétition exacte. Natives :1/8 proposée,1 réserve,6 rejets. Médiane22,376s, encodage cinq textes42,891s. Pic10 552Mio, GPU/HBM46/49°C. Deux mains à six doigts, katanas incohérents, duos non conformes. Incidents avant génération conservés ; aucun runtime modifié. GPU libres, services actifs, machine allumée ; aucune promotion. SLG et Large/Turbo non testés.
+
+
+## Avancement G347 — SD3.5 Medium SLG, 14/11/2026
+
+[Rapport G347](SD35-SLG-G347.md) : SD3.5 Medium FP16 avec SLG[7,8,9]/2,8/0,01–0,2,40étapes/CFG4,5 ;12images, répétition exacte. Natives :3/8 proposées,5rej et0réserve ;24,054s médianes (+7,50% vsG346). Main02 et anse04 corrigées, main01 toujours six doigts, katanas et duos non conformes. Pic10 556Mio, GPU/HBM47/52°C.47appels dont7SLG vérifiés/image. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion.
+
+
+## Avancement G348 — SD3.5 Large Turbo, 14/11/2026
+
+[Rapport G348](SD35-LARGE-TURBO-G348.md) : SD3.5 Large Turbo FP16 sur deux V100,4 étapes/guidage0 ;12images, répétition exacte. Natives :5/8 proposées,3rej et0réserve ;3,130s médianes. Deux mains à cinq doigts ; katanas et duo08 rejetés. Même score que Klein5/8 à3,396s sur une seule V100 ; aucune supériorité générale déduite. Pics13 692/8 550Mio, GPU40/37°C, HBM41/36°C.76appels de blocs/carte/image vérifiés. Runtime inchangé, services actifs, GPU libres, machine allumée. Aucune promotion ; Large non Turbo reste non testé.
+
+
+## Avancement G349 — SD3.5 Large, 14/11/2026
+
+[Rapport G349](SD35-LARGE-G349.md) : SD3.5 Large FP16 sur deux V100,28étapes/CFG3,5 ;12images, répétition exacte. Natives :2/8 proposées,0réserves,6rejets ;36.020s médianes. Deux mains à six doigts, katanas incohérents ; aucun avantage global établi face à Turbo malgré les détails supplémentaires. Pics14078/8926Mio, GPU46/42°C.532appels de blocs/carte/image vérifiés. Runtime inchangé, GPU libres, services actifs, machine allumée. Aucune promotion.
+
+
+## Avancement G350 — Sana Sprint0,6B, 14/11/2026
+
+[Rapport G350](SANA-SPRINT-600M-G350.md) : Sana Sprint 0,6B FP32 sur une V100, 4 étapes / guidage intégré 4,5 ; 12 images, répétition exacte. Natives : 2/8 proposées, 0 réserve, 6 rejets ; 1.279 s médianes contre 1.833 s en 1,6B. Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion. Pic 5336 Mio, GPU 42 °C, HBM 43 °C. Quatre appels du générateur vérifiés par image. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G351 — FLUX Schnell Q8, 14/11/2026
+
+[Rapport G351](FLUX-Q8-G351.md) : FLUX Schnell GGUF Q8_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 4/8 proposées, 2 réserves et 2 rejets ; 15.613 s médianes contre 6.451 s pour le complet réparti G339. Schnell tient sur une seule carte, mais le Q8 ne gagne pas en vitesse ; option pour libérer GPU1, aucune promotion. Pic 15158 Mio, GPU 43 °C, HBM 50 °C. Incident de placement CPU détecté puis corrigé, trace conservée. Runtime partagé inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G352 — FLUX Schnell Q4, 14/11/2026
+
+[Rapport G352](FLUX-Q4-G352.md) : FLUX Schnell GGUF Q4_0, calcul FP16 sur une V100 ; 4 étapes, guidage 0, 12 images, répétition exacte. Natives : 3/8 proposées, 2 réserves, 3 rejets ; 16.212 s médianes contre 15.613 s Q8. Pic 9824 Mio (-35.2 % vs Q8), GPU/HBM 44/49 °C. Moins de VRAM, mais main 01 plus floue et poignée surnuméraire en 06 ; aucun gain de vitesse, aucune promotion. Copie de licence corrigée avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G353 — Juggernaut v10/v9, 14/11/2026
+
+[Rapport G353](JUGGERNAUT-X-G353.md) : Juggernaut v10/v9, même DPM++2M Karras30/CFG5 sur une V100 ; 24 images et deux répétitions exactes. V10 1/8 proposées, 1 réserves, 6 rejets / 17.565s ; v9 3/8 proposées, 0 réserves, 5 rejets / 17.600s. V10 ne remplace pas v9 pour cette grille. Conserver les deux comme options spécialisées ; aucun nouveau modèle par défaut. Export JSON du scheduler corrigé avant génération, trace conservée. Runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G354 — Juggernaut Lightning, 14/11/2026
+
+[Rapport G354](JUGGERNAUT-LIGHTNING-G354.md) : Juggernaut XL Lightning, une V100 FP16, DPM++ SDE Karras6/CFG1,8, 11 appels UNet ; 12 images et répétition exacte. 1/8 proposées, 0 réserves, 7 rejets ; médiane 6.843s, temps divisé par 2.57 face au v9 G353 historique (recettes différentes). Gain de vitesse confirmé, conformité insuffisante : ne pas remplacer v9 ni les références FLUX par cette recette. Aucun déploiement ; runtime inchangé, services actifs, GPU libres, machine allumée.
+
+
+## Avancement G355 — Juggernaut XI v11, 14/11/2026
+
+[Rapport G355](JUGGERNAUT-XI-G355.md) : Juggernaut XI v11, une V100 FP16, DPM++2M Karras30/CFG5 ; 12 nouvelles images et répétition exacte. 2/8 proposées, 1 réserves, 5 rejets ; médiane 17.562s. V9 G353 historique3/8/17,600s, même recette. Conserver XI comme option pour les portraits en duo ; pas de remplacement global du v9 ou des références FLUX sur cette grille. Runtime inchangé, services actifs, GPU libres, machine allumée. Attribution RunDiffusion/KandooAI, CC BY-NC-ND4.0 et conditions auteur conservées ; aucun poids redistribué.
+
+
+## Avancement G356 — Juggernaut XI Lightning, 14/11/2026
+
+[Rapport G356](JUGGERNAUT-XI-LIGHTNING-G356.md) : XI Lightning Civitai-Version, une V100 FP16/VAE upcast FP32, SDE Karras6/CFG1,8,11 appels UNet ;12 nouvelles images, répétition exacte. 0/8 proposées,0 réserves,8 rejets ;6.840s. Références historiques XI standard2/8+1réserve/17,562s et XL Lightning1/8/6,843s. Ne pas retenir XI Lightning comme modèle principal avec cette recette. Sa vitesse est utile, mais la conformité est insuffisante sur cette petite grille ; le contrôle 4:3 mérite une confirmation sur plusieurs seeds avant tout usage régulier. Licences/attribution conservées, runtime inchangé, GPU libres, services actifs, machine allumée.
+
+
+## Avancement G357 - SDXL Inpainting, 14/11/2026
+
+[Rapport G357](SDXL-INPAINT-G357.md) : SDXL Inpainting 0.1 dédié, une V100, 21 générations ; 8 retouches avec prompts initiaux et 8 avec prompts ciblés, 0/8 proposées + 1 réserve dans chaque passe. Médianes 11,836/11,841 s ; 10 564 Mio, GPU/HBM 44/51 °C. Deux répétitions exactes ; hors masque inchangé après collage explicite, sortie brute non identique. Chaîne viable, correction automatique non retenue avec cette recette. Sources/masques/SHA/licence archivés, runtime inchangé, GPU libres, services actifs, machine allumée.

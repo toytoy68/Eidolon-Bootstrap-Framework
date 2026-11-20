@@ -1,0 +1,146 @@
+[
+  {
+    "id": "00",
+    "decision": "REJECT",
+    "reason": "Paume parcourue de bourrelets croisés et amas de replis incohérents à la jonction du pouce ; cinq doigts ne suffisent pas à valider la structure.",
+    "confidence": "high",
+    "scores": [
+      3,
+      1,
+      3,
+      3
+    ]
+  },
+  {
+    "id": "01",
+    "decision": "REJECT",
+    "reason": "Reliefs arrondis évoquant des jointures dorsales sur la face palmaire, plis et raccords incohérents à la base des doigts et du pouce.",
+    "confidence": "high",
+    "scores": [
+      3,
+      1,
+      3,
+      3
+    ]
+  },
+  {
+    "id": "02",
+    "decision": "REJECT",
+    "reason": "Même défaut de reliefs articulaires sur la face palmaire ; poche de plis incohérente près du pouce et raccords doigts-paume peu crédibles.",
+    "confidence": "high",
+    "scores": [
+      3,
+      1,
+      3,
+      3
+    ]
+  },
+  {
+    "id": "03",
+    "decision": "REJECT",
+    "reason": "Paume segmentée en volumes gonflés, replis artificiels près du pouce et raccords à la base des doigts incohérents ; texture plausible, structure non retenue.",
+    "confidence": "high",
+    "scores": [
+      3,
+      2,
+      4,
+      3
+    ]
+  },
+  {
+    "id": "04",
+    "decision": "REJECT",
+    "reason": "Deux récipients à anse ; couleurs rouge et bleu mélangées, tasse rouge à gauche et bol bleu à droite non respectés.",
+    "confidence": "high",
+    "scores": [
+      1,
+      3,
+      4,
+      4
+    ]
+  },
+  {
+    "id": "05",
+    "decision": "REJECT",
+    "reason": "Trois récipients au lieu de deux ; petit bol rouge supplémentaire, couleurs et positions non conformes.",
+    "confidence": "high",
+    "scores": [
+      0,
+      3,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "06",
+    "decision": "REJECT",
+    "reason": "Trois récipients et un plateau ; bol supplémentaire au premier plan, tasse couverte et mélange rouge/bleu. Nombre demandé non respecté.",
+    "confidence": "high",
+    "scores": [
+      0,
+      3,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "07",
+    "decision": "REJECT",
+    "reason": "Tasse rouge et bol bleu présents, mais troisième bol rouge/bleu ajouté au premier plan : défaut éliminatoire de nombre.",
+    "confidence": "high",
+    "scores": [
+      1,
+      3,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "08",
+    "decision": "REJECT",
+    "reason": "Deux lames distinctes et un élément supplémentaire coupé avec poignée dorée ; aucun couple unique katana/fourreau complet.",
+    "confidence": "high",
+    "scores": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "09",
+    "decision": "REJECT",
+    "reason": "Deux lames et plusieurs éléments/accessoires ; pas un seul katana et son fourreau parallèle, objet supérieur coupé.",
+    "confidence": "high",
+    "scores": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "10",
+    "decision": "REJECT",
+    "reason": "Plusieurs lames, poignées et pièces séparées au lieu des deux objets demandés ; proportions et assemblages incohérents.",
+    "confidence": "high",
+    "scores": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "11",
+    "decision": "REJECT",
+    "reason": "Une lame avec poignée est visible, mais le fourreau séparé demandé est entièrement absent.",
+    "confidence": "high",
+    "scores": [
+      1,
+      3,
+      4,
+      3
+    ]
+  }
+]

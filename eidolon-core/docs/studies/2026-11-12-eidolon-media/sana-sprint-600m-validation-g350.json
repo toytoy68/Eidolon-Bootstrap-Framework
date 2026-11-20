@@ -1,0 +1,686 @@
+{
+  "results": [
+    {
+      "index": 0,
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "smoke",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 4.5,
+      "seconds": 0.49191031499867677,
+      "transformer_calls": 4,
+      "png_sha256": "3ddee6c5793c9ecee3d1743aa7205a2763729127bb98a49c6efbef77a13d4ff5",
+      "pixel_sha256": "2bb9b4ccf8b9408556b13f97391b86c50dd3b80c54c6e1c8fbc5ca29febac0e6",
+      "visual": "À revoir",
+      "torch_peak_allocated_bytes": [
+        4563122688
+      ]
+    },
+    {
+      "index": 1,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 4.5,
+      "seconds": 1.461887833000219,
+      "transformer_calls": 4,
+      "png_sha256": "e5db67300c59277398fa985a56d55ddd19f22617ea2fa6fcd30cc1627111e492",
+      "pixel_sha256": "95ee216679adbe43789eb747a77c35eea1deca10d13dec1eec7ca40546b7529a",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 2,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 4.5,
+      "seconds": 1.27861472999939,
+      "transformer_calls": 4,
+      "png_sha256": "86eedb62803855a13c3079d5bc7b4b06f9637023cb3359a9f5da54ac86df5ca0",
+      "pixel_sha256": "1c936f1effc81f958faf14cd465bb1429678d4fb21f5c8311ea4dfdd42d9d568",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 3,
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "guidance": 4.5,
+      "seconds": 1.285399251999479,
+      "transformer_calls": 4,
+      "png_sha256": "bc407ed838916980111aa867291d7e44178bed15fe403e72263a51615e7dcd64",
+      "pixel_sha256": "f6ccf16e1115086e1e89c13ea8b98016c644d3ad5455a235d760f19f272c7259",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 4,
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "guidance": 4.5,
+      "seconds": 1.2773906020011054,
+      "transformer_calls": 4,
+      "png_sha256": "c1f3eb73c02fb4ced7009885ce32c0ceb522a64edca9f7dd84e7ad7657aafdcf",
+      "pixel_sha256": "470a74171a1f76d5d9ffd299d5f2507ccddff396a6e2f0f245a4780bfeeae82f",
+      "visual": "Proposée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 5,
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "guidance": 4.5,
+      "seconds": 1.2788092519986094,
+      "transformer_calls": 4,
+      "png_sha256": "53e384c64fb2f66c7d61a9827b96c47111285b9486d655a7b560e7b1918ff548",
+      "pixel_sha256": "394574e4ba744d8f9024f8d7235cc39b702a459214709d126b58ad79ece0e0d2",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 6,
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "guidance": 4.5,
+      "seconds": 1.277031268000428,
+      "transformer_calls": 4,
+      "png_sha256": "3df93dcd49c34baa8e6d64ee9dace884008817282b28639f70ff28bae60a4ad0",
+      "pixel_sha256": "d76a1bb3a863e9dfca7bd98034135afbfb07cf91c163d589838d14ea02e21024",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 7,
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 4.5,
+      "seconds": 1.2737950480004656,
+      "transformer_calls": 4,
+      "png_sha256": "3f51d30bebfd00955198073eee6e43cc0ebfd567a131d0cc208e0db137643eac",
+      "pixel_sha256": "7c8b7b460274aa35cf3f639f0bf58adc9c4a6038d2b5289fcec8ebdc3a5647d5",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 8,
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 4.5,
+      "seconds": 1.2786853990000964,
+      "transformer_calls": 4,
+      "png_sha256": "7b6db61b46cc2c32a343ed4a75b1202792aca8115055f41ad494a728a085e770",
+      "pixel_sha256": "3134f10b6363e7013801c31da13a49bb499dd13b48f6a2d8590083ae30e6f65a",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 9,
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "repeat",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "guidance": 4.5,
+      "seconds": 1.2745411360010621,
+      "transformer_calls": 4,
+      "png_sha256": "e5db67300c59277398fa985a56d55ddd19f22617ea2fa6fcd30cc1627111e492",
+      "pixel_sha256": "95ee216679adbe43789eb747a77c35eea1deca10d13dec1eec7ca40546b7529a",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4574591488
+      ]
+    },
+    {
+      "index": 10,
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen16x9",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 4.5,
+      "seconds": 0.7565091300020867,
+      "transformer_calls": 4,
+      "png_sha256": "a46d57f29603f7abd86b1aefd21a0114348f77ee098c9ebf90f7a06fd2520f86",
+      "pixel_sha256": "b9290455cae6cd1d394b796ae12e942c64393dfe2315877500d2c0fc4d37b18c",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4566350336
+      ]
+    },
+    {
+      "index": 11,
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen4x3",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "guidance": 4.5,
+      "seconds": 0.5701239729969529,
+      "transformer_calls": 4,
+      "png_sha256": "b47620a4b7fcf53b2e29c5fdd266b781b0897ecd59efe470097f0d54c2c28476",
+      "pixel_sha256": "19e8afc097358c3c69d289761d6c07cf39f67f1cc10fc0b4bda8876ccd3f474c",
+      "visual": "Rejetée",
+      "torch_peak_allocated_bytes": [
+        4563167744
+      ]
+    }
+  ],
+  "manifest": {
+    "model": "Sana-Sprint-0.6B",
+    "precision": "fp32",
+    "files": [
+      {
+        "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+        "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+        "path": "text_encoder/model-00001-of-00002.safetensors",
+        "name": "model-00001-of-00002.safetensors",
+        "bytes": 4988024144,
+        "sha256": "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71"
+      },
+      {
+        "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+        "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+        "path": "text_encoder/model-00002-of-00002.safetensors",
+        "name": "model-00002-of-00002.safetensors",
+        "bytes": 240691624,
+        "sha256": "48e14f6b7a917e54cabc4ff2047ac2bfe0dae663e771eed3a8acf4ea27dcac18"
+      },
+      {
+        "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+        "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+        "path": "transformer/diffusion_pytorch_model.safetensors",
+        "name": "diffusion_pytorch_model.safetensors",
+        "bytes": 1187078584,
+        "sha256": "9069dd697395b96a59d1f74837461f7aeb3d95e55b67fa85c9f31c9106b65e87"
+      },
+      {
+        "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+        "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+        "path": "vae/diffusion_pytorch_model.safetensors",
+        "name": "diffusion_pytorch_model.safetensors",
+        "bytes": 1249044836,
+        "sha256": "dfd991d1b54ffabf22745c5885589d8f2a7bc59930d95d92bd741c4fc64454bb"
+      }
+    ],
+    "text_encoder": "Gemma2 CPU FP32 eager,300 tokens",
+    "vae": "GPU0 FP32,tiled512px",
+    "attention": "native Sana linear attention FP32; PyTorch MATH for other attention",
+    "torch": "2.6.0+cu124",
+    "diffusers": "0.37.0",
+    "transformers": "4.56.1",
+    "encode_seconds": 26.757161907999034,
+    "embeddings_reused": true,
+    "load_seconds": 1.9247782530001132,
+    "parameter_bytes_by_device": {
+      "cuda:0": 2374004864
+    },
+    "device_map": {
+      "": 0
+    },
+    "prompt_instruction": [
+      "Given a user prompt, generate an 'Enhanced prompt' that provides detailed visual descriptions suitable for image generation. Evaluate the level of detail in the user prompt:",
+      "- If the prompt is simple, focus on adding specifics about colors, shapes, sizes, textures, and spatial relationships to create vivid and concrete scenes.",
+      "- If the prompt is already detailed, refine and enhance the existing details slightly without overcomplicating.",
+      "Here are examples of how to transform or refine prompts:",
+      "- User Prompt: A cat sleeping -> Enhanced: A small, fluffy white cat curled up in a round shape, sleeping peacefully on a warm sunny windowsill, surrounded by pots of blooming red flowers.",
+      "- User Prompt: A busy city street -> Enhanced: A bustling city street scene at dusk, featuring glowing street lamps, a diverse crowd of people in colorful clothing, and a double-decker bus passing by towering glass skyscrapers.",
+      "Please generate only the enhanced description for the prompt below and avoid including any additional commentary or evaluations:",
+      "User Prompt: "
+    ],
+    "resolution_binning": false,
+    "scheduler": {
+      "num_train_timesteps": 1000,
+      "prediction_type": "trigflow",
+      "sigma_data": 0.5,
+      "_class_name": "SCMScheduler",
+      "_diffusers_version": "0.33.0.dev0"
+    },
+    "steps": 4,
+    "guidance": 4.5,
+    "max_timesteps": 1.5708,
+    "intermediate_timesteps": null,
+    "plan": [
+      {
+        "case": "hand",
+        "width": 512,
+        "height": 512,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "smoke"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "repeat"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen16x9"
+      },
+      {
+        "case": "duo",
+        "width": 768,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen4x3"
+      }
+    ],
+    "pipeline_source_sha256": "15c9013e9c0485e68b43f7e7cc5b76fe7430ea04c0b98b39bcafb4b7055acdf8",
+    "runner_sha256": "b89740a4e4e4a35ca190d8ad8cb2b403cbf95ca7b9cbb3e6f31f5e188cfb5b02",
+    "promotion_allowed": false
+  },
+  "completion": {
+    "generated": 11,
+    "repeat_same_pixels": true,
+    "visual_acceptance": "REVIEWED_NOT_PROMOTED",
+    "promotion_allowed": false,
+    "generated_total": 12
+  },
+  "telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 5336.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 53.34,
+          "max": 333.46
+        },
+        "temperature.gpu": {
+          "min": 30.0,
+          "max": 42.0
+        },
+        "temperature.memory": {
+          "min": 29.0,
+          "max": 43.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 38.62,
+          "max": 39.18
+        },
+        "temperature.gpu": {
+          "min": 28.0,
+          "max": 28.0
+        },
+        "temperature.memory": {
+          "min": 28.0,
+          "max": 28.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 5.95,
+          "max": 6.34
+        },
+        "temperature.gpu": {
+          "min": 31.0,
+          "max": 32.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 25.0,
+      "max": 35.625
+    }
+  },
+  "health_final": {
+    "time": "2026-11-14T19:11:25.661082+00:00",
+    "gpu": {
+      "exit": 0,
+      "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 29, 30, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 28, 28, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 32, N/A, 2 MiB, 120.00 W\n",
+      "stderr": ""
+    },
+    "clients": {
+      "exit": 0,
+      "stdout": "pid, process_name\n",
+      "stderr": ""
+    },
+    "services": {
+      "exit": 0,
+      "stdout": "active\nactive\nactive\nactive\nactive\n",
+      "stderr": ""
+    },
+    "vms": {
+      "exit": 0,
+      "stdout": " ID   Nom                            État\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d’exécution\n -    eidolon-audit-smoke-20261102   fermé\n -    Eidolon-Debian12-Test          fermé\n -    Eidolon-Memory-Engine-Test     fermé\n -    Eidolon-Memory-Engine-v2       fermé\n -    Eidolon-Memory-Lab             fermé\n -    Eidolon-Memory-Lab-v2          fermé\n -    Eidolon-Ubuntu-Diagnostic      fermé\n -    Memory-engine-tests            fermé\n -    Memory-tests                   fermé\n -    nomifactory-test               fermé\n\n",
+      "stderr": ""
+    },
+    "runtime_unchanged": true,
+    "png_checks": [
+      {
+        "index": 0,
+        "match": true
+      },
+      {
+        "index": 1,
+        "match": true
+      },
+      {
+        "index": 2,
+        "match": true
+      },
+      {
+        "index": 3,
+        "match": true
+      },
+      {
+        "index": 4,
+        "match": true
+      },
+      {
+        "index": 5,
+        "match": true
+      },
+      {
+        "index": 6,
+        "match": true
+      },
+      {
+        "index": 7,
+        "match": true
+      },
+      {
+        "index": 8,
+        "match": true
+      },
+      {
+        "index": 9,
+        "match": true
+      },
+      {
+        "index": 10,
+        "match": true
+      },
+      {
+        "index": 11,
+        "match": true
+      }
+    ]
+  },
+  "reviews": {
+    "0": {
+      "verdict": "À revoir",
+      "comment": "Cinq doigts visibles, mais paume très segmentée, articulations artificielles et reflets verdâtres. Contrôle 512² hors score.",
+      "comparison": "Meilleur comptage que les échecs natifs, sans valider un rendu anatomique naturel.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "1": {
+      "verdict": "Rejetée",
+      "comment": "Cinq doigts, mais extrémités et pouce déformés ; des ongles apparaissent côté paume. Anatomie incohérente malgré la texture.",
+      "comparison": "La 1,6B gardait une réserve anatomique ; la 0,6B ajoute des défauts marqués. Klein a six doigts sur cette seed.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "Six doigts : quatre doigts centraux et deux appendices latéraux. Défaut anatomique éliminatoire.",
+      "comparison": "Même échec de comptage que Sprint 1,6B ; Klein est proposé sur cette seed.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "3": {
+      "verdict": "Proposée",
+      "comment": "Exactement deux objets entiers : tasse rouge à gauche et bol bleu à droite. Ombres et reflets plausibles.",
+      "comparison": "Les trois configurations respectent la composition. Quelques irrégularités de surface ne changent pas le sujet.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "4": {
+      "verdict": "Proposée",
+      "comment": "Tasse rouge et bol bleu séparés, complets et correctement placés. Céramique et lumière cohérentes.",
+      "comparison": "Les trois modèles réussissent cette scène simple ; aucune supériorité visuelle générale démontrée.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Lame claire détachée de la poignée ; pièce noire à droite avec poignée et garde. Aucun katana complet et fourreau distinct cohérents.",
+      "comparison": "Comme Sprint 1,6B et Klein, les matières masquent une construction impossible.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Trois éléments au lieu du couple demandé : fragment de lame séparé, pièce centrale hybride et fourreau à poignée.",
+      "comparison": "Le tissu et le métal sont détaillés, mais la structure échoue comme chez les deux références.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "Deux adultes et bonnes couleurs, mais cadrage coupé aux cuisses : jambes et pieds absents. Mains également peu lisibles.",
+      "comparison": "La 1,6B cadrait plus large sans tout respecter ; Klein est proposé pour son cadrage en pied.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Deux adultes correctement placés devant le château ; jambes et pieds coupés par le bord inférieur.",
+      "comparison": "Même limite de cadrage que la 1,6B sur cette seed ; Klein conserve les personnages entiers.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "9": {
+      "verdict": "Rejetée",
+      "comment": "Répétition exacte de G350-01 : mêmes pixels et PNG, donc mêmes défauts anatomiques. Hors score natif.",
+      "comparison": "La reproductibilité est vérifiée ; elle ne constitue pas une nouvelle réussite visuelle.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Format 16:9 : corps coupés vers la taille, mains et pieds hors cadre ; haut de la coiffure rogné.",
+      "comparison": "Aucune des trois configurations ne respecte ici le portrait complet demandé.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Format 4:3 : pieds de la femme masqués, proportions tassées, visages et mains déformés.",
+      "comparison": "Le cadrage élargit la scène, mais la petite variante perd nettement en précision et en proportions.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    }
+  },
+  "native_summary": {
+    "proposed": 2,
+    "review": 0,
+    "rejected": 6,
+    "total": 8,
+    "median_seconds": 1.2786500644997432,
+    "sprint_1600m_seconds": 1.8328534114998547,
+    "time_reduction_vs_1600m": 0.3023718882933456
+  },
+  "promotion_allowed": false,
+  "conclusion": "<b>Sana Sprint 0,6B : 2/8 images proposées, à 1.28 s médianes.</b> Rapide et peu gourmand en VRAM, mais aucune amélioration de conformité face à la 1,6B. Les objets réussissent ; mains, katanas et duos échouent.",
+  "summary_paragraphs": [
+    "<b>Conformité :</b> 2 proposées, aucune réserve et 6 rejets sur huit natives. La main 02 a six doigts ; la 01 conserve cinq doigts avec une anatomie incohérente. Duos trop serrés, katanas mal assemblés.",
+    "<b>Coût :</b> temps réduit de 30.2 % face à la 1,6B (1.83 s). Même recette, mêmes encodages réutilisés et une seule V100. L’exemple auteur à deux étapes n’est pas testé ici.",
+    "<b>Matériel :</b> pic 5336 Mio (5.21 Gio), contre 9184 Mio pour la 1,6B. Maxima GPU 42 °C et HBM 43 °C. Aucun incident de génération.",
+    "<b>Décision :</b> candidat aux aperçus simples sous contrainte mémoire ; aucun remplacement de Klein ou des favoris qualitatifs. Z-Image G344 reste réservé au détail à la demande selon ta préférence. Aucune promotion."
+  ],
+  "method_paragraphs": [
+    "<b>Recette :</b> Sana Sprint 0,6B, quatre étapes SCM, guidage intégré 4,5, max_timesteps 1,57080, intermediate_timesteps=None. Même grille et réglages que Sprint 1,6B G345. Exemple auteur à deux étapes ; ce lot teste quatre étapes, pas la vitesse minimale.",
+    "<b>Calcul :</b> générateur et DC-AE FP32 sur GPU0, décodage tuilé 512. Quatre appels du générateur comptés par image, sans modifier les tenseurs. FP32 conserve la plage numérique nécessaire sur V100 ; aucune équivalence visuelle BF16 revendiquée.",
+    "<b>Textes :</b> quatre encodages Gemma2 CPU FP32 réutilisés depuis G345 après contrôle SHA des poids, configurations, tokenizers et cache. 26,76 s est leur coût historique ; aucun nouvel encodage dans ce lot.",
+    "<b>Temps :</b> génération, décodage, contrôles et sauvegarde du latent inclus ; chargement (1.92 s), encodage et écriture PNG finale exclus. Médiane de huit natives 1024². Aucune mesure depuis clic ni énergie totale.",
+    "<b>Intégrité :</b> 12 PNG vérifiés, répétition pixel et PNG identiques. Consigne 300 W ; pic ponctuel observé 333.46 W. GPU libres, cinq services actifs, VM Memory-engine en marche. Runtime inchangé.",
+    "<b>Provenance :</b> dépôt auteur Efficient-Large-Model, révision aa76e7f. Poids et fichiers identifiés par SHA ; licence Apache 2.0 archivée, conditions Gemma et DC-AE conservées séparément. Génération locale sans réseau sortant.",
+    "<b>Limites :</b> quatre scènes, deux seeds et revue subjective. PyTorch 2.6.0+cu124, Diffusers 0.37.0, Transformers 4.56.1. Aperçus réduits pour la revue, PNG natifs conservés. Proposée ne vaut pas approbation de toytoy ; machine laissée allumée."
+  ],
+  "execution_summary": "Douze images terminées, latents/pixels finis, répétition pixel et PNG identiques. Aucun incident de génération ni erreur télémétrie. Contrôle final 2026-11-14T20:11:25.661082+01:00 : runtime inchangé, douze SHA PNG vérifiés, aucun client GPU, cinq services actifs et Memory-engine en marche. Machine laissée allumée.",
+  "short_decision": "Gain de temps et de VRAM, sans progrès de conformité ; candidat limité aux aperçus simples, aucune promotion.",
+  "run_paths": [
+    "/srv/eidolon/workspaces/media-20261112/sana-sprint-600m-g350/run01",
+    "/srv/eidolon/workspaces/media-20261112/sana-sprint-600m-g350/run02"
+  ],
+  "historical_references": [
+    "G345",
+    "G340 corrected",
+    "G344"
+  ],
+  "library_file_id": "libfile_fde3_f-92c53a5673fc819190dfd80bc6983c8f_d168d29c22b4819186c4d3b8d1b7451f",
+  "reviewed_at": "2026-11-14T19:15:54.829428+00:00"
+}

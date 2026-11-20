@@ -1,0 +1,9 @@
+{
+  "author_revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+  "author_example_steps": 2,
+  "tested_steps": 4,
+  "reason": "same recipe as Sprint1.6B G345 within 1-4 step range",
+  "guidance": 4.5,
+  "dtype": "FP32 on V100",
+  "cfg": "embedded guidance, not doubled classifier-free guidance"
+}

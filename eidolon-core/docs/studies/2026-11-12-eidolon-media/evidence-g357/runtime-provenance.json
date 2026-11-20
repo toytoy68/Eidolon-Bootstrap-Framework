@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl_inpaint.py",
+    "sha256": "16b09003c00fdd953f90363c950f1d71bfdf4cfc370b3999f54585038db6529b"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/schedulers/scheduling_euler_discrete.py",
+    "sha256": "a01e60f335294beff70329474cc7962da1f09e908a67e3f2a1c3433ce097bd41"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/unets/unet_2d_condition.py",
+    "sha256": "d3d9d1d3eeffb7a831bc8183db131dac4f37fc16374d2854340cb83987ab30fa"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl.py",
+    "sha256": "ed47d3851678665a2cdce463052ff5e5767cb8e69b5e1f69c2126867bddd73db"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/image_processor.py",
+    "sha256": "40391925ff7f090a990b0b6d6c3319ebd4b8c0361fd29de2b7d16d5412949abe"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/transformers/models/clip/modeling_clip.py",
+    "sha256": "382acb208bdab45dd7e99d5be09b325d5696feedfa3c511b8c7b9561a0c07bf9"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl.py",
+    "sha256": "7cc1e045695b974d4951fdc586b8530bf3c17b1fd9473eb66c50d0cbe4ed4fb8"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/schedulers/scheduling_dpmsolver_sde.py",
+    "sha256": "05ab60e14468fefde2e3a99d2fc55078cf182300b4fcb647f0a4540975519b0a"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/unets/unet_2d_condition.py",
+    "sha256": "d3d9d1d3eeffb7a831bc8183db131dac4f37fc16374d2854340cb83987ab30fa"
+  },
+  {
+    "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl.py",
+    "sha256": "ed47d3851678665a2cdce463052ff5e5767cb8e69b5e1f69c2126867bddd73db"
+  }
+]

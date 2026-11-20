@@ -1,0 +1,29 @@
+2026-11-14T22:02:56+01:00 eidolon-os flock[109408]: [153B blob data]
+2026-11-14T22:02:56+01:00 eidolon-os flock[109408]:  ['text_model.embeddings.position_ids']
+2026-11-14T22:02:57+01:00 eidolon-os flock[109408]: [378B blob data]
+2026-11-14T22:03:00+01:00 eidolon-os flock[109408]: {"loaded": "v10", "seconds": 3.746162800998718}
+2026-11-14T22:03:18+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 1, "case": "hand", "seconds": 17.814007654000307}
+2026-11-14T22:03:36+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 2, "case": "hand", "seconds": 17.55088806599815}
+2026-11-14T22:03:53+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 3, "case": "objects", "seconds": 17.537048837002658}
+2026-11-14T22:04:11+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 4, "case": "objects", "seconds": 17.549677388997225}
+2026-11-14T22:04:29+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 5, "case": "katana", "seconds": 17.56284067300294}
+2026-11-14T22:04:47+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 6, "case": "katana", "seconds": 17.566689302999293}
+2026-11-14T22:05:05+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 7, "case": "duo", "seconds": 17.573162369000784}
+2026-11-14T22:05:23+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 8, "case": "duo", "seconds": 17.57837715400092}
+2026-11-14T22:05:41+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 9, "case": "hand", "seconds": 17.572750796003675}
+2026-11-14T22:05:50+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 10, "case": "duo", "seconds": 8.952903605000756}
+2026-11-14T22:05:56+01:00 eidolon-os flock[109408]: {"generated": "v10", "index": 11, "case": "duo", "seconds": 5.994615509000141}
+2026-11-14T22:05:57+01:00 eidolon-os flock[109408]: [352B blob data]
+2026-11-14T22:06:00+01:00 eidolon-os flock[109408]: {"loaded": "v9", "seconds": 3.622076756997558}
+2026-11-14T22:06:04+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 0, "case": "hand", "seconds": 3.4631118910037912}
+2026-11-14T22:06:21+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 1, "case": "hand", "seconds": 17.583999035996385}
+2026-11-14T22:06:39+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 2, "case": "hand", "seconds": 17.591644937994715}
+2026-11-14T22:06:57+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 3, "case": "objects", "seconds": 17.591553215002932}
+2026-11-14T22:07:15+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 4, "case": "objects", "seconds": 17.596999772002164}
+2026-11-14T22:07:33+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 5, "case": "katana", "seconds": 17.603602803006652}
+2026-11-14T22:07:51+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 6, "case": "katana", "seconds": 17.60667192999972}
+2026-11-14T22:08:09+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 7, "case": "duo", "seconds": 17.624991812997905}
+2026-11-14T22:08:27+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 8, "case": "duo", "seconds": 17.623646569998527}
+2026-11-14T22:08:45+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 9, "case": "hand", "seconds": 17.62228836199938}
+2026-11-14T22:08:54+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 10, "case": "duo", "seconds": 8.946163344000524}
+2026-11-14T22:09:00+01:00 eidolon-os flock[109408]: {"generated": "v9", "index": 11, "case": "duo", "seconds": 5.974486062004871}

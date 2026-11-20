@@ -1,0 +1,14 @@
+{
+  "case": "duo",
+  "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+  "target": "Changer la tenue noire de la femme en kimono rouge, en pr\u00e9servant les deux visages et le samoura\u00ef.",
+  "seed": 20261114,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "local",
+  "condition": "quality"
+}

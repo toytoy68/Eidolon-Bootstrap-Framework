@@ -1,0 +1,62 @@
+{
+  "0": {
+    "verdict": "Rejetée",
+    "comment": "Quatre doigts visibles, pouce compris : anatomie non conforme.",
+    "comparison": "Même défaut éliminatoire que le témoin Schnell complet à 512² ; contrôle hors score natif."
+  },
+  "1": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts distincts, paume et poignet visibles. Peau très lissée et détail limité.",
+    "comparison": "Très proche de Schnell complet G339-01. Klein présentait six doigts sur ce seed ; aucun doigt surnuméraire visible ici."
+  },
+  "2": {
+    "verdict": "À revoir",
+    "comment": "Cinq doigts visibles, mais volume exagéré à la base du pouce et plis peu naturels.",
+    "comparison": "Réserve anatomique comparable à Schnell complet ; Klein était proposé sur ce second seed."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Une tasse rouge à gauche, un bol bleu à droite ; objets complets et séparés.",
+    "comparison": "Conforme comme les deux témoins ; matière céramique et ombres simples."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Disposition et couleurs respectées, deux objets complets ; rendu céramique propre.",
+    "comparison": "Même conformité que Schnell complet et Klein sur cette scène."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Deux sabres croisés au lieu d’un katana accompagné de son fourreau.",
+    "comparison": "Même erreur de contenu que Schnell complet ; Klein échouait également sur cette scène."
+  },
+  "6": {
+    "verdict": "À revoir",
+    "comment": "Lame et fourreau présents, mais poignée très courte, raccord inhabituel et pointe large.",
+    "comparison": "Défauts géométriques proches du complet G339-06 ; le réalisme de l’objet reste insuffisant pour le valider."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "La femme et son kimono sont coupés en bas du cadre ; les deux personnages ne sont pas en pied.",
+    "comparison": "Même cadrage défaillant que Schnell complet. Klein respectait le cadrage demandé."
+  },
+  "8": {
+    "verdict": "Proposée",
+    "comment": "Les deux personnages et leurs pieds sont visibles ; marge basse étroite, mais cadrage complet.",
+    "comparison": "Conformité comparable aux deux témoins. Contraste marqué et détails nets sur l’armure."
+  },
+  "9": {
+    "verdict": "Proposée",
+    "comment": "Répétition de G351-01 : cinq doigts, même rendu très lissé.",
+    "comparison": "Pixels et PNG strictement identiques à G351-01 ; contrôle hors score natif."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Les deux personnages sont coupés à mi-corps ; cadrage en pied non respecté.",
+    "comparison": "Même limite que Schnell complet au format 1024 × 576 ; contrôle hors score natif."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Bas du corps hors cadre pour les deux personnages.",
+    "comparison": "Même limite que Schnell complet au format 768 × 576 ; contrôle hors score natif."
+  }
+}

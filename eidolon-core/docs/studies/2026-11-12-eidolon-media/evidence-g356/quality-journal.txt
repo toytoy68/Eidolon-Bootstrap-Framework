@@ -1,0 +1,65 @@
+2026-11-14T23:32:23+01:00 eidolon-os systemd[1]: Started eidolon-media-juggernaut-xi-lightning-g356-quality.service - [systemd-run] /usr/bin/flock -n /srv/eidolon/workspaces/media-20261112/quality-campaign.lock /srv/eidolon/workspaces/media-20261112/preference-lab/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/juggernaut_xi_lightning_probe_g356.py --root /srv/eidolon/workspaces/media-20261112 --manifest /srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/manifest.json --mode quality --output /srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run02.
+2026-11-14T23:32:32+01:00 eidolon-os flock[126752]: 
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Some weights of the model checkpoint were not used when initializing CLIPTextModel:
+2026-11-14T23:32:32+01:00 eidolon-os flock[126752]:  ['text_model.embeddings.position_ids']
+2026-11-14T23:32:33+01:00 eidolon-os flock[126752]: 
+Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00, 11.38it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00, 14.30it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  6.82it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  7.96it/s]
+2026-11-14T23:32:35+01:00 eidolon-os flock[126752]: {"loaded": "xi_lightning", "seconds": 3.827755933001754}
+2026-11-14T23:32:36+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:36+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:37+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:37+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:43+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 1, "case": "hand", "seconds": 7.1241197180061135}
+2026-11-14T23:32:43+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:43+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:44+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:44+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:50+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 2, "case": "hand", "seconds": 6.842511432005267}
+2026-11-14T23:32:51+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:51+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:51+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:51+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:58+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 3, "case": "objects", "seconds": 6.836423474000185}
+2026-11-14T23:32:58+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:58+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:32:59+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:32:59+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:05+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 4, "case": "objects", "seconds": 6.835395522000908}
+2026-11-14T23:33:05+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:05+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:06+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:06+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:12+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 5, "case": "katana", "seconds": 6.837613012001384}
+2026-11-14T23:33:13+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:13+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:13+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:13+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:19+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 6, "case": "katana", "seconds": 6.836459020996699}
+2026-11-14T23:33:20+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:20+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:20+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:20+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:27+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 7, "case": "duo", "seconds": 6.845537594999769}
+2026-11-14T23:33:27+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:27+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:28+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:28+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:34+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 8, "case": "duo", "seconds": 6.842358836001949}
+2026-11-14T23:33:34+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:34+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:35+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:35+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:41+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 9, "case": "hand", "seconds": 6.847137235003174}
+2026-11-14T23:33:42+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:42+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:45+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 10, "case": "duo", "seconds": 3.5318814719939837}
+2026-11-14T23:33:45+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:45+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:46+01:00 eidolon-os flock[126752]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:33:46+01:00 eidolon-os flock[126752]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:33:48+01:00 eidolon-os flock[126752]: {"generated": "xi_lightning", "index": 11, "case": "duo", "seconds": 2.3958237350016134}
+2026-11-14T23:33:49+01:00 eidolon-os systemd[1]: eidolon-media-juggernaut-xi-lightning-g356-quality.service: Deactivated successfully.
+2026-11-14T23:33:49+01:00 eidolon-os systemd[1]: eidolon-media-juggernaut-xi-lightning-g356-quality.service: Consumed 1min 33.547s CPU time, 1.5G memory peak.

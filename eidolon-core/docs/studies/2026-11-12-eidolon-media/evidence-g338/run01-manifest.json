@@ -1,0 +1,207 @@
+{
+  "model": "FLUX.1-dev",
+  "files": [
+    {
+      "repo": "Comfy-Org/Flux-1-Dev",
+      "revision": "10cf201a3d49f7ff4de84d6a97d6a32cdfa8cb86",
+      "path": "flux1-dev.safetensors",
+      "name": "flux1-dev.safetensors",
+      "bytes": 23802932552,
+      "sha256": "4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7"
+    },
+    {
+      "repo": "comfyanonymous/flux_text_encoders",
+      "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+      "path": "clip_l.safetensors",
+      "name": "clip_l.safetensors",
+      "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+      "bytes": 246144152,
+      "absolute": "/srv/eidolon/models/media-20261112/flux-g332/clip_l.safetensors"
+    },
+    {
+      "repo": "comfyanonymous/flux_text_encoders",
+      "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+      "path": "t5xxl_fp16.safetensors",
+      "name": "t5xxl_fp16.safetensors",
+      "sha256": "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",
+      "bytes": 9787841024,
+      "absolute": "/srv/eidolon/models/media-20261112/flux-g332/t5xxl_fp16.safetensors"
+    },
+    {
+      "repo": "Comfy-Org/Z-Image-Turbo",
+      "revision": "6fc90a3b1b653e935a0d175e260736de25b84df5",
+      "path": "split_files/vae/ae.safetensors",
+      "name": "ae.safetensors",
+      "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+      "bytes": 335304388,
+      "absolute": "/srv/eidolon/models/media-20261112/flux-g332/ae.safetensors"
+    }
+  ],
+  "device_map": {
+    "pos_embed": 0,
+    "time_text_embed": 0,
+    "context_embedder": 0,
+    "x_embedder": 0,
+    "transformer_blocks.0": 0,
+    "transformer_blocks.1": 0,
+    "transformer_blocks.2": 0,
+    "transformer_blocks.3": 0,
+    "transformer_blocks.4": 0,
+    "transformer_blocks.5": 0,
+    "transformer_blocks.6": 0,
+    "transformer_blocks.7": 0,
+    "transformer_blocks.8": 0,
+    "transformer_blocks.9": 0,
+    "transformer_blocks.10": 0,
+    "transformer_blocks.11": 0,
+    "transformer_blocks.12": 0,
+    "transformer_blocks.13": 0,
+    "transformer_blocks.14": 0,
+    "transformer_blocks.15": 0,
+    "transformer_blocks.16": 0,
+    "transformer_blocks.17": 1,
+    "transformer_blocks.18": 1,
+    "single_transformer_blocks": 1,
+    "norm_out": 1,
+    "proj_out": 1
+  },
+  "parameter_bytes_by_device": {
+    "cuda:0": 11644359680,
+    "cuda:1": 12158456960
+  },
+  "text_encoder": "CPU FP32",
+  "denoiser": "FP16, all parameters resident on two V100, no CPU offload",
+  "vae": "GPU0 FP32",
+  "encode_seconds": 36.12083465999967,
+  "load_seconds": 13.076706530999218,
+  "torch": "2.6.0+cu124",
+  "peer_access": [
+    true,
+    true
+  ],
+  "steps": 50,
+  "guidance": 3.5,
+  "attention_query_chunk": 256,
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "shift": 1.0,
+    "use_dynamic_shifting": true,
+    "base_shift": 0.5,
+    "max_shift": 1.15,
+    "base_image_seq_len": 256,
+    "max_image_seq_len": 4096,
+    "invert_sigmas": false,
+    "shift_terminal": null,
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "_use_default_values": [
+      "invert_sigmas",
+      "use_beta_sigmas",
+      "num_train_timesteps",
+      "use_karras_sigmas",
+      "shift_terminal",
+      "use_exponential_sigmas"
+    ]
+  },
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 20,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 50,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 50,
+      "condition": "screen4x3"
+    }
+  ],
+  "runner_sha256": "c1d97f0ff29009f13445c63e46360e6acaec8f04a867fa832efb3fc3f865a332",
+  "promotion_allowed": false
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "eidolon-dialogue-holdout-report/1",
+  "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30",
+  "summary": {
+    "cases": 6,
+    "pass": 3,
+    "fail": 3,
+    "review": 0,
+    "failed_checks": {
+      "abstention": 2,
+      "required": 1
+    },
+    "families": {
+      "additional-unseen": {
+        "PASS": 3,
+        "FAIL": 3,
+        "REVIEW": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "case": "month-boundary",
+      "family": "additional-unseen",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "required"
+      ],
+      "review": [],
+      "cited": [
+        "colis-lea@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.984,
+      "text": "D'après la note, Léa a retiré son colis hier. [colis-lea@1]",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    },
+    {
+      "case": "missing-anchor",
+      "family": "additional-unseen",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "abstention"
+      ],
+      "review": [],
+      "cited": [
+        "lampe@1"
+      ],
+      "unsupported": [],
+      "seconds": 4.815,
+      "text": "D'après la note, hier, Jules a réparé la lampe. [lampe@1]",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    },
+    {
+      "case": "new-value",
+      "family": "additional-unseen",
+      "verdict": "PASS",
+      "kind": "ANSWER",
+      "failed": [],
+      "review": [],
+      "cited": [
+        "iris-final@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.95,
+      "text": "D'après la note, la capacité finale du réservoir Iris a été confirmée à 88 litres. [iris-final@1]",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    },
+    {
+      "case": "old-value",
+      "family": "additional-unseen",
+      "verdict": "PASS",
+      "kind": "ANSWER",
+      "failed": [],
+      "review": [],
+      "cited": [
+        "iris-draft@1"
+      ],
+      "unsupported": [],
+      "seconds": 2.765,
+      "text": "D'après la note, l'estimation initiale était de 93 litres. [iris-draft@1]",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    },
+    {
+      "case": "wrong-project",
+      "family": "additional-unseen",
+      "verdict": "PASS",
+      "kind": "ANSWER",
+      "failed": [],
+      "review": [],
+      "cited": [],
+      "unsupported": [],
+      "seconds": 3.059,
+      "text": "Je ne trouve pas cette information dans le contexte fourni.",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    },
+    {
+      "case": "conflicting-measures",
+      "family": "additional-unseen",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "abstention"
+      ],
+      "review": [],
+      "cited": [
+        "opale-a@1",
+        "opale-b@1"
+      ],
+      "unsupported": [],
+      "seconds": 4.938,
+      "text": "D'après la note, il y a un conflit de données concernant le poids du colis Opale. Le poids déclaré est de 17 kg dans une source et de 12 kg dans une autre. Je ne peux pas en retenir un poids certain. [opale-b@1, opale-a@1]",
+      "suite_sha256": "9fe59530eb22c545391cd85163d29eb37f98772a35f1a3b654ba53872bd4ab30"
+    }
+  ]
+}

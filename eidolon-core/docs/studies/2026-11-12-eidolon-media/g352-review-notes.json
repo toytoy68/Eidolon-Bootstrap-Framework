@@ -1,0 +1,62 @@
+{
+  "0": {
+    "verdict": "Rejetée",
+    "comment": "Quatre doigts visibles, pouce compris : anatomie non conforme.",
+    "comparison": "Même défaut éliminatoire que Q8 et Schnell complet à 512² ; contrôle hors score natif."
+  },
+  "1": {
+    "verdict": "À revoir",
+    "comment": "Cinq doigts distincts, mais doigts courts et rendu nettement flou ; plis et contours peu définis.",
+    "comparison": "La main Q8/complet était déjà lissée, mais plus lisible. Réserve de finition ajoutée en Q4, sans erreur de comptage."
+  },
+  "2": {
+    "verdict": "À revoir",
+    "comment": "Cinq doigts visibles, mais volume excessif à la base du pouce et raccord paume/pouce peu naturel.",
+    "comparison": "La réserve anatomique présente en Q8 et FP16 persiste."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Une tasse rouge à gauche et un bol bleu à droite, complets et bien séparés.",
+    "comparison": "Contenu, disposition et couleurs restent conformes comme en Q8 et FP16."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Deux objets complets, bonnes couleurs et disposition ; céramique détaillée.",
+    "comparison": "Rendu et conformité proches des deux témoins."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Deux sabres croisés, sans le fourreau demandé.",
+    "comparison": "Même défaut éliminatoire que Q8 et FP16 ; la compression ne le corrige pas."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Katana et fourreau accompagnés d’une poignée supplémentaire détachée ; poignée du sabre trop courte.",
+    "comparison": "Régression face à Q8/FP16 : leurs géométries étaient déjà à revoir, mais cette pièce surnuméraire est nouvelle."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "La femme est coupée en bas du cadre ; les deux adultes ne sont pas visibles en pied.",
+    "comparison": "Même défaut de cadrage que Q8/FP16. Le détail des tissus change, sans corriger la composition."
+  },
+  "8": {
+    "verdict": "Proposée",
+    "comment": "Deux adultes complets, tenues et positions respectées ; pieds au bord inférieur et partiellement cachés par le kimono.",
+    "comparison": "Cadrage global conforme comme les deux témoins, avec une marge basse étroite. Pas de gain qualitatif évident."
+  },
+  "9": {
+    "verdict": "À revoir",
+    "comment": "Répétition de G352-01 : cinq doigts, mais main floue et peu définie.",
+    "comparison": "Pixels et PNG identiques à G352-01 ; contrôle hors score natif."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Les deux personnages sont coupés à mi-corps ; le cadrage en pied est absent.",
+    "comparison": "Même limite que Q8 et FP16 en 1024 × 576 ; contrôle hors score natif."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Les jambes et les pieds des deux adultes sont hors cadre.",
+    "comparison": "Même limite que les deux témoins en 768 × 576 ; contrôle hors score natif."
+  }
+}

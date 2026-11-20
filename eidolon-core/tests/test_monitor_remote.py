@@ -31,11 +31,16 @@ STATUS = {"service_schema": "eidolon-darme-service/1", "badge": "grey", "visibil
           "sources": {"memory-bridge.service": True}, "authorizes_execution": False,
           "generated_at": "2026-10-12T10:00:00+00:00"}
 FAKE_SSH = '''#!{python}
-import json, sys, time
+import json, sys, time, os
 from pathlib import Path
 Path(__file__).with_name("argv.json").write_text(json.dumps(sys.argv[1:]))
 host = sys.argv[-1]
 if host == "ok": print({status!r})
+elif host.startswith("eof-"):
+    print({status!r}, flush=True)
+    os.close(1)
+    time.sleep(30 if host == "eof-hang" else 0.15)
+    os._exit(255 if host == "eof-refused" else 0)
 elif host == "big": sys.stdout.write("x" * 200000)
 elif host == "slow": time.sleep(30)
 elif host == "garbage": print("not json")
@@ -78,6 +83,14 @@ class RemoteReaderTests(unittest.TestCase):
         self.assertEqual(R.read_ssh(self.spec("garbage"), ssh=str(self.ssh)), (None, "INVALID_REPLY"))
         self.assertEqual(R.read_ssh(self.spec("refused"), ssh=str(self.ssh)), (None, "UNAVAILABLE"))
         self.assertEqual(R.read_ssh(self.spec(), ssh=str(self.ssh.parent / "absent")), (None, "UNAVAILABLE"))
+
+    def test_eof_waits_for_exit_within_original_deadline(self):
+        self.assertEqual(R.read_ssh(self.spec("eof-ok"), ssh=str(self.ssh)), (STATUS, None))
+        self.assertEqual(R.read_ssh(self.spec("eof-refused"), ssh=str(self.ssh)), (None, "UNAVAILABLE"))
+        started = time.monotonic()
+        self.assertEqual(R.read_ssh(self.spec("eof-hang"), ssh=str(self.ssh), timeout=0.4),
+                         (None, "TIMEOUT"))
+        self.assertLess(time.monotonic() - started, 2)
 
     def test_configuration_refusals(self):
         for host in ("-oProxyCommand=x", "a b", "a;b", "", "x" * 300):

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "core-root",
+    "exit": 0
+  },
+  {
+    "name": "memory-root",
+    "exit": 0
+  },
+  {
+    "name": "flux-attention",
+    "exit": 0
+  }
+]

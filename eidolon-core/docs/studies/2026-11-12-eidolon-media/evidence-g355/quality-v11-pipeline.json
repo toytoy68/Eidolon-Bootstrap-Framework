@@ -1,0 +1,117 @@
+{
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "beta_start": 0.00085,
+    "beta_end": 0.012,
+    "beta_schedule": "scaled_linear",
+    "trained_betas": null,
+    "solver_order": 2,
+    "prediction_type": "epsilon",
+    "thresholding": false,
+    "dynamic_thresholding_ratio": 0.995,
+    "sample_max_value": 1.0,
+    "algorithm_type": "dpmsolver++",
+    "solver_type": "midpoint",
+    "lower_order_final": true,
+    "euler_at_final": false,
+    "use_karras_sigmas": true,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "use_lu_lambdas": false,
+    "use_flow_sigmas": false,
+    "flow_shift": 1.0,
+    "final_sigmas_type": "zero",
+    "lambda_min_clipped": "-inf",
+    "variance_type": null,
+    "timestep_spacing": "leading",
+    "steps_offset": 1,
+    "rescale_betas_zero_snr": false,
+    "_use_default_values": [
+      "flow_shift",
+      "use_exponential_sigmas",
+      "solver_type",
+      "rescale_betas_zero_snr",
+      "dynamic_thresholding_ratio",
+      "thresholding",
+      "lower_order_final",
+      "use_flow_sigmas",
+      "final_sigmas_type",
+      "euler_at_final",
+      "variance_type",
+      "use_lu_lambdas",
+      "lambda_min_clipped",
+      "use_beta_sigmas"
+    ],
+    "interpolation_type": "linear",
+    "_class_name": "DPMSolverMultistepScheduler",
+    "_diffusers_version": "0.19.0.dev0",
+    "clip_sample": false,
+    "set_alpha_to_one": false,
+    "skip_prk_steps": true
+  },
+  "vae": {
+    "in_channels": 3,
+    "out_channels": 3,
+    "down_block_types": [
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D"
+    ],
+    "up_block_types": [
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D"
+    ],
+    "block_out_channels": [
+      128,
+      256,
+      512,
+      512
+    ],
+    "layers_per_block": 2,
+    "act_fn": "silu",
+    "latent_channels": 4,
+    "norm_num_groups": 32,
+    "sample_size": 1024,
+    "scaling_factor": 0.13025,
+    "shift_factor": null,
+    "latents_mean": null,
+    "latents_std": null,
+    "force_upcast": true,
+    "use_quant_conv": true,
+    "use_post_quant_conv": true,
+    "mid_block_add_attention": true,
+    "_use_default_values": [
+      "latents_std",
+      "latents_mean",
+      "use_quant_conv",
+      "shift_factor",
+      "use_post_quant_conv",
+      "mid_block_add_attention"
+    ],
+    "_class_name": "AutoencoderKL",
+    "_diffusers_version": "0.20.0.dev0",
+    "_name_or_path": "../sdxl-vae/"
+  },
+  "vae_tiling": true,
+  "components": {
+    "unet": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "text_encoder": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "text_encoder_2": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "vae": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    }
+  }
+}

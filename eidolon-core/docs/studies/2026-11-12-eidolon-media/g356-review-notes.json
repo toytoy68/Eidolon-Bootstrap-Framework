@@ -1,0 +1,32 @@
+{
+  "reviews": {
+    "0": {"verdict": "Proposée", "comment": "Une seule main, cinq doigts séparés, paume lisible et fond gris. Le poignet arrive par le bas droit : pose oblique, mais les doigts sont globalement dirigés vers le haut. Contrôle à 512 pixels, hors score principal."},
+    "1": {"verdict": "Rejetée", "comment": "Peau et éclairage crédibles, mais seulement quatre doigts : un pouce et trois doigts longs. Le cinquième manque malgré une paume bien orientée."},
+    "2": {"verdict": "Rejetée", "comment": "Même défaut décisif : quatre doigts visibles au lieu de cinq. Le bon rendu de peau ne compense pas l'erreur anatomique."},
+    "3": {"verdict": "Rejetée", "comment": "Trois récipients au lieu de deux : bol bleu à gauche, tasse rouge au centre et pichet bleu à droite. Socle et petit accessoire supplémentaires ; positions demandées non respectées."},
+    "4": {"verdict": "Rejetée", "comment": "Trois tasses ou récipients à anse, dont un grand gris. Le bol bleu séparé demandé à droite est absent ; nombre, formes et couleurs ne correspondent pas."},
+    "5": {"verdict": "Rejetée", "comment": "Assemblage incohérent : deux gardes et deux segments de poignée alignés, une lame détachée ou fusionnée avec les éléments noirs. Pas de couple katana et fourreau séparés crédible."},
+    "6": {"verdict": "Rejetée", "comment": "Un seul sabre entièrement visible, aux matériaux convaincants. Le fourreau noir séparé demandé est absent."},
+    "7": {"verdict": "Rejetée", "comment": "Deux adultes en pied et ordre gauche-droite correct, mais la femme porte une tenue noire avec ceinture rouge, pas un kimono rouge. Une de ses mains est aussi masquée par le samouraï."},
+    "8": {"verdict": "Rejetée", "comment": "Trois adultes au lieu des deux demandés. La femme en rouge et le samouraï sont présents, mais un personnage supplémentaire occupe la gauche."},
+    "9": {"verdict": "Rejetée", "comment": "Répétition pixel-identique à 01, donc même main à quatre doigts. La reproductibilité technique est validée, pas l'anatomie."},
+    "10": {"verdict": "Rejetée", "comment": "Duo en pied, vêtements et mains visibles, mais positions inversées : femme à gauche et samouraï à droite."},
+    "11": {"verdict": "Proposée", "comment": "Deux adultes en pied, samouraï en armure noire à gauche et femme en tenue rouge à droite, mains visibles. Ensemble cohérent à cette échelle ; détails des doigts peu résolus. Contrôle 4:3 hors score principal."}
+  },
+  "comparisons": {
+    "0": "Lightning présente une main plus ouverte et un poignet descendant vers le bord inférieur ; XI standard reste davantage en torsion latérale. Ce succès à 512 pixels ne se retrouve pas dans les deux essais à 1024 pixels.",
+    "1": "XI standard conserve les cinq doigts ; Lightning en perd un. La rapidité se paie ici par une régression anatomique nette.",
+    "2": "Les deux versions n'ont que quatre doigts. Lightning rend mieux certains détails de peau, sans corriger la structure.",
+    "3": "Les deux variantes ajoutent un troisième récipient et placent le bol à gauche. Lightning ajoute aussi un socle et un petit accessoire.",
+    "4": "Le problème persiste : trois récipients et mauvaise association des formes et des couleurs dans les deux variantes.",
+    "5": "XI standard produit deux objets de type sabre ; Lightning les fusionne davantage avec des gardes et poignées surnuméraires. Aucun fourreau séparé convaincant.",
+    "6": "Même omission dans les deux recettes : un sabre sans son fourreau. Le gain de temps ne change pas ce verdict.",
+    "7": "XI standard respecte le kimono rouge ; Lightning transfère le rouge surtout aux ceintures et habille la femme en noir. Régression du respect des attributs.",
+    "8": "XI standard reste un duo, avec une réserve sur son arme ; Lightning ajoute un troisième adulte. La cardinalité constitue un rejet clair.",
+    "9": "Les deux répétitions sont exactes dans leur campagne respective. Celle de XI standard conserve cinq doigts, celle de Lightning seulement quatre.",
+    "10": "Les deux variantes inversent les positions gauche-droite. La scène Lightning est plus rapprochée, sans corriger cette consigne.",
+    "11": "Lightning donne un duo cohérent sans la longue arme ambiguë qui motivait la réserve sur XI standard. Résultat intéressant en 4:3, mais exclu du score natif à 1024 pixels."
+  },
+  "visual_summary": "La lumière et les matériaux sont convaincants, mais les huit natives échouent : deux mains à quatre doigts, récipients surnuméraires, géométrie du sabre ou fourreau absent, tenue erronée et troisième personnage. Les contrôles 512 pixels et 4:3 sont proposés séparément ; ils ne modifient pas le score 0/8.",
+  "decision": "Ne pas retenir XI Lightning comme modèle principal avec cette recette. Sa vitesse est utile, mais la conformité est insuffisante sur cette petite grille ; le contrôle 4:3 mérite une confirmation sur plusieurs seeds avant tout usage régulier."
+}

@@ -1,0 +1,450 @@
+{
+  "time": "2026-11-14T22:55:44.504609+00:00",
+  "gpu": {
+    "exit": 0,
+    "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 31, 32, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 29, 28, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 32, N/A, 2 MiB, 120.00 W\n",
+    "stderr": ""
+  },
+  "clients": {
+    "exit": 0,
+    "stdout": "pid, process_name\n",
+    "stderr": ""
+  },
+  "services": {
+    "exit": 0,
+    "stdout": "active\nactive\nactive\nactive\nactive\n",
+    "stderr": ""
+  },
+  "vms": {
+    "exit": 0,
+    "stdout": " ID   Nom                            \u00c9tat\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d\u2019ex\u00e9cution\n -    eidolon-audit-smoke-20261102   ferm\u00e9\n -    Eidolon-Debian12-Test          ferm\u00e9\n -    Eidolon-Memory-Engine-Test     ferm\u00e9\n -    Eidolon-Memory-Engine-v2       ferm\u00e9\n -    Eidolon-Memory-Lab             ferm\u00e9\n -    Eidolon-Memory-Lab-v2          ferm\u00e9\n -    Eidolon-Ubuntu-Diagnostic      ferm\u00e9\n -    Memory-engine-tests            ferm\u00e9\n -    Memory-tests                   ferm\u00e9\n -    nomifactory-test               ferm\u00e9\n\n",
+    "stderr": ""
+  },
+  "runtime_unchanged": true,
+  "source_checks": [
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl_inpaint.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/schedulers/scheduling_euler_discrete.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/unets/unet_2d_condition.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/image_processor.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/transformers/models/clip/modeling_clip.py",
+      "match": true
+    }
+  ],
+  "png_checks": [
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run01/sdxl_inpaint/00-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run01/sdxl_inpaint/00-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run01/sdxl_inpaint/00-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run01/sdxl_inpaint/00-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/01-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/01-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/01-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/01-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/02-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/02-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/02-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/02-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/03-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/03-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/03-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/03-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/04-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/04-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/04-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/04-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/05-katana.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/05-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/05-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/05-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/06-katana.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/06-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/06-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/06-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/07-duo.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/07-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/07-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/07-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/08-duo.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/08-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/08-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/08-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/09-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/09-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/09-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/09-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/10-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/10-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/10-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/10-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/11-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/11-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/11-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run02/sdxl_inpaint/11-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/01-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/01-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/01-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/01-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/02-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/02-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/02-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/02-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/03-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/03-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/03-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/03-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/04-objects.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/04-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/04-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/04-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/05-katana.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/05-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/05-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/05-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/06-katana.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/06-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/06-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/06-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/07-duo.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/07-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/07-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/07-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/08-duo.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/08-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/08-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/08-mask.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/09-hand.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/09-raw.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/09-source.png",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/sdxl-inpaint-g357/run03/sdxl_inpaint/09-mask.png",
+      "match": true
+    }
+  ],
+  "config_checks": [
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/README.md",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/model_index.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/scheduler/scheduler_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/text_encoder/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/text_encoder_2/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer/merges.txt",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer/special_tokens_map.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer/tokenizer_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer/vocab.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer_2/merges.txt",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer_2/special_tokens_map.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer_2/tokenizer_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/tokenizer_2/vocab.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/unet/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/vae/config.json",
+      "match": true
+    }
+  ]
+}

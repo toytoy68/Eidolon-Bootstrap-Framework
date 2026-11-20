@@ -1,0 +1,242 @@
+[
+  {
+    "index": 0,
+    "case": "hand",
+    "width": 512,
+    "height": 512,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "smoke",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 9.983868762999919,
+    "png_sha256": "09de41ce1bccc7cb98a3f513aeb53b0fc85264c251a7477b152f7fe570a074ea",
+    "pixel_sha256": "91bc0f84ac7a81cb26e1a2c01575ca303c5726aa1dd9249f1118908c05acdeef",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12759057408,
+      13298987520
+    ]
+  },
+  {
+    "index": 1,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.29302403299971,
+    "png_sha256": "6eb2dafcfdbd6af1c03b735d3dcbba2f0b9d89e58fdaa4bbed395cbda0a1d1be",
+    "pixel_sha256": "4b77986e84f8886f92124b1ffc927e5164084d0340ed41d1e64a3ec3176a3813",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963325440,
+      13992361472
+    ]
+  },
+  {
+    "index": 2,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.397874822999256,
+    "png_sha256": "d21a848f38c205255f0674eb354f6fad49ba0e186c274032cd52ec6cbb665737",
+    "pixel_sha256": "0d4d9e17bbc5cd79c6a49a6ab108e0a279374e2925759b4a0ee72478253eae68",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963325440,
+      13992361472
+    ]
+  },
+  {
+    "index": 3,
+    "case": "objects",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.42211235200011,
+    "png_sha256": "93ce4e9504ea6e1dfe8a43460ec35992495b81eecd8258e96563ff70a039d823",
+    "pixel_sha256": "c1a06711f3ad759ef700fdc622377a83e9f4557e9aec3e7469f79401d28e1adc",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963393024,
+      13992361472
+    ]
+  },
+  {
+    "index": 4,
+    "case": "objects",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.46684828799971,
+    "png_sha256": "3777e4cb23f15c98027feb75f3c9a3bd5670407d7166c0a6520f80f829aca29c",
+    "pixel_sha256": "b2a226f9dea730333415c6704181d06349b488d840c52155572112e951178380",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963393024,
+      13992361472
+    ]
+  },
+  {
+    "index": 5,
+    "case": "katana",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.49507400099992,
+    "png_sha256": "86c85e74a826bebdc7ea16f0c61b4490041427ca2350a2f669c19645c8ef366f",
+    "pixel_sha256": "5bf7aa32fe897d7007c5799c594d0cff5f2fd34a1787e5942522e751969b3cb9",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963461120,
+      13992361472
+    ]
+  },
+  {
+    "index": 6,
+    "case": "katana",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.5257305289997,
+    "png_sha256": "d814f8d99ea5470a2c25f09141cc9fe068891652fbba75352475078eb270ece3",
+    "pixel_sha256": "fc9c802f67c74be042f7017cb53cac6e36cf89dd07ea8ff4125a2e9843f12335",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963461120,
+      13992361472
+    ]
+  },
+  {
+    "index": 7,
+    "case": "duo",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.57326947299953,
+    "png_sha256": "934d853b2c720d8213ffd8aee0609f6fa9a909a9aebd2137a278416043de3c05",
+    "pixel_sha256": "a1b629b0a3437fa96545f9a2a0f8710ceefd6245ea354e2aa283211f168879d7",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963558400,
+      13992361472
+    ]
+  },
+  {
+    "index": 8,
+    "case": "duo",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261114,
+    "steps": 9,
+    "condition": "quality",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.6065589509999,
+    "png_sha256": "e5b8d33a036e8a9978f4516f1ca88fa58c1c61cb4d6bf9a268aac72e98cbfd27",
+    "pixel_sha256": "b6635e0b55f76b720c00c36d70496d3c1821afadca4c87ff8fe8fe7ce8fadbdb",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963558400,
+      13992361472
+    ]
+  },
+  {
+    "index": 9,
+    "case": "hand",
+    "width": 1024,
+    "height": 1024,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "repeat",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 45.629813280000235,
+    "png_sha256": "6eb2dafcfdbd6af1c03b735d3dcbba2f0b9d89e58fdaa4bbed395cbda0a1d1be",
+    "pixel_sha256": "4b77986e84f8886f92124b1ffc927e5164084d0340ed41d1e64a3ec3176a3813",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12963325440,
+      13992361472
+    ]
+  },
+  {
+    "index": 10,
+    "case": "duo",
+    "width": 1024,
+    "height": 576,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "screen16x9",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 23.598612241999945,
+    "png_sha256": "6a00e8bdfe932ab2b44ba0ab877fa1a0dded7e75725bcb7020c38836b6cbfb48",
+    "pixel_sha256": "bf7b71b74edbbe99544f6b1c7d3209c98ca680ae718cb0af7638d2e4033352db",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12762858496,
+      13588362752
+    ]
+  },
+  {
+    "index": 11,
+    "case": "duo",
+    "width": 768,
+    "height": 576,
+    "seed": 20261113,
+    "steps": 9,
+    "condition": "screen4x3",
+    "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+    "guidance": 0.0,
+    "transformer_forward_calls": 9,
+    "seconds": 16.326348292000148,
+    "png_sha256": "65cbbf365ecd3c87c88461775f57fa34165d35e8670fed0f866ba8741c07bb15",
+    "pixel_sha256": "dabd10874bf5245175c15ea371dd84a66b9a12851c077d7bb2b4528df8bd5866",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      12759417856,
+      13457683456
+    ]
+  }
+]

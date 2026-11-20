@@ -1,0 +1,14 @@
+2026-11-14T19:36:26+01:00 eidolon-os flock[82398]: {"phase": "load_start", "precision": "fp16"}
+2026-11-14T19:36:30+01:00 eidolon-os flock[82398]: [334B blob data]
+2026-11-14T19:36:36+01:00 eidolon-os flock[82398]: {"phase": "loaded", "distribution": {"cuda:0": 8173096064, "cuda:1": 7940158976}}
+2026-11-14T19:36:39+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 1, "case": "hand", "seconds": 3.3361724189999222}
+2026-11-14T19:36:43+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 2, "case": "hand", "seconds": 3.125886060999619}
+2026-11-14T19:36:46+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 3, "case": "objects", "seconds": 3.1230974460013385}
+2026-11-14T19:36:50+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 4, "case": "objects", "seconds": 3.130258649998723}
+2026-11-14T19:36:53+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 5, "case": "katana", "seconds": 3.130261580001388}
+2026-11-14T19:36:56+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 6, "case": "katana", "seconds": 3.1403885139989143}
+2026-11-14T19:37:00+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 7, "case": "duo", "seconds": 3.1231818730011582}
+2026-11-14T19:37:03+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 8, "case": "duo", "seconds": 3.1324793719977606}
+2026-11-14T19:37:07+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 9, "case": "hand", "seconds": 3.1236172869976144}
+2026-11-14T19:37:09+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 10, "case": "duo", "seconds": 1.689130576000025}
+2026-11-14T19:37:10+01:00 eidolon-os flock[82398]: {"phase": "generated", "index": 11, "case": "duo", "seconds": 1.2854271040014282}

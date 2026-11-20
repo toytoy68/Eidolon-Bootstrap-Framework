@@ -1,0 +1,8 @@
+{
+  "exit": 0,
+  "stdout": "{\"legitimate_write\": true, \"outside_private_visible\": false, \"POST\": \"URLError\", \"PUT\": \"URLError\", \"dns\": \"gaierror\", \"cap_eff\": \"CapEff:\\t0000000000000000\"}\n",
+  "stderr": "",
+  "host_received_requests": [],
+  "legitimate_host_file": true,
+  "scope": "isolated synthetic bwrap capability proof; not DARME deployed integration"
+}

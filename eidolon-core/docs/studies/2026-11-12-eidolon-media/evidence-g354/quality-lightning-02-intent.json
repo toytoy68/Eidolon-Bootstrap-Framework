@@ -1,0 +1,11 @@
+{
+  "condition": "quality",
+  "case": "hand",
+  "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+  "seed": 20261114,
+  "steps": 6,
+  "cfg": 1.8,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024
+}

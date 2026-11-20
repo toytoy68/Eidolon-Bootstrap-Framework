@@ -1,0 +1,7 @@
+{
+  "source": "/srv/eidolon/data/proxmox-archives",
+  "destination": "/srv/eidolon/ssd/archives/proxmox-archives",
+  "verified": "rsync aHAX checksum dry-run empty",
+  "completed": 1795208195.1842637,
+  "df": "Sys. de fichiers            Taille Utilis\u00e9 Dispo Uti% Mont\u00e9 sur\n/dev/mapper/vg_eidolon-data   393G    263G  111G  71% /srv/eidolon/data\n/dev/sdc1                     469G    199G  265G  43% /srv/eidolon/ssd\n"
+}

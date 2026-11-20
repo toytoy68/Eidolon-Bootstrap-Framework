@@ -1,0 +1,25 @@
+[
+  {
+    "index": 0,
+    "case": "hand",
+    "width": 512,
+    "height": 512,
+    "seed": 20261113,
+    "steps": 4,
+    "condition": "smoke",
+    "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "guidance": 0.0,
+    "seconds": 1.0209251470005256,
+    "block_calls": {
+      "0": 76,
+      "1": 76
+    },
+    "png_sha256": "b553f44d22931bc55c9e36d0455ebad10dcb71143910f2086ba6ccbdf7115144",
+    "pixel_sha256": "3073f334e45c34f761e7f3cc0c6e5f59f830d744e048fc8fdd7caa016f0a93cf",
+    "visual": "NOT_REVIEWED",
+    "torch_peak_allocated_bytes": [
+      9703112192,
+      8216359424
+    ]
+  }
+]

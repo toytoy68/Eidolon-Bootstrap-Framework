@@ -1,0 +1,11 @@
+[
+  {
+    "id": "xi_lightning",
+    "repo": "RunDiffusion/Juggernaut-XI-Lightning",
+    "revision": "dbb242e5b54f33ce3bde22464f8813c1427bf1d4",
+    "name": "Juggernaut-XI-byRunDiffusion-Lightning-Civitai-Version.safetensors",
+    "absolute": "/srv/eidolon/data/media-models-20261113/juggernaut-xi-lightning-g356/Juggernaut-XI-byRunDiffusion-Lightning-Civitai-Version.safetensors",
+    "bytes": 7105348616,
+    "sha256": "609fde646e7fc60a259ad67351e02258ac7929a0a1f5040049dfec6a15f37b1a"
+  }
+]
