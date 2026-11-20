@@ -1,0 +1,24 @@
+2026-11-13T20:14:30+01:00 eidolon-os systemd[1]: Started eidolon-media-klein-g340.service - [systemd-run] /usr/bin/flock -n /srv/eidolon/workspaces/media-20261112/quality-campaign.lock /srv/eidolon/workspaces/media-20261112/klein-g340/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/klein_probe_g340.py --work /srv/eidolon/workspaces/media-20261112/klein-g340 --models /srv/eidolon/data/media-models-20261113/klein-4b --output /srv/eidolon/workspaces/media-20261112/klein-g340/run01.
+2026-11-13T20:14:44+01:00 eidolon-os flock[102231]: {"phase": "encode_cpu_start"}
+2026-11-13T20:14:44+01:00 eidolon-os flock[102231]: `torch_dtype` is deprecated! Use `dtype` instead!
+2026-11-13T20:14:48+01:00 eidolon-os flock[102231]: [334B blob data]
+2026-11-13T20:15:02+01:00 eidolon-os flock[102231]: {"phase": "encoded", "case": "hand", "shape": [1, 512, 7680]}
+2026-11-13T20:15:15+01:00 eidolon-os flock[102231]: {"phase": "encoded", "case": "objects", "shape": [1, 512, 7680]}
+2026-11-13T20:15:28+01:00 eidolon-os flock[102231]: {"phase": "encoded", "case": "katana", "shape": [1, 512, 7680]}
+2026-11-13T20:15:42+01:00 eidolon-os flock[102231]: {"phase": "encoded", "case": "duo", "shape": [1, 512, 7680]}
+2026-11-13T20:15:43+01:00 eidolon-os flock[102231]: {"phase": "load_start", "precision": "fp16"}
+2026-11-13T20:15:48+01:00 eidolon-os flock[102231]: {"phase": "loaded", "distribution": {"cuda:0": 7751089152}}
+2026-11-13T20:15:49+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 0, "case": "hand", "seconds": 1.0859289250001893}
+2026-11-13T20:15:53+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 1, "case": "hand", "seconds": 3.390778097003931}
+2026-11-13T20:15:57+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 2, "case": "hand", "seconds": 3.393752432995825}
+2026-11-13T20:16:00+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 3, "case": "objects", "seconds": 3.3959770040019066}
+2026-11-13T20:16:04+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 4, "case": "objects", "seconds": 3.3883964810011094}
+2026-11-13T20:16:08+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 5, "case": "katana", "seconds": 3.3964444730008836}
+2026-11-13T20:16:11+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 6, "case": "katana", "seconds": 3.3976661120032077}
+2026-11-13T20:16:15+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 7, "case": "duo", "seconds": 3.407428696002171}
+2026-11-13T20:16:19+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 8, "case": "duo", "seconds": 3.395337808993645}
+2026-11-13T20:16:23+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 9, "case": "hand", "seconds": 3.401343793993874}
+2026-11-13T20:16:25+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 10, "case": "duo", "seconds": 1.8768453969969414}
+2026-11-13T20:16:26+01:00 eidolon-os flock[102231]: {"phase": "generated", "index": 11, "case": "duo", "seconds": 1.4219367619953118}
+2026-11-13T20:16:27+01:00 eidolon-os systemd[1]: eidolon-media-klein-g340.service: Deactivated successfully.
+2026-11-13T20:16:27+01:00 eidolon-os systemd[1]: eidolon-media-klein-g340.service: Consumed 8min 37.215s CPU time, 16.2G memory peak.

@@ -1,0 +1,10 @@
+[
+  {
+    "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+    "revision": "19683c58b7ea290e55cedd8950ae1d86ada7ef96",
+    "path": "vae/diffusion_pytorch_model.safetensors",
+    "name": "diffusion_pytorch_model.safetensors",
+    "bytes": 1249044836,
+    "sha256": "dfd991d1b54ffabf22745c5885589d8f2a7bc59930d95d92bd741c4fc64454bb"
+  }
+]

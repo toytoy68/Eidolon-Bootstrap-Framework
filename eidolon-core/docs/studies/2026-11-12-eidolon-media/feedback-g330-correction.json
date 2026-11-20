@@ -1,0 +1,335 @@
+{
+  "event": {
+    "revision": 13,
+    "previous": "344da56d5b13037e5d8f4e26276ab215758c344c56a6a1c096538673f74ab83a",
+    "time": 1794501103.5223472,
+    "record": {
+      "asset_id": "g329-02",
+      "image_sha256": "e4f6a3a3e5f3f1652543effacea39dc721723ef93431c5358b76df51f81163f6",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+      "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+      "width": 1024,
+      "height": 1024,
+      "split": "train",
+      "decision": "REJECT",
+      "reason": "Correction de toytoy sur image annotee : raccords doigts-paume et plis incoherents a la base des doigts, replis deformes pres du pouce. Validation GPT initiale retiree. Notes revisees par GPT d'apres le signalement utilisateur.",
+      "reviewer": "user",
+      "confidence": "high",
+      "scores": {
+        "fidelity": 2,
+        "structure": 1,
+        "composition": 4,
+        "finish": 3
+      }
+    },
+    "hash": "cddd26de15d8df6d301ae5d54ae226c782e3368155d69992742f7aca5b2971d8"
+  },
+  "snapshot": {
+    "revision": 13,
+    "ledger_hash": "cddd26de15d8df6d301ae5d54ae226c782e3368155d69992742f7aca5b2971d8",
+    "records": [
+      {
+        "asset_id": "g329-00",
+        "image_sha256": "8114b6c245982fd563d7e3a93dd51d3a57e3a1276e3b52c1949bd6fb874f00ea",
+        "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+        "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Six doigts visibles pour une main demandée à cinq doigts : défaut éliminatoire.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 1,
+          "structure": 0,
+          "composition": 3,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-01",
+        "image_sha256": "42aec60acbb9e5375909aee8ec577566b4ccb0bde3ca043033ef1b9c1c1fc7a8",
+        "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+        "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "ACCEPT",
+        "reason": "Une seule paume ouverte, cinq doigts distincts, orientation conforme. Plis et proportions imparfaits mais pas de défaut éliminatoire évident à l'inspection.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 4,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-02",
+        "image_sha256": "e4f6a3a3e5f3f1652543effacea39dc721723ef93431c5358b76df51f81163f6",
+        "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+        "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Correction de toytoy sur image annotee : raccords doigts-paume et plis incoherents a la base des doigts, replis deformes pres du pouce. Validation GPT initiale retiree. Notes revisees par GPT d'apres le signalement utilisateur.",
+        "reviewer": "user",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 2,
+          "structure": 1,
+          "composition": 4,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-03",
+        "image_sha256": "1e04b0a5dee95741fa27066d93317d86729ef37694b304addd815d82a12be757",
+        "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+        "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Deux mains au lieu d'une, doigts déformés : nombre de sujets incorrect.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 0,
+          "structure": 1,
+          "composition": 2,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-04",
+        "image_sha256": "e90b2aa1da17eca9f9021d3f5eff909262029d85954a7426245813d3bca6c9ea",
+        "prompt": "Studio photograph of one red ceramic mug on the left and one blue ceramic bowl on the right, separated on a grey table. Both objects fully visible, soft side lighting.",
+        "config_sha256": "e97cdd2696eac97dea710b0a7674ec4e66eff2467153494e64a3ab083600cf46",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "ACCEPT",
+        "reason": "Une tasse rouge à gauche et un bol bleu à droite, entiers et séparés, conformément à la demande.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 4,
+          "structure": 4,
+          "composition": 3,
+          "finish": 4
+        }
+      },
+      {
+        "asset_id": "g329-05",
+        "image_sha256": "10cb68e3a44eef2349a0b4f3cf39849211c7f35baf94bb1325082dcc1668d361",
+        "prompt": "Studio photograph of one red ceramic mug on the left and one blue ceramic bowl on the right, separated on a grey table. Both objects fully visible, soft side lighting.",
+        "config_sha256": "e97cdd2696eac97dea710b0a7674ec4e66eff2467153494e64a3ab083600cf46",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Image divisée en deux scènes avec quatre récipients au lieu de deux : défaut éliminatoire de nombre et de composition.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 0,
+          "structure": 2,
+          "composition": 1,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-06",
+        "image_sha256": "3fb09d2d84d865a0b193bac4b75637e38ca34f1bd063a1c7e1314b0688939024",
+        "prompt": "Studio photograph of one red ceramic mug on the left and one blue ceramic bowl on the right, separated on a grey table. Both objects fully visible, soft side lighting.",
+        "config_sha256": "e97cdd2696eac97dea710b0a7674ec4e66eff2467153494e64a3ab083600cf46",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "UNCERTAIN",
+        "reason": "Le récipient bleu possède une anse et ressemble à une seconde tasse. Un bol à anse existe : ambiguïté de catégorie, exemple exclu de l'apprentissage.",
+        "reviewer": "gpt",
+        "confidence": "medium",
+        "scores": {
+          "fidelity": 2,
+          "structure": 3,
+          "composition": 4,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-07",
+        "image_sha256": "b6bd29f282c35c98bb1e6359e14e9e94be29fbc2b7bd8d2782bae4b3284f03f7",
+        "prompt": "Studio photograph of one red ceramic mug on the left and one blue ceramic bowl on the right, separated on a grey table. Both objects fully visible, soft side lighting.",
+        "config_sha256": "e97cdd2696eac97dea710b0a7674ec4e66eff2467153494e64a3ab083600cf46",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Deux récipients à anses avec mélange rouge/bleu ; aucun bol bleu distinct conforme à la relation demandée.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 1,
+          "structure": 3,
+          "composition": 2,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-08",
+        "image_sha256": "fb266800695dfb4c63d7a840a7cba0317760a4a23c614201342c0ec4ff97d575",
+        "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+        "config_sha256": "b64f582cbba0d3c813d9dbc9dcc7d580fe242ce0dde19bb0625990d2febfce58",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Lame avec élément de poignée transversal incohérent ; aucun fourreau séparé.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 1,
+          "structure": 1,
+          "composition": 3,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-09",
+        "image_sha256": "ad99caea4b8512e629666d8b0a0ecd2f65821fcaac5357e434cb9fb2d648d4cc",
+        "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+        "config_sha256": "b64f582cbba0d3c813d9dbc9dcc7d580fe242ce0dde19bb0625990d2febfce58",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Collage de détails, éléments coupés et assemblage incohérent : ni katana ni fourreau complets côte à côte.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 1,
+          "structure": 1,
+          "composition": 1,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-10",
+        "image_sha256": "49b89ab2bab11f4ee821d0175551cb34a65d99d418200680b6d365c6ed895e03",
+        "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+        "config_sha256": "b64f582cbba0d3c813d9dbc9dcc7d580fe242ce0dde19bb0625990d2febfce58",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Plusieurs lames et accessoires au lieu d'un katana avec son seul fourreau ; objets partiellement coupés.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 0,
+          "structure": 1,
+          "composition": 1,
+          "finish": 3
+        }
+      },
+      {
+        "asset_id": "g329-11",
+        "image_sha256": "e068dba0b22b7f5c3633a04ad41d2c050b6ceede06b2ed8db722eb189ac94418",
+        "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+        "config_sha256": "b64f582cbba0d3c813d9dbc9dcc7d580fe242ce0dde19bb0625990d2febfce58",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "split": "train",
+        "decision": "REJECT",
+        "reason": "Deux lames et plusieurs éléments coupés ; le couple unique katana/fourreau demandé n'est pas respecté.",
+        "reviewer": "gpt",
+        "confidence": "high",
+        "scores": {
+          "fidelity": 0,
+          "structure": 1,
+          "composition": 1,
+          "finish": 3
+        }
+      }
+    ],
+    "pairs": [
+      {
+        "chosen": "g329-01",
+        "rejected": "g329-00",
+        "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+        "config_sha256": "62b213e3ae0137ad6f77cfe8e70411f35759c3156c2d7f1661e3f0b57296e41c",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "chosen_sha256": "42aec60acbb9e5375909aee8ec577566b4ccb0bde3ca043033ef1b9c1c1fc7a8",
+        "rejected_sha256": "8114b6c245982fd563d7e3a93dd51d3a57e3a1276e3b52c1949bd6fb874f00ea"
+      },
+      {
+        "chosen": "g329-04",
+        "rejected": "g329-05",
+        "prompt": "Studio photograph of one red ceramic mug on the left and one blue ceramic bowl on the right, separated on a grey table. Both objects fully visible, soft side lighting.",
+        "config_sha256": "e97cdd2696eac97dea710b0a7674ec4e66eff2467153494e64a3ab083600cf46",
+        "model_sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+        "width": 1024,
+        "height": 1024,
+        "chosen_sha256": "e90b2aa1da17eca9f9021d3f5eff909262029d85954a7426245813d3bca6c9ea",
+        "rejected_sha256": "10cb68e3a44eef2349a0b4f3cf39849211c7f35baf94bb1325082dcc1668d361"
+      }
+    ]
+  },
+  "invalidation": {
+    "status": "INVALIDATED_BY_USER_REVIEW",
+    "asset_id": "g329-02",
+    "time": 1794501103.527901,
+    "previous_ledger_hash": "344da56d5b13037e5d8f4e26276ab215758c344c56a6a1c096538673f74ab83a",
+    "current_ledger_hash": "cddd26de15d8df6d301ae5d54ae226c782e3368155d69992742f7aca5b2971d8",
+    "revision": 13,
+    "candidate_sha256": "51a82b264852ef024f5b6239d835db558a0e95e22af561549cf532d2a28a227b",
+    "promotion_allowed": false,
+    "requires_retraining": true,
+    "training_reversed": false,
+    "reason": "Correction de toytoy sur image annotee : raccords doigts-paume et plis incoherents a la base des doigts, replis deformes pres du pouce. Validation GPT initiale retiree. Notes revisees par GPT d'apres le signalement utilisateur.",
+    "previous_dataset_sha256": "d63bd610d48bfc518c2017006b3736cd41bd350da8a7004680878dfdf1631c28",
+    "corrected_dataset": "/srv/eidolon/workspaces/media-20261112/preference-lab/dataset-g329/dataset-rev13.json"
+  },
+  "checks": {
+    "original_snapshot_unchanged": true,
+    "pair_hashes_verified": true,
+    "old_candidate_ledger_mismatch": true
+  },
+  "annotation_sha256": "27e572bbe7f21081bc469f4a9b831da35756198c5b1b4b7f5616aeab6af48a7a",
+  "annotation_source": "Image annotee fournie directement par toytoy en session ; non utilisee comme pixels entrainables.",
+  "validation": {
+    "unit_tests_local": {
+      "passed": 8
+    },
+    "unit_tests_x399": {
+      "passed": 8
+    },
+    "compare_guard_x399": {
+      "exit_code": 1,
+      "expected_error": "REVIEWS_CHANGED",
+      "cuda_visible_devices": "",
+      "gpu_generation_started": false
+    },
+    "pytest_attempts": "pytest absent localement et sur X399 ; tests executes avec unittest, sans installation."
+  }
+}

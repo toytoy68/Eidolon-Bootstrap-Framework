@@ -1,0 +1,15 @@
+{
+  "case": "hand",
+  "prompt": "Studio photograph of one adult human hand with exactly five anatomically correct separated digits: one thumb and four long fingers. Open palm facing the camera, all fingers spread apart, fingertips upwards, wrist downwards, natural skin, plain grey background.",
+  "target": "Reconstruire une main ouverte avec cinq doigts.",
+  "seed": 20261113,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "local",
+  "condition": "quality",
+  "prompt_variant": "focused"
+}

@@ -1,0 +1,14 @@
+{
+  "case": "hand",
+  "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+  "target": "Reconstruire une main ouverte avec cinq doigts.",
+  "seed": 20261113,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "local",
+  "condition": "quality"
+}

@@ -1,0 +1,244 @@
+{
+  "model": "Z-Image",
+  "precision": "fp32",
+  "files": [
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "text_encoder/model-00001-of-00003.safetensors",
+      "name": "model-00001-of-00003.safetensors",
+      "bytes": 3957900840,
+      "sha256": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223"
+    },
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "text_encoder/model-00002-of-00003.safetensors",
+      "name": "model-00002-of-00003.safetensors",
+      "bytes": 3987450520,
+      "sha256": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5"
+    },
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "text_encoder/model-00003-of-00003.safetensors",
+      "name": "model-00003-of-00003.safetensors",
+      "bytes": 99630640,
+      "sha256": "7ca841ee75b9c61267c0c6148fd8d096d3d21b6d3e161256a9b878154f91fc52"
+    },
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "name": "diffusion_pytorch_model-00001-of-00002.safetensors",
+      "bytes": 9973727144,
+      "sha256": "ecd5df7768856215812af84d5cc785ba9d84c6d8c84e6939c7ccf30a2e0d2425"
+    },
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "name": "diffusion_pytorch_model-00002-of-00002.safetensors",
+      "bytes": 2336146728,
+      "sha256": "e2d5fb75ca504b2d669a33af9380b68e0c1632ecddbfca85f82631958a4b81b1"
+    },
+    {
+      "repo": "Tongyi-MAI/Z-Image",
+      "revision": "04cc4abb7c5069926f75c9bfde9ef43d49423021",
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "name": "diffusion_pytorch_model.safetensors",
+      "bytes": 167666902,
+      "sha256": "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3"
+    }
+  ],
+  "text_encoder": "Qwen3 CPU FP32,512 tokens,penultimate hidden state",
+  "vae": "GPU0 FP32,tiled512px",
+  "attention": "PyTorch MATH FP32, query chunks256",
+  "torch": "2.6.0+cu124",
+  "diffusers": "0.37.0",
+  "transformers": "4.56.1",
+  "encode_seconds": 69.89597154199873,
+  "embeddings_reused": true,
+  "load_seconds": 10.414485488998253,
+  "parameter_bytes_by_device": {
+    "cuda:0": 11594090752,
+    "cuda:1": 13025544192
+  },
+  "device_map": {
+    "x_pad_token": 0,
+    "cap_pad_token": 0,
+    "all_x_embedder": 0,
+    "all_final_layer": 0,
+    "noise_refiner": 0,
+    "context_refiner": 0,
+    "t_embedder": 0,
+    "cap_embedder": 0,
+    "layers.0": 0,
+    "layers.1": 0,
+    "layers.2": 0,
+    "layers.3": 0,
+    "layers.4": 0,
+    "layers.5": 0,
+    "layers.6": 0,
+    "layers.7": 0,
+    "layers.8": 0,
+    "layers.9": 0,
+    "layers.10": 0,
+    "layers.11": 0,
+    "layers.12": 1,
+    "layers.13": 1,
+    "layers.14": 1,
+    "layers.15": 1,
+    "layers.16": 1,
+    "layers.17": 1,
+    "layers.18": 1,
+    "layers.19": 1,
+    "layers.20": 1,
+    "layers.21": 1,
+    "layers.22": 1,
+    "layers.23": 1,
+    "layers.24": 1,
+    "layers.25": 1,
+    "layers.26": 1,
+    "layers.27": 1,
+    "layers.28": 1,
+    "layers.29": 1
+  },
+  "attention_adapter_sha256": "afb75b04834d4bfb8ad08f02835f1c03043b37e74f71fb4a2e4373a003c4e137",
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "shift": 6.0,
+    "use_dynamic_shifting": false,
+    "base_shift": 0.5,
+    "max_shift": 1.15,
+    "base_image_seq_len": 256,
+    "max_image_seq_len": 4096,
+    "invert_sigmas": false,
+    "shift_terminal": null,
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "time_shift_type": "exponential",
+    "stochastic_sampling": false,
+    "_use_default_values": [
+      "max_image_seq_len",
+      "shift_terminal",
+      "use_karras_sigmas",
+      "base_image_seq_len",
+      "use_beta_sigmas",
+      "base_shift",
+      "time_shift_type",
+      "use_exponential_sigmas",
+      "max_shift",
+      "stochastic_sampling",
+      "invert_sigmas"
+    ],
+    "_class_name": "FlowMatchEulerDiscreteScheduler",
+    "_diffusers_version": "0.37.0.dev0"
+  },
+  "steps": 28,
+  "guidance": 4.0,
+  "negative_prompt": "",
+  "cfg_normalization": false,
+  "cfg_execution": "sequential conditional/unconditional",
+  "plan": [
+    {
+      "case": "hand",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "smoke"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "objects",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "katana",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 28,
+      "condition": "quality"
+    },
+    {
+      "case": "hand",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "repeat"
+    },
+    {
+      "case": "duo",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "screen16x9"
+    },
+    {
+      "case": "duo",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 28,
+      "condition": "screen4x3"
+    }
+  ],
+  "runner_sha256": "4fae12b62ae7dee2b775c531e9ec6302fa3f3e9a0cc6b515b6632bd40999a175",
+  "promotion_allowed": false
+}

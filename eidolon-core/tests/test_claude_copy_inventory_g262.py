@@ -47,6 +47,7 @@ def run(source, copy, **budget):
 
 def test_an_exact_copy_is_identical_even_with_other_owner_or_mode(tmp_path):
     source, copy = pair(tmp_path)
+    (source / "memory/persistent/a.md").chmod(0o644)
     (copy / "memory/persistent/a.md").chmod(0o600)
     report = run(source, copy)
     assert report["identical"] and report["entries"] == {"source": 9, "copy": 9}

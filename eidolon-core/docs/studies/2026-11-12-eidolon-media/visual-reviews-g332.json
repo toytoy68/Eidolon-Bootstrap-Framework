@@ -1,0 +1,33 @@
+{
+  "author": "Codex/GPT",
+  "date": "2026-11-12",
+  "human_review": "PENDING_TOYTOY",
+  "training_started": false,
+  "scope": "4 outputs, 3 unique scenes; hand repeated exactly",
+  "records": [
+    {
+      "id": "G332-00",
+      "decision": "REJECT",
+      "reason": "Quatre doigts visibles seulement (pouce et trois doigts), contre cinq demandés. Anatomie non conforme.",
+      "confidence": 1.0
+    },
+    {
+      "id": "G332-01",
+      "decision": "ACCEPT",
+      "reason": "Exactement deux objets distincts : tasse rouge à gauche, bol bleu à droite ; cadrage complet et formes plausibles. Acceptation de cette image seulement.",
+      "confidence": 0.95
+    },
+    {
+      "id": "G332-02",
+      "decision": "REJECT",
+      "reason": "Objet supérieur : forme évoquant deux lames/pointes reliées, absence de poignée cohérente. Objet inférieur : confusion poignée/fourreau. Assemblage de katana non fonctionnel.",
+      "confidence": 0.99
+    },
+    {
+      "id": "G332-03",
+      "decision": "REJECT",
+      "reason": "Répétition pixel-identique de G332-00, même doigt manquant ; pas un essai visuel indépendant.",
+      "confidence": 1.0
+    }
+  ]
+}

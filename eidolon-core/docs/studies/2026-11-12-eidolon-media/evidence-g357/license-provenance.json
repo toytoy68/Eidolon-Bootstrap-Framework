@@ -1,0 +1,8 @@
+{
+  "source": "/srv/eidolon/workspaces/media-20261112/checkpoints-g333/sdxl-base-LICENSE.md",
+  "sha256": "19b6998b569b53ac1fc2158a8a3202c8699a9a4605b47075715d9c96be7fb6d0",
+  "author_url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/LICENSE.md",
+  "license": "CreativeML Open RAIL++-M",
+  "usage": "private research evaluation; no weights redistributed",
+  "attribution": "Diffusers team / Stability AI"
+}

@@ -1,0 +1,41 @@
+{
+  "state": "time_limit_reached",
+  "started": "2026-11-14T03:21:26.585992+01:00",
+  "updated": "2026-11-14T06:21:26.838342+01:00",
+  "elapsed_seconds": 10800,
+  "requested_gib": 96,
+  "workers": [
+    {
+      "pid": 2707,
+      "exit_code": -15
+    },
+    {
+      "pid": 2708,
+      "exit_code": -15
+    },
+    {
+      "pid": 2709,
+      "exit_code": -15
+    },
+    {
+      "pid": 2710,
+      "exit_code": -15
+    },
+    {
+      "pid": 2711,
+      "exit_code": -15
+    },
+    {
+      "pid": 2712,
+      "exit_code": -15
+    },
+    {
+      "pid": 2713,
+      "exit_code": -15
+    },
+    {
+      "pid": 2714,
+      "exit_code": -15
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "note": "Trailing blank lines normalized in committed scripts after execution; exact executed runner retained. No computational changes.",
+  "executed_sha256": "b801e917729da35410bc022735455237389cc93d9199db14c5c9a86b4f35c60b",
+  "committed_sha256": "653d2eee4d5a45e8e6f0afec7ddc484c7603fa8cc442d8e38b431da2172c40ea"
+}

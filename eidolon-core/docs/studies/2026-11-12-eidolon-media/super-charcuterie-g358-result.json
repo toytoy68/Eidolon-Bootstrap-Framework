@@ -1,0 +1,108 @@
+{
+  "case": "Super Charcuterie",
+  "date": "2026-11-15",
+  "model": "Z-Image base",
+  "local_only": true,
+  "width": 1024,
+  "height": 1024,
+  "seed": 20261115,
+  "steps": 28,
+  "cfg": 4,
+  "delivery": {
+    "image_chars": 2188548,
+    "image_sha256": "2b715504f540110763cfab9cffb984ab4d4de380e8bcfba4e8d11a568f493df0",
+    "preview_chars": 260516,
+    "preview_sha256": "acc6e874b6ed7ec49a5252d1026d28f53b04ca2a4e1891586120a20c393f4482",
+    "seconds": 289.21285509300003,
+    "encode_seconds": 27.663857285000063,
+    "load_seconds": 10.253578885000024,
+    "telemetry": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 310,
+            "max": 14490
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 51.34,
+            "max": 314.91
+          },
+          "temperature.gpu": {
+            "min": 26,
+            "max": 45
+          },
+          "temperature.memory": {
+            "min": 25,
+            "max": 46
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 310,
+            "max": 14578
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 53.69,
+            "max": 324.06
+          },
+          "temperature.gpu": {
+            "min": 25,
+            "max": 43
+          },
+          "temperature.memory": {
+            "min": 24,
+            "max": 46
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2,
+            "max": 2
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 10,
+            "max": 10.4
+          },
+          "temperature.gpu": {
+            "min": 27,
+            "max": 32
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120,
+            "max": 120
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 32.875,
+        "max": 57.25
+      }
+    },
+    "gpu_clients": "",
+    "services": "active\nactive\nactive\nactive\nactive\n",
+    "original_path": "/srv/eidolon/workspaces/media-20261112/super-charcuterie-g358/run01/00-hero.png"
+  },
+  "visual_review": "Pig-headed superhero in blue and red costume with ham weapon, charcuterie projectiles and two black-masked villains. Readable dynamic comic scene. Sausage chain interpreted as metal chain with sausage at end; requested independent left-hand swing not followed. User validation pending."
+}

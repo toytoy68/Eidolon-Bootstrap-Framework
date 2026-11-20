@@ -1,0 +1,6 @@
+{
+  "time": "2026-11-14T18:34:49.297491+00:00",
+  "gpu": "index, uuid, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, Tesla V100-SXM2-16GB, 28, 28, 1 MiB, 300.00 W\n1, GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, Tesla V100-SXM2-16GB, 27, 27, 1 MiB, 300.00 W\n2, GPU-4e1c4053-29c2-f0b6-5267-3f561379c058, NVIDIA GeForce GTX 1060 6GB, 31, N/A, 2 MiB, 120.00 W\n",
+  "clients": "pid, process_name\n",
+  "topology": "\t\u001b[4mGPU0\tGPU1\tGPU2\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\u001b[0m\nGPU0\t X \tNV6\tSYS\t0-31\t0\t\tN/A\nGPU1\tNV6\t X \tSYS\t0-31\t0\t\tN/A\nGPU2\tSYS\tSYS\t X \t0-31\t0\t\tN/A\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks\n"
+}

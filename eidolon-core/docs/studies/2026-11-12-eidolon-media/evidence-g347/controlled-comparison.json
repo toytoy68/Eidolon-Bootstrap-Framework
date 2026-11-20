@@ -1,0 +1,33 @@
+{
+  "baseline": "G346",
+  "same_fields": [
+    "precision",
+    "files",
+    "text_encoder",
+    "vae",
+    "attention",
+    "torch",
+    "diffusers",
+    "transformers",
+    "scheduler",
+    "steps",
+    "guidance",
+    "negative_prompt",
+    "plan",
+    "pipeline_source_sha256"
+  ],
+  "all_fields_identical": true,
+  "normalization": "Sort unordered scheduler metadata _use_default_values before comparison; numerical parameters unchanged",
+  "same_embedding_sha256": true,
+  "change": {
+    "skip_guidance_layers": [
+      7,
+      8,
+      9
+    ],
+    "scale": 2.8,
+    "start": 0.01,
+    "stop": 0.2
+  },
+  "instrumentation": "Forward pre-hook records calls without modifying tensors; expects40full+7skipped"
+}

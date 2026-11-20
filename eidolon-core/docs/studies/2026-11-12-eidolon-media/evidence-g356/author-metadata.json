@@ -1,0 +1,225 @@
+{
+  "_id": "6691d28c3bd55e86d84f4c42",
+  "id": "RunDiffusion/Juggernaut-XI-Lightning",
+  "private": false,
+  "pipeline_tag": "text-to-image",
+  "library_name": "diffusers",
+  "tags": [
+    "diffusers",
+    "stable-diffusion",
+    "stable-diffusion-xl",
+    "sdxl",
+    "sdxl-lightning",
+    "text-to-image",
+    "photorealistic",
+    "fast",
+    "low-step",
+    "juggernaut",
+    "rundiffusion",
+    "kandooai",
+    "en",
+    "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+    "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+    "license:cc-by-nc-nd-4.0",
+    "endpoints_compatible",
+    "diffusers:StableDiffusionXLPipeline",
+    "region:us"
+  ],
+  "downloads": 858,
+  "likes": 29,
+  "modelId": "RunDiffusion/Juggernaut-XI-Lightning",
+  "author": "RunDiffusion",
+  "sha": "dbb242e5b54f33ce3bde22464f8813c1427bf1d4",
+  "lastModified": "2026-05-08T17:28:44.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {
+    "diffusers": {
+      "_class_name": "StableDiffusionXLPipeline"
+    }
+  },
+  "cardData": {
+    "license": "cc-by-nc-nd-4.0",
+    "language": [
+      "en"
+    ],
+    "library_name": "diffusers",
+    "pipeline_tag": "text-to-image",
+    "base_model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "extra_gated_prompt": "By accessing this model, you agree to the following:\n- You will NOT deploy this model behind a paid API or generative service.\n- You will NOT use this model on a platform that competes with RunDiffusion.com.\n- You will NOT redistribute or rehost the model weights.\n- You agree to receive communications from RunDiffusion (model releases, platform updates, and news). RunDiffusion does not misuse your information.\nCommercial licenses can be obtained by emailing juggernaut@rundiffusion.com.\n",
+    "extra_gated_fields": {
+      "Name": "text",
+      "Email": "text",
+      "Intended use": "text"
+    },
+    "tags": [
+      "stable-diffusion",
+      "stable-diffusion-xl",
+      "sdxl",
+      "sdxl-lightning",
+      "text-to-image",
+      "photorealistic",
+      "fast",
+      "low-step",
+      "juggernaut",
+      "rundiffusion",
+      "kandooai"
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "9ab807103731dba363d6b860eda946acb9ded6f4",
+      "size": 1585
+    },
+    {
+      "rfilename": "Juggernaut-XI-byRunDiffusion-Lightning-Civitai-Version.safetensors",
+      "blobId": "25e9d0e649e591467d426e1a3e5c8489a3490b4a",
+      "size": 7105348616,
+      "lfs": {
+        "sha256": "609fde646e7fc60a259ad67351e02258ac7929a0a1f5040049dfec6a15f37b1a",
+        "size": 7105348616,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "Juggernaut-XI-byRunDiffusion-Lightning.safetensors",
+      "blobId": "a1cc78736ca5169831bc8addcfdb36b393adbe8f",
+      "size": 6938040706,
+      "lfs": {
+        "sha256": "7782222e931a52aaded32647553ee4162c455046fa6a64ab6176cc1d2bae9da1",
+        "size": 6938040706,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "ff52aec2c68b7eb1da699ff075cc1a951093d031",
+      "size": 7746
+    },
+    {
+      "rfilename": "assets/Juggernaut_Banner.webp",
+      "blobId": "6b80b6db51e6dc8902a1136f132c61385dcc4b77",
+      "size": 458462,
+      "lfs": {
+        "sha256": "200223c851be9ce4b42d181222ccc554ac27dea410f5972a12301731bf3351b1",
+        "size": 458462,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "model_index.json",
+      "blobId": "0e3987a8cce4d54fd35fb119da0787fac04506ea",
+      "size": 712
+    },
+    {
+      "rfilename": "scheduler/scheduler_config.json",
+      "blobId": "f1f4bf1cdfa97938a04ce7e41ab9db6683ce66f8",
+      "size": 579
+    },
+    {
+      "rfilename": "text_encoder/config.json",
+      "blobId": "3c9a98dcf09a3ca746b7b17427596a234ae45819",
+      "size": 584
+    },
+    {
+      "rfilename": "text_encoder/pytorch_model.bin",
+      "blobId": "51ff60fbbe77b64bd36a52d3eb5e184147140500",
+      "size": 492307041,
+      "lfs": {
+        "sha256": "205903ff704616a765d9c5f7ad43d94fa5f76a1979c3e07370cbbb31b4e2d119",
+        "size": 492307041,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "text_encoder_2/config.json",
+      "blobId": "fbbb612372ef535b5c83a8547e9532884e71f660",
+      "size": 594
+    },
+    {
+      "rfilename": "text_encoder_2/pytorch_model.bin",
+      "blobId": "2d2e0762969c2e7e6c7fdb242f46f73461e63840",
+      "size": 2778810597,
+      "lfs": {
+        "sha256": "8789c738d9b7fb569baf95add70c6b7269cdeee67bd0c1056875c0ed43d69355",
+        "size": 2778810597,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "tokenizer/merges.txt",
+      "blobId": "1876098c4dcbf22af518537b3bd63102a05e1313",
+      "size": 573514
+    },
+    {
+      "rfilename": "tokenizer/special_tokens_map.json",
+      "blobId": "ad919e089d4d032a933a2a9087de2857d55af3bc",
+      "size": 496
+    },
+    {
+      "rfilename": "tokenizer/tokenizer_config.json",
+      "blobId": "4dccde201cd9e11e9e8194b6e31e2d3887b5c11e",
+      "size": 770
+    },
+    {
+      "rfilename": "tokenizer/vocab.json",
+      "blobId": "521b2c5def638d17b1e463ce25597140a1720005",
+      "size": 1109372
+    },
+    {
+      "rfilename": "tokenizer_2/merges.txt",
+      "blobId": "1876098c4dcbf22af518537b3bd63102a05e1313",
+      "size": 573514
+    },
+    {
+      "rfilename": "tokenizer_2/special_tokens_map.json",
+      "blobId": "4473e143ec2843c3cf9d6db8b1062f1e71076615",
+      "size": 484
+    },
+    {
+      "rfilename": "tokenizer_2/tokenizer_config.json",
+      "blobId": "50e62da0a9667b53c03b4a82a84c20b31b15b00d",
+      "size": 758
+    },
+    {
+      "rfilename": "tokenizer_2/vocab.json",
+      "blobId": "521b2c5def638d17b1e463ce25597140a1720005",
+      "size": 1109372
+    },
+    {
+      "rfilename": "unet/config.json",
+      "blobId": "5485b6998b678c914228a340af1f448df29604d0",
+      "size": 1845
+    },
+    {
+      "rfilename": "unet/diffusion_pytorch_model.bin",
+      "blobId": "93299c5466453d99bc02cf01a6f53738facda469",
+      "size": 10270603837,
+      "lfs": {
+        "sha256": "b5b9e46c13029582653e7cc9ac735a650e64ca6fc5998b79cfd265487f85780f",
+        "size": 10270603837,
+        "pointerSize": 136
+      }
+    },
+    {
+      "rfilename": "vae/config.json",
+      "blobId": "2347e83090500184ddefd8dbf6fbfd36a63ee495",
+      "size": 633
+    },
+    {
+      "rfilename": "vae/diffusion_pytorch_model.bin",
+      "blobId": "455f873cb8b8d53979769fe676e52d5c253640b9",
+      "size": 334712113,
+      "lfs": {
+        "sha256": "0371d3346ec2a8ab1c756b8205fa5d62d170ec6526a0af45082e5c93d8e22346",
+        "size": 334712113,
+        "pointerSize": 134
+      }
+    }
+  ],
+  "spaces": [],
+  "createdAt": "2024-07-13T01:04:12.000Z",
+  "usedStorage": 27920281372
+}

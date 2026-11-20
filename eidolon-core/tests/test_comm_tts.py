@@ -13,6 +13,7 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import patch
 
 from eidolon_core.comm_contract import CommError, read_wav
 from eidolon_core.comm_tts import (DEFAULT_RATE, PiperTTS, SimulatedTTS, TextToSpeech, chunks, scale,
@@ -100,6 +101,20 @@ class PiperTests(unittest.TestCase):
         slower = tts.synthesize("pc", "Bonjour toytoy.", rate=0.5)
         self.assertGreater(len(slower["wav"]), len(normal["wav"]))         # length_scale = 1 / rate
         self.assertEqual(normal["engine"], "piper")
+
+    def test_native_thread_budgets_without_parent_environment(self):
+        probe = (f"#!{sys.executable}\n"
+                 "import os,sys\n"
+                 "for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):\n"
+                 "    assert os.environ.get(key) == '1'\n"
+                 "assert 'EIDOLON_TEST_SECRET' not in os.environ\n"
+                 "sys.stdin.read()\n"
+                 "sys.stdout.buffer.write(bytes([16,0])*100)\n")
+        with open(self.piper, "w") as handle:
+            handle.write(probe)
+        with patch.dict(os.environ, {"EIDOLON_TEST_SECRET":"synthetic", "OPENBLAS_NUM_THREADS":"64"}):
+            result = TextToSpeech(PiperTTS(self.piper, self.voices)).synthesize("pc", "Bonjour.")
+        self.assertGreater(len(result["wav"]), 44)
 
     def test_stop_kills_the_synthesis_at_once(self):
         tts = TextToSpeech(PiperTTS(self.piper, self.voices))

@@ -1,0 +1,20 @@
+2026-11-14T22:33:02+01:00 eidolon-os flock[117947]: 
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Some weights of the model checkpoint were not used when initializing CLIPTextModel:
+2026-11-14T22:33:02+01:00 eidolon-os flock[117947]:  ['text_model.embeddings.position_ids']
+2026-11-14T22:33:03+01:00 eidolon-os flock[117947]: 
+Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00, 11.08it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00, 13.95it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  6.78it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  7.88it/s]
+2026-11-14T22:33:06+01:00 eidolon-os flock[117947]: {"loaded": "v11", "seconds": 3.766941677000432}
+2026-11-14T22:33:24+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 1, "case": "hand", "seconds": 17.816020441001456}
+2026-11-14T22:33:42+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 2, "case": "hand", "seconds": 17.55690367599891}
+2026-11-14T22:34:00+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 3, "case": "objects", "seconds": 17.541535096999723}
+2026-11-14T22:34:18+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 4, "case": "objects", "seconds": 17.55078516100184}
+2026-11-14T22:34:36+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 5, "case": "katana", "seconds": 17.562559276004322}
+2026-11-14T22:34:54+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 6, "case": "katana", "seconds": 17.560720189998392}
+2026-11-14T22:35:12+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 7, "case": "duo", "seconds": 17.586192734997894}
+2026-11-14T22:35:29+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 8, "case": "duo", "seconds": 17.579023497004528}
+2026-11-14T22:35:47+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 9, "case": "hand", "seconds": 17.590631970000686}
+2026-11-14T22:35:57+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 10, "case": "duo", "seconds": 8.950289709995559}
+2026-11-14T22:36:03+01:00 eidolon-os flock[117947]: {"generated": "v11", "index": 11, "case": "duo", "seconds": 5.981397073002881}

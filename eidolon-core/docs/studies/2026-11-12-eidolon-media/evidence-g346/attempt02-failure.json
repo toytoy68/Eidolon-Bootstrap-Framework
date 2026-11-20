@@ -1,0 +1,4 @@
+{
+  "error": "TypeError",
+  "message": "StableDiffusion3Pipeline.__init__() missing 4 required positional arguments: 'text_encoder_2', 'tokenizer_2', 'text_encoder_3', and 'tokenizer_3'"
+}

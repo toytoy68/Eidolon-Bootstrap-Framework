@@ -1,0 +1,38 @@
+[
+  {
+    "repo": "LiquidAI/LFM3-1.7B-GGUF",
+    "revision": "cd0c74c575b5c416f3011b5b4c298077f26ca8c2",
+    "gated": false,
+    "license": "other",
+    "downloaded": true,
+    "file": "$BENCH_ROOT/candidates/LFM3-1.7B-Q4_K_M.gguf",
+    "bytes": 1099627808,
+    "sha256": "3793e1e6e2266919d6e015287221b41100175a98eddaba92e111aed3b05c93c4"
+  },
+  {
+    "repo": "prism-ml/Ternary-Bonsai-2-2B-gguf",
+    "revision": "a6032a5089ac27e96be3a80c7b42d1ad0bd89887",
+    "gated": false,
+    "license": "apache-2.0",
+    "downloaded": true,
+    "file": "$BENCH_ROOT/candidates/Ternary-Bonsai-2-2B-Q2_0.gguf",
+    "bytes": 546689504,
+    "sha256": "c2893fa6f951daee8b7263d5f49b455e57989ef56417a22125b03566dc560650"
+  },
+  {
+    "repo": "google/embeddinggemma-2",
+    "revision": "f9972ac22e696a105c482202646979e33e4b5a1e",
+    "gated": false,
+    "license": "apache-2.0",
+    "downloaded": false,
+    "weights_http": 200
+  },
+  {
+    "repo": "tencent/WeVisOne-VL-2B",
+    "revision": "fcf8c8ca7fa481b514005ef591c8b72bed39618a",
+    "gated": false,
+    "license": "apache-2.0",
+    "downloaded": false,
+    "weights_http": 200
+  }
+]

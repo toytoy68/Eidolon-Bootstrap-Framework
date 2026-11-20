@@ -1,0 +1,84 @@
+{
+  "sample_errors": 0,
+  "gpus": {
+    "0": {
+      "memory.used": {
+        "min": 310.0,
+        "max": 7588.0
+      },
+      "utilization.gpu": {
+        "min": 0.0,
+        "max": 99.0
+      },
+      "power.draw": {
+        "min": 52.86,
+        "max": 253.33
+      },
+      "temperature.gpu": {
+        "min": 28.0,
+        "max": 38.0
+      },
+      "temperature.memory": {
+        "min": 28.0,
+        "max": 36.0
+      },
+      "power.limit": {
+        "min": 300.0,
+        "max": 300.0
+      }
+    },
+    "1": {
+      "memory.used": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "utilization.gpu": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "power.draw": {
+        "min": 38.65,
+        "max": 38.8
+      },
+      "temperature.gpu": {
+        "min": 27.0,
+        "max": 28.0
+      },
+      "temperature.memory": {
+        "min": 27.0,
+        "max": 27.0
+      },
+      "power.limit": {
+        "min": 300.0,
+        "max": 300.0
+      }
+    },
+    "2": {
+      "memory.used": {
+        "min": 2.0,
+        "max": 2.0
+      },
+      "utilization.gpu": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "power.draw": {
+        "min": 6.04,
+        "max": 7.02
+      },
+      "temperature.gpu": {
+        "min": 31.0,
+        "max": 32.0
+      },
+      "temperature.memory": null,
+      "power.limit": {
+        "min": 120.0,
+        "max": 120.0
+      }
+    }
+  },
+  "cpu_tdie_c": {
+    "min": 35.5,
+    "max": 35.875
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "time": "2026-11-14T21:36:31.299944+00:00",
+  "gpu": {
+    "exit": 0,
+    "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 31, 33, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 29, 28, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 31, N/A, 2 MiB, 120.00 W\n",
+    "stderr": ""
+  },
+  "clients": {
+    "exit": 0,
+    "stdout": "pid, process_name\n",
+    "stderr": ""
+  },
+  "services": {
+    "exit": 0,
+    "stdout": "active\nactive\nactive\nactive\nactive\n",
+    "stderr": ""
+  },
+  "vms": {
+    "exit": 0,
+    "stdout": " ID   Nom                            \u00c9tat\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d\u2019ex\u00e9cution\n -    eidolon-audit-smoke-20261102   ferm\u00e9\n -    Eidolon-Debian12-Test          ferm\u00e9\n -    Eidolon-Memory-Engine-Test     ferm\u00e9\n -    Eidolon-Memory-Engine-v2       ferm\u00e9\n -    Eidolon-Memory-Lab             ferm\u00e9\n -    Eidolon-Memory-Lab-v2          ferm\u00e9\n -    Eidolon-Ubuntu-Diagnostic      ferm\u00e9\n -    Memory-engine-tests            ferm\u00e9\n -    Memory-tests                   ferm\u00e9\n -    nomifactory-test               ferm\u00e9\n\n",
+    "stderr": ""
+  },
+  "runtime_unchanged": true,
+  "source_checks": [
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/schedulers/scheduling_dpmsolver_multistep.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/unets/unet_2d_condition.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl.py",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/model_index.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/scheduler/scheduler_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/text_encoder/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/text_encoder_2/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/merges.txt",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/special_tokens_map.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/tokenizer_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer/vocab.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/merges.txt",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/special_tokens_map.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/tokenizer_config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/tokenizer_2/vocab.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/unet/config.json",
+      "match": true
+    },
+    {
+      "path": "/srv/eidolon/workspaces/media-20261112/preference-lab/sdxl-config/vae/config.json",
+      "match": true
+    }
+  ],
+  "png_checks": [
+    {
+      "model": "v11",
+      "index": 0,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 1,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 2,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 3,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 4,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 5,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 6,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 7,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 8,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 9,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 10,
+      "match": true
+    },
+    {
+      "model": "v11",
+      "index": 11,
+      "match": true
+    }
+  ]
+}

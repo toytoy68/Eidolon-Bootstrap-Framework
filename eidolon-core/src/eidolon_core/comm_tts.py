@@ -14,7 +14,7 @@ sentence, and stopping is simply not asking for the next chunk (plus DELETE for 
 - Voices are the Piper voices REALLY present in the operator's voice directory (<name>.onnx and
   <name>.onnx.json); nothing is downloaded. Operator preference (G140): French, female, warm, calm,
   slightly slower (default rate 0.9). No promise of reproducing another service's voice.
-- PiperTTS runs the operator's Piper executable (absolute path) with an empty environment and a time
+- PiperTTS runs the operator's Piper executable (absolute path) with a fixed minimal thread-budget environment and a time
   limit; text goes through stdin, raw 16-bit PCM comes back through stdout.
 - SimulatedTTS: deterministic tone, for tests and container recipes only.
 """
@@ -130,7 +130,7 @@ class SimulatedTTS:
 
 
 class PiperTTS:
-    """The operator's Piper executable and voice directory; one process per chunk, empty environment."""
+    """The operator's Piper executable and voice directory; one process per chunk, fixed thread-budget environment."""
     engine = "piper"
 
     def __init__(self, executable, voice_dir, *, timeout=30.0):
@@ -152,7 +152,12 @@ class PiperTTS:
         args = [self.executable, "--model", model, "--output_raw", "--length_scale", f"{1.0 / rate:.3f}"]
         try:
             process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                       stderr=subprocess.DEVNULL, env={})
+                                       stderr=subprocess.DEVNULL,
+                                       # NumPy/BLAS and OpenMP defaults scale with host CPU count.
+                                       # On X399 this exhausted TasksMax=64 before synthesis began.
+                                       # Keep helper pools small; never inherit parent credentials.
+                                       env={"OPENBLAS_NUM_THREADS": "1", "OMP_NUM_THREADS": "1",
+                                            "MKL_NUM_THREADS": "1"})
         except OSError:
             raise CommError("ENGINE_UNAVAILABLE", "Piper could not start") from None
         result = {}

@@ -1,0 +1,74 @@
+{
+  "0": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts séparés, paume et poignet visibles. Texture un peu lissée ; contrôle technique hors score natif.",
+    "comparison": "Le petit format réussit ici sans prédire les mains à 1024².",
+    "rendering": "Revue GPT provisoire, à confronter à ton appréciation."
+  },
+  "1": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts : un pouce à gauche, quatre doigts centraux et un appendice supplémentaire à droite.",
+    "comparison": "Défaut de comptage également présent sur Klein G340-01 ; Z-Image G344-01 reste la référence de cette scène.",
+    "rendering": "Texture de peau lisse, anatomie non conforme."
+  },
+  "2": {
+    "verdict": "Rejetée",
+    "comment": "Six doigts distincts : cinq doigts dressés au-dessus de la paume et un pouce à droite.",
+    "comparison": "Contrairement à Klein02 et Z-Image02 proposés, la deuxième seed SD3.5 échoue aussi sur le comptage.",
+    "rendering": "Peau et éclairage crédibles au premier regard, défaut anatomique majeur."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Exactement une tasse rouge à gauche et un bol bleu à droite, complets, sur fond gris. Céramique et ombres crédibles.",
+    "comparison": "Cette scène simple est également réussie par Klein et Z-Image.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "4": {
+    "verdict": "À revoir",
+    "comment": "Couleurs et comptage respectés. Anse de la tasse aplatie et accolée au corps, sans ouverture convaincante.",
+    "comparison": "La conformité globale est meilleure que celle des mains, mais la géométrie de l’anse mérite un contrôle.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Lame fortement recourbée, assemblage poignée/garde incohérent, extrémité inférieure coupée ; fourreau incompatible.",
+    "comparison": "Plus grave que les réserves de géométrie des katanas G344. Les matières ne compensent pas la structure.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Arme désassemblée en plusieurs pièces et éléments supplémentaires ; aucun katana complet cohérent.",
+    "comparison": "Même famille d’échec que Sana Sprint : l’apparence métallique masque une composition impossible.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "9": {
+    "verdict": "Rejetée",
+    "comment": "Répétition exacte de01, mêmes pixels et même PNG : six doigts, rejet confirmé.",
+    "comparison": "Hors score natif et hors médiane ; la répétition ne corrige pas l’anatomie.",
+    "rendering": "Texture de peau lisse, anatomie non conforme."
+  },
+  "7": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes en pied et couleurs conformes, mais les mains de la femme sont masquées ; pieds et chaussures déformés.",
+    "comparison": "Le cadrage est meilleur que celui de08, sans satisfaire la visibilité des mains demandée.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Deux adultes et mains visibles, mais jambes et pieds coupés par le cadre.",
+    "comparison": "Les références Klein et Z-Image sont proposées sur cette seed ; SD3.5 échoue au cadrage en pied.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format16:9 : deux adultes en pied, mais mains de la femme cachées dans les manches.",
+    "comparison": "Le cadre est mieux respecté que chez G344, mais toutes les contraintes ne sont pas remplies.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "11": {
+    "verdict": "À revoir",
+    "comment": "Format4:3 : deux adultes en pied, mains visibles. Proportions du samurai et détails des mains/orteils discutables.",
+    "comparison": "Le cadrage est meilleur que dans les références, avec des réserves anatomiques ; image hors score natif.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  }
+}

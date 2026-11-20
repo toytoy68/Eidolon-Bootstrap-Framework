@@ -1,0 +1,22 @@
+{
+  "prompts": {
+    "hand": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+    "objects": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+    "katana": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+    "duo": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight."
+  },
+  "encode_seconds": 26.757161907999034,
+  "sha256": "4ac33cb0a1548dee3ed2de0af5fc76b527c713abaeee4f60376beafbf6f372c7",
+  "dtype": "CPU FP32",
+  "sequence_length": 300,
+  "instructions": [
+    "Given a user prompt, generate an 'Enhanced prompt' that provides detailed visual descriptions suitable for image generation. Evaluate the level of detail in the user prompt:",
+    "- If the prompt is simple, focus on adding specifics about colors, shapes, sizes, textures, and spatial relationships to create vivid and concrete scenes.",
+    "- If the prompt is already detailed, refine and enhance the existing details slightly without overcomplicating.",
+    "Here are examples of how to transform or refine prompts:",
+    "- User Prompt: A cat sleeping -> Enhanced: A small, fluffy white cat curled up in a round shape, sleeping peacefully on a warm sunny windowsill, surrounded by pots of blooming red flowers.",
+    "- User Prompt: A busy city street -> Enhanced: A bustling city street scene at dusk, featuring glowing street lamps, a diverse crowd of people in colorful clothing, and a double-decker bus passing by towering glass skyscrapers.",
+    "Please generate only the enhanced description for the prompt below and avoid including any additional commentary or evaluations:",
+    "User Prompt: "
+  ]
+}

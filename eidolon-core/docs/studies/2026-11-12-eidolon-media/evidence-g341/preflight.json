@@ -1,0 +1,11 @@
+{
+  "prompts_seeds_dimensions_match_G340": true,
+  "images": 12,
+  "steps": 50,
+  "guidance": 4.0,
+  "negative_prompt": "",
+  "runtime": "G340 unchanged",
+  "offline": true,
+  "guard_gpu_c": 65,
+  "guard_hbm_c": 70
+}

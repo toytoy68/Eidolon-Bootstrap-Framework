@@ -1,0 +1,1802 @@
+[
+  {
+    "runtime": "docker",
+    "iteration": 0,
+    "seconds": 0.274073086000044,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 0,
+    "seconds": 0.041252045999954134,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 0,
+    "seconds": 0.2283575890000975,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 1,
+    "seconds": 0.040388518999861844,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 1,
+    "seconds": 0.2664381920001233,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 1,
+    "seconds": 0.21199417299999368,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 2,
+    "seconds": 0.23699542200006363,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 2,
+    "seconds": 0.2877905660000124,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 2,
+    "seconds": 0.03970723900010853,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 3,
+    "seconds": 0.041625965000093856,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 3,
+    "seconds": 0.2935219150001558,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 3,
+    "seconds": 0.23769421799988777,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 4,
+    "seconds": 0.04226278999999522,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 4,
+    "seconds": 0.2941281870000694,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 4,
+    "seconds": 0.22425485200005824,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 5,
+    "seconds": 0.04611538700009987,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 5,
+    "seconds": 0.23755886399999326,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 5,
+    "seconds": 0.2823446630000035,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 6,
+    "seconds": 0.04404483199982678,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 6,
+    "seconds": 0.23960940599999958,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 6,
+    "seconds": 0.29111339399992175,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 7,
+    "seconds": 0.3105906729999788,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 7,
+    "seconds": 0.04206064499999229,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 7,
+    "seconds": 0.2586990560000686,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 8,
+    "seconds": 0.0446461740000359,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 8,
+    "seconds": 0.22587158300007104,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 8,
+    "seconds": 0.28347849900001165,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 9,
+    "seconds": 0.0420303400001103,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 9,
+    "seconds": 0.2121949779998431,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 9,
+    "seconds": 0.279554902999962,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 10,
+    "seconds": 0.22649668400003975,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 10,
+    "seconds": 0.03884080000011636,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 10,
+    "seconds": 0.27667728699998406,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 11,
+    "seconds": 0.27494239399993603,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 11,
+    "seconds": 0.23827613899993594,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 11,
+    "seconds": 0.04277969800000392,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 12,
+    "seconds": 0.293515619000118,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 12,
+    "seconds": 0.23309237400007987,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 12,
+    "seconds": 0.04254193499991743,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 13,
+    "seconds": 0.2739811220001229,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 13,
+    "seconds": 0.041906183000037345,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 13,
+    "seconds": 0.2299339260000579,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 14,
+    "seconds": 0.2866833980001502,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 14,
+    "seconds": 0.0414836350000769,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 14,
+    "seconds": 0.2198213389999637,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 15,
+    "seconds": 0.04325841099989702,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 15,
+    "seconds": 0.2832104139999956,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 15,
+    "seconds": 0.24778240099999493,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 16,
+    "seconds": 0.24836473500022294,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 16,
+    "seconds": 0.28260495800009267,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 16,
+    "seconds": 0.04531145800001468,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 17,
+    "seconds": 0.04306693599983191,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 17,
+    "seconds": 0.2847974779999731,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 17,
+    "seconds": 0.22175238699992406,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 18,
+    "seconds": 0.27893022900002507,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 18,
+    "seconds": 0.044457918000034624,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 18,
+    "seconds": 0.2265723790001175,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 19,
+    "seconds": 0.04418585100006567,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 19,
+    "seconds": 0.20652401300003476,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 19,
+    "seconds": 0.27368363300001874,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 20,
+    "seconds": 0.04081515200005015,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 20,
+    "seconds": 0.2813721739998982,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 20,
+    "seconds": 0.22851669800002128,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 21,
+    "seconds": 0.3150294299998677,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 21,
+    "seconds": 0.23573960299995633,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 21,
+    "seconds": 0.04512035400011882,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 22,
+    "seconds": 0.2633901650001462,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 22,
+    "seconds": 0.04044388199986315,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 22,
+    "seconds": 0.245226010000124,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 23,
+    "seconds": 0.2698281830000724,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 23,
+    "seconds": 0.033556042000100206,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 23,
+    "seconds": 0.21101320700017823,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 24,
+    "seconds": 0.2857424540000011,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 24,
+    "seconds": 0.04031403099997988,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 24,
+    "seconds": 0.21532420099993033,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 25,
+    "seconds": 0.27141991399980725,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 25,
+    "seconds": 0.21676100899981066,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 25,
+    "seconds": 0.04104882000001453,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 26,
+    "seconds": 0.04202161300008811,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 26,
+    "seconds": 0.25249709799982156,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 26,
+    "seconds": 0.274264660000199,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 27,
+    "seconds": 0.04172693399982563,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 27,
+    "seconds": 0.22422065000000657,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 27,
+    "seconds": 0.29388135599992893,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 28,
+    "seconds": 0.2317139250001219,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 28,
+    "seconds": 0.2813898300000801,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 28,
+    "seconds": 0.04203486899996278,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 29,
+    "seconds": 0.2248144110001249,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 29,
+    "seconds": 0.04403606799996851,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 29,
+    "seconds": 0.29479511799991087,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 30,
+    "seconds": 0.22831582000003436,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 30,
+    "seconds": 0.04289165799991679,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 30,
+    "seconds": 0.2829446119999375,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 31,
+    "seconds": 0.2937051110000084,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 31,
+    "seconds": 0.043843340000194075,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 31,
+    "seconds": 0.2248215050001363,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 32,
+    "seconds": 0.2893619139999828,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 32,
+    "seconds": 0.23393721799993727,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 32,
+    "seconds": 0.04080381800008581,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 33,
+    "seconds": 0.04241110199996001,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 33,
+    "seconds": 0.2735700889998043,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 33,
+    "seconds": 0.222920097000042,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 34,
+    "seconds": 0.2547666289999597,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 34,
+    "seconds": 0.045493456000031074,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 34,
+    "seconds": 0.27950551899994025,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 35,
+    "seconds": 0.27319042999988596,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 35,
+    "seconds": 0.04330121399993914,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 35,
+    "seconds": 0.2335131080001247,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 36,
+    "seconds": 0.03946272999996836,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 36,
+    "seconds": 0.22733218299981672,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 36,
+    "seconds": 0.2937240680000741,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 37,
+    "seconds": 0.22445787199990264,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 37,
+    "seconds": 0.29435994599998594,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 37,
+    "seconds": 0.04131600499999877,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 38,
+    "seconds": 0.22981642600007035,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 38,
+    "seconds": 0.03942201700010628,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 38,
+    "seconds": 0.2666764030000195,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 39,
+    "seconds": 0.2380727439999646,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 39,
+    "seconds": 0.04235128400000576,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 39,
+    "seconds": 0.27858832800006894,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 40,
+    "seconds": 0.25229576299989276,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 40,
+    "seconds": 0.042607693000036306,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 40,
+    "seconds": 0.22680318199991234,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 41,
+    "seconds": 0.041007341000067754,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 41,
+    "seconds": 0.22348949900015214,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 41,
+    "seconds": 0.289587967999978,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 42,
+    "seconds": 0.04154989300013767,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 42,
+    "seconds": 0.21985347700001512,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 42,
+    "seconds": 0.2991987899999913,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 43,
+    "seconds": 0.2406899610000437,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 43,
+    "seconds": 0.282478066999829,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 43,
+    "seconds": 0.04185872999983076,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 44,
+    "seconds": 0.23148443399986718,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 44,
+    "seconds": 0.03690172300002814,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 44,
+    "seconds": 0.2915372119998665,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 45,
+    "seconds": 0.041035796999949525,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 45,
+    "seconds": 0.22545077199993102,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 45,
+    "seconds": 0.281584630999987,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 46,
+    "seconds": 0.22683199100015372,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 46,
+    "seconds": 0.041468422999969334,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 46,
+    "seconds": 0.2522874500000398,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 47,
+    "seconds": 0.22491132300001482,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 47,
+    "seconds": 0.040963081999962014,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 47,
+    "seconds": 0.27269342299996424,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 48,
+    "seconds": 0.2757946340000217,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 48,
+    "seconds": 0.04080623999993804,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 48,
+    "seconds": 0.2200082920001023,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 49,
+    "seconds": 0.2919229040001028,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 49,
+    "seconds": 0.21689440499994816,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 49,
+    "seconds": 0.038018646999944394,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 50,
+    "seconds": 0.27513563200000135,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 50,
+    "seconds": 0.23741904700000305,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 50,
+    "seconds": 0.04175259599992387,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 51,
+    "seconds": 0.2741443459999573,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 51,
+    "seconds": 0.22788407600000937,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 51,
+    "seconds": 0.03954064399999879,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 52,
+    "seconds": 0.2636906220000128,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 52,
+    "seconds": 0.038029839000046195,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 52,
+    "seconds": 0.2345043220000207,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 53,
+    "seconds": 0.21051667899996573,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 53,
+    "seconds": 0.040220790999910605,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 53,
+    "seconds": 0.3054306019998876,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 54,
+    "seconds": 0.22570166500008781,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 54,
+    "seconds": 0.27369644200007315,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 54,
+    "seconds": 0.041363741999930426,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 55,
+    "seconds": 0.041767034000031344,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 55,
+    "seconds": 0.22735442899988811,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 55,
+    "seconds": 0.3030364379999355,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 56,
+    "seconds": 0.2861878829999114,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 56,
+    "seconds": 0.041242947999990065,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 56,
+    "seconds": 0.22237315900019894,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 57,
+    "seconds": 0.043851809999978286,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 57,
+    "seconds": 0.22464984299995194,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 57,
+    "seconds": 0.28353999599994495,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 58,
+    "seconds": 0.2278980670000692,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 58,
+    "seconds": 0.043839988000172525,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 58,
+    "seconds": 0.28522534000012456,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 59,
+    "seconds": 0.27501761200005603,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 59,
+    "seconds": 0.24426603000006253,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 59,
+    "seconds": 0.04161576499996045,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 60,
+    "seconds": 0.2702654069998971,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 60,
+    "seconds": 0.03663431299992226,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 60,
+    "seconds": 0.21650237299991204,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 61,
+    "seconds": 0.29124453400004313,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 61,
+    "seconds": 0.04099502899998697,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 61,
+    "seconds": 0.23616797599993333,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 62,
+    "seconds": 0.2726314229998934,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 62,
+    "seconds": 0.03817902199989476,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 62,
+    "seconds": 0.21781130599993048,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 63,
+    "seconds": 0.042087675000175295,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 63,
+    "seconds": 0.20258379000006244,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 63,
+    "seconds": 0.2893824200000381,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 64,
+    "seconds": 0.28685633800000687,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 64,
+    "seconds": 0.0368926260000535,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 64,
+    "seconds": 0.2007744540001113,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 65,
+    "seconds": 0.2617120849999992,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 65,
+    "seconds": 0.23978586800012636,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 65,
+    "seconds": 0.040144686000076035,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 66,
+    "seconds": 0.2233538220000355,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 66,
+    "seconds": 0.042651176999925156,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 66,
+    "seconds": 0.2963348870000573,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 67,
+    "seconds": 0.042606644999978016,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 67,
+    "seconds": 0.2861201529999562,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 67,
+    "seconds": 0.20669708700006595,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 68,
+    "seconds": 0.29042306899987125,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 68,
+    "seconds": 0.2260503620000236,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 68,
+    "seconds": 0.04238603400017382,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 69,
+    "seconds": 0.22852232800005368,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 69,
+    "seconds": 0.30437298600008944,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 69,
+    "seconds": 0.04134662800015576,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 70,
+    "seconds": 0.22929215899989686,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 70,
+    "seconds": 0.245822612999973,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 70,
+    "seconds": 0.04133300200010126,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 71,
+    "seconds": 0.03783559599992259,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 71,
+    "seconds": 0.21838551399991957,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 71,
+    "seconds": 0.2712315969999963,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 72,
+    "seconds": 0.23732705500015072,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 72,
+    "seconds": 0.04139247500006604,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 72,
+    "seconds": 0.29398861399999987,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 73,
+    "seconds": 0.26245567500018296,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 73,
+    "seconds": 0.23734944299985727,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 73,
+    "seconds": 0.043325507999952606,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 74,
+    "seconds": 0.04160735499999646,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 74,
+    "seconds": 0.22581186200000047,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 74,
+    "seconds": 0.2823915680000937,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 75,
+    "seconds": 0.04133363500000087,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 75,
+    "seconds": 0.23206925899989983,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 75,
+    "seconds": 0.29324384899996403,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 76,
+    "seconds": 0.20403091699995457,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 76,
+    "seconds": 0.27746211799990306,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 76,
+    "seconds": 0.040489443999831565,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 77,
+    "seconds": 0.21430429600013667,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 77,
+    "seconds": 0.28480486800003746,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 77,
+    "seconds": 0.04418201499993302,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 78,
+    "seconds": 0.2755256250000002,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 78,
+    "seconds": 0.04251539900019452,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 78,
+    "seconds": 0.2063876159998017,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 79,
+    "seconds": 0.21484325500000523,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 79,
+    "seconds": 0.04385184200009462,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 79,
+    "seconds": 0.28586276500004715,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 80,
+    "seconds": 0.28763700099989364,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 80,
+    "seconds": 0.22559971299983772,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 80,
+    "seconds": 0.04145994500004235,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 81,
+    "seconds": 0.2831861720001143,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 81,
+    "seconds": 0.2324638169998252,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 81,
+    "seconds": 0.04298003700000663,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 82,
+    "seconds": 0.04139551499997651,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 82,
+    "seconds": 0.21831934800002273,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 82,
+    "seconds": 0.2691229900001417,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 83,
+    "seconds": 0.21214537700006986,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 83,
+    "seconds": 0.28375162099996487,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 83,
+    "seconds": 0.03684458500015353,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 84,
+    "seconds": 0.23554299200009154,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 84,
+    "seconds": 0.2702850020000369,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 84,
+    "seconds": 0.04176582599984613,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 85,
+    "seconds": 0.23365105999982916,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 85,
+    "seconds": 0.041441701000167086,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 85,
+    "seconds": 0.283154113999899,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 86,
+    "seconds": 0.28338604200007467,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 86,
+    "seconds": 0.03892166599985103,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 86,
+    "seconds": 0.2070585060000667,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 87,
+    "seconds": 0.27726524499985317,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 87,
+    "seconds": 0.2166975889999776,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 87,
+    "seconds": 0.0440403550001065,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 88,
+    "seconds": 0.04461467700002686,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 88,
+    "seconds": 0.23354651299996476,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 88,
+    "seconds": 0.2728998350000893,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 89,
+    "seconds": 0.038960459000008996,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 89,
+    "seconds": 0.21736541799987208,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 89,
+    "seconds": 0.2649587270000211,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 90,
+    "seconds": 0.28249319899987313,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 90,
+    "seconds": 0.2143760310000289,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 90,
+    "seconds": 0.04388562999997703,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 91,
+    "seconds": 0.2774489389998962,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 91,
+    "seconds": 0.22023763700008203,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 91,
+    "seconds": 0.041389918000049875,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 92,
+    "seconds": 0.22331189800001994,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 92,
+    "seconds": 0.29097415100000035,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 92,
+    "seconds": 0.04298660400013432,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 93,
+    "seconds": 0.21531023600005028,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 93,
+    "seconds": 0.24586909200002083,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 93,
+    "seconds": 0.04282861100000446,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 94,
+    "seconds": 0.21578651800018633,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 94,
+    "seconds": 0.04188328800000818,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 94,
+    "seconds": 0.2807128229999307,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 95,
+    "seconds": 0.21702651900000092,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 95,
+    "seconds": 0.038773233000028995,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 95,
+    "seconds": 0.30240173100014545,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 96,
+    "seconds": 0.23838883700000224,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 96,
+    "seconds": 0.28348904299991773,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 96,
+    "seconds": 0.03757229500001813,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 97,
+    "seconds": 0.04086798700018335,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 97,
+    "seconds": 0.29370294399996055,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 97,
+    "seconds": 0.24515978199997335,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 98,
+    "seconds": 0.039178458999913346,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 98,
+    "seconds": 0.2507229399998323,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 98,
+    "seconds": 0.23290945899998405,
+    "exit": 0
+  },
+  {
+    "runtime": "podman",
+    "iteration": 99,
+    "seconds": 0.2208009050000328,
+    "exit": 0
+  },
+  {
+    "runtime": "docker",
+    "iteration": 99,
+    "seconds": 0.2782698169999094,
+    "exit": 0
+  },
+  {
+    "runtime": "kiri",
+    "iteration": 99,
+    "seconds": 0.03525515699993775,
+    "exit": 0
+  }
+]

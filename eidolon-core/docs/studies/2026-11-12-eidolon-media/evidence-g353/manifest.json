@@ -1,0 +1,21 @@
+[
+  {
+    "id": "v10",
+    "repo": "RunDiffusion/Juggernaut-X-v10",
+    "revision": "35e4f3ccbe745c3e1221715d04a452aaa1ee5761",
+    "name": "Juggernaut-X-RunDiffusion-NSFW.safetensors",
+    "absolute": "/srv/eidolon/data/media-models-20261113/juggernaut-x-g353/Juggernaut-X-RunDiffusion-NSFW.safetensors",
+    "bytes": 7105348672,
+    "sha256": "d91d35736d8f2be038f760a9b0009a771ecf0a417e9b38c244a84ea4cb9c0c45"
+  },
+  {
+    "repo": "RunDiffusion/Juggernaut-XL-v9",
+    "revision": "cf419233522daa0b9ea36c3aff98fa2cab1fb0fb",
+    "path": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+    "name": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+    "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca",
+    "bytes": 7105348188,
+    "id": "v9",
+    "absolute": "/srv/eidolon/models/media-20261112/checkpoints-g333/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
+  }
+]

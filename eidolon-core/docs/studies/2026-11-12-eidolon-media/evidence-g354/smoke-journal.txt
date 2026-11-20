@@ -1,0 +1,5 @@
+2026-11-14T22:20:25+01:00 eidolon-os flock[114729]: [448B blob data]
+2026-11-14T22:20:28+01:00 eidolon-os flock[114729]: {"loaded": "lightning", "seconds": 3.83186751500034}
+2026-11-14T22:20:28+01:00 eidolon-os flock[114729]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:20:28+01:00 eidolon-os flock[114729]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:20:30+01:00 eidolon-os flock[114729]: {"generated": "lightning", "index": 0, "case": "hand", "seconds": 1.7259010580019094}

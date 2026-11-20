@@ -1,0 +1,6 @@
+{
+  "time": "2026-11-14T20:44:34.490395+00:00",
+  "issue": "Licence wheel at dist-info/LICENSE, not dist-info/licenses/LICENSE. Download and SHA checks completed before copy failure.",
+  "action": "Corrected prepare script, copied actual packaged licence; original source and journal preserved.",
+  "licence_sha256": "ef78c7e6659e34c798194f0d344e807c722de70cbca1359ef54772661e11ca38"
+}

@@ -1,0 +1,14 @@
+{
+ "0":{"verdict":"Rejetée","comment":"Main très déformée, doigts amalgamés, contours artificiels et raccord du masque nettement visible. Le contrôle 512 valide l'exécution, pas la qualité."},
+ "1":{"verdict":"À revoir","comment":"Cinq doigts retrouvés, mais les deux doigts centraux se touchent, leur pose reste rigide et un raccord tonal du masque est perceptible. Amélioration anatomique partielle."},
+ "2":{"verdict":"Rejetée","comment":"La main conserve quatre doigts. Le fond et le poignet montrent aussi une différence de teinte au bord du masque."},
+ "3":{"verdict":"Rejetée","comment":"Trois récipients persistent : bol bleu à gauche, tasse rouge au centre, grande tasse gris-bleu à droite. L'anse rouge est déformée ; le nombre et la disposition restent incorrects."},
+ "4":{"verdict":"Rejetée","comment":"Récipients surnuméraires : deux bols imbriqués à gauche, tasse rouge centrale et tasse bleue à droite. La retouche ne corrige ni le comptage ni la disposition."},
+ "5":{"verdict":"Rejetée","comment":"Aucun fourreau ajouté. La bande masquée devient surtout une zone de tissu légèrement différente ; le sabre est conservé par la recomposition."},
+ "6":{"verdict":"Rejetée","comment":"Le fourreau reste absent. La retouche remplace essentiellement la texture du tissu dans le masque."},
+ "7":{"verdict":"Rejetée","comment":"La tenue demeure noire, avec une ceinture rouge remaniée. Le kimono rouge demandé n'apparaît pas ; visages et samouraï sont préservés hors masque par recomposition."},
+ "8":{"verdict":"Rejetée","comment":"Autre ceinture rouge et bas de vêtement modifié, mais la tenue reste noire. Le changement de couleur demandé échoue."},
+ "9":{"verdict":"À revoir","comment":"Répétition exacte de 01 dans les sorties brute et recomposée. Même amélioration partielle et mêmes réserves sur les doigts et le raccord."},
+ "10":{"verdict":"Contrôle réussi","comment":"Masque vide : la recomposition restitue exactement le PNG source. La sortie brute diffère pourtant presque partout, avec un écart moyen de 2,398/255 : le modèle seul n'est pas une opération sans effet."},
+ "11":{"verdict":"Rejetée","comment":"Masque plein : toute la sortie vient du modèle. Trois récipients persistent, bol à gauche et tasse rouge centrale ; aucune préservation hors masque n'est applicable."}
+}

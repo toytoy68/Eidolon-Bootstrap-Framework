@@ -1,0 +1,75 @@
+{
+  "time_utc": "2026-11-14T11:55:48.351305+00:00",
+  "gpu": {
+    "code": 0,
+    "stdout": "0, GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, 1 MiB, 33, 300.00 W\n1, GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 1 MiB, 33, 300.00 W\n2, GPU-4e1c4053-29c2-f0b6-5267-3f561379c058, 2 MiB, 33, 120.00 W\n",
+    "stderr": ""
+  },
+  "gpu_clients": {
+    "code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "services": {
+    "code": 0,
+    "stdout": "active\nactive\nactive\nactive\nactive\n",
+    "stderr": ""
+  },
+  "vms": {
+    "code": 0,
+    "stdout": " ID   Nom                            \u00c9tat\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d\u2019ex\u00e9cution\n -    eidolon-audit-smoke-20261102   ferm\u00e9\n -    Eidolon-Debian12-Test          ferm\u00e9\n -    Eidolon-Memory-Engine-Test     ferm\u00e9\n -    Eidolon-Memory-Engine-v2       ferm\u00e9\n -    Eidolon-Memory-Lab             ferm\u00e9\n -    Eidolon-Memory-Lab-v2          ferm\u00e9\n -    Eidolon-Ubuntu-Diagnostic      ferm\u00e9\n -    Memory-engine-tests            ferm\u00e9\n -    Memory-tests                   ferm\u00e9\n -    nomifactory-test               ferm\u00e9\n\n",
+    "stderr": ""
+  },
+  "runtime_unchanged": true,
+  "png_sha256_verified": [
+    {
+      "file": "00-hand.png",
+      "sha256": "09de41ce1bccc7cb98a3f513aeb53b0fc85264c251a7477b152f7fe570a074ea"
+    },
+    {
+      "file": "01-hand.png",
+      "sha256": "6eb2dafcfdbd6af1c03b735d3dcbba2f0b9d89e58fdaa4bbed395cbda0a1d1be"
+    },
+    {
+      "file": "02-hand.png",
+      "sha256": "d21a848f38c205255f0674eb354f6fad49ba0e186c274032cd52ec6cbb665737"
+    },
+    {
+      "file": "03-objects.png",
+      "sha256": "93ce4e9504ea6e1dfe8a43460ec35992495b81eecd8258e96563ff70a039d823"
+    },
+    {
+      "file": "04-objects.png",
+      "sha256": "3777e4cb23f15c98027feb75f3c9a3bd5670407d7166c0a6520f80f829aca29c"
+    },
+    {
+      "file": "05-katana.png",
+      "sha256": "86c85e74a826bebdc7ea16f0c61b4490041427ca2350a2f669c19645c8ef366f"
+    },
+    {
+      "file": "06-katana.png",
+      "sha256": "d814f8d99ea5470a2c25f09141cc9fe068891652fbba75352475078eb270ece3"
+    },
+    {
+      "file": "07-duo.png",
+      "sha256": "934d853b2c720d8213ffd8aee0609f6fa9a909a9aebd2137a278416043de3c05"
+    },
+    {
+      "file": "08-duo.png",
+      "sha256": "e5b8d33a036e8a9978f4516f1ca88fa58c1c61cb4d6bf9a268aac72e98cbfd27"
+    },
+    {
+      "file": "09-hand.png",
+      "sha256": "6eb2dafcfdbd6af1c03b735d3dcbba2f0b9d89e58fdaa4bbed395cbda0a1d1be"
+    },
+    {
+      "file": "10-duo.png",
+      "sha256": "6a00e8bdfe932ab2b44ba0ab877fa1a0dded7e75725bcb7020c38836b6cbfb48"
+    },
+    {
+      "file": "11-duo.png",
+      "sha256": "65cbbf365ecd3c87c88461775f57fa34165d35e8670fed0f866ba8741c07bb15"
+    }
+  ],
+  "failure_file_present": false
+}

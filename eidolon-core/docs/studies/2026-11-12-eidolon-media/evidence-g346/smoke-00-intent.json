@@ -1,0 +1,8 @@
+{
+  "case": "hand",
+  "width": 512,
+  "height": 512,
+  "seed": 20261113,
+  "steps": 40,
+  "condition": "smoke"
+}

@@ -1,0 +1,18 @@
+{
+  "model": "random tiny ZImage, not trained checkpoint",
+  "mapping": {
+    "all_x_embedder": 0,
+    "all_final_layer": 0,
+    "noise_refiner": 0,
+    "context_refiner": 0,
+    "t_embedder": 0,
+    "cap_embedder": 0,
+    "x_pad_token": 0,
+    "cap_pad_token": 0,
+    "layers.0": 0,
+    "layers.1": 1
+  },
+  "max_abs": 0.0,
+  "finite": true,
+  "allclose": true
+}

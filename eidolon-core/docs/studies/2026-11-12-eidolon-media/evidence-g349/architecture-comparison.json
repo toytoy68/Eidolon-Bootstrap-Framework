@@ -1,0 +1,16 @@
+{
+  "baseline": "G348",
+  "same_architecture_and_scheduler_configs": {
+    "transformer/config.json": true,
+    "scheduler/scheduler_config.json": true
+  },
+  "weights_different": true,
+  "steps": {
+    "G348": 4,
+    "G349": 28
+  },
+  "guidance": {
+    "G348": 0,
+    "G349": 3.5
+  }
+}

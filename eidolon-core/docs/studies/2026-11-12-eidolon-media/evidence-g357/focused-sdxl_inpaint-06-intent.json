@@ -1,0 +1,15 @@
+{
+  "case": "katana",
+  "prompt": "One empty black lacquer katana scabbard, a smooth curved sheath with a gold end cap and a gold opening, no handle and no blade, lying parallel beside the existing Japanese sword on grey fabric. Studio product photograph.",
+  "target": "Ajouter un fourreau noir \u00e0 gauche et parall\u00e8le au sabre existant, sans modifier le sabre.",
+  "seed": 20261114,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "local",
+  "condition": "quality",
+  "prompt_variant": "focused"
+}

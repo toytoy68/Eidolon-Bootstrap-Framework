@@ -1,0 +1,54 @@
+{
+  "time": 1795209380.273835,
+  "failed_services": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "vms": {
+    "exit": 0,
+    "stdout": " ID   Nom                            \u00c9tat\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d\u2019ex\u00e9cution\n -    eidolon-audit-smoke-20261102   ferm\u00e9\n -    Eidolon-Debian12-Test          ferm\u00e9\n -    Eidolon-llamacpp-v1-bench      ferm\u00e9\n -    Eidolon-Memory-Engine-Test     ferm\u00e9\n -    Eidolon-Memory-Engine-v2       ferm\u00e9\n -    Eidolon-Memory-Lab             ferm\u00e9\n -    Eidolon-Memory-Lab-v2          ferm\u00e9\n -    Eidolon-Ubuntu-Diagnostic      ferm\u00e9\n -    Legacy-VM100-core-check        ferm\u00e9\n -    Legacy-VM101-alpha-check       ferm\u00e9\n -    Legacy-VM110-memory-check      ferm\u00e9\n -    Legacy-VM200-minecraft-check   ferm\u00e9\n -    Memory-engine-tests            ferm\u00e9\n -    Memory-tests                   ferm\u00e9\n -    nomifactory-test               ferm\u00e9\n\n",
+    "stderr": ""
+  },
+  "gpus": {
+    "exit": 0,
+    "stdout": "0, 300.00 W, 37.89 W, 1 MiB, 26, 0, 0, 0, 0\n1, 300.00 W, 38.32 W, 1 MiB, 26, 0, 0, 0, 0\n",
+    "stderr": ""
+  },
+  "kernel_errors": {
+    "exit": 1,
+    "stdout": "-- No entries --\n",
+    "stderr": ""
+  },
+  "space": {
+    "exit": 0,
+    "stdout": "Sys. de fichiers            Taille Utilis\u00e9 Dispo Uti% Mont\u00e9 sur\n/dev/mapper/vg_eidolon-data   393G    263G  111G  71% /srv/eidolon/data\n/dev/sdc1                     469G    201G  263G  44% /srv/eidolon/ssd\n",
+    "stderr": ""
+  },
+  "production_head": {
+    "exit": 0,
+    "stdout": "afb79a7da1e3cfcc0f8f9d58c3863b7ba2f3ef60\n",
+    "stderr": ""
+  },
+  "services": [
+    "  eidolon-comm.service                                                                      loaded    active   running Eidolon communication (voix, synth\u00e8se, image ponctuelle) \u2014 boucle locale",
+    "  eidolon-core-api.service                                                                  loaded    active   running Eidolon Core beta local conversation API",
+    "  eidolon-daily-recorder.service                                                            loaded    active   running Eidolon 14-day thermal and power recorder",
+    "  eidolon-darme-ssh.service                                                                 loaded    active   running Eidolon DARME reduced signed SSH authentication collector",
+    "  eidolon-darme.service                                                                     loaded    active   running Eidolon DARME passive local monitoring",
+    "\u25cf eidolon-gpu-tunnel.service                                                                not-found inactive dead    eidolon-gpu-tunnel.service",
+    "  eidolon-hwmon.service                                                                     loaded    active   running Eidolon hardware monitoring (2 second samples, 10000 second retention)",
+    "  eidolon-memory-tunnel.service                                                             loaded    active   running Eidolon native Core to X399 Memory tunnel",
+    "  eidolon-monitor.service                                                                   loaded    active   running Eidolon monitor (statut DARME en lecture seule pour le dashboard) \u2014 boucle locale",
+    "  eidolon-omnifactory-downloads.service                                                     loaded    active   running Fichiers client Omnifactory pour le LAN",
+    "  eidolon-omnifactory-lan.service                                                           loaded    inactive dead    Proxy LAN vers VM Omnifactory",
+    "  eidolon-shelly.service                                                                    loaded    active   running Eidolon Shelly local power telemetry",
+    "  eidolon-tls-guardian.service                                                              loaded    inactive dead    DARME TLS Guardian read-only certificate probe",
+    "  eidolon-wol.service                                                                       loaded    active   exited  Enable Wake-on-LAN and PCIe wake on X399 10Gb Ethernet",
+    "  ollama.service                                                                            loaded    active   running Eidolon local Ollama inference",
+    "  systemd-fsck@dev-vg_eidolon-apps.service                                                  loaded    active   exited  File System Check on /dev/vg_eidolon/apps",
+    "  systemd-fsck@dev-vg_eidolon-data.service                                                  loaded    active   exited  File System Check on /dev/vg_eidolon/data",
+    "  systemd-fsck@dev-vg_eidolon-state.service                                                 loaded    active   exited  File System Check on /dev/vg_eidolon/state",
+    "  systemd-fsck@dev-vg_eidolon-work.service                                                  loaded    active   exited  File System Check on /dev/vg_eidolon/work"
+  ]
+}

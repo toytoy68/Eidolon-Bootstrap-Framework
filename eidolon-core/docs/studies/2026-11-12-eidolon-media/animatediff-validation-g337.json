@@ -1,0 +1,1003 @@
+{
+  "source_base": "edde825",
+  "g336_original_runner_sha256": "f92698f139a419a892417c825244581bde2049023a7bef7f303b8d390cfa7c0d",
+  "g337_manifest": {
+    "plan": [
+      {
+        "case": "boat",
+        "seed": 42,
+        "width": 256,
+        "height": 256,
+        "frames": 8,
+        "steps": 8,
+        "condition": "smoke",
+        "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      },
+      {
+        "case": "boat",
+        "seed": 42,
+        "width": 512,
+        "height": 512,
+        "frames": 16,
+        "steps": 20,
+        "condition": "quality",
+        "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      },
+      {
+        "case": "boat",
+        "seed": 43,
+        "width": 512,
+        "height": 512,
+        "frames": 16,
+        "steps": 20,
+        "condition": "quality",
+        "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      },
+      {
+        "case": "boat",
+        "seed": 42,
+        "width": 512,
+        "height": 512,
+        "frames": 16,
+        "steps": 20,
+        "condition": "repeat",
+        "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      },
+      {
+        "case": "space",
+        "seed": 42,
+        "width": 512,
+        "height": 288,
+        "frames": 16,
+        "steps": 20,
+        "condition": "screen16x9",
+        "prompt": "One silver spaceship slowly flying from left to right through a blue and purple nebula, stars in the background, wide shot, static camera",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      },
+      {
+        "case": "space",
+        "seed": 43,
+        "width": 512,
+        "height": 288,
+        "frames": 16,
+        "steps": 20,
+        "condition": "screen16x9",
+        "prompt": "One silver spaceship slowly flying from left to right through a blue and purple nebula, stars in the background, wide shot, static camera",
+        "negative_prompt": "bad quality, worse quality",
+        "cfg": 7.5,
+        "fps": 8
+      }
+    ],
+    "source": {
+      "root": "/srv/eidolon/data/media-models-20261113/animatediff-v2",
+      "metadata": [
+        {
+          "repo": "guoyww/animatediff-motion-adapter-v1-5-2",
+          "revision": "6167b88ffe39b4441fdf2113e77b99a6f56b7906",
+          "path": "README.md",
+          "local_path": "adapter/README.md",
+          "bytes": 2695,
+          "sha256": "baeae35cd835d10093173af12b72f18a6b53001c0c7d748d5d4931b7c6392246"
+        },
+        {
+          "repo": "guoyww/animatediff-motion-adapter-v1-5-2",
+          "revision": "6167b88ffe39b4441fdf2113e77b99a6f56b7906",
+          "path": "config.json",
+          "local_path": "adapter/config.json",
+          "bytes": 455,
+          "sha256": "7a82341871beba9826ebb8e608415ae2501686bc2e1ccb7a810e50c4b1e37863"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "README.md",
+          "local_path": "sd15-config/README.md",
+          "bytes": 14461,
+          "sha256": "2079161f9df7524bd9eca5e53ff5911271b8551e0f868b7b5a92b84776df28a3"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "model_index.json",
+          "local_path": "sd15-config/model_index.json",
+          "bytes": 541,
+          "sha256": "e2f6f22e274374010aec30c79eb2d6e53fff4a36ac0225523a92cb2d41a83347"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "scheduler/scheduler_config.json",
+          "local_path": "sd15-config/scheduler/scheduler_config.json",
+          "bytes": 308,
+          "sha256": "699cce92eb7c122e2eb7dfdea78e6187fda76a5ed4a8e42319b85610e620e091"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "text_encoder/config.json",
+          "local_path": "sd15-config/text_encoder/config.json",
+          "bytes": 617,
+          "sha256": "845df614cb9327ae7bbea027316246fae917827407da6df13572e41b5f93b4cc"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "tokenizer/merges.txt",
+          "local_path": "sd15-config/tokenizer/merges.txt",
+          "bytes": 524619,
+          "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "tokenizer/special_tokens_map.json",
+          "local_path": "sd15-config/tokenizer/special_tokens_map.json",
+          "bytes": 472,
+          "sha256": "c4864a9376a8401918425bed71fc14fc0e81f9b59ec45c1cf96cccb2df508eac"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "tokenizer/tokenizer_config.json",
+          "local_path": "sd15-config/tokenizer/tokenizer_config.json",
+          "bytes": 806,
+          "sha256": "00439066fcba73de57644cf41e4e3b9f2dbb09d7f3fc2005898ba52399045882"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "tokenizer/vocab.json",
+          "local_path": "sd15-config/tokenizer/vocab.json",
+          "bytes": 1059962,
+          "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "unet/config.json",
+          "local_path": "sd15-config/unet/config.json",
+          "bytes": 743,
+          "sha256": "78f474de6bab3d893868f37be97b636ae65c0df3073ed3256ca458ff599b5f96"
+        },
+        {
+          "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+          "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+          "path": "vae/config.json",
+          "local_path": "sd15-config/vae/config.json",
+          "bytes": 547,
+          "sha256": "786a7d21647ddea6a04b9675c03d3cb45e90a2f3c6da5fbda2c54ade040036de"
+        }
+      ],
+      "weights": [
+        {
+          "repo": "guoyww/animatediff-motion-adapter-v1-5-2",
+          "revision": "6167b88ffe39b4441fdf2113e77b99a6f56b7906",
+          "path": "diffusion_pytorch_model.fp16.safetensors",
+          "name": "diffusion_pytorch_model.fp16.safetensors",
+          "local_path": "adapter/diffusion_pytorch_model.fp16.safetensors",
+          "bytes": 1815329816,
+          "sha256": "5fd196988206cfac90bab1dc56cc59fdd12035492f74ff0662eb6eed5113c547"
+        }
+      ],
+      "sd15_checkpoint": "/srv/eidolon/models/media-20261112/checkpoints/v1-5-pruned-emaonly.safetensors",
+      "sd15_sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa",
+      "sd15_bytes": 4265146304
+    },
+    "runner_sha256": "a62b3a896e63430c400cf8a5c6f70b5fd562810704d7ce8bba71922069c93055",
+    "torch": "2.6.0+cu124",
+    "diffusers": "0.32.2",
+    "cpu_load_seconds": 9.559347490001528,
+    "gpu_transfer_seconds": 1.493157182001596,
+    "scheduler": {
+      "num_train_timesteps": 1000,
+      "beta_start": 0.00085,
+      "beta_end": 0.012,
+      "beta_schedule": "linear",
+      "trained_betas": null,
+      "clip_sample": false,
+      "set_alpha_to_one": false,
+      "steps_offset": 1,
+      "prediction_type": "epsilon",
+      "thresholding": false,
+      "dynamic_thresholding_ratio": 0.995,
+      "clip_sample_range": 1.0,
+      "sample_max_value": 1.0,
+      "timestep_spacing": "linspace",
+      "rescale_betas_zero_snr": false,
+      "_use_default_values": [
+        "dynamic_thresholding_ratio",
+        "clip_sample_range",
+        "prediction_type",
+        "rescale_betas_zero_snr",
+        "thresholding",
+        "sample_max_value"
+      ],
+      "skip_prk_steps": true,
+      "_class_name": "DDIMScheduler",
+      "_diffusers_version": "0.6.0"
+    },
+    "precision": "UNet/motion/CLIP FP16, VAE FP32",
+    "attention_processors": {
+      "down_blocks.0.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.0.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.0.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.0.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.0.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.0.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.0.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.0.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.1.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.1.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.1.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.1.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.1.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.1.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.1.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.1.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.2.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.2.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.2.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "down_blocks.2.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "down_blocks.2.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.2.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.2.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.2.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.3.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.3.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "down_blocks.3.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "down_blocks.3.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.2.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.0.motion_modules.2.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.1.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.1.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.1.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.1.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.1.attentions.2.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.1.attentions.2.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.1.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.1.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.1.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.1.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.1.motion_modules.2.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.1.motion_modules.2.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.2.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.2.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.2.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.2.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.2.attentions.2.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.2.attentions.2.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.2.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.2.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.2.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.2.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.2.motion_modules.2.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.2.motion_modules.2.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.3.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.3.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.3.attentions.1.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.3.attentions.1.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.3.attentions.2.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "up_blocks.3.attentions.2.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "up_blocks.3.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.3.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.3.motion_modules.1.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.3.motion_modules.1.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "up_blocks.3.motion_modules.2.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "up_blocks.3.motion_modules.2.transformer_blocks.0.attn2.processor": "AttnProcessor2_0",
+      "mid_block.attentions.0.transformer_blocks.0.attn1.processor": "SlicedAttnProcessor",
+      "mid_block.attentions.0.transformer_blocks.0.attn2.processor": "SlicedAttnProcessor",
+      "mid_block.motion_modules.0.transformer_blocks.0.attn1.processor": "AttnProcessor2_0",
+      "mid_block.motion_modules.0.transformer_blocks.0.attn2.processor": "AttnProcessor2_0"
+    },
+    "spatial_attention_slice": 4,
+    "forward_chunking": {
+      "chunk_size": 1,
+      "dim": 1
+    },
+    "vae_decode_chunk": 1,
+    "training_allowed": false,
+    "offline_required": true
+  },
+  "g337_results": [
+    {
+      "case": "boat",
+      "seed": 42,
+      "width": 256,
+      "height": 256,
+      "frames": 8,
+      "steps": 8,
+      "condition": "smoke",
+      "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 0,
+      "seconds_encode_and_denoise": 8.527258335001534,
+      "seconds_decode": 0.26920355499896687,
+      "seconds_export": 0.08232155600126134,
+      "frame_pixel_sha256": [
+        "43e941e83814987fcc825eec99330db8cd5a460a58f59c3078bb6243b6ff3c70",
+        "5fed47e9bbf07fddfb98835b44211ae8b5fcf8290a86c39f5b1edfd7706c0f45",
+        "ffaf67a117d77293602668ba67cda01ac45215f4867b51895fe15e2fb95fbe46",
+        "99598f4344f61b0547b8aaad0d73b95a4fd3ca0cdd51ae6b400b2b21091bd11b",
+        "c4a87e689ae889374ea3adb45575d698fcfd682d397876d2c0512456a8ef8d99",
+        "5b85efb459db2be8d5e7a56b724d5885fc67c0fcf649ab450b44adad22fdd2ca",
+        "9fcdf047175058d1e856f8d63df8db39f9e99fd2e1b02c804d55854f5fe91810",
+        "c1fa0db760263271671429c6d3f7165f8f3d9c7aa1f4bf495a8eafacd9fb28e3"
+      ],
+      "video": {
+        "frames": 8,
+        "width": 256,
+        "height": 256,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 1.0,
+        "sha256": "64c71fd92f6746d2bb975bbe67a2fed724cd166cc2930b6389f3ae182b0ea9ac"
+      },
+      "peak_allocated_bytes": 4472077312,
+      "peak_reserved_bytes": 4854906880,
+      "frame_std": [
+        35.89103647113455,
+        40.5643733884904,
+        38.56358525914007,
+        35.088386586100036,
+        42.12126938995015,
+        37.49924529448532,
+        48.85607083553849,
+        43.33968921814733
+      ],
+      "mean_adjacent_abs_difference": [
+        28.289886474609375,
+        18.924662272135418,
+        60.54411315917969,
+        72.73360188802083,
+        25.727615356445312,
+        33.50890604654948,
+        35.782389322916664
+      ],
+      "visual": "NOT_REVIEWED"
+    },
+    {
+      "case": "boat",
+      "seed": 42,
+      "width": 512,
+      "height": 512,
+      "frames": 16,
+      "steps": 20,
+      "condition": "quality",
+      "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 1,
+      "seconds_encode_and_denoise": 83.91027141599989,
+      "seconds_decode": 2.0949858210005914,
+      "seconds_export": 0.38585853499898803,
+      "frame_pixel_sha256": [
+        "d9e0a2938dea4e4641efbf9ed86578f5f0a16caf58e3bee1819fe07dd96f0cb4",
+        "9b111338473f3046e849c9d6d1d318c8a30d6fd1376e4407ac4772f9a88eb3d8",
+        "529bf20c4249842d47d92d3ef77e403d8163f87287fec96226fb86b5419bf0b0",
+        "2ab3316ea2e5355f870304d60fbc50a6c8ca66363fbb277312818193a4b6d937",
+        "e9789d12b31fa14e67ab1b5ac076c97a97bb39dab4cfae9a9dc08bc60e6f6e37",
+        "41e555cf6fd108e6600e0f697d124c88c3aef3468544cd1473e89161dadcdd31",
+        "33462f8bdafe72520ebd6b0424cf8e77d316af792c2ec24e210c28f92aca2c5b",
+        "8b3b0dc78aad9812a88ce3e32ae50f869fa7b2a657f1f729a6273571dbae0384",
+        "7b6c76d7ce4f548c2f13268c1227bf8f78811154c5a132fd13d27eaf0eb6a844",
+        "49e61dc7ef9ffb18414e6d575a1faa5494ec1d54b8062774460dd4a0c6786f9e",
+        "4993559dd28acb045d0ae0f905c7c18de1ba74972ae867578599edf099086dfc",
+        "08fcace2e7a2cc6c2dcc954ec17349d75684a5f724a3ebc55b4bcbdb32e9d3c5",
+        "09068c001092346271dac83b36051c2cab79e93904c9931d1e27a4335dc5372c",
+        "4f5aefe61d519c370fa191c1ed48bce8847a3ac6faec011f9aeac5e85c5d0d77",
+        "b913ce61a4c932d2b94117f34cffd8668bf1371696d08c3feebb296a5759c913",
+        "2bee324ae4b5b5552abaf75aa571d478d8a41ff8ef862612e6c68c48e1cf1b96"
+      ],
+      "video": {
+        "frames": 16,
+        "width": 512,
+        "height": 512,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 2.0,
+        "sha256": "d2b9d9d511bbf56b8a4bbc86e3e0640fd5bbce7000aeae42598ffb0d0bde5df0"
+      },
+      "peak_allocated_bytes": 6521756672,
+      "peak_reserved_bytes": 8692695040,
+      "frame_std": [
+        6.068145927348758,
+        9.548186807560718,
+        9.666724818845685,
+        8.94223297507894,
+        9.490069571481348,
+        10.339738876014831,
+        6.207634250199071,
+        11.801784328602938,
+        12.17663343391278,
+        9.359196747875838,
+        12.747730348603222,
+        11.279364669540607,
+        8.62893247496942,
+        7.495963437568071,
+        6.036047873575523,
+        8.733442978431848
+      ],
+      "mean_adjacent_abs_difference": [
+        30.381359100341797,
+        25.97759501139323,
+        52.24180221557617,
+        66.63475672403972,
+        31.0853754679362,
+        27.711573282877605,
+        26.054645538330078,
+        16.313836415608723,
+        9.812513987223307,
+        12.070255279541016,
+        21.049116770426433,
+        32.29179890950521,
+        6.238482157389323,
+        7.597857157389323,
+        8.164264678955078
+      ],
+      "visual": "NOT_REVIEWED"
+    },
+    {
+      "case": "boat",
+      "seed": 43,
+      "width": 512,
+      "height": 512,
+      "frames": 16,
+      "steps": 20,
+      "condition": "quality",
+      "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 2,
+      "seconds_encode_and_denoise": 82.57007585199972,
+      "seconds_decode": 2.0952563540013216,
+      "seconds_export": 0.3379636500030756,
+      "frame_pixel_sha256": [
+        "1bd3c8979b39fda47ff7c18af7e8b1b2c1d3a91a56cfd0d96f35a53c6afee857",
+        "9b67e0b77e7d8e81d08bb0bfddb5d121534e74e1731a6d883d8901c346c61ee1",
+        "f48a030d5bf60f34818a7c79601b3165cf2d65838a99dd154c19498a89d7d462",
+        "a078cd37ba23ed0ab43cb9148a5f824e4a42efca8ec965e7994639839672a555",
+        "29ddcd4c4836c7aba8f3461fd832cad1ea9970b47fe7ae10c5fbc7c6828ca139",
+        "359fbbd2b436de9b4c1017fca444b7a031e75c365303c764cc116e907688293b",
+        "426d2d992f3c38fc7147712d44b7aa62c25fe6d66adca2d97079557dbd68339a",
+        "57dcba3ddb0dd5218d4a75dff571837928c008589b58b76b0554c1415beb949d",
+        "16c59063d619bd9ee4bba884bf22b83c07c99dbca873b0017b39bfadb50218e2",
+        "ca69533cf2e1681c3013552690cd8d5e27b3e1a5231cf1c2e013612617c4d63b",
+        "08e58c29dae3bdf148bb96b8306fa28e25bc74e27fbd72d10cee8af05992ce9a",
+        "aec9dc55a6194666dfa2f8f697951acb3c11f03430bed59079e054058d177a9c",
+        "777965dc7665f2f9bc97817c7a102b4632511c309309a786b2c81e813459ee4c",
+        "42c8c3e9e789724b13660834c4196f23ed4b0e2519910a30ea0eed72526125d3",
+        "a6a0849fb499f2b5a6f742b2339f48366b95fb0cab6d2e1a947dcdf33ccd4260",
+        "a0d381ae9c387a56d1ee25ecfcada0d408f9e06029bfd25112e08b8e297e4e38"
+      ],
+      "video": {
+        "frames": 16,
+        "width": 512,
+        "height": 512,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 2.0,
+        "sha256": "93e6e960dab5d6895472f3274d959031bc80a84af4b9e60e8bcb243bce5a475c"
+      },
+      "peak_allocated_bytes": 6522215424,
+      "peak_reserved_bytes": 8694792192,
+      "frame_std": [
+        6.537476482192844,
+        6.937193144530847,
+        8.398551548374646,
+        7.714103837832632,
+        10.86840292368857,
+        6.513699430705041,
+        9.621585131824,
+        9.125720854766024,
+        7.994614321283444,
+        6.600866657977467,
+        7.084732463137538,
+        7.8381508462318426,
+        8.324256759565738,
+        7.91617099407768,
+        5.456507026157721,
+        4.7617363352676145
+      ],
+      "mean_adjacent_abs_difference": [
+        37.72390365600586,
+        12.84668223063151,
+        22.200031280517578,
+        35.19762293497721,
+        21.25074005126953,
+        21.23922602335612,
+        40.807821909586586,
+        8.801153818766275,
+        26.483348846435547,
+        48.32038879394531,
+        10.057918548583984,
+        19.366893768310547,
+        8.065989176432291,
+        31.885536193847656,
+        14.098599751790365
+      ],
+      "visual": "NOT_REVIEWED"
+    },
+    {
+      "case": "boat",
+      "seed": 42,
+      "width": 512,
+      "height": 512,
+      "frames": 16,
+      "steps": 20,
+      "condition": "repeat",
+      "prompt": "A small red sailboat slowly crossing a calm blue lake, mountains in the background, static camera, gentle ripples",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 3,
+      "seconds_encode_and_denoise": 82.83651189000011,
+      "seconds_decode": 2.0971393729996635,
+      "seconds_export": 0.386046940999222,
+      "frame_pixel_sha256": [
+        "d9e0a2938dea4e4641efbf9ed86578f5f0a16caf58e3bee1819fe07dd96f0cb4",
+        "9b111338473f3046e849c9d6d1d318c8a30d6fd1376e4407ac4772f9a88eb3d8",
+        "529bf20c4249842d47d92d3ef77e403d8163f87287fec96226fb86b5419bf0b0",
+        "2ab3316ea2e5355f870304d60fbc50a6c8ca66363fbb277312818193a4b6d937",
+        "e9789d12b31fa14e67ab1b5ac076c97a97bb39dab4cfae9a9dc08bc60e6f6e37",
+        "41e555cf6fd108e6600e0f697d124c88c3aef3468544cd1473e89161dadcdd31",
+        "33462f8bdafe72520ebd6b0424cf8e77d316af792c2ec24e210c28f92aca2c5b",
+        "8b3b0dc78aad9812a88ce3e32ae50f869fa7b2a657f1f729a6273571dbae0384",
+        "7b6c76d7ce4f548c2f13268c1227bf8f78811154c5a132fd13d27eaf0eb6a844",
+        "49e61dc7ef9ffb18414e6d575a1faa5494ec1d54b8062774460dd4a0c6786f9e",
+        "4993559dd28acb045d0ae0f905c7c18de1ba74972ae867578599edf099086dfc",
+        "08fcace2e7a2cc6c2dcc954ec17349d75684a5f724a3ebc55b4bcbdb32e9d3c5",
+        "09068c001092346271dac83b36051c2cab79e93904c9931d1e27a4335dc5372c",
+        "4f5aefe61d519c370fa191c1ed48bce8847a3ac6faec011f9aeac5e85c5d0d77",
+        "b913ce61a4c932d2b94117f34cffd8668bf1371696d08c3feebb296a5759c913",
+        "2bee324ae4b5b5552abaf75aa571d478d8a41ff8ef862612e6c68c48e1cf1b96"
+      ],
+      "video": {
+        "frames": 16,
+        "width": 512,
+        "height": 512,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 2.0,
+        "sha256": "d2b9d9d511bbf56b8a4bbc86e3e0640fd5bbce7000aeae42598ffb0d0bde5df0"
+      },
+      "peak_allocated_bytes": 6522215424,
+      "peak_reserved_bytes": 8694792192,
+      "frame_std": [
+        6.068145927348758,
+        9.548186807560718,
+        9.666724818845685,
+        8.94223297507894,
+        9.490069571481348,
+        10.339738876014831,
+        6.207634250199071,
+        11.801784328602938,
+        12.17663343391278,
+        9.359196747875838,
+        12.747730348603222,
+        11.279364669540607,
+        8.62893247496942,
+        7.495963437568071,
+        6.036047873575523,
+        8.733442978431848
+      ],
+      "mean_adjacent_abs_difference": [
+        30.381359100341797,
+        25.97759501139323,
+        52.24180221557617,
+        66.63475672403972,
+        31.0853754679362,
+        27.711573282877605,
+        26.054645538330078,
+        16.313836415608723,
+        9.812513987223307,
+        12.070255279541016,
+        21.049116770426433,
+        32.29179890950521,
+        6.238482157389323,
+        7.597857157389323,
+        8.164264678955078
+      ],
+      "visual": "NOT_REVIEWED"
+    },
+    {
+      "case": "space",
+      "seed": 42,
+      "width": 512,
+      "height": 288,
+      "frames": 16,
+      "steps": 20,
+      "condition": "screen16x9",
+      "prompt": "One silver spaceship slowly flying from left to right through a blue and purple nebula, stars in the background, wide shot, static camera",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 4,
+      "seconds_encode_and_denoise": 46.56034887699934,
+      "seconds_decode": 1.1805586089976714,
+      "seconds_export": 0.21661343199957628,
+      "frame_pixel_sha256": [
+        "ae8f17eaa15f1ef58f8f8cee50d1c8baefe399df69582d134ea560e8868952b8",
+        "3775d13de1aeea976d69b18ca43424f8c9a481f6f5696a0793c51935dc6af3da",
+        "a642b7e26946630eeb31fdcf37b6d8b803a6ec2429e2de8c2870f2a6769e79bb",
+        "af719a946136bc5ef7a13c53a15112a5bc8e97d7d1f6bd5adc970a911296f457",
+        "5349fc061f77be763724e10cbfc9979da622076c358650ebcd189474c9bd3947",
+        "4e7945a6bbb9305470eed8a5f29657f91cd367e12a285c18c23bcd6213494b30",
+        "a4a80fc0f3708f6405376c31f10f00f3e7b90837b04c699e770f33dcf3e05e63",
+        "87472caccd53ed89bd4e529cbc99d0ae6428e0c11ae4fe6ef97c69361c9114be",
+        "6a981e46732e3bfb79d5dc5e630fcd3a08c15818edefc2d803511e9c6f6c6c70",
+        "73710b401fd818f149991b6dd32c00eac41ff0c9c7c947bda02a870c1555fec5",
+        "5dbe3b50e859ec0367c2a43228b908fec9e82ff8a56f1d1238fc4a6bdaf15f6b",
+        "02c4817ae1bc05b84860e1251532c543845844621ac483dd28e7c6645144882d",
+        "d66ae527d5b91560a3f4985aceae8db908c9217b8d1a150d3a6ab12c1d6beb4d",
+        "8e247a8bc4c0f142e8e783b2fc26bd6b1f263fd4fda7df98a621410248162bd3",
+        "645aeb82b499c208a83bd46bff8da212e82bcab82e047cacb2bfae1f5307498b",
+        "09d16d9dc90d2139bd08f6697959d0f1c31075e3208e1b5b58a223c0f7108042"
+      ],
+      "video": {
+        "frames": 16,
+        "width": 512,
+        "height": 288,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 2.0,
+        "sha256": "d9218a91e187d7f9233cda67818e896c13e52e47e400f408856f506f99d9b64d"
+      },
+      "peak_allocated_bytes": 5501164544,
+      "peak_reserved_bytes": 8694792192,
+      "frame_std": [
+        17.42107111105607,
+        12.91857300252964,
+        9.675392033590814,
+        13.635465671299768,
+        17.410034808770313,
+        17.101517213158036,
+        9.587414651894075,
+        8.570466577919715,
+        11.915242642488241,
+        13.090158123902087,
+        16.617358313607145,
+        15.568765510022855,
+        13.043689460397015,
+        12.751074061230588,
+        18.809102583942504,
+        17.33198141130261
+      ],
+      "mean_adjacent_abs_difference": [
+        26.619108977141202,
+        57.73237892433449,
+        25.391517921730323,
+        13.25560619212963,
+        17.48942283347801,
+        62.68390344690393,
+        109.19929560908565,
+        11.98482937282986,
+        47.96537498191551,
+        24.39035373263889,
+        10.137270326967593,
+        51.88347258391204,
+        57.784769694010414,
+        41.629335756655095,
+        9.35009765625
+      ],
+      "visual": "NOT_REVIEWED"
+    },
+    {
+      "case": "space",
+      "seed": 43,
+      "width": 512,
+      "height": 288,
+      "frames": 16,
+      "steps": 20,
+      "condition": "screen16x9",
+      "prompt": "One silver spaceship slowly flying from left to right through a blue and purple nebula, stars in the background, wide shot, static camera",
+      "negative_prompt": "bad quality, worse quality",
+      "cfg": 7.5,
+      "fps": 8,
+      "index": 5,
+      "seconds_encode_and_denoise": 46.443877719997545,
+      "seconds_decode": 1.1779790569999022,
+      "seconds_export": 0.20224473499911255,
+      "frame_pixel_sha256": [
+        "b6484e12e5a002fec2a9bed255a5d5cc580b34c6764e491e79213f0e3351cd9c",
+        "886bad449ee5889a3e820d15d4c43ca860e6b75b9a41dd2df35e0b5d24e312bb",
+        "ad86cfecd95da75156414cefabf44461797620436b05908b32c8f12d46745742",
+        "46f01004137666de24d8d48726c4d07a636dafb415b7a18e655dd2c9e7c9d228",
+        "0bcd981a36db6f679ac9cc7b4d88d9bce9f715ee1cf42df0abe127a256851527",
+        "5f5f2b1f955f3c35d6b30e66886eb7a3747c1b8bb8c6214614b04e304d1852b8",
+        "aff25d12eef5e4f84df293cbb867a348327fd1fe528470b09b618449f60fb277",
+        "a0df4b380b7e0dd8170f88bbe20ba8e0370b9304431420e74653d447709f36f3",
+        "414722516f2eb751b071bd8bfc3d08ae1434f7a6d05f04099d9f1f7e78abe55f",
+        "5962881da5751f0c9f350e9b0758be7035dbfe3a24622bbbbe41103eb0f7b13f",
+        "3b311a9655fea5489592c238fb9a23b0a9afe198d02a20e4acc246a6b041c5b4",
+        "9fac3b1ac54c4352f96ca962f7b6e22a3b96a22bc12bd4e9535942235cf8ccb8",
+        "98e7af182890c0e6d50aba482b7967d9be41d5e6bfd96b8aab2247cf9ae4c0b1",
+        "8970f1263b2bf9e8a8e716e6a55d07844fce7f04171be0218bb8d99854608060",
+        "ed0632ae3786444715c34c57a53bcce11229b548158c69cae6ead44cc751b729",
+        "0743ca024b32d68113608acf92dbad1968d641ef1d1115cd72d70f020ec8dd8a"
+      ],
+      "video": {
+        "frames": 16,
+        "width": 512,
+        "height": 288,
+        "fps": "8",
+        "codec": "h264",
+        "duration_s": 2.0,
+        "sha256": "467ca028bd9809de3f0090e09ca4ef0f6f7d64296e5b7ab7edf0e18ee7e9859f"
+      },
+      "peak_allocated_bytes": 5500935168,
+      "peak_reserved_bytes": 8694792192,
+      "frame_std": [
+        17.197904083739033,
+        15.941632364041354,
+        16.786783687936346,
+        16.690621648246236,
+        17.710144379414324,
+        16.84599981151764,
+        17.79521832576399,
+        18.19752685686304,
+        14.978729913752437,
+        13.182134198894836,
+        12.063646277157194,
+        14.44542610468025,
+        13.919595757715355,
+        12.609122401186479,
+        14.702711437577083,
+        24.749914400951496
+      ],
+      "mean_adjacent_abs_difference": [
+        7.603597005208333,
+        65.40514458550348,
+        8.684611002604166,
+        25.49447066695602,
+        21.688569245515048,
+        78.55081741898148,
+        50.877572518807874,
+        37.632473415798614,
+        5.559789586950232,
+        26.19370071976273,
+        51.445938675491895,
+        73.21881555627894,
+        31.28705738208912,
+        88.58736843532986,
+        34.715962727864586
+      ],
+      "visual": "NOT_REVIEWED"
+    }
+  ],
+  "g337_completion": {
+    "generated": 6,
+    "repeat_same_pixels": true,
+    "visual_acceptance": "PENDING_REVIEW",
+    "training_allowed": false
+  },
+  "g337_telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 8676.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 51.93,
+          "max": 335.59
+        },
+        "temperature.gpu": {
+          "min": 28.0,
+          "max": 41.0
+        },
+        "temperature.memory": {
+          "min": 27.0,
+          "max": 43.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 38.22,
+          "max": 38.85
+        },
+        "temperature.gpu": {
+          "min": 27.0,
+          "max": 28.0
+        },
+        "temperature.memory": {
+          "min": 26.0,
+          "max": 27.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 10.11,
+          "max": 10.59
+        },
+        "temperature.gpu": {
+          "min": 30.0,
+          "max": 34.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 26.75,
+      "max": 48.625
+    }
+  },
+  "sd15_controls": [
+    {
+      "schedule": "scaled_linear",
+      "seconds": 1.661351681999804,
+      "latent_std": 0.77587890625,
+      "latent_mean": 0.0202178955078125,
+      "pixel_std": 71.8049579809531,
+      "scaling_factor": 0.18215,
+      "sha256": "b83e4535c60a63f1743f6246e8f23657ce4874fc525a8630afef29d18fa90893"
+    },
+    {
+      "schedule": "linear",
+      "seconds": 1.4067322079972655,
+      "latent_std": 0.99267578125,
+      "latent_mean": 0.039337158203125,
+      "pixel_std": 87.23922322712123,
+      "scaling_factor": 0.18215,
+      "sha256": "f69991ec271296ff2a1d88d3b69afd1b8385e057b3557fb9393a239f69d3d3ea"
+    }
+  ],
+  "sd15_telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 3870.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 98.0
+        },
+        "power.draw": {
+          "min": 52.89,
+          "max": 307.45
+        },
+        "temperature.gpu": {
+          "min": 29.0,
+          "max": 41.0
+        },
+        "temperature.memory": {
+          "min": 31.0,
+          "max": 42.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 38.67,
+          "max": 38.83
+        },
+        "temperature.gpu": {
+          "min": 28.0,
+          "max": 28.0
+        },
+        "temperature.memory": {
+          "min": 27.0,
+          "max": 27.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 10.11,
+          "max": 10.4
+        },
+        "temperature.gpu": {
+          "min": 33.0,
+          "max": 34.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 38.25,
+      "max": 39.0
+    }
+  },
+  "visual_review": {
+    "reviewer": "Codex/GPT",
+    "method": "Contact sheets; first/middle/last frame of each clip, plus full 16-frame sheet for boat seed42",
+    "g336": "6/6 rejected: texture/no identifiable requested scene",
+    "g337": "6/6 rejected: texture/no identifiable requested scene",
+    "sd15": "Two recognizable lake/mountain/boat images; not a general aesthetic qualification",
+    "cause": "Localized to tested AnimateDiff chain; root cause unresolved",
+    "training_allowed": false
+  },
+  "final": {
+    "units": "Result=success\nExecMainStatus=0\nId=eidolon-media-animatediff-g337.service\nActiveState=inactive\n\nResult=success\nExecMainStatus=0\nId=eidolon-media-sd15-control-g337.service\nActiveState=inactive",
+    "gpu": "index, memory.used [MiB], utilization.gpu [%], temperature.gpu, power.limit [W]\n0, 1 MiB, 0 %, 29, 300.00 W\n1, 1 MiB, 0 %, 28, 300.00 W\n2, 2 MiB, 0 %, 34, 120.00 W",
+    "services": {
+      "eidolon-core-api": "active",
+      "eidolon-comm": "active",
+      "ollama": "active",
+      "eidolon-darme": "active",
+      "eidolon-memory-tunnel": "active"
+    }
+  }
+}

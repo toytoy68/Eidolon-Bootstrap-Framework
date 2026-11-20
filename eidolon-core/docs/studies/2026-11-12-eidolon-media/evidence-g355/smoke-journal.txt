@@ -1,0 +1,10 @@
+2026-11-14T22:31:58+01:00 eidolon-os flock[117674]: 
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Some weights of the model checkpoint were not used when initializing CLIPTextModel:
+2026-11-14T22:31:58+01:00 eidolon-os flock[117674]:  ['text_model.embeddings.position_ids']
+2026-11-14T22:31:59+01:00 eidolon-os flock[117674]: 
+Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00, 10.90it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00, 13.93it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  6.74it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  7.83it/s]
+2026-11-14T22:32:02+01:00 eidolon-os flock[117674]: {"loaded": "v11", "seconds": 3.9080125949985813}
+2026-11-14T22:32:06+01:00 eidolon-os flock[117674]: {"generated": "v11", "index": 0, "case": "hand", "seconds": 3.7675865450000856}

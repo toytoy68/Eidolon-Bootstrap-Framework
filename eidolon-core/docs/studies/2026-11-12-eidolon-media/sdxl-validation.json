@@ -1,0 +1,204 @@
+[
+  {
+    "attempt": 0,
+    "state": "SUCCEEDED",
+    "seconds_wall": 17.940657477999594,
+    "seconds_service": 17.605039596557617,
+    "samples": 76,
+    "sha256": "459f8424fb2bdda107e7a434349b72a8ae14552f7e996f3bf30de366c8afedfd",
+    "bytes": 824488,
+    "generation_size": [
+      1024,
+      576
+    ],
+    "steps": 30,
+    "seed": 72420,
+    "gpus": [
+      {
+        "index": "0",
+        "name": "Tesla V100-SXM2-16GB",
+        "memory.used": {
+          "min": 1,
+          "max": 1
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 37.91,
+          "max": 38.4
+        },
+        "temperature.gpu": {
+          "min": 29,
+          "max": 30
+        },
+        "temperature.memory": {
+          "min": 29,
+          "max": 30
+        },
+        "power.limit": {
+          "min": 300,
+          "max": 300
+        }
+      },
+      {
+        "index": "1",
+        "name": "Tesla V100-SXM2-16GB",
+        "memory.used": {
+          "min": 624,
+          "max": 8880
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 100
+        },
+        "power.draw": {
+          "min": 54.24,
+          "max": 227.86
+        },
+        "temperature.gpu": {
+          "min": 30,
+          "max": 37
+        },
+        "temperature.memory": {
+          "min": 29,
+          "max": 40
+        },
+        "power.limit": {
+          "min": 200,
+          "max": 200
+        }
+      },
+      {
+        "index": "2",
+        "name": "NVIDIA GeForce GTX 1060 6GB",
+        "memory.used": {
+          "min": 2,
+          "max": 2
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 10.21,
+          "max": 10.5
+        },
+        "temperature.gpu": {
+          "min": 34,
+          "max": 34
+        },
+        "power.limit": {
+          "min": 120,
+          "max": 120
+        }
+      }
+    ],
+    "cpu_tdie_c": {
+      "min": 31.25,
+      "max": 35.875
+    }
+  },
+  {
+    "attempt": 1,
+    "state": "SUCCEEDED",
+    "seconds_wall": 18.651306074000786,
+    "seconds_service": 18.12848138809204,
+    "samples": 79,
+    "sha256": "459f8424fb2bdda107e7a434349b72a8ae14552f7e996f3bf30de366c8afedfd",
+    "bytes": 824488,
+    "generation_size": [
+      1024,
+      576
+    ],
+    "steps": 30,
+    "seed": 72420,
+    "gpus": [
+      {
+        "index": "0",
+        "name": "Tesla V100-SXM2-16GB",
+        "memory.used": {
+          "min": 1,
+          "max": 1
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 38.27,
+          "max": 38.4
+        },
+        "temperature.gpu": {
+          "min": 29,
+          "max": 30
+        },
+        "temperature.memory": {
+          "min": 29,
+          "max": 30
+        },
+        "power.limit": {
+          "min": 300,
+          "max": 300
+        }
+      },
+      {
+        "index": "1",
+        "name": "Tesla V100-SXM2-16GB",
+        "memory.used": {
+          "min": 624,
+          "max": 8880
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 100
+        },
+        "power.draw": {
+          "min": 54.76,
+          "max": 222.76
+        },
+        "temperature.gpu": {
+          "min": 31,
+          "max": 36
+        },
+        "temperature.memory": {
+          "min": 30,
+          "max": 40
+        },
+        "power.limit": {
+          "min": 200,
+          "max": 200
+        }
+      },
+      {
+        "index": "2",
+        "name": "NVIDIA GeForce GTX 1060 6GB",
+        "memory.used": {
+          "min": 2,
+          "max": 2
+        },
+        "utilization.gpu": {
+          "min": 0,
+          "max": 0
+        },
+        "power.draw": {
+          "min": 10.11,
+          "max": 10.5
+        },
+        "temperature.gpu": {
+          "min": 34,
+          "max": 35
+        },
+        "power.limit": {
+          "min": 120,
+          "max": 120
+        }
+      }
+    ],
+    "cpu_tdie_c": {
+      "min": 26.75,
+      "max": 36
+    }
+  }
+]

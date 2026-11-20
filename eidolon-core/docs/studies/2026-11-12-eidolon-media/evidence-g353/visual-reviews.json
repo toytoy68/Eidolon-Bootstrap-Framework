@@ -1,0 +1,102 @@
+{
+  "v10": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts visibles et main déformée ; poignet sur le côté au lieu du bas."
+    },
+    "1": {
+      "verdict": "Rejetée",
+      "comment": "Seulement quatre doigts bien formés visibles, pouce compris ; anatomie non conforme."
+    },
+    "2": {
+      "verdict": "Proposée",
+      "comment": "Cinq doigts distincts, main entière et poignet visible ; texture de peau détaillée."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Trois objets au lieu de deux : un bol et deux tasses. Le bol est à gauche."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois objets, couleurs et positions incorrectes : bol bicolore ajouté entre deux tasses."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Plusieurs lames et poignées superposées ; assemblage incompatible avec un katana et son fourreau séparés."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Deux lames, pièces supplémentaires et fourreau trop court ; géométrie incohérente."
+    },
+    "7": {
+      "verdict": "À revoir",
+      "comment": "Deux adultes en pied et tenues correctes, mais visage de la femme flou et main tendue peu définie."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Trois adultes au lieu des deux demandés : un second samurai a été ajouté."
+    },
+    "9": {
+      "verdict": "Rejetée",
+      "comment": "Répétition de la main 01 : quatre doigts visibles, anatomie non conforme."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "La femme est à gauche et le samurai à droite, contrairement au prompt ; haut du casque coupé."
+    },
+    "11": {
+      "verdict": "À revoir",
+      "comment": "Deux adultes en pied et positions correctes ; tenue de la femme ambiguë, proche d’un pantalon, mains peu définies."
+    }
+  },
+  "v9": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts visibles, pouce compris ; poignet latéral et anatomie déformée."
+    },
+    "1": {
+      "verdict": "Proposée",
+      "comment": "Cinq doigts séparés, main entière et poignet visible ; rendu de peau plausible."
+    },
+    "2": {
+      "verdict": "Proposée",
+      "comment": "Cinq doigts distincts et main entière ; anatomie visuellement plausible."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Quatre récipients au lieu de deux, avec bol à gauche et couleurs répétées."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients au lieu de deux ; bol bicolore central et tasse rouge à droite."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Plusieurs lames et poignées ; éléments tronqués et assemblage incohérent."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Plusieurs poignées et éléments de sabre ; géométrie incompatible avec un seul katana et son fourreau."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "Trois adultes au lieu de deux : le samurai est dupliqué."
+    },
+    "8": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes en pied, samurai à gauche et kimono rouge à droite ; positions et tenues respectées."
+    },
+    "9": {
+      "verdict": "Proposée",
+      "comment": "Répétition exacte de la main 01, avec cinq doigts distincts."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Positions inversées et cadrage à mi-corps ; la consigne en pied échoue."
+    },
+    "11": {
+      "verdict": "À revoir",
+      "comment": "Deux adultes en pied, positions et tenues correctes ; rendu flou et décor intérieur ambigu face au château demandé."
+    }
+  }
+}

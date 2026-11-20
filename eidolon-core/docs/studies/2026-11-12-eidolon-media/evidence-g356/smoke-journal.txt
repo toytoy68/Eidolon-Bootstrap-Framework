@@ -1,0 +1,17 @@
+2026-11-14T23:29:36+01:00 eidolon-os systemd[1]: Started eidolon-media-juggernaut-xi-lightning-g356-smoke.service - [systemd-run] /usr/bin/flock -n /srv/eidolon/workspaces/media-20261112/quality-campaign.lock /srv/eidolon/workspaces/media-20261112/preference-lab/venv/bin/python /srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/juggernaut_xi_lightning_probe_g356.py --root /srv/eidolon/workspaces/media-20261112 --manifest /srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/manifest.json --mode smoke --output /srv/eidolon/workspaces/media-20261112/juggernaut-xi-lightning-g356/run01.
+2026-11-14T23:29:46+01:00 eidolon-os flock[126281]: 
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Some weights of the model checkpoint were not used when initializing CLIPTextModel:
+2026-11-14T23:29:46+01:00 eidolon-os flock[126281]:  ['text_model.embeddings.position_ids']
+2026-11-14T23:29:47+01:00 eidolon-os flock[126281]: 
+Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00, 11.21it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00, 14.06it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  6.78it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:00<00:00,  7.90it/s]
+2026-11-14T23:29:50+01:00 eidolon-os flock[126281]: {"loaded": "xi_lightning", "seconds": 4.138345401006518}
+2026-11-14T23:29:51+01:00 eidolon-os flock[126281]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:29:51+01:00 eidolon-os flock[126281]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:29:51+01:00 eidolon-os flock[126281]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T23:29:51+01:00 eidolon-os flock[126281]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T23:29:52+01:00 eidolon-os flock[126281]: {"generated": "xi_lightning", "index": 0, "case": "hand", "seconds": 1.7222503910015803}
+2026-11-14T23:29:53+01:00 eidolon-os systemd[1]: eidolon-media-juggernaut-xi-lightning-g356-smoke.service: Deactivated successfully.
+2026-11-14T23:29:53+01:00 eidolon-os systemd[1]: eidolon-media-juggernaut-xi-lightning-g356-smoke.service: Consumed 20.790s CPU time, 6.6G memory peak.
