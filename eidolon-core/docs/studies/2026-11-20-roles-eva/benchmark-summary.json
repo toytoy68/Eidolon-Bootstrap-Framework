@@ -1,0 +1,494 @@
+[
+  {
+    "model": "LFM2.5-1.2B-Instruct-Q4_K_M",
+    "load_seconds": 0.9265358448028564,
+    "meter_before": {
+      "epoch": 1795212216.760216,
+      "watts": 197.3,
+      "wh": 32127.831
+    },
+    "meter_after": {
+      "epoch": 1795212223.517014,
+      "watts": 311.1,
+      "wh": 32128.474
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-02",
+          "robot-04",
+          "robot-06",
+          "robot-07",
+          "robot-08",
+          "robot-09",
+          "robot-10",
+          "robot-11"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 5,
+        "semantic": 5,
+        "critical_failures": [
+          "darme-06"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-08",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.025199598000654078,
+    "request_median_s": 0.05171636349950859,
+    "errors": []
+  },
+  {
+    "model": "SmolLM3-Q4_K_M",
+    "load_seconds": 1.8424098491668701,
+    "meter_before": {
+      "epoch": 1795212223.7597454,
+      "watts": 311.1,
+      "wh": 32128.474
+    },
+    "meter_after": {
+      "epoch": 1795212240.6260781,
+      "watts": 377.4,
+      "wh": 32129.974
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-04",
+          "robot-06",
+          "robot-09",
+          "robot-10",
+          "robot-11"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "darme-05",
+          "darme-06",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 5,
+        "semantic": 5,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.05874966299870721,
+    "request_median_s": 0.13299499550066685,
+    "errors": []
+  },
+  {
+    "model": "Phi-4-mini-instruct-Q4_K_M",
+    "load_seconds": 2.1795473098754883,
+    "meter_before": {
+      "epoch": 1795212240.8673713,
+      "watts": 380.6,
+      "wh": 32130.188
+    },
+    "meter_after": {
+      "epoch": 1795212253.3075216,
+      "watts": 357.9,
+      "wh": 32131.26
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 6,
+        "semantic": 6,
+        "critical_failures": [
+          "robot-02",
+          "robot-09"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 5,
+        "semantic": 5,
+        "critical_failures": [
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 8,
+        "semantic": 8,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.060503255499497754,
+    "request_median_s": 0.11914431249988411,
+    "errors": []
+  },
+  {
+    "model": "Falcon3-3B-Instruct-q4_k_m",
+    "load_seconds": 1.6024160385131836,
+    "meter_before": {
+      "epoch": 1795212253.6064548,
+      "watts": 357.9,
+      "wh": 32131.26
+    },
+    "meter_after": {
+      "epoch": 1795212265.5042262,
+      "watts": 363.6,
+      "wh": 32132.331
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 7,
+        "semantic": 7,
+        "critical_failures": [
+          "robot-02",
+          "robot-04",
+          "robot-06",
+          "robot-09",
+          "robot-11"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 3,
+        "semantic": 3,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-08",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.050203248499201436,
+    "request_median_s": 0.10717586050031969,
+    "errors": []
+  },
+  {
+    "model": "LFM3-1.7B",
+    "load_seconds": 1.5312683582305908,
+    "meter_before": {
+      "epoch": 1795212265.7445664,
+      "watts": 378.2,
+      "wh": 32132.331
+    },
+    "meter_after": {
+      "epoch": 1795212295.4688249,
+      "watts": 328.2,
+      "wh": 32135.118
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 9,
+        "semantic": 10,
+        "critical_failures": [
+          "robot-09",
+          "robot-10"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 3,
+        "semantic": 6,
+        "critical_failures": [
+          "darme-05",
+          "darme-06",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 7,
+        "semantic": 10,
+        "critical_failures": [
+          "systeme-06"
+        ],
+        "truncated": 1
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [],
+        "truncated": 3
+      }
+    },
+    "ttft_content_median_s": 0.04987550699934218,
+    "request_median_s": 0.12515699050072726,
+    "errors": []
+  },
+  {
+    "model": "Prism-Ternary-2B-Q2_0",
+    "load_seconds": 1.5350673198699951,
+    "meter_before": {
+      "epoch": 1795212295.9627404,
+      "watts": 328.2,
+      "wh": 32135.118
+    },
+    "meter_after": {
+      "epoch": 1795212308.0368023,
+      "watts": 323.1,
+      "wh": 32136.189
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-02",
+          "robot-07",
+          "robot-09",
+          "robot-10"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 1,
+        "semantic": 1,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.08022458599953097,
+    "request_median_s": 0.12318247500024881,
+    "errors": []
+  },
+  {
+    "model": "Qwen2.5-1.5B",
+    "load_seconds": 1.5600156784057617,
+    "meter_before": {
+      "epoch": 1795212308.4557366,
+      "watts": 323.1,
+      "wh": 32136.189
+    },
+    "meter_after": {
+      "epoch": 1795212316.9055765,
+      "watts": 393.9,
+      "wh": 32137.047
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 5,
+        "semantic": 5,
+        "critical_failures": [
+          "robot-02",
+          "robot-08",
+          "robot-09"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-08",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 0,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.032836458000019775,
+    "request_median_s": 0.06603871500101377,
+    "errors": []
+  },
+  {
+    "model": "Eva-source-Q4_K_M",
+    "load_seconds": 3.125821828842163,
+    "meter_before": {
+      "epoch": 1795212317.3221502,
+      "watts": 415.3,
+      "wh": 32137.047
+    },
+    "meter_after": {
+      "epoch": 1795212331.9223008,
+      "watts": 443.1,
+      "wh": 32138.761
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 10,
+        "semantic": 10,
+        "critical_failures": [
+          "robot-09"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 7,
+        "semantic": 7,
+        "critical_failures": [
+          "darme-05",
+          "darme-06",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 8,
+        "semantic": 8,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.07518196949968114,
+    "request_median_s": 0.13158359250064677,
+    "errors": []
+  }
+]

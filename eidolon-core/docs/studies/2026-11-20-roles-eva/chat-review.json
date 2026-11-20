@@ -1,0 +1,48 @@
+{
+  "scope": "Relecture qualitative post-hoc des quatre conversations synthétiques, non utilisée pour sélectionner E5",
+  "models": {
+    "Eva-source-Q4_K_M": {
+      "facts": "chat-02 correct, chat-03 abstention explicite",
+      "summary": "chat-04 distingue correction effectuée et test B non retesté ; le titre valide reste ambigu pour la correction"
+    },
+    "Qwen3-14B": {
+      "facts": "chat-02 correct, chat-03 abstention",
+      "issue": "chat-03 suggère top/htop/vmstat/iostat, inadéquats pour la mesure directe de température",
+      "summary": "chat-04 distinction correcte des faits et de la validation restante"
+    },
+    "Gemma4-12B": {
+      "facts": "chat-03 abstention, chat-04 résumé correct",
+      "issue": "chat-02 propose trois variantes au lieu d'une phrase"
+    },
+    "Phi-4-mini-instruct-Q4_K_M": {
+      "facts": "chat-02 correct, chat-03 abstention",
+      "issue": "chat-01 ne respecte pas trois phrases ; chat-04 confond partiellement jour du test et jour de correction"
+    },
+    "LFM3-1.7B": {
+      "facts": "chat-02 correct, chat-03 abstention",
+      "issue": "chat-03 suggère df -h pour la demande de température ; chat-04 affirme la correction valide sans retest"
+    },
+    "LFM2.5-1.2B-Instruct-Q4_K_M": {
+      "facts": "correction CPU et abstention correctes",
+      "issue": "chat-04 met correction dans résultats valides puis demande de confirmer B ; formulation générique"
+    },
+    "SmolLM3-Q4_K_M": {
+      "facts": "correction CPU et abstention",
+      "issue": "chat-04 invente un contexte académique et tronque ; chat-03 suggère des services cloud hors cible locale"
+    },
+    "Falcon3-3B-Instruct-q4_k_m": {
+      "facts": "correction CPU et abstention",
+      "issue": "chat-01 développe LLM en Licence en Langues Modèles ; chat-04 contexte scolaire ajouté et sortie tronquée"
+    },
+    "Prism-Ternary-2B-Q2_0": {
+      "issue": "chat-02 confusion processeurs/threads par cœur ; chat-03 htop/iostat non adaptés à la température ; chat-04 spéculation abandon du test"
+    },
+    "Qwen2.5-1.5B": {
+      "facts": "correction CPU et abstention",
+      "issue": "chat-04 invente élève et incertitude sur une date pourtant fournie"
+    },
+    "Qwen3-30B-A3B": {
+      "issue": "Budget rapide 512 inadapté à Thinking, conversations tronquées sans contenu final ; aucune qualification chat long budget dans ce lot"
+    }
+  }
+}

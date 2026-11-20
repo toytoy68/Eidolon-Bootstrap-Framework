@@ -1,0 +1,179 @@
+{
+  "scope": "Post-hoc manual key/value review, does not alter pre-registered strict score",
+  "strict_correct": 6,
+  "values_correct_on_review": 12,
+  "rows": [
+    {
+      "id": "raisonnement-01",
+      "expected": {
+        "heure": "11:00",
+        "jours": 0
+      },
+      "actual": {
+        "heure": "11:00",
+        "jours": 0
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-02",
+      "expected": {
+        "heure": "00:15",
+        "jours": 1
+      },
+      "actual": {
+        "heure": "00:15",
+        "jours": 1
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-03",
+      "expected": {
+        "heure": "00:00",
+        "jours": 1
+      },
+      "actual": {
+        "heure": "00:00",
+        "jours": 1
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-04",
+      "expected": {
+        "heure": "00:00",
+        "jours": 1
+      },
+      "actual": {
+        "heure": "00:00",
+        "jours": 1
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-05",
+      "expected": {
+        "heure": "12:25",
+        "jours": 2
+      },
+      "actual": {
+        "heure": "12:25",
+        "jours": 2
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-06",
+      "expected": {
+        "heure": "06:20",
+        "jours": 0
+      },
+      "actual": {
+        "heure": "06:20",
+        "jours": 0
+      },
+      "strict": true,
+      "values_correct_on_review": true,
+      "error_type": null
+    },
+    {
+      "id": "raisonnement-07",
+      "expected": {
+        "resultat": 391
+      },
+      "actual": {
+        "result": 391
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    },
+    {
+      "id": "raisonnement-08",
+      "expected": {
+        "resultat": 78
+      },
+      "actual": {
+        "result": 78
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    },
+    {
+      "id": "raisonnement-09",
+      "expected": {
+        "resultat": 664
+      },
+      "actual": {
+        "result": 664
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    },
+    {
+      "id": "raisonnement-10",
+      "expected": {
+        "resultat": 64
+      },
+      "actual": {
+        "result": 64
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    },
+    {
+      "id": "raisonnement-11",
+      "expected": {
+        "depasse": false
+      },
+      "actual": {
+        "cle_depasse": false
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    },
+    {
+      "id": "raisonnement-12",
+      "expected": {
+        "valeur": null
+      },
+      "actual": {
+        "temperature": null
+      },
+      "strict": false,
+      "values_correct_on_review": true,
+      "error_type": "wrong_key_correct_value"
+    }
+  ],
+  "darme_failures": [
+    {
+      "id": "darme-06",
+      "expected": {
+        "triage": "BLOQUER"
+      },
+      "content": "{\"triage\":\"OBSERVER\"}"
+    },
+    {
+      "id": "darme-09",
+      "expected": {
+        "triage": "BLOQUER"
+      },
+      "content": "{\"triage\":\"VERIFIER\"}"
+    }
+  ]
+}

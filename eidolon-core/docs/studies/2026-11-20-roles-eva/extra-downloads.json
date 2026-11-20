@@ -1,0 +1,88 @@
+[
+  {
+    "repo": "tencent/WeVisOne-VL-2B",
+    "revision": "fcf8c8ca7fa481b514005ef591c8b72bed39618a",
+    "files": [
+      {
+        "file": "README.md",
+        "sha256": "4d68a3d72e5b4aaed9be503d560b1754d28f636ac445e789734c2a723036d91f",
+        "lfs_verified": false,
+        "bytes": 3566
+      },
+      {
+        "file": "chat_template.jinja",
+        "sha256": "3636d0f0bd6bef02654cdffdc447b79cb2cef8ab02cc75267345946291a489e4",
+        "lfs_verified": false,
+        "bytes": 5292
+      },
+      {
+        "file": "config.json",
+        "sha256": "c50561386446ad7a1b2d61b662d25adfa399acbda713dd78eca8a9696c7e1bea",
+        "lfs_verified": false,
+        "bytes": 1656
+      },
+      {
+        "file": "generation_config.json",
+        "sha256": "ddecce697daef029e7e64a792e31a20541e050978a5a12216e07ca3e8e594b58",
+        "lfs_verified": false,
+        "bytes": 227
+      },
+      {
+        "file": "mask_decoder.pt",
+        "sha256": "5d42d641f5c493e1d3f48869d36f9d74ac2ba2fbd5146db8de513f19084a469f",
+        "lfs_verified": true,
+        "bytes": 38141525
+      },
+      {
+        "file": "model.safetensors",
+        "sha256": "5a843ab41b29946a712608a8f27e04149c5923d979d93973dac14ca4565f5f9e",
+        "lfs_verified": true,
+        "bytes": 4883565184
+      },
+      {
+        "file": "processor_config.json",
+        "sha256": "bfbc24af59a3e73a9cd0653b8d4ae758dfaec4e3e6c15dfb1c6c8ee8d5683c85",
+        "lfs_verified": false,
+        "bytes": 1220
+      },
+      {
+        "file": "tokenizer.json",
+        "sha256": "3bb172429b952469b51c64783f52fa01c26d1b30f1f31a4693e385a43f9cfc5e",
+        "lfs_verified": true,
+        "bytes": 11607393
+      },
+      {
+        "file": "tokenizer_config.json",
+        "sha256": "064277e04934ac9c98e66f7325c4854cf225574b32a6d7bba21af2b06ed28ea5",
+        "lfs_verified": false,
+        "bytes": 574
+      }
+    ],
+    "complete": true
+  },
+  {
+    "repo": "prism-ml/Ternary-Bonsai-2-2B-gguf",
+    "revision": "a6032a5089ac27e96be3a80c7b42d1ad0bd89887",
+    "files": [
+      {
+        "file": "Ternary-Bonsai-2-2B-PQ2_0.gguf",
+        "sha256": "d5f01a4ecaf49239653308ee732ad1a0c5f802c0ddb997549fc7b694c8b45928",
+        "lfs_verified": true,
+        "bytes": 517312992
+      },
+      {
+        "file": "Ternary-Bonsai-2-2B-PTQ1_0.gguf",
+        "sha256": "36061ad406df8a4903a6db005be350c50fabfaf717f9ef0acf4b76adcd9929fa",
+        "lfs_verified": true,
+        "bytes": 429183456
+      },
+      {
+        "file": "Ternary-Bonsai-2-2B-mmproj-Q8_0.gguf",
+        "sha256": "ac9934e8d7966d0d62442c202ec8fdad99a045dea79366c1a4a246a46f5c0533",
+        "lfs_verified": true,
+        "bytes": 364664352
+      }
+    ],
+    "complete": true
+  }
+]

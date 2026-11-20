@@ -1,0 +1,110 @@
+# ==========================================================
+# Projet      : Eidolon Core
+# Organisation: Eidolon Core Technologies (ECT)
+# Fichier     : prepare.py
+# Description : Curriculum E4b1 et tests disjoints, budgets exacts
+# Standard    : Eidolon Presentation Standard v1
+# ==========================================================
+from common import P,read,save,sha
+from components import make
+from packing import pack_plan
+import random,ast,json,re,collections,time,copy
+from transformers import AutoTokenizer
+rng=random.Random(1111323);start=time.time()
+tok=AutoTokenizer.from_pretrained(str(P/'source-model'),local_files_only=True,trust_remote_code=False)
+tree=ast.parse((P/'encoding-source.py').read_text());SYSTEM=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(x,ast.Name) and x.id=='SYSTEM' for x in n.targets))
+def sig(ex):
+ pre=tok.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question'])],tokenize=False,add_generation_prompt=True,enable_thinking=False)
+ full=tok.apply_chat_template([dict(role='system',content=SYSTEM),dict(role='user',content=ex['question']),dict(role='assistant',content=ex['answer'])],tokenize=False,add_generation_prompt=False,enable_thinking=False);assert full.startswith(pre)
+ enc=tok(full,add_special_tokens=False,return_offsets_mapping=True)
+ return len(enc['input_ids']),sum(a>=len(pre) for a,b in enc['offset_mapping'])
+legacy=read(P/'legacy-probes.json');blocked=set()
+for x in legacy:
+ if x['kind']=='S1':blocked.add(int(x['expected']['resultat']))
+ elif x['kind']=='S4':
+  m=re.search(r'Convertis (\d+) minutes',x['question']);assert m;blocked.add(int(m[1]))
+mandatory3=[0,59,60,1380,1439];mandatory2=[0,1439,1440,1441,2879,2880,2881,4319]
+available=[n for n in range(1440) if n not in blocked and n not in mandatory3];rng.shuffle(available)
+test1=available[:96];test3=available[96:192];hold=set(test1+test3)
+pool=[n for n in available[192:] if n not in mandatory3];rng.shuffle(pool)
+quarters=[pool[i::4] for i in range(4)];pools=[{'X1':quarters[0],'X3':mandatory3+quarters[1]},{'X1':quarters[2],'X3':quarters[3]}]
+def near(n):return min(abs(n-1440),abs(n-2880))<=60
+test2=[]
+for day in range(3):
+ a=[n for n in range(day*1440,(day+1)*1440) if n not in mandatory2+mandatory3 and near(n)];b=[n for n in range(day*1440,(day+1)*1440) if n not in mandatory2+mandatory3 and not near(n)];rng.shuffle(a);rng.shuffle(b);test2+=a[:16]+b[:16]
+assert len(set(test2))==96
+for pp in pools:
+ for kk in ['X1','X3']:pp[kk]=[n for n in pp[kk] if n not in set(test2)]
+used2=set(test2)|hold;target2=[]
+for ep in range(2):
+ # Each pass balances day0/1/2 and boundary/random operands before token-budget selection.
+ vals=mandatory2[:] if ep==0 else [];used2.update(vals)
+ for turn in range(180):
+  day=turn%3;border=(turn//3)%2==0
+  choices=[n for n in range(day*1440,(day+1)*1440) if n not in used2 and near(n)==border]
+  if not choices:choices=[n for n in range(4320) if n not in used2 and near(n)==border]
+  if not choices:choices=[n for n in range(4320) if n not in used2]
+  assert choices,'Distinct operand pool exhausted'
+  n=rng.choice(choices);used2.add(n);vals.append(n)
+ pools[ep]['X2']=vals
+test=[]
+for kind,ns in [('X1',test1),('X2',test2),('X3',test3)]:
+ test += [make(kind,n,i%2,f'e4b-held-{kind}-{i}') for i,n in enumerate(ns)]
+save(P/'component-eval.json',test)
+replay=read(P/'replay-original.json');assert len(replay)==810
+replay_sig=[sig(x) for x in replay];short_hours=sum(s[1] for x,s in zip(replay,replay_sig) if x['expected']['unite']=='heure');other=sum(s[1] for x,s in zip(replay,replay_sig) if x['expected']['unite']!='heure');assert other==31622
+need=28487-short_hours;assert need>0
+passes=[];plans=[];stats=[];all_selected={k:[] for k in ['X1','X2','X3']}
+for ep in range(2):
+ candidates={}
+ for kind in ['X1','X2','X3']:
+  candidates[kind]=[]
+  for i,n in enumerate(pools[ep][kind]):
+   ex=make(kind,n,i%2,f'e4b-pass{ep+1}-{kind}-{i}');a,b=sig(ex);assert a<=512
+   candidates[kind].append(dict(ex=ex,full=a,sup=b))
+ selected=[];counts=collections.Counter();taken=set()
+ if ep==0:
+  for kind,ns in [('X2',mandatory2),('X3',mandatory3)]:
+   for n in ns:
+    c=next(c for c in candidates[kind] if c['ex']['value']==n);selected.append(c);counts[kind]+=c['sup'];taken.add(c['ex']['id'])
+ remaining=need-sum(counts.values());weights={'X1':1,'X2':3,'X3':1}
+ while remaining>450:
+  kind=min(weights,key=lambda k:counts[k]/weights[k]);opts=[c for c in candidates[kind] if c['ex']['id'] not in taken and c['sup']<=remaining]
+  assert opts,('candidate pool exhausted',ep,kind,remaining)
+  c=opts[0];selected.append(c);taken.add(c['ex']['id']);counts[kind]+=c['sup'];remaining-=c['sup']
+ # Exact small residual via subset-sum over still-distinct examples.
+ options=[c for kind in ['X1','X2','X3'] for c in candidates[kind] if c['ex']['id'] not in taken]
+ dp={0:[]}
+ for c in options:
+  for total,items in list(dp.items()):
+   t=total+c['sup']
+   if t<=remaining and t not in dp:dp[t]=items+[c]
+  if remaining in dp:break
+ assert remaining in dp,('exact token budget unavailable',remaining)
+ for c in dp[remaining]:selected.append(c);counts[c['ex']['kind']]+=c['sup']
+ assert sum(counts.values())==need
+ exercises=[c['ex'] for c in selected]
+ x2=[x['value'] for x in exercises if x['kind']=='X2']
+ assert sum(map(near,x2))*3>=len(x2),(len(x2),sum(map(near,x2)))
+ for k in all_selected:all_selected[k]+= [x['value'] for x in exercises if x['kind']==k]
+ slots=collections.defaultdict(list)
+ for ex in exercises:slots[rng.randrange(len(replay)+1)].append(ex)
+ train=[]
+ for i in range(len(replay)+1):
+  train+=slots[i]
+  if i<len(replay):train.append(copy.deepcopy(replay[i]))
+ lengths=[sig(x)[0] for x in train];plan=pack_plan(lengths)
+ assert [x for x in train if x['group']=='replay']==replay
+ hour_tokens=sum(sig(x)[1] for x in train if x['group']=='component' or x['expected']['unite']=='heure');assert hour_tokens==28487
+ passes.append(train);plans.append(plan)
+ stats.append(dict(examples=len(train),isolated_examples=len(exercises),replay_hours_examples=101,nonhours_examples=709,supervised_hours_tokens=hour_tokens,supervised_nonhours_tokens=other,supervised_isolated_tokens=dict(counts),isolated_counts=dict(collections.Counter(x['kind'] for x in exercises)),X2_boundary_count=sum(map(near,x2)),X2_n=len(x2),X2_days=dict(collections.Counter(n//1440 for n in x2)),nonpadding_tokens=sum(lengths),packs=len(plan),max_example_tokens=max(lengths)))
+for k,vs in all_selected.items():assert len(vs)==len(set(vs)),k
+assert not set(all_selected['X1']+all_selected['X3'])&hold
+assert not set(sum(all_selected.values(),[]))&(hold|set(test2))
+assert not set(all_selected['X1'])&set(all_selected['X3'])
+assert set(mandatory2)<=set(all_selected['X2']) and set(mandatory3)<=set(all_selected['X3'])
+d=dict(train=passes[0],train_second=passes[1],validation=read(P/'selection.json'),heldout=read(P/'report-examples.json'))
+save(P/'dataset.json',d);save(P/'pack-plan.json',plans)
+save(P/'lineage.json',dict(dataset_sha256=sha(P/'dataset.json'),parent_adapter=read(P/'config.json')['parent_adapter'],source_replay_sha256=sha(P/'replay-original.json'),starting_step=0,automatic_promotion=False))
+save(P/'dataset-preparation.json',dict(passed=True,passes=stats,heldout_counts={'X1':96,'X2':96,'X3':96},short_replay_supervised_tokens=short_hours,nonhours_supervised_tokens=other,hours_share=56974/120218,supervised_total=120218,training_values_distinct_per_kind=True,X1_X3_training_values_disjoint=True,primitive_heldout_values_excluded=True,heldout_values_excluded_across_all_primitive_families=True,legacy_tests_not_new_blind=True,mandatory_boundaries_trained_once_first_pass=True,format='Full-question replay short original E1, no time_steps answers; isolated exercises have only their local steps',packing='Best-fit whole examples, even pack count >=408;102updates/pass with equal per-rank microsteps, variable4/6globalpacks/update; assistant masking/token-weighted loss unchanged; pack membership/order differs E3',source_commit='9914b3db89b52f6f8ffa8f7804b7bb322f3a6684',seed=1111323,seconds=time.time()-start,final_reserved_read=False))
+print(json.dumps(read(P/'dataset-preparation.json'),ensure_ascii=False))

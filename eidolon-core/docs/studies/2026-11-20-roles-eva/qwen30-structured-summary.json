@@ -1,0 +1,59 @@
+[
+  {
+    "model": "Qwen3-30B-A3B",
+    "load_seconds": 9.251691341400146,
+    "meter_before": {
+      "epoch": 1795212862.4719367,
+      "watts": 476.1,
+      "wh": 32196.843
+    },
+    "meter_after": {
+      "epoch": 1795213021.7245955,
+      "watts": 380.0,
+      "wh": 32213.775
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 11,
+        "semantic": 11,
+        "critical_failures": [
+          "robot-09"
+        ],
+        "truncated": 1
+      },
+      "darme": {
+        "n": 12,
+        "strict": 11,
+        "semantic": 11,
+        "critical_failures": [
+          "darme-06"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 1,
+        "semantic": 1,
+        "critical_failures": [
+          "systeme-04",
+          "systeme-06",
+          "systeme-07",
+          "systeme-08",
+          "systeme-11"
+        ],
+        "truncated": 11
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 8,
+        "semantic": 8,
+        "critical_failures": [],
+        "truncated": 4
+      }
+    },
+    "ttft_content_median_s": 2.6842051114999776,
+    "request_median_s": 3.1936397810004564,
+    "errors": []
+  }
+]

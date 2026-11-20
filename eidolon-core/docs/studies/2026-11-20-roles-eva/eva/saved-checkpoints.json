@@ -1,0 +1,20 @@
+{
+  "state": "finished",
+  "epoch": 1795214595.1886637,
+  "verified_files": 3071,
+  "automatic_promotion": false,
+  "checkpoints": {
+    "checkpoints/step-100/complete.json": "5388b5d5925f4c562b1c8f99fdee170b686a80c3b474bbf5a4b7bc2451ab03fd",
+    "checkpoints/step-40/complete.json": "aaa615ddf7ac7de582d9816bb40d2c2890147af3753723220a861d9cfcc9c644",
+    "checkpoints/step-102/complete.json": "b30da2390d359969b5893dc5be160eea0895d54dabd4874e2d409be2f1028fe5",
+    "checkpoints/step-80/complete.json": "d8a18b202363c22eacae9405be16b615ff6416b50beafbd7faff112acc400345",
+    "checkpoints/step-60/complete.json": "0c84806416bf4c07adc27941949d94fb1672e3486dd74b354a941cd4ff64b693",
+    "checkpoints/step-20/complete.json": "09e7265345b4a3be61ab983c42a6279e140759fed678fff1a1731c6fecbac076",
+    "checkpoints/step-20/adapter/adapter_model.safetensors": "86db65af209f144dcf8f6e48fa1345ce292b95fd2214fb93040c898a2709c0d8",
+    "checkpoints/step-60/adapter/adapter_model.safetensors": "57d420938695cc71441d1b3925a2b45d647f05425c60e55574105488d05be81f",
+    "checkpoints/step-80/adapter/adapter_model.safetensors": "e1f40ccc91f9ae8c5afc4540407061c0b20849421afcbb0c3e732ca4a7e624ca",
+    "checkpoints/step-102/adapter/adapter_model.safetensors": "6359b6493ca2f20dbbdfe09e583a0fc8482874e4b00e0b06c12362d45aef1f50",
+    "checkpoints/step-40/adapter/adapter_model.safetensors": "815ce9de7f8c57dc59608bb523876ca6dd8240b49cd0af5687c1553482af6a51",
+    "checkpoints/step-100/adapter/adapter_model.safetensors": "11a429f6b8fa7ffad510682527008b57a7eba6d60a1d6d3516322c07ccc73074"
+  }
+}

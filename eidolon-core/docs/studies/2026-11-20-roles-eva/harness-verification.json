@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "checks": [
+    [
+      "strict exact",
+      true
+    ],
+    [
+      "boolean distinct",
+      true
+    ],
+    [
+      "extra key rejected",
+      true
+    ],
+    [
+      "fence strict rejected",
+      true
+    ],
+    [
+      "fence extraction",
+      true
+    ],
+    [
+      "invalid rejected",
+      true
+    ],
+    [
+      "bare action rejected",
+      true
+    ]
+  ],
+  "unknown_schema": [
+    "number",
+    "null"
+  ],
+  "no_expected_value_enums": true
+}

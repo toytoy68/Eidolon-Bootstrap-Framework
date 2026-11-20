@@ -1,0 +1,29 @@
+{
+  "epoch": 1795214421.0499685,
+  "repositories": {
+    "prism": {
+      "commit": "cec7baeffba70dcf52890069aa8588d4a71006dd",
+      "status": ""
+    },
+    "wevis": {
+      "commit": "9a6bcd85404505df0d05cfb5d97512ccacf35dee",
+      "status": ""
+    }
+  },
+  "text_build": [
+    "CMAKE_CUDA_ARCHITECTURES:UNINITIALIZED=70-real",
+    "CMAKE_CUDA_COMPILER:FILEPATH=/srv/eidolon/ssd/work/backlog-20261120/cuda129/bin/nvcc",
+    "GGML_CUDA:BOOL=ON",
+    "LLAMA_BUILD_SERVER:BOOL=ON",
+    "LLAMA_BUILD_TESTS:BOOL=ON",
+    "LLAMA_BUILD_UI:BOOL=OFF"
+  ],
+  "prism_build": [
+    "CMAKE_CUDA_ARCHITECTURES:UNINITIALIZED=70",
+    "CMAKE_CUDA_COMPILER:STRING=/srv/eidolon/ssd/work/backlog-20261120/cuda129/bin/nvcc",
+    "GGML_CUDA:BOOL=ON",
+    "LLAMA_BUILD_SERVER:BOOL=ON",
+    "LLAMA_BUILD_TESTS:BOOL=OFF",
+    "LLAMA_BUILD_UI:BOOL=OFF"
+  ]
+}

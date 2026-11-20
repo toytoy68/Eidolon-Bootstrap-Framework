@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "counts": {
+    "json": 55,
+    "jsonl_records": 1308,
+    "python": 40
+  },
+  "index_files": 125,
+  "errors": [],
+  "hash_mismatches": [],
+  "credential_pattern_hits": []
+}
