@@ -1,0 +1,51 @@
+{
+  "tasks": [
+    [
+      "count",
+      "count_point",
+      "red squares"
+    ],
+    [
+      "locate",
+      "referring",
+      "the blue circle"
+    ],
+    [
+      "absent",
+      "referring",
+      "a green triangle"
+    ],
+    [
+      "ocr",
+      "ocr",
+      ""
+    ],
+    [
+      "mask",
+      "segmentation",
+      "the blue circle"
+    ],
+    [
+      "count-repeat",
+      "count_point",
+      "red squares"
+    ]
+  ],
+  "known": {
+    "red_squares": 2,
+    "blue_circle_box": [
+      0.72265625,
+      0.18229166666666666,
+      0.8984375,
+      0.4166666666666667
+    ],
+    "green_triangle_absent": true,
+    "text": "STOP 42"
+  },
+  "criteria": "count exact; absent None; box IoU >=0.5; OCR exact text; mask IoU>=0.5; repeat identical",
+  "source_commit": "9a6bcd85404505df0d05cfb5d97512ccacf35dee",
+  "precision": "float16",
+  "torch": "2.6.0+cu124",
+  "transformers": "5.23.0",
+  "runtime_differs_vendor_pins": true
+}

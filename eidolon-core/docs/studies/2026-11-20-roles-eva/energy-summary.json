@@ -1,0 +1,195 @@
+{
+  "scope": "Whole X399 at wall; only sampled Eva stage intervals; excludes CPU preflight, model benchmarks and between-stage gaps",
+  "energy_wh": 117.02300000000105,
+  "sampled_seconds": 1086.8671960830688,
+  "stages": {
+    "qualification-dual": {
+      "seconds": 54.13638162612915,
+      "samples": 100,
+      "wall_w_mean": 257.258,
+      "wall_w_max": 531.1,
+      "energy_wh": 3.644000000000233,
+      "meter_missing": 0,
+      "energy_interval_seconds": 54.13638162612915,
+      "gpu": [
+        {
+          "gpu_w": {
+            "mean": 63.93273,
+            "max": 206.99
+          },
+          "gpu_c": {
+            "mean": 28.76,
+            "max": 35.0
+          },
+          "hbm_c": {
+            "mean": 29.42,
+            "max": 38.0
+          },
+          "cpu_c": {
+            "mean": 38.9575,
+            "max": 43.25
+          }
+        },
+        {
+          "gpu_w": {
+            "mean": 62.240140000000004,
+            "max": 205.286
+          },
+          "gpu_c": {
+            "mean": 29.94,
+            "max": 37.0
+          },
+          "hbm_c": {
+            "mean": 30.82,
+            "max": 40.0
+          },
+          "cpu_c": {
+            "mean": 38.94625,
+            "max": 43.125
+          }
+        }
+      ]
+    },
+    "baseline": {
+      "seconds": 329.22573471069336,
+      "samples": 604,
+      "wall_w_mean": 380.9054635761589,
+      "wall_w_max": 470.1,
+      "energy_wh": 34.93500000000131,
+      "meter_missing": 0,
+      "energy_interval_seconds": 329.22573471069336,
+      "gpu": [
+        {
+          "gpu_w": {
+            "mean": 122.30215066225165,
+            "max": 247.08
+          },
+          "gpu_c": {
+            "mean": 32.99834437086093,
+            "max": 37.0
+          },
+          "hbm_c": {
+            "mean": 36.152317880794705,
+            "max": 42.0
+          },
+          "cpu_c": {
+            "mean": 38.58050496688742,
+            "max": 41.125
+          }
+        },
+        {
+          "gpu_w": {
+            "mean": 120.76081456953644,
+            "max": 257.632
+          },
+          "gpu_c": {
+            "mean": 34.85761589403973,
+            "max": 38.0
+          },
+          "hbm_c": {
+            "mean": 37.359271523178805,
+            "max": 44.0
+          },
+          "cpu_c": {
+            "mean": 38.5807119205298,
+            "max": 41.125
+          }
+        }
+      ]
+    },
+    "phase1": {
+      "seconds": 189.2542543411255,
+      "samples": 339,
+      "wall_w_mean": 427.7581120943953,
+      "wall_w_max": 532.9,
+      "energy_wh": 22.71900000000096,
+      "meter_missing": 0,
+      "energy_interval_seconds": 189.2542543411255,
+      "gpu": [
+        {
+          "gpu_w": {
+            "mean": 140.51693805309733,
+            "max": 218.895
+          },
+          "gpu_c": {
+            "mean": 35.4070796460177,
+            "max": 38.0
+          },
+          "hbm_c": {
+            "mean": 38.74631268436578,
+            "max": 44.0
+          },
+          "cpu_c": {
+            "mean": 38.392699115044245,
+            "max": 45.75
+          }
+        },
+        {
+          "gpu_w": {
+            "mean": 141.33090265486726,
+            "max": 225.622
+          },
+          "gpu_c": {
+            "mean": 37.81120943952802,
+            "max": 41.0
+          },
+          "hbm_c": {
+            "mean": 40.26843657817109,
+            "max": 45.0
+          },
+          "cpu_c": {
+            "mean": 38.392699115044245,
+            "max": 45.75
+          }
+        }
+      ]
+    },
+    "eval1": {
+      "seconds": 514.2508254051208,
+      "samples": 944,
+      "wall_w_mean": 390.1262711864407,
+      "wall_w_max": 488.8,
+      "energy_wh": 55.724999999998545,
+      "meter_missing": 0,
+      "energy_interval_seconds": 514.2508254051208,
+      "gpu": [
+        {
+          "gpu_w": {
+            "mean": 125.89395868644067,
+            "max": 254.559
+          },
+          "gpu_c": {
+            "mean": 35.958686440677965,
+            "max": 39.0
+          },
+          "hbm_c": {
+            "mean": 39.72775423728814,
+            "max": 45.0
+          },
+          "cpu_c": {
+            "mean": 38.57746292372882,
+            "max": 43.375
+          }
+        },
+        {
+          "gpu_w": {
+            "mean": 123.1781154661017,
+            "max": 240.272
+          },
+          "gpu_c": {
+            "mean": 37.8728813559322,
+            "max": 41.0
+          },
+          "hbm_c": {
+            "mean": 40.91101694915254,
+            "max": 46.0
+          },
+          "cpu_c": {
+            "mean": 38.57719809322034,
+            "max": 43.375
+          }
+        }
+      ]
+    }
+  }
+}

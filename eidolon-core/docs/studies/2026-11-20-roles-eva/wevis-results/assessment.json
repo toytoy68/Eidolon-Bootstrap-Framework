@@ -1,0 +1,11 @@
+{
+  "count": true,
+  "box_iou": 0.9563751907876409,
+  "absent": true,
+  "ocr": true,
+  "mask_iou": null,
+  "repeat_identical": true,
+  "passed": false,
+  "mask_finite": false,
+  "mask_failure": "FP16 decoder emitted all NaN; no usable mask"
+}

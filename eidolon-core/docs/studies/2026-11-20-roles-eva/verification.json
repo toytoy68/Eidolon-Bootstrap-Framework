@@ -1,0 +1,94 @@
+{
+  "epoch": 1795214688.2284114,
+  "saved_files_rehashed": 3071,
+  "hash_mismatches": [],
+  "parent_crossload_checks": [
+    {
+      "file": "crossload-legacy-rank1.json",
+      "passed": true,
+      "n": 36,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-report-rank1.json",
+      "passed": true,
+      "n": 176,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X3-rank1.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X1-rank0.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-report-rank0.json",
+      "passed": true,
+      "n": 176,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-canary-rank1.json",
+      "passed": true,
+      "n": 4,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X1-rank1.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-legacy-rank0.json",
+      "passed": true,
+      "n": 36,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-roles-rank0.json",
+      "passed": true,
+      "n": 26,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-roles-rank1.json",
+      "passed": true,
+      "n": 26,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X3-rank0.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X2-rank0.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-canary-rank0.json",
+      "passed": true,
+      "n": 4,
+      "independent_load": true
+    },
+    {
+      "file": "crossload-component-X2-rank1.json",
+      "passed": true,
+      "n": 48,
+      "independent_load": true
+    }
+  ],
+  "ecc_max_counters": 0,
+  "guard_trips": [],
+  "parent_unchanged": true
+}

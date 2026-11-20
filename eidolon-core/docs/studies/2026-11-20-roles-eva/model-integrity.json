@@ -1,0 +1,86 @@
+{
+  "verified": true,
+  "epoch": 1795212881.7956722,
+  "files": [
+    {
+      "path": "/srv/eidolon/models/ollama/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+      "bytes": 7381382048,
+      "sha256": "1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606"
+    },
+    {
+      "path": "/srv/eidolon/models/ollama/blobs/sha256-58574f2e94b99fb9e4391408b57e5aeaaaec10f6384e9a699fc2cb43a5c8eabf",
+      "bytes": 18556685856,
+      "sha256": "58574f2e94b99fb9e4391408b57e5aeaaaec10f6384e9a699fc2cb43a5c8eabf"
+    },
+    {
+      "path": "/srv/eidolon/models/ollama/blobs/sha256-a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e",
+      "bytes": 9276184896,
+      "sha256": "a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e"
+    },
+    {
+      "path": "/srv/eidolon/models/ollama/blobs/sha256-fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+      "bytes": 2496723456,
+      "sha256": "fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/backlog-20261120/candidates/LFM3-1.7B-Q4_K_M.gguf",
+      "bytes": 1099627808,
+      "sha256": "3793e1e6e2266919d6e015287221b41100175a98eddaba92e111aed3b05c93c4"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/backlog-20261120/candidates/Ternary-Bonsai-2-2B-Q2_0.gguf",
+      "bytes": 546689504,
+      "sha256": "c2893fa6f951daee8b7263d5f49b455e57989ef56417a22125b03566dc560650"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/campaign-20261120/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "bytes": 1117320736,
+      "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/models/Falcon3-3B-Instruct-q4_k_m.gguf",
+      "bytes": 2005684448,
+      "sha256": "ac9bc2edb58a961f77db11ae89e7f23b610d8b15c2ef603d1e7cb390c50d1aad"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/models/LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+      "bytes": 730895168,
+      "sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/models/Phi-4-mini-instruct-Q4_K_M.gguf",
+      "bytes": 2491874272,
+      "sha256": "88c00229914083cd112853aab84ed51b87bdf6b9ce42f532d8c85c7c63b1730a"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/models/SmolLM3-Q4_K_M.gguf",
+      "bytes": 1915305312,
+      "sha256": "8334b850b7bd46238c16b0c550df2138f0889bf433809008cc17a8b05761863e"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/prism-models/Ternary-Bonsai-2-2B-PQ2_0.gguf",
+      "bytes": 517312992,
+      "sha256": "d5f01a4ecaf49239653308ee732ad1a0c5f802c0ddb997549fc7b694c8b45928"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/prism-models/Ternary-Bonsai-2-2B-PTQ1_0.gguf",
+      "bytes": 429183456,
+      "sha256": "36061ad406df8a4903a6db005be350c50fabfaf717f9ef0acf4b76adcd9929fa"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/prism-models/Ternary-Bonsai-2-2B-mmproj-Q8_0.gguf",
+      "bytes": 364664352,
+      "sha256": "ac9934e8d7966d0d62442c202ec8fdad99a045dea79366c1a4a246a46f5c0533"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/wevis-model/mask_decoder.pt",
+      "bytes": 38141525,
+      "sha256": "5d42d641f5c493e1d3f48869d36f9d74ac2ba2fbd5146db8de513f19084a469f"
+    },
+    {
+      "path": "/srv/eidolon/ssd/work/roles-eva-20261120/wevis-model/model.safetensors",
+      "bytes": 4883565184,
+      "sha256": "5a843ab41b29946a712608a8f27e04149c5923d979d93973dac14ca4565f5f9e"
+    }
+  ]
+}

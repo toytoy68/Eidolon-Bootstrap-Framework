@@ -1,0 +1,188 @@
+[
+  {
+    "model": "Prism-fork-PTQ1_0",
+    "load_seconds": 1.533656358718872,
+    "meter_before": {
+      "epoch": 1795213108.2116764,
+      "watts": 292.4,
+      "wh": 32218.919
+    },
+    "meter_after": {
+      "epoch": 1795213118.6554847,
+      "watts": 277.4,
+      "wh": 32219.776
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-02",
+          "robot-07",
+          "robot-09",
+          "robot-10"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 1,
+        "semantic": 1,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.07135734549956396,
+    "request_median_s": 0.09597868849959923,
+    "errors": []
+  },
+  {
+    "model": "Prism-fork-PQ2_0",
+    "load_seconds": 1.2465031147003174,
+    "meter_before": {
+      "epoch": 1795213119.0120502,
+      "watts": 277.4,
+      "wh": 32219.776
+    },
+    "meter_after": {
+      "epoch": 1795213128.7596984,
+      "watts": 268.6,
+      "wh": 32220.634
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-02",
+          "robot-07",
+          "robot-09",
+          "robot-10"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 1,
+        "semantic": 1,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.07014980300027673,
+    "request_median_s": 0.09403511950040411,
+    "errors": []
+  },
+  {
+    "model": "Prism-fork-Q2_0",
+    "load_seconds": 1.531440019607544,
+    "meter_before": {
+      "epoch": 1795213129.100848,
+      "watts": 268.6,
+      "wh": 32220.634
+    },
+    "meter_after": {
+      "epoch": 1795213139.3656616,
+      "watts": 263.9,
+      "wh": 32221.277
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "robot-02",
+          "robot-07",
+          "robot-09",
+          "robot-10"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 2,
+        "semantic": 2,
+        "critical_failures": [
+          "darme-02",
+          "darme-05",
+          "darme-06",
+          "darme-07",
+          "darme-09",
+          "darme-11"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 4,
+        "semantic": 4,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 1,
+        "semantic": 1,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.06910871750005754,
+    "request_median_s": 0.09452882149980724,
+    "errors": []
+  }
+]

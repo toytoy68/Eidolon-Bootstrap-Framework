@@ -1,0 +1,72 @@
+{
+  "load_seconds": 7.7016761302948,
+  "rows": [
+    {
+      "id": "count",
+      "task": "count_point",
+      "query": "red squares",
+      "response": "<ref>red squares</ref><point><182><291>,<530><290></point>\nTotal number: 2.",
+      "boxes": [],
+      "mask_count": 0,
+      "seconds": 2.176591396331787,
+      "peak_vram_mib": 4741.55859375
+    },
+    {
+      "id": "locate",
+      "task": "referring",
+      "query": "the blue circle",
+      "response": "<ref>the blue circle</ref><box><721><182><902><420></box>",
+      "boxes": [],
+      "mask_count": 0,
+      "seconds": 0.5219705104827881,
+      "peak_vram_mib": 4741.775390625
+    },
+    {
+      "id": "absent",
+      "task": "referring",
+      "query": "a green triangle",
+      "response": "<ref>a green triangle</ref><box>none</box>",
+      "boxes": [],
+      "mask_count": 0,
+      "seconds": 0.3737499713897705,
+      "peak_vram_mib": 4741.775390625
+    },
+    {
+      "id": "ocr",
+      "task": "ocr",
+      "query": "",
+      "response": "<ref>STOP</ref><box><238><693><492><789></box>, <ref>42</ref><box><519><694><637><790></box>",
+      "boxes": [],
+      "mask_count": 0,
+      "seconds": 0.8115477561950684,
+      "peak_vram_mib": 4741.775390625
+    },
+    {
+      "id": "mask",
+      "task": "segmentation",
+      "query": "the blue circle",
+      "response": "<ref>the blue circle</ref><box><722><183><901><420><OBJ></box>",
+      "boxes": [
+        [
+          0.722,
+          0.183,
+          0.901,
+          0.42
+        ]
+      ],
+      "mask_count": 1,
+      "seconds": 0.8865132331848145,
+      "peak_vram_mib": 6615.62158203125
+    },
+    {
+      "id": "count-repeat",
+      "task": "count_point",
+      "query": "red squares",
+      "response": "<ref>red squares</ref><point><182><291>,<530><290></point>\nTotal number: 2.",
+      "boxes": [],
+      "mask_count": 0,
+      "seconds": 0.712468147277832,
+      "peak_vram_mib": 6615.62158203125
+    }
+  ]
+}
