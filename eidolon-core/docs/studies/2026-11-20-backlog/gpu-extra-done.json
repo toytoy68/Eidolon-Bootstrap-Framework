@@ -1,0 +1,22 @@
+[
+  {
+    "name": "matmul-v08-CUDA0",
+    "exit": 0
+  },
+  {
+    "name": "matmul-v08-CUDA1",
+    "exit": 0
+  },
+  {
+    "name": "matmul-v1-CUDA0",
+    "exit": 0
+  },
+  {
+    "name": "matmul-v1-CUDA1",
+    "exit": 0
+  },
+  {
+    "name": "gpu-moe-partial12",
+    "exit": 0
+  }
+]

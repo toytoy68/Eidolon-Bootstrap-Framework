@@ -3327,3 +3327,8 @@ Base 8e106400bac8754d8a17ae5c3703529e0251454e. Candidat I03 : diffusers/stable-d
 Autorisation directe toytoy : prioriser et traiter la liste, rapport unique final.
 Branche isolée codex/backlog-reconcile-20261120 ; réconciliation des contributions locales, audit, temporalité, client et média, préservation des deux côtés des conflits documentaires.
 Périmètre : suivi et preuves, CI, stockage froid, banc CUDA, qualification locale des études. Production Core inchangée.
+
+
+## Codex - clôture du lot backlog 2026-11-20
+
+Réconciliation et corrections testées en copies isolées : Core 2463 réussis ; Memory 3236 réussis, complétés par Qdrant réel et montages privilégiés. Builds CUDA Volta, A/B llama.cpp, LFM3/Prism, MoE, Kiri/Docker/Podman et embeddings multimodaux exécutés. Archives froides déplacées avec contrôle intégral. PR Core #17 et Memory #7 ouvertes en brouillon ; production non déployée. Voir docs/studies/2026-11-20-backlog/README.md et ADR-PRIORITES.md pour preuves, limites et tâches restantes. Le pont de collaboration Memory reste en échec côté service. Plafonds GPU restaurés, VM de test arrêtée.

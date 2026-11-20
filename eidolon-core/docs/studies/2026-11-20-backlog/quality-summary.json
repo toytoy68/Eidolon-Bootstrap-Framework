@@ -1,0 +1,122 @@
+[
+  {
+    "model": "baseline-qwen15",
+    "case": "arith",
+    "expected": "391",
+    "exit": 0,
+    "strict_raw_exact": true,
+    "final_extracted": "391",
+    "final_exact": true,
+    "seconds_including_load": 1.2975856010007192
+  },
+  {
+    "model": "baseline-qwen15",
+    "case": "temporal",
+    "expected": "38",
+    "exit": 0,
+    "strict_raw_exact": true,
+    "final_extracted": "38",
+    "final_exact": true,
+    "seconds_including_load": 1.427717837000273
+  },
+  {
+    "model": "baseline-qwen15",
+    "case": "json",
+    "expected": "{\"commande\":\"STOP\"}",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "```json\n{\"commande\":\"STOP\"}\n```",
+    "final_exact": false,
+    "seconds_including_load": 1.3555983070000366
+  },
+  {
+    "model": "baseline-qwen15",
+    "case": "abstain",
+    "expected": "INCONNU",
+    "exit": 0,
+    "strict_raw_exact": true,
+    "final_extracted": "INCONNU",
+    "final_exact": true,
+    "seconds_including_load": 1.2956527730002563
+  },
+  {
+    "model": "lfm3",
+    "case": "arith",
+    "expected": "391",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "391",
+    "final_exact": true,
+    "seconds_including_load": 2.0682546859998183
+  },
+  {
+    "model": "lfm3",
+    "case": "temporal",
+    "expected": "38",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "38",
+    "final_exact": true,
+    "seconds_including_load": 2.4351436249999097
+  },
+  {
+    "model": "lfm3",
+    "case": "json",
+    "expected": "{\"commande\":\"STOP\"}",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "{\"commande\":\"STOP\"}",
+    "final_exact": true,
+    "seconds_including_load": 2.5237667810006315
+  },
+  {
+    "model": "lfm3",
+    "case": "abstain",
+    "expected": "INCONNU",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "INCONNU",
+    "final_exact": true,
+    "seconds_including_load": 1.9315482010006235
+  },
+  {
+    "model": "prism",
+    "case": "arith",
+    "expected": "391",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "391",
+    "final_exact": true,
+    "seconds_including_load": 2.4751948200000697
+  },
+  {
+    "model": "prism",
+    "case": "temporal",
+    "expected": "38",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": null,
+    "final_exact": false,
+    "seconds_including_load": 2.6438740829999006
+  },
+  {
+    "model": "prism",
+    "case": "json",
+    "expected": "{\"commande\":\"STOP\"}",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "{\"commande\":\"STOP\"}",
+    "final_exact": true,
+    "seconds_including_load": 1.7955540020002445
+  },
+  {
+    "model": "prism",
+    "case": "abstain",
+    "expected": "INCONNU",
+    "exit": 0,
+    "strict_raw_exact": false,
+    "final_extracted": "INCONNU",
+    "final_exact": true,
+    "seconds_including_load": 2.4312280340000143
+  }
+]
