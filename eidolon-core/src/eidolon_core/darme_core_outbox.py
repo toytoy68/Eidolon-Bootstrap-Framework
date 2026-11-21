@@ -15,8 +15,16 @@ def export_once(database, state_file, feed_file, key):
         if (set(state) != {'cursor', 'sequence'} or any(type(v) is not int or v < 0 for v in state.values())):
             raise ValueError('invalid sender checkpoint')
     # A pending feed must be delivered before a new one can be emitted.
-    if feed_file.with_suffix('.pending').exists() and not feed_file.exists():
-        raise ValueError('orphaned pending metadata: manual reconciliation required')
+    pending_file = feed_file.with_suffix('.pending')
+    if pending_file.exists() and not feed_file.exists():
+        pending = json.loads(pending_file.read_text())
+        # Crash after durable acknowledgement and feed unlink, before pending unlink.
+        # Exact checkpoint equality is required; an unacknowledged orphan stays blocked.
+        if (type(pending) is not dict or set(pending) != {'cursor', 'sequence'}
+                or any(type(v) is not int or v < 1 for v in pending.values())
+                or pending != state):
+            raise ValueError('orphaned pending metadata: manual reconciliation required')
+        pending_file.unlink()
     if feed_file.exists():
         raise FileExistsError('pending signed feed requires acknowledgement')
     db = sqlite3.connect('file:' + str(Path(database).resolve()) + '?mode=ro', uri=True)
@@ -32,7 +40,9 @@ def export_once(database, state_file, feed_file, key):
     events = []
     for _, detail in rows:
         record = json.loads(detail)
-        if set(record) != {'event_id','source','category','severity','observed_at','subject'}:
+        fields = {'event_id','source','category','severity','observed_at','subject'}
+        metadata = {'status', 'phase', 'progress', 'outcome'}
+        if type(record) is not dict or set(record) not in (fields, fields | metadata):
             raise ValueError('invalid durable Core evidence')
         events.append(SecurityEvent(record['event_id'], record['source'], record['category'],
                                     Severity(record['severity']), record['observed_at'], record['subject']))

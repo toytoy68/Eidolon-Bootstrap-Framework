@@ -3340,3 +3340,11 @@ Autorisation toytoy : poursuivre les tests, adapter le protocole, classifier par
 ### Clôture scientifique du lot rôles / Eva E5
 
 Onze modèles texte, 1 304 réponses du banc (hors tentatives invalidées), trois stockages Prism et WeVisOne testés. Contrats de rôle, identité Qwen30 Thinking et recette vision FP32 documentés. Eva E5 : 102 updates, X1 47→66/96 mais X3 47→43 ; garde échouée, second passage annulé, parent cycle5 conservé. 3 071 fichiers de campagne relus par SHA sans écart. Résultats et limites : docs/studies/2026-11-20-roles-eva/. Arrêt propre de X399 prévu après conservation et vérification ; preuve secteur finale ajoutée séparément.
+
+## Codex/GPT — lot maintenance et Darme du 21 novembre 2026
+
+Autorisation toytoy : traiter les priorités proposées après audit. Base 766bf823943626e823d6f46865bddd35c5246b35. Branche isolée codex/maintenance-darme-20261121. Périmètre : diagnostic et correction maintenance Memory, diagnostic du pont Git, qualification Darme bout en bout et intégration des lots déjà testés. Fichiers prévus : maintenance_host et tests associés, étude 2026-11-21-maintenance-darme ; extension Darme selon diagnostic. Aucun corpus ni modèle promu implicitement.
+
+### Clôture du lot maintenance et Darme — 21 novembre 2026
+
+Maintenance Memory rétablie, ouverture Qdrant différée et diagnostics d’étape déployés avec sauvegarde ; cause historique non reproduite, corpus/index inchangés. Rupture réelle Store/outbox corrigée et reprises après crash testées. Adaptateur text.stats isolé opt-in qualifié, non activé globalement. Suite Core : 2478 réussis, 24 ignorés, 1349 sous-tests ; lot final ciblé : 35 réussis. Core #17/#18 et Memory #7 intégrées. Pont Git NAS toujours bloqué faute d’accès au checkout/journaux du service. Rapport : docs/studies/2026-11-21-maintenance-darme/. Hôte conservé allumé.
