@@ -1,0 +1,34 @@
+{
+  "scope": "Qualitative review of 8 historical synthetic canaries; not a blind validation and not a training selection score",
+  "baseline": {
+    "canary-preference": "Choisit le vert, mais attribue la préférence à l'atelier plutôt qu'à l'utilisateur.",
+    "canary-fiction": "Scène courte conforme, Iris présente, sombre et non graphique.",
+    "canary-francais": "Réponse intelligible mais ambiguë : dédiée à un seul processus, sans clarifier le contexte mémoire CPU/GPU.",
+    "canary-debat": "Un argument pour et un contre, aucune opinion utilisateur supposée.",
+    "canary-desaccord": "Refuse correctement 48 processeurs logiques pour 16 cœurs/32 threads.",
+    "canary-personnalite": "Idée créative, mais affirme sans fondement que le comportement proposé évite les erreurs de programmation.",
+    "canary-absence": "N'invente pas le mot de passe absent.",
+    "canary-clarification": "Demande le type de serveur et les erreurs observées ; question large mais pertinente."
+  },
+  "step102": {
+    "identical_to_parent": 6,
+    "changed": [
+      "canary-fiction",
+      "canary-desaccord"
+    ],
+    "observations": {
+      "canary-fiction": "Variation de style sans perte de consigne observée.",
+      "canary-desaccord": "Régression factuelle : refuse 48 mais affirme que 16 cœurs offrent 16 processeurs logiques, alors que 16 cœurs/32 threads correspondent ici à 32 processeurs logiques."
+    },
+    "conclusion": "Pas de validation conversationnelle générale ; une régression factuelle est relevée malgré six réponses identiques."
+  },
+  "role_chat_review": {
+    "unchanged": [
+      "chat-01",
+      "chat-02",
+      "chat-04"
+    ],
+    "chat-03": "Abstention plus directe ; la suggestion Raspberry Pi du parent disparaît.",
+    "limitation": "Le résumé chat-04 garde une formulation ambiguë sur un retest mercredi qui n’a pas eu lieu."
+  }
+}

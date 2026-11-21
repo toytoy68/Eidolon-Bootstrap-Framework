@@ -1,0 +1,53 @@
+[
+  {
+    "id": "original",
+    "response": "<ref>the blue circle</ref><box><722><183><901><420><OBJ></box>",
+    "boxes": [
+      [
+        0.722,
+        0.183,
+        0.901,
+        0.42
+      ]
+    ],
+    "masks": 1,
+    "finite": true,
+    "iou": 1.0,
+    "seconds": 1.1087403297424316,
+    "peak_vram_mib": 11345.435546875
+  },
+  {
+    "id": "shifted",
+    "response": "<ref>the blue circle</ref><box><117><520><295><758><OBJ></box>",
+    "boxes": [
+      [
+        0.117,
+        0.52,
+        0.295,
+        0.758
+      ]
+    ],
+    "masks": 1,
+    "finite": true,
+    "iou": 1.0,
+    "seconds": 0.7841436862945557,
+    "peak_vram_mib": 11345.435546875
+  },
+  {
+    "id": "original-repeat",
+    "response": "<ref>the blue circle</ref><box><722><183><901><420><OBJ></box>",
+    "boxes": [
+      [
+        0.722,
+        0.183,
+        0.901,
+        0.42
+      ]
+    ],
+    "masks": 1,
+    "finite": true,
+    "iou": 1.0,
+    "seconds": 0.7892069816589355,
+    "peak_vram_mib": 11345.435546875
+  }
+]

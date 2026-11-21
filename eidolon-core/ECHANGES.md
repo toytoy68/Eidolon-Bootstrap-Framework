@@ -3332,3 +3332,11 @@ Périmètre : suivi et preuves, CI, stockage froid, banc CUDA, qualification loc
 ## Codex - clôture du lot backlog 2026-11-20
 
 Réconciliation et corrections testées en copies isolées : Core 2463 réussis ; Memory 3236 réussis, complétés par Qdrant réel et montages privilégiés. Builds CUDA Volta, A/B llama.cpp, LFM3/Prism, MoE, Kiri/Docker/Podman et embeddings multimodaux exécutés. Archives froides déplacées avec contrôle intégral. PR Core #17 et Memory #7 ouvertes en brouillon ; production non déployée. Voir docs/studies/2026-11-20-backlog/README.md et ADR-PRIORITES.md pour preuves, limites et tâches restantes. Le pont de collaboration Memory reste en échec côté service. Plafonds GPU restaurés, VM de test arrêtée.
+
+## Codex/GPT - lot roles et Eva du 20 novembre 2026
+
+Autorisation toytoy : poursuivre les tests, adapter le protocole, classifier par usage, reprendre Eva, sauvegarder et eteindre X399. Base d61792d883e7dc4ecc611a072d76f1e50f1c77ee. Branche isolee codex/roles-eva-20261120. Fichiers : nouvelle etude 2026-11-20-roles-eva, protocole, banc, classement, cycle experimental ; aucune promotion automatique.
+
+### Clôture scientifique du lot rôles / Eva E5
+
+Onze modèles texte, 1 304 réponses du banc (hors tentatives invalidées), trois stockages Prism et WeVisOne testés. Contrats de rôle, identité Qwen30 Thinking et recette vision FP32 documentés. Eva E5 : 102 updates, X1 47→66/96 mais X3 47→43 ; garde échouée, second passage annulé, parent cycle5 conservé. 3 071 fichiers de campagne relus par SHA sans écart. Résultats et limites : docs/studies/2026-11-20-roles-eva/. Arrêt propre de X399 prévu après conservation et vérification ; preuve secteur finale ajoutée séparément.

@@ -1,0 +1,16 @@
+{
+  "epoch": 1795214841.7787259,
+  "tests_finished": true,
+  "eva_finished": true,
+  "eva_qualified": false,
+  "automatic_promotion": false,
+  "gpu_processes": "",
+  "gpu_power_limit_restored_w": 300,
+  "cap_output": "Power limit for GPU 00000000:0A:00.0 was set to 300.00 W from 200.00 W.\nPower limit for GPU 00000000:0C:00.0 was set to 300.00 W from 200.00 W.\nAll done.\n",
+  "production_core_head": "afb79a7da1e3cfcc0f8f9d58c3863b7ba2f3ef60",
+  "running_vms": [
+    "Memory-engine",
+    ""
+  ],
+  "shutdown_status": "not_yet_requested"
+}

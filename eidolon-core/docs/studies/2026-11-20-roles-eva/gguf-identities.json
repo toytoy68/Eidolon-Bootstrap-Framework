@@ -1,0 +1,392 @@
+[
+  {
+    "file": "sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+    "sha256": "1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+    "version": 3,
+    "tensors": 667,
+    "metadata": {
+      "general.architecture": "gemma4",
+      "general.type": "model",
+      "general.sampling.top_k": 64,
+      "general.sampling.top_p": 0.949999988079071,
+      "general.sampling.temp": 1.0,
+      "general.size_label": "12B",
+      "general.license": "apache-2.0",
+      "general.license.link": "https://ai.google.dev/gemma/docs/gemma_4_license",
+      "general.base_model.count": 1,
+      "general.base_model.0.name": "Gemma 4 12B",
+      "general.base_model.0.organization": "Google",
+      "general.base_model.0.repo_url": "https://huggingface.co/google/gemma-4-12B",
+      "general.tags": [
+        "any-to-any"
+      ]
+    }
+  },
+  {
+    "file": "sha256-58574f2e94b99fb9e4391408b57e5aeaaaec10f6384e9a699fc2cb43a5c8eabf",
+    "sha256": "58574f2e94b99fb9e4391408b57e5aeaaaec10f6384e9a699fc2cb43a5c8eabf",
+    "version": 3,
+    "tensors": 579,
+    "metadata": {
+      "general.architecture": "qwen3moe",
+      "general.basename": "Qwen3",
+      "general.file_type": 15,
+      "general.finetune": "Thinking",
+      "general.name": "Qwen3 30B A3B Thinking 2507",
+      "general.parameter_count": 30532122624,
+      "general.quantization_version": 2,
+      "general.size_label": "30B-A3B",
+      "general.type": "model",
+      "general.version": "2507"
+    }
+  },
+  {
+    "file": "sha256-a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e",
+    "sha256": "a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e",
+    "version": 3,
+    "tensors": 443,
+    "metadata": {
+      "general.architecture": "qwen3",
+      "general.type": "model",
+      "general.name": "Qwen3 14B",
+      "general.basename": "Qwen3",
+      "general.size_label": "14B"
+    }
+  },
+  {
+    "file": "sha256-fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "sha256": "fc06dc11c735cca884f0b5da55480ea3178e461e5b747040fdb8c217d50a3ce5",
+    "version": 3,
+    "tensors": 398,
+    "metadata": {
+      "general.architecture": "qwen3",
+      "general.type": "model",
+      "general.name": "Qwen3 4B Element8 Eva Hermes Heretic",
+      "general.finetune": "Element8-Eva-Hermes-Heretic",
+      "general.basename": "Qwen3",
+      "general.size_label": "4B",
+      "general.license": "apache-2.0",
+      "general.base_model.count": 16,
+      "general.base_model.0.name": "Jan v1 2509",
+      "general.base_model.0.version": "v1-2509",
+      "general.base_model.0.organization": "Janhq",
+      "general.base_model.0.repo_url": "https://huggingface.co/janhq/Jan-v1-2509",
+      "general.base_model.1.name": "Qwen3 4B RA SFT",
+      "general.base_model.1.organization": "Gen Verse",
+      "general.base_model.1.repo_url": "https://huggingface.co/Gen-Verse/Qwen3-4B-RA-SFT",
+      "general.base_model.2.name": "Qwen3 4B Instruct 2507 Polaris Alpha Distill",
+      "general.base_model.2.version": "2507",
+      "general.base_model.2.organization": "TeichAI",
+      "general.base_model.2.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Instruct-2507-Polaris-Alpha-Distill",
+      "general.base_model.3.name": "Qwen3 4B Thinking 2507 Gemini 2.5 Flash Distill",
+      "general.base_model.3.version": "2507-2.5",
+      "general.base_model.3.organization": "TeichAI",
+      "general.base_model.3.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Thinking-2507-Gemini-2.5-Flash-Distill",
+      "general.base_model.4.name": "Qwen3 4B Instruct 2507 Claude Haiku 4.5 Distill",
+      "general.base_model.4.version": "2507-4.5",
+      "general.base_model.4.organization": "TeichAI",
+      "general.base_model.4.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Instruct-2507-Claude-Haiku-4.5-Distill",
+      "general.base_model.5.name": "Qwen3 4B Instruct 2507 Gemini 3 Pro Preview Distill",
+      "general.base_model.5.version": "2507-3",
+      "general.base_model.5.organization": "TeichAI",
+      "general.base_model.5.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Instruct-2507-Gemini-3-Pro-Preview-Distill",
+      "general.base_model.6.name": "Qwen3 4B Thinking 2507 Claude Haiku 4.5 High Reasoning Distill",
+      "general.base_model.6.version": "2507-4.5",
+      "general.base_model.6.organization": "TeichAI",
+      "general.base_model.6.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Thinking-2507-Claude-Haiku-4.5-High-Reasoning-Distill",
+      "general.base_model.7.name": "Qwen3 4B Thinking 2507 MiniMax M2.1 Distill",
+      "general.base_model.7.version": "2507",
+      "general.base_model.7.organization": "TeichAI",
+      "general.base_model.7.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Thinking-2507-MiniMax-M2.1-Distill",
+      "general.base_model.8.name": "Qwen3 4B Thinking 2507 MiMo V2 Flash Distill",
+      "general.base_model.8.version": "2507-V2",
+      "general.base_model.8.organization": "TeichAI",
+      "general.base_model.8.repo_url": "https://huggingface.co/TeichAI/Qwen3-4B-Thinking-2507-MiMo-V2-Flash-Distill",
+      "general.base_model.9.name": "Qwen3 4B Agent Claude Gemini Heretic",
+      "general.base_model.9.organization": "DavidAU",
+      "general.base_model.9.repo_url": "https://huggingface.co/DavidAU/Qwen3-4B-Agent-Claude-Gemini-heretic",
+      "general.base_model.10.name": "Qwen3 4B Apollo V0.1 4B Thinking Heretic Abliterated",
+      "general.base_model.10.version": "V0.1",
+      "general.base_model.10.organization": "DavidAU",
+      "general.base_model.10.repo_url": "https://huggingface.co/DavidAU/Qwen3-4B-Apollo-V0.1-4B-Thinking-Heretic-Abliterated",
+      "general.base_model.11.name": "Qwen3 4B Element8 Eva Heretic",
+      "general.base_model.11.organization": "Nightmedia",
+      "general.base_model.11.repo_url": "https://huggingface.co/nightmedia/Qwen3-4B-Element8-Eva-Heretic",
+      "general.base_model.12.name": "Qwen3 4B Element8 Eva",
+      "general.base_model.12.organization": "Nightmedia",
+      "general.base_model.12.repo_url": "https://huggingface.co/nightmedia/Qwen3-4B-Element8-Eva",
+      "general.base_model.13.name": "Qwen3 4B Element8",
+      "general.base_model.13.organization": "Nightmedia",
+      "general.base_model.13.repo_url": "https://huggingface.co/nightmedia/Qwen3-4B-Element8",
+      "general.base_model.14.name": "Eva 4B",
+      "general.base_model.14.organization": "FutureMa",
+      "general.base_model.14.repo_url": "https://huggingface.co/FutureMa/Eva-4B",
+      "general.base_model.15.name": "Qwen3 4B Sky High Hermes",
+      "general.base_model.15.organization": "ZeroXClem",
+      "general.base_model.15.repo_url": "https://huggingface.co/ZeroXClem/Qwen3-4B-Sky-High-Hermes",
+      "general.tags": [
+        "coding",
+        "research",
+        "deep thinking",
+        "1M context",
+        "256k context",
+        "Qwen3",
+        "All use cases",
+        "creative",
+        "creative writing",
+        "fiction writing",
+        "plot generation",
+        "sub-plot generation",
+        "story generation",
+        "scene continue",
+        "storytelling",
+        "fiction story",
+        "science fiction",
+        "all genres",
+        "story",
+        "writing",
+        "vivid prosing",
+        "vivid writing",
+        "fiction",
+        "roleplaying",
+        "bfloat16",
+        "finetune",
+        "mergekit",
+        "merge",
+        "text-generation"
+      ],
+      "general.languages": [
+        "en",
+        "zh"
+      ]
+    }
+  },
+  {
+    "file": "LFM3-1.7B-Q4_K_M.gguf",
+    "sha256": "3793e1e6e2266919d6e015287221b41100175a98eddaba92e111aed3b05c93c4",
+    "version": 3,
+    "tensors": 287,
+    "metadata": {
+      "general.architecture": "lfm3",
+      "general.type": "model",
+      "general.sampling.top_k": 50,
+      "general.sampling.temp": 0.10000000149011612,
+      "general.sampling.penalty_repeat": 1.100000023841858,
+      "general.name": "LFM3 1.7B",
+      "general.basename": "LFM3",
+      "general.size_label": "1.7B",
+      "general.license": "other",
+      "general.license.name": "lfm1.0",
+      "general.license.link": "LICENSE",
+      "general.base_model.count": 1,
+      "general.base_model.0.name": "LFM3 1.7B Base",
+      "general.base_model.0.organization": "LiquidAI",
+      "general.base_model.0.repo_url": "https://huggingface.co/LiquidAI/LFM3-1.7B-Base",
+      "general.tags": [
+        "liquid",
+        "lfm3",
+        "edge",
+        "conversational",
+        "custom_code",
+        "text-generation"
+      ],
+      "general.languages": [
+        "en",
+        "ar",
+        "zh",
+        "fr",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "pt",
+        "es",
+        "vi",
+        "th",
+        "id",
+        "hi",
+        "ru",
+        "pl"
+      ]
+    }
+  },
+  {
+    "file": "Ternary-Bonsai-2-2B-Q2_0.gguf",
+    "sha256": "c2893fa6f951daee8b7263d5f49b455e57989ef56417a22125b03566dc560650",
+    "version": 3,
+    "tensors": 320,
+    "metadata": {
+      "general.architecture": "qwen35",
+      "general.type": "model",
+      "general.sampling.min_p": 0.0,
+      "general.name": "Ternary-Bonsai-2-2B",
+      "general.size_label": "2B"
+    }
+  },
+  {
+    "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "version": 3,
+    "tensors": 339,
+    "metadata": {
+      "general.architecture": "qwen2",
+      "general.type": "model",
+      "general.name": "qwen2.5-1.5b-instruct",
+      "general.version": "v0.1",
+      "general.finetune": "qwen2.5-1.5b-instruct",
+      "general.size_label": "1.8B",
+      "general.file_type": 15
+    }
+  },
+  {
+    "file": "Falcon3-3B-Instruct-q4_k_m.gguf",
+    "sha256": "ac9bc2edb58a961f77db11ae89e7f23b610d8b15c2ef603d1e7cb390c50d1aad",
+    "version": 3,
+    "tensors": 201,
+    "metadata": {
+      "general.architecture": "llama",
+      "general.type": "model",
+      "general.name": "Falcon3 3B Instruct",
+      "general.finetune": "Instruct",
+      "general.basename": "Falcon3",
+      "general.size_label": "3B",
+      "general.license": "other",
+      "general.license.name": "falcon-llm-license",
+      "general.license.link": "https://falconllm.tii.ae/falcon-terms-and-conditions.html",
+      "general.base_model.count": 1,
+      "general.base_model.0.name": "Falcon3 3B Instruct",
+      "general.base_model.0.organization": "Tiiuae",
+      "general.base_model.0.repo_url": "https://huggingface.co/tiiuae/Falcon3-3B-Instruct",
+      "general.tags": [
+        "falcon3"
+      ],
+      "general.languages": [
+        "en",
+        "fr",
+        "es",
+        "pt"
+      ]
+    }
+  },
+  {
+    "file": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+    "sha256": "b1b3de114215d9507409a662a501a631095a479a419584e8a2ded6304b19b4f5",
+    "version": 3,
+    "tensors": 148,
+    "metadata": {
+      "general.architecture": "lfm2",
+      "general.type": "model",
+      "general.name": "4cd563d5a96af9e7c738b76cd89a0a200db7608f",
+      "general.finetune": "4cd563d5a96af9e7c738b76cd89a0a200db7608f",
+      "general.size_label": "1.2B",
+      "general.license": "other",
+      "general.license.name": "lfm1.0",
+      "general.license.link": "LICENSE",
+      "general.tags": [
+        "liquid",
+        "lfm2.5",
+        "edge",
+        "text-generation"
+      ],
+      "general.languages": [
+        "en",
+        "ar",
+        "zh",
+        "fr",
+        "de",
+        "ja",
+        "ko",
+        "es"
+      ]
+    }
+  },
+  {
+    "file": "Phi-4-mini-instruct-Q4_K_M.gguf",
+    "sha256": "88c00229914083cd112853aab84ed51b87bdf6b9ce42f532d8c85c7c63b1730a",
+    "version": 3,
+    "tensors": 196,
+    "metadata": {
+      "general.architecture": "phi3",
+      "general.type": "model",
+      "general.name": "Phi 4 Mini Instruct",
+      "general.organization": "Microsoft",
+      "general.finetune": "instruct",
+      "general.basename": "Phi-4",
+      "general.quantized_by": "Unsloth",
+      "general.size_label": "mini",
+      "general.repo_url": "https://huggingface.co/unsloth"
+    }
+  },
+  {
+    "file": "SmolLM3-Q4_K_M.gguf",
+    "sha256": "8334b850b7bd46238c16b0c550df2138f0889bf433809008cc17a8b05761863e",
+    "version": 3,
+    "tensors": 326,
+    "metadata": {
+      "general.architecture": "smollm3",
+      "general.type": "model",
+      "general.size_label": "3.1B",
+      "general.license": "apache-2.0",
+      "general.languages": [
+        "en",
+        "fr",
+        "es",
+        "it",
+        "pt",
+        "zh",
+        "ar",
+        "ru"
+      ]
+    }
+  },
+  {
+    "file": "Ternary-Bonsai-2-2B-PQ2_0.gguf",
+    "sha256": "d5f01a4ecaf49239653308ee732ad1a0c5f802c0ddb997549fc7b694c8b45928",
+    "version": 3,
+    "tensors": 320,
+    "metadata": {
+      "general.architecture": "qwen35",
+      "general.type": "model",
+      "general.sampling.min_p": 0.0,
+      "general.name": "Ternary-Bonsai-2-2B",
+      "general.size_label": "2B"
+    }
+  },
+  {
+    "file": "Ternary-Bonsai-2-2B-PTQ1_0.gguf",
+    "sha256": "36061ad406df8a4903a6db005be350c50fabfaf717f9ef0acf4b76adcd9929fa",
+    "version": 3,
+    "tensors": 320,
+    "metadata": {
+      "general.architecture": "qwen35",
+      "general.type": "model",
+      "general.sampling.min_p": 0.0,
+      "general.name": "Ternary-Bonsai-2-2B",
+      "general.size_label": "2B"
+    }
+  },
+  {
+    "file": "Ternary-Bonsai-2-2B-mmproj-Q8_0.gguf",
+    "sha256": "ac9934e8d7966d0d62442c202ec8fdad99a045dea79366c1a4a246a46f5c0533",
+    "version": 3,
+    "tensors": 298,
+    "metadata": {
+      "general.architecture": "clip",
+      "general.type": "mmproj",
+      "general.sampling.min_p": 0.05000000074505806,
+      "general.name": "Ternary-Bonsai-2-2B",
+      "general.size_label": "331M",
+      "general.license": "apache-2.0",
+      "general.license.link": "https://huggingface.co/Qwen/Qwen3.5-2B/blob/main/LICENSE",
+      "general.base_model.count": 1,
+      "general.base_model.0.name": "Qwen3.5 2B Base",
+      "general.base_model.0.organization": "Qwen",
+      "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen3.5-2B-Base",
+      "general.tags": [
+        "image-text-to-text"
+      ],
+      "general.file_type": 7,
+      "general.quantization_version": 2
+    }
+  }
+]

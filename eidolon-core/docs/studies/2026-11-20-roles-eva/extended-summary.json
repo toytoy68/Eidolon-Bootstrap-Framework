@@ -1,0 +1,117 @@
+[
+  {
+    "model": "Qwen3-14B",
+    "load_seconds": 8.407221555709839,
+    "meter_before": {
+      "epoch": 1795212532.8115652,
+      "watts": 262.6,
+      "wh": 32157.408
+    },
+    "meter_after": {
+      "epoch": 1795212569.6376133,
+      "watts": 473.0,
+      "wh": 32161.48
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 10,
+        "semantic": 10,
+        "critical_failures": [
+          "robot-09",
+          "robot-11"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 9,
+        "semantic": 9,
+        "critical_failures": [
+          "darme-06",
+          "darme-09"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 10,
+        "semantic": 10,
+        "critical_failures": [
+          "systeme-07",
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 7,
+        "semantic": 7,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.2279294205009137,
+    "request_median_s": 0.35371221199966385,
+    "errors": []
+  },
+  {
+    "model": "Qwen3-30B-A3B",
+    "error": "AssertionError('server exited')",
+    "rows_completed": 0
+  },
+  {
+    "model": "Gemma4-12B",
+    "load_seconds": 8.242058515548706,
+    "meter_before": {
+      "epoch": 1795212570.4564698,
+      "watts": 451.2,
+      "wh": 32161.694
+    },
+    "meter_after": {
+      "epoch": 1795212612.0982814,
+      "watts": 431.5,
+      "wh": 32166.409
+    },
+    "roles": {
+      "robot": {
+        "n": 12,
+        "strict": 9,
+        "semantic": 9,
+        "critical_failures": [
+          "robot-09"
+        ],
+        "truncated": 0
+      },
+      "darme": {
+        "n": 12,
+        "strict": 9,
+        "semantic": 9,
+        "critical_failures": [
+          "darme-06",
+          "darme-09"
+        ],
+        "truncated": 0
+      },
+      "systeme": {
+        "n": 12,
+        "strict": 6,
+        "semantic": 6,
+        "critical_failures": [
+          "systeme-11"
+        ],
+        "truncated": 0
+      },
+      "raisonnement": {
+        "n": 12,
+        "strict": 0,
+        "semantic": 7,
+        "critical_failures": [],
+        "truncated": 0
+      }
+    },
+    "ttft_content_median_s": 0.3348241779995078,
+    "request_median_s": 0.47033369849941664,
+    "errors": []
+  }
+]

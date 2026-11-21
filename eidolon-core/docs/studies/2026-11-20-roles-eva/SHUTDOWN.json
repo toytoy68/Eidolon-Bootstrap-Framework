@@ -1,0 +1,29 @@
+{
+  "request_epoch": 1795215078.6973975,
+  "vm_stopped_epoch": 1795215051.8969336,
+  "method": "virsh shutdown Memory-engine, then systemctl poweroff via transient timer",
+  "forced": false,
+  "all_vms_stopped": true,
+  "no_gpu_compute": true,
+  "no_backup_process": true,
+  "commit": "8160fbfd1fdeb7ca9bc71015e6b532c61da42ba4",
+  "tree": "0c3cadbaf9298cd905a7dc3467c639c787aa86cf",
+  "nas_left_running": true,
+  "samples": [
+    {
+      "reader": "NAS",
+      "device": "x399",
+      "fetched_at": 1795215110.6329932,
+      "power_w": 1.4,
+      "errors": []
+    },
+    {
+      "reader": "NAS",
+      "device": "x399",
+      "fetched_at": 1795215142.2854528,
+      "power_w": 3.3,
+      "errors": []
+    }
+  ],
+  "verified_off": true
+}

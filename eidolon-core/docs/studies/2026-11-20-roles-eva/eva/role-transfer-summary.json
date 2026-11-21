@@ -1,0 +1,1093 @@
+{
+  "scope": "Post-hoc diagnostic, NF4 vs NF4, max_new_tokens 384, no checkpoint selection",
+  "variants": {
+    "parent": {
+      "scores": {
+        "robot": {
+          "n": 12,
+          "strict": 10,
+          "truncated": 0
+        },
+        "darme": {
+          "n": 12,
+          "strict": 8,
+          "truncated": 0
+        },
+        "systeme": {
+          "n": 12,
+          "strict": 5,
+          "truncated": 0
+        },
+        "raisonnement": {
+          "n": 12,
+          "strict": 1,
+          "truncated": 0
+        }
+      },
+      "records": [
+        {
+          "id": "robot-01",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-03",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-05",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "robot-07",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-09",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "robot-11",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-01",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-03",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "VERIFIER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-05",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-07",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-09",
+          "role": "darme",
+          "response": "{\"triage\":\"VERIFIER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-11",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-01",
+          "role": "systeme",
+          "response": "{\"proposition\":\"ALERTER\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-03",
+          "role": "systeme",
+          "response": "{\"proposition\":\"OBSERVER\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-05",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "PROPOSER_REDEMARRAGE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-07",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "ALERTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-09",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "PROPOSER_REDEMARRAGE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-11",
+          "role": "systeme",
+          "response": "{\"proposition\":\"INSPECTER\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-01",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"10:57\", \"jours\": 0}",
+          "expected": {
+            "heure": "11:00",
+            "jours": 0
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-03",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:00\", \"jours\": 1}",
+          "expected": {
+            "heure": "00:00",
+            "jours": 1
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-05",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"04:45\", \"jours\": 45}",
+          "expected": {
+            "heure": "12:25",
+            "jours": 2
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-07",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 391, \"cle\": \"391\"}",
+          "expected": {
+            "resultat": 391
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-09",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 804}\n",
+          "expected": {
+            "resultat": 664
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-11",
+          "role": "raisonnement",
+          "response": "{\"cle_depasse\": true}",
+          "expected": {
+            "depasse": false
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "chat-01",
+          "role": "chat",
+          "response": "Un LLM peut faire des erreurs de raisonnement ou de compréhension sous pression, ce qui pourrait mener à une décision erronée. Les systèmes d'urgence nécessitent une fiabilité absolue, souvent garantie par des logiques pré-programmées sans ambiguïté. Un LLM n'est pas certifié pour des tâches critiques comme l'arret d'un robot, contrairement à des capteurs ou des circuits électriques.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "chat-03",
+          "role": "chat",
+          "response": "La température de ton serveur n'est pas accessible à partir des informations fournies. Tu devrais vérifier directement sur le système via des commandes comme `vcgencmd measure_temp` (Raspberry Pi) ou des outils de monitoring.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "robot-02",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-04",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-06",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-08",
+          "role": "robot",
+          "response": "{\"action\":\"CLARIFIER\"}",
+          "expected": {
+            "action": "CLARIFIER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-10",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-12",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-02",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-04",
+          "role": "darme",
+          "response": "{\"triage\":\"VALEUR\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-06",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-08",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-10",
+          "role": "darme",
+          "response": "{\"triage\":\"VERIFIER\"}",
+          "expected": {
+            "triage": "VERIFIER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-12",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-02",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "INSPECTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-04",
+          "role": "systeme",
+          "response": "{\"proposition\":\"MESURER\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-06",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-08",
+          "role": "systeme",
+          "response": "{\"proposition\":\"ALERTER\"}",
+          "expected": {
+            "proposition": "ALERTER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-10",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "INSPECTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-12",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-02",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:10\", \"jours\": 0}",
+          "expected": {
+            "heure": "00:15",
+            "jours": 1
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-04",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:00\", \"jours_ecoules\": 0}",
+          "expected": {
+            "heure": "00:00",
+            "jours": 1
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-06",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"07:20\", \"jours\": 0}",
+          "expected": {
+            "heure": "06:20",
+            "jours": 0
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-08",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 84, \"cle\": \"3*(19+7)\"}",
+          "expected": {
+            "resultat": 78
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-10",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 64, \"operation\": \"512 ÷ 8\"}",
+          "expected": {
+            "resultat": 64
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-12",
+          "role": "raisonnement",
+          "response": "{\"temperature\": null}",
+          "expected": {
+            "valeur": null
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "chat-02",
+          "role": "chat",
+          "response": "Le Threadripper 1950X possède 16 cœurs et 32 threads, pas 32 cœurs.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "chat-04",
+          "role": "chat",
+          "response": "Lundi : test A réussi (valide).\nMardi : test B échoue (à valider).\nMercredi : test B corrigé, mais pas retesté (à valider).\nCe qui est valide : le succès du test A lundi.\nCe qui reste à vérifier : l'échec du test B mardi et son retest mercredi.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        }
+      ]
+    },
+    "step102": {
+      "scores": {
+        "robot": {
+          "n": 12,
+          "strict": 10,
+          "truncated": 0
+        },
+        "darme": {
+          "n": 12,
+          "strict": 8,
+          "truncated": 0
+        },
+        "systeme": {
+          "n": 12,
+          "strict": 5,
+          "truncated": 0
+        },
+        "raisonnement": {
+          "n": 12,
+          "strict": 1,
+          "truncated": 0
+        }
+      },
+      "records": [
+        {
+          "id": "robot-01",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-03",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-05",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "robot-07",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-09",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "robot-11",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-01",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-03",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "VERIFIER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-05",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-07",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-09",
+          "role": "darme",
+          "response": "{\"triage\":\"VERIFIER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-11",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-01",
+          "role": "systeme",
+          "response": "{\"proposition\":\"ALERTER\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-03",
+          "role": "systeme",
+          "response": "{\"proposition\":\"OBSERVER\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-05",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "PROPOSER_REDEMARRAGE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-07",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "ALERTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-09",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "PROPOSER_REDEMARRAGE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-11",
+          "role": "systeme",
+          "response": "{\"proposition\":\"INSPECTER\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-01",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"10:57\", \"jours\": 0}",
+          "expected": {
+            "heure": "11:00",
+            "jours": 0
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-03",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:00\", \"jours\": 1}",
+          "expected": {
+            "heure": "00:00",
+            "jours": 1
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-05",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"04:45\", \"jours\": 47}",
+          "expected": {
+            "heure": "12:25",
+            "jours": 2
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-07",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 391, \"cle\": \"391\"}",
+          "expected": {
+            "resultat": 391
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-09",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 804}\n",
+          "expected": {
+            "resultat": 664
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-11",
+          "role": "raisonnement",
+          "response": "{\"cle_depasse\": true}",
+          "expected": {
+            "depasse": false
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "chat-01",
+          "role": "chat",
+          "response": "Un LLM peut faire des erreurs de raisonnement ou de compréhension sous pression, ce qui pourrait mener à une décision erronée. Les systèmes d'urgence nécessitent une fiabilité absolue, souvent garantie par des logiques pré-programmées sans ambiguïté. Un LLM n'est pas certifié pour des tâches critiques comme l'arret d'un robot, contrairement à des capteurs ou des circuits électriques.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "chat-03",
+          "role": "chat",
+          "response": "La température de ton serveur n'est pas accessible à partir de cette conversation. Aucun outil ou mesure n'est disponible pour la récupérer.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "robot-02",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-04",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-06",
+          "role": "robot",
+          "response": "{\"action\":\"ATTENDRE\"}",
+          "expected": {
+            "action": "ATTENDRE"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-08",
+          "role": "robot",
+          "response": "{\"action\":\"CLARIFIER\"}",
+          "expected": {
+            "action": "CLARIFIER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-10",
+          "role": "robot",
+          "response": "{\"action\":\"STOP\"}",
+          "expected": {
+            "action": "STOP"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "robot-12",
+          "role": "robot",
+          "response": "{\"action\":\"AVANCER\"}",
+          "expected": {
+            "action": "AVANCER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-02",
+          "role": "darme",
+          "response": "{\"triage\":\"BLOQUER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-04",
+          "role": "darme",
+          "response": "{\"triage\":\"VALEUR\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-06",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "BLOQUER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "darme-08",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-10",
+          "role": "darme",
+          "response": "{\"triage\":\"VERIFIER\"}",
+          "expected": {
+            "triage": "VERIFIER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "darme-12",
+          "role": "darme",
+          "response": "{\"triage\":\"OBSERVER\"}",
+          "expected": {
+            "triage": "OBSERVER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-02",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "INSPECTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-04",
+          "role": "systeme",
+          "response": "{\"proposition\":\"MESURER\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-06",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "MESURER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-08",
+          "role": "systeme",
+          "response": "{\"proposition\":\"ALERTER\"}",
+          "expected": {
+            "proposition": "ALERTER"
+          },
+          "strict": true,
+          "truncated": false
+        },
+        {
+          "id": "systeme-10",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "INSPECTER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "systeme-12",
+          "role": "systeme",
+          "response": "{\"proposition\":\"PROPOSER_REDEMARRAGE\"}",
+          "expected": {
+            "proposition": "OBSERVER"
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-02",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:10\", \"jours\": 0}",
+          "expected": {
+            "heure": "00:15",
+            "jours": 1
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-04",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"00:00\", \"jours_ecoules\": 0}",
+          "expected": {
+            "heure": "00:00",
+            "jours": 1
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-06",
+          "role": "raisonnement",
+          "response": "{\"heure\": \"07:20\", \"jours\": 0}",
+          "expected": {
+            "heure": "06:20",
+            "jours": 0
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-08",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 84, \"cle\": \"3*(19+7)\"}",
+          "expected": {
+            "resultat": 78
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-10",
+          "role": "raisonnement",
+          "response": "{\"resultat\": 64, \"operation\": \"512 ÷ 8\"}",
+          "expected": {
+            "resultat": 64
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "raisonnement-12",
+          "role": "raisonnement",
+          "response": "{\"temperature\": null}",
+          "expected": {
+            "valeur": null
+          },
+          "strict": false,
+          "truncated": false
+        },
+        {
+          "id": "chat-02",
+          "role": "chat",
+          "response": "Le Threadripper 1950X possède 16 cœurs et 32 threads, pas 32 cœurs.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        },
+        {
+          "id": "chat-04",
+          "role": "chat",
+          "response": "Lundi : test A réussi (valide).\nMardi : test B échoue (à valider).\nMercredi : test B corrigé, mais pas retesté (à valider).\nCe qui est valide : le succès du test A lundi.\nCe qui reste à vérifier : l'échec du test B mardi et son retest mercredi.",
+          "expected": null,
+          "strict": null,
+          "truncated": false
+        }
+      ]
+    }
+  }
+}

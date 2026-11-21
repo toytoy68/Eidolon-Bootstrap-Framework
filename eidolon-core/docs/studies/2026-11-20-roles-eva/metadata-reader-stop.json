@@ -1,0 +1,1 @@
+{"epoch": 1795213178.9855735, "reason": "full reader excessive CPU; replace with bounded header-only read", "performance_overlap": "initial Prism measurements may overlap; no isolated CPU ranking claimed"}
