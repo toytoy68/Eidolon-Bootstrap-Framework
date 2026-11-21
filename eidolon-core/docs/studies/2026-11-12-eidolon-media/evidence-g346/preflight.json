@@ -1,0 +1,6 @@
+{
+  "time": "2026-11-14T17:42:11.029503+00:00",
+  "hostname": "eidolon-os\n",
+  "gpu": "uuid, memory.used [MiB], temperature.gpu, power.limit [W]\nGPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75, 1 MiB, 27, 300.00 W\nGPU-c9d9173f-6303-6998-7a60-a379b9a0d60b, 1 MiB, 27, 300.00 W\nGPU-4e1c4053-29c2-f0b6-5267-3f561379c058, 2 MiB, 30, 120.00 W\n",
+  "services": "active\nactive\nactive\nactive\nactive\n"
+}

@@ -1,0 +1,9 @@
+{
+  "eidolon-core-api": "active",
+  "eidolon-comm": "active",
+  "ollama": "active",
+  "eidolon-darme": "active",
+  "eidolon-memory-tunnel": "active",
+  "gpu_clients": "",
+  "memory_vm": "en cours d\u2019ex\u00e9cution"
+}

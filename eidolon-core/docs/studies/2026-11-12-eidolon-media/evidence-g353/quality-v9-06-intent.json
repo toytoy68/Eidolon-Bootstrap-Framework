@@ -1,0 +1,11 @@
+{
+  "condition": "quality",
+  "case": "katana",
+  "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+  "seed": 20261114,
+  "steps": 30,
+  "cfg": 5,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024
+}

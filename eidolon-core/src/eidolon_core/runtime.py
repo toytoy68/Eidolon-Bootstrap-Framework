@@ -16,6 +16,7 @@ from .model import DeterministicModel
 from .objectives import DIAGNOSTIC, RESTART, RESEARCH, TARGETED, assess, bind, check_contract, check_plan, diagnostic_request, restart_parameters
 from .store import Busy, TERMINAL
 from .tools import Policy, default_registry
+from .darme_tool_audit import denied_tool_event
 from .worker import CallFailure, _read_receipt, attempt_receipt_path, invoke
 
 
@@ -158,7 +159,17 @@ class Runtime:
         for step in m["plan"]["steps"]:
             tool = self.registry.get(step["tool"])
             if not self.policy.allows(tool):
-                raise ContractError("POLICY_DENIED: " + step["tool"])
+                # Core's durable mission log is the first trusted evidence boundary.
+                # Never put raw model parameters or untrusted tool names in audit text.
+                event = denied_tool_event(request_id=m["id"],
+                    tool_name="tool-" + digest(step["tool"])[:24],
+                    policy_id="policy-" + digest(self.policy.manifest())[:24],
+                    parameters=step["parameters"])
+                self._save(m, "DARME_TOOL_POLICY_DENIED", {
+                    "event_id": event.event_id, "source": event.source,
+                    "category": event.category, "severity": event.severity.value,
+                    "observed_at": event.observed_at, "subject": event.subject})
+                raise ContractError("POLICY_DENIED: tool not authorized")
             tool.validate(step["parameters"], m["context"])
         check_plan(m)
         if m["objective"]["kind"] in TARGETED:

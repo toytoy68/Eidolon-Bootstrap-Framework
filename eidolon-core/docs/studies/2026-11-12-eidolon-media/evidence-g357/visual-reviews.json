@@ -1,0 +1,90 @@
+{
+  "baseline": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Main très déformée, doigts amalgamés, contours artificiels et raccord du masque nettement visible. Le contrôle 512 valide l'exécution, pas la qualité."
+    },
+    "1": {
+      "verdict": "À revoir",
+      "comment": "Cinq doigts retrouvés, mais les deux doigts centraux se touchent, leur pose reste rigide et un raccord tonal du masque est perceptible. Amélioration anatomique partielle."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "La main conserve quatre doigts. Le fond et le poignet montrent aussi une différence de teinte au bord du masque."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "Trois récipients persistent : bol bleu à gauche, tasse rouge au centre, grande tasse gris-bleu à droite. L'anse rouge est déformée ; le nombre et la disposition restent incorrects."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Récipients surnuméraires : deux bols imbriqués à gauche, tasse rouge centrale et tasse bleue à droite. La retouche ne corrige ni le comptage ni la disposition."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Aucun fourreau ajouté. La bande masquée devient surtout une zone de tissu légèrement différente ; le sabre est conservé par la recomposition."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Le fourreau reste absent. La retouche remplace essentiellement la texture du tissu dans le masque."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "La tenue demeure noire, avec une ceinture rouge remaniée. Le kimono rouge demandé n'apparaît pas ; visages et samouraï sont préservés hors masque par recomposition."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Autre ceinture rouge et bas de vêtement modifié, mais la tenue reste noire. Le changement de couleur demandé échoue."
+    },
+    "9": {
+      "verdict": "À revoir",
+      "comment": "Répétition exacte de 01 dans les sorties brute et recomposée. Même amélioration partielle et mêmes réserves sur les doigts et le raccord."
+    },
+    "10": {
+      "verdict": "Contrôle réussi",
+      "comment": "Masque vide : la recomposition restitue exactement le PNG source. La sortie brute diffère pourtant presque partout, avec un écart moyen de 2,398/255 : le modèle seul n'est pas une opération sans effet."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Masque plein : toute la sortie vient du modèle. Trois récipients persistent, bol à gauche et tasse rouge centrale ; aucune préservation hors masque n'est applicable."
+    }
+  },
+  "focused": {
+    "1": {
+      "verdict": "À revoir",
+      "comment": "Cinq doigts sont présents, mais deux doigts centraux restent collés et la pose rigide. Le raccord du poignet et la différence de fond restent perceptibles. Aucun gain décisif face au prompt initial."
+    },
+    "2": {
+      "verdict": "Rejetée",
+      "comment": "Toujours quatre doigts, malgré la mention explicite d'un pouce et de quatre doigts longs. Raccord tonal et texture peu naturelle."
+    },
+    "3": {
+      "verdict": "Rejetée",
+      "comment": "La formulation ciblée améliore l'anse rouge, mais conserve trois récipients et le bol à gauche. Le défaut principal n'est pas réparé."
+    },
+    "4": {
+      "verdict": "Rejetée",
+      "comment": "Le bol imbriqué disparaît, mais il reste un bol bicolore à gauche et deux tasses. Nombre, couleurs et positions ne respectent pas la demande."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Aucun fourreau ajouté, même en décrivant uniquement une gaine noire vide. La zone traitée reste du tissu ; le sabre est préservé par le composite."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Le fourreau reste absent. Changement de texture dans la bande masquée, sans création de l'objet demandé."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "La ceinture et son pan deviennent plus rouges, mais manches, épaules et jupe demeurent noires. La consigne ciblant ces surfaces n'est pas satisfaite."
+    },
+    "8": {
+      "verdict": "Rejetée",
+      "comment": "Tenue toujours noire et ceinture rouge, proche de la première passe. La recoloration demandée échoue."
+    },
+    "9": {
+      "verdict": "À revoir",
+      "comment": "Répétition pixel-identique à 01 pour les versions brute et recomposée. Les cinq doigts et les mêmes réserves sont reproduits."
+    }
+  }
+}

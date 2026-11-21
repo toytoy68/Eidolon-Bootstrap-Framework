@@ -1,0 +1,104 @@
+{
+  "case": "Super Charcuterie SC + sausage nunchaku",
+  "date": "2026-11-15",
+  "delivery": {
+    "image_chars": 2144204,
+    "image_sha256": "e850bb7c2fb16277ffb1193319ce83c45358cce6a24334d3949ce7d611b9d189",
+    "preview_chars": 247824,
+    "preview_sha256": "889e620eb3162bc559fa019f1543218522255c6e3d9c7628eca037ced4252a68",
+    "seconds": 290.5726291819999,
+    "encode_seconds": 28.836600305000047,
+    "load_seconds": 10.277467835999914,
+    "telemetry": {
+      "sample_errors": 0,
+      "gpus": {
+        "0": {
+          "memory.used": {
+            "min": 310,
+            "max": 14034
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 52.34,
+            "max": 311.79
+          },
+          "temperature.gpu": {
+            "min": 29,
+            "max": 46
+          },
+          "temperature.memory": {
+            "min": 28,
+            "max": 48
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "1": {
+          "memory.used": {
+            "min": 310,
+            "max": 14418
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 100
+          },
+          "power.draw": {
+            "min": 54.69,
+            "max": 313.12
+          },
+          "temperature.gpu": {
+            "min": 28,
+            "max": 45
+          },
+          "temperature.memory": {
+            "min": 27,
+            "max": 48
+          },
+          "power.limit": {
+            "min": 300,
+            "max": 300
+          }
+        },
+        "2": {
+          "memory.used": {
+            "min": 2,
+            "max": 2
+          },
+          "utilization.gpu": {
+            "min": 0,
+            "max": 0
+          },
+          "power.draw": {
+            "min": 10.11,
+            "max": 10.5
+          },
+          "temperature.gpu": {
+            "min": 30,
+            "max": 35
+          },
+          "temperature.memory": null,
+          "power.limit": {
+            "min": 120,
+            "max": 120
+          }
+        }
+      },
+      "cpu_tdie_c": {
+        "min": 25.5,
+        "max": 55.5
+      }
+    },
+    "gpu_clients": "",
+    "services": "active\nactive\nactive\nactive\nactive\n",
+    "original_path": "/srv/eidolon/workspaces/media-20261112/super-charcuterie-g359/run01/00-hero.png"
+  },
+  "visual_review": {
+    "accepted": false,
+    "notes": "SC is legible but placed on chest rather than requested abdomen. Belt accessory has two long sausages but extra small pieces and incorrect chain connections. Corrective rerun superseded by user's six-panel comic prompt; not launched."
+  }
+}

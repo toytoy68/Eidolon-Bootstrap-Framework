@@ -1,0 +1,11 @@
+[
+  {
+    "id": "lightning",
+    "repo": "RunDiffusion/Juggernaut-XL-Lightning",
+    "revision": "9c35e7ca1112b7e567ae7b24400b83935909916d",
+    "name": "Juggernaut_RunDiffusionPhoto2_Lightning_4Steps.safetensors",
+    "absolute": "/srv/eidolon/data/media-models-20261113/juggernaut-lightning-g354/Juggernaut_RunDiffusionPhoto2_Lightning_4Steps.safetensors",
+    "bytes": 7105348284,
+    "sha256": "c8df560d2992ac04299412be6a36fa53a4e7a1b74f27b94867ad3f84f4b425a5"
+  }
+]

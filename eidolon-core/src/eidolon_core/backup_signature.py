@@ -199,6 +199,7 @@ def server_key(directory, *, create=True):
             fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
             written.append(path)
             try:
+                os.fchmod(fd, mode)  # explicit key contract, independent of the service umask
                 os.write(fd, data)
                 os.fsync(fd)
             finally:

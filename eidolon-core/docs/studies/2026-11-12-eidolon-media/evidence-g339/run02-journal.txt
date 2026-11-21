@@ -1,0 +1,32 @@
+nov. 13 19:42:35 eidolon-os flock[95707]: {"phase": "encode_cpu_start"}
+nov. 13 19:42:37 eidolon-os flock[95707]: WARNING:root:clip missing: ['text_projection.weight']
+nov. 13 19:42:47 eidolon-os flock[95707]: {"phase": "encoded", "case": "hand", "shape": [1, 256, 4096]}
+nov. 13 19:42:55 eidolon-os flock[95707]: {"phase": "encoded", "case": "objects", "shape": [1, 256, 4096]}
+nov. 13 19:43:03 eidolon-os flock[95707]: {"phase": "encoded", "case": "katana", "shape": [1, 256, 4096]}
+nov. 13 19:43:10 eidolon-os flock[95707]: {"phase": "encoded", "case": "duo", "shape": [1, 256, 4096]}
+nov. 13 19:43:12 eidolon-os flock[95707]: {"phase": "load_transformer_start"}
+nov. 13 19:43:25 eidolon-os flock[95707]: {"phase": "loaded", "parameter_bytes_by_device": {"cuda:0": 11623900160, "cuda:1": 12158456960}}
+nov. 13 19:43:26 eidolon-os flock[95707]: {"phase": "step", "index": 0, "step": 4, "total": 4}
+nov. 13 19:43:27 eidolon-os flock[95707]: {"phase": "generated", "case": "hand", "seconds": 1.7301228309952421}
+nov. 13 19:43:32 eidolon-os flock[95707]: {"phase": "step", "index": 1, "step": 4, "total": 4}
+nov. 13 19:43:33 eidolon-os flock[95707]: {"phase": "generated", "case": "hand", "seconds": 6.444631218997529}
+nov. 13 19:43:39 eidolon-os flock[95707]: {"phase": "step", "index": 2, "step": 4, "total": 4}
+nov. 13 19:43:40 eidolon-os flock[95707]: {"phase": "generated", "case": "hand", "seconds": 6.449127944004431}
+nov. 13 19:43:46 eidolon-os flock[95707]: {"phase": "step", "index": 3, "step": 4, "total": 4}
+nov. 13 19:43:47 eidolon-os flock[95707]: {"phase": "generated", "case": "objects", "seconds": 6.451345661997038}
+nov. 13 19:43:52 eidolon-os flock[95707]: {"phase": "step", "index": 4, "step": 4, "total": 4}
+nov. 13 19:43:53 eidolon-os flock[95707]: {"phase": "generated", "case": "objects", "seconds": 6.4506878679967485}
+nov. 13 19:43:59 eidolon-os flock[95707]: {"phase": "step", "index": 5, "step": 4, "total": 4}
+nov. 13 19:44:00 eidolon-os flock[95707]: {"phase": "generated", "case": "katana", "seconds": 6.453666733999853}
+nov. 13 19:44:06 eidolon-os flock[95707]: {"phase": "step", "index": 6, "step": 4, "total": 4}
+nov. 13 19:44:07 eidolon-os flock[95707]: {"phase": "generated", "case": "katana", "seconds": 6.446471964998636}
+nov. 13 19:44:13 eidolon-os flock[95707]: {"phase": "step", "index": 7, "step": 4, "total": 4}
+nov. 13 19:44:14 eidolon-os flock[95707]: {"phase": "generated", "case": "duo", "seconds": 6.468050873998436}
+nov. 13 19:44:19 eidolon-os flock[95707]: {"phase": "step", "index": 8, "step": 4, "total": 4}
+nov. 13 19:44:21 eidolon-os flock[95707]: {"phase": "generated", "case": "duo", "seconds": 6.47409670399793}
+nov. 13 19:44:26 eidolon-os flock[95707]: {"phase": "step", "index": 9, "step": 4, "total": 4}
+nov. 13 19:44:27 eidolon-os flock[95707]: {"phase": "generated", "case": "hand", "seconds": 6.465537487005349}
+nov. 13 19:44:30 eidolon-os flock[95707]: {"phase": "step", "index": 10, "step": 4, "total": 4}
+nov. 13 19:44:31 eidolon-os flock[95707]: {"phase": "generated", "case": "duo", "seconds": 3.3099952039992786}
+nov. 13 19:44:33 eidolon-os flock[95707]: {"phase": "step", "index": 11, "step": 4, "total": 4}
+nov. 13 19:44:34 eidolon-os flock[95707]: {"phase": "generated", "case": "duo", "seconds": 2.5510570100013865}

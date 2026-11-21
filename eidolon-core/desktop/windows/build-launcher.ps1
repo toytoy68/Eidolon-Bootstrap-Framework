@@ -17,6 +17,11 @@ $icon=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '../tauri/icons/icon.i
 if ($LASTEXITCODE -ne 0) { throw 'LAUNCHER_COMPILATION_FAILED' }
 if (-not (Test-Path -LiteralPath $output -PathType Leaf)) { throw 'LAUNCHER_EXE_MISSING' }
 
+$resident=Join-Path (Resolve-Path -LiteralPath $OutputDirectory).Path 'Eidolon-compagnon.exe'
+$residentSources=@('EidolonLauncher.cs','EidolonResident.cs','PairingImport.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
+& $compiler /nologo /target:winexe /main:EidolonResident /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Security.dll /reference:System.Web.Extensions.dll "/win32icon:$icon" "/out:$resident" $residentSources
+if ($LASTEXITCODE -ne 0) { throw 'RESIDENT_COMPILATION_FAILED' }
+
 $camera=Join-Path (Resolve-Path -LiteralPath $OutputDirectory).Path 'Eidolon-camera.exe'
 & $compiler /nologo /target:winexe /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/win32icon:$icon" "/out:$camera" (Join-Path $PSScriptRoot 'PixyControl.cs')
 if ($LASTEXITCODE -ne 0) { throw 'CAMERA_COMPILATION_FAILED' }

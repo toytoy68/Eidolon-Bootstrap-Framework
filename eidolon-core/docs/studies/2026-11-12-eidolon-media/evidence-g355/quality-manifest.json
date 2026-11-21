@@ -1,0 +1,155 @@
+{
+  "runner_sha256": "f860e33074f63f6918c8d34de255ee75dee3661c451ccdcabff045478ea84fe9",
+  "gpu_uuid": "GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75",
+  "runtime": {
+    "torch": "2.6.0+cu124",
+    "diffusers": "0.32.2"
+  },
+  "mode": "quality",
+  "models": [
+    {
+      "id": "v11",
+      "path": "/srv/eidolon/data/media-models-20261113/juggernaut-xi-g355/Juggernaut-XI-byRunDiffusion.safetensors",
+      "sha256": "33e58e86686f6b386c526682b5da9228ead4f91d994abd4b053442dc5b42719e",
+      "plan": [
+        {
+          "condition": "smoke",
+          "case": "hand",
+          "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "condition": "quality",
+          "case": "hand",
+          "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "hand",
+          "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+          "seed": 20261114,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "objects",
+          "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "objects",
+          "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+          "seed": 20261114,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "katana",
+          "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "katana",
+          "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+          "seed": 20261114,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "duo",
+          "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "quality",
+          "case": "duo",
+          "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+          "seed": 20261114,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "repeat",
+          "case": "hand",
+          "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "condition": "screen16x9",
+          "case": "duo",
+          "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 1024,
+          "height": 576
+        },
+        {
+          "condition": "screen4x3",
+          "case": "duo",
+          "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+          "seed": 20261113,
+          "steps": 30,
+          "cfg": 5,
+          "negative_prompt": "",
+          "width": 768,
+          "height": 576
+        }
+      ]
+    }
+  ],
+  "scheduler": "DPM++ 2M Karras",
+  "denoiser_dtype": "FP16",
+  "vae": "upcast FP32 for decode",
+  "offline_required": true,
+  "training_or_promotion_allowed": false
+}

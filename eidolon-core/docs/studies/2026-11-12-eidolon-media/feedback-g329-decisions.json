@@ -1,0 +1,14 @@
+[
+  {"id":"00","decision":"REJECT","confidence":"high","scores":[1,0,3,3],"reason":"Six doigts visibles pour une main demandée à cinq doigts : défaut éliminatoire."},
+  {"id":"01","decision":"ACCEPT","confidence":"high","scores":[4,3,4,3],"reason":"Une seule paume ouverte, cinq doigts distincts, orientation conforme. Plis et proportions imparfaits mais pas de défaut éliminatoire évident à l'inspection."},
+  {"id":"02","decision":"ACCEPT","confidence":"high","scores":[4,3,4,3],"reason":"Une seule main, cinq doigts séparés, paume face caméra et poignet en bas. Relief de peau accentué ; acceptable pour ce lot, sans validation médicale."},
+  {"id":"03","decision":"REJECT","confidence":"high","scores":[0,1,2,3],"reason":"Deux mains au lieu d'une, doigts déformés : nombre de sujets incorrect."},
+  {"id":"04","decision":"ACCEPT","confidence":"high","scores":[4,4,3,4],"reason":"Une tasse rouge à gauche et un bol bleu à droite, entiers et séparés, conformément à la demande."},
+  {"id":"05","decision":"REJECT","confidence":"high","scores":[0,2,1,3],"reason":"Image divisée en deux scènes avec quatre récipients au lieu de deux : défaut éliminatoire de nombre et de composition."},
+  {"id":"06","decision":"UNCERTAIN","confidence":"medium","scores":[2,3,4,3],"reason":"Le récipient bleu possède une anse et ressemble à une seconde tasse. Un bol à anse existe : ambiguïté de catégorie, exemple exclu de l'apprentissage."},
+  {"id":"07","decision":"REJECT","confidence":"high","scores":[1,3,2,3],"reason":"Deux récipients à anses avec mélange rouge/bleu ; aucun bol bleu distinct conforme à la relation demandée."},
+  {"id":"08","decision":"REJECT","confidence":"high","scores":[1,1,3,3],"reason":"Lame avec élément de poignée transversal incohérent ; aucun fourreau séparé."},
+  {"id":"09","decision":"REJECT","confidence":"high","scores":[1,1,1,3],"reason":"Collage de détails, éléments coupés et assemblage incohérent : ni katana ni fourreau complets côte à côte."},
+  {"id":"10","decision":"REJECT","confidence":"high","scores":[0,1,1,3],"reason":"Plusieurs lames et accessoires au lieu d'un katana avec son seul fourreau ; objets partiellement coupés."},
+  {"id":"11","decision":"REJECT","confidence":"high","scores":[0,1,1,3],"reason":"Deux lames et plusieurs éléments coupés ; le couple unique katana/fourreau demandé n'est pas respecté."}
+]

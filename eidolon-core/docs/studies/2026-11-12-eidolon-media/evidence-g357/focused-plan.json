@@ -1,0 +1,18 @@
+{
+  "reason": "First baseline using original scene prompts did not repair seven cases; hand 01 only partly improved. Focused region prompts tested on the same masks and seeds.",
+  "baseline_runner_unchanged": true,
+  "indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "comparability": "same sources, masks, seeds, 20 steps, strength .99, CFG8, Euler; only positive prompt changed",
+  "masks_unchanged": true,
+  "promotion": false
+}

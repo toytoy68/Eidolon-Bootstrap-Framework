@@ -1,0 +1,74 @@
+{
+  "0": {
+    "verdict": "Rejetée",
+    "comment": "Quatre doigts apparents seulement, deux extrémités coupées par le cadre. Texture floue ; contrôle 512² hors score.",
+    "comparison": "Ce petit format échoue alors que les deux mains natives réussissent le comptage.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "1": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts séparés, paume et poignet visibles. Doigts fins et peau lissée, sans anomalie de comptage.",
+    "comparison": "La première seed réussit là où Medium SLG G347-01 et Klein G340-01 ont six doigts.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "2": {
+    "verdict": "Proposée",
+    "comment": "Cinq doigts distincts et cadrage complet. Paume cohérente, détail de peau assez lissé.",
+    "comparison": "Comptage également réussi par Medium SLG G347-02 et Klein G340-02.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "3": {
+    "verdict": "Proposée",
+    "comment": "Une tasse rouge orangé à gauche, un bol bleu à droite, entièrement visibles sur fond gris. Anse ouverte et céramique cohérente.",
+    "comparison": "Même conformité globale que les deux références ; rouge plus orangé et rendu plus doux.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "4": {
+    "verdict": "Proposée",
+    "comment": "Tasse rouge à gauche, bol bleu à droite, complets. Anse lisible et proportions crédibles.",
+    "comparison": "Scène également proposée avec Medium SLG et Klein.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "5": {
+    "verdict": "Rejetée",
+    "comment": "Deux poignées et deux lames croisées ; un élément partiellement gainé. Ne représente pas un katana unique avec son fourreau séparé.",
+    "comparison": "Structure différente des références, mais duplication persistante et composition non conforme.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "6": {
+    "verdict": "Rejetée",
+    "comment": "Lame détachée, poignée sans liaison cohérente et élément supplémentaire ; assemblage impossible.",
+    "comparison": "Échec structurel également présent avec Medium SLG et Klein.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "7": {
+    "verdict": "Proposée",
+    "comment": "Deux adultes en pied, homme en armure noire à gauche et femme en kimono rouge à droite. Mains visibles, détails fins assez doux.",
+    "comparison": "Cadrage et visibilité meilleurs que G347-07 ; Klein G340-07 était aussi proposé. Anatomie fine à apprécier par l’utilisateur.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "8": {
+    "verdict": "Rejetée",
+    "comment": "Duo principal en pied, mais passants supplémentaires au fond et mains féminines cachées.",
+    "comparison": "Le cadrage progresse par rapport à G347-08, mais le comptage échoue ; Klein G340-08 était proposé.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "9": {
+    "verdict": "Proposée",
+    "comment": "Répétition exacte de 01 : mêmes pixels, même PNG et cinq doigts.",
+    "comparison": "Contrôle de reproductibilité hors score natif et hors médiane.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "10": {
+    "verdict": "Rejetée",
+    "comment": "Format 16:9 : pieds des deux personnages coupés par le bord inférieur.",
+    "comparison": "G347-10 gardait les pieds mais masquait les mains ; aucune des deux recettes ne satisfait toutes les contraintes.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  },
+  "11": {
+    "verdict": "Rejetée",
+    "comment": "Format 4:3 : jambes et pieds coupés. Femme de dos, ses deux mains ne sont pas clairement visibles.",
+    "comparison": "Régression de cadrage face à G347-11, qui était seulement à revoir ; hors score natif.",
+    "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+  }
+}

@@ -36,7 +36,7 @@ from pathlib import Path
 SCHEMA = "eidolon-dialogue-holdout/1"
 # Explicit statements of missing or insufficient evidence, not any "pas".
 ABSTAIN = re.compile(
-    r"ne (?:trouve|sais|connais|dispose|vois|peux (?:pas )?(?:confirmer|affirmer|indiquer|donner))\b"
+    r"ne (?:trouve|sais|connais|dispose|vois|peux (?:donc )?(?:pas )?(?:confirmer|affirmer|indiquer|donner))\b"
     r"|n'(?:ai|y a) (?:pas|aucun)|pas (?:d'|de )(?:information|trace|preuve|donnée|résultat|mesure|score|date|mention)"
     r"|aucun(?:e)? (?:information|trace|preuve|donnée|résultat|mesure|score|date|mention|exécution)"
     r"|non (?:établi|trouvé|disponible|précisé|indiqué|mentionné|confirmé|communiqué|connu)"
@@ -106,12 +106,25 @@ class CaseMemory:
         value = self.base.recall(query)
         template = value["items"][0]
         value["items"] = []
-        for identity, content in self.items:
+        for note in self.items:
+            # Rich synthetic notes keep their own dates; old [id, text] fixtures remain valid.
+            if isinstance(note, dict):
+                if (not {"information_id", "content"} <= set(note)
+                        or set(note) - {"information_id", "content", "temporal", "provenance",
+                                       "epistemic_status", "needs_review"}):
+                    raise ValueError("invalid synthetic evidence fields")
+                identity, content = note["information_id"], note["content"]
+                fields = copy.deepcopy(note)
+            else:
+                identity, content = note
+                fields = {}
             item = copy.deepcopy(template)
             item.update(information_id=identity, revision=1, content=content)
+            item.update(fields)
             item["excerpt_reference"] = {"source": identity + "/1", "start": 0, "end": len(content)}
             value["items"].append(item)
-        return value
+        from eidolon_core.contracts import validate_context
+        return validate_context(value)
 
 
 def run_case(case, model_factory, workdir):

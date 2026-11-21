@@ -1,0 +1,17 @@
+from pathlib import Path
+import subprocess,sys,json
+w=Path(__file__).parent
+old=Path('/srv/eidolon/workspaces/media-20261112/preference-lab/venv')
+before=subprocess.check_output([str(old/'bin/python'),'-m','pip','freeze'],text=True)
+(w/'runtime-before.txt').write_text(before)
+assert not (w/'venv').exists()
+subprocess.run(['cp','-a','--reflink=auto',str(old),str(w/'venv')],check=True)
+py=str(w/'venv/bin/python')
+subprocess.run([py,'-c',"import sys;assert sys.prefix=='"+str(w/'venv')+"'"],check=True)
+subprocess.run([py,'-m','pip','install','--disable-pip-version-check','diffusers==0.37.0','transformers==4.56.1','huggingface-hub==0.36.2','tokenizers==0.22.2'],check=True)
+subprocess.run([py,'-m','pip','check'],check=True)
+after=subprocess.check_output([str(old/'bin/python'),'-m','pip','freeze'],text=True)
+assert before==after
+(w/'runtime-freeze.txt').write_text(subprocess.check_output([py,'-m','pip','freeze'],text=True))
+subprocess.run([py,'-c',"import torch,diffusers,transformers;from diffusers import Flux2KleinPipeline,Flux2Transformer2DModel,AutoencoderKLFlux2;print(torch.__version__,diffusers.__version__,transformers.__version__);assert torch.__version__=='2.6.0+cu124'"],check=True)
+(w/'runtime-ready.json').write_text(json.dumps({'base_runtime_unchanged':True,'torch':'2.6.0+cu124','diffusers':'0.37.0','transformers':'4.56.1','pip_check':'passed'}))

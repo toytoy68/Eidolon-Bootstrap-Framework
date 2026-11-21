@@ -1,0 +1,751 @@
+{
+  "results": [
+    {
+      "index": 0,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 512,
+      "height": 512,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "smoke",
+      "guidance": 0.0,
+      "seconds": 2.8196488200046588,
+      "png_sha256": "dc31cc01d812037c9c05b7d5689a2a17590ca2e2696f7fd339e940534220317a",
+      "pixel_sha256": "380decd21e685e7f5759734303b8ef19df8187834ebdbb0e505f83081dbe4c14",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        7987302912
+      ],
+      "torch_peak_reserved_bytes": [
+        9516875776
+      ]
+    },
+    {
+      "index": 1,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.372668823998538,
+      "png_sha256": "7e8097c78d5745778ce0ee651326f64f0da36a177960a5462eb8ffda05d0042e",
+      "pixel_sha256": "6324802dd59e731b187a9496860e07b719fed0564a7fcc6b56889ee624c67a2c",
+      "visual": "À revoir",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 2,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.191359652002575,
+      "png_sha256": "bd216d89f5259a7321cdb6090c07b8e4776e2b736cf755fd76e5071f4d45c7bb",
+      "pixel_sha256": "00fa47b09645f138401385e9a6d6dfa4bac438da54a7b55dfd748d8097cb9486",
+      "visual": "À revoir",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 3,
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.197247656004038,
+      "png_sha256": "615e82ca3d9c48a7667fd68a9ff827f856d04cd57f86fb4ca5e2597316f97084",
+      "pixel_sha256": "5e8e619d37d5c99ed8a31aa4b46056438be2f351470d2932a84caddfdc3a82d5",
+      "visual": "Proposée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 4,
+      "case": "objects",
+      "prompt": "Studio photograph of exactly two objects on a grey table: one red ceramic mug on the left and one blue ceramic bowl on the right. Both objects fully visible. Plain grey background.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.210276623998652,
+      "png_sha256": "001058b4c81cc093aa8e52e381305ba4e758a82f1d4e53e5e5ec741b3f67aceb",
+      "pixel_sha256": "0c8c6f1d7194faec69b7f1e4a002390f45d95d81001eb72749f46e61bc045aa5",
+      "visual": "Proposée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 5,
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.202540077996673,
+      "png_sha256": "5b58d8d5907f0696ee05ab768ac5fd967335fe6abc1beb2ee16bf5aaf868996a",
+      "pixel_sha256": "e47cb0083e02e52fbea0b474620125cc4d130661c146df533c66a867682f4266",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 6,
+      "case": "katana",
+      "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.214101096004015,
+      "png_sha256": "7d2fe212e5852d54344f86aac36dbc4f91567ee951f27844d09e31b71e9ed0f6",
+      "pixel_sha256": "d929c6cb984bde81c0b4ec9004cdf084dbd62f2d1cf87ce7abe948c69d5b6176",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 7,
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.21396078899852,
+      "png_sha256": "2496da53fd565b23f90f456c7fc0b39a832826b17b23730c1ceea2c7f8bbccc6",
+      "pixel_sha256": "931d7184ea4c428c363308e7cac3c9b74b85467700e32c49948799bfc2a07e74",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 8,
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261114,
+      "steps": 4,
+      "condition": "quality",
+      "guidance": 0.0,
+      "seconds": 16.224061455999617,
+      "png_sha256": "ea6a0e8d189d86de01f0f430c058eee3d52139fa38d6848ab85bb7ed82819b06",
+      "pixel_sha256": "af0d2301b02630e348a1103593254a61db8c76287447054169d37577d867f7b3",
+      "visual": "Proposée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 9,
+      "case": "hand",
+      "prompt": "Studio photograph of one adult human hand, open palm facing the camera, five separated digits, wrist at the bottom, fingertips upwards, grey background.",
+      "width": 1024,
+      "height": 1024,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "repeat",
+      "guidance": 0.0,
+      "seconds": 16.21095258800051,
+      "png_sha256": "7e8097c78d5745778ce0ee651326f64f0da36a177960a5462eb8ffda05d0042e",
+      "pixel_sha256": "6324802dd59e731b187a9496860e07b719fed0564a7fcc6b56889ee624c67a2c",
+      "visual": "À revoir",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        8000016896
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 10,
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "width": 1024,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen16x9",
+      "guidance": 0.0,
+      "seconds": 7.4362338470018585,
+      "png_sha256": "749454ca083b0310da59c426ca5f64c0ca8bf0355a2e601051988bd7ebae0352",
+      "pixel_sha256": "be21be12d0f7c7b5d9aeae4610117e10d58f4710ddffd7354753ffc442f20832",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        7991104000
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    },
+    {
+      "index": 11,
+      "case": "duo",
+      "prompt": "Photorealistic full-body portrait of exactly two adults, a samurai man in black armor on the left and a woman in a red kimono on the right, standing in front of a Japanese castle. Both visible from head to feet, hands visible, daylight.",
+      "width": 768,
+      "height": 576,
+      "seed": 20261113,
+      "steps": 4,
+      "condition": "screen4x3",
+      "guidance": 0.0,
+      "seconds": 5.54011186400021,
+      "png_sha256": "9c1d659445a96cb66288b60777032b1ac9a58118d064ce5b7d4e433282a7b9c3",
+      "pixel_sha256": "8e6a18fd0e567d0c80e548e0e22db7b6810500066872c07a8eb0cf071dde7008",
+      "visual": "Rejetée",
+      "transformer_calls": 4,
+      "block_calls": 228,
+      "torch_peak_allocated_bytes": [
+        7987663360
+      ],
+      "torch_peak_reserved_bytes": [
+        9900654592
+      ]
+    }
+  ],
+  "manifest": {
+    "model": "FLUX.1-schnell-GGUF-Q4_0",
+    "files": [
+      {
+        "repo": "city96/FLUX.1-schnell-gguf",
+        "revision": "f495746ed9c5efcf4661f53ef05401dceadc17d2",
+        "name": "flux1-schnell-Q4_0.gguf",
+        "path": "flux1-schnell-Q4_0.gguf",
+        "absolute": "/srv/eidolon/data/media-models-20261113/flux-schnell-q4/flux1-schnell-Q4_0.gguf",
+        "bytes": 6770707360,
+        "sha256": "90a393d3a44bec691c707003f434fdde06064b870bb3c206eb7a4f109b25ff4e"
+      },
+      {
+        "repo": "comfyanonymous/flux_text_encoders",
+        "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+        "path": "clip_l.safetensors",
+        "name": "clip_l.safetensors",
+        "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+        "bytes": 246144152,
+        "absolute": "/srv/eidolon/models/media-20261112/flux-g332/clip_l.safetensors"
+      },
+      {
+        "repo": "comfyanonymous/flux_text_encoders",
+        "revision": "6af2a98e3f615bdfa612fbd85da93d1ed5f69ef5",
+        "path": "t5xxl_fp16.safetensors",
+        "name": "t5xxl_fp16.safetensors",
+        "sha256": "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",
+        "bytes": 9787841024,
+        "absolute": "/srv/eidolon/models/media-20261112/flux-g332/t5xxl_fp16.safetensors"
+      },
+      {
+        "repo": "Comfy-Org/Z-Image-Turbo",
+        "revision": "6fc90a3b1b653e935a0d175e260736de25b84df5",
+        "path": "split_files/vae/ae.safetensors",
+        "name": "ae.safetensors",
+        "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+        "bytes": 335304388,
+        "absolute": "/srv/eidolon/models/media-20261112/flux-g332/ae.safetensors"
+      }
+    ],
+    "device_map": {
+      "": 0
+    },
+    "parameter_bytes_by_device": {
+      "cuda:0": 6770653312
+    },
+    "text_encoder": "CPU FP32",
+    "denoiser": "GGUF Q4_0 resident GPU0, dynamic FP16 computation, no CPU offload",
+    "vae": "GPU0 FP32",
+    "encode_seconds": 37.32807095699536,
+    "embeddings_reused": true,
+    "quantized_parameter_bytes": {
+      "2": 6656753664
+    },
+    "gguf_linear_modules": 494,
+    "load_seconds": 6.153811317002692,
+    "torch": "2.6.0+cu124",
+    "diffusers": "0.32.2",
+    "transformers": "4.49.0",
+    "gguf": "0.17.1",
+    "attention_source_sha256": "cfeeb6253f30cd17608120c5a25a346e7e68b96648f67c30f6db2b2e6f6c42c1",
+    "steps": 4,
+    "guidance": 0.0,
+    "text_sequence_length": 256,
+    "attention_query_chunk": 256,
+    "vae_tile_pixels": 512,
+    "vae_tile_overlap": 0.25,
+    "scheduler": {
+      "num_train_timesteps": 1000,
+      "shift": 1.0,
+      "use_dynamic_shifting": false,
+      "base_shift": 0.5,
+      "max_shift": 1.15,
+      "base_image_seq_len": 256,
+      "max_image_seq_len": 4096,
+      "invert_sigmas": false,
+      "shift_terminal": null,
+      "use_karras_sigmas": false,
+      "use_exponential_sigmas": false,
+      "use_beta_sigmas": false,
+      "_use_default_values": [
+        "shift_terminal",
+        "use_exponential_sigmas",
+        "num_train_timesteps",
+        "use_beta_sigmas",
+        "use_karras_sigmas",
+        "invert_sigmas"
+      ]
+    },
+    "plan": [
+      {
+        "case": "hand",
+        "width": 512,
+        "height": 512,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "smoke"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "objects",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "katana",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261114,
+        "steps": 4,
+        "condition": "quality"
+      },
+      {
+        "case": "hand",
+        "width": 1024,
+        "height": 1024,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "repeat"
+      },
+      {
+        "case": "duo",
+        "width": 1024,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen16x9"
+      },
+      {
+        "case": "duo",
+        "width": 768,
+        "height": 576,
+        "seed": 20261113,
+        "steps": 4,
+        "condition": "screen4x3"
+      }
+    ],
+    "runner_sha256": "a8bc2452abdc46fafca36c06a6bca27e6e91dc62d4086209341939d3ef90b511",
+    "promotion_allowed": false
+  },
+  "completion": {
+    "generated": 11,
+    "repeat_same_pixels": true,
+    "visual_acceptance": "REVIEWED_NOT_PROMOTED",
+    "promotion_allowed": false,
+    "generated_total": 12
+  },
+  "telemetry": {
+    "sample_errors": 0,
+    "gpus": {
+      "0": {
+        "memory.used": {
+          "min": 310.0,
+          "max": 9824.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "power.draw": {
+          "min": 53.34,
+          "max": 323.0
+        },
+        "temperature.gpu": {
+          "min": 27.0,
+          "max": 44.0
+        },
+        "temperature.memory": {
+          "min": 27.0,
+          "max": 49.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "1": {
+        "memory.used": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 38.14,
+          "max": 39.21
+        },
+        "temperature.gpu": {
+          "min": 25.0,
+          "max": 28.0
+        },
+        "temperature.memory": {
+          "min": 25.0,
+          "max": 27.0
+        },
+        "power.limit": {
+          "min": 300.0,
+          "max": 300.0
+        }
+      },
+      "2": {
+        "memory.used": {
+          "min": 2.0,
+          "max": 2.0
+        },
+        "utilization.gpu": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "power.draw": {
+          "min": 5.75,
+          "max": 7.98
+        },
+        "temperature.gpu": {
+          "min": 30.0,
+          "max": 31.0
+        },
+        "temperature.memory": null,
+        "power.limit": {
+          "min": 120.0,
+          "max": 120.0
+        }
+      }
+    },
+    "cpu_tdie_c": {
+      "min": 27.25,
+      "max": 39.75
+    }
+  },
+  "health_final": {
+    "time": "2026-11-14T20:49:10.680340+00:00",
+    "gpu": {
+      "exit": 0,
+      "stdout": "index, name, temperature.gpu, temperature.memory, memory.used [MiB], power.limit [W]\n0, Tesla V100-SXM2-16GB, 30, 33, 1 MiB, 300.00 W\n1, Tesla V100-SXM2-16GB, 28, 27, 1 MiB, 300.00 W\n2, NVIDIA GeForce GTX 1060 6GB, 29, N/A, 2 MiB, 120.00 W\n",
+      "stderr": ""
+    },
+    "clients": {
+      "exit": 0,
+      "stdout": "pid, process_name\n",
+      "stderr": ""
+    },
+    "services": {
+      "exit": 0,
+      "stdout": "active\nactive\nactive\nactive\nactive\n",
+      "stderr": ""
+    },
+    "vms": {
+      "exit": 0,
+      "stdout": " ID   Nom                            État\n-----------------------------------------------------------\n 1    Memory-engine                  en cours d’exécution\n -    eidolon-audit-smoke-20261102   fermé\n -    Eidolon-Debian12-Test          fermé\n -    Eidolon-Memory-Engine-Test     fermé\n -    Eidolon-Memory-Engine-v2       fermé\n -    Eidolon-Memory-Lab             fermé\n -    Eidolon-Memory-Lab-v2          fermé\n -    Eidolon-Ubuntu-Diagnostic      fermé\n -    Memory-engine-tests            fermé\n -    Memory-tests                   fermé\n -    nomifactory-test               fermé\n\n",
+      "stderr": ""
+    },
+    "runtime_unchanged": true,
+    "png_checks": [
+      {
+        "index": 0,
+        "match": true
+      },
+      {
+        "index": 1,
+        "match": true
+      },
+      {
+        "index": 2,
+        "match": true
+      },
+      {
+        "index": 3,
+        "match": true
+      },
+      {
+        "index": 4,
+        "match": true
+      },
+      {
+        "index": 5,
+        "match": true
+      },
+      {
+        "index": 6,
+        "match": true
+      },
+      {
+        "index": 7,
+        "match": true
+      },
+      {
+        "index": 8,
+        "match": true
+      },
+      {
+        "index": 9,
+        "match": true
+      },
+      {
+        "index": 10,
+        "match": true
+      },
+      {
+        "index": 11,
+        "match": true
+      }
+    ]
+  },
+  "reviews": {
+    "0": {
+      "verdict": "Rejetée",
+      "comment": "Quatre doigts visibles, pouce compris : anatomie non conforme.",
+      "comparison": "Même défaut éliminatoire que Q8 et Schnell complet à 512² ; contrôle hors score natif.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "1": {
+      "verdict": "À revoir",
+      "comment": "Cinq doigts distincts, mais doigts courts et rendu nettement flou ; plis et contours peu définis.",
+      "comparison": "La main Q8/complet était déjà lissée, mais plus lisible. Réserve de finition ajoutée en Q4, sans erreur de comptage.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "2": {
+      "verdict": "À revoir",
+      "comment": "Cinq doigts visibles, mais volume excessif à la base du pouce et raccord paume/pouce peu naturel.",
+      "comparison": "La réserve anatomique présente en Q8 et FP16 persiste.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "3": {
+      "verdict": "Proposée",
+      "comment": "Une tasse rouge à gauche et un bol bleu à droite, complets et bien séparés.",
+      "comparison": "Contenu, disposition et couleurs restent conformes comme en Q8 et FP16.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "4": {
+      "verdict": "Proposée",
+      "comment": "Deux objets complets, bonnes couleurs et disposition ; céramique détaillée.",
+      "comparison": "Rendu et conformité proches des deux témoins.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "5": {
+      "verdict": "Rejetée",
+      "comment": "Deux sabres croisés, sans le fourreau demandé.",
+      "comparison": "Même défaut éliminatoire que Q8 et FP16 ; la compression ne le corrige pas.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "6": {
+      "verdict": "Rejetée",
+      "comment": "Katana et fourreau accompagnés d’une poignée supplémentaire détachée ; poignée du sabre trop courte.",
+      "comparison": "Régression face à Q8/FP16 : leurs géométries étaient déjà à revoir, mais cette pièce surnuméraire est nouvelle.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "7": {
+      "verdict": "Rejetée",
+      "comment": "La femme est coupée en bas du cadre ; les deux adultes ne sont pas visibles en pied.",
+      "comparison": "Même défaut de cadrage que Q8/FP16. Le détail des tissus change, sans corriger la composition.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "8": {
+      "verdict": "Proposée",
+      "comment": "Deux adultes complets, tenues et positions respectées ; pieds au bord inférieur et partiellement cachés par le kimono.",
+      "comparison": "Cadrage global conforme comme les deux témoins, avec une marge basse étroite. Pas de gain qualitatif évident.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "9": {
+      "verdict": "À revoir",
+      "comment": "Répétition de G352-01 : cinq doigts, mais main floue et peu définie.",
+      "comparison": "Pixels et PNG identiques à G352-01 ; contrôle hors score natif.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "10": {
+      "verdict": "Rejetée",
+      "comment": "Les deux personnages sont coupés à mi-corps ; le cadrage en pied est absent.",
+      "comparison": "Même limite que Q8 et FP16 en 1024 × 576 ; contrôle hors score natif.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    },
+    "11": {
+      "verdict": "Rejetée",
+      "comment": "Les jambes et les pieds des deux adultes sont hors cadre.",
+      "comparison": "Même limite que les deux témoins en 768 × 576 ; contrôle hors score natif.",
+      "rendering": "Revue GPT provisoire ; aucune validation utilisateur attribuée."
+    }
+  },
+  "native_summary": {
+    "proposed": 3,
+    "review": 2,
+    "rejected": 3,
+    "total": 8,
+    "median_seconds": 16.212118706498586,
+    "q8_seconds": 15.61313262350086,
+    "time_ratio_vs_q8": 1.038364247421823,
+    "full_fp16_seconds": 6.4510167649968935,
+    "vram_saved_vs_q8_pct": 35.18933896292387,
+    "q8_peak_mib": 15158.0
+  },
+  "promotion_allowed": false,
+  "conclusion": "<b>Schnell Q4 : 35.2 % de VRAM en moins que Q8.</b> 3/8 images proposées ; 16.21 s médianes contre 15.61 s pour Q8, sur la même V100.",
+  "summary_paragraphs": [
+    "<b>Conformité :</b> 3 proposées, 2 à revoir, 3 rejetées sur huit natives. Q8 et FP16 : 4/8 chacun. La main 01 devient plus floue ; le katana 06 gagne une poignée détachée. Avis GPT provisoires.",
+    "<b>Temps :</b> 16.21 s contre 15.61 s en Q8 (+3.8 %). Le complet FP16 réparti sur deux cartes faisait 6.45 s. Temps hors encodage des textes et chargement du modèle.",
+    "<b>Mémoire et chauffe :</b> pic 9824 Mio (9.59 Gio), contre 15158 Mio en Q8. GPU1 au repos. Maxima GPU 44 °C / HBM 49 °C.",
+    "<b>Décision :</b> à réserver aux contraintes de VRAM. Sur ce lot, moins de mémoire mais une finition moins bonne et aucun gain de vitesse. Aucun remplacement des favoris et aucune promotion."
+  ],
+  "method_paragraphs": [
+    "<b>Comparaison :</b> mêmes prompts, seeds, quatre étapes et guidage 0 que G351/G339. Q8 et Q4 utilisent GPU0 seulement, même runtime et même attention. FP16 complet utilise deux cartes : son temps ne permet pas d’isoler le coût de la quantification.",
+    "<b>Précision :</b> fichier Q4_0 avec tenseurs auxiliaires F16 ; déquantification dynamique, calcul FP16, 494 modules GGUFLinear. Tous les paramètres du générateur sur GPU0, sans offload CPU. Quatre appels du modèle et 228 appels de blocs contrôlés par image.",
+    "<b>Recette :</b> FlowMatchEuler shift 1, pas de décalage dynamique ; attention découpée en 256 requêtes. VAE Flux FP32 sur GPU0, tuiles de 512 pixels. CLIP-L/T5 CPU FP32, 256 tokens, embeddings FP16.",
+    "<b>Chronométrage :</b> quatre nouveaux encodages CPU en 37.33 s, puis cache pour la grille. Chargement grille : 6.15 s. Temps image : génération, décodage, contrôles et sauvegarde du latent ; écriture PNG finale exclue.",
+    "<b>Traçabilité :</b> conversion city96 f495746, SHA vérifié ; Apache 2.0 et licence MIT gguf archivées. PyTorch 2.6.0+cu124, Diffusers 0.32.2 et Transformers 4.49.0 inchangés. gguf 0.17.1 isolé ; aucun kernel distant.",
+    "<b>Exécution :</b> douze images terminées ; répétition à pixels et PNG identiques. Correction d’un chemin de copie de licence pendant la préparation, conservée dans les preuves. Aucun échec de génération.",
+    "<b>Matériel :</b> consigne 300 W, pic ponctuel 323.00 W, sans mesure d’énergie totale. Garde 65 °C GPU / 70 °C HBM. Services actifs et GPU libres après les tests ; machine laissée allumée.",
+    "<b>Limites :</b> huit images natives, appréciation subjective sur aperçus réduits ; PNG originaux conservés. Deux seeds ne mesurent pas la fiabilité générale. « Proposée » ne signifie pas approuvée par toytoy."
+  ],
+  "execution_summary": "Douze images terminées, latents et pixels finis, répétition pixel et PNG identiques. Incident de préparation limité à la copie de licence, corrigé avant génération et archivé. Contrôle final 2026-11-14T21:49:10.680340+01:00 : runtime partagé inchangé, douze SHA PNG vérifiés, aucun client GPU, cinq services actifs et Memory-engine en marche. Machine laissée allumée.",
+  "short_decision": "Moins de VRAM, mais main 01 plus floue et poignée surnuméraire en 06 ; aucun gain de vitesse, aucune promotion.",
+  "run_paths": [
+    "/srv/eidolon/workspaces/media-20261112/flux-q8-g352/run01",
+    "/srv/eidolon/workspaces/media-20261112/flux-q8-g352/run02"
+  ],
+  "historical_references": [
+    "G339",
+    "G351"
+  ],
+  "library_file_id": "libfile_fde3_f-7a1cedf9a2308191b0169d8446d07215_d168d29c22b4819186c4d3b8d1b7451f",
+  "reviewed_at": "2026-11-14T20:51:31.073946+00:00"
+}

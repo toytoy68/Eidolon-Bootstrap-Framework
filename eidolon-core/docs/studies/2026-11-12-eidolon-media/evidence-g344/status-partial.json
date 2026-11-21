@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-11-14T13:07:24.719579+00:00",
+  "status": "RUNNING",
+  "unit": "eidolon-media-zimage-base-g344-quality.service",
+  "completed_reviewed_indices": [
+    0,
+    1
+  ],
+  "native_score": null,
+  "library_report_id": "libfile_fde3_f-a7e55dafbd00819188d3e98b84c1204c_d168d29c22b4819186c4d3b8d1b7451f",
+  "report_version": 0,
+  "report_scope": "provisional after first native image",
+  "run_path": "/srv/eidolon/workspaces/media-20261112/zimage-base-g344/run02",
+  "remaining_indices_at_report": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

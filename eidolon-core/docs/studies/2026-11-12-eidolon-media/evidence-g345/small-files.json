@@ -1,0 +1,62 @@
+[
+  {
+    "path": "LICENSE",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "path": "README.md",
+    "sha256": "d4c7975b684d492b80d6103cfb35117e91d8dfab14cff1c2bcc415e391fc28b7",
+    "bytes": 6543
+  },
+  {
+    "path": "model_index.json",
+    "sha256": "e3294833370d55fe1d568ab6f9b24df46c4270403d24daffd594eb01927e3fca",
+    "bytes": 392
+  },
+  {
+    "path": "scheduler/scheduler_config.json",
+    "sha256": "9a2c56f902710bfde73c81045c7fb99902ab3ead525fa201b58a35817995173b",
+    "bytes": 160
+  },
+  {
+    "path": "text_encoder/config.json",
+    "sha256": "733f241a6692770dfba10383e2c5a56a4f88b320732d9ee8fa16118737eca84d",
+    "bytes": 890
+  },
+  {
+    "path": "text_encoder/model.safetensors.index.json",
+    "sha256": "92764588f700e36874c52f9f05bba143857e5069fc69b14450f907a1cdf879ed",
+    "bytes": 22495
+  },
+  {
+    "path": "tokenizer/special_tokens_map.json",
+    "sha256": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351",
+    "bytes": 636
+  },
+  {
+    "path": "tokenizer/tokenizer.json",
+    "sha256": "5f7eee611703c5ce5d1eee32d9cdcfe465647b8aff0c1dfb3bed7ad7dbb05060",
+    "bytes": 34362873
+  },
+  {
+    "path": "tokenizer/tokenizer.model",
+    "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+    "bytes": 4241003
+  },
+  {
+    "path": "tokenizer/tokenizer_config.json",
+    "sha256": "cb32b7929c62608d46572e813112b3ad8a841fb98fdd6a4da8559e368a951c89",
+    "bytes": 46996
+  },
+  {
+    "path": "transformer/config.json",
+    "sha256": "a6a7c9d96124415b7ea5e2463e2b1125ddcaea8a79d96f396448ec5b75b5ee08",
+    "bytes": 624
+  },
+  {
+    "path": "vae/config.json",
+    "sha256": "ba6f3d3e44d75d44fdd3760097c069173b5b925e6d14604d5d3582628d09cca6",
+    "bytes": 1280
+  }
+]

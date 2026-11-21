@@ -1,0 +1,146 @@
+[
+  {
+    "test": "version",
+    "runtime": "docker",
+    "seconds": 0.03572349599994595,
+    "exit": 0,
+    "stdout": "Client:\n Version:           26.1.5+dfsg1\n API version:       1.45\n Go version:        go1.24.4\n Git commit:        a72d7cd\n Built:             Thu Aug 13 05:35:47 2026\n OS/Arch:           linux/amd64\n Context:           default\n\nServer:\n Engine:\n  Version:          26.1.5+dfsg1\n  API version:      1.45 (minimum version 1.24)\n  Go version:       go1.24.4\n  Git commit:       411e817\n  Built:            Thu Aug 13 05:35:47 2026\n  OS/Arch:          linux/amd64\n  Experimental:     false\n containerd:\n  Version:          1.7.24~ds1\n  GitCommit:        1.7.24~ds1-6+deb13u1\n runc:\n  Version:          1.1.15+ds1\n  GitCommit:        1.1.15+ds1-2+b4\n docker-init:\n  Version:          0.19.0\n  GitCommit:        \n",
+    "stderr": ""
+  },
+  {
+    "test": "exit37",
+    "runtime": "docker",
+    "seconds": 0.27906173700012005,
+    "exit": 37,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "test": "readonly-bind",
+    "runtime": "docker",
+    "seconds": 0.27367393399981665,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /fixture/forbidden: Read-only file system\n"
+  },
+  {
+    "test": "network-none",
+    "runtime": "docker",
+    "seconds": 0.2805694220000987,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "wget: can't connect to remote host (1.1.1.1): Network unreachable\n"
+  },
+  {
+    "test": "rootfs-readonly",
+    "runtime": "docker",
+    "seconds": 0.278381526999965,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /forbidden: Read-only file system\n"
+  },
+  {
+    "test": "warmup",
+    "runtime": "docker",
+    "seconds": 0.2802692940001634,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "test": "version",
+    "runtime": "podman",
+    "seconds": 0.0433089140001357,
+    "exit": 0,
+    "stdout": "Client:        Podman Engine\nVersion:       5.4.2\nAPI Version:   5.4.2\nGo Version:    go1.24.4\nBuilt:         Sun Dec 21 16:42:01 2025\nBuild Origin:  Debian\nOS/Arch:       linux/amd64\n",
+    "stderr": ""
+  },
+  {
+    "test": "exit37",
+    "runtime": "podman",
+    "seconds": 0.2646704869998757,
+    "exit": 37,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "test": "readonly-bind",
+    "runtime": "podman",
+    "seconds": 0.23288390100015022,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /fixture/forbidden: Read-only file system\n"
+  },
+  {
+    "test": "network-none",
+    "runtime": "podman",
+    "seconds": 0.22172109000007367,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "wget: can't connect to remote host (1.1.1.1): Network unreachable\n"
+  },
+  {
+    "test": "rootfs-readonly",
+    "runtime": "podman",
+    "seconds": 0.20699048300002687,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /forbidden: Read-only file system\n"
+  },
+  {
+    "test": "warmup",
+    "runtime": "podman",
+    "seconds": 0.21304592299998149,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "test": "version",
+    "runtime": "kiri",
+    "seconds": 0.027997949000109656,
+    "exit": 0,
+    "stdout": "Client:\n Version:           26.1.5+dfsg1\n API version:       1.45\n Go version:        go1.24.4\n Git commit:        a72d7cd\n Built:             Thu Aug 13 05:35:47 2026\n OS/Arch:           linux/amd64\n Context:           default\n\nServer: Kiri\n Engine:\n  Version:          27.5.1\n  API version:      1.47 (minimum version 1.24)\n  Go version:       n/a (Rust)\n  Git commit:       \n  Built:            \n  OS/Arch:          linux/amd64\n  Experimental:     \n Kiri:\n  Version:          0.2.2\n",
+    "stderr": ""
+  },
+  {
+    "test": "exit37",
+    "runtime": "kiri",
+    "seconds": 0.27125617899991994,
+    "exit": 37,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "test": "readonly-bind",
+    "runtime": "kiri",
+    "seconds": 0.039813525999989,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /fixture/forbidden: Read-only file system\n"
+  },
+  {
+    "test": "network-none",
+    "runtime": "kiri",
+    "seconds": 0.03593918000001395,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "wget: can't connect to remote host (1.1.1.1): Network unreachable\n"
+  },
+  {
+    "test": "rootfs-readonly",
+    "runtime": "kiri",
+    "seconds": 0.04076865499996529,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "touch: /forbidden: Read-only file system\n"
+  },
+  {
+    "test": "warmup",
+    "runtime": "kiri",
+    "seconds": 0.04178521000017099,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

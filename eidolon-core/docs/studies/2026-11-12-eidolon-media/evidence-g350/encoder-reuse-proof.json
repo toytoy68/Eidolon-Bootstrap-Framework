@@ -1,0 +1,56 @@
+{
+  "baseline": "G345",
+  "weights_identical": [
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+      "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+      "path": "text_encoder/model-00001-of-00002.safetensors",
+      "name": "model-00001-of-00002.safetensors",
+      "bytes": 4988024144,
+      "sha256": "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71"
+    },
+    {
+      "repo": "Efficient-Large-Model/Sana_Sprint_0.6B_1024px_diffusers",
+      "revision": "aa76e7f4f4928f378716b6716a2130fba3caf5b1",
+      "path": "text_encoder/model-00002-of-00002.safetensors",
+      "name": "model-00002-of-00002.safetensors",
+      "bytes": 240691624,
+      "sha256": "48e14f6b7a917e54cabc4ff2047ac2bfe0dae663e771eed3a8acf4ea27dcac18"
+    }
+  ],
+  "configs_tokenizers_identical": [
+    {
+      "path": "text_encoder/config.json",
+      "sha256": "733f241a6692770dfba10383e2c5a56a4f88b320732d9ee8fa16118737eca84d",
+      "bytes": 890
+    },
+    {
+      "path": "text_encoder/model.safetensors.index.json",
+      "sha256": "92764588f700e36874c52f9f05bba143857e5069fc69b14450f907a1cdf879ed",
+      "bytes": 22495
+    },
+    {
+      "path": "tokenizer/special_tokens_map.json",
+      "sha256": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351",
+      "bytes": 636
+    },
+    {
+      "path": "tokenizer/tokenizer.json",
+      "sha256": "5f7eee611703c5ce5d1eee32d9cdcfe465647b8aff0c1dfb3bed7ad7dbb05060",
+      "bytes": 34362873
+    },
+    {
+      "path": "tokenizer/tokenizer.model",
+      "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+      "bytes": 4241003
+    },
+    {
+      "path": "tokenizer/tokenizer_config.json",
+      "sha256": "cb32b7929c62608d46572e813112b3ad8a841fb98fdd6a4da8559e368a951c89",
+      "bytes": 46996
+    }
+  ],
+  "embedding_sha256": "4ac33cb0a1548dee3ed2de0af5fc76b527c713abaeee4f60376beafbf6f372c7",
+  "encode_seconds_historical": 26.757161907999034,
+  "new_encoding": false
+}

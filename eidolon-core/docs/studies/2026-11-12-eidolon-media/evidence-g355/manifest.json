@@ -1,0 +1,11 @@
+[
+  {
+    "id": "v11",
+    "repo": "RunDiffusion/Juggernaut-XI-v11",
+    "revision": "f836518c7a75f47a9e26bc661ff9509ef2ceb7c0",
+    "name": "Juggernaut-XI-byRunDiffusion.safetensors",
+    "absolute": "/srv/eidolon/data/media-models-20261113/juggernaut-xi-g355/Juggernaut-XI-byRunDiffusion.safetensors",
+    "bytes": 7105350536,
+    "sha256": "33e58e86686f6b386c526682b5da9228ead4f91d994abd4b053442dc5b42719e"
+  }
+]

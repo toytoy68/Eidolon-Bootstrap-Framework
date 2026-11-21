@@ -1,0 +1,11 @@
+{
+  "name": "gguf-0.17.1-py3-none-any.whl",
+  "sha256": "7bc5aa7eeb1931f7d39b48fdc5b38fda6b294b9dca75cf607ac69557840a3943",
+  "bytes": 96224,
+  "requires_dist": [
+    "PySide6<7.0,>=6.9; (python_version >= \"3.9\" and python_version < \"3.14\") and extra == \"gui\"",
+    "numpy>=1.17",
+    "pyyaml>=5.1",
+    "tqdm>=4.27"
+  ]
+}

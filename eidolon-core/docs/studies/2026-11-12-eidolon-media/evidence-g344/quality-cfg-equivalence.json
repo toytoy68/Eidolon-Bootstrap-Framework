@@ -1,0 +1,10 @@
+{
+  "max_abs_errors": [
+    1.2636184692382812e-05,
+    3.254413604736328e-05
+  ],
+  "atol": 0.003,
+  "rtol": 0.003,
+  "passed": true,
+  "scope": "two random 512px samples at t=.5; not whole trajectory"
+}

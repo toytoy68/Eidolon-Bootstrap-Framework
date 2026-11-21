@@ -1,0 +1,24 @@
+2026-11-14T15:23:52+01:00 eidolon-os flock[46669]: {"phase": "encode_cpu_start"}
+2026-11-14T15:23:52+01:00 eidolon-os flock[46669]: `torch_dtype` is deprecated! Use `dtype` instead!
+2026-11-14T15:23:53+01:00 eidolon-os flock[46669]: [241B blob data]
+2026-11-14T15:24:00+01:00 eidolon-os flock[46669]: {"phase": "encoded", "case": "hand", "shape": [1, 300, 2304]}
+2026-11-14T15:24:06+01:00 eidolon-os flock[46669]: {"phase": "encoded", "case": "objects", "shape": [1, 300, 2304]}
+2026-11-14T15:24:12+01:00 eidolon-os flock[46669]: {"phase": "encoded", "case": "katana", "shape": [1, 300, 2304]}
+2026-11-14T15:24:19+01:00 eidolon-os flock[46669]: {"phase": "encoded", "case": "duo", "shape": [1, 300, 2304]}
+2026-11-14T15:24:19+01:00 eidolon-os flock[46669]: {"phase": "load_start", "precision": "fp32"}
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]: {"phase": "loaded", "distribution": {"cuda:0": 6440949888}}
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]: Traceback (most recent call last):
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/sana_sprint_probe_g345.py", line 145, in <module>
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:     if __name__=='__main__':main()
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:                             ^^^^^^
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:   File "/srv/eidolon/workspaces/media-20261112/source/eidolon-core/docs/studies/2026-11-12-eidolon-media/sana_sprint_probe_g345.py", line 128, in main
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:     latents=pipe(prompt_embeds=embeddings[name].to('cuda:0',dtype=dtype),prompt_attention_mask=embeddings[name+'_mask'].to('cuda:0'),use_resolution_binning=False,width=row['width'],height=row['height'],num_inference_steps=4,guidance_scale=4.5,generator=torch.Generator('cuda:0').manual_seed(row['seed']),output_type='latent',callback_on_step_end=callback).images
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:   File "/srv/eidolon/workspaces/media-20261112/klein-g340/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:     return func(*args, **kwargs)
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:            ^^^^^^^^^^^^^^^^^^^^^
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:   File "/srv/eidolon/workspaces/media-20261112/klein-g340/venv/lib/python3.12/site-packages/diffusers/pipelines/sana/pipeline_sana_sprint.py", line 748, in __call__
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:     self.check_inputs(
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:   File "/srv/eidolon/workspaces/media-20261112/klein-g340/venv/lib/python3.12/site-packages/diffusers/pipelines/sana/pipeline_sana_sprint.py", line 437, in check_inputs
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]:     raise ValueError("Intermediate timesteps for SCM is not supported when num_inference_steps != 2.")
+2026-11-14T15:24:22+01:00 eidolon-os flock[46669]: ValueError: Intermediate timesteps for SCM is not supported when num_inference_steps != 2.

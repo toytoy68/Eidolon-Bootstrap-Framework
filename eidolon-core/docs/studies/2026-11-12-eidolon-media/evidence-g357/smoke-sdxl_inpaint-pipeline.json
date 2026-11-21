@@ -1,0 +1,101 @@
+{
+  "scheduler": {
+    "num_train_timesteps": 1000,
+    "beta_start": 0.00085,
+    "beta_end": 0.012,
+    "beta_schedule": "scaled_linear",
+    "trained_betas": null,
+    "prediction_type": "epsilon",
+    "interpolation_type": "linear",
+    "use_karras_sigmas": false,
+    "use_exponential_sigmas": false,
+    "use_beta_sigmas": false,
+    "sigma_min": null,
+    "sigma_max": null,
+    "timestep_spacing": "leading",
+    "timestep_type": "discrete",
+    "steps_offset": 1,
+    "rescale_betas_zero_snr": false,
+    "final_sigmas_type": "zero",
+    "_use_default_values": [
+      "use_beta_sigmas",
+      "final_sigmas_type",
+      "timestep_type",
+      "sigma_max",
+      "rescale_betas_zero_snr",
+      "sigma_min",
+      "use_exponential_sigmas"
+    ],
+    "_class_name": "EulerDiscreteScheduler",
+    "_diffusers_version": "0.21.0.dev0",
+    "clip_sample": false,
+    "sample_max_value": 1.0,
+    "set_alpha_to_one": false,
+    "skip_prk_steps": true
+  },
+  "vae": {
+    "in_channels": 3,
+    "out_channels": 3,
+    "down_block_types": [
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D",
+      "DownEncoderBlock2D"
+    ],
+    "up_block_types": [
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D",
+      "UpDecoderBlock2D"
+    ],
+    "block_out_channels": [
+      128,
+      256,
+      512,
+      512
+    ],
+    "layers_per_block": 2,
+    "act_fn": "silu",
+    "latent_channels": 4,
+    "norm_num_groups": 32,
+    "sample_size": 512,
+    "scaling_factor": 0.13025,
+    "shift_factor": null,
+    "latents_mean": null,
+    "latents_std": null,
+    "force_upcast": false,
+    "use_quant_conv": true,
+    "use_post_quant_conv": true,
+    "mid_block_add_attention": true,
+    "_use_default_values": [
+      "use_quant_conv",
+      "shift_factor",
+      "mid_block_add_attention",
+      "latents_std",
+      "use_post_quant_conv",
+      "latents_mean"
+    ],
+    "_class_name": "AutoencoderKL",
+    "_diffusers_version": "0.21.0.dev0",
+    "_name_or_path": "/srv/eidolon/data/media-models-20261113/sdxl-inpaint-g357/vae"
+  },
+  "vae_tiling": true,
+  "components": {
+    "unet": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "text_encoder": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "text_encoder_2": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    },
+    "vae": {
+      "device": "cuda:0",
+      "dtype": "torch.float16"
+    }
+  }
+}

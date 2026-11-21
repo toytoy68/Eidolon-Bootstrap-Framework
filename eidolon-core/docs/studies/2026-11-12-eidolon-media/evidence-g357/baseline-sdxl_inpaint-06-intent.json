@@ -1,0 +1,14 @@
+{
+  "case": "katana",
+  "prompt": "Studio product photograph of one luxury Japanese katana and its black lacquer scabbard lying separately side by side on grey fabric. Entire curved blade and entire scabbard visible, gold fittings, top-down view.",
+  "target": "Ajouter un fourreau noir \u00e0 gauche et parall\u00e8le au sabre existant, sans modifier le sabre.",
+  "seed": 20261114,
+  "steps": 20,
+  "cfg": 8.0,
+  "strength": 0.99,
+  "negative_prompt": "",
+  "width": 1024,
+  "height": 1024,
+  "mask_kind": "local",
+  "condition": "quality"
+}

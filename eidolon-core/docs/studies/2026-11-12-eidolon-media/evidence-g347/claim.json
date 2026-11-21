@@ -1,0 +1,6 @@
+{
+  "base": "aab5088941b4ff4a21fefab4e8f1093ef0f8dafa",
+  "time": "2026-11-14T18:18:33.796466+00:00",
+  "recipe": "G346 unchanged + SLG layers7,8,9 scale2.8 start0.01 stop0.2; Diffusers defaults",
+  "promotion_allowed": false
+}

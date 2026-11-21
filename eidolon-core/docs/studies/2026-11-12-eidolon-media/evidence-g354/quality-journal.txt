@@ -1,0 +1,55 @@
+2026-11-14T22:21:42+01:00 eidolon-os flock[115037]: [448B blob data]
+2026-11-14T22:21:45+01:00 eidolon-os flock[115037]: {"loaded": "lightning", "seconds": 3.8153105480014347}
+2026-11-14T22:21:46+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:21:46+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:21:46+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:21:46+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:21:52+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 1, "case": "hand", "seconds": 7.113823109997611}
+2026-11-14T22:21:53+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:21:53+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:21:53+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:21:53+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:00+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 2, "case": "hand", "seconds": 6.842383777999203}
+2026-11-14T22:22:00+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:00+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:01+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:01+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:07+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 3, "case": "objects", "seconds": 6.842658423003741}
+2026-11-14T22:22:07+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:07+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:08+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:08+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:14+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 4, "case": "objects", "seconds": 6.83333868200134}
+2026-11-14T22:22:15+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:15+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:15+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:15+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:21+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 5, "case": "katana", "seconds": 6.839028921000136}
+2026-11-14T22:22:22+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:22+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:22+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:22+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:29+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 6, "case": "katana", "seconds": 6.841142256002058}
+2026-11-14T22:22:29+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:29+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:30+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:30+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:36+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 7, "case": "duo", "seconds": 6.843297156003246}
+2026-11-14T22:22:36+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:36+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:37+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:37+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:43+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 8, "case": "duo", "seconds": 6.846763235000253}
+2026-11-14T22:22:44+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:44+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:44+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:44+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:51+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 9, "case": "hand", "seconds": 6.848395918001188}
+2026-11-14T22:22:51+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:51+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:54+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 10, "case": "duo", "seconds": 3.528438900000765}
+2026-11-14T22:22:55+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:55+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:55+01:00 eidolon-os flock[115037]: /srv/eidolon/workspaces/media-20261112/preference-lab/venv/lib/python3.12/site-packages/torchsde/_brownian/brownian_interval.py:608: UserWarning: Should have tb<=t1 but got tb=5.906451225280762 and t1=5.906451.
+2026-11-14T22:22:55+01:00 eidolon-os flock[115037]:   warnings.warn(f"Should have {tb_name}<=t1 but got {tb_name}={tb} and t1={self._end}.")
+2026-11-14T22:22:57+01:00 eidolon-os flock[115037]: {"generated": "lightning", "index": 11, "case": "duo", "seconds": 2.3965051070044865}

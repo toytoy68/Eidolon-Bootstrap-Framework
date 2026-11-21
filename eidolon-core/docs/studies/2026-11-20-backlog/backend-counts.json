@@ -1,0 +1,20 @@
+{
+  "matmul-quant-v08-CUDA0.log": [
+    "582/582 tests passed"
+  ],
+  "matmul-quant-v1-CUDA1.log": [
+    "602/602 tests passed"
+  ],
+  "matmul-quant-v1-CUDA0.log": [
+    "602/602 tests passed"
+  ],
+  "matmul-quant-v08-CUDA1.log": [
+    "582/582 tests passed"
+  ],
+  "backend-v08.out": [
+    "442/442 tests passed"
+  ],
+  "backend-v1.out": [
+    "442/442 tests passed"
+  ]
+}

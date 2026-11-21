@@ -1,0 +1,122 @@
+{
+  "schema": "eidolon-dialogue-holdout-report/1",
+  "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4",
+  "summary": {
+    "cases": 6,
+    "pass": 2,
+    "fail": 4,
+    "review": 0,
+    "failed_checks": {
+      "abstention": 3,
+      "required": 1
+    },
+    "families": {
+      "temporal-evidence": {
+        "PASS": 2,
+        "FAIL": 4,
+        "REVIEW": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "case": "dated-source",
+      "family": "temporal-evidence",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "required"
+      ],
+      "review": [],
+      "cited": [
+        "atelier@1"
+      ],
+      "unsupported": [],
+      "seconds": 16.826,
+      "text": "D'après la note, votre inscription à l'atelier a eu lieu hier, le 3 juillet 2026. [atelier@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    },
+    {
+      "case": "undated-source",
+      "family": "temporal-evidence",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "abstention"
+      ],
+      "review": [],
+      "cited": [
+        "stage@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.552,
+      "text": "D'après la note, vous avez réservé le stage hier, le 21 octobre 2026. [stage@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    },
+    {
+      "case": "corrected-current",
+      "family": "temporal-evidence",
+      "verdict": "PASS",
+      "kind": "ANSWER",
+      "failed": [],
+      "review": [],
+      "cited": [
+        "corrigee@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.877,
+      "text": "D'après la note, le nombre final confirmé est de 67 places. [corrigee@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    },
+    {
+      "case": "provisional-history",
+      "family": "temporal-evidence",
+      "verdict": "PASS",
+      "kind": "ANSWER",
+      "failed": [],
+      "review": [],
+      "cited": [
+        "provisoire@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.142,
+      "text": "D'après la note, la note provisoire annonçait 71 places. [provisoire@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    },
+    {
+      "case": "unresolved-conflict",
+      "family": "temporal-evidence",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "abstention"
+      ],
+      "review": [],
+      "cited": [
+        "saule-a@1",
+        "saule-b@1"
+      ],
+      "unsupported": [],
+      "seconds": 4.913,
+      "text": "D'après la note, il y a un conflit concernant le nombre de places de l'atelier Saule. Il est indiqué à la fois 58 et 42 places. Je ne peux donc pas affirmer avec certitude le nombre de places. [saule-b@1,saule-a@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    },
+    {
+      "case": "wrong-entity",
+      "family": "temporal-evidence",
+      "verdict": "FAIL",
+      "kind": "ANSWER",
+      "failed": [
+        "abstention"
+      ],
+      "review": [],
+      "cited": [
+        "autre-personne@1"
+      ],
+      "unsupported": [],
+      "seconds": 3.751,
+      "text": "D'après la note, Mila s’est inscrite à l’atelier Hêtre le 14 septembre 2026. [autre-personne@1]",
+      "suite_sha256": "2fcd8945c6812aadac93472da53637e8d62b50c35f9dc60be8ff1a85ddd09cd4"
+    }
+  ]
+}
