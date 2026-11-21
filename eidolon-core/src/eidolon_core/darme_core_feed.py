@@ -41,9 +41,10 @@ class CoreFeedVerifier:
                 or len(payload['events']) > 64):
             raise ValueError('invalid payload')
         age = (self.now() - _instant(payload['generated_at'])).total_seconds()
-        if not -5 <= age <= 60:
-            raise ValueError('stale feed')
         digest = hashlib.sha256(encoded).hexdigest()
+        committed_replay = (payload['sequence'] == self.sequence and digest == self.previous_digest)
+        if not committed_replay and not -5 <= age <= 60:
+            raise ValueError('stale feed')
         if payload['sequence'] < self.sequence or (payload['sequence'] == self.sequence and digest != self.previous_digest):
             raise ValueError('replay')
         if payload['sequence'] > self.sequence + 1:
@@ -59,7 +60,7 @@ class CoreFeedVerifier:
                 raise ValueError('invalid event')
             event = SecurityEvent(row['event_id'], row['source'], row['category'], Severity.WARNING,
                                   row['observed_at'], row['subject'])
-            if abs((self.now() - _instant(event.observed_at)).total_seconds()) > 300:
+            if not committed_replay and abs((self.now() - _instant(event.observed_at)).total_seconds()) > 300:
                 raise ValueError('stale event')
             seen.add(event.event_id)
             events.append(event)

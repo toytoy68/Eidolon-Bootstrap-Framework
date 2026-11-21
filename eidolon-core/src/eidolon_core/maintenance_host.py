@@ -106,7 +106,6 @@ def run_once(policy, observation, *, now, runtime=None, activity_provider=None):
                 or state==root or root in state.parents or state in root.parents):
             raise ValueError("separate existing canonical and private state directories required")
         config=load_runtime(r["index_config"])
-        index=open_index(config);opened.append(index.client)
         profile=r["profile_id"];allowed=r["allowed_information_ids"]
         if allowed is None:
             from services.profile_binding import require_binding
@@ -135,9 +134,11 @@ def run_once(policy, observation, *, now, runtime=None, activity_provider=None):
                         fresh = capture(policy, now=current, activity=activity)
                         previous = _aware(fresh["last_activity"], "activity")
                         return (current-previous).total_seconds() >= 1800
+                    index=open_index(config);opened.append(index.client)
                     return index.sync(root, authorize=lambda ident: authorize(profile, ident, "index.upsert"),
                                       should_continue=idle)
             return PassageTick()
+        index=open_index(config);opened.append(index.client)
         return IndexMaintenance(state/"cycle.sqlite3",ChangeJournal(state/"changes.sqlite3"),
             canonical_checkpoint=state/"canonical.sqlite3",orphan_checkpoint=state/"orphans.sqlite3",
             canonical_root=root,index=index,authorize=authorize,profile_id=profile,
@@ -174,25 +175,31 @@ def main(argv=None):
         parser.error("select either local or remote activity")
     if args.snapshot is not None and (args.activity is not None or args.activity_core_port is not None or args.capture_only):
         parser.error("snapshot cannot be combined with capture or activity")
+    stage="POLICY"
     try:
         policy=validate_host_policy(read_config(args.policy))
         from .activity import read_remote
         activity_provider = ((lambda: read_remote(args.activity_core_port, args.activity_token_file))
                              if args.activity_core_port is not None else
                              (lambda: read_config(args.activity)) if args.activity else None)
+        stage="ACTIVITY"
         activity=activity_provider() if activity_provider else None
         now=datetime.now(timezone.utc)
+        stage="OBSERVATION"
         observation=read_config(args.snapshot) if args.snapshot else capture(policy,now=now,activity=activity)
         if args.capture_only:
             report=observation
         else:
+            stage="RUNTIME_CONFIG"
             runtime=read_config(args.runtime) if args.execute else None
+            stage="TICK"
             report=run_once(policy,observation,now=now,runtime=runtime,
                 activity_provider=activity_provider)
         print(json.dumps(report,sort_keys=True))
         return 0
     except Exception:
-        print(json.dumps({"state":"REFUSED_OR_INCOMPLETE","effects":"UNKNOWN" if args.execute else "NONE"}))
+        print(json.dumps({"state":"REFUSED_OR_INCOMPLETE","effects":"UNKNOWN" if args.execute and stage=="TICK" else "NONE",
+                          "stage":stage}))
         return 2
 
 if __name__=="__main__":

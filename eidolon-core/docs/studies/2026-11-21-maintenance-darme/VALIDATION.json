@@ -1,0 +1,44 @@
+{
+  "base_commit": "f89a38fec476558dd79f21e265e5410f2caa2c2b",
+  "full_suite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "24",
+    "tests": "3851",
+    "time": "308.284",
+    "timestamp": "2026-11-21T22:51:37.918210+01:00",
+    "hostname": "eidolon-os"
+  },
+  "full_console_summary": "2478 passed, 24 skipped, 1349 subtests passed",
+  "targeted_final": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "35",
+    "time": "2.828",
+    "timestamp": "2026-11-21T22:54:29.628144+01:00",
+    "hostname": "eidolon-os"
+  },
+  "targeted_console_summary": "35 passed",
+  "validation_order": "Full suite plus final targeted tests after environment minimization and additional eligible-passage regression. New test was added after full collection.",
+  "memory_deployment_commit": "60cbdba9590331b0bc5ee953edec8bc5aa95dfb4",
+  "production_index_points": 205,
+  "production_index_source_digest": "e809e38ad7d68a76d3c1102aee2919b44b508aa1464600451e8a7b9117d2941a",
+  "collaboration_bridge": "BLOCKED_NAS_CHECKOUT_ACCESS_UNAVAILABLE",
+  "files_sha256": {
+    "eidolon-core/src/eidolon_core/maintenance_host.py": "f3cc4dac7444050f9ab1d8c4820ecaadb6832a98e33e2235b61e9c973d826c66",
+    "eidolon-core/src/eidolon_core/darme_core_feed.py": "dba4bdc43dd46b7901aa3d63a707e74c5afd68eed87f7f7684a0c173ff1e4585",
+    "eidolon-core/src/eidolon_core/darme_core_outbox.py": "3754000b0cd9877d7ca2a2913d551dc5a8aef08983459b8df1b6c93ac9702d93",
+    "eidolon-core/src/eidolon_core/sandbox_tools.py": "85060d2a49aafd4fef7d803c142c731b4b746f40b478a67136d8bf91773047c9",
+    "eidolon-core/tests/test_maintenance_deferred.py": "4ebe6123cfb558af17bbca8281d0ff63b03fe0c8370e0db6f915c4c41010ed0a",
+    "eidolon-core/tests/test_sandbox_tools.py": "ab0da69c33043dd29526142bb38bb131c5dcc68cbf353fc6c19447493be86b26"
+  },
+  "logs_sha256": {
+    "core-tests.log": "95b191ecc1b28d2f63374c76e88959d729eef033386345e93af1bd4f99cfa737",
+    "core-tests.xml": "2a1a7f3318eead21d6e1b37126e2fac20b7247e4c82eb9453c3d021e54aec97c",
+    "targeted-final.xml": "24d0d7d90c5d5f869863dbe420957bcf7d2ded5a1ca2cb369b9fadfe69f29a21"
+  },
+  "log_directory": "/srv/eidolon/ssd/work/maintenance-darme-20261121"
+}
