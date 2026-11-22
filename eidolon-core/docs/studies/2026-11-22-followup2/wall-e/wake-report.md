@@ -1,3 +1,5 @@
+> État actualisé : SSH rétabli et nouvelle reprise validée. Voir [résolution](ssh-fix-resolution.md). Le compte rendu ci-dessous conserve le diagnostic antérieur.
+
 ## WALL-E : réveil physique démontré, accès SSH encore bloqué
 
 Le lancement initial par systemd-suspend.service est refusé parce que sleep.target est masqué. Aucun sommeil réel n'a eu lieu à cet essai. Les masques sont conservés ; les essais suivants appellent directement systemd-sleep depuis une unité transitoire.

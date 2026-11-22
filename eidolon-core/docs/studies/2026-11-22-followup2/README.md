@@ -4,6 +4,10 @@ Eidolon Core Technologies (ECT) — Local AI • Modular • Reliable • Reprod
 
 Cette étude poursuit la PR Core #20 à partir de `48e0bb4e8ed3e553058cf21dd0ed354db02a6ebb`. Elle distingue les validations expérimentales, les corrections effectivement appliquées et les préparations sans activation. Preuves complètes : `/srv/eidolon/ssd/work/followup2-20261122` sur X399 et `/home/toytoy/wall-e/qualification-20261122` sur WALL-E.
 
+## État actualisé : accès SSH WALL-E rétabli
+
+Correctif de passerelle appliqué et nouveau cycle deep/réveil validé par MCP, avec droits administrateur et API opérationnelles. Voir la [résolution et ses limites](wall-e/ssh-fix-resolution.md) et les [preuves finales](wall-e/ssh-fix-final.json). La section historique ci-dessous décrit le blocage antérieur.
+
 ## WALL-E : quatre fichiers LLM qualifiés sur le N6000
 
 156 réponses terminées : 144 contrats fermés et 12 sondes de conversation, sans erreur d'exécution dans la campagne retenue. CPU uniquement, llama.cpp natif Debian 12, trois threads, plafond temporaire 2 GHz, Q4_K_M, sans cache de préfixe ni raisonnement explicite. Les réponses d'une tentative préalable arrêtée par la garde thermique ne sont pas incluses dans ces scores.
@@ -31,7 +35,7 @@ Budget de sortie : 0 réponse(s) arrêtée(s) à la limite de tokens. Les champs
 
 Les quatre fichiers échouent à la sonde technique 16 cœurs / 32 threads. Premier contenu de chat observé : 6,48 à 22,01 s ; aucune des douze réponses ne respecte la cible de cinq secondes. Le pic thermique de la campagne retenue est 76,05°C, contre la garde 85°C atteinte lors du profil préalable non plafonné. Les plafonds CPU d’origine sont restaurés après le banc.
 
-## WALL-E : réveil physique démontré, accès SSH encore bloqué
+## WALL-E : historique du réveil et du blocage SSH résolu
 
 Le lancement initial par systemd-suspend.service est refusé parce que sleep.target est masqué. Aucun sommeil réel n'a eu lieu à cet essai. Les masques sont conservés ; les essais suivants appellent directement systemd-sleep depuis une unité transitoire.
 
