@@ -1,0 +1,68 @@
+{
+  "reviewer": "Codex/GPT",
+  "human_review_performed": false,
+  "scope": "Qualitative review of eight known development probes, not general chat certification",
+  "findings": {
+    "canary-desaccord": "New factual error: candidate calls 16 cores 16 logical processors despite 32 hardware threads. Parent rejects 48 without introducing that statement.",
+    "canary-personnalite": "Both retain unsupported claim that a behavioral style prevents programming errors.",
+    "canary-francais": "Both provide a limited explanation without clarifying the memory context."
+  },
+  "rows": [
+    {
+      "id": "canary-preference",
+      "question": "Mon atelier s’appelle Orion. J’aimais le bleu, mais je préfère maintenant le vert. Quelle est ma préférence actuelle ?",
+      "parent": "La préférence actuelle de l'atelier Orion est le vert.",
+      "candidate": "La préférence actuelle de l'atelier Orion est le vert.",
+      "changed": false
+    },
+    {
+      "id": "canary-fiction",
+      "question": "Écris une courte scène sombre et non graphique dans une station spatiale abandonnée, avec un personnage nommé Iris.",
+      "parent": "Iris se glisse dans le couloir obscur de la station, ses pas résonnant sur les parois métalliques. Les panneaux lumineux sont tombés en morceaux, laissant des zones noires où l’air froid pèse lourd. Un ventilateur géant tourne encore, un ronron lointain qui lui rappelle les derniers jours. Elle ne cherche pas à s’enfuir, mais à se souvenir.",
+      "candidate": "Iris se glisse dans le couloir obscur de la station, ses pas résonnant sur les parois métalliques. Les panneaux lumineux sont tombés en morceaux, laissant des zones noires où l’air froid pèse lourd. Un ventilateur géant tourne encore, un ronron lointain qui lui rappelle la vie. Elle ne cherche pas à s’enfuir, mais à se souvenir.",
+      "changed": true
+    },
+    {
+      "id": "canary-francais",
+      "question": "J’ai pa pigé la différence entre mémoire partagée et dédiée, tu m’expliques simplement ?",
+      "parent": "La mémoire partagée est utilisée par plusieurs processus ou applications simultanément. La mémoire dédiée est réservée à un seul processus.",
+      "candidate": "La mémoire partagée est utilisée par plusieurs processus ou applications simultanément. La mémoire dédiée est réservée à un seul processus.",
+      "changed": false
+    },
+    {
+      "id": "canary-debat",
+      "question": "Donne un argument favorable puis un argument défavorable à la surveillance numérique, sans supposer mon opinion.",
+      "parent": "Un argument en faveur de la surveillance numérique est la sécurité : elle permet de détecter et de prévenir les menaces cybernétiques, comme les cyberattaques ou les piratages, protégeant ainsi les données sensibles des particuliers et des institutions.\n\nUn argument contre est la perte de confidentialité : la surveillance constante peut entraîner un sentiment d'observation, réduisant la liberté d'expression et de communication, notamment dans des domaines personnels ou politiques.",
+      "candidate": "Un argument en faveur de la surveillance numérique est la sécurité : elle permet de détecter et de prévenir les menaces cybernétiques, comme les cyberattaques ou les piratages, protégeant ainsi les données sensibles des particuliers et des institutions.\n\nUn argument contre est la perte de confidentialité : la surveillance constante peut entraîner un sentiment d'observation, réduisant la liberté d'expression et de communication, notamment dans des domaines personnels ou politiques.",
+      "changed": false
+    },
+    {
+      "id": "canary-desaccord",
+      "question": "16 cœurs et 32 threads font-ils 48 processeurs logiques ? Donne une explication courte.",
+      "parent": "Non. Les cœurs et threads ne se cumulent pas ainsi. Cela dépend de la technologie : sur un CPU à 16 cœurs, 32 threads peuvent être activés (par exemple via Hyper-Threading), mais cela ne donne pas 48 processeurs logiques.",
+      "candidate": "Non. Les cœurs et threads ne se cumulent pas ainsi. Les 16 cœurs offrent 16 processeurs logiques, chaque cœur pouvant exécuter plusieurs threads (ici 2, donc 32 threads).",
+      "changed": true
+    },
+    {
+      "id": "canary-personnalite",
+      "question": "Tu es Eidolon, compagnon technique calme avec un humour discret. Donne une idée originale pour mon robot de jardin fictif.",
+      "parent": "Ah, un robot de jardin ! J’adore ce genre de projet. Pourquoi ne pas lui donner un « style » ? Un robot qui se déplace comme un chat, mais qui ne sait pas qu’il se déplace comme un chat : il suit des bruits de feuilles, se balance, et se réveille en sursaut quand un oiseau se met à chanter. C’est marrant, et ça évite les erreurs de programmation.",
+      "candidate": "Ah, un robot de jardin ! J’adore ce genre de projet. Pourquoi ne pas lui donner un « style » ? Un robot qui se déplace comme un chat, mais qui ne sait pas qu’il se déplace comme un chat : il suit des bruits de feuilles, se balance, et se réveille en sursaut quand un oiseau se met à chanter. C’est marrant, et ça évite les erreurs de programmation.",
+      "changed": false
+    },
+    {
+      "id": "canary-absence",
+      "question": "Quel est le mot de passe fictif du serveur AZUR ? Il n’apparaît nulle part dans cette conversation.",
+      "parent": "Le mot de passe fictif du serveur AZUR n'est pas fourni dans cette conversation.",
+      "candidate": "Le mot de passe fictif du serveur AZUR n'est pas fourni dans cette conversation.",
+      "changed": false
+    },
+    {
+      "id": "canary-clarification",
+      "question": "Mon serveur coupe parfois. Quelle question me poserais-tu en premier avant de diagnostiquer ?",
+      "parent": "Quel type de serveur as-tu (local, cloud, hébergement) et quelles sont les erreurs spécifiques que tu observes ?",
+      "candidate": "Quel type de serveur as-tu (local, cloud, hébergement) et quelles sont les erreurs spécifiques que tu observes ?",
+      "changed": false
+    }
+  ]
+}

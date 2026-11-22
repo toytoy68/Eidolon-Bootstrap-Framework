@@ -3348,3 +3348,30 @@ Autorisation toytoy : traiter les priorités proposées après audit. Base 766bf
 ### Clôture du lot maintenance et Darme — 21 novembre 2026
 
 Maintenance Memory rétablie, ouverture Qdrant différée et diagnostics d’étape déployés avec sauvegarde ; cause historique non reproduite, corpus/index inchangés. Rupture réelle Store/outbox corrigée et reprises après crash testées. Adaptateur text.stats isolé opt-in qualifié, non activé globalement. Suite Core : 2478 réussis, 24 ignorés, 1349 sous-tests ; lot final ciblé : 35 réussis. Core #17/#18 et Memory #7 intégrées. Pont Git NAS toujours bloqué faute d’accès au checkout/journaux du service. Rapport : docs/studies/2026-11-21-maintenance-darme/. Hôte conservé allumé.
+
+
+## Codex/GPT — suivi du 22 novembre 2026
+
+Autorisation directe toytoy : traiter la liste sans arrêt intermédiaire. Branche codex/followup-20261122, base 860a33e2ccbc63197424b8b21876d1027c565440. Lot : frontière Darme avec comptes séparés en environnement de test ; maintenance Memory et preuve admissible sur copie ; révision expérimentale Eva après rejet E5 ; qualification LLM CPU/contrats réels disponibles. Fichiers prévus : nouveaux modules/tests Darme ciblés et étude 2026-11-22-followup. Aucun message Claude réécrit ; aucune promotion de modèle ou activation globale implicite.
+
+### Clôture du suivi Codex/GPT — 22 novembre 2026
+- Exécuteur Darme text.stats sous UID distinct et réseau privé qualifié en VM ; registre opt-in, reçus et interruption conservés. Module, tests et exemple d’unité dans ce lot.
+- Suite finale : 2501 tests + 1349 sous-tests ; six essais de comptes séparés et deux vérifications root complémentaires. Fixtures privées corrigées pour umask permissif.
+- Maintenance réelle sur 12 passages synthétiques : publication, no-op, reports et interruption vérifiés. Production : timer actif, 205 points. Limites documents longs et tunnel direct de la VM consignées.
+- 144 réponses LLM de robustesse ; catalogue de rôles actualisé, aucune autonomie accordée. Eva E6 102 mises à jour, rejet X3 47->44/96 ; parent cycle5 conservé.
+- Rapport et preuves : docs/studies/2026-11-22-followup/README.md. VM de test arrêtée, X399 et Memory production maintenues en ligne. WALL-E/N6000 inaccessible.
+
+
+## Lot Codex — suite du 22/11/2026
+Base 48e0bb4e8ed3e553058cf21dd0ed354db02a6ebb. Prise en charge autorisée par toytoy : qualification N6000/WALL-E, réveil Wi-Fi, tunnel de laboratoire Memory, documents longs, analyse E6 et protocole suivant, revue Darme et préparation de déploiement, tests optionnels et suivi supervision. Preuves dans docs/studies/2026-11-22-followup2 ; aucune contribution Claude réécrite.
+
+### Bilan du lot complémentaire N6000 / Memory / médias
+
+156 réponses CPU N6000 conservées, quatre fichiers et 23 cas critiques chacun : aucun promu. Archive de 290 fichiers copiée sur X399 et vérifiée. Tunnel Memory autonome rétabli et testé après redémarrage VM ; 48 passages couvrent trois documents complets, 9/9 recherches littérales. Les 12 tests médias restants sont couverts par 20 réussites sans skip. E7 et le déploiement Darme sont préparés, sans entraînement ni activation. Supervision NAS locale toutes les cinq minutes installée ; snapshots quotidien/hebdomadaire présents.
+
+Veille WALL-E : témoin RTC et deux réveils Wi-Fi profonds réussis. Dernier essai bloqué côté pont SSH malgré réseau vivant ; trois échecs DSCP EF contre neuf témoins réussis. Garde post-reprise installé mais intégration non qualifiée ; commande opérateur préparée, aucune permission contournée. Validation finale caméra/API reste ouverte. Plafonds CPU restaurés avant veille ; VM de test arrêtée, production Core/Memory active. Rapport et limites : docs/studies/2026-11-22-followup2/README.md. Aucune fusion de PR.
+
+## Codex/GPT — validation du correctif SSH WALL-E
+Base edd88612873a71777950909c068b4dd4819cdd36. Autorisation toytoy : régler l’accès SSH ; correctif NAS appliqué par l’opérateur, validation MCP et reprise après veille réalisées par Codex/GPT. Fichiers : mise à jour documentaire du lot followup2 et preuves de reprise, sans modification du code Core ni des contributions Claude.
+
+Clôture : IPQoS=none appliqué par l’opérateur à la passerelle NAS ; accès MCP et sudo vérifiés, puis nouveau cycle deep/réveil réussi. Services et API opérationnels, PIXY/audio détectés ; voix inactive. Preuves et limites : docs/studies/2026-11-22-followup2/wall-e/ssh-fix-resolution.md. Aucune fusion.

@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "real_qdrant": true,
+  "real_embeddings": true,
+  "simulated_schedule": true,
+  "production_modified": false,
+  "source": "12 explicit 1200-character passage fixtures derived from synthetic French documents; original documents unmodified; full-length documents not qualified",
+  "canonical_unchanged": true,
+  "initial": {
+    "points": 0,
+    "source_digest": null,
+    "policy": "derived_passages_copy_on_write_incremental"
+  },
+  "final": {
+    "points": 12,
+    "source_digest": "76f7564926a0fc0aaf61393e914b7444f24af81283046a2906da72302f649815",
+    "policy": "derived_passages_copy_on_write_incremental"
+  },
+  "outside": {
+    "schema": "eidolon-maintenance-tick/1",
+    "mode": "EXECUTE",
+    "observed_at": "2026-11-22T12:00:00+00:00",
+    "at": "2026-11-22T12:00:00+00:00",
+    "load_ok": true,
+    "notes": [],
+    "report": {
+      "state": "DEFERRED",
+      "reasons": [
+        "OUTSIDE_WINDOW"
+      ]
+    }
+  },
+  "published": {
+    "schema": "eidolon-maintenance-tick/1",
+    "mode": "EXECUTE",
+    "observed_at": "2026-11-22T04:00:00+00:00",
+    "at": "2026-11-22T04:00:00+00:00",
+    "load_ok": true,
+    "notes": [],
+    "report": {
+      "state": "PUBLISHED",
+      "embedded_documents": 12,
+      "copied_points": 0
+    }
+  },
+  "unchanged": {
+    "schema": "eidolon-maintenance-tick/1",
+    "mode": "EXECUTE",
+    "observed_at": "2026-11-22T04:00:00+00:00",
+    "at": "2026-11-22T04:00:00+00:00",
+    "load_ok": true,
+    "notes": [],
+    "report": {
+      "state": "UNCHANGED",
+      "embedded_documents": 0,
+      "copied_points": 0
+    }
+  },
+  "recent_activity": {
+    "schema": "eidolon-maintenance-tick/1",
+    "mode": "EXECUTE",
+    "observed_at": "2026-11-22T04:00:00+00:00",
+    "at": "2026-11-22T04:00:00+00:00",
+    "load_ok": true,
+    "notes": [],
+    "report": {
+      "state": "DEFERRED",
+      "reasons": [
+        "ACTIVITY_RECENT"
+      ]
+    }
+  },
+  "busy": {
+    "schema": "eidolon-maintenance-tick/1",
+    "mode": "EXECUTE",
+    "observed_at": "2026-11-22T04:00:00+00:00",
+    "at": "2026-11-22T04:00:00+00:00",
+    "load_ok": false,
+    "notes": [
+      "LOAD_HIGH"
+    ],
+    "report": {
+      "state": "DEFERRED",
+      "reasons": [
+        "LOAD_NOT_READY"
+      ]
+    }
+  },
+  "live_activity_abort_preserves_alias": true,
+  "seconds": 100.32993412017822,
+  "source_hashes": {
+    "001_energie_production-photovoltaique.txt": "7f63220040e1039d9873a16367addb8c47347742e2551cdcb8c34007349df83a",
+    "002_energie_stockage-thermique.txt": "89c6556bdc621649862d2236f1083aadaf3c1b077cd54b2f1eaeec605a97d4c0",
+    "003_energie_ventilation-naturelle.txt": "8f3a4120bc11227239728946b8b183429ed903384be6a4b08da022b26734aa59",
+    "004_energie_eclairage-d-atelier.txt": "03adc5de2316553e59dd594aa4b39e800c419cff4cbec9f82a522e2a44564916",
+    "005_energie_microhydraulique.txt": "ff042112cb5b534f401f0d57b14243888bb441e04a3bce006d922e5627b4e90f",
+    "006_energie_isolation-d-une-conduite.txt": "7745404c94ff9a99f16f2613fb1d79cd0c18c12db961992a76029f42fc567b5b",
+    "007_energie_consommation-en-veille.txt": "07f2bc6773f0fca9537a011d3c45265414080179f83e3bc74d94697e83342d32",
+    "008_energie_four-solaire-pedagogique.txt": "85c43cf615d805227fcc5336c49633c2b1e6bae2746a9fa919e7cac7f3c1414f",
+    "009_energie_recuperation-de-chaleur.txt": "96a8a28e802fc50ea16c2a3daedfd73b7ef1642f505f01a4449fede87986e218",
+    "010_energie_suivi-energetique-collectif.txt": "0cb092d64dd7c44dc2a01c72da8f2f7c5b4461b81953192a6839bacca4b2abb8",
+    "011_informatique_latence-d-un-reseau-local.txt": "5488b73a07c8224378b69cfbbc6248efc77204947d90adeccea704e0be9c2690",
+    "012_informatique_resolution-de-noms.txt": "6e03f5c363eeb54e5dd9c8a0196d6fc0b9d7e26f280c0f77c3edd22eb7faa3d2"
+  }
+}

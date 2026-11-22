@@ -1,0 +1,8 @@
+{
+  "epoch": 1795355600.9849505,
+  "reason": "Missing copied system input and relocated historical baseline paths; correct report date/name",
+  "preflight_reused_same_boot": true,
+  "hardware_integrity_rechecked_each_stage": true,
+  "training_started": false,
+  "parent_and_dataset_unchanged": true
+}

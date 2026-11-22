@@ -1,0 +1,6 @@
+{
+  "observed_at": "2026-11-22T18:15:16.770438+00:00",
+  "test_vm": "ferm\u00e9",
+  "x399_hostname": "eidolon-os",
+  "wall_e": "network reachable, bridge blocked by DSCP-sensitive connection; final local application state unverified"
+}

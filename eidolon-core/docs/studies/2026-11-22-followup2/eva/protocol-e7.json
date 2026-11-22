@@ -1,0 +1,53 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "hypothesis": "A fourfold lower learning rate may reduce loss of established X3 responses; causal interference is not demonstrated by aggregate scores.",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "parent_sha256": "c600d531e36d65b30c36b84bc65f6a44c0175550581b8ea5a1f1c224a27d5b30",
+  "changed_training_variable": {
+    "learning_rate": [
+      1e-06,
+      2.5e-07
+    ]
+  },
+  "unchanged": [
+    "parent",
+    "NF4/FP16",
+    "LoRA rank8 alpha16",
+    "E6 balanced corpus",
+    "replay",
+    "supervised token budget",
+    "packing",
+    "seed",
+    "102-update gate before204"
+  ],
+  "development_gates": {
+    "X1_min": 47,
+    "X2_min": 80,
+    "X3_min": 47,
+    "full_report_min": 84,
+    "day0_min": 54,
+    "anchors_min": 25,
+    "technical_canary": "16 physical cores / 32 logical processors; no unsupported claim of actions"
+  },
+  "extra_analysis": "Paired correct-to-wrong and wrong-to-correct counts, per wording; improved net score is insufficient alone.",
+  "blind_validation": "Before E7 training: independently generate and hash new prompts/values and acceptance criteria, exclude overlap with training/development/history, keep outside trainer inputs; evaluate once only after all development gates pass. Not yet generated or executed; no promotion based on historical probes.",
+  "preflight": [
+    "freeze independent validation and acceptance criteria before training, without exposing it to training or checkpoint selection",
+    "verify all pinned hashes",
+    "copy system.json",
+    "refresh boot and hardware tests if boot changed",
+    "controller uses /usr/bin/python3 with telemetry",
+    "both V100 200W, enforce original CPU70/GPU83 thermal and ECC guards",
+    "stop on gate failure; do not automatically retry"
+  ],
+  "automatic_promotion": false,
+  "arithmetic_route": "Evaluate deterministic arithmetic assistance separately; successful tool calculation does not certify intrinsic model arithmetic.",
+  "artifacts": {
+    "dataset.json": "14499c22c8ee2795808532a2ab8c4d976f5e02b6a17a3c1bb969b53d60253aa2",
+    "pack-plan.json": "a0fe43740447978c184d4cbc6e518709e0e2ace2689420d3ba52940dd3c95ca4",
+    "system.json": "6abde8b6e0bd91f8a953632c1cbdf39acf33a20f8ea6559573eb75aa6d0a043e",
+    "config.json": "9ccebdb542acb1e2d07b0c0c90d4275f5a4503849f1416025d6b08d7b19cb9f5",
+    "source-manifest.json": "b9a6518e2a115d3128dace48fdd62dfaee83add8f051cfac41a63868c6837620"
+  },
+  "trainer_configuration_verified": "Existing train.py passes C[learning_rate] to AdamW; config proposal changes the effective optimizer input when staged in a new run directory."
+}

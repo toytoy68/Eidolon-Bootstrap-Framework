@@ -1,0 +1,12 @@
+{
+  "source_sha256": "8a7eba940551be283dfedc28b97c632334775d04e695f9cdf5ddc6c2fe7d973b",
+  "verified_on_vm": true,
+  "core_uid": 999,
+  "executor_uid": 995,
+  "independent_principal": true,
+  "private_network": true,
+  "capabilities": [],
+  "runtime_integration_tests": 6,
+  "service_stopped_no_fallback": true,
+  "epoch": 1795355866.095827
+}

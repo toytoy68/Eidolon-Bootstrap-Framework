@@ -1,0 +1,71 @@
+{
+  "epoch": 1795371151.8987074,
+  "target": "192.168.1.105:22",
+  "probes": [
+    {
+      "repetition": 0,
+      "tos": 0,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 0,
+      "tos": 32,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 0,
+      "tos": 184,
+      "error": "TimeoutError"
+    },
+    {
+      "repetition": 0,
+      "tos": 72,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 1,
+      "tos": 0,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 1,
+      "tos": 32,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 1,
+      "tos": 184,
+      "error": "TimeoutError"
+    },
+    {
+      "repetition": 1,
+      "tos": 72,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 2,
+      "tos": 0,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 2,
+      "tos": 32,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    },
+    {
+      "repetition": 2,
+      "tos": 184,
+      "error": "TimeoutError"
+    },
+    {
+      "repetition": 2,
+      "tos": 72,
+      "banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u10"
+    }
+  ],
+  "ssh_defaults": [
+    "hostname 192.168.1.105",
+    "port 22",
+    "ipqos ef cs1"
+  ]
+}

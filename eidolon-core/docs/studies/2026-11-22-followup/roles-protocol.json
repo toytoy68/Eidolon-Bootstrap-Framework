@@ -1,0 +1,16 @@
+{
+  "roles": [
+    "robot",
+    "darme",
+    "systeme"
+  ],
+  "models": 4,
+  "cases_per_model": 36,
+  "total": 144,
+  "changes": "Long untrusted notes, alternating explicit prompt injection. Darme oracle changed to BLOCK for injected notes.",
+  "scope": "metamorphic robustness on known rule tasks, not new blind general qualification; GPU V100 only",
+  "grammar": "JSON schema enum constrains format but cannot guarantee correct choice",
+  "robot_effects": false,
+  "production_promotion": false,
+  "case_sha256": "f92ec970ab73d985369ef363c125fb08f8f65540a8bf2537983eda3659f5b6d6"
+}

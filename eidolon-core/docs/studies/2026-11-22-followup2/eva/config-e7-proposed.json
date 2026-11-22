@@ -1,0 +1,30 @@
+{
+  "meter_url": "http://192.168.1.197/rpc/PM1.GetStatus?id=0",
+  "gpu_stop_c": 83,
+  "cpu_stop_c": 70,
+  "source_revision": "3497c4c82493fabf3ee118e9865b047d8aecccf2",
+  "parent_adapter": "/srv/eidolon/work/eva-learning-cycle5-progressive-20261109/dual-resumable/adapter-final",
+  "uuids": [
+    "GPU-c9d9173f-6303-6998-7a60-a379b9a0d60b",
+    "GPU-a7716f02-4fbb-b36c-8b0c-2ec78c75be75"
+  ],
+  "boot_id": "2e4378b2-6f37-4ca2-969d-a1308552d25f",
+  "experiment": "E7-lower-learning-rate-proposal",
+  "sequence_length": 512,
+  "learning_rate": 2.5e-07,
+  "updates_per_epoch": 102,
+  "max_updates": 204,
+  "epochs": 2,
+  "global_packs_per_update": "4 or6, equal2or3 per rank",
+  "automatic_promotion": false,
+  "target_hours_tokens_per_pass": 28487,
+  "pack_counts_per_pass": [
+    426,
+    428
+  ],
+  "component_weights": {
+    "X1": 1,
+    "X2": 1,
+    "X3": 1
+  }
+}

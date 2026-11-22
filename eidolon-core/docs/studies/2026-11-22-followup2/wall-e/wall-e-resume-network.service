@@ -1,0 +1,15 @@
+[Unit]
+Description=WALL-E bounded network recovery after suspend
+After=NetworkManager.service
+ConditionPathExists=/sys/class/net/wlo1
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/wall-e-resume-network.py
+TimeoutStartSec=55
+User=root
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/wall-e-resume-network

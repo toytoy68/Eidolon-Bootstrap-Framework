@@ -1,0 +1,11 @@
+{
+  "review": "Codex source review, no new independent reviewer",
+  "paths": [
+    "/srv/eidolon/ssd/work/followup-20261122/core/eidolon-core/src/eidolon_core/darme_executor.py",
+    "/srv/eidolon/ssd/work/followup-20261122/core/eidolon-core/tests/test_darme_executor.py",
+    "/srv/eidolon/ssd/work/followup-20261122/core/eidolon-core/tests/test_darme_executor_principals.py"
+  ],
+  "no_new_blocking_finding": true,
+  "source_changed": false,
+  "production_deployed": false
+}

@@ -1,0 +1,24 @@
+{
+  "awake_capture": true,
+  "packets": [
+    {
+      "epoch": 1795361216.9846716,
+      "source": "192.168.1.20",
+      "correct_magic": true,
+      "targets_current_wifi_mac": true
+    },
+    {
+      "epoch": 1795361217.2286975,
+      "source": "192.168.1.20",
+      "correct_magic": true,
+      "targets_current_wifi_mac": true
+    },
+    {
+      "epoch": 1795361217.4743516,
+      "source": "192.168.1.20",
+      "correct_magic": true,
+      "targets_current_wifi_mac": true
+    }
+  ],
+  "elapsed": 1.415980339050293
+}

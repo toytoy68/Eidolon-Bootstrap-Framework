@@ -1,0 +1,17 @@
+{
+  "cases": 39,
+  "seed": 1234,
+  "max_tokens": 128,
+  "ctx": 4096,
+  "threads": 3,
+  "cpu_only": true,
+  "temperature": 0,
+  "robot_execution": false,
+  "stop_cpu_c": 85,
+  "deadline_s": 180,
+  "background_services": "dashboard and local model remain running; voice inactive at baseline; deployed idle system",
+  "energy": "RAPL package only, not wall power",
+  "corpus": "full36 compact role cases and3 chat probes; neutral boilerplate reduced16to1; long-context latency separate; cap2GHz; cooldown70C before model and above75C between requests; limit85C unchanged; initial33 responses retained",
+  "binary_sha256": "2d9cc3cc32335e8d7a83f8ad4a709c29948221ff322e4b0c53c88091a708b86f",
+  "case_sha256": "2e42eea4cbf148c555872a94513dbaabbaf4433b7da46aa51389b8081daaa647"
+}

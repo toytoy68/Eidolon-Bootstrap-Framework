@@ -1,0 +1,11 @@
+{
+  "source": "operator deployment output; independently validated through MCP in ssh-fix-final.json",
+  "before_sha256": "bf356bbbe2886b81fe65d675d5f53af9d816da45e6efa3ee0475a394a832b752",
+  "after_sha256": "af479145df9c7384e13a07d6ef3a2a7cc15f8df73e8bc450bdc44458df402c4d",
+  "backup": "/mnt/tank/eidolon-collaboration/wall-e-ssh-qos-p65gpj85",
+  "wake_archive_sha256": "e36b611e07ebd05645dfd80fe0e7cc28bc1d71ea4c118aefd3cd6cad700a13d3",
+  "archive_paths": [
+    "/srv/eidolon/ssd/work/followup2-20261122/wall-e/wake-proof-after-qos.tar.xz",
+    "/home/toytoy/wall-e/qualification-20261122/wake-proof-after-qos.tar.xz"
+  ]
+}

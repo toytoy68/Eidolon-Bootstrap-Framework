@@ -178,7 +178,7 @@ def test_real_sigterm_runs_context_cleanup_and_keeps_gpu_reservations(tmp_path):
     state=Store(tmp_path/'state');Runtime(state).create(DEMO_REQUEST)
     token=tmp_path/'token';token.write_text('t'*40);token.chmod(0o600)
     gpu=tmp_path/'gpu';gpu.mkdir(mode=0o700);q=queue(gpu);q.enqueue('prior','media');q.acquire('prior');q.enqueue('inherited','dialogue')
-    config=tmp_path/'gpu.json';config.write_text(json.dumps(q.config))
+    config=tmp_path/'gpu.json';config.write_text(json.dumps(q.config));config.chmod(0o600)
     marker=tmp_path/'closed';output=tmp_path/'output'
     script='''import sys
 from pathlib import Path
