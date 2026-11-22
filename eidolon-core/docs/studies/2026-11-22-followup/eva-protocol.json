@@ -1,0 +1,15 @@
+{
+  "hypothesis": "Equal supervised token allocation across X1 X2 X3 reduces primitive interference relative to E5. Exploratory single run.",
+  "changed_variable": "component token weights 1:3:1 -> 1:1:1",
+  "parent": "cycle5 unchanged",
+  "learning_rate": 1e-06,
+  "unchanged": "total supervised tokens, replay, parent, legacy evaluation and rejection guards",
+  "checkpoint_gates": [
+    102,
+    204
+  ],
+  "stop_after102_if_guard_fails": true,
+  "automatic_promotion": false,
+  "legacy_evaluations": "development only, not new blind validation",
+  "no_final_reserved_read": true
+}

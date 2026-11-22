@@ -272,7 +272,7 @@ def test_operator_cli_entry_points_on_real_private_files(tmp_path):
     report=run('library_sync','--config',str(cfg),'--directory',lib.directory,'--client','pc0','--root','nas','--sync')
     assert report['state']=='SYNCED_EXCERPTS_ONLY'
     assert run('retention_preview','--directory',lib.directory,'--older-than-days','90')['deleted'] is False
-    data=tmp_path/'trials.json';data.write_text(json.dumps(dataset()))
+    data=tmp_path/'trials.json';data.write_text(json.dumps(dataset()));data.chmod(0o600)
     assert run('identity_evaluation','--input',str(data),'--max-far','0')['state']=='SYNTHETIC_ONLY'
-    queue=gpu(tmp_path);configfile=tmp_path/'gpu.json';configfile.write_text(json.dumps(queue.config))
+    queue=gpu(tmp_path);configfile=tmp_path/'gpu.json';configfile.write_text(json.dumps(queue.config));configfile.chmod(0o600)
     assert run('gpu_queue','--config',str(configfile),'status')['hardware_measured'] is False

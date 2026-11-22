@@ -3348,3 +3348,15 @@ Autorisation toytoy : traiter les priorités proposées après audit. Base 766bf
 ### Clôture du lot maintenance et Darme — 21 novembre 2026
 
 Maintenance Memory rétablie, ouverture Qdrant différée et diagnostics d’étape déployés avec sauvegarde ; cause historique non reproduite, corpus/index inchangés. Rupture réelle Store/outbox corrigée et reprises après crash testées. Adaptateur text.stats isolé opt-in qualifié, non activé globalement. Suite Core : 2478 réussis, 24 ignorés, 1349 sous-tests ; lot final ciblé : 35 réussis. Core #17/#18 et Memory #7 intégrées. Pont Git NAS toujours bloqué faute d’accès au checkout/journaux du service. Rapport : docs/studies/2026-11-21-maintenance-darme/. Hôte conservé allumé.
+
+
+## Codex/GPT — suivi du 22 novembre 2026
+
+Autorisation directe toytoy : traiter la liste sans arrêt intermédiaire. Branche codex/followup-20261122, base 860a33e2ccbc63197424b8b21876d1027c565440. Lot : frontière Darme avec comptes séparés en environnement de test ; maintenance Memory et preuve admissible sur copie ; révision expérimentale Eva après rejet E5 ; qualification LLM CPU/contrats réels disponibles. Fichiers prévus : nouveaux modules/tests Darme ciblés et étude 2026-11-22-followup. Aucun message Claude réécrit ; aucune promotion de modèle ou activation globale implicite.
+
+### Clôture du suivi Codex/GPT — 22 novembre 2026
+- Exécuteur Darme text.stats sous UID distinct et réseau privé qualifié en VM ; registre opt-in, reçus et interruption conservés. Module, tests et exemple d’unité dans ce lot.
+- Suite finale : 2501 tests + 1349 sous-tests ; six essais de comptes séparés et deux vérifications root complémentaires. Fixtures privées corrigées pour umask permissif.
+- Maintenance réelle sur 12 passages synthétiques : publication, no-op, reports et interruption vérifiés. Production : timer actif, 205 points. Limites documents longs et tunnel direct de la VM consignées.
+- 144 réponses LLM de robustesse ; catalogue de rôles actualisé, aucune autonomie accordée. Eva E6 102 mises à jour, rejet X3 47->44/96 ; parent cycle5 conservé.
+- Rapport et preuves : docs/studies/2026-11-22-followup/README.md. VM de test arrêtée, X399 et Memory production maintenues en ligne. WALL-E/N6000 inaccessible.

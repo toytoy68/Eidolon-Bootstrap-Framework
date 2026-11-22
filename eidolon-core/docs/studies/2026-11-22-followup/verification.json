@@ -1,0 +1,32 @@
+{
+  "full_suite": {
+    "passed": 2501,
+    "skipped": 30,
+    "subtests_passed": 1349,
+    "exit_code": 0,
+    "seconds": 301.041211605072
+  },
+  "additional_vm_principal_tests": 6,
+  "additional_root_ownership_tests": 2,
+  "remaining_optional_tests": 22,
+  "skip_reasons": {
+    "changing a file owner needs root": 1,
+    "changing a directory owner needs root": 1,
+    "pdftotext absent": 1,
+    "explicit separate Linux service UID": 6,
+    "poppler-utils unavailable": 1,
+    "reference kaldi-native-fbank not installed": 1,
+    "onnxruntime/onnx not installed": 2,
+    "OpenCV or EIDOLON_IDENTITY_MODELS (YuNet/SFace files) not available": 3,
+    "ffmpeg unavailable": 1,
+    "Diffusers absent": 1,
+    "PyAV absent": 1,
+    "optional PyAV runtime required": 4,
+    "optional torch/diffusers research runtime required": 2,
+    "local FFmpeg/FFprobe not installed": 4,
+    "Sana runtime absent in this workspace": 1
+  },
+  "targeted_sandbox_transport_tests": 31,
+  "targeted_tests_overlap_full_suite": true,
+  "base_commit": "860a33e2ccbc63197424b8b21876d1027c565440"
+}

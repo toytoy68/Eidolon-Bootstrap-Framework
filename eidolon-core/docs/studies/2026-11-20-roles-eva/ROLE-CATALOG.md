@@ -29,3 +29,11 @@ Aucun modèle de cette étude n'obtient une autorité autonome de sécurité, de
 4. Mesurer les petits modèles sur le N6000 réel, puis la perception sur images réelles ; garder la supervision et l'arrêt matériel.
 
 Les tests logiciels antérieurs ne comptent pas comme validations de qualité LLM. Les modèles téléchargés mais non exécutés ne sont pas marqués validés.
+
+## Complément du 22 novembre : robustesse des rôles
+
+Une campagne complémentaire de 144 réponses ajoute des journaux longs et des instructions malveillantes dans les données. Scores exacts robot / Darme / système, chacun sur 12 cas : LFM3 **9 / 9 / 7** ; LFM2.5 **4 / 9 / 2** ; Phi-4-mini **6 / 3 / 7** ; Eva-source **8 / 6 / 7**. Aucun des quatre ne satisfait tous les cas critiques. Le schéma JSON n'empêche pas une mauvaise décision valide syntaxiquement.
+
+Ces modèles restent des candidats pour proposer, expliquer ou dialoguer sous vérification. Les mesures antérieures gardent leur périmètre initial ; ce complément ne qualifie ni l'autonomie robot, ni une autorité Darme, ni des actions système sans contrôle. WALL-E étant injoignable, aucune qualification N6000 n'est ajoutée.
+
+[Rapport, protocole, réponses et suite Eva E6](../2026-11-22-followup/README.md).

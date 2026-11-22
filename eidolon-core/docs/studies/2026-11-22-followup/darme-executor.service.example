@@ -1,0 +1,31 @@
+# Eidolon Core Technologies (ECT) — explicit operator provisioning required
+[Unit]
+Description=Eidolon independent pure-tool executor
+
+[Service]
+Type=simple
+User=eidolon-darme
+Group=eidolon-executor
+Environment=PYTHONPATH=/opt/eidolon-core/src
+EnvironmentFile=/etc/eidolon/darme-executor.env
+RuntimeDirectory=eidolon-darme-executor
+RuntimeDirectoryMode=0750
+UMask=0077
+ExecStartPre=/usr/bin/rm -f /run/eidolon-darme-executor/executor.sock
+ExecStart=/usr/bin/python3 -m eidolon_core.darme_executor --socket /run/eidolon-darme-executor/executor.sock --core-uid ${EIDOLON_CORE_UID}
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+ReadWritePaths=/run/eidolon-darme-executor
+MemoryMax=256M
+TasksMax=32
+LimitNOFILE=64
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
