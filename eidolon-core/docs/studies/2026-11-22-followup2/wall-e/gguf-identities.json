@@ -1,0 +1,41 @@
+{
+  "LFM25-1.2B": {
+    "gguf_version": 3,
+    "tensors": 148,
+    "general.architecture": "lfm2",
+    "general.name": "4cd563d5a96af9e7c738b76cd89a0a200db7608f",
+    "general.size_label": "1.2B",
+    "general.quantization_version": 2,
+    "general.file_type": 15
+  },
+  "LFM3-1.7B": {
+    "gguf_version": 3,
+    "tensors": 287,
+    "general.architecture": "lfm3",
+    "general.name": "LFM3 1.7B",
+    "general.basename": "LFM3",
+    "general.size_label": "1.7B",
+    "general.quantization_version": 2,
+    "general.file_type": 15
+  },
+  "Qwen3-0.6B": {
+    "gguf_version": 3,
+    "tensors": 310,
+    "general.architecture": "qwen3",
+    "general.name": "Qwen3 0.6B Instruct Awq",
+    "general.basename": "Qwen3",
+    "general.size_label": "0.6B",
+    "general.quantization_version": 2,
+    "general.file_type": 15
+  },
+  "Qwen3-1.7B": {
+    "gguf_version": 3,
+    "tensors": 311,
+    "general.architecture": "qwen3",
+    "general.name": "Qwen3 1.7B",
+    "general.basename": "Qwen3",
+    "general.size_label": "1.7B",
+    "general.quantization_version": 2,
+    "general.file_type": 15
+  }
+}

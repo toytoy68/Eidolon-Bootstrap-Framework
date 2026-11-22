@@ -1,0 +1,15 @@
+{
+  "status": "frozen_before_inference",
+  "models": 4,
+  "role_cases_per_model": 36,
+  "dialogue_canaries_per_model": 3,
+  "critical_case_requirement": "all correct; suggestions only even if passing",
+  "intent_latency_target_p95_ttft_s": 2,
+  "chat_latency_target_ttft_s": 5,
+  "robot_motor_control": "deterministic controller only; no model output executed",
+  "timeout_s": 180,
+  "three_consecutive_errors": "stop that model and report unqualified",
+  "temperature_stop_c": 85,
+  "energy": "RAPL CPU package estimate; not whole-machine wall consumption",
+  "comparison_limit": "N6000 local CPU and newly compiled native runtime; V100 runtime differs, max_tokens128 versus512; truncation must be reported"
+}

@@ -1,0 +1,30 @@
+{
+  "passed": 20,
+  "skipped": 0,
+  "tests": [
+    "tests.test_identity_runners.Fbank::test_parity_with_kaldi_native_fbank",
+    "tests.test_identity_runners.Fbank::test_shape_cmn_and_bounds",
+    "tests.test_identity_runners.WeSpeakerRunnerTests::test_runner_loads_the_verified_bytes_and_feeds_the_voice_adapter",
+    "tests.test_identity_runners.WeSpeakerRunnerTests::test_wrong_preprocessing_or_signature_is_refused",
+    "tests.test_identity_runners.YuNetSFaceTests::test_a_blank_image_has_no_face_and_the_capture_is_wiped",
+    "tests.test_identity_runners.YuNetSFaceTests::test_encoder_gives_a_finite_128_vector_and_wipes_the_decoded_image",
+    "tests.test_identity_runners.YuNetSFaceTests::test_published_hashes_match_the_files",
+    "tests.test_media_animatediff_probe.AnimateDiffProbeTests::test_nonfinite_rejected_before_clamp",
+    "tests.test_media_animatediff_probe.AnimateDiffProbeTests::test_progressive_budget_and_repeat",
+    "tests.test_media_animatediff_probe.AnimateDiffProbeTests::test_real_motion_unet_slicing_preserves_small_forward",
+    "tests.test_media_animatediff_probe.AnimateDiffProbeTests::test_real_mp4_roundtrip_and_invalid_shape",
+    "tests.test_media_codec.CodecTests::test_export_preserves_fps_duration_and_frame_count",
+    "tests.test_media_codec.CodecTests::test_geometry_mismatch_rejected",
+    "tests.test_media_codec.CodecTests::test_pillarbox_export_keeps_timing_and_black_sides",
+    "tests.test_media_codec.CodecTests::test_truncated_video_rejected",
+    "tests.test_media_flux_dev.FluxDevAttentionTests::test_full_transformer_fp32",
+    "tests.test_media_flux_dev.FluxDevAttentionTests::test_full_transformer_v100_fp16",
+    "tests.test_media_sana_probe.SanaProbeTests::test_bounded_ramp_and_exact_repeat",
+    "tests.test_media_sana_probe.SanaProbeTests::test_padding_preserves_pixels_and_adds_only_side_bars",
+    "tests.test_media_sana_probe.SanaProbeTests::test_real_sana_cached_embedding_contract_without_gpu"
+  ],
+  "previously_uncovered_cases": 12,
+  "synthetic_inputs": true,
+  "real_v100_fp16": true,
+  "not_quality_benchmark": true
+}

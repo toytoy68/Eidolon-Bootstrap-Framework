@@ -1,0 +1,6 @@
+#!/bin/sh
+# Queue recovery outside the systemd-sleep hook; never wait inside it.
+if [ "$1/$2" = "post/suspend" ]; then
+    /usr/bin/systemctl --no-block start wall-e-resume-network.service
+fi
+exit 0

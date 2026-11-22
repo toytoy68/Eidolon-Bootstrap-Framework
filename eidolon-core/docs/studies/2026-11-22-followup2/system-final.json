@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-11-22T18:15:16.770438+00:00",
+  "units": {
+    "eidolon-core-api.service": "Result=success\nExecMainStatus=0\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-darme.service": "Result=success\nExecMainStatus=0\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-darme-netgear-snmp.service": "Result=success\nExecMainStatus=0\nActiveState=inactive\nInactiveEnterTimestamp=Sun 2026-11-22 19:14:38 CET\n",
+    "eidolon-darme-netgear-archive.service": "Result=success\nExecMainStatus=0\nActiveState=inactive\nInactiveEnterTimestamp=Sun 2026-11-22 19:07:30 CET\n",
+    "eidolon-darme-netgear-health.service": "Result=success\nExecMainStatus=0\nActiveState=inactive\nInactiveEnterTimestamp=Sun 2026-11-22 19:15:16 CET\n",
+    "eidolon-darme-discord.service": "Result=success\nExecMainStatus=0\nActiveState=inactive\nInactiveEnterTimestamp=Sun 2026-11-22 19:14:35 CET\n",
+    "eidolon-darme-netgear-snmp.timer": "Result=success\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-darme-netgear-archive.timer": "Result=success\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-darme-netgear-health.timer": "Result=success\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-darme-discord.timer": "Result=success\nActiveState=active\nInactiveEnterTimestamp=\n",
+    "eidolon-v100-llamacpp-build.service": "Result=exit-code\nExecMainStatus=2\nActiveState=failed\nInactiveEnterTimestamp=Sun 2026-11-22 18:22:39 CET\n",
+    "eidolon-v100-ubuntu-deps.service": "Result=exit-code\nExecMainStatus=100\nActiveState=failed\nInactiveEnterTimestamp=Sun 2026-11-22 18:12:39 CET\n",
+    "eidolon-v100-ubuntu-rootfs.service": "Result=exit-code\nExecMainStatus=2\nActiveState=failed\nInactiveEnterTimestamp=Sun 2026-11-22 18:11:58 CET\n"
+  }
+}

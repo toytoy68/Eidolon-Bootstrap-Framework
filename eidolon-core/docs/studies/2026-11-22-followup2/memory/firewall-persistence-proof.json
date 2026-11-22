@@ -1,0 +1,12 @@
+{
+  "epoch": 1795364541.3193564,
+  "enabled": "enabled",
+  "active": "active",
+  "live_rule": [
+    "iifname \"virbr0\" ip saddr 192.168.122.71 ip daddr 192.168.122.1 tcp dport 22 accept comment \"Memory test inference tunnel\""
+  ],
+  "persistent_rule": [
+    "iifname \"virbr0\" ip saddr 192.168.122.71 ip daddr 192.168.122.1 tcp dport 22 accept comment \"Memory test inference tunnel\""
+  ],
+  "host_reboot_tested": false
+}

@@ -1,0 +1,122 @@
+{
+  "host": "wall-e-001",
+  "kernel": "6.1.0-49-amd64",
+  "cpu": {
+    "code": 0,
+    "stdout": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture\u00a0:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"Mode(s) op\u00e9ratoire(s) des processeurs\u00a0:\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Tailles des adresses:\",\n         \"data\": \"39 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Boutisme\u00a0:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"Processeur(s)\u00a0:\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Liste de processeur(s) en ligne\u00a0:\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Identifiant constructeur\u00a0:\",\n         \"data\": \"GenuineIntel\"\n      },{\n         \"field\": \"Nom de mod\u00e8le\u00a0:\",\n         \"data\": \"Intel(R) Pentium(R) Silver N6000 @ 1.10GHz\"\n      },{\n         \"field\": \"Famille de processeur\u00a0:\",\n         \"data\": \"6\"\n      },{\n         \"field\": \"Mod\u00e8le\u00a0:\",\n         \"data\": \"156\"\n      },{\n         \"field\": \"Thread(s) par c\u0153ur\u00a0:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"C\u0153ur(s) par socket\u00a0:\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Socket(s)\u00a0:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"R\u00e9vision\u00a0:\",\n         \"data\": \"0\"\n      },{\n         \"field\": \"multiplication des MHz du/des CPU(s)\u00a0:\",\n         \"data\": \"81%\"\n      },{\n         \"field\": \"Vitesse maximale du processeur en MHz\u00a0:\",\n         \"data\": \"3300,0000\"\n      },{\n         \"field\": \"Vitesse minimale du processeur en MHz\u00a0:\",\n         \"data\": \"800,0000\"\n      },{\n         \"field\": \"BogoMIPS\u00a0:\",\n         \"data\": \"2227,20\"\n      },{\n         \"field\": \"Drapeaux\u00a0:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg cx16 xtpr pdcm sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave rdrand lahf_lm 3dnowprefetch cpuid_fault epb cat_l2 cdp_l2 ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust smep erms rdt_a rdseed smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req umip waitpkg gfni rdpid movdiri movdir64b md_clear flush_l1d arch_capabilities\"\n      },{\n         \"field\": \"Virtualisation\u00a0:\",\n         \"data\": \"VT-x\"\n      },{\n         \"field\": \"Cache L1d\u00a0:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"Cache L1i\u00a0:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"Cache L2\u00a0:\",\n         \"data\": \"1,5 MiB (1 instance)\"\n      },{\n         \"field\": \"Cache L3\u00a0:\",\n         \"data\": \"4 MiB (1 instance)\"\n      },{\n         \"field\": \"N\u0153ud(s) NUMA\u00a0:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"N\u0153ud NUMA\u00a00 de processeur(s)\u00a0:\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Gather data sampling\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Indirect target selection\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Itlb multihit\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 L1tf\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Mds\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Meltdown\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Mmio stale data\u00a0:\",\n         \"data\": \"Mitigation; Clear CPU buffers; SMT disabled\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Reg file data sampling\u00a0:\",\n         \"data\": \"Mitigation; Clear Register File\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Retbleed\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Spec rstack overflow\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Spec store bypass\u00a0:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Spectre v1\u00a0:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Spectre v2\u00a0:\",\n         \"data\": \"Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS Not affected; BHI SW loop, KVM SW loop\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Srbds\u00a0:\",\n         \"data\": \"Vulnerable: No microcode\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Tsa\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Tsx async abort\u00a0:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vuln\u00e9rabilit\u00e9 Vmscape\u00a0:\",\n         \"data\": \"Not affected\"\n      }\n   ]\n}",
+    "stderr": ""
+  },
+  "memory_total": "MemTotal:       24408112 kB",
+  "source": {
+    "code": 0,
+    "stdout": "b019be0c86e8adaf8b46627c091c24c1597b95f9",
+    "stderr": ""
+  },
+  "source_status": {
+    "code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "cmake": {
+    "CMAKE_BUILD_TYPE:STRING": "Release",
+    "GGML_AVX:BOOL": "OFF",
+    "GGML_AVX2:BOOL": "OFF",
+    "GGML_CUDA:BOOL": "OFF",
+    "GGML_F16C:BOOL": "OFF",
+    "GGML_FMA:BOOL": "OFF",
+    "GGML_NATIVE:BOOL": "ON"
+  },
+  "runtime_files": {
+    "libllama.so": {
+      "size": 5503288,
+      "sha256": "a583da62a2c47c12f484594a46df08a9bc4f0758116f6e7466efa506afac9baa"
+    },
+    "libllama-common.so.1.0.0": {
+      "size": 6590856,
+      "sha256": "832d25a0549ab6f2a82a82870bf4701ad8391711b51235e7e9fdfffd71a3af61"
+    },
+    "libggml-base.so.1": {
+      "size": 923744,
+      "sha256": "d3d654e8d4d358e21e9e11699f0a4bd69fcd5f002b93782ae46e2292d14f0ed9"
+    },
+    "libmtmd.so.1.0.0": {
+      "size": 3004200,
+      "sha256": "36792a59f440f06ce2d78451a71bf52bebd82fbe8180b586b8831b6a629a856d"
+    },
+    "libggml-base.so.1.0.0": {
+      "size": 923744,
+      "sha256": "d3d654e8d4d358e21e9e11699f0a4bd69fcd5f002b93782ae46e2292d14f0ed9"
+    },
+    "libggml.so.1.0.0": {
+      "size": 51352,
+      "sha256": "2b74b99a879cfff34bce4b7e4dace8c6601fdef057f7ee9df430a15b24b16c1d"
+    },
+    "libllama-common.so.1": {
+      "size": 6590856,
+      "sha256": "832d25a0549ab6f2a82a82870bf4701ad8391711b51235e7e9fdfffd71a3af61"
+    },
+    "libllama-common.so": {
+      "size": 6590856,
+      "sha256": "832d25a0549ab6f2a82a82870bf4701ad8391711b51235e7e9fdfffd71a3af61"
+    },
+    "libggml-base.so": {
+      "size": 923744,
+      "sha256": "d3d654e8d4d358e21e9e11699f0a4bd69fcd5f002b93782ae46e2292d14f0ed9"
+    },
+    "libggml-cpu.so": {
+      "size": 1019784,
+      "sha256": "aa66bbb9d26685c09019cb578ebc8d64c6962e3e74efe3e0910a5e6c67e9b81d"
+    },
+    "libggml.so.1": {
+      "size": 51352,
+      "sha256": "2b74b99a879cfff34bce4b7e4dace8c6601fdef057f7ee9df430a15b24b16c1d"
+    },
+    "libmtmd.so": {
+      "size": 3004200,
+      "sha256": "36792a59f440f06ce2d78451a71bf52bebd82fbe8180b586b8831b6a629a856d"
+    },
+    "libllama.so.1": {
+      "size": 5503288,
+      "sha256": "a583da62a2c47c12f484594a46df08a9bc4f0758116f6e7466efa506afac9baa"
+    },
+    "libmtmd.so.1": {
+      "size": 3004200,
+      "sha256": "36792a59f440f06ce2d78451a71bf52bebd82fbe8180b586b8831b6a629a856d"
+    },
+    "libggml-cpu.so.1": {
+      "size": 1019784,
+      "sha256": "aa66bbb9d26685c09019cb578ebc8d64c6962e3e74efe3e0910a5e6c67e9b81d"
+    },
+    "libggml.so": {
+      "size": 51352,
+      "sha256": "2b74b99a879cfff34bce4b7e4dace8c6601fdef057f7ee9df430a15b24b16c1d"
+    },
+    "libllama.so.1.0.0": {
+      "size": 5503288,
+      "sha256": "a583da62a2c47c12f484594a46df08a9bc4f0758116f6e7466efa506afac9baa"
+    },
+    "libggml-cpu.so.1.0.0": {
+      "size": 1019784,
+      "sha256": "aa66bbb9d26685c09019cb578ebc8d64c6962e3e74efe3e0910a5e6c67e9b81d"
+    },
+    "libllama-server-impl.so": {
+      "size": 4778816,
+      "sha256": "00eb8687b0ef46113d48af4175270da2ae5294a5d16b662e06359a5bbd85cc25"
+    },
+    "llama-server": {
+      "size": 30944,
+      "sha256": "2d9cc3cc32335e8d7a83f8ad4a709c29948221ff322e4b0c53c88091a708b86f"
+    }
+  },
+  "packages": {
+    "code": 0,
+    "stdout": "cmake\t3.25.1-1\ng++\t4:12.2.0-3\nlibc6:amd64\t2.36-9+deb12u14\nlibstdc++6:amd64\t12.2.0-14+deb12u1",
+    "stderr": ""
+  },
+  "frequency_caps": {
+    "policy2": "3300000",
+    "policy0": "3300000",
+    "policy3": "3300000",
+    "policy1": "3300000"
+  }
+}

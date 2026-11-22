@@ -1,0 +1,8 @@
+{
+  "gates_mtime_epoch": 1795359812.198714,
+  "first_requests": {
+    "original": 1795360123.9006064,
+    "compact": 1795360298.825109,
+    "capped_first_segment": 1795360558.4562333
+  }
+}

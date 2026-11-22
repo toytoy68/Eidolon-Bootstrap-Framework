@@ -1,0 +1,28 @@
+{
+  "reason": "65C cooldown not reached within300s although package dropped63C and ACPI TCPU71C. Conservative protocol recovery, not a new85C breach.",
+  "initial_completed": 33,
+  "unchanged": [
+    "cases",
+    "expected labels",
+    "weights",
+    "runtime",
+    "seed",
+    "max_tokens",
+    "3threads",
+    "2GHz cap",
+    "85C abort"
+  ],
+  "changed": {
+    "cooldown_c": [
+      65,
+      70
+    ],
+    "cooldown_timeout_s": [
+      300,
+      1200
+    ]
+  },
+  "energy_comparability": "per-response intervals and total reported separately; recovery interval is not model efficiency",
+  "old_segment": "compact-cool-segment1",
+  "no_answer_retried": true
+}

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checked": {
+    "train": {
+      "X1": 179,
+      "X2": 92,
+      "X3": 116
+    },
+    "train_second": {
+      "X2": 90,
+      "X3": 117,
+      "X1": 178
+    }
+  },
+  "errors": [],
+  "literal_backslash_n_targets": 0,
+  "scope": "training component question/value/final JSON consistency; independent divmod oracle; no new final reserved set opened",
+  "dataset_sha256": "14499c22c8ee2795808532a2ab8c4d976f5e02b6a17a3c1bb969b53d60253aa2"
+}

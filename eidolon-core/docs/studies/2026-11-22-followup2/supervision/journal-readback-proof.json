@@ -1,0 +1,34 @@
+{
+  "records": 11,
+  "all_parse": true,
+  "latest_age_s": 87.21062231063843,
+  "latest": {
+    "archive_age_s": 804.8348388671875,
+    "archive_state": "FRESH",
+    "epoch": 1795362601.8703227,
+    "external_notification": false,
+    "schema": "eidolon-nas-health/1",
+    "snapshots": [
+      {
+        "epoch": 1795309636,
+        "name": "tank/eidolon-darme-archive@darme-initial-20261122"
+      },
+      {
+        "epoch": 1795312800,
+        "name": "tank/eidolon-darme-archive@darme-daily-2026-11-22_03-00"
+      },
+      {
+        "epoch": 1795316400,
+        "name": "tank/eidolon-darme-archive@darme-weekly-2026-11-22_04-00"
+      }
+    ],
+    "source": "truenas",
+    "switch_failures": 0,
+    "switch_icmp": true,
+    "switch_state": "REACHABLE",
+    "x399_icmp": true,
+    "x399_power_w": 149.1,
+    "x399_state": "POWERED_AND_REACHABLE"
+  },
+  "script_sha256": "3dbe4832ed555ad4b1f15b9288d3b1815a010811829acc6db6eab0e1ad943884"
+}

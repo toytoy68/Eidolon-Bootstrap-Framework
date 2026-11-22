@@ -3360,3 +3360,13 @@ Autorisation directe toytoy : traiter la liste sans arrêt intermédiaire. Branc
 - Maintenance réelle sur 12 passages synthétiques : publication, no-op, reports et interruption vérifiés. Production : timer actif, 205 points. Limites documents longs et tunnel direct de la VM consignées.
 - 144 réponses LLM de robustesse ; catalogue de rôles actualisé, aucune autonomie accordée. Eva E6 102 mises à jour, rejet X3 47->44/96 ; parent cycle5 conservé.
 - Rapport et preuves : docs/studies/2026-11-22-followup/README.md. VM de test arrêtée, X399 et Memory production maintenues en ligne. WALL-E/N6000 inaccessible.
+
+
+## Lot Codex — suite du 22/11/2026
+Base 48e0bb4e8ed3e553058cf21dd0ed354db02a6ebb. Prise en charge autorisée par toytoy : qualification N6000/WALL-E, réveil Wi-Fi, tunnel de laboratoire Memory, documents longs, analyse E6 et protocole suivant, revue Darme et préparation de déploiement, tests optionnels et suivi supervision. Preuves dans docs/studies/2026-11-22-followup2 ; aucune contribution Claude réécrite.
+
+### Bilan du lot complémentaire N6000 / Memory / médias
+
+156 réponses CPU N6000 conservées, quatre fichiers et 23 cas critiques chacun : aucun promu. Archive de 290 fichiers copiée sur X399 et vérifiée. Tunnel Memory autonome rétabli et testé après redémarrage VM ; 48 passages couvrent trois documents complets, 9/9 recherches littérales. Les 12 tests médias restants sont couverts par 20 réussites sans skip. E7 et le déploiement Darme sont préparés, sans entraînement ni activation. Supervision NAS locale toutes les cinq minutes installée ; snapshots quotidien/hebdomadaire présents.
+
+Veille WALL-E : témoin RTC et deux réveils Wi-Fi profonds réussis. Dernier essai bloqué côté pont SSH malgré réseau vivant ; trois échecs DSCP EF contre neuf témoins réussis. Garde post-reprise installé mais intégration non qualifiée ; commande opérateur préparée, aucune permission contournée. Validation finale caméra/API reste ouverte. Plafonds CPU restaurés avant veille ; VM de test arrêtée, production Core/Memory active. Rapport et limites : docs/studies/2026-11-22-followup2/README.md. Aucune fusion de PR.

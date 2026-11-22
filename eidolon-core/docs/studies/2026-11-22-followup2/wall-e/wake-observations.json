@@ -1,0 +1,107 @@
+{
+  "status": "PARTIAL_REMOTE_ADMIN_BLOCKED",
+  "tests": [
+    {
+      "tag": "deep-rtc-control",
+      "actual_suspend": false,
+      "reason": "sleep.target masked",
+      "returncode": 1
+    },
+    {
+      "tag": "deep-rtc-control2",
+      "actual_suspend": true,
+      "kernel_mode": "deep",
+      "returncode": 0,
+      "boot_id_unchanged": true,
+      "suspend_request_epoch": 1795370248.5040362,
+      "resume_epoch": 1795370370.9561715,
+      "seconds_before_rtc": -1.9561715126037598,
+      "network_recovery": false
+    },
+    {
+      "tag": "deep-magic1",
+      "actual_suspend": true,
+      "kernel_mode": "deep",
+      "returncode": 0,
+      "boot_id_unchanged": true,
+      "suspend_request_epoch": 1795370407.3726108,
+      "resume_epoch": 1795370419.9655674,
+      "seconds_before_rtc": 108.03443264961243,
+      "network_probe_returncodes": [
+        1,
+        1,
+        1
+      ],
+      "network_recovery": true,
+      "network_recovery_returncode": 0,
+      "send": {
+        "epoch": 1795370418.628,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\n  \"target\": \"wall-e-001\",\n  \"packets_sent\": 3,\n  \"wake_confirmed\": false\n}"
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        }
+      }
+    },
+    {
+      "tag": "deep-magic2",
+      "actual_suspend": true,
+      "kernel_mode": "deep",
+      "returncode": 0,
+      "boot_id_unchanged": true,
+      "suspend_request_epoch": 1795370484.582759,
+      "resume_epoch": 1795370506.9617097,
+      "seconds_before_rtc": 98.03829026222229,
+      "network_probe_returncodes": [
+        0
+      ],
+      "network_recovery": false,
+      "send": {
+        "epoch": 1795370505.66,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\n  \"target\": \"wall-e-001\",\n  \"packets_sent\": 3,\n  \"wake_confirmed\": false\n}"
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        }
+      }
+    },
+    {
+      "tag": "integrated-deep-magic3",
+      "local_result_not_retrieved": true,
+      "send": {
+        "epoch": 1795370756.056,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\n  \"target\": \"wall-e-001\",\n  \"packets_sent\": 3,\n  \"wake_confirmed\": false\n}"
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        }
+      },
+      "network_alive_later": true,
+      "ssh_bridge_timeout": true
+    }
+  ],
+  "limitations": [
+    "Third cycle root evidence, hook execution and final USB/API state not retrieved",
+    "DSCP EF failure reproduced 3/3 from X399; other TOS profiles 9/9 banners",
+    "Physical wake and usable administrative access are distinct",
+    "No s2idle change; target masks unchanged",
+    "Resume guard installed, five simulated cases pass, end-to-end integration unqualified",
+    "No overnight reliability claim"
+  ],
+  "recovery_command": "operator-recover-nas.sh"
+}

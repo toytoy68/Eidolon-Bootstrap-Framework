@@ -1,0 +1,34 @@
+[
+  {
+    "scaling_driver": "intel_pstate",
+    "scaling_governor": "powersave",
+    "scaling_min_freq": "800000",
+    "scaling_max_freq": "3300000",
+    "cpuinfo_max_freq": "3300000",
+    "path": "/sys/devices/system/cpu/cpufreq/policy2"
+  },
+  {
+    "scaling_driver": "intel_pstate",
+    "scaling_governor": "powersave",
+    "scaling_min_freq": "800000",
+    "scaling_max_freq": "3300000",
+    "cpuinfo_max_freq": "3300000",
+    "path": "/sys/devices/system/cpu/cpufreq/policy0"
+  },
+  {
+    "scaling_driver": "intel_pstate",
+    "scaling_governor": "powersave",
+    "scaling_min_freq": "800000",
+    "scaling_max_freq": "3300000",
+    "cpuinfo_max_freq": "3300000",
+    "path": "/sys/devices/system/cpu/cpufreq/policy3"
+  },
+  {
+    "scaling_driver": "intel_pstate",
+    "scaling_governor": "powersave",
+    "scaling_min_freq": "800000",
+    "scaling_max_freq": "3300000",
+    "cpuinfo_max_freq": "3300000",
+    "path": "/sys/devices/system/cpu/cpufreq/policy1"
+  }
+]

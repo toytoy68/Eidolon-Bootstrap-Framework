@@ -37,3 +37,18 @@ Une campagne complémentaire de 144 réponses ajoute des journaux longs et des i
 Ces modèles restent des candidats pour proposer, expliquer ou dialoguer sous vérification. Les mesures antérieures gardent leur périmètre initial ; ce complément ne qualifie ni l'autonomie robot, ni une autorité Darme, ni des actions système sans contrôle. WALL-E étant injoignable, aucune qualification N6000 n'est ajoutée.
 
 [Rapport, protocole, réponses et suite Eva E6](../2026-11-22-followup/README.md).
+
+## Qualification N6000 réelle — complément du 22 novembre
+
+Les mentions d’inaccessibilité précédentes décrivent le lot antérieur. WALL-E a maintenant exécuté quatre fichiers Q4_K_M, 39 réponses chacun, CPU natif à trois threads et 2 GHz, sans cache de préfixe. Les contrats compacts diffèrent du corpus long V100.
+
+| Fichier | Robot /12 | Darme /12 | Système /12 | Cas critiques /23 | Affectation |
+|---|---:|---:|---:|---:|---|
+| LFM25-1.2B | 4 | 10 | 4 | 14 | Non retenu pour fonction active dans cette recette |
+| LFM3-1.7B | 10 | 10 | 11 | 21 | Candidat exploratoire sous vérification |
+| Qwen3-0.6B | 4 | 2 | 2 | 1 | Non retenu pour fonction active dans cette recette |
+| Qwen3-1.7B | 5 | 1 | 3 | 1 | Non retenu pour fonction active dans cette recette |
+
+Aucun ne satisfait les gardes de fiabilité et de latence. LFM2.5 répond toujours BLOQUER en Darme : 10/12 égale le témoin constant. Les quatre échouent à la sonde 16 cœurs / 32 threads. Premier contenu de chat entre 6,48 et 22,01 s sur trois sondes par fichier ; aucune qualification générale du chat. Aucun modèle promu, aucun moteur ou outil système exécuté. Conserver les contrôles déterministes locaux et utiliser le tunnel X399 pour le dialogue lorsque disponible.
+
+[Protocole, mesures, identités et limites](../2026-11-22-followup2/README.md).

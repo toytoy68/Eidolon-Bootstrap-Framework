@@ -1,0 +1,17 @@
+{
+  "archive_verified": true,
+  "files": 146,
+  "core_user": "toytoy",
+  "core_uid": 1000,
+  "service_uid": null,
+  "bwrap_current_account_ok": true,
+  "production_deployed": false,
+  "ready_for_provisioning": true,
+  "required": [
+    "create dedicated service account and socket group if absent",
+    "install pinned root-owned source",
+    "configure explicit Core UID",
+    "qualify real accounts on target",
+    "explicit Runtime remote_registry wiring; no default substitution"
+  ]
+}

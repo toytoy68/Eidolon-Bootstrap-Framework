@@ -1,0 +1,523 @@
+{
+  "X1": {
+    "transitions": {
+      "correct->correct": 46,
+      "wrong->correct": 21,
+      "wrong->wrong": 28,
+      "correct->wrong": 1
+    },
+    "variants": {
+      "0": {
+        "correct->correct": 21,
+        "wrong->correct": 12,
+        "wrong->wrong": 15
+      },
+      "1": {
+        "wrong->correct": 9,
+        "correct->correct": 25,
+        "wrong->wrong": 13,
+        "correct->wrong": 1
+      }
+    },
+    "changes": [
+      {
+        "id": "e4b-held-X1-6",
+        "question": "Convertis 09:38 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "578",
+          "unite": "minute"
+        },
+        "parent": "9 + 38 = 47 minutes depuis minuit.\n{\"resultat\": 47, \"unite\": \"minute\"}",
+        "candidate": "9 * 60 + 38 = 578 minutes depuis minuit.\n{\"resultat\": 578, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-20",
+        "question": "Convertis 09:17 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "557",
+          "unite": "minute"
+        },
+        "parent": "97 + 17 = 114 minutes depuis minuit.\n{\"resultat\": 114, \"unite\": \"minute\"}",
+        "candidate": "9 * 60 + 17 = 557 minutes depuis minuit.\n{\"resultat\": 557, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-30",
+        "question": "Convertis 15:46 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "946",
+          "unite": "minute"
+        },
+        "parent": "946 + 46 = 992 minutes depuis minuit.\n{\"resultat\": 992, \"unite\": \"minute\"}",
+        "candidate": "15 × 60 + 46 = 946 minutes depuis minuit.\n{\"resultat\": 946, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-40",
+        "question": "Convertis 22:37 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "1357",
+          "unite": "minute"
+        },
+        "parent": "227 + 37 = 264 minutes depuis minuit.\n{\"resultat\": 264, \"unite\": \"minute\"}",
+        "candidate": "22 × 60 + 37 = 1357 minutes depuis minuit.\n{\"resultat\": 1357, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-52",
+        "question": "Convertis 09:59 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "599",
+          "unite": "minute"
+        },
+        "parent": "99 + 59 = 158 minutes depuis minuit.\n{\"resultat\": 158, \"unite\": \"minute\"}",
+        "candidate": "9 * 60 + 59 = 599 minutes depuis minuit.\n{\"resultat\": 599, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-54",
+        "question": "Convertis 22:26 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "1346",
+          "unite": "minute"
+        },
+        "parent": "226 + 26 = 252 minutes depuis minuit.\n{\"resultat\": 252, \"unite\": \"minute\"}",
+        "candidate": "22 × 60 + 26 = 1346 minutes depuis minuit.\n{\"resultat\": 1346, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-62",
+        "question": "Convertis 09:14 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "554",
+          "unite": "minute"
+        },
+        "parent": "94 + 14 = 108 minutes depuis minuit.\n{\"resultat\": 108, \"unite\": \"minute\"}",
+        "candidate": "9 * 60 + 14 = 554.\n{\"resultat\": 554, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-70",
+        "question": "Convertis 08:24 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "504",
+          "unite": "minute"
+        },
+        "parent": "84 + 24 = 108 minutes depuis minuit.\n{\"resultat\": 108, \"unite\": \"minute\"}",
+        "candidate": "8 × 60 + 24 = 480 + 24 = 504.\n{\"resultat\": 504, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-72",
+        "question": "Convertis 13:14 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "794",
+          "unite": "minute"
+        },
+        "parent": "134 + 14 = 148 minutes depuis minuit.\n{\"resultat\": 148, \"unite\": \"minute\"}",
+        "candidate": "13 × 60 + 14 = 794.\n{\"resultat\": 794, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-74",
+        "question": "Convertis 13:36 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "816",
+          "unite": "minute"
+        },
+        "parent": "1366 + 36 = 1402 minutes depuis minuit.\n{\"resultat\": 1402, \"unite\": \"minute\"}",
+        "candidate": "13 × 60 + 36 = 816 minutes depuis minuit.\n{\"resultat\": 816, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-90",
+        "question": "Convertis 11:41 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "701",
+          "unite": "minute"
+        },
+        "parent": "111 + 41 = 151 minutes depuis minuit.\n{\"resultat\": 151, \"unite\": \"minute\"}",
+        "candidate": "11 × 60 + 41 = 701 minutes depuis minuit.\n{\"resultat\": 701, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-94",
+        "question": "Convertis 20:22 en minutes depuis minuit. Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "1222",
+          "unite": "minute"
+        },
+        "parent": "2022 + 22 = 2042 minutes depuis minuit.\n{\"resultat\": 2042, \"unite\": \"minute\"}",
+        "candidate": "20 × 60 + 22 = 1222.\n{\"resultat\": 1222, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-1",
+        "question": "Combien de minutes depuis minuit correspondent a 08:01 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "481",
+          "unite": "minute"
+        },
+        "parent": "601 + 1 = 602 minutes depuis minuit.\n{\"resultat\": 602, \"unite\": \"minute\"}",
+        "candidate": "8*60 + 1 = 481 minutes depuis minuit.\n{\"resultat\": 481, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-15",
+        "question": "Combien de minutes depuis minuit correspondent a 05:28 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "328",
+          "unite": "minute"
+        },
+        "parent": "628 + 28 = 656 minutes depuis minuit.\n{\"resultat\": 656, \"unite\": \"minute\"}",
+        "candidate": "5*60 + 28 = 328 minutes depuis minuit.\n{\"resultat\": 328, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-23",
+        "question": "Combien de minutes depuis minuit correspondent a 12:33 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "753",
+          "unite": "minute"
+        },
+        "parent": "633 + 33 = 663 minutes depuis minuit.\n{\"resultat\": 663, \"unite\": \"minute\"}",
+        "candidate": "12*60 + 33 = 753 minutes depuis minuit.\n{\"resultat\": 753, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-25",
+        "question": "Combien de minutes depuis minuit correspondent a 12:17 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "737",
+          "unite": "minute"
+        },
+        "parent": "617 + 17 = 634 minutes depuis minuit.\n{\"resultat\": 634, \"unite\": \"minute\"}",
+        "candidate": "12*60 + 17 = 720 + 17 = 737.\n{\"resultat\": 737, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-43",
+        "question": "Combien de minutes depuis minuit correspondent a 14:58 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "898",
+          "unite": "minute"
+        },
+        "parent": "14*60 + 58 = 898 minutes depuis minuit.\n{\"resultat\": 898, \"unite\": \"minute\"}",
+        "candidate": "14*60 + 58 = 898 + 58 = 958.\n{\"resultat\": 958, \"unite\": \"minute\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X1-45",
+        "question": "Combien de minutes depuis minuit correspondent a 16:43 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "1003",
+          "unite": "minute"
+        },
+        "parent": "1003 + 43 = 1043 minutes depuis minuit.\n{\"resultat\": 1043, \"unite\": \"minute\"}",
+        "candidate": "16*60 + 43 = 960 + 43 = 1003.\n{\"resultat\": \"1003\", \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-63",
+        "question": "Combien de minutes depuis minuit correspondent a 08:16 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "496",
+          "unite": "minute"
+        },
+        "parent": "816 + 16 = 832 minutes depuis minuit.\n{\"resultat\": 832, \"unite\": \"minute\"}",
+        "candidate": "8*60 + 16 = 496 minutes depuis minuit.\n{\"resultat\": 496, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-69",
+        "question": "Combien de minutes depuis minuit correspondent a 13:09 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "789",
+          "unite": "minute"
+        },
+        "parent": "60 + 9 = 69 minutes depuis minuit.\n{\"resultat\": 69, \"unite\": \"minute\"}",
+        "candidate": "13*60 + 9 = 789 minutes depuis minuit.\n{\"resultat\": 789, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-87",
+        "question": "Combien de minutes depuis minuit correspondent a 07:06 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "426",
+          "unite": "minute"
+        },
+        "parent": "66 + 0 = 66 minutes depuis minuit.\n{\"resultat\": 66, \"unite\": \"minute\"}",
+        "candidate": "7*60 + 6 = 426 minutes depuis minuit.\n{\"resultat\": 426, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X1-95",
+        "question": "Combien de minutes depuis minuit correspondent a 23:45 ? Termine par un objet JSON avec resultat, unite exactement « minute ».",
+        "expected": {
+          "resultat": "1425",
+          "unite": "minute"
+        },
+        "parent": "1440 + 23*60 + 45 = 1440 + 1380 + 45 = 2865 minutes depuis minuit.\n{\"resultat\": 2865, \"unite\": \"minute\"}",
+        "candidate": "23*60 + 45 = 1425 minutes depuis minuit.\n{\"resultat\": 1425, \"unite\": \"minute\"}",
+        "transition": "wrong->correct"
+      }
+    ]
+  },
+  "X2": {
+    "transitions": {
+      "correct->correct": 80,
+      "wrong->wrong": 14,
+      "wrong->correct": 2
+    },
+    "variants": {
+      "0": {
+        "correct->correct": 36,
+        "wrong->wrong": 11,
+        "wrong->correct": 1
+      },
+      "1": {
+        "correct->correct": 44,
+        "wrong->correct": 1,
+        "wrong->wrong": 3
+      }
+    },
+    "changes": [
+      {
+        "id": "e4b-held-X2-54",
+        "question": "1864 minutes : combien de jours entiers de 1440 et quel reste en minutes ? Termine par un objet JSON avec resultat, unite exactement « minute » et jours, un entier.",
+        "expected": {
+          "resultat": "424",
+          "unite": "minute",
+          "jours": 1
+        },
+        "parent": "11184 ÷ 1440 = 7 avec un reste de 1008 minutes.\n{\"resultat\": 1008, \"unite\": \"minute\", \"jours\": 7}",
+        "candidate": "1864 ÷ 1440 = 1 jour(s) avec un reste de 424 minutes.\n{\"resultat\": 424, \"unite\": \"minute\", \"jours\": 1}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X2-17",
+        "question": "Decompose 1011 minutes en jours de 1440 minutes et reste. Termine par un objet JSON avec resultat, unite exactement « minute » et jours, un entier.",
+        "expected": {
+          "resultat": "1011",
+          "unite": "minute",
+          "jours": 0
+        },
+        "parent": "1011 = 1440 + (-429). Il reste 429 minutes.\n{\"resultat\": 429, \"unite\": \"minute\", \"jours\": 0}",
+        "candidate": "1011 ÷ 1440 = 0 jour(s) avec un reste de 1011 minutes.\n{\"resultat\": 1011, \"unite\": \"minute\", \"jours\": 0}",
+        "transition": "wrong->correct"
+      }
+    ]
+  },
+  "X3": {
+    "transitions": {
+      "wrong->correct": 7,
+      "wrong->wrong": 42,
+      "correct->correct": 37,
+      "correct->wrong": 10
+    },
+    "variants": {
+      "0": {
+        "wrong->correct": 3,
+        "wrong->wrong": 13,
+        "correct->correct": 24,
+        "correct->wrong": 8
+      },
+      "1": {
+        "wrong->correct": 4,
+        "wrong->wrong": 29,
+        "correct->correct": 13,
+        "correct->wrong": 2
+      }
+    },
+    "changes": [
+      {
+        "id": "e4b-held-X3-0",
+        "question": "Convertis 489 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "08:09",
+          "unite": "heure"
+        },
+        "parent": "600 + 9 = 609 minutes depuis minuit. Cela donne 10:09.\n{\"resultat\": \"10:09\", \"unite\": \"heure\"}",
+        "candidate": "489 minutes depuis minuit donne 08:09.\n{\"resultat\": \"08:09\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-6",
+        "question": "Convertis 285 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "04:45",
+          "unite": "heure"
+        },
+        "parent": "285 minutes depuis minuit donne 04:45.\n{\"resultat\": \"04:45\", \"unite\": \"heure\"}",
+        "candidate": "285 + 60 = 345 minutes depuis minuit. Cela donne 05:45.\n{\"resultat\": \"05:45\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-10",
+        "question": "Convertis 333 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "05:33",
+          "unite": "heure"
+        },
+        "parent": "333 minutes depuis minuit donne 05:33.\n{\"resultat\": \"05:33\", \"unite\": \"heure\"}",
+        "candidate": "333 + 333 = 666 minutes depuis minuit. Cela donne 11:06.\n{\"resultat\": \"11:06\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-12",
+        "question": "Convertis 184 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "03:04",
+          "unite": "heure"
+        },
+        "parent": "1040 + 184 = 1224 minutes depuis minuit. Cela donne 20:24.\n{\"resultat\": \"20:24\", \"unite\": \"heure\"}",
+        "candidate": "104 + 80 = 184 minutes depuis minuit : 03:04.\n{\"resultat\": \"03:04\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-40",
+        "question": "Convertis 355 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "05:55",
+          "unite": "heure"
+        },
+        "parent": "355 minutes depuis minuit donne 05:55.\n{\"resultat\": \"05:55\", \"unite\": \"heure\"}",
+        "candidate": "355 + 15 = 370 minutes depuis minuit. Cela donne 06:10.\n{\"resultat\": \"06:10\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-46",
+        "question": "Convertis 453 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "07:33",
+          "unite": "heure"
+        },
+        "parent": "453 minutes depuis minuit donne 07:33.\n{\"resultat\": \"07:33\", \"unite\": \"heure\"}",
+        "candidate": "453 + 3 = 456 minutes depuis minuit. Cela donne 07:36.\n{\"resultat\": \"07:36\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-56",
+        "question": "Convertis 303 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "05:03",
+          "unite": "heure"
+        },
+        "parent": "303 minutes depuis minuit donne 05:03.\n{\"resultat\": \"05:03\", \"unite\": \"heure\"}",
+        "candidate": "303 + 303 = 606 minutes depuis minuit. Cela donne 10:06.\n{\"resultat\": \"10:06\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-64",
+        "question": "Convertis 698 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "11:38",
+          "unite": "heure"
+        },
+        "parent": "698 + 12 = 710 minutes depuis minuit. Cela donne 11:50.\n{\"resultat\": \"11:50\", \"unite\": \"heure\"}",
+        "candidate": "698 = 11*60 + 38. Cela donne 11:38.\n{\"resultat\": \"11:38\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-70",
+        "question": "Convertis 669 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "11:09",
+          "unite": "heure"
+        },
+        "parent": "669 minutes depuis minuit donne 11:09.\n{\"resultat\": \"11:09\", \"unite\": \"heure\"}",
+        "candidate": "669 + 60 = 729 minutes depuis minuit. Cela donne 12:09.\n{\"resultat\": \"12:09\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-82",
+        "question": "Convertis 274 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "04:34",
+          "unite": "heure"
+        },
+        "parent": "274 minutes depuis minuit donne 04:34.\n{\"resultat\": \"04:34\", \"unite\": \"heure\"}",
+        "candidate": "274 + 60 = 334 minutes depuis minuit. Cela donne 05:34.\n{\"resultat\": \"05:34\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-88",
+        "question": "Convertis 607 minutes depuis minuit en heure HH:MM. Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "10:07",
+          "unite": "heure"
+        },
+        "parent": "607 minutes depuis minuit donne 10:07.\n{\"resultat\": \"10:07\", \"unite\": \"heure\"}",
+        "candidate": "607 + 7 = 614 minutes depuis minuit. Cela donne 10:14.\n{\"resultat\": \"10:14\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-1",
+        "question": "Quelle heure HH:MM correspond a 1075 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "17:55",
+          "unite": "heure"
+        },
+        "parent": "600 + 455 = 1055 minutes depuis minuit, soit 17:35.\n{\"resultat\": \"17:35\", \"unite\": \"heure\"}",
+        "candidate": "600 + 475 = 1075 minutes depuis minuit. Cela donne 17:55.\n{\"resultat\": \"17:55\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-19",
+        "question": "Quelle heure HH:MM correspond a 620 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "10:20",
+          "unite": "heure"
+        },
+        "parent": "620 minutes depuis minuit donne 10:20.\n{\"resultat\": \"10:20\", \"unite\": \"heure\"}",
+        "candidate": "600 minutes correspondent à minuit, il reste 20 minutes : 00:20.\n{\"resultat\": \"00:20\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      },
+      {
+        "id": "e4b-held-X3-27",
+        "question": "Quelle heure HH:MM correspond a 299 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "04:59",
+          "unite": "heure"
+        },
+        "parent": "60 + 299 = 359 minutes depuis minuit. Cela donne 05:59.\n{\"resultat\": \"05:59\", \"unite\": \"heure\"}",
+        "candidate": "60*4 + 59 = 299 minutes depuis minuit : 04:59.\n{\"resultat\": \"04:59\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-39",
+        "question": "Quelle heure HH:MM correspond a 396 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "06:36",
+          "unite": "heure"
+        },
+        "parent": "600 + 396 = 996 minutes depuis minuit. Cela donne 16:36.\n{\"resultat\": \"16:36\", \"unite\": \"heure\"}",
+        "candidate": "6*60 + 36 = 396 minutes depuis minuit. Cela donne 06:36.\n{\"resultat\": \"06:36\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-83",
+        "question": "Quelle heure HH:MM correspond a 221 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "03:41",
+          "unite": "heure"
+        },
+        "parent": "140 + 221 = 361 minutes depuis minuit. Cela donne 06:01.\n{\"resultat\": \"06:01\", \"unite\": \"heure\"}",
+        "candidate": "221 minutes depuis minuit donne 3h41.\n{\"resultat\": \"03:41\", \"unite\": \"heure\"}",
+        "transition": "wrong->correct"
+      },
+      {
+        "id": "e4b-held-X3-95",
+        "question": "Quelle heure HH:MM correspond a 637 minutes depuis minuit ? Termine par un objet JSON avec resultat, unite exactement « heure ».",
+        "expected": {
+          "resultat": "10:37",
+          "unite": "heure"
+        },
+        "parent": "637 minutes depuis minuit donne 10:37.\n{\"resultat\": \"10:37\", \"unite\": \"heure\"}",
+        "candidate": "637 = 10 + 627 minutes. Cela donne 10:27.\n{\"resultat\": \"10:27\", \"unite\": \"heure\"}",
+        "transition": "correct->wrong"
+      }
+    ]
+  }
+}

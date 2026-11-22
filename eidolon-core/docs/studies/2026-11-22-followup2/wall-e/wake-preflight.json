@@ -1,0 +1,8 @@
+{
+  "epoch": 1795368146.550789,
+  "rtc_name": "rtc_cmos rtc_cmos",
+  "alarm": "",
+  "rtc_skew_s": -0.551276683807373,
+  "inhibitors": "WHO                 UID  USER   PID  COMM            WHAT                                                                       WHY                                       MODE\nModemManager        0    root   602  ModemManager    sleep                                                                      ModemManager needs to reset devices       delay\nNetworkManager      0    root   584  NetworkManager  sleep                                                                      NetworkManager needs to turn off networks delay\nUPower              0    root   1374 upowerd         sleep                                                                      Pause device polling                      delay\nxfce4-power-manager 1000 toytoy 1391 xfce4-power-man handle-power-key:handle-suspend-key:handle-hibernate-key:handle-lid-switch xfce4-power-manager handles these events  block\n\n4 inhibitors listed.\n",
+  "inhibitors_code": 0
+}
